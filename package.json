@@ -7,8 +7,27 @@
     "start": "electron .",
     "build": "electron-builder"
   },
-  "dependencies": {
+  "devDependencies": {
     "electron": "^26.1.0",
     "electron-builder": "^24.3.0"
+  },
+  "build": {
+    "appId": "com.mangabox.app",
+    "productName": "MangaBox",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
