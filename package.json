@@ -1,0 +1,12 @@
+{
+  "name": "mangabox",
+  "version": "1.0.0",
+  "description": "Komga desktop client using Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^26.1.0"
+  }
+}
