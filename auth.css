@@ -1,0 +1,107 @@
+#loginScreen {
+	position:fixed;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	background-color: #f5f5f5;
+	z-index:5000;
+}
+
+.dialog {
+	padding: 0px;
+	margin:0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+.login-input{
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border: none;             /* Removes default border */
+	outline: none;            /* Removes focus outline */
+	background: none;         /* Removes default background */
+	padding: 0;               /* Removes any internal padding */
+	margin: 0;                /* Removes any external margin */
+	box-shadow: none;         /* Removes any shadow */
+	font: inherit;            /* Inherits font properties from parent */
+	color: inherit;           /* Inherits text color */
+
+	box-sizing: border-box;
+	margin-top:15px;
+	height:30px;
+	width:280px;
+	border-radius:4px;
+	border:1px #c0c0c0 solid;
+	padding-left:10px;
+	padding-right:10px;
+	font-size:16px;
+
+	transition: all 0.3s, box-shadow 0.1s;
+}
+
+.login-input:hover{
+	border:1px solid var(--mb-accent);
+}
+
+.login-input:focus{
+	border:1px solid var(--mb-accent);
+	box-shadow: 0px 0px 5px var(--mb-accent-a50);
+}
+
+.login-buttons{
+	margin:0px;
+	padding:0px;
+	display: grid;
+	grid-template-columns: auto 80px; 
+	width: 280px;
+	gap:15px;
+
+}
+
+.login-button{
+	margin:0px;
+	appearance: none;
+	background:#ddd;
+	border:1px solid #aaa;
+	border-radius:4px;
+	margin-top:15px;
+	height:30px;
+	width:100%;
+	
+	transition:0.3s all;
+	color:black;
+
+}
+
+.login-button:hover{
+	border:1px solid var(--mb-accent);
+	background-color:#eee;
+}
+
+.login-button:active{
+	border:1px solid var(--mb-accent);
+	background-color: var(--mb-accent);
+}
+
+.auth-hidden {
+    display: none;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
