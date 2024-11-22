@@ -12,23 +12,24 @@
     "electron": "^26.1.0",
     "electron-builder": "^24.3.0"
   },
- "build": {
-  "appId": "com.mangabox.app",
-  "productName": "MangaBox",
-  "directories": {
-    "output": "dist"
-  },
-  "files": [
-    "**/*"
-  ],
-  "mac": {
-    "target": ["dmg", "zip"],
-    "category": "public.app-category.utilities"
-  },
-  "win": {
-    "target": "nsis"
-  },
-  "linux": {
-    "target": "AppImage"
+  "build": {
+    "appId": "com.mangabox.app",
+    "productName": "MangaBox",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*"
+    ],
+    "mac": {
+      "target": ["dmg", "zip"],
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   }
 }
