@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  linux:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -21,13 +20,26 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build the app
+    - name: Build for Linux
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run build
+      run: npm run build -- --linux
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+  macos:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
       with:
-        name: MangaBox
-        path: dist/
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build for macOS
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: npm run build -- --mac
