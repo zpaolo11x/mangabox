@@ -9,5 +9,6 @@
   },
   "dependencies": {
     "electron": "^26.1.0"
+    "electron-builder": "^24.3.0"
   }
 }
