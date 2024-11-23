@@ -23,7 +23,7 @@ jobs:
     - name: Build for macOS (x86 and ARM)
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run build -- --mac --x64 --arm64
+      run: npm run build -- --mac --x64
 
     - name: Upload macOS artifacts
       uses: actions/upload-artifact@v3
