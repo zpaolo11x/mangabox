@@ -207,7 +207,7 @@
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 
-		const basePath = ''; //was '/mangabox/'
+		const basePath =  ''; //'/mangabox/';
 
 		const scrollBars = Array.from(document.getElementsByClassName('range-bar'));
 		const homeStrips = Array.from(document.getElementsByClassName('home-strip'));
@@ -1190,10 +1190,11 @@
 		}
 
 		let rd = {
-			preloadCount: 4,
+			preloadCount: 2,
 			preloadDelay: 400,
 			preloadPicDelay: 300,
 			loadDelay: 100,
+			jumpTimeout: null,
 
 			preloadStack: [],
 			picLoadStack: [],
@@ -1226,6 +1227,7 @@
 
 			clearAllTimeouts();
 			rd.picLoadStack = [];
+			rd.jumpTimeout = null;
 
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
@@ -1258,7 +1260,7 @@
 
 		function resumePreload() {
 			console.log("resumePreload");
-			//cancelPreload();
+			cancelPreload();
 			rd.preloadTimeout = setTimeout(() => {
 				preloadPages(rd.currentSpreadIndex, rd.preloadCount);
 			}, rd.preloadDelay);
@@ -1269,11 +1271,13 @@
 
 			for (let i = 1; i <= count; i++) {
 				if (startSpreadIndex + i < rd.uiSpreads.length) {
+					console.log("timeout" + (startSpreadIndex + i))
 					startTimeout(rd.preloadPicDelay * i, () => {
 						populateSpread(startSpreadIndex + i);
 					});
 				}
 				if (startSpreadIndex - i >= 0) {
+					console.log("timeout" + (startSpreadIndex - i))
 					startTimeout(rd.preloadPicDelay * i, () => {
 						populateSpread(startSpreadIndex - i);
 					});
@@ -1502,26 +1506,65 @@
 			console.log(out);
 		}
 
-		function populateSpread(spreadIndex) {
-			rd.uiSpreadsPages[spreadIndex].forEach(async (element, index) => {
+		async function populateSpread(spreadIndex) {
+			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 				if (!rd.uiPages[element].src) {
-					rd.uiPages[element].src = await fetchMedia(rd.pages[element].url);
-
-					rd.uiPages[element].onload = () => {
-						//console.log("loaded pic " + element);
-						printStack('L');
-						const index = rd.picLoadStack.indexOf(element);
-						if (index !== -1) {
-							rd.picLoadStack.splice(index, 1);
-						}
-					};
-					rd.picLoadStack.push(element);
-					//console.log("added pic " + element);
+					rd.picLoadStack.push(element); // Add to the stack
 					printStack('S');
+
+					try {
+						// Fetch the image
+						const blobUrl = await fetchMedia(rd.pages[element].url);
+						rd.uiPages[element].src = blobUrl;
+
+						// Handle successful load
+						rd.uiPages[element].addEventListener('load', () => {
+							printStack('L');
+							const index = rd.picLoadStack.indexOf(element);
+							if (index !== -1) {
+								rd.picLoadStack.splice(index, 1); // Remove from stack
+							}
+						});
+
+						// Immediately handle cached images
+						if (rd.uiPages[element].complete) {
+							const index = rd.picLoadStack.indexOf(element);
+							if (index !== -1) {
+								rd.picLoadStack.splice(index, 1);
+							}
+						}
+					} catch (error) {
+						console.error(`Failed to load image for element ${element}:`, error);
+						// Handle error (optional: remove from stack or show fallback)
+					}
 				}
 			});
-		}
 
+			// Wait for all fetches to complete
+			await Promise.all(promises);
+		}
+		/*
+				function populateSpread(spreadIndex) {
+					if (isSectionHidden(readerContainer)) return;
+					rd.uiSpreadsPages[spreadIndex].forEach( (element, index) => {
+						if (!rd.uiPages[element].src) {
+							rd.uiPages[element].src = rd.pages[element].url;
+		
+							rd.uiPages[element].addEventListener('load', () => {
+								//console.log("loaded pic " + element);
+								printStack('L');
+								const index = rd.picLoadStack.indexOf(element);
+								if (index !== -1) {
+									rd.picLoadStack.splice(index, 1);
+								}
+							});
+							rd.picLoadStack.push(element);
+							//console.log("added pic " + element);
+							printStack('S');
+						}
+					});
+				}
+		*/
 		// Update the viewer for the current page or spread
 		function updateViewer() {
 			populateSpread(rd.currentSpreadIndex);
@@ -1571,6 +1614,7 @@
 		}
 
 		function purgeLoading() {
+			console.log("purgecheck");
 			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
 				const item = rd.picLoadStack[i];
 				console.log("purged page " + item);
@@ -1578,23 +1622,51 @@
 				rd.picLoadStack.splice(i, 1); // Remove the element at index i
 				printStack("P");
 			}
+			clearAllTimeouts();
+
 		}
 
 		function jumpToSpread(newSpreadTarget) {
+			console.log("                                  jumpto:" + newSpreadTarget);
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length)) return;
+
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
+console.log("                                  old:"+localOldSpreadIndex);
+console.log("                                  new:"+localNewSpreadIndex);
+console.log("                                  jumpTimeout null?"+(rd.jumpTimeout === null));
+			if (localOldSpreadIndex == localNewSpreadIndex) return;
 
-			rd.oldSpreadIndex = localOldSpreadIndex;
-			rd.currentSpreadIndex = newSpreadTarget;
+			if (rd.jumpTimeout === null) {
+				console.log("                                  nulltimeout");
+				rd.oldSpreadIndex = localOldSpreadIndex;
+				rd.currentSpreadIndex = localNewSpreadIndex;
+
+				rd.jumpTimeout = setTimeout(() => {
+					console.log('                                  spreadHide:' + localOldSpreadIndex);
+					spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+					populateSpread(localNewSpreadIndex);
+					console.log('                                  spreadShow:' + localNewSpreadIndex);
+					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+					rd.jumpTimeout = null;
+				}, rd.loadDelay );
+			} else {
+				clearTimeout(rd.jumpTimeout);
+				rd.jumpTimeout = null;
+
+				rd.currentSpreadIndex = localNewSpreadIndex;
+
+				rd.jumpTimeout = setTimeout(() => {
+					spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
+					console.log('                                  spreadHide:' + rd.oldSpreadIndex);
+					populateSpread(localNewSpreadIndex);
+					console.log('                                  spreadShow:' + localNewSpreadIndex);
+					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+					rd.jumpTimeout = null;
+				},rd.loadDelay );
+			}
 
 			purgeLoading()
-
-			startTimeout(rd.loadDelay, () => {
-				spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-				populateSpread(localNewSpreadIndex);
-				spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-			})
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
 
@@ -1621,13 +1693,14 @@
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {//TODO check why it fires twice for any seek
-
+			console.log("                                     seek");
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
 
-			rd.currentSpreadIndex = Math.floor(newProgressPercent * (rd.uiSpreads.length - 1));
-			jumpToSpread(rd.currentSpreadIndex);
+			//rd.currentSpreadIndex = Math.floor(newProgressPercent * (rd.uiSpreads.length - 1));
+			//console.log("seekjump to" + rd.currentSpreadIndex)
+			jumpToSpread(Math.floor(newProgressPercent * (rd.uiSpreads.length - 1)));
 		}
 
 		// Dragging the progress bar
@@ -1692,6 +1765,8 @@
 		});
 
 		function handleCloseReader() {
+			console.log(">>>                                   >>>"+rd.historyPath+"<<<");
+			console.log(rd.historyPath == "");
 			hideMenu();
 			incognitoMark.classList.remove('incognito');
 
@@ -1699,9 +1774,12 @@
 				rd.uiPages.forEach(item => item.remove());
 				rd.uiSpreads.forEach(item => item.remove());
 			}, 300);
-
-
-			navigateTo(rd.historyPath ?? '#dashboard');
+			//console.log("X");
+			//console.log(rd.historyPath);
+			purgeLoading();
+			clearAllTimeouts();
+			
+			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 		}
 
 		readerClose.addEventListener('click', () => {
@@ -1783,6 +1861,7 @@
 		}
 
 		function navigateTo(path) {
+			console.log(basePath + path);
 			history.pushState(null, '', basePath + path);
 			loadContent();
 		}
@@ -1795,7 +1874,7 @@
 
 					// Set the actual src from lazySrc
 					const imageUrl = await fetchMedia(img.lazySrc);
-					
+
 					img.src = imageUrl;
 
 					// Remove lazySrc to clean up
