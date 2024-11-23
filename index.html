@@ -1501,9 +1501,9 @@
 		}
 
 		function populateSpread(spreadIndex) {
-			rd.uiSpreadsPages[spreadIndex].forEach((element, index) => {
+			rd.uiSpreadsPages[spreadIndex].forEach(async (element, index) => {
 				if (!rd.uiPages[element].src) {
-					rd.uiPages[element].src = await(fetchMedia(rd.pages[element].url));
+					rd.uiPages[element].src = await fetchMedia(rd.pages[element].url);
 
 					rd.uiPages[element].onload = () => {
 						//console.log("loaded pic " + element);
