@@ -834,7 +834,7 @@
 				libraryThumbnail.src = `library-thumbnails/${library.name}.png`;
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
-					libraryThumbnail.src = `${library.name}.jpg`;
+					libraryThumbnail.src = `library-thumbnails/${library.name}.jpg`;
 				};
 
 				libraryThumbnail.alt = `${library.name} Cover`;
@@ -1503,7 +1503,7 @@
 		function populateSpread(spreadIndex) {
 			rd.uiSpreadsPages[spreadIndex].forEach((element, index) => {
 				if (!rd.uiPages[element].src) {
-					rd.uiPages[element].src = rd.pages[element].url;
+					rd.uiPages[element].src = await(fetchMedia(rd.pages[element].url));
 
 					rd.uiPages[element].onload = () => {
 						//console.log("loaded pic " + element);
