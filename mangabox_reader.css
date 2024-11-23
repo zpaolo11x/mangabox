@@ -270,10 +270,12 @@ div.single-page {
 	pointer-events: none;
 }
 
-#controlPanel.hidden #topControls{
+#controlPanel.hidden #topControls,
+#readerContainer.hidden #topControls{
 	top:-100px;
 }
-#controlPanel.hidden #bottomControls{
+#controlPanel.hidden #bottomControls,
+#readerContainer.hidden #bottomControls{
 	bottom:-100px;
 }
 

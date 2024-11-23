@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="black">
 	<title>MangaBox</title>
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
@@ -15,8 +16,6 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
 
 	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="manifest" href="manifest.json">
 	<link rel="stylesheet" type="text/css" href="auth.css">
 	<script src="https://kit.fontawesome.com/7a02964dfa.js" crossorigin="anonymous"></script>
@@ -27,7 +26,6 @@
 </head>
 
 <body>
-
 	<div id="stickyContainer" class="sticky-container hidden">
 		<ul class="libraries-list buttons left-block">
 			<li id="homeButton" class="library-item">
@@ -231,6 +229,11 @@
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
 				document.documentElement.style.setProperty(varName, swatches[id][index]);
 			});
+			/*
+			// Custom colored top bar
+			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+			metaThemeColor.setAttribute('content', `hsl(${swatches[id][0]},100%,10%)`);
+			*/
 			localStorage.setItem('mbAccentColor', accentId)
 		}
 
@@ -403,7 +406,6 @@
 		function updateSliderMax() {
 			if (isSectionHidden(homeStripsContainer)) return;
 
-			console.log('slidermax');
 			scrollBars.forEach((bar, index) => {
 				bar.max = homeStrips[index].scrollWidth - homeStrips[index].clientWidth;
 				// Check if the content overflows
@@ -470,6 +472,28 @@
 				console.error('Fetch libraries error:', error);
 			}
 		}
+
+		async function fetchMedia(url) {
+
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'Authorization': mbAuthHeader,
+				},
+			});
+
+			if (response.ok) {
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			} else {
+				console.error(`Failed to load thumbnail for series ${seriesId}`, response.status);
+				return 'fallback-image.jpg';
+			}
+		}
+
+		// Set the image:
+		// document.querySelector('#image-id').src = await fetchThumbnail('series-id');
+
 
 		async function setReadStatus(seriesId, bookId, read, item, format = null) {
 			if (bookId == null) {
@@ -1762,13 +1786,15 @@
 		}
 
 		// Lazy-loading setup with Intersection Observer
-		const observer = new IntersectionObserver((entries, observer) => {
-			entries.forEach(entry => {
+		const observer = new IntersectionObserver(async (entries, observer) => {
+			entries.forEach(async (entry) => {
 				if (entry.isIntersecting) {
 					const img = entry.target;
 
 					// Set the actual src from lazySrc
-					img.src = img.lazySrc;
+					const imageUrl = await fetchMedia(img.lazySrc);
+					
+					img.src = imageUrl;
 
 					// Remove lazySrc to clean up
 					delete img.lazySrc;
