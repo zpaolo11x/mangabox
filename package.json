@@ -22,7 +22,7 @@
       "**/*"
     ],
     "mac": {
-      "target": ["dmg", "zip"],
+      "target": ["dmg"],
       "category": "public.app-category.utilities"
     },
     "win": {
