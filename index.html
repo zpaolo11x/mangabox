@@ -207,7 +207,7 @@
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 
-		const basePath = '/mangabox/';
+		const basePath = ''; //was '/mangabox/'
 
 		const scrollBars = Array.from(document.getElementsByClassName('range-bar'));
 		const homeStrips = Array.from(document.getElementsByClassName('home-strip'));
@@ -873,7 +873,7 @@
 		}
 
 
-		function displayHeader(serie) {
+		async function displayHeader(serie) {
 			const altTitle = getAltTitles(serie);
 			const creditString = altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
@@ -886,7 +886,7 @@
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
-					<img src="${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
+					<img id="seriesThumbnail" src="${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
 				</div>
 			</div>
 			<div class="header-title">
@@ -896,6 +896,8 @@
 			</div>
 			<div class="header-summary">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
 			`;
+
+			seriesThumbnail.src = await fetchmedia(seriesThumbnail.src);
 
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${serie.metadata.title}</span>

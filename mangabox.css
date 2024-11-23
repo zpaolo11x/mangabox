@@ -272,7 +272,8 @@ a {
 	transform: translate(-50%, -50%);
 
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
-	mask: radial-gradient(circle, transparent 30px, white 30px, white 40px);
+	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
+	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 
 }
 
