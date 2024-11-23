@@ -886,7 +886,7 @@
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
-					<img id="seriesThumbnail" src="${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
+					<img id="seriesHeaderThumbnail" src="${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
 				</div>
 			</div>
 			<div class="header-title">
@@ -897,7 +897,7 @@
 			<div class="header-summary">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
 			`;
 
-			seriesThumbnail.src = await fetchmedia(seriesThumbnail.src);
+			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
 
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${serie.metadata.title}</span>
