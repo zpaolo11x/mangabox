@@ -1430,12 +1430,20 @@
 				if (startSpreadIndex + i < rd.uiSpreads.length) {
 					console.log("timeout" + (startSpreadIndex + i))
 					startTimeout(rd.preloadPicDelay * i, () => {
+						if (picLoadStackSize() >= 20000000) {
+							console.log("                     ABORT");
+							return;
+						}
 						populateSpread(startSpreadIndex + i);
 					});
 				}
 				if (startSpreadIndex - i >= 0) {
 					console.log("timeout" + (startSpreadIndex - i))
 					startTimeout(rd.preloadPicDelay * i, () => {
+						if (picLoadStackSize() >= 20000000) {
+							console.log("                     ABORT");
+							return;
+						}
 						populateSpread(startSpreadIndex - i);
 					});
 				}
@@ -1513,9 +1521,9 @@
 					let spreadArray = [i];
 
 					const flockRate = [
-						(i / dataOut.length),
-						(1.0 - i / dataOut.length),
-						0.5 * (1.0 - 2 * i / dataOut.length)
+						rd.ltr ? (1.0 - i / dataOut.length) : (i / dataOut.length),
+						rd.ltr ? (i / dataOut.length) : (1.0 - i / dataOut.length),
+						rd.ltr ? - 0.5 * (1.0 - 2 * i / dataOut.length) : 0.5 * (1.0 - 2 * i / dataOut.length)
 					]
 					const flockOffset = flockRate.map(rate => 100 * (40 / 800) * rate);
 
@@ -1707,12 +1715,6 @@
 		}
 
 		async function populateSpread(spreadIndex) {
-			console.log(picLoadStackSize());
-			if (picLoadStackSize() >= 20000000) {
-				console.log("                     ABORT");
-				return;
-			}
-
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 
 				if (!rd.uiPages[element].src) {
@@ -1723,11 +1725,13 @@
 						// Fetch the image
 						const blobUrl = await fetchMedia(rd.pages[element].url);
 						rd.uiPages[element].src = blobUrl;
+						rd.uiPages[element].visible = false;
 						//rd.uiPages[element].src = rd.pages[element].url;
 						// Handle successful load
 						rd.uiPages[element].addEventListener('load', () => {
 							printStack('L');
 							const index = rd.picLoadStack.indexOf(element);
+							rd.uiPages[element].visible = true;
 							if (index !== -1) {
 								rd.picLoadStack.splice(index, 1); // Remove from stack
 							}
