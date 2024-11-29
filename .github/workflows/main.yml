@@ -53,5 +53,5 @@ jobs:
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: windows-build
-          path: dist/
+          name: windows-portable
+          path: dist/*.exe
