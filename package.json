@@ -29,7 +29,7 @@
     },
     "win": {
       "target": "portable",
-      "icon": "assets/icons/mangabox.png"
+      "icon": "assets/icons/mangabox.ico"
     },
     "linux": {
       "target": "AppImage"
