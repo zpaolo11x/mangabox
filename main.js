@@ -2,6 +2,8 @@ const { app, BrowserWindow } = require('electron');
 
 let mainWindow;
 
+app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
+
 app.on('ready', () => {
   mainWindow = new BrowserWindow({
     width: 800,
