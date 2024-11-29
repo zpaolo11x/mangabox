@@ -23,13 +23,13 @@ jobs:
       - name: Build for macOS (x86 and ARM)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build -- --mac --x64 --dir
+        run: npm run build -- --mac --x64
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: macos-app-bunle
-          path: dist/mac/*.app
+          name: macos-build
+          path: dist/
 
   windows:
     runs-on: windows-latest
