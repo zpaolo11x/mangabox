@@ -28,7 +28,7 @@
       "category": "public.app-category.utilities"
     },
     "win": {
-      "target": "portable"
+      "target": "portable",
       "icon": "assets/icons/mangabox.png"
     },
     "linux": {
