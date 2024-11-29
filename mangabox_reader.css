@@ -87,6 +87,13 @@ img.page:not([src]) {
 .page-layout img.page {
 	display: block;
 }
+img.page:not(.loading){
+	opacity:1;
+}
+
+img.page.loading{
+	opacity:0;
+}
 
 img.multiply {
 	mix-blend-mode: multiply;

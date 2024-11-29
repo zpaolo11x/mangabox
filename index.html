@@ -1720,6 +1720,7 @@
 				if (!rd.uiPages[element].src) {
 					rd.picLoadStack.push(element); // Add to the stack
 					printStack('S');
+					rd.uiPages[element].classList.add('loading');
 
 					try {
 						// Fetch the image
@@ -1730,8 +1731,8 @@
 						// Handle successful load
 						rd.uiPages[element].addEventListener('load', () => {
 							printStack('L');
+							rd.uiPages[element].classList.remove('loading');
 							const index = rd.picLoadStack.indexOf(element);
-							rd.uiPages[element].visible = true;
 							if (index !== -1) {
 								rd.picLoadStack.splice(index, 1); // Remove from stack
 							}
@@ -1739,6 +1740,7 @@
 
 						// Immediately handle cached images
 						if (rd.uiPages[element].complete) {
+							rd.uiPages[element].classList.remove('loading');
 							const index = rd.picLoadStack.indexOf(element);
 							if (index !== -1) {
 								rd.picLoadStack.splice(index, 1);
