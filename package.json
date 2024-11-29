@@ -25,6 +25,7 @@
     ],
     "mac": {
       "target": "dmg",
+      "icon": "assets/icons/mangabox.icns",
       "category": "public.app-category.utilities"
     },
     "win": {
