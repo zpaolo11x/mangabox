@@ -24,7 +24,7 @@
       "package.json"
     ],
     "mac": {
-      "target": ["dmg"],
+      "target": "dir",
       "category": "public.app-category.utilities"
     },
     "win": {
