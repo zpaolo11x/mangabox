@@ -2,6 +2,9 @@
 
 // Show the login dialog if no auth header or base URL is available
 if (!localStorage.getItem('mbAuthHeader') || !localStorage.getItem('mbBaseUrl')) {
+	if (localStorage.getItem('mbBaseUrl')){
+		document.getElementById('mbBaseUrl').value = localStorage.getItem('mbBaseUrl');
+	}
 	showLoginDialog();
 }
 
@@ -23,7 +26,8 @@ function login() {
 			  location.reload(true);
 			  //fetchLibraries(); // Fetch libraries after successful login
 		 } else {
-			  document.getElementById('loginError').classList.remove('auth-hidden'); // Show error message
+			localStorage.setItem('mbBaseUrl', mbBaseUrl);       // Save base URL
+			document.getElementById('loginError').classList.remove('auth-hidden'); // Show error message
 		 }
 	})
 	.catch(error => {

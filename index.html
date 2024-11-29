@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
+	<title>MangaBox</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="black">
-	<title>MangaBox</title>
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
 	<link rel="icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!-- Generator: Gravit.io --%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='isolation:isolate' viewBox='0 0 160 160' width='160pt' height='160pt'%3E%3Cdefs%3E%3CclipPath id='_clipPath_YN17YSJ5FM1sjm2TADxOwkUODDUQiVcY'%3E%3Crect width='160' height='160'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23_clipPath_YN17YSJ5FM1sjm2TADxOwkUODDUQiVcY)'%3E%3Crect width='160' height='160' style='fill:rgb(0,0,0)' fill-opacity='0'/%3E%3Cpath d=' M 145 42 L 145 117 L 75 155 L 6 116 L 6 42 L 75 5 L 145 42 Z ' fill='rgb(255,255,255)'/%3E%3Cpath d='' fill-rule='evenodd' fill='rgb(235,235,235)'/%3E%3Cpath d=' M 38.542 24.55 L 61.749 56.429 L 20.291 34.337 L 10.67 39.496 L 10.236 40.31 L 64.368 69.155 L 60.578 71.175 L 65.281 80 L 70 77.485 L 70 79 L 80 79 L 80 77.485 L 84.719 80 L 89.422 71.175 L 85.632 69.155 L 139.764 40.31 L 138.964 38.81 L 130.104 34.127 L 88.251 56.429 L 111.605 24.349 L 102.673 19.627 L 80 50.772 L 80 7.643 L 75 5 L 70 7.681 L 70 50.772 L 47.438 19.78 L 38.542 24.55 Z ' fill-rule='evenodd' fill='rgb(188,8,43)'/%3E%3Ccircle vector-effect='non-scaling-stroke' cx='75.5' cy='77' r='50' fill='rgb(255,255,255)'/%3E%3Ccircle vector-effect='non-scaling-stroke' cx='75.5' cy='77' r='40' fill='rgb(188,8,43)'/%3E%3Cpath d=' M 145 42 L 145 117 L 75 155 L 6 116 L 6 42 L 75 79 L 145 42 Z ' fill='rgb(255,255,255)'/%3E%3Cpath d=' M 134.066 42.835 L 75 11.33 L 15.934 42.835 L 75 74.337 L 134.066 42.835 Z M 140 50.997 L 140 114 L 80 146.003 L 80 82.997 L 140 50.997 Z M 70 146.003 L 10 114 L 10 50.997 L 70 82.997 L 70 146.003 Z M 150 40 L 150 120 L 75 160 L 0 120 L 0 40 L 75 0 L 150 40 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3Cpath d=' M 90 127.669 L 130 106.334 L 130 106.334 L 130 96.33 L 90 117.663 L 90 127.669 Z M 90 103.669 L 130 82.334 L 130 82.334 L 130 72.33 L 90 93.663 L 90 103.669 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3Cpath d=' M 33 79.263 L 33 130.669 L 23 130.669 L 23 73.93 L 33 79.263 Z M 57 92.063 L 57 142.669 L 47 142.669 L 47 86.73 L 57 92.063 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml">
@@ -67,21 +67,51 @@
 
 	<div id="booksGrid" class="section hidden"></div>
 
+	<div id="stripGridContainer" class="section hidden">
+		<div id="stripGrid" class="strip-grid"></div>
+		<div id="stripGridHeaderContainer" class="stripgrid-header-container">
+			<div id="stripGridHeader" class="strip-header">
+				<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+			</div>
+			<div id="stripGridRight" class="stripgrid-all">
+				<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
+				</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+			</div>
+		</div>
+	</div>
+
 	<div id="seriesMiniHeader" class="section hidden collapse"></div>
+
+	<!--
+	<div id="searchStripsContainer" class="section hidden">
+		<div class="strip-header-container">
+			<div class="strip-header">
+				<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results
+			</div>
+		</div>
+	<div id="homeStripSeriesResults" class="series-results search-results"></div>
+	-->
 
 	<div id="homeStripsContainer" class="section hidden">
 		<div class="home-strip-parent">
 			<div class="strip-header-container">
-				<div class="strip-header"><span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading</div>
+				<div class="strip-header">
+					<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+				</div>
 				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
+				<div id="allKeepReading" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
 			</div>
+
 			<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
 		</div>
 
 		<div class="home-strip-parent">
 			<div class="strip-header-container">
-				<div class="strip-header"><span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck</div>
+				<div class="strip-header">
+					<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
+				</div>
 				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKOnDeck" min="0" max="100" value="0"></div>
+				<div id="allOnDeck" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
 			</div>
 			<div id="homeStripOnDeck" class="home-strip on-deck"></div>
 		</div>
@@ -92,6 +122,7 @@
 					<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books
 				</div>
 				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentBooks" min="0" max="100" value="0"></div>
+				<div id="allRecentBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
 			</div>
 			<div id="homeStripRecentBooks" class="home-strip recent-books"></div>
 		</div>
@@ -102,6 +133,7 @@
 					<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series
 				</div>
 				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentSeries" min="0" max="100" value="0"></div>
+				<div id="allRecentSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
 			</div>
 			<div id="homeStripRecentSeries" class="home-strip recent-series"></div>
 		</div>
@@ -112,6 +144,7 @@
 					<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series
 				</div>
 				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderUpdatedSeries" min="0" max="100" value="0"></div>
+				<div id="allUpdatedSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
 			</div>
 			<div id="homeStripUpdatedSeries" class="home-strip updated-series"></div>
 		</div>
@@ -122,6 +155,7 @@
 					<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books
 				</div>
 				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderReadBooks" min="0" max="100" value="0"></div>
+				<div id="allReadBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
 			</div>
 			<div id="homeStripReadBooks" class="home-strip updated-series"></div>
 		</div>
@@ -159,6 +193,7 @@
 				<div id="topControls" class="reader-controls">
 					<span id="readerClose" class="reader-buttons fa-solid fa-chevron-down"></span>
 					<span id="bookName"></span>
+					<span id="readerPageFormat" class="reader-buttons fa-solid fa-book-open"></span>
 					<span id="readerIncognito" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
@@ -180,7 +215,7 @@
 		<div id="loginDialog" class="dialog">
 			<img src="mangabox-logo.png" width="80px" height="80px">
 			<img src="mangabox-name-sticks-round.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
-			<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)" value="https://aerobox.freeddns.it/komga">
+			<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
 			<input type="text" class="login-input" id="username" placeholder="Username">
 			<input type="password" class="login-input" id="password" placeholder="Password">
 			<div class="login-buttons">
@@ -207,7 +242,7 @@
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 
-		const basePath =  ''; //'/mangabox/';
+		const basePath = ''; //'/mangabox/';
 
 		const scrollBars = Array.from(document.getElementsByClassName('range-bar'));
 		const homeStrips = Array.from(document.getElementsByClassName('home-strip'));
@@ -373,6 +408,8 @@
 
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
+			if (!(rd.pageMode == 2)) return;
+
 			if (isSectionHidden(readerContainer)) {
 				screenAR = newScreenAR;
 				readerHorizontal = newScreenAR > readerMaxRatio;
@@ -429,6 +466,15 @@
 				bar.value = homeStrips[index].scrollLeft;
 			});
 		});
+
+
+		function stepPageChange(increment) {
+			const { path, params } = parseHashAndParams();
+			navigateTo('#dashboard?all=' + params.get('all') + '&page=' + (parseInt(params.get('page')) + increment));
+		}
+
+		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
+		stripNextPage.addEventListener('click', () => stepPageChange(1));
 
 		// Initialize the slider max when the page loads and on resize
 		//window.addEventListener('load', updateSliderMax); //TODO forse si può togliere
@@ -1132,6 +1178,7 @@
 
 			seriesGrid.innerHTML = ''; // Clear the series grid
 			booksGrid.innerHTML = ''; // Clear the series grid
+			stripGrid.innerHTML = '';
 
 			let keepReadingArray = (await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`)).content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 
@@ -1162,6 +1209,107 @@
 			navigateTo('#dashboard');
 		});
 
+
+		dashboardElements = {
+			allKeepReading: {
+				code: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
+				getItems: async (page) => {
+					const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
+					out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
+					return (out);
+				},
+				showItems: async (input) => {
+					displayBooks(input, stripGrid, 'compact');
+				}
+			},
+			allOnDeck: {
+				code: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/books/ondeck`));
+				},
+				showItems: async (input) => {
+					displayBooks(input, stripGrid, 'compact');
+				}
+			},
+			allRecentBooks: {
+				code: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/books?page=${page}&size=50&sort=created,desc`));
+				},
+				showItems: async (input) => {
+					console.log("B");
+					console.log(input);
+					displayBooks(input, stripGrid, 'compact');
+				}
+			},
+			allRecentSeries: {
+				code: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
+				},
+				showItems: async (input) => {
+					displaySeries(input, stripGrid);
+				}
+			},
+			allUpdatedSeries: {
+				code: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
+				},
+				showItems: async (input) => {
+					displaySeries(input, stripGrid);
+				}
+			},
+			allReadBooks: {
+				code: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/books?page=${page}&size=50&read_status=READ&sort=readProgress.readDate,desc`));
+				},
+				showItems: async (input) => {
+					displayBooks(input, stripGrid, 'timeline');
+				},
+				maxPages: 1
+			}
+		}
+
+		async function dashboardAll(element, page) {
+			libraryHighlight('homeButton');
+
+			seriesGrid.innerHTML = ''; // Clear the series grid
+			booksGrid.innerHTML = ''; // Clear the series grid
+			stripGrid.innerHTML = '';
+
+			sectionShow(stripGridContainer);
+			stripGridHeader.innerHTML = dashboardElements[element].code;
+			console.log("page:" + page);
+			const data = await dashboardElements[element].getItems(page);
+			console.log("DATA");
+			console.log(data);
+			const array = data.content;
+			//TODO Forse questa cosa qui sotto no nserve se è tutto gestito tramite le pagine
+			dashboardElements[element].maxPages = data.totalPages;
+
+			console.log(data);
+			stripPrevPage.classList.remove("disabled");
+			stripNextPage.classList.remove("disabled");
+			if (page <= 0) stripPrevPage.classList.add("disabled");
+			if (page >= data.totalPages - 1) stripNextPage.classList.add("disabled");
+			/*update arrow status based on page and maxPages*/
+			console.log(array);
+			console.log("A");
+			dashboardElements[element].showItems(array);
+		}
+
+
+
+		[allKeepReading, allOnDeck, allRecentBooks, allRecentSeries, allUpdatedSeries, allReadBooks].forEach((element) => {
+			element.addEventListener('click', async (event) => {
+				//dashboardAll(event.target.parentElement.id);
+				navigateTo('#dashboard?all=' + event.target.parentElement.id + '&page=0')
+			});
+		});
+
+
 		// Open a whole series fetching all its books and showing them with the correct header
 		// if seriesdata is not available at the moment of the call, it fetches it from the server
 		async function openSeries(libraryId, seriesId, bookId) {
@@ -1190,7 +1338,7 @@
 		}
 
 		let rd = {
-			preloadCount: 2,
+			preloadCount: 5,
 			preloadDelay: 400,
 			preloadPicDelay: 300,
 			loadDelay: 100,
@@ -1198,6 +1346,13 @@
 
 			preloadStack: [],
 			picLoadStack: [],
+
+			pageModes: [
+				{ icon: 'reader-buttons fa-solid fa-book-open' },
+				{ icon: 'reader-buttons fa-solid fa-note-sticky' },
+				{ icon: 'reader-buttons fa-solid fa-rotate' }
+			],
+			pageMode: Number(localStorage.getItem('mbPageMode')) ?? 2,
 
 			ltr: null,
 			currentPage: 0,
@@ -1221,6 +1376,8 @@
 
 			incognito: false
 		};
+
+		readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
 
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
@@ -1283,13 +1440,13 @@
 					});
 				}
 			}
-
 		}
 
 
 		// Initialize viewer with page data
 		async function initViewer() {
 			rd.pages = await fetchPages(rd.bookId);
+
 			/*
 			console.log(pages);
 			console.log(uiPages);
@@ -1323,7 +1480,8 @@
 				AR: page.width / page.height,
 				isCover: page.number == 1,
 				isCurrent: page.number == rd.currentPage,
-				isDoubleSpread: page.width > page.height
+				isDoubleSpread: page.width > page.height,
+				size: page.sizeBytes
 			}));
 
 			readerMaxRatio = Math.max(...dataOut.map(item => item.width / item.height));
@@ -1332,7 +1490,7 @@
 			dataOut.forEach((element, index) => {
 				const imgPage = addItem('img', {
 					alt: element.pageNum,
-					className: 'page multiply'
+					className: 'page multiply',
 				});
 				rd.uiPages.push(imgPage);
 			});
@@ -1343,7 +1501,8 @@
 			readerViewer.classList.remove("spread-layout");
 			readerViewer.classList.remove("page-layout");
 
-			readerHorizontal = screenAR > readerMaxRatio;
+			readerHorizontal = (rd.pageMode == 0) || ((screenAR > readerMaxRatio) && !(rd.pageMode == 1));
+
 			readerViewer.classList.add(readerHorizontal ? "spread-layout" : "page-layout");
 
 			if (readerHorizontal) {
@@ -1352,11 +1511,22 @@
 					spreadItem.style.height = `100vh`;
 					spreadItem.classList.add("spread-layout");
 					let spreadArray = [i];
+
+					const flockRate = [
+						(i / dataOut.length),
+						(1.0 - i / dataOut.length),
+						0.5 * (1.0 - 2 * i / dataOut.length)
+					]
+					const flockOffset = flockRate.map(rate => 100 * (40 / 800) * rate);
+
 					if (dataOut[i].isCover) {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('cover-page')
 						spreadItem.classList.add(rd.ltr ? 'LTR' : 'RTL')
-						spreadItem.style.width = `${100 * dataOut[i].AR}vh`;
+						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
+						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 						const coverlay = document.createElement('div');
@@ -1367,19 +1537,37 @@
 					} else if (dataOut[i].isDoubleSpread) {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
-						spreadItem.style.width = `${100 * dataOut[i].AR}vh`;
+						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
+						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
+
+						spreadItem.style.transform = `translate(calc(-50% - ${flockOffset[2]}vh), -50%)`;
+						spreadItem.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
+
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
 						spreadItem.classList.add('two-pages', 'flock')
-						spreadItem.style.width = `${100 * (dataOut[i].AR + dataOut[i + 1].AR)}vh`;
+						spreadItem.style.width = `calc(min(100vw, ${100 * (dataOut[i].AR + dataOut[i + 1].AR)}vh))`;
+						spreadItem.style.height = `calc(min(${100 / (dataOut[i].AR + dataOut[i + 1].AR)}vw, 100vh))`;
+
+						spreadItem.style.transform = `translate(calc(-50% - ${flockOffset[2]}vh), -50%)`;
+						spreadItem.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
+
+						spreadItem.style.borderImageSlice = `0 ${120 * flockRate[0]} 0 ${120 * flockRate[1]}`;
+
+						rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i + 1].style.width = spreadItem.style.height * dataOut[i + 1].AR;
+						rd.uiPages[i + 1].style.height = spreadItem.style.height;
 						spreadArray.push(i + 1);
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i += 2;
-					} else if (i < dataOut.length - 1) {
+					} else if (i < dataOut.length - 1) {//TODO: MANCA SISTEMARE QUESTO
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
 						spreadItem.style.width = `${200 * dataOut[i].AR}vh`;
@@ -1389,7 +1577,10 @@
 					} else {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('single-page')
-						spreadItem.style.width = `${100 * dataOut[i].AR}vh`;
+						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
+						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
@@ -1452,6 +1643,7 @@
 					else {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
+						//TODO this is probably useless
 						spreadItem.classList.add(picFitWidth ? "fit-width" : "fit-height");
 						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
 						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
@@ -1497,6 +1689,14 @@
 			}
 		}
 
+		function picLoadStackSize() {
+			let out = 0;
+			rd.picLoadStack.forEach(element => {
+				out += rd.pages[element].size;
+			});
+			return (out);
+		}
+
 		function printStack(str_in) {
 			let out = str_in + ' *';
 			rd.picLoadStack.forEach(element => {
@@ -1507,7 +1707,14 @@
 		}
 
 		async function populateSpread(spreadIndex) {
+			console.log(picLoadStackSize());
+			if (picLoadStackSize() >= 20000000) {
+				console.log("                     ABORT");
+				return;
+			}
+
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
+
 				if (!rd.uiPages[element].src) {
 					rd.picLoadStack.push(element); // Add to the stack
 					printStack('S');
@@ -1516,7 +1723,7 @@
 						// Fetch the image
 						const blobUrl = await fetchMedia(rd.pages[element].url);
 						rd.uiPages[element].src = blobUrl;
-
+						//rd.uiPages[element].src = rd.pages[element].url;
 						// Handle successful load
 						rd.uiPages[element].addEventListener('load', () => {
 							printStack('L');
@@ -1632,9 +1839,9 @@
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
-console.log("                                  old:"+localOldSpreadIndex);
-console.log("                                  new:"+localNewSpreadIndex);
-console.log("                                  jumpTimeout null?"+(rd.jumpTimeout === null));
+			console.log("                                  old:" + localOldSpreadIndex);
+			console.log("                                  new:" + localNewSpreadIndex);
+			console.log("                                  jumpTimeout null?" + (rd.jumpTimeout === null));
 			if (localOldSpreadIndex == localNewSpreadIndex) return;
 
 			if (rd.jumpTimeout === null) {
@@ -1649,7 +1856,7 @@ console.log("                                  jumpTimeout null?"+(rd.jumpTimeou
 					console.log('                                  spreadShow:' + localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
-				}, rd.loadDelay );
+				}, rd.loadDelay);
 			} else {
 				clearTimeout(rd.jumpTimeout);
 				rd.jumpTimeout = null;
@@ -1663,7 +1870,7 @@ console.log("                                  jumpTimeout null?"+(rd.jumpTimeou
 					console.log('                                  spreadShow:' + localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
-				},rd.loadDelay );
+				}, rd.loadDelay);
 			}
 
 			purgeLoading()
@@ -1716,10 +1923,21 @@ console.log("                                  jumpTimeout null?"+(rd.jumpTimeou
 		});
 
 		document.addEventListener('scroll', function () {
-			if ((window.scrollY > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
-				seriesMiniHeader.classList.remove('collapse');
-			} else if ((window.scrollY < 200) && !seriesMiniHeader.classList.contains('collapse')) {
-				seriesMiniHeader.classList.add('collapse');
+			//TODO: farlo succedere solo quando miniheader è visible
+			if (!isSectionHidden(seriesMiniHeader)) {
+				if ((window.scrollY > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
+					seriesMiniHeader.classList.remove('collapse');
+				} else if ((window.scrollY < 200) && !seriesMiniHeader.classList.contains('collapse')) {
+					seriesMiniHeader.classList.add('collapse');
+				}
+			}
+
+			if (!isSectionHidden(stripGridContainer)) {
+				if ((window.scrollY < 5) && (stripGridHeaderContainer.classList.contains('collapse'))) {
+					stripGridHeaderContainer.classList.remove('collapse');
+				} else if ((window.scrollY > 10) && !stripGridHeaderContainer.classList.contains('collapse')) {
+					stripGridHeaderContainer.classList.add('collapse');
+				}
 			}
 		});
 
@@ -1765,7 +1983,7 @@ console.log("                                  jumpTimeout null?"+(rd.jumpTimeou
 		});
 
 		function handleCloseReader() {
-			console.log(">>>                                   >>>"+rd.historyPath+"<<<");
+			console.log(">>>                                   >>>" + rd.historyPath + "<<<");
 			console.log(rd.historyPath == "");
 			hideMenu();
 			incognitoMark.classList.remove('incognito');
@@ -1778,7 +1996,7 @@ console.log("                                  jumpTimeout null?"+(rd.jumpTimeou
 			//console.log(rd.historyPath);
 			purgeLoading();
 			clearAllTimeouts();
-			
+
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 		}
 
@@ -1800,6 +2018,18 @@ console.log("                                  jumpTimeout null?"+(rd.jumpTimeou
 
 		readerIncognito.addEventListener('click', () => {
 			setIncognito(!rd.incognito);
+		})
+
+		function switchPageFormat(newId) {
+			rd.pageMode = newId;
+			readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
+			console.log(rd.pageMode);
+			localStorage.setItem('mbPageMode', rd.pageMode);
+			navigateTo(window.location.hash);
+		}
+
+		readerPageFormat.addEventListener('click', () => {
+			switchPageFormat((rd.pageMode + 1) % 3);
 		})
 
 		function updateProgressBar() {
@@ -1836,8 +2066,13 @@ console.log("                                  jumpTimeout null?"+(rd.jumpTimeou
 			switch (path) {
 				case '':
 				case 'dashboard':
+					console.log(params.size);
 					searchInput.value = '';
-					await selectHome();
+					if (params.size == 0) {
+						await selectHome();
+					} else {
+						dashboardAll(params.get('all'), params.get('page'));
+					}
 					break;
 				case 'library':
 					searchInput.value = '';

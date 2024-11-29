@@ -15,12 +15,12 @@
 		hsl(35, 15%, 100%)71%,
 		hsl(35, 15%, 100%)100%;
 
-		/*
+	/*
 		--colorSpread:
 		hsl(212, 30%, 52%)0%,
 		hsl(35, 85%, 100%)100%;
 		*/
-	}
+}
 
 #readerBackground {
 	position: fixed;
@@ -31,7 +31,7 @@
 	/*z-index: 1001;*/
 	background-image: linear-gradient(180deg, rgba(140, 130, 120, 1), rgba(30, 20, 0, 1));
 	pointer-events: none;
-	opacity:1;
+	opacity: 1;
 }
 
 #readerContainer.hidden #readerBackground {
@@ -61,8 +61,8 @@
 	background-color: var(--mb-page-color);
 	height: 100vh;
 	overflow: hidden;
-	
-	background:none;
+
+	background: none;
 }
 
 #readerContainer.hidden {
@@ -70,6 +70,13 @@
 	/*display: none;*/
 	/*top:100vh;*/
 	pointer-events: none;
+}
+
+img.page:not([src]) {
+	border: none;
+	/* Removes borders */
+	color: transparent;
+	/* Hides alt text by making it invisible */
 }
 
 .spread-layout img.page {
@@ -82,7 +89,7 @@
 }
 
 img.multiply {
-   mix-blend-mode: multiply;
+	mix-blend-mode: multiply;
 	filter: sepia(5%) opacity(100%);
 	-webkit-filter: sepia(5%) opacity(100%);
 }
@@ -97,7 +104,8 @@ div.single-page,
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	overflow-x: hidden;
+	box-sizing:content-box;
+	/*overflow-x: hidden;*/
 }
 
 .LTR #coverlay {
@@ -135,14 +143,68 @@ div.two-pages {
 	background-size: 10% 10%, 100% 100%, 100% 100%;
 }
 
+/*
 div.double-page.flock,
 div.two-pages.flock {
 	background-position: center;
 	background-size: 10% 10%, 100% 100%, 100% 100%;
-	box-shadow: 0px 0px 15px 0px rgb(65, 45, 25), 0px 0px 0px 8px rgb(235, 233, 229),
-		0px 0px 15px 8px rgb(65, 45, 25), 0px 0px 0px 16px rgb(235, 233, 229);
+	box-shadow:
+		0px 0px 15px 0px rgb(65, 45, 25),
+		0px 0px 0px 8px rgb(235, 233, 229),
+		0px 0px 15px 8px rgb(65, 45, 25),
+		0px 0px 0px 16px rgb(235, 233, 229);
+}
+*/
+div.double-page.flock,
+div.two-pages.flock {
+	background-position: center;
+	background-size: 10% 10%, 100% 100%, 100% 100%;
+
+	border-style: solid;
+	border-color: transparent;
+	/*border-width: 0px calc(100vh * 20 / 800);*/
+	/*border-image: url('https://aerobox.freeddns.it/mangabox/pagesM.png') 0 80 0 80;*/
+	border-image: url('https://aerobox.freeddns.it/mangabox/pagesZ.png') 0 80 0 80;
+	background-color:#d0cbc1;
 }
 
+/*
+div.two-pages.flock::after,
+div.double-page.flock::after,
+div.two-pages.flock::before,
+div.double-page.flock::before  {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+
+	background-image: linear-gradient(270deg,
+			hsl(35, 10%, 55%) 0,
+			hsl(38, 9%, 77%) 25%,
+			hsl(38, 9%, 77%) 30%,
+			hsl(30, 10%, 50%) 30.1%,
+			hsl(37, 9%, 75%) 55%,
+			hsl(37, 9%, 75%) 60%,
+			hsla(38, 88%, 13%, 0.2) 61%,
+			hsla(37, 88%, 13%, 0.05) 80%,
+			hsla(37, 88%, 13%, 0.0) 100%);
+	background-size: 100% 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+div.two-pages.flock::after,
+div.double-page.flock::after {
+left: calc(-1 * 100vh * 35 / 800);
+width: calc(100vh * 35 / 800);
+}
+
+div.two-pages.flock::before,
+div.double-page.flock::before {
+	left:100%;
+	width: calc(100vh * 35 / 800);
+	transform: scaleX(-1);
+}
+*/
 div.cover-page.RTL {
 	filter: sepia(5%);
 	-webkit-filter: sepia(5%);
@@ -154,7 +216,6 @@ div.cover-page.RTL {
 	background-repeat: repeat, no-repeat, no-repeat;
 	background-size: 10% 10%, 200% 100%, 200% 100%;
 	background-position: left, left, left;
-	box-shadow: 0px 0px 15px 0px rgba(40, 40, 40, 0.8);
 }
 
 div.cover-page.LTR {
@@ -168,7 +229,6 @@ div.cover-page.LTR {
 	background-repeat: repeat, no-repeat, no-repeat;
 	background-size: 10% 10%, 200% 100%, 200% 100%;
 	background-position: right, right, right;
-	box-shadow: 0px 0px 15px 0px rgba(40, 40, 40, 0.8);
 }
 
 div.single-page {
@@ -182,12 +242,17 @@ div.single-page {
 	background-repeat: repeat, no-repeat, no-repeat;
 	background-size: 10% 10%, 200% 100%, 200% 100%;
 	background-position: left, left, left;
-	box-shadow: 0px 0px 15px 0px rgba(40, 40, 40, 0.8);
 }
 
+div.double-page,
+div.two-pages,
+div.cover-page,
+div.single-page {
+	box-shadow: 0px 0px 15px 0px rgba(60, 40, 30, 0.8);
+}
 
-#readerViewer{
-	position:fixed;
+#readerViewer {
+	position: fixed;
 	left: 0;
 	right: 0;
 	top: 0;
@@ -201,7 +266,7 @@ div.single-page {
 	height: 100vh;
 	overflow: hidden;
 
-	background:none;
+	background: none;
 }
 
 #readerViewer.spread-layout {
@@ -218,12 +283,12 @@ div.single-page {
 	width: 100vw;
 }
 
-#readerContainer.hidden #readerViewer{
+#readerContainer.hidden #readerViewer {
 	top: 100vh;
 	transition: top 0.3s ease;
 }
 
-#readerContainer:not(.hidden) #readerViewer{
+#readerContainer:not(.hidden) #readerViewer {
 	top: 0px;
 	transition: top 0.3s ease 0.5s;
 }
@@ -238,7 +303,8 @@ div.single-page {
 	left: 0px;
 	right: 0px;
 	gap: 10px;
-	background-color: var(--mb-card-color);/* rgba(250, 250, 250, 0.8);*/
+	background-color: var(--mb-card-color);
+	/* rgba(250, 250, 250, 0.8);*/
 	/*z-index: 1003;*/
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 	padding-left: 10px;
@@ -253,36 +319,38 @@ div.single-page {
 }
 
 #topControls {
-	grid-template-columns: 40px 1fr 40px;
+	grid-template-columns: 40px 1fr 40px 40px;
 	top: 0px;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 }
+
 /*
 #topControls:has(.incognito){
 	background-image: linear-gradient(-135deg, rgba(196, 48, 212) 40px, var(--mb-card-color) 41px);
 }
 */
-#controlPanel{
-	transition:opacity 0.3s;
+#controlPanel {
+	transition: opacity 0.3s;
 }
 
-#controlPanel.hidden{
+#controlPanel.hidden {
 	pointer-events: none;
 }
 
 #controlPanel.hidden #topControls,
-#readerContainer.hidden #topControls{
-	top:-100px;
+#readerContainer.hidden #topControls {
+	top: -100px;
 }
+
 #controlPanel.hidden #bottomControls,
-#readerContainer.hidden #bottomControls{
-	bottom:-100px;
+#readerContainer.hidden #bottomControls {
+	bottom: -100px;
 }
 
 #bookName {
 	text-align: center;
 	font-size: 20px;
-	
+
 	display: -webkit-box;
 	line-clamp: 2;
 	-webkit-line-clamp: 2;
@@ -315,14 +383,14 @@ div.single-page {
 	height: 30px;
 	padding: 0px;
 	margin: 0px;
-	position:absolute;
+	position: absolute;
 	line-height: 30px;
 	border-radius: 4px;
 	color: white;
 	left: -20px;
-	top:-10px;
-	background:var(--mb-accent);
-	transition:left 0.3s;
+	top: -10px;
+	background: var(--mb-accent);
+	transition: left 0.3s;
 	text-align: center;
 }
 
@@ -362,7 +430,7 @@ div.single-page {
 	background-color: var(--mb-accent-active);
 }
 
-.reader-buttons.incognito{
+.reader-buttons.incognito {
 	/*
 	background-color: rgb(210, 168, 214);
 	color: rgb(103, 24, 112);
@@ -377,15 +445,15 @@ div.single-page {
 	/*display: none;*/
 }
 
-.preloadedObj{
-	opacity:0;
+.preloadedObj {
+	opacity: 0;
 }
 
 #touchPanel {
 	position: absolute;
 	left: 0px;
 	right: 0px;
-	top:0px;
+	top: 0px;
 	display: grid;
 	width: 100vw;
 	height: 100vh;
@@ -405,29 +473,33 @@ div.single-page {
 }
 */
 
-#incognitoMark{
-	content:"";
-	position:fixed;
-	right:0px;
-	top:0px;
-	width:0px;
-	height:0px;
+#incognitoMark {
+	content: "";
+	position: fixed;
+	right: 0px;
+	top: 0px;
+	width: 0px;
+	height: 0px;
 	border-top: 2cap solid rgba(196, 48, 212, 0.74);
 	border-right: 20px solid rgba(196, 48, 212, 0.74);
 	border-left: 20px solid transparent;
 	border-bottom: 20px solid transparent;
 	/*z-index:1003;*/
-	filter: drop-shadow(-2px -2px 6px rgba(0, 0, 0, 0.6)); /* Adds shadow to the triangle */
-	opacity:1;
+	filter: drop-shadow(-2px -2px 6px rgba(0, 0, 0, 0.6));
+	/* Adds shadow to the triangle */
+	opacity: 1;
 	pointer-events: none;
 	transition: opacity 0.3s;
 }
-#incognitoMark.hidden{
-	opacity:0;
+
+#incognitoMark.hidden {
+	opacity: 0;
 }
-#incognitoMark:not(.incognito){
-	opacity:0;
+
+#incognitoMark:not(.incognito) {
+	opacity: 0;
 }
+
 /*
 #touchPanel.incognito::after{
 	opacity:1;
