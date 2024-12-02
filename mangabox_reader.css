@@ -75,14 +75,16 @@
 img.page{
 	transition: opacity 0.3s;
 	position:absolute;
+	border:none;
+	color:transparent;
 }
 
+/*
 img.page:not([src]) {
 	border: none;
-	/* Removes borders */
 	color: transparent;
-	/* Hides alt text by making it invisible */
 }
+*/
 
 .spread-layout img.page {
 	display: block;
@@ -97,30 +99,11 @@ img.page:not(.loading){
 	opacity:1;
 }
 
-img.page.loading::before {
-	content: "";
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: min(30vh, 30vw);
-	height: min(30vh, 30vw);
-	opacity:1;
-	z-index:2000;
-	
-	border-radius: 50%;
-	border-top-color: var(--mb-accent);
-	transform: translate(-50%, -50%);
-	animation: loader_spin 1s linear infinite;
-	opacity:0.2;
-	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
-	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
-	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
-	
-}
 
 img.page.loading{
-	opacity:1;
-;}
+	opacity:0.25;
+	object-fit: cover;
+}
 
 img.multiply {
 	mix-blend-mode: multiply;

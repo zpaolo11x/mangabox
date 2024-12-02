@@ -1418,6 +1418,7 @@
 							console.log('                     ABORT');
 							return;
 						}
+						console.log("A3 "+ i);
 						populateSpread(startSpreadIndex + i, true);
 					});
 				}
@@ -1428,6 +1429,7 @@
 							console.log('                     ABORT');
 							return;
 						}
+						console.log("A4 " + i);
 						populateSpread(startSpreadIndex - i, true);
 					});
 				}
@@ -1458,10 +1460,10 @@
 			updateProgressBar();
 		}
 
-function buildSizePic(item, ratio, picratio){
-	item.style.width = `calc(min(${100 * picratio / ratio}vw, ${picratio * 100}vh))`;
-	item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
-}
+		function buildSizePic(item, ratio, picratio) {
+			item.style.width = `calc(min(${100 * picratio / ratio}vw, ${picratio * 100}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+		}
 
 		function buildSize(item, ratio) {
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
@@ -1511,6 +1513,8 @@ function buildSizePic(item, ratio, picratio){
 				const imgPage = addItem('img', {
 					alt: element.pageNum,
 					className: 'page multiply',
+					src:'transparent.png',
+					hasSrc: false,
 				});
 				rd.uiPages.push(imgPage);
 			});
@@ -1724,46 +1728,54 @@ function buildSizePic(item, ratio, picratio){
 		}
 
 		async function populateSpread(spreadIndex, preload = false) {
+			console.log("popsprread:" + spreadIndex);
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
-
-				if (!rd.uiPages[element].src) {
+				if (rd.picLoadStack.indexOf(element) == -1) {
+				if (!rd.uiPages[element].hasSrc) {
+					rd.uiPages[element].src = 'anim.gif';
 					rd.picLoadStack.push(element); // Add to the stack
 					printStack('S');
 					rd.uiPages[element].classList.add('loading');
-
 					try {
 						// Fetch the image
 						const blobUrl = await fetchMedia(rd.pages[element].url);
 						rd.uiPages[element].src = blobUrl;
+						rd.uiPages[element].hasSrc = true;
 						//XXX tolto da poco, non serve se c'è l'opacity sotto, no? rd.uiPages[element].visible = false;
 						//rd.uiPages[element].src = rd.pages[element].url;
 						// Handle successful load
 						rd.uiPages[element].addEventListener('load', () => {
 							rd.uiPages[element].classList.remove('loading');
 							const index = rd.picLoadStack.indexOf(element);
-							printStack('L '+index);
+							printStack('L ' + index);
 							console.log(element);
 							if (index !== -1) {
 								rd.picLoadStack.splice(index, 1); // Remove from stack
 							};
-							if (!preload){
+							if (!preload) {
 								preloadPages(spreadIndex, rd.preloadCount)
 							}
 						});
 
-						// Immediately handle cached images
-						if (rd.uiPages[element].complete) {
-							rd.uiPages[element].classList.remove('loading');
-							const index = rd.picLoadStack.indexOf(element);
-							if (index !== -1) {
-								rd.picLoadStack.splice(index, 1);
-							}
-						}
 					} catch (error) {
 						console.error(`Failed to load image for element ${element}:`, error);
 						// Handle error (optional: remove from stack or show fallback)
 					}
 				}
+
+				// Immediately handle cached images
+				else if (rd.uiPages[element].complete) {
+					rd.uiPages[element].classList.remove('loading');
+					const index = rd.picLoadStack.indexOf(element);
+					if (index !== -1) {
+						rd.picLoadStack.splice(index, 1);
+					}
+					// Force preload when landing on a cached image
+					if (!preload) {
+						preloadPages(spreadIndex, rd.preloadCount)
+					}
+				}
+			}
 			});
 
 			// Wait for all fetches to complete
@@ -1793,6 +1805,7 @@ function buildSizePic(item, ratio, picratio){
 		*/
 		// Update the viewer for the current page or spread
 		function updateViewer() {
+			console.log("A5");
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 		}
@@ -1844,7 +1857,8 @@ function buildSizePic(item, ratio, picratio){
 			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
 				const item = rd.picLoadStack[i];
 				console.log('purged page ' + item);
-				rd.uiPages[item].removeAttribute('src');
+				rd.uiPages[item].hasSrc = false;
+				rd.uiPages[item].src = 'transparent.png';
 				rd.picLoadStack.splice(i, 1); // Remove the element at index i
 				printStack('P');
 			}
@@ -1872,6 +1886,7 @@ function buildSizePic(item, ratio, picratio){
 				rd.jumpTimeout = setTimeout(() => {
 					console.log('                                  spreadHide:' + localOldSpreadIndex);
 					spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+					console.log("A1");
 					populateSpread(localNewSpreadIndex);
 					console.log('                                  spreadShow:' + localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
@@ -1886,6 +1901,7 @@ function buildSizePic(item, ratio, picratio){
 				rd.jumpTimeout = setTimeout(() => {
 					spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
 					console.log('                                  spreadHide:' + rd.oldSpreadIndex);
+					console.log("A2");
 					populateSpread(localNewSpreadIndex);
 					console.log('                                  spreadShow:' + localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
