@@ -72,6 +72,11 @@
 	pointer-events: none;
 }
 
+img.page{
+	transition: opacity 0.3s;
+	position:absolute;
+}
+
 img.page:not([src]) {
 	border: none;
 	/* Removes borders */
@@ -87,13 +92,35 @@ img.page:not([src]) {
 .page-layout img.page {
 	display: block;
 }
+
 img.page:not(.loading){
 	opacity:1;
 }
 
-img.page.loading{
-	opacity:0;
+img.page.loading::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: min(30vh, 30vw);
+	height: min(30vh, 30vw);
+	opacity:1;
+	z-index:2000;
+	
+	border-radius: 50%;
+	border-top-color: var(--mb-accent);
+	transform: translate(-50%, -50%);
+	animation: loader_spin 1s linear infinite;
+	opacity:0.2;
+	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
+	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
+	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
+	
 }
+
+img.page.loading{
+	opacity:1;
+;}
 
 img.multiply {
 	mix-blend-mode: multiply;
@@ -171,7 +198,7 @@ div.two-pages.flock {
 	border-color: transparent;
 	/*border-width: 0px calc(100vh * 20 / 800);*/
 	/*border-image: url('https://aerobox.freeddns.it/mangabox/pagesM.png') 0 80 0 80;*/
-	border-image: url('https://aerobox.freeddns.it/mangabox/pagesZ.png') 0 80 0 80;
+	border-image: url('https://aerobox.freeddns.it/mangabox/pagesZ3.png') 0 80 0 80;
 	background-color:#d0cbc1;
 }
 

@@ -281,13 +281,13 @@
 
 		function changeTheme(toDark) {
 			// Set css theme to dark or light
-			document.documentElement.setAttribute("data-theme", toDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
 			// Change fa icons for light or dark theme
-			swapThemeClass("theme-label", "fa-sun", "fa-moon", toDark);
-			swapThemeClass("fa-file", "fa-regular", "fa-solid", toDark);
-			swapThemeClass("fa-calendar", "fa-regular", "fa-solid", toDark);
-			swapThemeClass("fa-clock", "fa-regular", "fa-solid", toDark);
+			swapThemeClass('theme-label', 'fa-sun', 'fa-moon', toDark);
+			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
+			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
+			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
 
 			// Save theme setting in local storage
 			localStorage.setItem('mbDarkTheme', toDark ? 1 : 0)
@@ -349,11 +349,11 @@
 		async function performSearch(searchString) {
 			libraryHighlight('searchField');
 
-			if (searchString.includes("y:")) {
+			if (searchString.includes('y:')) {
 
 				const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 				const dataArray = unFilteredSeries.content;
-				const searchYear = (searchString.split("y:")[1].split(" ")[0]).replace("TBD", "5000").split("-");
+				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
 
 				if (searchYear.length == 1) searchYear.push(searchYear[0]);
 
@@ -363,7 +363,7 @@
 
 				for (let i = 0; i < dataArray.length; i++) {
 					if (dataArray[i].metadata.alternateTitles.length == 0) continue;
-					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === "Time").title.replace("TBD", "5000").split("-");
+					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
 					start.push(Number(dateArray[0]));
 					stop.push(Number(dateArray[1] ?? dateArray[0]));
 					filterArray.push(!((start[i] >= Number(searchYear[1])) || (stop[i] <= Number(searchYear[0]))));
@@ -416,9 +416,9 @@
 			} else {
 				let newReaderHorizontal = (newScreenAR > readerMaxRatio);
 				if (newReaderHorizontal != readerHorizontal) {
-					console.log("UPDATE ORIENT");
-					console.log("SCREENAR old:" + screenAR + " new:" + newScreenAR);
-					console.log("READERHR old:" + readerHorizontal + " new:" + newReaderHorizontal);
+					console.log('UPDATE ORIENT');
+					console.log('SCREENAR old:' + screenAR + ' new:' + newScreenAR);
+					console.log('READERHR old:' + readerHorizontal + ' new:' + newReaderHorizontal);
 					screenAR = newScreenAR;
 					/*
 					rd.uiPages.forEach(item => item.remove());
@@ -544,12 +544,12 @@
 		async function setReadStatus(seriesId, bookId, read, item, format = null) {
 			if (bookId == null) {
 				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
-				//item.innerHTML = "";
+				//item.innerHTML = '';
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData);
 			} else {
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
-				//item.innerHTML = "";
+				//item.innerHTML = '';
 				const bookData = await callAPI(`/api/v1/books/${bookId}`);
 				buildBookItem(item, bookData, format);
 			}
@@ -588,7 +588,7 @@
 
 		function addTouchScaler(item, execute) {
 			item.addEventListener('pointerup', async (event) => {
-				if (event.pointerType === "touch") {
+				if (event.pointerType === 'touch') {
 					// TOUCH DEVICE
 					if (currentlyScaled !== item) {
 						if (currentlyScaled) {
@@ -647,8 +647,12 @@
 			const seriesItem = addItem('div', {
 				className: 'series-item'
 			});
+			// const ITA = serie.metadata.language == 'it' ? '<img class="glyph-right" src="glyphs/it.svg">' : '';
+			// const ITA = serie.metadata.language == 'it' ? '<span class="fa-solid fa-square-full glyph-dark glyph-zh-flag glyph-flag"></span>' : '';
 
-			const ITA = serie.metadata.language == 'it' ? '<img class="glyph-right" src="glyphs/it.svg">' : '';
+			const ITA = ((serie.metadata.language != 'en') ? `<span class="fa-solid fa-square-full glyph-dark glyph-${serie.metadata.language}-flag glyph-flag"></span>` : '');
+			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-square-full glyph-dark glyph-ltr"></span>';
+			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-regular fa-calendar fa-rotate-270 glyph-dark"></span>';
 			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
 			const spacer = ((ITA != '') && (LTR != '')) ? '&nbsp;' : '';
 
@@ -840,7 +844,7 @@
 				window.scrollTo({ top: y });
 
 				currentlyScaled = item.firstChild;
-				item.firstChild.classList.add("scaled");
+				item.firstChild.classList.add('scaled');
 
 			} else {
 				window.scrollTo({ top: 0 });
@@ -1161,7 +1165,7 @@
 					//TODO FIX MOVING OUT OF ITEM, disabled for now
 
 					currentlyScaled = item.firstChild;
-					item.firstChild.classList.add("scaled");
+					item.firstChild.classList.add('scaled');
 
 				} else {
 					window.scrollTo({ top: 0 });
@@ -1237,7 +1241,7 @@
 					return (await callAPI(`/api/v1/books?page=${page}&size=50&sort=created,desc`));
 				},
 				showItems: async (input) => {
-					console.log("B");
+					console.log('B');
 					console.log(input);
 					displayBooks(input, stripGrid, 'compact');
 				}
@@ -1268,7 +1272,6 @@
 				showItems: async (input) => {
 					displayBooks(input, stripGrid, 'timeline');
 				},
-				maxPages: 1
 			}
 		}
 
@@ -1281,22 +1284,20 @@
 
 			sectionShow(stripGridContainer);
 			stripGridHeader.innerHTML = dashboardElements[element].code;
-			console.log("page:" + page);
+			console.log('page:' + page);
 			const data = await dashboardElements[element].getItems(page);
-			console.log("DATA");
+			console.log('DATA');
 			console.log(data);
 			const array = data.content;
-			//TODO Forse questa cosa qui sotto no nserve se è tutto gestito tramite le pagine
-			dashboardElements[element].maxPages = data.totalPages;
 
 			console.log(data);
-			stripPrevPage.classList.remove("disabled");
-			stripNextPage.classList.remove("disabled");
-			if (page <= 0) stripPrevPage.classList.add("disabled");
-			if (page >= data.totalPages - 1) stripNextPage.classList.add("disabled");
-			/*update arrow status based on page and maxPages*/
+			stripPrevPage.classList.remove('disabled');
+			stripNextPage.classList.remove('disabled');
+			if (page <= 0) stripPrevPage.classList.add('disabled');
+			if (page >= data.totalPages - 1) stripNextPage.classList.add('disabled');
+
 			console.log(array);
-			console.log("A");
+			console.log('A');
 			dashboardElements[element].showItems(array);
 		}
 
@@ -1325,7 +1326,7 @@
 		}
 
 		async function bootSequence() {
-			// console.log("boot");
+			// console.log('boot');
 			changeAccent(accentId);
 			changeTheme(darkTheme);
 			setIncognito(false);
@@ -1338,8 +1339,7 @@
 		}
 
 		let rd = {
-			preloadCount: 5,
-			preloadDelay: 400,
+			preloadCount: 4,
 			preloadPicDelay: 300,
 			loadDelay: 100,
 			jumpTimeout: null,
@@ -1356,8 +1356,6 @@
 
 			ltr: null,
 			currentPage: 0,
-			preloadTimeout: null,
-			loadTimeout: [],
 			pages: [],					// this is the array of pages data in the form url, iscover etc
 			uiPages: [],				// array of page images with alt = page number
 			uiSpreads: [],				// array of divs with the correct paged uiPages inside
@@ -1388,8 +1386,6 @@
 
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
-			rd.preloadTimeout = null;
-			rd.loadTimeout = [];
 			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
 			rd.uiPages = [];				// array of page images with alt = page number
 			rd.uiSpreads = [];				// array of divs with the correct paged uiPages inside
@@ -1411,40 +1407,28 @@
 
 		}
 
-		function cancelPreload() {
-			if (rd.preloadTimeout) clearTimeout(rd.preloadTimeout);
-		}
-
-		function resumePreload() {
-			console.log("resumePreload");
-			cancelPreload();
-			rd.preloadTimeout = setTimeout(() => {
-				preloadPages(rd.currentSpreadIndex, rd.preloadCount);
-			}, rd.preloadDelay);
-		}
-
 		function preloadPages(startSpreadIndex, count) {
 			//return; //XXX REMOVED PRELOAD
 
 			for (let i = 1; i <= count; i++) {
 				if (startSpreadIndex + i < rd.uiSpreads.length) {
-					console.log("timeout" + (startSpreadIndex + i))
+					console.log('timeout' + (startSpreadIndex + i))
 					startTimeout(rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
-							console.log("                     ABORT");
+							console.log('                     ABORT');
 							return;
 						}
-						populateSpread(startSpreadIndex + i);
+						populateSpread(startSpreadIndex + i, true);
 					});
 				}
 				if (startSpreadIndex - i >= 0) {
-					console.log("timeout" + (startSpreadIndex - i))
+					console.log('timeout' + (startSpreadIndex - i))
 					startTimeout(rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
-							console.log("                     ABORT");
+							console.log('                     ABORT');
 							return;
 						}
-						populateSpread(startSpreadIndex - i);
+						populateSpread(startSpreadIndex - i, true);
 					});
 				}
 			}
@@ -1471,8 +1455,36 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			updateViewer();
-			resumePreload();
 			updateProgressBar();
+		}
+
+function buildSizePic(item, ratio, picratio){
+	item.style.width = `calc(min(${100 * picratio / ratio}vw, ${picratio * 100}vh))`;
+	item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+}
+
+		function buildSize(item, ratio) {
+			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+			console.log("XXXXXXX");
+			console.log(item.style.width);
+			console.log(item.style.height);
+		}
+
+		function buildFlock(item, index, total) {
+			const flockRate = [
+				rd.ltr ? (1.0 - index / total) : (index / total),
+				rd.ltr ? (index / total) : (1.0 - index / total),
+				rd.ltr ? - 0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
+			]
+			const bookThickness = (80 - (80 / (800 * 800)) * (total - 800) * (total - 800)) / 800;//Was 40/800 and (15 / 800) * (dataOut.length / 100) before
+			const flockCut = Math.min(360 * total / 700, 360);
+			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
+
+			item.style.transform = `translate(calc(-50% - ${flockOffset[2]}vh), -50%)`;
+			item.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
+			item.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
+
 		}
 
 		// Fetch page data
@@ -1506,33 +1518,25 @@
 			let i = 0;
 			let spreadTotal = 0;
 
-			readerViewer.classList.remove("spread-layout");
-			readerViewer.classList.remove("page-layout");
+			readerViewer.classList.remove('spread-layout');
+			readerViewer.classList.remove('page-layout');
 
 			readerHorizontal = (rd.pageMode == 0) || ((screenAR > readerMaxRatio) && !(rd.pageMode == 1));
 
-			readerViewer.classList.add(readerHorizontal ? "spread-layout" : "page-layout");
+			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
 
 			if (readerHorizontal) {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
-					spreadItem.style.height = `100vh`;
-					spreadItem.classList.add("spread-layout");
+					spreadItem.classList.add('spread-layout');
 					let spreadArray = [i];
-
-					const flockRate = [
-						rd.ltr ? (1.0 - i / dataOut.length) : (i / dataOut.length),
-						rd.ltr ? (i / dataOut.length) : (1.0 - i / dataOut.length),
-						rd.ltr ? - 0.5 * (1.0 - 2 * i / dataOut.length) : 0.5 * (1.0 - 2 * i / dataOut.length)
-					]
-					const flockOffset = flockRate.map(rate => 100 * (40 / 800) * rate);
 
 					if (dataOut[i].isCover) {
 						spreadItem.appendChild(rd.uiPages[i]);
-						spreadItem.classList.add('cover-page')
-						spreadItem.classList.add(rd.ltr ? 'LTR' : 'RTL')
-						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
-						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
+						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
+
+						buildSize(spreadItem, dataOut[i].AR);
+
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
@@ -1545,11 +1549,9 @@
 					} else if (dataOut[i].isDoubleSpread) {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
-						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
-						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
 
-						spreadItem.style.transform = `translate(calc(-50% - ${flockOffset[2]}vh), -50%)`;
-						spreadItem.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
+						buildSize(spreadItem, dataOut[i].AR);
+						buildFlock(spreadItem, i, dataOut.length);
 
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
@@ -1558,35 +1560,45 @@
 					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
+
+						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
+						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
+
 						spreadItem.classList.add('two-pages', 'flock')
-						spreadItem.style.width = `calc(min(100vw, ${100 * (dataOut[i].AR + dataOut[i + 1].AR)}vh))`;
-						spreadItem.style.height = `calc(min(${100 / (dataOut[i].AR + dataOut[i + 1].AR)}vw, 100vh))`;
 
-						spreadItem.style.transform = `translate(calc(-50% - ${flockOffset[2]}vh), -50%)`;
-						spreadItem.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
-
-						spreadItem.style.borderImageSlice = `0 ${120 * flockRate[0]} 0 ${120 * flockRate[1]}`;
-
-						rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
-						rd.uiPages[i].style.height = spreadItem.style.height;
-						rd.uiPages[i + 1].style.width = spreadItem.style.height * dataOut[i + 1].AR;
-						rd.uiPages[i + 1].style.height = spreadItem.style.height;
+						buildSize(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
+						buildFlock(spreadItem, i, dataOut.length);
+						buildSizePic(rd.uiPages[i], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i].AR);
+						buildSizePic(rd.uiPages[i + 1], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i + 1].AR);
+						//rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
+						//rd.uiPages[i].style.height = spreadItem.style.height;
+						//rd.uiPages[i + 1].style.width = spreadItem.style.height * dataOut[i + 1].AR;
+						//rd.uiPages[i + 1].style.height = spreadItem.style.height;
 						spreadArray.push(i + 1);
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						console.log(rd.uiPages[i]);
+						console.log(rd.uiPages[i].style.width);
+						console.log(rd.uiPages[i].style.height);
 						i += 2;
-					} else if (i < dataOut.length - 1) {//TODO: MANCA SISTEMARE QUESTO
+					} else if (i < dataOut.length - 1) {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
-						spreadItem.style.width = `${200 * dataOut[i].AR}vh`;
-						if (rd.ltr) rd.uiPages[i].style.marginLeft = `auto`;
+
+						buildSize(spreadItem, 2 * dataOut[i].AR);
+						buildFlock(spreadItem, i, dataOut.length);
+
+						rd.uiPages[i].style.width = spreadItem.style.width * 0.5;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style[rd.ltr ? 'right' : 'left'] = '0px'; // align pane to right or left based on ltr
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('single-page')
-						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
-						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
+
+						buildSize(spreadItem, dataOut[i].AR);
+
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
@@ -1602,17 +1614,15 @@
 			} else {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
-					const picFitWidth = (dataOut[i].AR > screenAR);
-
 					spreadItem.classList.add('page-layout');
-
 					let spreadArray = [i];
+
 					if (dataOut[i].isCover) {
 						spreadItem.appendChild(rd.uiPages[i]);
-						spreadItem.classList.add('cover-page')
-						spreadItem.classList.add(rd.ltr ? 'LTR' : 'RTL')
-						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
-						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
+						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
+
+						buildSize(spreadItem, dataOut[i].AR);
+
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
@@ -1651,10 +1661,9 @@
 					else {
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
-						//TODO this is probably useless
-						spreadItem.classList.add(picFitWidth ? "fit-width" : "fit-height");
-						spreadItem.style.width = `calc(min(100vw, ${100 * dataOut[i].AR}vh))`;
-						spreadItem.style.height = `calc(min(${100 / dataOut[i].AR}vw, 100vh))`;
+
+						buildSize(spreadItem, dataOut[i].AR);
+
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
@@ -1708,13 +1717,13 @@
 		function printStack(str_in) {
 			let out = str_in + ' *';
 			rd.picLoadStack.forEach(element => {
-				out = out + " " + element;
+				out = out + ' ' + element;
 			})
-			out = out + '*';
+			out = 'tot:' + rd.picLoadStack.length + ' ' + out + '*';
 			console.log(out);
 		}
 
-		async function populateSpread(spreadIndex) {
+		async function populateSpread(spreadIndex, preload = false) {
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 
 				if (!rd.uiPages[element].src) {
@@ -1726,15 +1735,19 @@
 						// Fetch the image
 						const blobUrl = await fetchMedia(rd.pages[element].url);
 						rd.uiPages[element].src = blobUrl;
-						rd.uiPages[element].visible = false;
+						//XXX tolto da poco, non serve se c'è l'opacity sotto, no? rd.uiPages[element].visible = false;
 						//rd.uiPages[element].src = rd.pages[element].url;
 						// Handle successful load
 						rd.uiPages[element].addEventListener('load', () => {
-							printStack('L');
 							rd.uiPages[element].classList.remove('loading');
 							const index = rd.picLoadStack.indexOf(element);
+							printStack('L '+index);
+							console.log(element);
 							if (index !== -1) {
 								rd.picLoadStack.splice(index, 1); // Remove from stack
+							};
+							if (!preload){
+								preloadPages(spreadIndex, rd.preloadCount)
 							}
 						});
 
@@ -1764,7 +1777,7 @@
 							rd.uiPages[element].src = rd.pages[element].url;
 		
 							rd.uiPages[element].addEventListener('load', () => {
-								//console.log("loaded pic " + element);
+								//console.log('loaded pic ' + element);
 								printStack('L');
 								const index = rd.picLoadStack.indexOf(element);
 								if (index !== -1) {
@@ -1772,7 +1785,7 @@
 								}
 							});
 							rd.picLoadStack.push(element);
-							//console.log("added pic " + element);
+							//console.log('added pic ' + element);
 							printStack('S');
 						}
 					});
@@ -1819,39 +1832,40 @@
 
 			if (!rd.incognito) {
 				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: newPage }), false)
-					.then(data => console.log("Read progress updated:", data))
-					.catch(error => console.error("Error:", error));
+					.then(data => console.log('Read progress updated:', data))
+					.catch(error => console.error('Error:', error));
 			}
 
 			return (stringOut);
 		}
 
 		function purgeLoading() {
-			console.log("purgecheck");
+			console.log('purgecheck');
 			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
 				const item = rd.picLoadStack[i];
-				console.log("purged page " + item);
+				console.log('purged page ' + item);
 				rd.uiPages[item].removeAttribute('src');
 				rd.picLoadStack.splice(i, 1); // Remove the element at index i
-				printStack("P");
+				printStack('P');
 			}
 			clearAllTimeouts();
-
 		}
 
 		function jumpToSpread(newSpreadTarget) {
-			console.log("                                  jumpto:" + newSpreadTarget);
+			console.log('                                  jumpto:' + newSpreadTarget);
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length)) return;
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
-			console.log("                                  old:" + localOldSpreadIndex);
-			console.log("                                  new:" + localNewSpreadIndex);
-			console.log("                                  jumpTimeout null?" + (rd.jumpTimeout === null));
+			console.log('                                  old:' + localOldSpreadIndex);
+			console.log('                                  new:' + localNewSpreadIndex);
+			console.log('                                  jumpTimeout null?' + (rd.jumpTimeout === null));
 			if (localOldSpreadIndex == localNewSpreadIndex) return;
 
+			purgeLoading();
+
 			if (rd.jumpTimeout === null) {
-				console.log("                                  nulltimeout");
+				console.log('                                  nulltimeout');
 				rd.oldSpreadIndex = localOldSpreadIndex;
 				rd.currentSpreadIndex = localNewSpreadIndex;
 
@@ -1879,12 +1893,10 @@
 				}, rd.loadDelay);
 			}
 
-			purgeLoading()
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
 
 			updateProgressBar();
-			resumePreload();
 		}
 
 		function toggleMenu() {
@@ -1906,13 +1918,13 @@
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {//TODO check why it fires twice for any seek
-			console.log("                                     seek");
+			console.log('                                     seek');
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
 
 			//rd.currentSpreadIndex = Math.floor(newProgressPercent * (rd.uiSpreads.length - 1));
-			//console.log("seekjump to" + rd.currentSpreadIndex)
+			//console.log('seekjump to' + rd.currentSpreadIndex)
 			jumpToSpread(Math.floor(newProgressPercent * (rd.uiSpreads.length - 1)));
 		}
 
@@ -1989,8 +2001,8 @@
 		});
 
 		function handleCloseReader() {
-			console.log(">>>                                   >>>" + rd.historyPath + "<<<");
-			console.log(rd.historyPath == "");
+			console.log('>>>                                   >>>' + rd.historyPath + '<<<');
+			console.log(rd.historyPath == '');
 			hideMenu();
 			incognitoMark.classList.remove('incognito');
 
@@ -1998,7 +2010,7 @@
 				rd.uiPages.forEach(item => item.remove());
 				rd.uiSpreads.forEach(item => item.remove());
 			}, 300);
-			//console.log("X");
+			//console.log('X');
 			//console.log(rd.historyPath);
 			purgeLoading();
 			clearAllTimeouts();
@@ -2011,12 +2023,12 @@
 		})
 
 		function setIncognito(status) {
-			readerIncognito.classList.remove("incognito");
-			incognitoMark.classList.remove("incognito");
+			readerIncognito.classList.remove('incognito');
+			incognitoMark.classList.remove('incognito');
 
 			if (status) {
-				readerIncognito.classList.add("incognito");
-				incognitoMark.classList.add("incognito")
+				readerIncognito.classList.add('incognito');
+				incognitoMark.classList.add('incognito')
 			};
 
 			rd.incognito = status;
@@ -2179,18 +2191,18 @@
 			if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
 				if (diffX > 0) {
 					handleLeftArrow();
-					console.log("Swipe Right");
+					console.log('Swipe Right');
 				} else {
 					handleRightArrow();
-					console.log("Swipe Left");
+					console.log('Swipe Left');
 				}
 				isSingleTouch = false; // Reset to prevent repeat action on the same swipe
 			} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
 				if (diffY > 0) {
 					handleCloseReader();
-					console.log("Swipe Down");
+					console.log('Swipe Down');
 				} else {
-					console.log("Swipe Up");
+					console.log('Swipe Up');
 				}
 				isSingleTouch = false;
 			}
