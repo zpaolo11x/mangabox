@@ -880,9 +880,15 @@
 				const libraryThumbnail = document.createElement('img');
 				libraryThumbnail.classList.add('library-thumbnail');
 				libraryThumbnail.src = `library-thumbnails/${library.name}.png`;
+
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
 					libraryThumbnail.src = `library-thumbnails/${library.name}.jpg`;
+					libraryThumbnail.onerror = () => {
+						libraryThumbnail.onerror = null;
+						console.log('Both PNG and JPG images failed to load');
+						libraryThumbnail.src = 'library-thumbnails/blank.png';
+					};
 				};
 
 				libraryThumbnail.alt = `${library.name} Cover`;
@@ -1399,9 +1405,9 @@
 		function preloadPages(startSpreadIndex, count) {
 			//return; //XXX REMOVED PRELOAD
 			if (isSectionHidden(readerContainer)) return;
-			console.log("preloadPages: "+startSpreadIndex+" +/- "+count);
+			console.log("preloadPages: " + startSpreadIndex + " +/- " + count);
 			for (let i = 1; i <= count; i++) {
-				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack)) ){
+				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack))) {
 					console.log('startTimeout POS ' + (startSpreadIndex + i))
 					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
@@ -1412,7 +1418,7 @@
 						populateSpread(startSpreadIndex + i, true);
 					});
 				}
-				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack)) ){
+				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack))) {
 					console.log('startTimeout NEG ' + (startSpreadIndex - i))
 					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
@@ -1975,15 +1981,15 @@
 			incognitoMark.classList.remove('incognito');
 
 			clearTimeout(rd.jumpTimeout);
-				rd.uiPages.forEach(item => {
-					item.remove();
-					item = null;
-				});
+			rd.uiPages.forEach(item => {
+				item.remove();
+				item = null;
+			});
 
-				rd.uiSpreads.forEach(item => {
-					item.remove();
-					item = null;
-				});
+			rd.uiSpreads.forEach(item => {
+				item.remove();
+				item = null;
+			});
 
 			purgeLoading();
 			clearAllTimeouts();

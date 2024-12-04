@@ -25,6 +25,7 @@
     ],
     "mac": {
       "target": "dmg",
+		"artifactName": "MangaBox-${version}-${arch}.dmg",		
       "icon": "assets/icons/mangabox.icns",
       "category": "public.app-category.utilities"
     },
@@ -33,7 +34,8 @@
       "icon": "assets/icons/mangabox.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+		"icon": "assets/icons/mangabox.png"
     }
   }
 }
