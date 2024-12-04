@@ -21,16 +21,27 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build for macOS (x86 and ARM)
+      - name: Build for macOS (x86)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build -- --mac --x64
 
-      - name: Upload macOS artifacts
+      - name: Upload macOS x86 DMG
         uses: actions/upload-artifact@v3
         with:
-          name: macos-dmg
-          path: dist/*.dmg
+          name: macos-dmg-x86
+          path: dist/*x64.dmg
+
+      - name: Build for macOS (ARM)
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build -- --mac --arm64
+
+      - name: Upload macOS ARM DMG
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-dmg-arm64
+          path: dist/*arm64.dmg
 
   windows:
     runs-on: windows-latest
