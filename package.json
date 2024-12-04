@@ -1,0 +1,39 @@
+{
+  "name": "mangabox",
+  "version": "1.0.0",
+  "author": "zpaolo11x paolo.zago@gmail.com",
+  "description": "Komga desktop client using Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^26.1.0",
+    "electron-builder": "^24.3.0"
+  },
+  "build": {
+    "appId": "com.mangabox.app",
+    "productName": "MangaBox",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "main.js",
+      "package.json"
+    ],
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icons/mangabox.icns",
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": "portable",
+      "icon": "assets/icons/mangabox.ico"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

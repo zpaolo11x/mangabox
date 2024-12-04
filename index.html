@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>MangaBox</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="black">
+
+	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
+	<link rel="icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!-- Generator: Gravit.io --%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='isolation:isolate' viewBox='0 0 160 160' width='160pt' height='160pt'%3E%3Cdefs%3E%3CclipPath id='_clipPath_YN17YSJ5FM1sjm2TADxOwkUODDUQiVcY'%3E%3Crect width='160' height='160'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23_clipPath_YN17YSJ5FM1sjm2TADxOwkUODDUQiVcY)'%3E%3Crect width='160' height='160' style='fill:rgb(0,0,0)' fill-opacity='0'/%3E%3Cpath d=' M 145 42 L 145 117 L 75 155 L 6 116 L 6 42 L 75 5 L 145 42 Z ' fill='rgb(255,255,255)'/%3E%3Cpath d='' fill-rule='evenodd' fill='rgb(235,235,235)'/%3E%3Cpath d=' M 38.542 24.55 L 61.749 56.429 L 20.291 34.337 L 10.67 39.496 L 10.236 40.31 L 64.368 69.155 L 60.578 71.175 L 65.281 80 L 70 77.485 L 70 79 L 80 79 L 80 77.485 L 84.719 80 L 89.422 71.175 L 85.632 69.155 L 139.764 40.31 L 138.964 38.81 L 130.104 34.127 L 88.251 56.429 L 111.605 24.349 L 102.673 19.627 L 80 50.772 L 80 7.643 L 75 5 L 70 7.681 L 70 50.772 L 47.438 19.78 L 38.542 24.55 Z ' fill-rule='evenodd' fill='rgb(188,8,43)'/%3E%3Ccircle vector-effect='non-scaling-stroke' cx='75.5' cy='77' r='50' fill='rgb(255,255,255)'/%3E%3Ccircle vector-effect='non-scaling-stroke' cx='75.5' cy='77' r='40' fill='rgb(188,8,43)'/%3E%3Cpath d=' M 145 42 L 145 117 L 75 155 L 6 116 L 6 42 L 75 79 L 145 42 Z ' fill='rgb(255,255,255)'/%3E%3Cpath d=' M 134.066 42.835 L 75 11.33 L 15.934 42.835 L 75 74.337 L 134.066 42.835 Z M 140 50.997 L 140 114 L 80 146.003 L 80 82.997 L 140 50.997 Z M 70 146.003 L 10 114 L 10 50.997 L 70 82.997 L 70 146.003 Z M 150 40 L 150 120 L 75 160 L 0 120 L 0 40 L 75 0 L 150 40 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3Cpath d=' M 90 127.669 L 130 106.334 L 130 106.334 L 130 96.33 L 90 117.663 L 90 127.669 Z M 90 103.669 L 130 82.334 L 130 82.334 L 130 72.33 L 90 93.663 L 90 103.669 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3Cpath d=' M 33 79.263 L 33 130.669 L 23 130.669 L 23 73.93 L 33 79.263 Z M 57 92.063 L 57 142.669 L 47 142.669 L 47 86.73 L 57 92.063 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml">
+	<link rel="apple-touch-icon" href="mangabox-logo.png">
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="manifest" href="manifest.json">
+	<link rel="stylesheet" type="text/css" href="auth.css">
+	<script src="https://kit.fontawesome.com/7a02964dfa.js" crossorigin="anonymous"></script>
+
+	<link rel="stylesheet" href="mangabox.css">
+	<link rel="stylesheet" href="mangabox_reader.css">
+
+</head>
+
+<body>
+	<div id="stickyContainer" class="sticky-container hidden">
+		<ul class="libraries-list buttons left-block">
+			<li id="homeButton" class="library-item">
+				<div class="thumbnail-wrapper">
+					<img class="library-thumbnail" src="library-thumbnails/mangabox.png">
+				</div>
+				<div class="library-name">Home</div>
+			</li>
+		</ul>
+		<ul id="librariesList" class="libraries-list"></ul>
+		<ul class="libraries-list buttons right-block">
+			<li id="themeChanger" class="library-item">
+				<div class="thumbnail-wrapper">
+					<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+				</div>
+			</li>
+			<li id="colorChanger" class="library-item">
+				<div class="thumbnail-wrapper">
+					<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+				</div>
+			</li>
+			<li id="searchField" class="library-item search-field">
+				<div id="searchIcon" class="thumbnail-wrapper">
+					<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+				</div>
+				<input id="searchInput" type="text" class="search-input" placeholder="Search...">
+			</li>
+			<li id="logOut" class="library-item">
+				<div class="thumbnail-wrapper">
+					<span class="fa-solid fa-power-off glyph-dark"></span>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div id="seriesHeader" class="section hidden"></div>
+
+	<div id="seriesGrid" class="section hidden"></div>
+
+	<div id="booksGrid" class="section hidden"></div>
+
+	<div id="stripGridContainer" class="section hidden">
+		<div id="stripGrid" class="strip-grid"></div>
+		<div id="stripGridHeaderContainer" class="stripgrid-header-container">
+			<div id="stripGridHeader" class="strip-header">
+				<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+			</div>
+			<div id="stripGridRight" class="stripgrid-all">
+				<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
+				</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+			</div>
+		</div>
+	</div>
+
+	<div id="seriesMiniHeader" class="section hidden collapse"></div>
+
+	<!--
+	<div id="searchStripsContainer" class="section hidden">
+		<div class="strip-header-container">
+			<div class="strip-header">
+				<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results
+			</div>
+		</div>
+	<div id="homeStripSeriesResults" class="series-results search-results"></div>
+	-->
+
+	<div id="homeStripsContainer" class="section hidden">
+		<div class="home-strip-parent">
+			<div class="strip-header-container">
+				<div class="strip-header">
+					<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+				</div>
+				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
+				<div id="allKeepReading" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+			</div>
+
+			<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
+		</div>
+
+		<div class="home-strip-parent">
+			<div class="strip-header-container">
+				<div class="strip-header">
+					<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
+				</div>
+				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKOnDeck" min="0" max="100" value="0"></div>
+				<div id="allOnDeck" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+			</div>
+			<div id="homeStripOnDeck" class="home-strip on-deck"></div>
+		</div>
+
+		<div class="home-strip-parent">
+			<div class="strip-header-container">
+				<div class="strip-header">
+					<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books
+				</div>
+				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentBooks" min="0" max="100" value="0"></div>
+				<div id="allRecentBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
+			</div>
+			<div id="homeStripRecentBooks" class="home-strip recent-books"></div>
+		</div>
+
+		<div class="home-strip-parent">
+			<div class="strip-header-container">
+				<div class="strip-header">
+					<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series
+				</div>
+				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentSeries" min="0" max="100" value="0"></div>
+				<div id="allRecentSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+			</div>
+			<div id="homeStripRecentSeries" class="home-strip recent-series"></div>
+		</div>
+
+		<div class="home-strip-parent">
+			<div class="strip-header-container">
+				<div class="strip-header">
+					<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series
+				</div>
+				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderUpdatedSeries" min="0" max="100" value="0"></div>
+				<div id="allUpdatedSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+			</div>
+			<div id="homeStripUpdatedSeries" class="home-strip updated-series"></div>
+		</div>
+
+		<div class="home-strip-parent">
+			<div class="strip-header-container">
+				<div class="strip-header">
+					<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books
+				</div>
+				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderReadBooks" min="0" max="100" value="0"></div>
+				<div id="allReadBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
+			</div>
+			<div id="homeStripReadBooks" class="home-strip updated-series"></div>
+		</div>
+	</div>
+
+	<div id="searchStripsContainer" class="section hidden">
+		<div class="strip-header-container">
+			<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
+		</div>
+		<div id="homeStripSeriesResults" class="series-results search-results"></div>
+
+		<div class="strip-header-container">
+			<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+		</div>
+		<div id="homeStripBooksResults" class="books-results search-results"></div>
+	</div>
+
+	<div id="blanker"></div>
+
+	<div id="readerContainer" class="section hidden">
+		<div id="readerBackground" class="hidden reader-background"></div>
+
+		<div id="readerViewer"></div>
+
+		<div id="readerOverlay">
+			<div id="incognitoMark"></div>
+
+			<div id="touchPanel">
+				<div id="toLeftPage"></div>
+				<div id="openMenu"></div>
+				<div id="toRightPage"></div>
+			</div>
+
+			<div id="controlPanel" class="hidden">
+				<div id="topControls" class="reader-controls">
+					<span id="readerClose" class="reader-buttons fa-solid fa-chevron-down"></span>
+					<span id="bookName"></span>
+					<span id="readerPageFormat" class="reader-buttons fa-solid fa-book-open"></span>
+					<span id="readerIncognito" class="reader-buttons fa-solid fa-ghost"></span>
+				</div>
+
+				<div id="bottomControls" class="reader-controls">
+					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
+					<span id="leftLimit" class="bar-note"></span>
+					<div id="readerProgressBar" onclick="seek(event)">
+						<div id="readerProgress"></div>
+						<div id="readerPage"></div>
+					</div>
+					<span id="rightLimit" class="bar-note"></span>
+					<span id="rightArrow" class="reader-buttons fa-solid fa-caret-right"></span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="loginScreen" class="login-screen auth-hidden">
+		<div id="loginDialog" class="dialog">
+			<img src="mangabox-logo.png" width="80px" height="80px">
+			<img src="mangabox-name-sticks-round.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
+			<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+			<input type="text" class="login-input" id="username" placeholder="Username">
+			<input type="password" class="login-input" id="password" placeholder="Password">
+			<div class="login-buttons">
+				<button class="login-button" onclick="login()">Login</button>
+				<button class="login-button" onclick="loginTest()">Test</button>
+			</div>
+			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
+		</div>
+	</div>
+
+	<div id="debuggerObj"></div>
+
+	<script src="auth.js"></script>
+
+	<script>
+
+		function testpr(text) {
+			debuggerObj.innerText = debuggerObj.innerText + text;
+		}
+
+		let accentId = Number(localStorage.getItem('mbAccentColor')) ?? 0;
+		let darkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
+
+		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
+		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
+
+		const basePath = ''; //'/mangabox/';
+
+		const scrollBars = Array.from(document.getElementsByClassName('range-bar'));
+		const homeStrips = Array.from(document.getElementsByClassName('home-strip'));
+
+		function getScreenAR() {
+			return (window.innerWidth / window.innerHeight);
+		}
+
+		let screenAR = getScreenAR();
+		let readerMaxRatio = 1;
+		let readerHorizontal = true;
+
+		const swatches = getComputedStyle(document.documentElement)
+			.getPropertyValue('--mb-swatches')
+			.match(/hsl\([^)]*\)/g)
+			.map(swatch => swatch.match(/(\d+%?)/g));
+
+		function changeAccent(id) {
+			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
+				document.documentElement.style.setProperty(varName, swatches[id][index]);
+			});
+			document.documentElement.style.setProperty('--mb-h-deg', swatches[id][0] + "deg");
+			/*
+			// Custom colored top bar
+			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+			metaThemeColor.setAttribute('content', `hsl(${swatches[id][0]},100%,10%)`);
+			*/
+			localStorage.setItem('mbAccentColor', accentId)
+		}
+
+		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
+			Array.from(document.getElementsByClassName(classSelector)).forEach((item) => {
+				item.classList.remove(toDark ? lightClass : darkClass);
+				item.classList.add(toDark ? darkClass : lightClass);
+			});
+		}
+
+		function changeTheme(toDark) {
+			// Set css theme to dark or light
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+
+			// Change fa icons for light or dark theme
+			swapThemeClass('theme-label', 'fa-sun', 'fa-moon', toDark);
+			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
+			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
+			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
+
+			// Save theme setting in local storage
+			localStorage.setItem('mbDarkTheme', toDark ? 1 : 0)
+		}
+
+		// Show/Hide section functions
+		function sectionHide(item) {
+			item.classList.add('hidden');
+		}
+		function sectionShow(item) {
+			item.classList.remove('hidden');
+		}
+		function sectionToggle(item) {
+			item.classList.toggle('hidden');
+		}
+		function isSectionHidden(item) {
+			return (item.classList.contains('hidden'));
+		}
+
+		// Show/Hide reader pages/spreads
+		function spreadHide(item) {
+			item.classList.add('hidden-item');
+		}
+		function spreadShow(item) {
+			item.classList.remove('hidden-item');
+		}
+		function isSpreadHidden(item) {
+			return (item.classList.contains('hidden-item'));
+		}
+
+		colorChanger.addEventListener('click', () => {
+			accentId = (accentId + 1) % swatches.length;
+			changeAccent(accentId);
+		})
+
+		logOut.addEventListener('click', () => {
+			sectionHide(stickyContainer);
+			sectionShow(blanker);
+			localStorage.removeItem('mbAuthHeader');
+			history.pushState(null, '', basePath);
+			location.reload(true);
+		})
+
+		themeChanger.addEventListener('click', () => {
+			darkTheme = !darkTheme;
+			changeTheme(darkTheme);
+		})
+
+		searchInput.addEventListener('keydown', (event) => {
+			if (event.key === 'Enter') {
+				if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
+			}
+		});
+
+		searchIcon.addEventListener('click', () => {
+			if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
+		})
+
+		async function performSearch(searchString) {
+			libraryHighlight('searchField');
+
+			if (searchString.includes('y:')) {
+
+				const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+				const dataArray = unFilteredSeries.content;
+				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
+
+				if (searchYear.length == 1) searchYear.push(searchYear[0]);
+
+				let start = [];
+				let stop = [];
+				let filterArray = [];
+
+				for (let i = 0; i < dataArray.length; i++) {
+					if (dataArray[i].metadata.alternateTitles.length == 0) continue;
+					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
+					start.push(Number(dateArray[0]));
+					stop.push(Number(dateArray[1] ?? dateArray[0]));
+					filterArray.push(!((start[i] >= Number(searchYear[1])) || (stop[i] <= Number(searchYear[0]))));
+				}
+
+				const filteredSeries = dataArray.filter((item, index) =>
+					filterArray[index]
+				);
+				displaySeries(filteredSeries, homeStripSeriesResults);
+				setTimeout(updateSliderMax, 10);
+				sectionShow(searchStripsContainer);
+
+				return
+			}
+
+			const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+
+			const filteredSeries = unFilteredSeries.content.filter(item =>
+				item.metadata.title.toLowerCase().includes(searchString) ||
+				item.metadata.titleSort.toLowerCase().includes(searchString) ||
+				item.metadata.alternateTitles.some(
+					titleIn => titleIn.title.toLowerCase().includes(searchString)
+				)
+			);
+			displaySeries(filteredSeries, homeStripSeriesResults);
+
+			const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+
+			const filteredBooks = unFilteredBooks.content.filter(item =>
+				item.metadata.title.toLowerCase().includes(searchString) ||
+				item.metadata.summary.toLowerCase().includes(searchString) ||
+				item.metadata.tags.some(
+					tagIn => tagIn.toLowerCase().includes(searchString)
+				)
+			);
+			displayBooks(filteredBooks, homeStripBooksResults, 'compact');
+
+			setTimeout(updateSliderMax, 10);
+			sectionShow(searchStripsContainer);
+		}
+
+
+		function updateReaderOrientation() {
+			let newScreenAR = getScreenAR();
+			if (!(rd.pageMode == 2)) return;
+
+			if (isSectionHidden(readerContainer)) {
+				screenAR = newScreenAR;
+				readerHorizontal = newScreenAR > readerMaxRatio;
+			} else {
+				let newReaderHorizontal = (newScreenAR > readerMaxRatio);
+				if (newReaderHorizontal != readerHorizontal) {
+					screenAR = newScreenAR;
+					/*
+					rd.uiPages.forEach(item => item.remove());
+					rd.uiSpreads.forEach(item => item.remove());
+					
+					rd.uiPages = [];
+					rd.uiSpreads = [];
+*/
+					//newReaderHorizontal = readerHorizontal;
+					navigateTo(window.location.hash); //XXX Magari si può usare una cosa meno invasiva?
+				}
+				/*
+				else if (!readerHorizontal) {
+					screenAR = newScreenAR;
+					navigateTo(window.location.hash); //XXX Magari si può usare una cosa meno invasiva?
+				}
+				*/
+			}
+		}
+
+		// Set the slider max value based on the scroll width
+		function updateSliderMax() {
+			if (isSectionHidden(homeStripsContainer)) return;
+
+			scrollBars.forEach((bar, index) => {
+				bar.max = homeStrips[index].scrollWidth - homeStrips[index].clientWidth;
+				// Check if the content overflows
+				const isOverflowing = homeStrips[index].scrollWidth > homeStrips[index].clientWidth;
+				// Show or hide controls based on overflow
+				bar.style.display = isOverflowing ? 'block' : 'none';
+
+				const visibleRatio = homeStrips[index].clientWidth / homeStrips[index].scrollWidth;
+				const thumbWidth = (100 * visibleRatio); // Minimum width of 14px
+
+				bar.style.setProperty('--thumb-width', `${thumbWidth}%`);
+			});
+		}
+
+		scrollBars.forEach((bar, index) => {
+			bar.addEventListener('input', () => {
+				homeStrips[index].scrollLeft = bar.value;
+			});
+
+			homeStrips[index].addEventListener('scroll', () => {
+				bar.value = homeStrips[index].scrollLeft;
+			});
+		});
+
+
+		function stepPageChange(increment) {
+			const { path, params } = parseHashAndParams();
+			navigateTo('#dashboard?all=' + params.get('all') + '&page=' + (parseInt(params.get('page')) + increment));
+		}
+
+		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
+		stripNextPage.addEventListener('click', () => stepPageChange(1));
+
+		// Initialize the slider max when the page loads and on resize
+		//window.addEventListener('load', updateSliderMax); //TODO forse si può togliere
+
+		let resizeTimeout;
+
+		window.addEventListener('resize', () => {
+			// update slider for home screen
+			updateSliderMax();
+			// Manage reader orientation
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(updateReaderOrientation, 500); // Adjust delay as needed
+		});
+
+		// Fade in and Fade out routines
+		function wait(ms) {
+			return new Promise(resolve => setTimeout(resolve, ms));
+		}
+
+		async function executeFade(val) {
+			blanker.style.opacity = val;
+			await wait(100);
+		}
+
+		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
+			try {
+				const response = await fetch(`${mbBaseUrl}${API_url}`, {
+					method: method,
+					headers: {
+						'Authorization': mbAuthHeader,
+						'Content-Type': 'application/json'
+					},
+					body: body
+				});
+				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+				if (returnval) {
+					const output = await response.json();
+					return (output);
+				}
+			} catch (error) {
+				console.error('Fetch libraries error:', error);
+			}
+		}
+
+		async function fetchMedia(url) {
+
+			const response = await fetch(url, {
+				method: 'GET',
+				headers: {
+					'Authorization': mbAuthHeader,
+				},
+			});
+
+			if (response.ok) {
+				const blob = await response.blob();
+				return URL.createObjectURL(blob);
+			} else {
+				console.error(`Failed to load thumbnail for series ${seriesId}`, response.status);
+				return 'fallback-image.jpg';
+			}
+		}
+
+		// Set the image:
+		// document.querySelector('#image-id').src = await fetchThumbnail('series-id');
+
+
+		async function setReadStatus(seriesId, bookId, read, item, format = null) {
+			if (bookId == null) {
+				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
+				//item.innerHTML = '';
+				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
+				buildSeriesItem(item, seriesData);
+			} else {
+				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
+				//item.innerHTML = '';
+				const bookData = await callAPI(`/api/v1/books/${bookId}`);
+				buildBookItem(item, bookData, format);
+			}
+		}
+
+		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
+		async function fetchLibraries() {
+			const libraries = await callAPI('/api/v1/libraries');
+			libraries.sort((a, b) => a.name.localeCompare(b.name));
+			await displayLibraries(libraries);
+		}
+
+		// This function is called when a library is selected, it manages the library menu and library naming in the URL
+		function libraryHighlight(libraryId) {
+			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('highlighted'));
+			document.getElementById(libraryId).classList.add('highlighted');
+		}
+
+		async function getFilteredSeries(filterTitle, serieId) {
+			const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+
+			const filteredItems = unFilteredSeries.content.filter(item =>
+				item.metadata.alternateTitles.some(
+					titleIn => titleIn.title === filterTitle
+				)
+			);
+
+			displaySeries(filteredItems, seriesGrid);
+		}
+
+		function noPointerDown(item) {
+			item.addEventListener('pointerup', (event) => {
+				event.stopPropagation();
+			})
+		}
+
+		function addTouchScaler(item, execute) {
+			item.addEventListener('pointerup', async (event) => {
+				if (event.pointerType === 'touch') {
+					// TOUCH DEVICE
+					if (currentlyScaled !== item) {
+						if (currentlyScaled) {
+							currentlyScaled.classList.remove('scaled');
+						}
+						item.classList.add('scaled');
+						currentlyScaled = item;
+						event.preventDefault();
+					} else {
+						item.classList.remove('scaled');
+						currentlyScaled = null;
+						execute();
+					}
+				} else if (event.button == 0) {
+					// MOUSE DEVICE
+					if (!item.classList.contains('scaled')) {
+						item.classList.add('scaled');
+						currentlyScaled = item;
+					} else {
+						item.classList.remove('scaled');
+						currentlyScaled = null;
+						execute();
+					}
+				}
+			});
+
+			item.addEventListener('mouseenter', () => {
+				// Added this to unselect pre-scaled book
+
+				if (currentlyScaled != null) {
+					currentlyScaled.classList.remove('scaled');
+					//currentlyScaled = null; //TODO check, ho tolto questo ma forse serve a qualcosa???
+				}
+
+				item.classList.add('scaled');
+			});
+
+			item.addEventListener('mouseleave', () => {
+				item.classList.remove('scaled');
+			});
+		}
+
+
+		function addItem(itemkind, properties) {
+			return Object.assign(document.createElement(itemkind), properties);
+		}
+
+		async function buildSeriesItem(item, serie) {
+			//item.firstChild.remove();
+			if (item.childNodes[0]) {
+				item.childNodes[0].remove();
+			}
+
+			item.title = 'Open series';
+
+			const seriesItem = addItem('div', {
+				className: 'series-item'
+			});
+			// const ITA = serie.metadata.language == 'it' ? '<img class="glyph-right" src="glyphs/it.svg">' : '';
+			// const ITA = serie.metadata.language == 'it' ? '<span class="fa-solid fa-square-full glyph-dark glyph-zh-flag glyph-flag"></span>' : '';
+
+			const ITA = ((serie.metadata.language != 'en') ? `<span class="fa-solid fa-square-full glyph-dark glyph-${serie.metadata.language}-flag glyph-flag"></span>` : '');
+			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-square-full glyph-dark glyph-ltr"></span>';
+			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-regular fa-calendar fa-rotate-270 glyph-dark"></span>';
+			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
+			const spacer = ((ITA != '') && (LTR != '')) ? '&nbsp;' : '';
+
+			const seriesTitle = addItem('div', {
+				innerHTML: `
+								<div class="title-row data-row top-row">
+									<div style="flex-grow:1">${serie.metadata.title}</div>
+									<div class="glyph-dark" style="text-align:right">${LTR}</div>
+										${spacer}
+									<div class="glyph-div" style="text-align:right">${ITA}</div>
+								</div>`
+			});
+
+			const thumbnailWrapper = addItem('div', {
+				className: 'thumbnail-wrapper'
+			});
+
+			const seriesThumbnail = addItem('img', {
+				className: 'series-thumbnail hidden',
+				src: 'transparent.png',
+				lazySrc: `${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail`,
+				alt: serie.metadata.title
+			});
+
+			addLazyLoading(seriesThumbnail);
+
+			const seriesFader = addItem('div', {
+				className: 'series-fader'
+			});
+
+			const seriesOverlay = addItem('div', {
+				className: 'series-overlay'
+			});
+
+			const seriesStatus = addItem('div', {
+				className: 'series-status'
+			});
+
+			const unreadCount = serie.booksUnreadCount;
+
+			if (unreadCount > 0) {
+				const unreadCountBadge = addItem('div', {
+					className: 'unread-count',
+					innerHTML: `<span>${unreadCount}</span>`
+				});
+				seriesStatus.appendChild(unreadCountBadge);
+			}
+
+			const markAsRead = addItem('div', {
+				className: 'mini-buttons mark-as-read',
+				title: 'Mark as Read',
+				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
+			});
+			markAsRead.addEventListener('click', async (event) => {
+				event.stopPropagation();
+				await setReadStatus(serie.id, null, true, item);
+			})
+			noPointerDown(markAsRead);
+
+			const markAsUnread = addItem('div', {
+				className: 'mini-buttons mark-as-unread',
+				title: 'Mark as Unread',
+				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
+			});
+			markAsUnread.addEventListener('click', async (event) => {
+				event.stopPropagation();
+				await setReadStatus(serie.id, null, false, item);
+			})
+			noPointerDown(markAsUnread);
+
+			// Find alternate title with label "Time"
+			const altTitle = getAltTitles(serie);
+
+			// Fetch and display the number of books and alternate title
+			const bookCount = serie.booksCount;
+			const infoRow = addItem('div', {
+				className: 'data-row info-row'
+			});
+
+			const timeLabel = addItem('span', {
+				innerHTML: `<span class='${darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				className: 'red search-trigger',
+				title: `Filter time: ${altTitle.time}`
+			});
+			timeLabel.addEventListener('click', async (event) => {
+				event.stopPropagation();
+				navigateTo(`#search?search_string=y:${altTitle.time}`);
+			});
+			noPointerDown(timeLabel);
+
+			const booksLabel = addItem('span', {
+				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
+			});
+
+			const artistRow = addItem('div', {
+				className: 'data-row artist-row'
+			});
+
+			if (altTitle.story != altTitle.art) {
+
+				const storyLabel = addItem('div', {
+					innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
+					className: 'red data-label search-trigger',
+					title: `Filter artist: ${altTitle.story}`
+				});
+
+				const artLabel = addItem('div', {
+					innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+					className: 'red data-label search-trigger',
+					title: `Filter artist: ${altTitle.art}`
+				});
+
+				artistRow.appendChild(storyLabel);
+				artistRow.appendChild(artLabel);
+				storyLabel.addEventListener('click', async (event) => {
+					event.stopPropagation();
+					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+				});
+				artLabel.addEventListener('click', async (event) => {
+					event.stopPropagation();
+					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
+				});
+				noPointerDown(artLabel);
+				noPointerDown(storyLabel);
+			} else {
+				const artistLabel = addItem('div', {
+					innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+					title: `Filter artist: ${altTitle.story}`,
+					className: 'red data-label search-trigger'
+				});
+				artistRow.appendChild(artistLabel);
+				artistLabel.addEventListener('click', async (event) => {
+					event.stopPropagation();
+					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+					//getFilteredSeries(altTitle.story, serie.id);
+				});
+				noPointerDown(artistLabel);
+			}
+
+			seriesItem.append(
+				thumbnailWrapper,
+				seriesTitle,
+				infoRow,
+				artistRow
+			);
+			thumbnailWrapper.append(
+				seriesThumbnail,
+				seriesFader,
+				seriesOverlay,
+				seriesStatus
+			);
+			seriesOverlay.append(
+				markAsRead,
+				markAsUnread
+			);
+			infoRow.append(
+				timeLabel,
+				booksLabel
+			);
+
+			addTouchScaler(seriesItem, () => navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`))
+
+			item.appendChild(seriesItem);
+		}
+
+		// Creates and populates the series grid with the data from the series array.
+		async function displaySeries(series, target, focus = null) {
+
+			while (target.firstChild) {
+				target.removeChild(target.firstChild);
+			}
+
+			series.forEach(async (serie) => {
+
+				const seriesContainer = document.createElement('div');
+				seriesContainer.classList.add('series-container'); //XXX was ending with , 'fade-in');
+				seriesContainer.id = serie.id;
+
+				buildSeriesItem(seriesContainer, serie);
+
+				target.appendChild(seriesContainer);
+			});
+
+			sectionShow(target); //XXX serve un fade qui???
+			if (focus) {
+				var item = document.getElementById(focus);
+				const yOffset = -150;
+				const y = item.getBoundingClientRect().top + window.pageYOffset + yOffset;
+				window.scrollTo({ top: y });
+
+				currentlyScaled = item.firstChild;
+				item.firstChild.classList.add('scaled');
+
+			} else {
+				window.scrollTo({ top: 0 });
+			}
+		}
+
+		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
+		async function fetchAllSeries(libraryId) {
+			let allSeries = [];
+			const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			allSeries = allSeriesPage.content;
+			// now it gets the series sorted by name so no need to elaborate the sorting, but for custom sorting based for example on title time?
+			//allSeries.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
+			return (allSeries);
+		}
+
+		// Compose function that opens a specific library based on it ID
+		async function openLibrary(libraryId, seriesId) {
+			await libraryHighlight(libraryId);		// Triggers and manages the library menu
+			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
+			displaySeries(allSeries, seriesGrid, seriesId);
+		}
+
+		function displayLibraries(libraries) {
+			librariesList.innerHTML = '';
+
+			Array.from(libraries).forEach((library, index) => {
+				const listItem = document.createElement('li');
+				listItem.classList.add('library-item');
+				listItem.id = library.id;
+
+				const thumbnailWrapper = document.createElement('div');
+				thumbnailWrapper.classList.add('thumbnail-wrapper');
+
+				const libraryThumbnail = document.createElement('img');
+				libraryThumbnail.classList.add('library-thumbnail');
+				libraryThumbnail.src = `library-thumbnails/${library.name}.png`;
+				libraryThumbnail.onerror = () => {
+					libraryThumbnail.onerror = null;
+					libraryThumbnail.src = `library-thumbnails/${library.name}.jpg`;
+				};
+
+				libraryThumbnail.alt = `${library.name} Cover`;
+				thumbnailWrapper.appendChild(libraryThumbnail);
+				listItem.appendChild(thumbnailWrapper);
+
+				const libraryName = document.createElement('div');
+				libraryName.classList.add('library-name');
+				libraryName.textContent = library.name;
+				listItem.appendChild(libraryName);
+
+				listItem.addEventListener('click', () => {
+
+					currentPath = parseHashAndParams();
+					if ((currentPath.path == 'series') && (currentPath.params.get('library_id') == library.id)) {
+						navigateTo(`#library?library_id=${library.id}&series_id=${currentPath.params.get('series_id')}`);
+					}
+					else {
+						navigateTo(`#library?library_id=${library.id}`);
+					}
+
+				});
+				librariesList.appendChild(listItem);
+			});
+		}
+
+		function getAltTitles(serie) {
+			const labels = ['Time', 'Story', 'Art'];
+			return labels.reduce((out, label) => {
+				const altTitle = serie.metadata.alternateTitles.find(
+					(alt) => alt.label === label
+				);
+				out[label.toLowerCase()] = altTitle ? altTitle.title : 'N/A';
+				return out;
+			}, {});
+		}
+
+
+		async function displayHeader(serie) {
+			const altTitle = getAltTitles(serie);
+			const creditString = altTitle.story == altTitle.art
+				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">
+						${altTitle.story}
+					</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">
+						${altTitle.art}
+					</a>`;
+
+			seriesHeader.innerHTML = `
+			<div class="header-pic-container">
+				<div class="thumbnail-wrapper">
+					<img id="seriesHeaderThumbnail" src="${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
+				</div>
+			</div>
+			<div class="header-title">
+				<span class="title">${serie.metadata.title}</span>
+				<span class="notes">
+					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
+			</div>
+			<div class="header-summary">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+			`;
+
+			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
+
+			seriesMiniHeader.innerHTML = `
+				<span class="mini-title">${serie.metadata.title}</span>
+			`
+		}
+
+		async function buildBookItem(item, book, format, target) {
+			if (item.childNodes[0]) {
+				item.childNodes[0].remove();
+			}
+			item.title = 'Read book';
+
+			const booksItem = addItem('div', {
+				className: 'book-item'
+			});
+
+			const mainRow = addItem('div', {
+				className: 'data-row top-row'
+			});
+
+			if (format == 'longname') {
+				mainRow.classList.add('book-row');
+				const volumeNumberLabel = document.createElement('span');
+				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
+				const pagesLabel = document.createElement('span');
+				pagesLabel.innerHTML = `<span class="${darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
+				mainRow.appendChild(volumeNumberLabel);
+				mainRow.appendChild(pagesLabel);
+			} else {
+				mainRow.classList.add('book-series-row', 'red');
+				mainRow.title = `Open series: ${book.seriesTitle}`;
+				mainRow.textContent = book.seriesTitle;
+				mainRow.addEventListener('click', (event) => {
+					event.stopPropagation();
+					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
+				});
+				noPointerDown(mainRow);
+			}
+
+			const secondRow = document.createElement('div');
+			secondRow.classList.add('data-row');
+
+			if (format == 'longname') {
+				secondRow.classList.add('info-row');
+				secondRow.textContent = book.metadata.title;
+			} else if (format == 'compact') {
+				const volumeNumberLabel = document.createElement('span');
+				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
+				const pagesLabel = document.createElement('span');
+				pagesLabel.innerHTML = `<span class="${darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
+				secondRow.appendChild(volumeNumberLabel);
+				secondRow.appendChild(pagesLabel);
+			} else if (format == 'timeline') {
+				const volumeNumberLabelShort = document.createElement('span');
+				volumeNumberLabelShort.innerHTML = `Vol.${book.metadata.number}`;
+				const timeLabel = document.createElement('span');
+
+				const dateString = book.readProgress ?
+					new Intl.DateTimeFormat('en-GB', {
+						day: '2-digit',
+						month: 'short',
+						year: '2-digit'
+					}).format(new Date(book.readProgress.readDate))
+					: '';
+
+				timeLabel.innerHTML = `<span class='${darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`;
+				secondRow.appendChild(volumeNumberLabelShort);
+				secondRow.appendChild(timeLabel);
+			}
+
+			const thumbnailWrapper = document.createElement('div');
+			thumbnailWrapper.classList.add('thumbnail-wrapper');
+
+			const bookThumbnail = document.createElement('img');
+			bookThumbnail.classList.add('book-thumbnail', 'hidden');
+			bookThumbnail.src = 'transparent.png';
+			bookThumbnail.lazySrc = `${mbBaseUrl}/api/v1/books/${book.id}/thumbnail`;
+			bookThumbnail.alt = book.metadata.title;
+			//bookThumbnail.loading = 'lazy';
+
+			addLazyLoading(bookThumbnail);
+
+			const bookFader = addItem('div', {
+				className: 'book-fader'
+			});
+
+			const bookOverlay = addItem('div', {
+				className: 'book-overlay'
+			});
+
+			const bookStatus = addItem('div', {
+				className: 'book-status'
+			});
+
+			const unread = (book.readProgress == null);
+
+			if (unread) {
+				const unreadBookBadge = addItem('div', {
+					className: 'unread-book'
+				});
+				bookStatus.appendChild(unreadBookBadge);
+			}
+
+			const markAsRead = addItem('div', {
+				className: 'mini-buttons mark-as-read',
+				title: 'Mark as Read',
+				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
+			});
+			markAsRead.addEventListener('click', () => {
+				event.stopPropagation();
+				setReadStatus(null, book.id, true, item, format);
+			})
+			noPointerDown(markAsRead);
+
+			const markAsUnread = addItem('div', {
+				className: 'mini-buttons mark-as-unread',
+				title: 'Mark as Unread',
+				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
+			});
+			markAsUnread.addEventListener('click', () => {
+				event.stopPropagation();
+				setReadStatus(null, book.id, false, item, format);
+			})
+			noPointerDown(markAsUnread);
+
+			bookOverlay.appendChild(markAsRead);
+			bookOverlay.appendChild(markAsUnread);
+
+			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
+			const progressBar = document.createElement('div');
+			progressBar.classList.add('progress-bar');
+			const progressGauge = document.createElement('div');
+			progressGauge.classList.add('progress-gauge');
+			if (progress == 0) {
+				progressBar.classList.add('no-show');
+			} else {
+				progressGauge.style.width = `${Math.round(100 * progress / book.media.pagesCount)}%`;
+			}
+
+			booksItem.append(
+				thumbnailWrapper,
+				progressBar,
+				mainRow,
+				secondRow
+			);
+
+			thumbnailWrapper.append(
+				bookThumbnail,
+				bookFader,
+				bookOverlay,
+				bookStatus
+			);
+
+			progressBar.appendChild(progressGauge);
+
+			addTouchScaler(booksItem, async () => {
+				const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
+				const readingDirection = seriesData.metadata.readingDirection;
+				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
+				setIncognito(false);
+
+				navigateTo(`#bookread
+						?library_id=${book.libraryId}
+						&series_id=${book.seriesId}
+						&book_id=${book.id}
+						&dir=${(readingDirection == 'RIGHT_TO_LEFT' ? 'rtl' : 'ltr')}
+						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
+			});
+
+			item.appendChild(booksItem);
+
+		}
+
+		function displayBooks(books, target, format, focus = null) {
+			/*
+				"format" can be one of the follows
+				- longname: will not show the series name, but the book file name
+				- compact: will show series name and pages 
+				- timeline: will show latest read date
+			*/
+			// focus is the book id to focus on
+			while (target.firstChild) {
+				target.removeChild(target.firstChild);
+			}
+
+			if (books.length === 0) {
+				const noBooksMsg = document.createElement('p');
+				noBooksMsg.textContent = 'No books available';
+				booksGrid.appendChild(noBooksMsg);
+				return;
+			}
+
+			books.forEach(book => {
+				const bookContainer = addItem('div', {
+					className: 'book-container',
+					id: book.id
+				});
+
+				buildBookItem(bookContainer, book, format, target);
+
+				target.appendChild(bookContainer);
+			});
+
+			if (target == booksGrid) {
+				sectionShow(booksGrid);
+				sectionShow(seriesHeader);
+				sectionShow(seriesMiniHeader);
+
+				if (focus) {
+					var item = document.getElementById(focus);
+					const yOffset = -150;
+					const y = item.getBoundingClientRect().top + window.pageYOffset + yOffset;
+					window.scrollTo({ top: y });
+
+					//TODO FIX MOVING OUT OF ITEM, disabled for now
+
+					currentlyScaled = item.firstChild;
+					item.firstChild.classList.add('scaled');
+
+				} else {
+					window.scrollTo({ top: 0 });
+				}
+			}
+
+
+		}
+
+		// Function to trigger the home page layout
+		async function selectHome() {
+
+			libraryHighlight('homeButton');
+
+			seriesGrid.innerHTML = ''; // Clear the series grid
+			booksGrid.innerHTML = ''; // Clear the series grid
+			stripGrid.innerHTML = '';
+
+			let keepReadingArray = (await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`)).content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
+
+			let onDeckArray = (await callAPI(`/api/v1/books/ondeck`)).content;
+
+			let recentBooksArray = (await callAPI(`/api/v1/books?page=0&size=20&sort=created,desc`)).content;
+
+			let recentSeriesArray = (await callAPI(`/api/v1/series/new`)).content;
+
+			let updatedSeriesArray = (await callAPI(`/api/v1/series/updated`)).content;
+
+			let readBooksArray = (await callAPI(`/api/v1/books?read_status=READ&sort=readProgress.readDate,desc`)).content;
+
+			sectionShow(homeStripsContainer);
+
+			displayBooks(keepReadingArray, homeStripKeepReading, 'compact');
+			displayBooks(onDeckArray, homeStripOnDeck, 'compact');
+			displayBooks(recentBooksArray, homeStripRecentBooks, 'compact');
+			displaySeries(recentSeriesArray, homeStripRecentSeries);
+			displaySeries(updatedSeriesArray, homeStripUpdatedSeries);
+			displayBooks(readBooksArray, homeStripReadBooks, 'timeline');
+
+			setTimeout(updateSliderMax, 10);
+
+		}
+
+		homeButton.addEventListener('click', () => {
+			navigateTo('#dashboard');
+		});
+
+
+		dashboardElements = {
+			allKeepReading: {
+				code: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
+				getItems: async (page) => {
+					const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
+					out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
+					return (out);
+				},
+				showItems: async (input) => {
+					displayBooks(input, stripGrid, 'compact');
+				}
+			},
+			allOnDeck: {
+				code: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/books/ondeck`));
+				},
+				showItems: async (input) => {
+					displayBooks(input, stripGrid, 'compact');
+				}
+			},
+			allRecentBooks: {
+				code: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/books?page=${page}&size=50&sort=created,desc`));
+				},
+				showItems: async (input) => {
+					displayBooks(input, stripGrid, 'compact');
+				}
+			},
+			allRecentSeries: {
+				code: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
+				},
+				showItems: async (input) => {
+					displaySeries(input, stripGrid);
+				}
+			},
+			allUpdatedSeries: {
+				code: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
+				},
+				showItems: async (input) => {
+					displaySeries(input, stripGrid);
+				}
+			},
+			allReadBooks: {
+				code: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books',
+				getItems: async (page) => {
+					return (await callAPI(`/api/v1/books?page=${page}&size=50&read_status=READ&sort=readProgress.readDate,desc`));
+				},
+				showItems: async (input) => {
+					displayBooks(input, stripGrid, 'timeline');
+				},
+			}
+		}
+
+		async function dashboardAll(element, page) {
+			libraryHighlight('homeButton');
+
+			seriesGrid.innerHTML = ''; // Clear the series grid
+			booksGrid.innerHTML = ''; // Clear the series grid
+			stripGrid.innerHTML = '';
+
+			sectionShow(stripGridContainer);
+			stripGridHeader.innerHTML = dashboardElements[element].code;
+			const data = await dashboardElements[element].getItems(page);
+			const array = data.content;
+
+			stripPrevPage.classList.remove('disabled');
+			stripNextPage.classList.remove('disabled');
+			if (page <= 0) stripPrevPage.classList.add('disabled');
+			if (page >= data.totalPages - 1) stripNextPage.classList.add('disabled');
+
+			dashboardElements[element].showItems(array);
+		}
+
+
+
+		[allKeepReading, allOnDeck, allRecentBooks, allRecentSeries, allUpdatedSeries, allReadBooks].forEach((element) => {
+			element.addEventListener('click', async (event) => {
+				//dashboardAll(event.target.parentElement.id);
+				navigateTo('#dashboard?all=' + event.target.parentElement.id + '&page=0')
+			});
+		});
+
+
+		// Open a whole series fetching all its books and showing them with the correct header
+		// if seriesdata is not available at the moment of the call, it fetches it from the server
+		async function openSeries(libraryId, seriesId, bookId) {
+
+			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
+			//const books = await fetchBooks(seriesId);
+			let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);
+			books = books.content;
+
+			await libraryHighlight(libraryId);
+			displayHeader(seriesData);
+			displayBooks(books, booksGrid, 'longname', bookId);
+		}
+
+		async function bootSequence() {
+			changeAccent(accentId);
+			changeTheme(darkTheme);
+			setIncognito(false);
+
+			sectionShow(stickyContainer);
+
+			let series_data = null;
+			await fetchLibraries();
+			loadContent();
+		}
+
+		let rd = {
+			preloadCount: 4,
+			preloadPicDelay: 300,
+			loadDelay: 100,
+			jumpTimeout: null,
+
+			preloadStack: {}, // Contains all the preload timers, one for each spread that's going to be loaded
+			picLoadStack: [], // Contains all load image objects, both direct load and preload
+
+			pageModes: [
+				{ icon: 'reader-buttons fa-solid fa-book-open' },
+				{ icon: 'reader-buttons fa-solid fa-note-sticky' },
+				{ icon: 'reader-buttons fa-solid fa-rotate' }
+			],
+			pageMode: Number(localStorage.getItem('mbPageMode')) ?? 2,
+
+			ltr: null,
+			currentPage: 0,
+			pages: [],					// this is the array of pages data in the form url, iscover etc
+			uiPages: [],				// array of page images with alt = page number
+			uiSpreads: [],				// array of divs with the correct paged uiPages inside
+			uiSpreadsPages: [],		// array of arrays that associates each uiSpreads div index to its uiPages index.
+			currentPageIndex: 0,
+			currentSpreadIndex: 0,
+			oldSpreadIndex: 0,
+			isDraggingProgressBar: false,
+
+			libraryId: 0,
+			seriesId: 0,
+			bookId: 0,
+
+			historyPath: '',
+			bookPath: '',
+
+			incognito: false
+		};
+
+		readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
+
+		function readBook(libraryId, seriesId, bookId, dir, pag) {
+			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
+
+			clearAllTimeouts();
+			rd.picLoadStack = [];
+			rd.jumpTimeout = null;
+
+			rd.ltr = (dir == 'ltr');
+			rd.currentPage = pag;
+			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
+			rd.uiPages = [];				// array of page images with alt = page number
+			rd.uiSpreads = [];				// array of divs with the correct paged uiPages inside
+			rd.uiSpreadsPages = [];		// array of arrays that associates each uiSpreads div index to its uiPages index.
+			rd.currentPageIndex = 0;
+			rd.currentSpreadIndex = 0;
+			rd.oldSpreadIndex = 0;
+			rd.isDraggingProgressBar = false;
+
+			rd.libraryId = libraryId;
+			rd.seriesId = seriesId;
+			rd.bookId = bookId;
+
+			readerViewer.innerHTML = '';
+
+			sectionShow(readerContainer);
+
+			initViewer();
+
+		}
+
+		function preloadPages(startSpreadIndex, count) {
+			//return; //XXX REMOVED PRELOAD
+			if (isSectionHidden(readerContainer)) return;
+			console.log("preloadPages: "+startSpreadIndex+" +/- "+count);
+			for (let i = 1; i <= count; i++) {
+				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack)) ){
+					console.log('startTimeout POS ' + (startSpreadIndex + i))
+					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
+						if (picLoadStackSize() >= 20000000) {
+							console.log('                     ABORT');
+							return;
+						}
+						console.log("A3 " + i);
+						populateSpread(startSpreadIndex + i, true);
+					});
+				}
+				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack)) ){
+					console.log('startTimeout NEG ' + (startSpreadIndex - i))
+					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
+						if (picLoadStackSize() >= 20000000) {
+							console.log('                     ABORT');
+							return;
+						}
+						console.log("A4 " + i);
+						populateSpread(startSpreadIndex - i, true);
+					});
+				}
+			}
+		}
+
+
+		// Initialize viewer with page data
+		async function initViewer() {
+			rd.pages = await fetchPages(rd.bookId);
+
+			let bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+
+			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
+				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
+			}
+
+			leftLimit.innerText = rd.ltr ? 1 : rd.uiPages.length;
+			rightLimit.innerText = rd.ltr ? rd.uiPages.length : 1;
+			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
+
+			updateViewer();
+			updateProgressBar();
+		}
+
+		function buildSizePic(item, ratio, picratio) {
+			item.style.width = `calc(min(${100 * picratio / ratio}vw, ${picratio * 100}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+		}
+
+		function buildSize(item, ratio) {
+			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+		}
+
+		function buildFlock(item, index, total) {
+			const flockRate = [
+				rd.ltr ? (1.0 - index / total) : (index / total),
+				rd.ltr ? (index / total) : (1.0 - index / total),
+				rd.ltr ? - 0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
+			]
+			const bookThickness = (80 - (80 / (800 * 800)) * (total - 800) * (total - 800)) / 800;//Was 40/800 and (15 / 800) * (dataOut.length / 100) before
+			const flockCut = Math.min(360 * total / 700, 360);
+			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
+
+			item.style.transform = `translate(calc(-50% - ${flockOffset[2]}vh), -50%)`;
+			item.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
+			item.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
+
+		}
+
+		// Fetch page data
+		async function fetchPages(bookId) {
+
+			const data = await callAPI(`/api/v1/books/${bookId}/pages`);
+
+			const dataOut = data.map(page => ({
+				url: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				pageNum: page.number,
+				width: page.width,
+				height: page.height,
+				AR: page.width / page.height,
+				isCover: page.number == 1,
+				isCurrent: page.number == rd.currentPage,
+				isDoubleSpread: page.width > page.height,
+				size: page.sizeBytes
+			}));
+
+			readerMaxRatio = Math.max(...dataOut.map(item => item.width / item.height));
+			if (readerMaxRatio < 1) readerMaxRatio = 2 * readerMaxRatio;
+
+			dataOut.forEach((element, index) => {
+				const imgPage = addItem('img', {
+					alt: element.pageNum,
+					className: 'page multiply',
+					src: 'transparent.png',
+					hasSrc: false,
+				});
+				rd.uiPages.push(imgPage);
+			});
+
+			let i = 0;
+			let spreadTotal = 0;
+
+			readerViewer.classList.remove('spread-layout');
+			readerViewer.classList.remove('page-layout');
+
+			readerHorizontal = (rd.pageMode == 0) || ((screenAR > readerMaxRatio) && !(rd.pageMode == 1));
+
+			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
+
+			if (readerHorizontal) {
+				while (i < dataOut.length) {
+					const spreadItem = document.createElement('div');
+					spreadItem.classList.add('spread-layout');
+					let spreadArray = [i];
+
+					if (dataOut[i].isCover) {
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
+
+						buildSize(spreadItem, dataOut[i].AR);
+
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i++;
+						const coverlay = document.createElement('div');
+						coverlay.id = 'coverlay';
+						coverlay.style.width = spreadItem.style.width;
+						coverlay.style.height = spreadItem.style.height;
+						spreadItem.appendChild(coverlay);
+					} else if (dataOut[i].isDoubleSpread) {
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add('double-page', 'flock')
+
+						buildSize(spreadItem, dataOut[i].AR);
+						buildFlock(spreadItem, i, dataOut.length);
+
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i++;
+					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
+						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
+						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
+
+						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
+						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
+
+						spreadItem.classList.add('two-pages', 'flock')
+
+						buildSize(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
+						buildFlock(spreadItem, i, dataOut.length);
+						buildSizePic(rd.uiPages[i], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i].AR);
+						buildSizePic(rd.uiPages[i + 1], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i + 1].AR);
+						//rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
+						//rd.uiPages[i].style.height = spreadItem.style.height;
+						//rd.uiPages[i + 1].style.width = spreadItem.style.height * dataOut[i + 1].AR;
+						//rd.uiPages[i + 1].style.height = spreadItem.style.height;
+						spreadArray.push(i + 1);
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i += 2;
+					} else if (i < dataOut.length - 1) {
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add('double-page', 'flock')
+
+						buildSize(spreadItem, 2 * dataOut[i].AR);
+						buildFlock(spreadItem, i, dataOut.length);
+
+						rd.uiPages[i].style.width = spreadItem.style.width * 0.5;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style[rd.ltr ? 'right' : 'left'] = '0px'; // align pane to right or left based on ltr
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i++;
+					} else {
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add('single-page')
+
+						buildSize(spreadItem, dataOut[i].AR);
+
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i++;
+					}
+					spreadTotal++;
+
+					rd.uiSpreadsPages.push(spreadArray);
+					rd.uiSpreads.push(spreadItem);
+					readerViewer.appendChild(spreadItem);
+					spreadHide(spreadItem);
+				}
+			} else {
+				while (i < dataOut.length) {
+					const spreadItem = document.createElement('div');
+					spreadItem.classList.add('page-layout');
+					let spreadArray = [i];
+
+					if (dataOut[i].isCover) {
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
+
+						buildSize(spreadItem, dataOut[i].AR);
+
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i++;
+						const coverlay = document.createElement('div');
+						coverlay.id = 'coverlay';
+						coverlay.style.width = spreadItem.style.width;
+						coverlay.style.height = spreadItem.style.height;
+						spreadItem.appendChild(coverlay);
+					}
+					/*else if (dataOut[i].isDoubleSpread) {
+						
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add('double-page')
+						spreadItem.style.width = `${100 * dataOut[i].width / dataOut[i].height}vh`;
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						
+						i++;
+					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
+						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
+						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
+						spreadItem.classList.add('two-pages')
+						spreadItem.style.width = `${100 * (dataOut[i].width + dataOut[i + 1].width) / dataOut[i].height}vh`;
+						spreadArray.push([i + 1]);
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i += 2;
+					} else if (i < dataOut.length - 1) {
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add('double-page')
+						spreadItem.style.width = `${200 * dataOut[i].width / dataOut[i].height}vh`;
+						if (!rd.ltr) rd.uiPages[i].style.marginLeft = `auto`;
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i++;
+					} */
+					else {
+						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
+
+						buildSize(spreadItem, dataOut[i].AR);
+
+						rd.uiPages[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = spreadItem.style.height;
+						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						i++;
+					}
+					spreadTotal++;
+
+					rd.uiSpreadsPages.push(spreadArray);
+					rd.uiSpreads.push(spreadItem);
+					readerViewer.appendChild(spreadItem);
+					spreadHide(spreadItem);
+				}
+
+			}
+			return dataOut;
+		}
+
+		// TIMEOUT MANAGEMENT
+		function startTimeout(id, duration, callback) {
+			const timeoutId = setTimeout(() => {
+				// Execute the callback when the timeout finishes
+				callback();
+				delete rd.preloadStack[id];
+			}, duration);
+
+			// Add the timeoutId to the stack
+			rd.preloadStack[id] = timeoutId;
+		}
+
+		// Function to clear all timeouts (optional, if you need this functionality)
+		function clearAllTimeouts() {
+			console.log("clearAllTimeouts");
+			Object.values(rd.preloadStack).forEach(timer => {
+				clearTimeout(timer);
+			});
+			rd.preloadStack = {};
+		}
+
+		function picLoadStackSize() {
+			let out = 0;
+			rd.picLoadStack.forEach(element => {
+				out += rd.pages[element].size;
+			});
+			return (out);
+		}
+
+		function printStack(str_in) {
+			let out = str_in + ' *';
+			rd.picLoadStack.forEach(element => {
+				out = out + ' ' + element;
+			})
+			out = 'tot:' + rd.picLoadStack.length + ' ' + out + ' *';
+			console.log(out);
+		}
+
+		async function populateSpread(spreadIndex, isPreload = false) {
+			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
+			console.log("populateSpread:" + spreadIndex);
+			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
+				if (rd.picLoadStack.indexOf(element) == -1) {
+					if (!rd.uiPages[element].hasSrc) {
+						//rd.uiPages[element].src = 'anim5.gif';
+						rd.picLoadStack.push(element); // Add to the stack
+						printStack('S');
+						rd.uiPages[element].classList.add('loading');
+						try {
+							// Fetch the image
+							const blobUrl = await fetchMedia(rd.pages[element].url);
+							rd.uiPages[element].src = blobUrl;
+							rd.uiPages[element].hasSrc = true;
+							//rd.uiPages[element].src = rd.pages[element].url;
+							// Handle successful load
+							rd.uiPages[element].addEventListener('load', () => {
+								//if(rd.uiPages[element] == null) return; //TODO questa parte funziona o è inutile?
+								rd.uiPages[element].classList.remove('loading');
+								if (isSectionHidden(readerContainer)) {
+									printStack('LX ');
+									return;
+								}
+								const index = rd.picLoadStack.indexOf(element);
+								printStack('L ' + index);
+								if (index !== -1) {
+									rd.picLoadStack.splice(index, 1); // Remove from stack
+								};
+								if (!isPreload) {
+									preloadPages(spreadIndex, rd.preloadCount)
+								}
+							});
+
+						} catch (error) {
+							console.error(`Failed to load image for element ${element}:`, error);
+							// Handle error (optional: remove from stack or show fallback)
+						}
+					}
+
+					// Immediately handle cached images
+					else if (rd.uiPages[element].complete) {
+						rd.uiPages[element].classList.remove('loading');
+						const index = rd.picLoadStack.indexOf(element);
+						if (index !== -1) {
+							rd.picLoadStack.splice(index, 1);
+						}
+						// Force preload when landing on a cached image
+						if (!preload) {
+							preloadPages(spreadIndex, rd.preloadCount)
+						}
+					}
+				}
+			});
+
+			// Wait for all fetches to complete
+			await Promise.all(promises);
+		}
+
+		// Update the viewer for the current page or spread
+		function updateViewer() {
+			console.log("A5");
+			populateSpread(rd.currentSpreadIndex);
+			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
+		}
+
+		function handleLeftArrow() {
+			jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
+		}
+
+		function handleRightArrow() {
+			jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
+		}
+
+		function handleLeftLimit() {
+			jumpToSpread(rd.ltr ? 0 : rd.uiSpreads.length - 1);
+		}
+
+		function handleRightLimit() {
+			jumpToSpread(rd.ltr ? rd.uiSpreads.length - 1 : 0);
+		}
+
+		function getPage(index) {
+			return (1 + Number((rd.ltr
+				? rd.uiSpreadsPages[index][0]
+				: rd.uiSpreadsPages[index][1] ?? rd.uiSpreadsPages[index][0]))
+			);
+		}
+
+		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
+		function jumpString(index) {
+			const newPage = getPage(index);
+			const stringOut = `${basePath}#bookread
+			?library_id=${rd.libraryId}
+			&series_id=${rd.seriesId}
+			&book_id=${rd.bookId}
+			&dir=${rd.ltr ? 'ltr' : 'rtl'}
+			&pag=${newPage}`;
+
+			if (!rd.incognito) {
+				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: newPage }), false)
+					.then(data => console.log('Read progress updated:', data))
+					.catch(error => console.error('Error:', error));
+			}
+
+			return (stringOut);
+		}
+
+		function purgeLoading() {
+			console.log('purgeLoading');
+			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
+				const item = rd.picLoadStack[i];
+				console.log('purged page ' + item);
+				rd.uiPages[item].hasSrc = false;
+				rd.uiPages[item].src = 'transparent.png';
+				rd.picLoadStack.splice(i, 1); // Remove the element at index i
+				printStack('P');
+			}
+			clearAllTimeouts();
+		}
+
+		function jumpToSpread(newSpreadTarget) {
+
+			const localOldSpreadIndex = rd.currentSpreadIndex;
+			const localNewSpreadIndex = newSpreadTarget;
+
+			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
+
+			console.log('                                  jumpto:' + newSpreadTarget);
+
+			purgeLoading();
+
+			if (rd.jumpTimeout === null) {
+				rd.oldSpreadIndex = localOldSpreadIndex;
+				rd.currentSpreadIndex = localNewSpreadIndex;
+
+				rd.jumpTimeout = setTimeout(() => {
+					if (isSectionHidden(readerContainer)) return;
+					spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+					console.log("A1");
+					populateSpread(localNewSpreadIndex);
+					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+					rd.jumpTimeout = null;
+				}, rd.loadDelay);
+			} else {
+				clearTimeout(rd.jumpTimeout);
+				rd.jumpTimeout = null;
+
+				rd.currentSpreadIndex = localNewSpreadIndex;
+
+				rd.jumpTimeout = setTimeout(() => {
+					if (isSectionHidden(readerContainer)) return;
+					spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
+					console.log("A2");
+					populateSpread(localNewSpreadIndex);
+					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+					rd.jumpTimeout = null;
+				}, rd.loadDelay);
+			}
+
+
+			history.replaceState(null, '', jumpString(newSpreadTarget));
+
+			updateProgressBar();
+		}
+
+		function toggleMenu() {
+			sectionToggle(controlPanel);
+		}
+
+		function hideMenu() {
+			sectionHide(controlPanel);
+		}
+
+		leftArrow.addEventListener('click', handleLeftArrow);
+		rightArrow.addEventListener('click', handleRightArrow);
+		leftLimit.addEventListener('click', handleLeftLimit);
+		rightLimit.addEventListener('click', handleRightLimit);
+
+		toLeftPage.addEventListener('click', handleLeftArrow);
+		toRightPage.addEventListener('click', handleRightArrow);
+		openMenu.addEventListener('click', toggleMenu);
+
+		// Seek function to move to specific spread based on click or drag
+		function seek(event) {//TODO check why it fires twice for any seek
+			console.log('                                     seek');
+			const progressBarWidth = readerProgressBar.offsetWidth;
+			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
+			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
+
+			//rd.currentSpreadIndex = Math.floor(newProgressPercent * (rd.uiSpreads.length - 1));
+			//console.log('seekjump to' + rd.currentSpreadIndex)
+			jumpToSpread(Math.floor(newProgressPercent * (rd.uiSpreads.length - 1)));
+		}
+
+		// Dragging the progress bar
+		readerProgressBar.addEventListener('mousedown', (event) => {
+			rd.isDraggingProgressBar = true;
+			event.preventDefault();
+
+			seek(event);
+		});
+		readerProgressBar.addEventListener('touchstart', (event) => {
+			rd.isDraggingProgressBar = true;
+			seek(event.touches[0]); // Use the first touch point
+		});
+
+		document.addEventListener('scroll', function () {
+			//TODO: farlo succedere solo quando miniheader è visible
+			if (!isSectionHidden(seriesMiniHeader)) {
+				if ((window.scrollY > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
+					seriesMiniHeader.classList.remove('collapse');
+				} else if ((window.scrollY < 200) && !seriesMiniHeader.classList.contains('collapse')) {
+					seriesMiniHeader.classList.add('collapse');
+				}
+			}
+
+			if (!isSectionHidden(stripGridContainer)) {
+				if ((window.scrollY < 5) && (stripGridHeaderContainer.classList.contains('collapse'))) {
+					stripGridHeaderContainer.classList.remove('collapse');
+				} else if ((window.scrollY > 10) && !stripGridHeaderContainer.classList.contains('collapse')) {
+					stripGridHeaderContainer.classList.add('collapse');
+				}
+			}
+		});
+
+		seriesMiniHeader.addEventListener('click', () => {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+
+		document.addEventListener('mousemove', (event) => {
+			if (rd.isDraggingProgressBar) {
+				seek(event);
+			}
+		});
+		document.addEventListener('touchmove', (event) => {
+			if (rd.isDraggingProgressBar) {
+				seek(event.touches[0]); // Use the first touch point
+			}
+		});
+
+		document.addEventListener('mouseup', () => {
+			rd.isDraggingProgressBar = false;
+		});
+		document.addEventListener('touchend', () => {
+			rd.isDraggingProgressBar = false;
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowLeft') {
+				if (!isSectionHidden(readerContainer)) handleLeftArrow();
+			} else if (event.key === 'ArrowRight') {
+				if (!isSectionHidden(readerContainer)) handleRightArrow();
+			} else if (event.key === 'Escape' || event.key === 'ArrowDown') {
+				if (!isSectionHidden(readerContainer)) handleCloseReader();
+			} else if (event.code === 'Space' || event.key === ' ') {
+				if (!isSectionHidden(readerContainer)) toggleMenu();
+			}
+		});
+
+		document.addEventListener('pointerup', (event) => {
+			if (currentlyScaled && !currentlyScaled.contains(event.target)) {
+				currentlyScaled.classList.remove('scaled');
+				currentlyScaled = null;
+			}
+		});
+
+		function handleCloseReader() {
+			console.log("******************** CLOSE READER ***********************");
+			hideMenu();
+			incognitoMark.classList.remove('incognito');
+
+			clearTimeout(rd.jumpTimeout);
+				rd.uiPages.forEach(item => {
+					item.remove();
+					item = null;
+				});
+
+				rd.uiSpreads.forEach(item => {
+					item.remove();
+					item = null;
+				});
+
+			purgeLoading();
+			clearAllTimeouts();
+
+			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
+		}
+
+		readerClose.addEventListener('click', () => {
+			handleCloseReader();
+		})
+
+		function setIncognito(status) {
+			readerIncognito.classList.remove('incognito');
+			incognitoMark.classList.remove('incognito');
+
+			if (status) {
+				readerIncognito.classList.add('incognito');
+				incognitoMark.classList.add('incognito')
+			};
+
+			rd.incognito = status;
+		}
+
+		readerIncognito.addEventListener('click', () => {
+			setIncognito(!rd.incognito);
+		})
+
+		function switchPageFormat(newId) {
+			rd.pageMode = newId;
+			readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
+
+			localStorage.setItem('mbPageMode', rd.pageMode);
+			navigateTo(window.location.hash);
+		}
+
+		readerPageFormat.addEventListener('click', () => {
+			switchPageFormat((rd.pageMode + 1) % 3);
+		})
+
+		function updateProgressBar() {
+			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
+			readerProgress.style.width = `${progressPercent}%`;
+			readerProgress.style.float = rd.ltr ? 'left' : 'right';
+
+			readerPage.style.left = rd.ltr
+				? `min(max(0px, calc(${progressPercent}% - 20px)), calc(100% - 40px))`
+				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
+
+			const newPage = getPage(rd.currentSpreadIndex);
+			readerPage.innerText = newPage;
+		}
+
+
+		function parseHashAndParams() {
+			const fullHash = window.location.hash.substring(1); // Remove leading '#'
+			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
+
+			// Parse parameters if they exist
+			const params = new URLSearchParams(paramString || '');
+
+			// Return both path and params
+			return { path, params };
+		}
+
+		async function loadContent() {
+			const { path, params } = parseHashAndParams();
+
+			await executeFade(1);
+			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+			screenAR = getScreenAR();
+			switch (path) {
+				case '':
+				case 'dashboard':
+					searchInput.value = '';
+					if (params.size == 0) {
+						await selectHome();
+					} else {
+						dashboardAll(params.get('all'), params.get('page'));
+					}
+					break;
+				case 'library':
+					searchInput.value = '';
+					await openLibrary(params.get('library_id'), params.get('series_id'));
+					break;
+				case 'series':
+					searchInput.value = '';
+					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
+					break;
+				case 'search':
+					searchInput.value = params.get('search_string');
+					await performSearch(params.get('search_string'));
+					break;
+				case 'bookread':
+					await readBook(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
+					break;
+				default:
+					console.log('no selection');
+			}
+			await executeFade(0);
+		}
+
+		function navigateTo(path) {
+			console.log(basePath + path);
+			history.pushState(null, '', basePath + path);
+			loadContent();
+		}
+
+		// Lazy-loading setup with Intersection Observer
+		const observer = new IntersectionObserver(async (entries, observer) => {
+			entries.forEach(async (entry) => {
+				if (entry.isIntersecting) {
+					const img = entry.target;
+					img.classList.add('loading');
+
+					// Set the actual src from lazySrc
+					const imageUrl = await fetchMedia(img.lazySrc);
+					img.src = imageUrl;
+
+					// Remove lazySrc to clean up
+					delete img.lazySrc;
+
+					img.addEventListener('load', () => {
+						img.classList.remove('hidden');
+						img.classList.remove('loading');
+					});
+					if (img.complete) {
+						img.classList.remove('hidden');
+						img.classList.remove('loading');
+					}
+					// Stop observing this image
+					observer.unobserve(img);
+				}
+			});
+		});
+
+		// Function to add lazy loading to an image
+		function addLazyLoading(img) {
+			observer.observe(img);
+		}
+
+		window.addEventListener('hashchange', loadContent);
+		document.addEventListener('popstate', loadContent);
+
+		if (loginScreen.classList.contains('auth-hidden')) bootSequence();
+
+		let sweepX = 0;
+		let sweepY = 0;
+
+		let touchStartX = 0;
+		let touchStartY = 0;
+		let isSingleTouch = true; // Track if it's a single-touch gesture
+
+		let currentlyScaled = null;
+
+
+		function handleTouchStart(event) {
+			if (window.visualViewport.scale > 1) return;
+			if (event.touches.length > 1) {
+				isSingleTouch = false; // Multiple touches: ignore for swipe
+				return;
+			}
+			isSingleTouch = true;
+			touchStartX = event.touches[0].clientX;
+			touchStartY = event.touches[0].clientY;
+		}
+
+		function handleTouchMove(event) {
+			if (window.visualViewport.scale > 1 || !isSingleTouch) return;
+
+			const touchEndX = event.touches[0].clientX;
+			const touchEndY = event.touches[0].clientY;
+
+			const diffX = touchEndX - touchStartX;
+			const diffY = touchEndY - touchStartY;
+
+			// Threshold for swipes
+			const threshold = 30; // Customize as needed
+
+			if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
+				if (diffX > 0) {
+					handleLeftArrow();
+					console.log('Swipe Right');
+				} else {
+					handleRightArrow();
+					console.log('Swipe Left');
+				}
+				isSingleTouch = false; // Reset to prevent repeat action on the same swipe
+			} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
+				if (diffY > 0) {
+					handleCloseReader();
+					console.log('Swipe Down');
+				} else {
+					console.log('Swipe Up');
+				}
+				isSingleTouch = false;
+			}
+		}
+
+		// Add event listeners
+		readerContainer.addEventListener('touchstart', handleTouchStart);
+		readerContainer.addEventListener('touchmove', handleTouchMove);
+
+	</script>
+</body>
+
+</html>

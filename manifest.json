@@ -1,0 +1,17 @@
+{
+	"name": "MangaBox",
+	"short_name": "MangaBox",
+	"scope": "/",
+	"display": "standalone",
+	"capture_links": "new-client",
+	"icons": [
+		{
+		  "src": "mangabox.png",
+		  "sizes": "192x192",
+		  "type": "image/png"
+		}
+	 ]
+ }
+ 
+ 
+ 
