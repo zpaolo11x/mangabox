@@ -7,7 +7,6 @@ on:
       - devtest
   release:
     types:
-      - created
       - published
 
 jobs:
