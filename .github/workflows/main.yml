@@ -93,7 +93,7 @@ jobs:
           name: linux-appimage
           path: dist/*.AppImage
 
-    release:
+  release:
     runs-on: ubuntu-latest
     needs: [macos, windows, linux]  # Ensure the build jobs are completed before creating a release
     steps:
