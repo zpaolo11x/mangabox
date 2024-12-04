@@ -101,15 +101,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up GitHub CLI
-        uses: cli/cli@v2
-        with:
-          gh-version: latest
+        run: |
+          sudo apt-get update
+          sudo apt-get install gh
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token < ${{ secrets.GH_TOKEN }}
 
       - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          VERSION=${{ github.ref_name }}  # This assumes the version is the tag, e.g., v1.0.0
+          VERSION=${{ github.ref_name }}  # This assumes the version is the tag, e.g., v3.0.0
           gh release create "$VERSION" dist/*.AppImage dist/*.exe dist/*x64.dmg dist/*arm64.dmg --title "Release $VERSION" --notes "Release notes for $VERSION" --target "$VERSION"
 
       - name: Upload release assets to GitHub
@@ -119,3 +120,4 @@ jobs:
           asset_path: dist/*.AppImage
           asset_name: MangaBox-linux.AppImage
           asset_content_type: application/octet-stream
+
