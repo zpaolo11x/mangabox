@@ -199,8 +199,8 @@ div.two-pages.flock {
 	border-style: solid;
 	border-color: transparent;
 	/*border-width: 0px calc(100vh * 20 / 800);*/
-	/*border-image: url('https://aerobox.freeddns.it/mangabox/pagesM.png') 0 80 0 80;*/
-	border-image: url('https://aerobox.freeddns.it/mangabox/pagesZ3.png') 0 80 0 80;
+	/*border-image: url('pagesM.png') 0 80 0 80;*/
+	border-image: url('pagesZ3.png') 0 80 0 80;
 	background-color:#d0cbc1;
 }
 

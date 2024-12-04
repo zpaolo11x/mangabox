@@ -33,7 +33,8 @@
       "icon": "assets/icons/mangabox.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+		"icon": "assets/icons/mangabox.png"
     }
   }
 }
