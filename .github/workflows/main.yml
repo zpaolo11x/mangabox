@@ -27,7 +27,7 @@ jobs:
         run: npm run build -- --mac --x64
 
       - name: Upload macOS x86 DMG
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos-dmg-x86
           path: dist/*x64.dmg
@@ -38,7 +38,7 @@ jobs:
         run: npm run build -- --mac --arm64
 
       - name: Upload macOS ARM DMG
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos-dmg-arm64
           path: dist/*arm64.dmg
@@ -63,7 +63,7 @@ jobs:
         run: npm run build -- --win --x64
 
       - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-portable
           path: dist/*.exe
@@ -88,7 +88,7 @@ jobs:
       run: npm run build -- --linux
 
     - name: Upload Linux artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: linux-appimage
         path: dist/*.AppImage
