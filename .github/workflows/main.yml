@@ -1,4 +1,4 @@
-name: Build Electron App
+name: Build and Release Electron App
 
 on:
   push:
@@ -71,24 +71,51 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build for Linux
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run build -- --linux
+      - name: Build for Linux
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build -- --linux
 
-    - name: Upload Linux artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: linux-appimage
-        path: dist/*.AppImage
+      - name: Upload Linux artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-appimage
+          path: dist/*.AppImage
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [macos, windows, linux]  # Ensure the build jobs are completed before creating a release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up GitHub CLI
+        uses: cli/cli@v2
+        with:
+          gh-version: latest
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          VERSION=${{ github.ref_name }}  # This assumes the version is the tag, e.g., v1.0.0
+          gh release create "$VERSION" dist/*.AppImage dist/*.exe dist/*x64.dmg dist/*arm64.dmg --title "Release $VERSION" --notes "Release notes for $VERSION" --target "$VERSION"
+
+      - name: Upload release assets to GitHub
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/*.AppImage
+          asset_name: MangaBox-linux.AppImage
+          asset_content_type: application/octet-stream
