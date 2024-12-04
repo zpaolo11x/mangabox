@@ -9,6 +9,10 @@ app.on('ready', () => {
     width: 1200,
     height: 800,
 	 autoHideMenuBar: true,
+	 titleBarOverlay: {
+      color: '#ffffff', // Initial light theme color
+      symbolColor: '#000000', // Initial light theme button color
+    },
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
