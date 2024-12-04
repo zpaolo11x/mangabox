@@ -93,7 +93,7 @@ jobs:
           name: linux-appimage
           path: dist/*.AppImage
 
-  release:
+    release:
     runs-on: ubuntu-latest
     needs: [macos, windows, linux]  # Ensure the build jobs are completed before creating a release
     steps:
@@ -106,7 +106,7 @@ jobs:
           sudo apt-get install gh
 
       - name: Authenticate with GitHub CLI
-        run: gh auth login --with-token < ${{ secrets.GH_TOKEN }}
+        run: echo ${{ secrets.GH_TOKEN }} | gh auth login --with-token
 
       - name: Create GitHub Release
         run: |
@@ -120,4 +120,5 @@ jobs:
           asset_path: dist/*.AppImage
           asset_name: MangaBox-linux.AppImage
           asset_content_type: application/octet-stream
+
 
