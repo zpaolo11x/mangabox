@@ -120,6 +120,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build -- --linux
+      
+      - name: Debug Build Output
+        run: ls -l dist
 
       - name: Upload Linux Artifact
         if: github.event_name == 'push'
