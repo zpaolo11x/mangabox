@@ -139,4 +139,3 @@ jobs:
           asset_path: dist/MangaBox-1.0.0.AppImage
           asset_name: app-linux.AppImage
           asset_content_type: application/octet-stream
-          token: ${{ secrets.GH_TOKEN }}
