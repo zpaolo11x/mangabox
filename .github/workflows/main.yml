@@ -5,9 +5,6 @@ on:
     branches:
       - main
       - devtest
-  release:
-    types:
-      - published
 
 jobs:
   macos:
@@ -29,42 +26,22 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build -- --mac --x64
 
-      - name: Upload macOS x86 Artifact
-        if: github.event_name == 'push'
+      - name: Upload macOS x86 DMG
         uses: actions/upload-artifact@v4
         with:
           name: macos-dmg-x86
           path: dist/*x64.dmg
-
-      - name: Upload macOS x86 Release Asset
-        if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: dist/*x64.dmg
-          asset_name: app-macos-x64.dmg
-          asset_content_type: application/octet-stream
 
       - name: Build for macOS (ARM)
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build -- --mac --arm64
 
-      - name: Upload macOS ARM Artifact
-        if: github.event_name == 'push'
+      - name: Upload macOS ARM DMG
         uses: actions/upload-artifact@v4
         with:
           name: macos-dmg-arm64
           path: dist/*arm64.dmg
-
-      - name: Upload macOS ARM Release Asset
-        if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: dist/*arm64.dmg
-          asset_name: app-macos-arm64.dmg
-          asset_content_type: application/octet-stream
 
   windows:
     runs-on: windows-latest
@@ -85,56 +62,33 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build -- --win --x64
 
-      - name: Upload Windows Artifact
-        if: github.event_name == 'push'
+      - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-portable
           path: dist/*.exe
 
-      - name: Upload Windows Release Asset
-        if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: dist/*.exe
-          asset_name: app-windows.exe
-          asset_content_type: application/octet-stream
-
   linux:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Build for Linux
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build -- --linux
-      
-      - name: Debug Build Output
-        run: ls -l dist
+    - name: Build for Linux
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: npm run build -- --linux
 
-      - name: Upload Linux Artifact
-        if: github.event_name == 'push'
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-appimage
-          path: dist/*.AppImage
-
-      - name: Upload Linux Release Asset
-        if: github.event_name == 'release'
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: dist/*.AppImage
-          asset_name: app-linux.AppImage
-          asset_content_type: application/octet-stream
+    - name: Upload Linux artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-appimage
+        path: dist/*.AppImage
