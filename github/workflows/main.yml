@@ -1,0 +1,57 @@
+name: Build Electron App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build for macOS (x86 and ARM)
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build -- --mac --x64
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-build
+          path: dist/*.dmg
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build for Windows
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npm run build -- --win --x64
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-portable
+          path: dist/*.exe
