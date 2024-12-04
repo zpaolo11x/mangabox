@@ -29,7 +29,7 @@ jobs:
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: macos-build
+          name: macos-dmg
           path: dist/*.dmg
 
   windows:
@@ -79,5 +79,5 @@ jobs:
     - name: Upload Linux artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: linux-build
-        path: dist/
+        name: linux-appimage
+        path: dist/*.AppImage
