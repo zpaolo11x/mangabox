@@ -93,6 +93,9 @@ jobs:
           git tag -a v${{ env.version }} -m "Release v${{ env.version }}"
           git push origin v${{ env.version }}
 
+      - name: List dist directory contents
+        run: ls -l dist/
+
       - name: Create GitHub Release
         id: create-release
         uses: softprops/action-gh-release@v1
