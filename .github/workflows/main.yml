@@ -93,6 +93,30 @@ jobs:
           git tag -a v${{ env.version }} -m "Release v${{ env.version }}"
           git push origin v${{ env.version }}
 
+      - name: Download macOS x64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-macOS-x64-${{ env.version }}
+          path: dist
+
+      - name: Download macOS arm64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-macOS-arm64-${{ env.version }}
+          path: dist
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Linux-${{ env.version }}
+          path: dist
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Windows-${{ env.version }}
+          path: dist
+
       - name: List dist directory contents
         run: ls -l dist/
 
