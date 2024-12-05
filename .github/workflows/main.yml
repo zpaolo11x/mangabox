@@ -73,7 +73,7 @@ jobs:
 
   release:
     needs: build
-    if: github.ref_name == 'devtest' # Run this job only for the 'main' branch
+    if: github.ref_name == 'main' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
