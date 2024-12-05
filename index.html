@@ -1981,15 +1981,17 @@
 			incognitoMark.classList.remove('incognito');
 
 			clearTimeout(rd.jumpTimeout);
-			rd.uiPages.forEach(item => {
-				item.remove();
-				item = null;
-			});
+			setTimeout(() => {
+				rd.uiPages.forEach(item => {
+					item.remove();
+					item = null;
+				});
 
-			rd.uiSpreads.forEach(item => {
-				item.remove();
-				item = null;
-			});
+				rd.uiSpreads.forEach(item => {
+					item.remove();
+					item = null;
+				});
+			}, 300); //300ms timeout so the reader can slide out
 
 			purgeLoading();
 			clearAllTimeouts();

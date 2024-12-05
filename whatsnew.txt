@@ -1,0 +1,2 @@
+- Fixed slide out of reader
+- Added what's new to release
