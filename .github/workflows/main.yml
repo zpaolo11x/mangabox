@@ -1,4 +1,4 @@
-name: Build Electron App
+name: Build and Release Electron App
 
 on:
   push:
@@ -7,8 +7,23 @@ on:
       - devtest
 
 jobs:
-  macos:
-    runs-on: macos-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            arch: x64
+            name: macOS-x64
+          - os: macos-latest
+            arch: arm64
+            name: macOS-arm64
+          - os: ubuntu-latest
+            arch: x64
+            name: Linux
+          - os: windows-latest
+            arch: x64
+            name: Windows
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,74 +36,137 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build for macOS (x86)
+      - name: Get version from package.json
+        id: version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build -- --mac --x64
+        run: |
+          if [ "${{ matrix.os }}" == "macos-latest" ]; then
+            npm run build -- --mac --${{ matrix.arch }}
+          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            npm run build -- --linux
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            npm run build -- --win
+          fi
+        shell: bash
+        if: matrix.os != 'windows-latest'
 
-      - name: Upload macOS x86 DMG
+      - name: Build the app (Windows)
+        run: npm run build -- --win
+        shell: pwsh
+        if: matrix.os == 'windows-latest'
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: macos-dmg-x86
-          path: dist/*x64.dmg
+          name: MangaBox-${{ matrix.name }}-${{ env.version }}
+          path: |
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.exe
 
-      - name: Build for macOS (ARM)
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build -- --mac --arm64
-
-      - name: Upload macOS ARM DMG
-        uses: actions/upload-artifact@v4
-        with:
-          name: macos-dmg-arm64
-          path: dist/*arm64.dmg
-
-  windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build for Windows
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build -- --win --x64
-
-      - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-portable
-          path: dist/*.exe
-
-  linux:
+  release:
+    needs: build
+    if: github.ref_name == 'main' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
+      - name: Get version from package.json
+        id: version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> $GITHUB_ENV
+        shell: bash
 
-    - name: Install dependencies
-      run: npm install
+      - name: Create Git tag
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag -a v${{ env.version }} -m "Release v${{ env.version }}"
+          git push origin v${{ env.version }}
 
-    - name: Build for Linux
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: npm run build -- --linux
+      - name: Create GitHub Release
+        id: create-release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ env.version }}
+          release_name: Release v${{ env.version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Upload Linux artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: linux-appimage
-        path: dist/*.AppImage
+      - name: Download macOS x64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-macOS-x64-${{ env.version }}
+          path: dist
+
+      - name: Download macOS arm64 artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-macOS-arm64-${{ env.version }}
+          path: dist
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Linux-${{ env.version }}
+          path: dist
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Windows-${{ env.version }}
+          path: dist
+
+      - name: List downloaded files
+        run: ls -R dist/
+        
+      - name: Upload macOS x64 asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: dist/MangaBox-${{ env.version }}-x64.dmg
+          asset_name: MangaBox-${{ env.version }}-x64.dmg		
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload macOS arm64 asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: dist/MangaBox-${{ env.version }}-arm64.dmg
+          asset_name: MangaBox-${{ env.version }}-arm64.dmg		
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Linux asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: dist/MangaBox-${{ env.version }}-x86_64.AppImage
+          asset_name: MangaBox-${{ env.version }}-x86_64.AppImage		
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Windows asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: dist/MangaBox-${{ env.version }}-x64.exe
+          asset_name: MangaBox-${{ env.version }}-x64.exe		
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
