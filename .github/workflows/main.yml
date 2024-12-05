@@ -99,7 +99,7 @@ jobs:
           path: dist
 
       - name: List dist directory contents
-        run: ls -l dist/
+        run: ls -lR dist/
 
       - name: Create GitHub Release
         id: create-release
@@ -110,6 +110,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/*
+            dist/*/*
           token: ${{ secrets.GITHUB_TOKEN }}
 
