@@ -1756,7 +1756,7 @@
 							rd.picLoadStack.splice(index, 1);
 						}
 						// Force preload when landing on a cached image
-						if (!preload) {
+						if (!isPreload) {
 							preloadPages(spreadIndex, rd.preloadCount)
 						}
 					}
