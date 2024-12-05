@@ -73,11 +73,24 @@ jobs:
 
   release:
     needs: build
-    if: github.ref_name == 'main' # Run this job only for the 'main' branch
+    if: github.ref_name == 'devtest' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Read "whatsnew.txt"
+        id: read_whatsnew
+        run: |
+          if [ -f whatsnew.txt ]; then
+            whatsNew=$(cat whatsnew.txt)
+            echo "whatsNew<<EOF" >> $GITHUB_ENV
+            echo "$whatsNew" >> $GITHUB_ENV
+            echo "EOF" >> $GITHUB_ENV
+          else
+            echo "Error: 'whatsnew.txt' not found!"
+            exit 1
+          fi
 
       - name: Get version from package.json
         id: version
@@ -111,5 +124,6 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
+          body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
