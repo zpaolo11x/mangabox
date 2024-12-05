@@ -73,7 +73,7 @@ jobs:
 
   release:
     needs: build
-    if: github.ref_name == 'main' # Run this job only for the 'main' branch
+    if: github.ref_name == 'devtest' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -95,78 +95,13 @@ jobs:
 
       - name: Create GitHub Release
         id: create-release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ env.version }}
-          release_name: Release v${{ env.version }}
+          name: Release v${{ env.version }}
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            dist/*
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download macOS x64 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MangaBox-macOS-x64-${{ env.version }}
-          path: dist
-
-      - name: Download macOS arm64 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MangaBox-macOS-arm64-${{ env.version }}
-          path: dist
-
-      - name: Download Linux artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MangaBox-Linux-${{ env.version }}
-          path: dist
-
-      - name: Download Windows artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MangaBox-Windows-${{ env.version }}
-          path: dist
-
-      - name: List downloaded files
-        run: ls -R dist/
-        
-      - name: Upload macOS x64 asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist/MangaBox-${{ env.version }}-x64.dmg
-          asset_name: MangaBox-${{ env.version }}-x64.dmg		
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Upload macOS arm64 asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist/MangaBox-${{ env.version }}-arm64.dmg
-          asset_name: MangaBox-${{ env.version }}-arm64.dmg		
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Linux asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist/MangaBox-${{ env.version }}-x86_64.AppImage
-          asset_name: MangaBox-${{ env.version }}-x86_64.AppImage		
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Windows asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist/MangaBox-${{ env.version }}-x64.exe
-          asset_name: MangaBox-${{ env.version }}-x64.exe		
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
