@@ -26,6 +26,7 @@
 </head>
 
 <body>
+
 	<div id="stickyContainer" class="sticky-container hidden">
 		<ul class="libraries-list buttons left-block">
 			<li id="homeButton" class="library-item">
@@ -191,10 +192,10 @@
 
 			<div id="controlPanel" class="hidden">
 				<div id="topControls" class="reader-controls">
-					<span id="readerClose" class="reader-buttons fa-solid fa-chevron-down"></span>
+					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-chevron-down"></span>
 					<span id="bookName"></span>
-					<span id="readerPageFormat" class="reader-buttons fa-solid fa-book-open"></span>
-					<span id="readerIncognito" class="reader-buttons fa-solid fa-ghost"></span>
+					<span id="readerPageFormat"  title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
+					<span id="readerIncognito"  title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
 				<div id="bottomControls" class="reader-controls">
@@ -648,7 +649,7 @@
 			// const ITA = serie.metadata.language == 'it' ? '<img class="glyph-right" src="glyphs/it.svg">' : '';
 			// const ITA = serie.metadata.language == 'it' ? '<span class="fa-solid fa-square-full glyph-dark glyph-zh-flag glyph-flag"></span>' : '';
 
-			const ITA = ((serie.metadata.language != 'en') ? `<span class="fa-solid fa-square-full glyph-dark glyph-${serie.metadata.language}-flag glyph-flag"></span>` : '');
+			const ITA = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-square-full glyph-dark glyph-ltr"></span>';
 			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-regular fa-calendar fa-rotate-270 glyph-dark"></span>';
 			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
@@ -1343,9 +1344,9 @@
 			picLoadStack: [], // Contains all load image objects, both direct load and preload
 
 			pageModes: [
-				{ icon: 'reader-buttons fa-solid fa-book-open' },
-				{ icon: 'reader-buttons fa-solid fa-note-sticky' },
-				{ icon: 'reader-buttons fa-solid fa-rotate' }
+				{ icon: 'reader-buttons fa-solid fa-book-open', title: 'Page Layout: Two Pages' },
+				{ icon: 'reader-buttons fa-solid fa-note-sticky', title: 'Page Layout: Single Page' },
+				{ icon: 'reader-buttons fa-solid fa-rotate', title: 'Page Layout: Automatic' }
 			],
 			pageMode: Number(localStorage.getItem('mbPageMode')) ?? 2,
 
@@ -1371,6 +1372,7 @@
 		};
 
 		readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
+		readerPageFormat.title = rd.pageModes[rd.pageMode].title;
 
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
@@ -2022,6 +2024,7 @@
 		function switchPageFormat(newId) {
 			rd.pageMode = newId;
 			readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
+			readerPageFormat.title = rd.pageModes[rd.pageMode].title;
 
 			localStorage.setItem('mbPageMode', rd.pageMode);
 			navigateTo(window.location.hash);

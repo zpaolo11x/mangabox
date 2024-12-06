@@ -1,2 +1,3 @@
-- Fixed slide out of reader
-- Added what's new to release
+- Added tooltips to reader controls
+- New svg based flags
+- Updated GitHub readme
