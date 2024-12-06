@@ -1,16 +1,19 @@
-# MangaBox
+<picture><img alt="MangaBox Logo" src="mangabox-logo-name-2.png" height=80px></picture>
+
 MangaBox is a simple Electron client for Komga.
 
-[![Local Image](.localassets/MangaBox_001_th.png)](.localassets/MangaBox_001.png)
+<img alt="MangaBox main UI" src=".localassets/MangaBox_001.png" width=50%>
 
-It is very simple and tailored for few libraries, it doesn't feature library management but only reading.
+Clean design tailored for few libraries, it doesn't feature library management but only reading.
 
-It has a rich library view with metadata taken from "alternate title" fields like "Story", "Art" and "Time". There's no book view (yet) but a series view with all volumes.
+It has a rich library view with metadata taken from "alternate title" fields like "Story", "Art" and "Time". 
 
-[![Local Image](.localassets/MangaBox_002_th.png)](.localassets/MangaBox_002.png)
+<img alt="MangaBox main UI" src=".localassets/MangaBox_002.png" width=50%>
 
-[![Local Image](.localassets/MangaBox_004_th.png)](.localassets/MangaBox_004.png)
+There's no book view (yet) but a series view with all volumes.
 
-There's a reading mode with two pages or one page, and "book like" effects
+<img alt="MangaBox main UI" src=".localassets/MangaBox_004.png" width=50%>
 
-[![Local Image](.localassets/MangaBox_003_th.png)](.localassets/MangaBox_003.png)
+Reading mode supports two pages and single page, with "paper like" effects
+
+<img alt="MangaBox main UI" src=".localassets/MangaBox_003.png" width=50%>
