@@ -1,9 +1,8 @@
-<picture style="display: inline-block; vertical-align: middle;">
+<div style="display: inline-block; vertical-align: middle;">
 <img alt="MangaBox Logo" src="mangabox-logo.png" style="height:120px">
-</picture>
-<picture style="display: inline-block; vertical-align: middle;">
+
 <img alt="MangaBox Logo Text" src="mangabox-name-sticks-round.svg" style="height:60px; margin-bottom:30px">
-</picture>
+</div>
 
 MangaBox is a simple Electron client for Komga.
 
