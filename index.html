@@ -26,6 +26,33 @@
 </head>
 
 <body>
+	<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+		<defs>
+		  <symbol id="flag-us" viewBox="0 0 100 60">
+			 <!-- US flag design here -->
+			 <rect width="100" height="60" fill="blue" />
+		  </symbol>
+		  <symbol id="flag-it" viewBox="0 0 100 60">
+			<!-- France flag design here -->
+			<rect width="33.3" height="60" fill="green" />
+			<rect x="33.3" width="33.3" height="60" fill="white" />
+			<rect x="66.6" width="33.3" height="60" fill="red" />
+		 </symbol>
+		 <symbol id="flag-fr" viewBox="0 0 100 60">
+			 <!-- France flag design here -->
+			 <rect width="33.3" height="60" fill="blue" />
+			 <rect x="33.3" width="33.3" height="60" fill="white" />
+			 <rect x="66.6" width="33.3" height="60" fill="red" />
+		  </symbol>
+		  <symbol id="flag-de" viewBox="0 0 100 60">
+			 <!-- Germany flag design here -->
+			 <rect width="100" height="20" fill="black" />
+			 <rect y="20" width="100" height="20" fill="red" />
+			 <rect y="40" width="100" height="20" fill="yellow" />
+		  </symbol>
+		</defs>
+	 </svg>
+
 	<div id="stickyContainer" class="sticky-container hidden">
 		<ul class="libraries-list buttons left-block">
 			<li id="homeButton" class="library-item">
@@ -648,7 +675,7 @@
 			// const ITA = serie.metadata.language == 'it' ? '<img class="glyph-right" src="glyphs/it.svg">' : '';
 			// const ITA = serie.metadata.language == 'it' ? '<span class="fa-solid fa-square-full glyph-dark glyph-zh-flag glyph-flag"></span>' : '';
 
-			const ITA = ((serie.metadata.language != 'en') ? `<span class="fa-solid fa-square-full glyph-dark glyph-${serie.metadata.language}-flag glyph-flag"></span>` : '');
+			const ITA = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-square-full glyph-dark glyph-ltr"></span>';
 			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-regular fa-calendar fa-rotate-270 glyph-dark"></span>';
 			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
