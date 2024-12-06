@@ -1,2 +1,3 @@
 - Added tooltips to reader controls
+- New svg based flags
 - Updated GitHub readme
