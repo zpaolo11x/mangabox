@@ -1,7 +1,7 @@
 # MangaBox
 MangaBox is a simple Electron client for Komga.
 
-[![Local Image](.localassets/MangaBox_001_th.png)](.localassets/MangaBox_001.png)
+![MangaBox main UI](.localassets/MangaBox_001_th.png)
 
 It is very simple and tailored for few libraries, it doesn't feature library management but only reading.
 
