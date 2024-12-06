@@ -1,4 +1,4 @@
-<picture><img alt="MangaBox Logo" src="mangabox-logo.png"></picture><picture><img alt="MangaBox Logo" src="mangabox-name-sticks-round.svg"></picture>
+<picture><img alt="MangaBox Logo" src="mangabox-logo.png" width=200px></picture><picture><img alt="MangaBox Logo" src="mangabox-name-sticks-round.svg"></picture>
 
 MangaBox is a simple Electron client for Komga.
 
