@@ -977,6 +977,17 @@ span.mini-title {
 	linear-gradient(to top, #ffd000ff 0%, #ffd000ff 100%);
 }
 
+.glyph-gr-flag{
+	background: 33.3333% 0% / 16.6666% 66.6666% no-repeat linear-gradient(to bottom, #ffffffff 0%, #ffffffff 100%), 
+	0% 33.3333% / 66.6666% 16.6666% no-repeat linear-gradient(to bottom, #ffffffff 0%, #ffffffff 100%), 
+	0% 0% / 66.6666% 66.6666% no-repeat linear-gradient(to bottom, #0D5EAF 0%, #0D5EAF 100%), 
+	0% 0% / 100% 16.6666% no-repeat linear-gradient(to top, #0D5EAF 0%, #0D5EAF 100%), 
+	0% 33.3333% / 100% 16.6666% no-repeat linear-gradient(to top, #0D5EAF 0%, #0D5EAF 100%), 
+	0% 66.6666% / 100% 16.6666% no-repeat linear-gradient(to top, #0D5EAF 0%, #0D5EAF 100%), 
+	0% 99.9999% / 100% 16.6666% no-repeat linear-gradient(to top, #0D5EAF 0%, #0D5EAF 100%), 
+	linear-gradient(to top, #ffffffff 0%, #ffffffff 100%);
+}
+
 .glyph-ltr{
 	background:linear-gradient(90deg, var(--mb-glyph-color) 25%, transparent 25.5%, transparent 37.5%, var(--mb-glyph-color) 38%);
 	background-clip: text;
