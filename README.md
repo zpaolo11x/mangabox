@@ -2,7 +2,7 @@
 <img alt="MangaBox Logo" src="mangabox-logo.png" height=120px>
 </picture>
 <picture style="display: inline-block; vertical-align: middle;">
-<img alt="MangaBox Logo Text" src="mangabox-name-sticks-round.svg" height=80px>
+<img alt="MangaBox Logo Text" src="mangabox-name-sticks-round.svg" height=60px>
 </picture>
 
 MangaBox is a simple Electron client for Komga.
