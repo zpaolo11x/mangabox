@@ -1,11 +1,10 @@
-<div style="display: flex; align-items: center; gap: 10px; height: 120px;">
-  <picture>
-    <img alt="MangaBox Logo" src="mangabox-logo.png" style="height: 100%;">
-  </picture>
-  <picture>
-    <img alt="MangaBox Logo" src="mangabox-name-sticks-round.svg" style="height: 50%;">
-  </picture>
-</div>
+<picture style="display: inline-block; vertical-align: middle;">
+<img alt="MangaBox Logo" src="mangabox-logo.png" height=120px>
+</picture>
+<picture style="display: inline-block; vertical-align: middle;">
+<img alt="MangaBox Logo Text" src="mangabox-name-sticks-round.svg" height=60px margin=30px>
+</picture>
+
 MangaBox is a simple Electron client for Komga.
 
 <picture><img alt="MangaBox main UI" src=".localassets/MangaBox_001_th.png"></picture>
