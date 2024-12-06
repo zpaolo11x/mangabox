@@ -1,1 +1,2 @@
+- Added tooltips to reader controls
 - Updated GitHub readme

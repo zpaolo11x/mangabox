@@ -191,10 +191,10 @@
 
 			<div id="controlPanel" class="hidden">
 				<div id="topControls" class="reader-controls">
-					<span id="readerClose" class="reader-buttons fa-solid fa-chevron-down"></span>
+					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-chevron-down"></span>
 					<span id="bookName"></span>
-					<span id="readerPageFormat" class="reader-buttons fa-solid fa-book-open"></span>
-					<span id="readerIncognito" class="reader-buttons fa-solid fa-ghost"></span>
+					<span id="readerPageFormat"  title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
+					<span id="readerIncognito"  title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
 				<div id="bottomControls" class="reader-controls">
@@ -1343,9 +1343,9 @@
 			picLoadStack: [], // Contains all load image objects, both direct load and preload
 
 			pageModes: [
-				{ icon: 'reader-buttons fa-solid fa-book-open' },
-				{ icon: 'reader-buttons fa-solid fa-note-sticky' },
-				{ icon: 'reader-buttons fa-solid fa-rotate' }
+				{ icon: 'reader-buttons fa-solid fa-book-open', title: 'Page Layout: Two Pages' },
+				{ icon: 'reader-buttons fa-solid fa-note-sticky', title: 'Page Layout: Single Page' },
+				{ icon: 'reader-buttons fa-solid fa-rotate', title: 'Page Layout: Automatic' }
 			],
 			pageMode: Number(localStorage.getItem('mbPageMode')) ?? 2,
 
@@ -1371,6 +1371,7 @@
 		};
 
 		readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
+		readerPageFormat.title = rd.pageModes[rd.pageMode].title;
 
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
@@ -2022,6 +2023,7 @@
 		function switchPageFormat(newId) {
 			rd.pageMode = newId;
 			readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
+			readerPageFormat.title = rd.pageModes[rd.pageMode].title;
 
 			localStorage.setItem('mbPageMode', rd.pageMode);
 			navigateTo(window.location.hash);
