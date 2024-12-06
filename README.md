@@ -9,7 +9,7 @@ It is very simple and tailored for few libraries, it doesn't feature library man
 It has a rich library view with metadata taken from "alternate title" fields like "Story", "Art" and "Time". There's no book view (yet) but a series view with all volumes.
 
 <picture><img alt="MangaBox main UI" src=".localassets/MangaBox_002_th.png"></picture>
-
+<p>
 <picture><img alt="MangaBox main UI" src=".localassets/MangaBox_004_th.png"></picture>
 
 There's a reading mode with two pages or one page, and "book like" effects
