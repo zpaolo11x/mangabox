@@ -1335,7 +1335,7 @@
 		}
 
 		let rd = {
-			preloadCount: 4,
+			preloadCount: 1,
 			preloadPicDelay: 300,
 			loadDelay: 100,
 			jumpTimeout: null,
@@ -1407,27 +1407,21 @@
 		function preloadPages(startSpreadIndex, count) {
 			//return; //XXX REMOVED PRELOAD
 			if (isSectionHidden(readerContainer)) return;
-			console.log("preloadPages: " + startSpreadIndex + " +/- " + count);
+
 			for (let i = 1; i <= count; i++) {
 				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack))) {
-					console.log('startTimeout POS ' + (startSpreadIndex + i))
 					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
-							console.log('                     ABORT');
 							return;
 						}
-						console.log("A3 " + i);
 						populateSpread(startSpreadIndex + i, true);
 					});
 				}
 				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack))) {
-					console.log('startTimeout NEG ' + (startSpreadIndex - i))
 					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
-							console.log('                     ABORT');
 							return;
 						}
-						console.log("A4 " + i);
 						populateSpread(startSpreadIndex - i, true);
 					});
 				}
@@ -1686,7 +1680,6 @@
 
 		// Function to clear all timeouts (optional, if you need this functionality)
 		function clearAllTimeouts() {
-			console.log("clearAllTimeouts");
 			Object.values(rd.preloadStack).forEach(timer => {
 				clearTimeout(timer);
 			});
@@ -1712,7 +1705,6 @@
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
-			console.log("populateSpread:" + spreadIndex);
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
@@ -1739,9 +1731,7 @@
 								if (index !== -1) {
 									rd.picLoadStack.splice(index, 1); // Remove from stack
 								};
-								if (!isPreload) {
 									preloadPages(spreadIndex, rd.preloadCount)
-								}
 							});
 
 						} catch (error) {
@@ -1758,9 +1748,7 @@
 							rd.picLoadStack.splice(index, 1);
 						}
 						// Force preload when landing on a cached image
-						if (!isPreload) {
 							preloadPages(spreadIndex, rd.preloadCount)
-						}
 					}
 				}
 			});
@@ -1771,7 +1759,6 @@
 
 		// Update the viewer for the current page or spread
 		function updateViewer() {
-			console.log("A5");
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 		}
@@ -1819,10 +1806,8 @@
 		}
 
 		function purgeLoading() {
-			console.log('purgeLoading');
 			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
 				const item = rd.picLoadStack[i];
-				console.log('purged page ' + item);
 				rd.uiPages[item].hasSrc = false;
 				rd.uiPages[item].src = 'transparent.png';
 				rd.picLoadStack.splice(i, 1); // Remove the element at index i
@@ -1838,8 +1823,6 @@
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
 
-			console.log('                                  jumpto:' + newSpreadTarget);
-
 			purgeLoading();
 
 			if (rd.jumpTimeout === null) {
@@ -1849,7 +1832,6 @@
 				rd.jumpTimeout = setTimeout(() => {
 					if (isSectionHidden(readerContainer)) return;
 					spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-					console.log("A1");
 					populateSpread(localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
@@ -1863,7 +1845,6 @@
 				rd.jumpTimeout = setTimeout(() => {
 					if (isSectionHidden(readerContainer)) return;
 					spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
-					console.log("A2");
 					populateSpread(localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
@@ -1895,7 +1876,6 @@
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {//TODO check why it fires twice for any seek
-			console.log('                                     seek');
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
