@@ -198,6 +198,9 @@
 					<span id="readerIncognito"  title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
+				<div id="thumbStrip" class="reader-controls">
+					<div id="thumbStripInner"></div>					
+				</div>
 				<div id="bottomControls" class="reader-controls">
 					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
 					<span id="leftLimit" class="bar-note"></span>
@@ -1486,6 +1489,7 @@
 
 			const dataOut = data.map(page => ({
 				url: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				thumb: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
 				height: page.height,
@@ -1499,6 +1503,8 @@
 			readerMaxRatio = Math.max(...dataOut.map(item => item.width / item.height));
 			if (readerMaxRatio < 1) readerMaxRatio = 2 * readerMaxRatio;
 
+			let leftPos = 0;
+
 			dataOut.forEach((element, index) => {
 				const imgPage = addItem('img', {
 					alt: element.pageNum,
@@ -1507,6 +1513,16 @@
 					hasSrc: false,
 				});
 				rd.uiPages.push(imgPage);
+				const imgThumb = addItem('img', {
+					alt: element.pageNum,
+					src: element.thumb,
+				});
+				imgThumb.style.height = '60px';
+				imgThumb.style.width = (60 * element.AR) + 'px';
+				imgThumb.style.left = leftPos + "px";
+				leftPos = leftPos + 60 * element.AR;
+				console.log(leftPos);
+				thumbStripInner.appendChild(imgThumb);
 			});
 
 			let i = 0;
