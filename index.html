@@ -194,12 +194,12 @@
 				<div id="topControls" class="reader-controls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
 					<span id="bookName"></span>
-					<span id="readerPageFormat"  title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
-					<span id="readerIncognito"  title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
+					<span id="readerPageFormat" title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
+					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
 				<div id="thumbStrip" class="reader-controls">
-					<div id="thumbStripInner"></div>					
+					<div id="thumbStripInner"></div>
 				</div>
 				<div id="bottomControls" class="reader-controls">
 					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
@@ -1364,6 +1364,10 @@
 			oldSpreadIndex: 0,
 			isDraggingProgressBar: false,
 
+			thumbHeight: 120,
+			uiPagesThumbs: [],
+			uiSpreadsThumbs: [],
+
 			libraryId: 0,
 			seriesId: 0,
 			bookId: 0,
@@ -1513,16 +1517,19 @@
 					hasSrc: false,
 				});
 				rd.uiPages.push(imgPage);
+
 				const imgThumb = addItem('img', {
 					alt: element.pageNum,
-					src: element.thumb,
+					src: 'transparent.png',
+					lazySrc: element.thumb,
 				});
-				imgThumb.style.height = '60px';
-				imgThumb.style.width = (60 * element.AR) + 'px';
-				imgThumb.style.left = leftPos + "px";
-				leftPos = leftPos + 60 * element.AR;
-				console.log(leftPos);
-				thumbStripInner.appendChild(imgThumb);
+				imgThumb.style.height = rd.thumbHeight + 'px';
+				imgThumb.style.width = (rd.thumbHeight * element.AR) + 'px';
+				addLazyLoading(imgThumb);
+				rd.uiPagesThumbs.push(imgThumb);
+
+				//thumbStripInner.appendChild(imgThumb);
+				//thumbStripInner.insertBefore(imgThumb, parent.firstChild);
 			});
 
 			let i = 0;
@@ -1538,10 +1545,14 @@
 			if (readerHorizontal) {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
+					const spreadItemThumb = document.createElement('div');
+					
 					spreadItem.classList.add('spread-layout');
 					let spreadArray = [i];
 
 					if (dataOut[i].isCover) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
@@ -1557,6 +1568,8 @@
 						coverlay.style.height = spreadItem.style.height;
 						spreadItem.appendChild(coverlay);
 					} else if (dataOut[i].isDoubleSpread) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
@@ -1568,6 +1581,9 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i : i + 1]);
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i + 1 : i]);
+
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
 
@@ -1589,6 +1605,8 @@
 						if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i += 2;
 					} else if (i < dataOut.length - 1) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
@@ -1601,6 +1619,8 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('single-page')
 
@@ -1617,6 +1637,10 @@
 					rd.uiSpreads.push(spreadItem);
 					readerViewer.appendChild(spreadItem);
 					spreadHide(spreadItem);
+
+					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
+					thumbStripInner.appendChild(spreadItemThumb);
+
 				}
 			} else {
 				while (i < dataOut.length) {
@@ -1858,6 +1882,18 @@
 
 			purgeLoading();
 
+			const targetElement = thumbStripInner.children[newSpreadTarget]; // n-th element (0-based index)
+
+			if (targetElement) {
+//				targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+			 }
+			
+/*
+			if (targetElement) {
+				thumbStripInner.scrollLeft = targetElement.offsetLeft - thumbStripInner.offsetLeft;
+			}
+*/
 			if (rd.jumpTimeout === null) {
 				rd.oldSpreadIndex = localOldSpreadIndex;
 				rd.currentSpreadIndex = localNewSpreadIndex;
@@ -2061,6 +2097,7 @@
 
 			const newPage = getPage(rd.currentSpreadIndex);
 			readerPage.innerText = newPage;
+
 		}
 
 

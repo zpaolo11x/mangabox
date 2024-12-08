@@ -330,8 +330,7 @@ div.single-page {
 }
 
 #bottomControls,
-#topControls,
-#thumbStrip {
+#topControls {
 	display: grid;
 	align-items: center;
 	justify-content: center;
@@ -350,20 +349,43 @@ div.single-page {
 }
 
 #thumbStrip {
+	position: fixed;
+	height: 120px;
+	left: 0px;
+	right: 0px;
 	display:flex;
 	justify-content: left;
+	background-color: var(--mb-card-color);
 	bottom: 60px;
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
+	overflow-x: auto
 }
 
 #thumbStripInner {
+	display:flex;
 	padding:0;
 	margin:0;
+	height: 120px;
+	margin-left:50%;
+	margin-right:50%;
+	/*flex-direction: row-reverse;*/
+}
+#thumbStripInner div{
+	display:flex;
+	padding:0;
+	margin:0;
+	height: 120px;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+#thumbStripInner img {
+	/*position:absolute;*/
+	display:inline-block;
 }
 
-#thumbStripInner img {
-	position:absolute;
-	/*display:inline-block;*/
+#thumbStripInner img.current {
+	/*position:absolute;*/
+	display:inline-block;
 	border: 1px solid red;
 }
 
