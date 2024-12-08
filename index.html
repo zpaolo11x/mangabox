@@ -1549,7 +1549,7 @@
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
 					const spreadItemThumb = document.createElement('div');
-					
+
 					spreadItem.classList.add('spread-layout');
 					let spreadArray = [i];
 
@@ -1879,11 +1879,17 @@
 			clearAllTimeouts();
 		}
 
-		function centerThumb(spreadIndex){
+		function centerThumb(spreadIndex) {
 			const targetElement = thumbStripInner.children[spreadIndex]; // n-th element (0-based index)
 			if (targetElement) {
 				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
-			 }
+			
+			/*	thumbStrip.scrollTo({
+					left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
+					behavior: 'smooth' // Enable smooth scrolling
+				});
+			*/
+			}
 
 		}
 		function jumpToSpread(newSpreadTarget) {
@@ -1896,7 +1902,7 @@
 			console.log('                                  jumpto:' + newSpreadTarget);
 
 			purgeLoading();
-			
+
 			if (rd.jumpTimeout === null) {
 				rd.oldSpreadIndex = localOldSpreadIndex;
 				rd.currentSpreadIndex = localNewSpreadIndex;
@@ -1928,7 +1934,7 @@
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
 
-			centerThumb(spreadIndex);
+			centerThumb(rd.currentSpreadIndex);
 			updateProgressBar();
 		}
 
