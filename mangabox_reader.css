@@ -358,7 +358,8 @@ div.single-page {
 	background-color: var(--mb-card-color);
 	bottom: 60px;
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
-	overflow-x: auto
+	overflow-x: auto;
+	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 }
 
 #thumbStripInner {
@@ -377,7 +378,9 @@ div.single-page {
 	height: 120px;
 	margin-left: 3px;
 	margin-right: 3px;
+	cursor: pointer;
 }
+
 #thumbStripInner img {
 	/*position:absolute;*/
 	display:inline-block;
@@ -420,8 +423,13 @@ div.single-page {
 }
 
 #controlPanel.hidden #bottomControls,
-#readerContainer.hidden #bottomControls {
+#readerContainer.hidden #bottomControls{
 	bottom: -100px;
+}
+
+#controlPanel.hidden #thumbStrip,
+#readerContainer.hidden #thumbStrip{
+	bottom: -200px;
 }
 
 #bookName {

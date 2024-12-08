@@ -1457,6 +1457,7 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			updateViewer();
+			centerThumb(rd.currentSpreadIndex);
 			updateProgressBar();
 		}
 
@@ -1541,6 +1542,8 @@
 			readerHorizontal = (rd.pageMode == 0) || ((screenAR > readerMaxRatio) && !(rd.pageMode == 1));
 
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
+
+			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
 			if (readerHorizontal) {
 				while (i < dataOut.length) {
@@ -1631,6 +1634,8 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
+					const localSpread = spreadTotal;
+
 					spreadTotal++;
 
 					rd.uiSpreadsPages.push(spreadArray);
@@ -1638,6 +1643,9 @@
 					readerViewer.appendChild(spreadItem);
 					spreadHide(spreadItem);
 
+					spreadItemThumb.addEventListener('click', () => {
+						jumpToSpread(localSpread);
+					});
 					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
 					thumbStripInner.appendChild(spreadItemThumb);
 
@@ -1871,6 +1879,13 @@
 			clearAllTimeouts();
 		}
 
+		function centerThumb(spreadIndex){
+			const targetElement = thumbStripInner.children[spreadIndex]; // n-th element (0-based index)
+			if (targetElement) {
+				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+			 }
+
+		}
 		function jumpToSpread(newSpreadTarget) {
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
@@ -1881,19 +1896,7 @@
 			console.log('                                  jumpto:' + newSpreadTarget);
 
 			purgeLoading();
-
-			const targetElement = thumbStripInner.children[newSpreadTarget]; // n-th element (0-based index)
-
-			if (targetElement) {
-//				targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
-			 }
 			
-/*
-			if (targetElement) {
-				thumbStripInner.scrollLeft = targetElement.offsetLeft - thumbStripInner.offsetLeft;
-			}
-*/
 			if (rd.jumpTimeout === null) {
 				rd.oldSpreadIndex = localOldSpreadIndex;
 				rd.currentSpreadIndex = localNewSpreadIndex;
@@ -1925,6 +1928,7 @@
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
 
+			centerThumb(spreadIndex);
 			updateProgressBar();
 		}
 
