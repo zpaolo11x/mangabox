@@ -1653,7 +1653,7 @@
 						jumpToSpread(localSpread);
 					});
 					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
-					
+
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
@@ -1907,12 +1907,12 @@
 			const targetElement = thumbStripInner.children[spreadIndex]; // n-th element (0-based index)
 			if (targetElement) {
 				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
-			
-			/*	thumbStrip.scrollTo({
-					left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
-					behavior: 'smooth' // Enable smooth scrolling
-				});
-			*/
+
+				/*	thumbStrip.scrollTo({
+						left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
+						behavior: 'smooth' // Enable smooth scrolling
+					});
+				*/
 			}
 
 		}
@@ -2254,6 +2254,9 @@
 			if (event.touches.length > 1) {
 				isSingleTouch = false; // Multiple touches: ignore for swipe
 				return;
+			}
+			if (!touchPanel.contains(event.target)) {
+				return; // Ignore the touch if it's outside the swipe area
 			}
 			isSingleTouch = true;
 			touchStartX = event.touches[0].clientX;
