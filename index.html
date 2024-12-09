@@ -1928,7 +1928,10 @@
 		}
 
 		function centerThumb() {
-			thumbStripInner.children[rd.oldSpreadIndex].classList.remove('current');
+			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
+			Array.from (thumbStripInner.children).forEach(element => {
+				element.classList.remove('current');
+			});
 
 			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 			if (targetElement) {
