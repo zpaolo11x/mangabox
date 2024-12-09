@@ -192,12 +192,15 @@
 
 			<div id="controlPanel" class="hidden">
 				<div id="topControls" class="reader-controls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-chevron-down"></span>
+					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
 					<span id="bookName"></span>
-					<span id="readerPageFormat"  title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
-					<span id="readerIncognito"  title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
+					<span id="readerPageFormat" title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
+					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
+				<div id="thumbStrip" class="reader-controls">
+					<div id="thumbStripInner"></div>
+				</div>
 				<div id="bottomControls" class="reader-controls">
 					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
 					<span id="leftLimit" class="bar-note"></span>
@@ -646,14 +649,14 @@
 			const seriesItem = addItem('div', {
 				className: 'series-item'
 			});
-			// const ITA = serie.metadata.language == 'it' ? '<img class="glyph-right" src="glyphs/it.svg">' : '';
-			// const ITA = serie.metadata.language == 'it' ? '<span class="fa-solid fa-square-full glyph-dark glyph-zh-flag glyph-flag"></span>' : '';
+			// const LNG = serie.metadata.language == 'it' ? '<img class="glyph-right" src="glyphs/it.svg">' : '';
+			// const LNG = serie.metadata.language == 'it' ? '<span class="fa-solid fa-square-full glyph-dark glyph-zh-flag glyph-flag"></span>' : '';
 
-			const ITA = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
+			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-square-full glyph-dark glyph-ltr"></span>';
 			//	const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-regular fa-calendar fa-rotate-270 glyph-dark"></span>';
 			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
-			const spacer = ((ITA != '') && (LTR != '')) ? '&nbsp;' : '';
+			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
 
 			const seriesTitle = addItem('div', {
 				innerHTML: `
@@ -661,7 +664,7 @@
 									<div style="flex-grow:1">${serie.metadata.title}</div>
 									<div class="glyph-dark" style="text-align:right">${LTR}</div>
 										${spacer}
-									<div class="glyph-div" style="text-align:right">${ITA}</div>
+									<div class="glyph-div" style="text-align:right">${LNG}</div>
 								</div>`
 			});
 
@@ -1361,6 +1364,10 @@
 			oldSpreadIndex: 0,
 			isDraggingProgressBar: false,
 
+			thumbHeight: 120,
+			uiPagesThumbs: [],
+			uiSpreadsThumbs: [],
+
 			libraryId: 0,
 			seriesId: 0,
 			bookId: 0,
@@ -1391,6 +1398,9 @@
 			rd.currentSpreadIndex = 0;
 			rd.oldSpreadIndex = 0;
 			rd.isDraggingProgressBar = false;
+
+			rd.uiSpreadsThumbs = [];
+			rd.uiPagesThumbs = [];
 
 			rd.libraryId = libraryId;
 			rd.seriesId = seriesId;
@@ -1450,6 +1460,7 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			updateViewer();
+			centerThumb(rd.currentSpreadIndex);
 			updateProgressBar();
 		}
 
@@ -1486,6 +1497,7 @@
 
 			const dataOut = data.map(page => ({
 				url: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				thumb: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
 				height: page.height,
@@ -1499,6 +1511,8 @@
 			readerMaxRatio = Math.max(...dataOut.map(item => item.width / item.height));
 			if (readerMaxRatio < 1) readerMaxRatio = 2 * readerMaxRatio;
 
+			let leftPos = 0;
+
 			dataOut.forEach((element, index) => {
 				const imgPage = addItem('img', {
 					alt: element.pageNum,
@@ -1507,6 +1521,20 @@
 					hasSrc: false,
 				});
 				rd.uiPages.push(imgPage);
+
+				const imgThumb = addItem('img', {
+					className: 'page-thumb',
+					alt: element.pageNum,
+					src: 'transparent.png',
+					lazySrc: element.thumb,
+				});
+				imgThumb.style.height = rd.thumbHeight + 'px';
+				imgThumb.style.width = (rd.thumbHeight * element.AR) + 'px';
+				addLazyLoading(imgThumb);
+				rd.uiPagesThumbs.push(imgThumb);
+
+				//thumbStripInner.appendChild(imgThumb);
+				//thumbStripInner.insertBefore(imgThumb, parent.firstChild);
 			});
 
 			let i = 0;
@@ -1519,13 +1547,21 @@
 
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
 
+			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
+
 			if (readerHorizontal) {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
+					const spreadItemThumb = document.createElement('div');
+
 					spreadItem.classList.add('spread-layout');
+					spreadItemThumb.classList.add('spread-thumb');
+
 					let spreadArray = [i];
 
 					if (dataOut[i].isCover) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
@@ -1541,6 +1577,8 @@
 						coverlay.style.height = spreadItem.style.height;
 						spreadItem.appendChild(coverlay);
 					} else if (dataOut[i].isDoubleSpread) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
@@ -1552,6 +1590,9 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i : i + 1]);
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i + 1 : i]);
+
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
 						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
 
@@ -1573,6 +1614,8 @@
 						if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i += 2;
 					} else if (i < dataOut.length - 1) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
@@ -1585,6 +1628,8 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('single-page')
 
@@ -1595,20 +1640,36 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
+					const localSpread = spreadTotal;
+
 					spreadTotal++;
 
 					rd.uiSpreadsPages.push(spreadArray);
 					rd.uiSpreads.push(spreadItem);
 					readerViewer.appendChild(spreadItem);
 					spreadHide(spreadItem);
+
+					spreadItemThumb.addEventListener('click', () => {
+						jumpToSpread(localSpread);
+					});
+					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
+
+					thumbStripInner.appendChild(spreadItemThumb);
+
 				}
 			} else {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
+					const spreadItemThumb = document.createElement('div');
+
 					spreadItem.classList.add('page-layout');
+					spreadItemThumb.classList.add('spread-thumb');
+
 					let spreadArray = [i];
 
 					if (dataOut[i].isCover) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
@@ -1650,6 +1711,8 @@
 						i++;
 					} */
 					else {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
 
@@ -1660,12 +1723,21 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
+					const localSpread = spreadTotal;
+
 					spreadTotal++;
 
 					rd.uiSpreadsPages.push(spreadArray);
 					rd.uiSpreads.push(spreadItem);
 					readerViewer.appendChild(spreadItem);
 					spreadHide(spreadItem);
+
+					spreadItemThumb.addEventListener('click', () => {
+						jumpToSpread(localSpread);
+					});
+					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
+					thumbStripInner.appendChild(spreadItemThumb);
+
 				}
 
 			}
@@ -1831,6 +1903,19 @@
 			clearAllTimeouts();
 		}
 
+		function centerThumb(spreadIndex) {
+			const targetElement = thumbStripInner.children[spreadIndex]; // n-th element (0-based index)
+			if (targetElement) {
+				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+
+				/*	thumbStrip.scrollTo({
+						left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
+						behavior: 'smooth' // Enable smooth scrolling
+					});
+				*/
+			}
+
+		}
 		function jumpToSpread(newSpreadTarget) {
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
@@ -1873,15 +1958,18 @@
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
 
+			centerThumb(rd.currentSpreadIndex);
 			updateProgressBar();
 		}
 
 		function toggleMenu() {
 			sectionToggle(controlPanel);
+			touchPanel.classList.toggle('shrink');
 		}
 
 		function hideMenu() {
 			sectionHide(controlPanel);
+			touchPanel.classList.remove('shrink');
 		}
 
 		leftArrow.addEventListener('click', handleLeftArrow);
@@ -1993,6 +2081,16 @@
 					item.remove();
 					item = null;
 				});
+
+				rd.uiPagesThumbs.forEach(item => {
+					item.remove();
+					item = null;
+				});
+
+				rd.uiSpreadsThumbs.forEach(item => {
+					item.remove();
+					item = null;
+				});
 			}, 300); //300ms timeout so the reader can slide out
 
 			purgeLoading();
@@ -2045,6 +2143,7 @@
 
 			const newPage = getPage(rd.currentSpreadIndex);
 			readerPage.innerText = newPage;
+
 		}
 
 
@@ -2155,6 +2254,9 @@
 			if (event.touches.length > 1) {
 				isSingleTouch = false; // Multiple touches: ignore for swipe
 				return;
+			}
+			if (!touchPanel.contains(event.target)) {
+				return; // Ignore the touch if it's outside the swipe area
 			}
 			isSingleTouch = true;
 			touchStartX = event.touches[0].clientX;

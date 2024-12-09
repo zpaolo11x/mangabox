@@ -348,6 +348,48 @@ div.single-page {
 	/*backdrop-filter: blur(15px);*/
 }
 
+#thumbStrip {
+	position: fixed;
+	height: 120px;
+	left: 0px;
+	right: 0px;
+	display:flex;
+	justify-content: left;
+	background-color: var(--mb-card-color);
+	bottom: 60px;
+	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
+	overflow-x: auto;
+	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
+}
+
+#thumbStripInner {
+	display:flex;
+	padding:0;
+	margin:0;
+	height: 120px;
+	margin-left:50%;
+	margin-right:50%;
+	/*flex-direction: row-reverse;*/
+}
+
+.spread-thumb{
+	display:flex;
+	padding:0;
+	margin:0;
+	height: 120px;
+	margin-left: 3px;
+	margin-right: 3px;
+	cursor: pointer;
+	background:white;
+	box-shadow: inset rgba(0,0,0,0.1) 0px 0px 15px, rgba(0,0,0,0.5) 0px 0px 3px;
+}
+
+.page-thumb {
+	/*position:absolute;*/
+	display:inline-block;
+	/*object-fit: contain;*/
+}
+
 #bottomControls {
 	grid-template-columns: 40px 40px 1fr 40px 40px;
 	bottom: 0px;
@@ -379,8 +421,13 @@ div.single-page {
 }
 
 #controlPanel.hidden #bottomControls,
-#readerContainer.hidden #bottomControls {
+#readerContainer.hidden #bottomControls{
 	bottom: -100px;
+}
+
+#controlPanel.hidden #thumbStrip,
+#readerContainer.hidden #thumbStrip{
+	bottom: -200px;
 }
 
 #bookName {
@@ -502,7 +549,11 @@ div.single-page {
 
 	transition: border 0.3s;
 }
-
+#touchPanel.shrink {
+	top: 60px;
+	bottom: 180px;
+	height: calc(100vh - 60px - 180px);
+}
 /*
 #touchPanel.incognito{
 	border-bottom: 5px solid rgba(196, 48, 212, 0.74);

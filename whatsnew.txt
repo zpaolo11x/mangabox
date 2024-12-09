@@ -1,3 +1,2 @@
-- Added tooltips to reader controls
-- New svg based flags
-- Updated GitHub readme
+- Added thumbnail strip on the reader interface
+- Added new flags
