@@ -1520,6 +1520,7 @@
 				rd.uiPages.push(imgPage);
 
 				const imgThumb = addItem('img', {
+					className: 'page-thumb',
 					alt: element.pageNum,
 					src: 'transparent.png',
 					lazySrc: element.thumb,
@@ -1649,6 +1650,7 @@
 						jumpToSpread(localSpread);
 					});
 					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
+					
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
