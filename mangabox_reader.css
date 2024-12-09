@@ -350,7 +350,7 @@ div.single-page {
 
 #thumbStrip {
 	position: fixed;
-	height: 120px;
+	height: 130px;
 	left: 0px;
 	right: 0px;
 	display:flex;
@@ -366,7 +366,7 @@ div.single-page {
 	display:flex;
 	padding:0;
 	margin:0;
-	height: 120px;
+	height: 130px;
 	margin-left:50%;
 	margin-right:50%;
 	/*flex-direction: row-reverse;*/
@@ -377,6 +377,7 @@ div.single-page {
 	padding:0;
 	margin:0;
 	height: 120px;
+	padding:5px;
 	margin-left: 3px;
 	margin-right: 3px;
 	cursor: pointer;
