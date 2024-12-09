@@ -384,6 +384,7 @@ div.single-page {
 	cursor: pointer;
 	background: white;
 	box-shadow: inset rgba(0,0,0,0.1) 0px 0px 15px, rgba(0,0,0,0.45) 0px 0px 8px;
+	border-radius: 3px;
 }
 
 .spread-thumb.current{
