@@ -1399,6 +1399,9 @@
 			rd.oldSpreadIndex = 0;
 			rd.isDraggingProgressBar = false;
 
+			rd.uiSpreadsThumbs = [];
+			rd.uiPagesThumbs = [];
+
 			rd.libraryId = libraryId;
 			rd.seriesId = seriesId;
 			rd.bookId = bookId;
@@ -2073,6 +2076,16 @@
 				});
 
 				rd.uiSpreads.forEach(item => {
+					item.remove();
+					item = null;
+				});
+
+				rd.uiPagesThumbs.forEach(item => {
+					item.remove();
+					item = null;
+				});
+
+				rd.uiSpreadsThumbs.forEach(item => {
 					item.remove();
 					item = null;
 				});
