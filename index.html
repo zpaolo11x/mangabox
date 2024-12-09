@@ -1460,7 +1460,7 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			updateViewer();
-			centerThumb(rd.currentSpreadIndex);
+			centerThumb();
 			updateProgressBar();
 		}
 
@@ -1523,7 +1523,7 @@
 				rd.uiPages.push(imgPage);
 
 				const imgThumb = addItem('img', {
-					className: 'page-thumb',
+					className: 'page-thumb multiply',
 					alt: element.pageNum,
 					src: 'transparent.png',
 					lazySrc: element.thumb,
@@ -1903,11 +1903,15 @@
 			clearAllTimeouts();
 		}
 
-		function centerThumb(spreadIndex) {
-			const targetElement = thumbStripInner.children[spreadIndex]; // n-th element (0-based index)
+		function centerThumb() {
+			thumbStripInner.children[rd.oldSpreadIndex].classList.remove('current');
+
+			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 			if (targetElement) {
 				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
-
+				
+				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
+			
 				/*	thumbStrip.scrollTo({
 						left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
 						behavior: 'smooth' // Enable smooth scrolling
@@ -1958,7 +1962,7 @@
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
 
-			centerThumb(rd.currentSpreadIndex);
+			centerThumb();
 			updateProgressBar();
 		}
 
