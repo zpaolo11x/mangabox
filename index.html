@@ -1364,7 +1364,7 @@
 			oldSpreadIndex: 0,
 			isDraggingProgressBar: false,
 
-			thumbHeight: 120,
+			thumbHeight: getComputedStyle(document.documentElement).getPropertyValue('--mb-thumb-height'),//120,
 			uiPagesThumbs: [],
 			uiSpreadsThumbs: [],
 

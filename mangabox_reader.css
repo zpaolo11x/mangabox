@@ -15,6 +15,7 @@
 		hsl(35, 15%, 100%)71%,
 		hsl(35, 15%, 100%)100%;
 
+		--mb-thumb-height: 150;
 	/*
 		--colorSpread:
 		hsl(212, 30%, 52%)0%,
@@ -350,7 +351,7 @@ div.single-page {
 
 #thumbStrip {
 	position: fixed;
-	height: 130px;
+	height: calc(var(--mb-thumb-height) + 10)px;
 	left: 0px;
 	right: 0px;
 	display:flex;
@@ -366,7 +367,7 @@ div.single-page {
 	display:flex;
 	padding:0;
 	margin:0;
-	height: 130px;
+	height: calc(var(--mb-thumb-height) + 10)px;
 	margin-left:50%;
 	margin-right:50%;
 	/*flex-direction: row-reverse;*/
@@ -376,7 +377,7 @@ div.single-page {
 	display:flex;
 	padding:0;
 	margin:0;
-	height: 120px;
+	height: var(--mb-thumb-height)px;
 	margin:5px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -436,7 +437,7 @@ div.single-page {
 
 #controlPanel.hidden #thumbStrip,
 #readerContainer.hidden #thumbStrip{
-	bottom: -200px;
+	bottom: -300px;
 }
 
 #bookName {
