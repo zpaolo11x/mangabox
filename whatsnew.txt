@@ -1,1 +1,2 @@
+- Added thumbnail strip on the reader interface
 - Added new flags
