@@ -1383,7 +1383,7 @@
 
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
-
+			clearReader(); // forse eccessivo?
 			clearAllTimeouts();
 			rd.picLoadStack = [];
 			rd.jumpTimeout = null;
@@ -2112,14 +2112,8 @@
 			}
 		});
 
-		function handleCloseReader() {
-			console.log("******************** CLOSE READER ***********************");
-			hideMenu();
-			incognitoMark.classList.remove('incognito');
-
-			clearTimeout(rd.jumpTimeout);
-			setTimeout(() => {
-				rd.uiPages.forEach(item => {
+		function clearReader(){
+			rd.uiPages.forEach(item => {
 					item.remove();
 					item = null;
 				});
@@ -2138,6 +2132,16 @@
 					item.remove();
 					item = null;
 				});
+		}
+
+		function handleCloseReader() {
+			console.log("******************** CLOSE READER ***********************");
+			hideMenu();
+			incognitoMark.classList.remove('incognito');
+
+			clearTimeout(rd.jumpTimeout);
+			setTimeout(() => {
+				clearReader();
 			}, 300); //300ms timeout so the reader can slide out
 
 			purgeLoading();
