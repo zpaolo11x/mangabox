@@ -392,6 +392,10 @@ div.single-page {
 	border: 1px solid red;
 }
 
+.spread-thumb{
+	border:10px solid green;
+}
+
 #bottomControls {
 	grid-template-columns: 40px 40px 1fr 40px 40px;
 	bottom: 0px;
