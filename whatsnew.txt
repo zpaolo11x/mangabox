@@ -1,1 +1,3 @@
 - Fixed swipe when thumbs are visible
+- Added thumbnails smooth scrolling
+- Added selected thumbnail highlight

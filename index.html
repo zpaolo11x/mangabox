@@ -1903,15 +1903,52 @@
 			clearAllTimeouts();
 		}
 
+		function smoothScroll(container, targetScrollLeft, duration = 500) {
+			const start = container.scrollLeft;
+			const change = targetScrollLeft - start;
+			const startTime = performance.now();
+
+			function animateScroll(currentTime) {
+				const elapsedTime = currentTime - startTime;
+				const progress = Math.min(elapsedTime / duration, 1); // Ensure progress doesn't exceed 1
+
+				// Easing function (easeInOutQuad for smooth effect)
+				const ease = progress < 0.5
+					? 2 * progress * progress
+					: -1 + (4 - 2 * progress) * progress;
+
+				container.scrollLeft = start + change * ease;
+
+				if (progress < 1) {
+					requestAnimationFrame(animateScroll);
+				}
+			}
+
+			requestAnimationFrame(animateScroll);
+		}
+
 		function centerThumb() {
 			thumbStripInner.children[rd.oldSpreadIndex].classList.remove('current');
 
 			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 			if (targetElement) {
-				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
-				
+				// Step scroll
+				//	thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+
+				// Smooth Scroll
+				/*
+				thumbStrip.scrollTo({
+					left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
+					behavior: "smooth"
+				});			
+				*/
+
+				const targetScrollLeft = -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+
+				smoothScroll(thumbStrip, targetScrollLeft, 300);
+
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
-			
+
 				/*	thumbStrip.scrollTo({
 						left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
 						behavior: 'smooth' // Enable smooth scrolling
@@ -2254,13 +2291,13 @@
 
 
 		function handleTouchStart(event) {
-				
+
 			if (window.visualViewport.scale > 1) return;
 			if (event.touches.length > 1) {
 				isSingleTouch = false; // Multiple touches: ignore for swipe
 				return;
 			}
-			
+
 			isSingleTouch = true;
 			touchStartX = event.touches[0].clientX;
 			touchStartY = event.touches[0].clientY;
