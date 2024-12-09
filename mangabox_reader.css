@@ -549,7 +549,11 @@ div.single-page {
 
 	transition: border 0.3s;
 }
-
+#touchPanel.shrink {
+	top: 60px;
+	bottom: 180px;
+	height: calc(100vh - 60px - 180px);
+}
 /*
 #touchPanel.incognito{
 	border-bottom: 5px solid rgba(196, 48, 212, 0.74);
