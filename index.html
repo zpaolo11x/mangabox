@@ -1653,10 +1653,14 @@
 			} else {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
+					const spreadItemThumb = document.createElement('div');
+
 					spreadItem.classList.add('page-layout');
 					let spreadArray = [i];
 
 					if (dataOut[i].isCover) {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
@@ -1698,6 +1702,8 @@
 						i++;
 					} */
 					else {
+						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
+
 						spreadItem.appendChild(rd.uiPages[i]);
 						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
 
@@ -1708,12 +1714,21 @@
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
+					const localSpread = spreadTotal;
+
 					spreadTotal++;
 
 					rd.uiSpreadsPages.push(spreadArray);
 					rd.uiSpreads.push(spreadItem);
 					readerViewer.appendChild(spreadItem);
 					spreadHide(spreadItem);
+
+					spreadItemThumb.addEventListener('click', () => {
+						jumpToSpread(localSpread);
+					});
+					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
+					thumbStripInner.appendChild(spreadItemThumb);
+
 				}
 
 			}
