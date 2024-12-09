@@ -386,8 +386,10 @@ div.single-page {
 }
 
 .spread-thumb.current{
+	/*
 	margin-left:10px;
 	margin-right:10px;
+	*/
 	box-shadow: inset var(--mb-accent) 0px 0px 0px 3px, rgba(0,0,0,0.5) 0px 0px 3px;
 }
 
