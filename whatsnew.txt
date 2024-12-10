@@ -1,2 +1,3 @@
-- Added thumbnail strip on the reader interface
-- Added new flags
+- Fixed swipe when thumbs are visible
+- Added thumbnails smooth scrolling
+- Added selected thumbnail highlight

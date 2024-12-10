@@ -1364,7 +1364,7 @@
 			oldSpreadIndex: 0,
 			isDraggingProgressBar: false,
 
-			thumbHeight: 120,
+			thumbHeight: getComputedStyle(document.documentElement).getPropertyValue('--mb-thumb-height'),//120,
 			uiPagesThumbs: [],
 			uiSpreadsThumbs: [],
 
@@ -1383,7 +1383,7 @@
 
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
-
+			clearReader(); //TODO forse eccessivo?
 			clearAllTimeouts();
 			rd.picLoadStack = [];
 			rd.jumpTimeout = null;
@@ -1460,7 +1460,7 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			updateViewer();
-			centerThumb(rd.currentSpreadIndex);
+			centerThumb();
 			updateProgressBar();
 		}
 
@@ -1523,7 +1523,7 @@
 				rd.uiPages.push(imgPage);
 
 				const imgThumb = addItem('img', {
-					className: 'page-thumb',
+					className: 'page-thumb multiply',
 					alt: element.pageNum,
 					src: 'transparent.png',
 					lazySrc: element.thumb,
@@ -1903,10 +1903,57 @@
 			clearAllTimeouts();
 		}
 
-		function centerThumb(spreadIndex) {
-			const targetElement = thumbStripInner.children[spreadIndex]; // n-th element (0-based index)
+		function smoothScroll(container, targetScrollLeft, duration = 500) {
+			const start = container.scrollLeft;
+			const change = targetScrollLeft - start;
+			const startTime = performance.now();
+
+			function animateScroll(currentTime) {
+				const elapsedTime = currentTime - startTime;
+				const progress = Math.min(elapsedTime / duration, 1); // Ensure progress doesn't exceed 1
+
+				// Easing function (easeInOutQuad for smooth effect)
+				const ease = progress < 0.5
+					? 2 * progress * progress
+					: -1 + (4 - 2 * progress) * progress;
+
+				container.scrollLeft = start + change * ease;
+
+				if (progress < 1) {
+					requestAnimationFrame(animateScroll);
+				}
+			}
+
+			requestAnimationFrame(animateScroll);
+		}
+
+		function centerThumb() {
+			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
+			// maybe each time the old and current spreads are updated I could call this function with old and current to
+			// remove one class and add the other...
+			
+			Array.from (thumbStripInner.children).forEach(element => {
+				element.classList.remove('current');
+			});
+
+			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 			if (targetElement) {
-				thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+				// Step scroll
+				//	thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+
+				// Smooth Scroll
+				/*
+				thumbStrip.scrollTo({
+					left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
+					behavior: "smooth"
+				});			
+				*/
+
+				const targetScrollLeft = -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+
+				smoothScroll(thumbStrip, targetScrollLeft, 300);
+
+				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
 
 				/*	thumbStrip.scrollTo({
 						left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
@@ -1958,7 +2005,7 @@
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
 
-			centerThumb(rd.currentSpreadIndex);
+			centerThumb();
 			updateProgressBar();
 		}
 
@@ -2065,14 +2112,8 @@
 			}
 		});
 
-		function handleCloseReader() {
-			console.log("******************** CLOSE READER ***********************");
-			hideMenu();
-			incognitoMark.classList.remove('incognito');
-
-			clearTimeout(rd.jumpTimeout);
-			setTimeout(() => {
-				rd.uiPages.forEach(item => {
+		function clearReader(){
+			rd.uiPages.forEach(item => {
 					item.remove();
 					item = null;
 				});
@@ -2091,6 +2132,16 @@
 					item.remove();
 					item = null;
 				});
+		}
+
+		function handleCloseReader() {
+			console.log("******************** CLOSE READER ***********************");
+			hideMenu();
+			incognitoMark.classList.remove('incognito');
+
+			clearTimeout(rd.jumpTimeout);
+			setTimeout(() => {
+				clearReader();
 			}, 300); //300ms timeout so the reader can slide out
 
 			purgeLoading();
@@ -2250,14 +2301,13 @@
 
 
 		function handleTouchStart(event) {
+
 			if (window.visualViewport.scale > 1) return;
 			if (event.touches.length > 1) {
 				isSingleTouch = false; // Multiple touches: ignore for swipe
 				return;
 			}
-			if (!touchPanel.contains(event.target)) {
-				return; // Ignore the touch if it's outside the swipe area
-			}
+
 			isSingleTouch = true;
 			touchStartX = event.touches[0].clientX;
 			touchStartY = event.touches[0].clientY;
@@ -2296,8 +2346,8 @@
 		}
 
 		// Add event listeners
-		readerContainer.addEventListener('touchstart', handleTouchStart);
-		readerContainer.addEventListener('touchmove', handleTouchMove);
+		touchPanel.addEventListener('touchstart', handleTouchStart);
+		touchPanel.addEventListener('touchmove', handleTouchMove);
 
 	</script>
 </body>
