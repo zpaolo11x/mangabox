@@ -1,1 +1,2 @@
 - Added new flags
+- Added tooltips for main toolbar
