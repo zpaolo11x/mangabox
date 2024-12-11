@@ -174,6 +174,10 @@
 		<div id="homeStripBooksResults" class="books-results search-results"></div>
 	</div>
 
+	<div id="bookDetailsContainer" class="section hidden">
+
+	</div>
+
 	<div id="blanker"></div>
 
 	<div id="readerContainer" class="section hidden">
@@ -962,6 +966,23 @@
 			`
 		}
 
+		function showBookDetails(book){
+			sectionShow(bookDetailsContainer);
+			let summaryArray = book.metadata.summary.split(/\r?\n/);
+			console.log(book);
+			let text = `
+			<div class="books-details-pic-container">
+				<div class="thumbnail-wrapper">
+					<img class="book-thumbnail" src="${mbBaseUrl}/api/v1/books/${book.id}/thumbnail">
+				</div>
+			</div>
+			<ol>
+				${summaryArray.map(element => `<li>${element}</li>`).join('')}
+			</ol>
+			`;
+			bookDetailsContainer.innerHTML = text;
+		}
+
 		async function buildBookItem(item, book, format, target) {
 			if (item.childNodes[0]) {
 				item.childNodes[0].remove();
@@ -1083,6 +1104,24 @@
 
 			bookOverlay.appendChild(markAsRead);
 			bookOverlay.appendChild(markAsUnread);
+
+
+			if (book.metadata.summary != ""){
+				const bookDetails = addItem('div', {
+					className: 'mini-buttons book-details',
+					title: 'Book Details',
+					innerHTML: `<span class="fa-solid fa-bars"></span>`
+				});
+				bookDetails.addEventListener('click', async (event) => {
+					event.stopPropagation();
+					showBookDetails(book);
+				})
+				noPointerDown(bookDetails);
+
+				bookOverlay.appendChild(bookDetails);
+
+			}
+
 
 			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
 			const progressBar = document.createElement('div');
@@ -1931,8 +1970,8 @@
 			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
 			// maybe each time the old and current spreads are updated I could call this function with old and current to
 			// remove one class and add the other...
-			
-			Array.from (thumbStripInner.children).forEach(element => {
+
+			Array.from(thumbStripInner.children).forEach(element => {
 				element.classList.remove('current');
 			});
 
@@ -2112,26 +2151,26 @@
 			}
 		});
 
-		function clearReader(){
+		function clearReader() {
 			rd.uiPages.forEach(item => {
-					item.remove();
-					item = null;
-				});
+				item.remove();
+				item = null;
+			});
 
-				rd.uiSpreads.forEach(item => {
-					item.remove();
-					item = null;
-				});
+			rd.uiSpreads.forEach(item => {
+				item.remove();
+				item = null;
+			});
 
-				rd.uiPagesThumbs.forEach(item => {
-					item.remove();
-					item = null;
-				});
+			rd.uiPagesThumbs.forEach(item => {
+				item.remove();
+				item = null;
+			});
 
-				rd.uiSpreadsThumbs.forEach(item => {
-					item.remove();
-					item = null;
-				});
+			rd.uiSpreadsThumbs.forEach(item => {
+				item.remove();
+				item = null;
+			});
 		}
 
 		function handleCloseReader() {

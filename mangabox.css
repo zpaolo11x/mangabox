@@ -347,6 +347,12 @@ a {
 	bottom: 10px;
 }
 
+.mini-buttons.book-details {
+	left: 50%;
+	bottom: 10px;
+	transform: translate(-50%, 0%); /* Centers the div */
+}
+
 .scaled .mini-buttons {
 	opacity: 1;
 }
@@ -590,6 +596,33 @@ a {
 	padding-top:50px;
 }
 
+#bookDetailsContainer{
+	position: fixed; /* Keeps the div centered and prevents scrolling */
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%); /* Centers the div */
+	width: min(500px, 100vw); /* Minimum width between 300px and 100vw */
+	height: min(300px, 100vh); /* Minimum height between 500px and 100vh */
+	box-sizing: border-box; /* Ensures padding and border are included in size */
+	background-color:var(--mb-page-color);
+	box-shadow: 0px 2px 20px rgba(0,0,0,0.5);
+	border-radius:10px;
+	padding:20px;
+	font-size:16px;
+	line-height:20px;
+	display:flex;
+	align-items:flex-start;
+}
+
+#bookDetailsContainer li{
+	margin-bottom:10px;
+}
+
+.books-details-pic-container{
+	margin-right:10px;
+	width:150px;
+}
+
 /*
 #booksGrid{
 	padding-top: calc(175px + 60px);
@@ -613,7 +646,8 @@ a {
 #homeStripsContainer.hidden,
 #searchStripsContainer.hidden,
 #stripGridContainer.hidden,
-#stickyContainer.hidden {
+#stickyContainer.hidden,
+#bookDetailsContainer.hidden {
 	opacity: 0;
 	display: none;
 }
