@@ -6,7 +6,7 @@
 	"capture_links": "new-client",
 	"icons": [
 		{
-		  "src": "mangabox-icon-red.png",
+		  "src": "mangabox-red.png",
 		  "sizes": "192x192",
 		  "type": "image/png"
 		}
