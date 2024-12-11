@@ -353,6 +353,37 @@ a {
 	transform: translate(-50%, 0%); /* Centers the div */
 }
 
+#bookDetailsContainer .mini-buttons-2{
+	color:var(--mb-text-color);
+	width: 100%;
+	height: 25px;
+	line-height: 25px;
+	font-size: 25px;
+	display:flex;
+	justify-content: center; /* Horizontally center the content */
+	align-items: center; /* Vertically center the content */
+	cursor:pointer;
+}
+
+#bookDetailsContainer .close-details{
+	color:var(--mb-text-color);
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	font-size: 25px;
+	position:relative;
+	right: -5px;
+	top: -5px;
+	cursor:pointer;
+}
+
+.mini-controls{
+	margin-top:15px;
+	display:grid;
+	grid-template-columns: 1fr 1fr;
+	width:100%;
+}
+
 .scaled .mini-buttons {
 	opacity: 1;
 }
@@ -600,9 +631,9 @@ a {
 	position: fixed; /* Keeps the div centered and prevents scrolling */
 	left: 50%;
 	top: 50%;
-	transform: translate(-50%, -50%); /* Centers the div */
+	transform: translate(-50%, calc(-50% + 60px)); /* Centers the div */
 	width: min(500px, 100vw); /* Minimum width between 300px and 100vw */
-	height: min(300px, 100vh); /* Minimum height between 500px and 100vh */
+	height: auto; /* Minimum height between 500px and 100vh */
 	box-sizing: border-box; /* Ensures padding and border are included in size */
 	background-color:var(--mb-page-color);
 	box-shadow: 0px 2px 20px rgba(0,0,0,0.5);
@@ -613,13 +644,26 @@ a {
 	display:flex;
 	align-items:flex-start;
 }
+#bookDetailsContainer ul{
+	padding:0px;
+	margin:0px 0px 0px 40px;
+}
+
+#bookDetailsContainer .thumbnail-wrapper{
+	box-shadow:0px 2px 10px rgba(0,0,0,0.3);
+}
 
 #bookDetailsContainer li{
 	margin-bottom:10px;
 }
+.book-details-title{
+	font-weight: 500;
+	font-size: 20px;
+	margin-left:20px;
+	margin-bottom:10px;
+}
 
-.books-details-pic-container{
-	margin-right:10px;
+.book-details-pic-container{
 	width:150px;
 }
 

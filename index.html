@@ -966,19 +966,42 @@
 			`
 		}
 
-		function showBookDetails(book){
+		function closeBookDetails(){
+			sectionHide(bookDetailsContainer);
+			bookDetailsContainer.innerHTML = '';
+		}
+
+		function jumpBookDetails(book, step){
+			
+		}
+
+		function showBookDetails(book) {
 			sectionShow(bookDetailsContainer);
 			let summaryArray = book.metadata.summary.split(/\r?\n/);
 			console.log(book);
 			let text = `
-			<div class="books-details-pic-container">
+			<div class="book-details-pic-container">
 				<div class="thumbnail-wrapper">
 					<img class="book-thumbnail" src="${mbBaseUrl}/api/v1/books/${book.id}/thumbnail">
 				</div>
+				<div class="mini-controls">
+					<div class="mini-buttons-2 prev-book">
+						<span class="fa-solid fa-chevron-left"></span>
+					</div>
+					<div class="mini-buttons-2 next-book">
+						<span class="fa-solid fa-chevron-right"></span>
+					</div>			
+				</div>
 			</div>
-			<ol>
-				${summaryArray.map(element => `<li>${element}</li>`).join('')}
-			</ol>
+			<div>
+				<div class="book-details-title">${book.metadata.title}</div>
+				<ul>
+					${summaryArray.map(element => `<li>${element}</li>`).join('')}
+				</ul>
+			</div>
+			<div class="close-details" onclick="closeBookDetails()">
+				<span class="fa-solid fa-xmark"></span>
+			</div>
 			`;
 			bookDetailsContainer.innerHTML = text;
 		}
@@ -1106,7 +1129,7 @@
 			bookOverlay.appendChild(markAsUnread);
 
 
-			if (book.metadata.summary != ""){
+			if (book.metadata.summary != "") {
 				const bookDetails = addItem('div', {
 					className: 'mini-buttons book-details',
 					title: 'Book Details',
