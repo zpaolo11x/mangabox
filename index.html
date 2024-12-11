@@ -970,12 +970,31 @@
 			sectionHide(bookDetailsContainer);
 			bookDetailsContainer.innerHTML = '';
 		}
+		
+		let prevbook = null
+		let nextbook = null
 
-		function jumpBookDetails(book, step){
-			
+		function jumpBookDetailsPrev(){
+			if (prevbook != null) showBookDetails(prevbook);
+		}
+		function jumpBookDetailsNext(){
+			if (nextbook != null) showBookDetails(nextbook);
 		}
 
-		function showBookDetails(book) {
+
+		async function showBookDetails(book) {
+			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
+			console.log(seriesData);
+
+			prevbook = null
+			nextbook = null
+
+			if (book.number > 1) {
+				prevbook = seriesData.content[book.number - 2];
+			}
+			if (book.number < seriesData.size) {
+				nextbook = seriesData.content[book.number];
+			}
 			sectionShow(bookDetailsContainer);
 			let summaryArray = book.metadata.summary.split(/\r?\n/);
 			console.log(book);
@@ -985,10 +1004,10 @@
 					<img class="book-thumbnail" src="${mbBaseUrl}/api/v1/books/${book.id}/thumbnail">
 				</div>
 				<div class="mini-controls">
-					<div class="mini-buttons-2 prev-book">
+					<div class="mini-buttons-2 prev-book" onclick="jumpBookDetailsPrev()">
 						<span class="fa-solid fa-chevron-left"></span>
 					</div>
-					<div class="mini-buttons-2 next-book">
+					<div class="mini-buttons-2 next-book" onclick="jumpBookDetailsNext()">
 						<span class="fa-solid fa-chevron-right"></span>
 					</div>			
 				</div>

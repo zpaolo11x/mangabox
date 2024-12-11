@@ -371,9 +371,9 @@ a {
 	height: 25px;
 	line-height: 25px;
 	font-size: 25px;
-	position:relative;
-	right: -5px;
-	top: -5px;
+	position:absolute;
+	right: 10px;
+	top: 10px;
 	cursor:pointer;
 }
 
@@ -635,7 +635,7 @@ a {
 	width: min(500px, 100vw); /* Minimum width between 300px and 100vw */
 	height: auto; /* Minimum height between 500px and 100vh */
 	box-sizing: border-box; /* Ensures padding and border are included in size */
-	background-color:var(--mb-page-color);
+	background-color:var(--mb-card-color);
 	box-shadow: 0px 2px 20px rgba(0,0,0,0.5);
 	border-radius:10px;
 	padding:20px;
