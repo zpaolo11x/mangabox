@@ -2310,6 +2310,7 @@
 		}
 
 		async function loadContent() {
+			console.log("                                                           LOADCONENT");
 			const { path, params } = parseHashAndParams();
 
 			await executeFade(1);
@@ -2320,6 +2321,7 @@
 				case '':
 				case 'dashboard':
 					searchInput.value = '';
+					setIncognito(false);
 					if (params.size == 0) {
 						await selectHome();
 					} else {
@@ -2328,18 +2330,21 @@
 					break;
 				case 'library':
 					searchInput.value = '';
+					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
 					break;
 				case 'series':
 					searchInput.value = '';
+					setIncognito(false);
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
 					break;
 				case 'search':
-					searchInput.value = params.get('search_string');
+				setIncognito(false);
+				searchInput.value = params.get('search_string');
 					await performSearch(params.get('search_string'));
 					break;
 				case 'bookread':
-					await readBook(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
+				await readBook(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
 					break;
 				default:
 					console.log('no selection');
