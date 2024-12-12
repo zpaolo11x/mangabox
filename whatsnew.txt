@@ -1,3 +1,1 @@
-- Added book summary view button
-- Added new flags
-- Added tooltips for main toolbar
+- 

@@ -968,7 +968,9 @@
 
 		function closeBookDetails(){
 			sectionHide(bookDetailsContainer);
-			bookDetailsContainer.innerHTML = '';
+			setTimeout(() => {
+				bookDetailsContainer.innerHTML = ''
+			},300);
 		}
 		
 		let currentbook = null;
@@ -1012,17 +1014,17 @@
 			console.log(book);
 			let text = `
 			<div class="book-details-pic-container">
-				<div class="thumbnail-wrapper" onclick="navigateToReadBook(currentbook, '${readingDirection}')">
+				<div class="thumbnail-wrapper" title="Open Book" onclick="navigateToReadBook(currentbook, '${readingDirection}')">
 					<img class="book-thumbnail" src="${mbBaseUrl}/api/v1/books/${book.id}/thumbnail">
 				</div>
 				<div class="mini-controls">
-					<div class="mini-buttons-2 prev-book" onclick="jumpBookDetailsPrev()">
+					<div class="mini-buttons-2 prev-book" title="Previous book" onclick="jumpBookDetailsPrev()">
 						<span class="fa-solid fa-chevron-left"></span>
 					</div>
-					<div class="mini-buttons-2 prev-book" onclick="navigateTo('#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}')">
+					<div class="mini-buttons-2 prev-book" title="Go to library" onclick="navigateTo('#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}')">
 						<span class="fa-solid fa-layer-group"></span>
 					</div>
-					<div class="mini-buttons-2 next-book" onclick="jumpBookDetailsNext()">
+					<div class="mini-buttons-2 next-book" title="Next book" onclick="jumpBookDetailsNext()">
 						<span class="fa-solid fa-chevron-right"></span>
 					</div>			
 				</div>
@@ -1033,7 +1035,7 @@
 					${summaryArray.map(element => `<li>${element}</li>`).join('')}
 				</ul>
 			</div>
-			<div class="close-details" onclick="closeBookDetails()">
+			<div class="close-details mini-buttons-2" onclick="closeBookDetails()">
 				<span class="fa-solid fa-xmark"></span>
 			</div>
 			`;
@@ -2312,6 +2314,7 @@
 
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+			closeBookDetails();
 			screenAR = getScreenAR();
 			switch (path) {
 				case '':

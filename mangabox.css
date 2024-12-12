@@ -353,7 +353,7 @@ a {
 	transform: translate(-50%, 0%); /* Centers the div */
 }
 
-#bookDetailsContainer .mini-buttons-2{
+.mini-buttons-2{
 	color:var(--mb-text-color);
 	width: 100%;
 	height: 25px;
@@ -363,6 +363,11 @@ a {
 	justify-content: center; /* Horizontally center the content */
 	align-items: center; /* Vertically center the content */
 	cursor:pointer;
+	transition: all 0.3s;
+}
+
+.mini-buttons-2:hover{
+	opacity:0.7;
 }
 
 #bookDetailsContainer .close-details{
@@ -647,6 +652,7 @@ a {
 	line-height:20px;
 	display:flex;
 	align-items:flex-start;
+	transition:all 0.3s;
 }
 #bookDetailsContainer ul{
 	padding:0px;
@@ -694,10 +700,13 @@ a {
 #homeStripsContainer.hidden,
 #searchStripsContainer.hidden,
 #stripGridContainer.hidden,
-#stickyContainer.hidden,
-#bookDetailsContainer.hidden {
+#stickyContainer.hidden {
 	opacity: 0;
 	display: none;
+}
+
+#bookDetailsContainer.hidden {
+	opacity: 0;
 }
 
 .series-container,
