@@ -377,10 +377,14 @@ a {
 	cursor:pointer;
 }
 
+#bookDetailsContainer .thumbnail-wrapper{
+	cursor: pointer;
+}
+
 .mini-controls{
 	margin-top:15px;
 	display:grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 30% 40% 30%;
 	width:100%;
 }
 

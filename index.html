@@ -971,8 +971,9 @@
 			bookDetailsContainer.innerHTML = '';
 		}
 		
-		let prevbook = null
-		let nextbook = null
+		let currentbook = null;
+		let prevbook = null;
+		let nextbook = null;
 
 		function jumpBookDetailsPrev(){
 			if (prevbook != null) showBookDetails(prevbook);
@@ -981,31 +982,46 @@
 			if (nextbook != null) showBookDetails(nextbook);
 		}
 
+		function navigateToReadBook(book, readingDirection){
+
+			setIncognito(false);
+			navigateTo(`#bookread
+						?library_id=${book.libraryId}
+						&series_id=${book.seriesId}
+						&book_id=${book.id}
+						&dir=${(readingDirection == 'RIGHT_TO_LEFT' ? 'rtl' : 'ltr')}
+						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
+		}
 
 		async function showBookDetails(book) {
-			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
-			console.log(seriesData);
+			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
+			const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
+			const readingDirection = seriesData.metadata.readingDirection;
 
-			prevbook = null
-			nextbook = null
+			currentbook = book;
+			prevbook = null;
+			nextbook = null;
 
 			if (book.number > 1) {
-				prevbook = seriesData.content[book.number - 2];
+				prevbook = seriesBooks.content[book.number - 2];
 			}
-			if (book.number < seriesData.size) {
-				nextbook = seriesData.content[book.number];
+			if (book.number < seriesBooks.size) {
+				nextbook = seriesBooks.content[book.number];
 			}
 			sectionShow(bookDetailsContainer);
 			let summaryArray = book.metadata.summary.split(/\r?\n/);
 			console.log(book);
 			let text = `
 			<div class="book-details-pic-container">
-				<div class="thumbnail-wrapper">
+				<div class="thumbnail-wrapper" onclick="navigateToReadBook(currentbook, '${readingDirection}')">
 					<img class="book-thumbnail" src="${mbBaseUrl}/api/v1/books/${book.id}/thumbnail">
 				</div>
 				<div class="mini-controls">
 					<div class="mini-buttons-2 prev-book" onclick="jumpBookDetailsPrev()">
 						<span class="fa-solid fa-chevron-left"></span>
+					</div>
+					<div class="mini-buttons-2 prev-book" onclick="navigateTo('#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}')">
+						<span class="fa-solid fa-layer-group"></span>
 					</div>
 					<div class="mini-buttons-2 next-book" onclick="jumpBookDetailsNext()">
 						<span class="fa-solid fa-chevron-right"></span>
@@ -1195,6 +1211,7 @@
 			addTouchScaler(booksItem, async () => {
 				const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
+				//TODO capire questa storia di historypath per esternalizzare il touchscaler
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
 
