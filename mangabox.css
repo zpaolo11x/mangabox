@@ -347,6 +347,47 @@ a {
 	bottom: 10px;
 }
 
+.mini-buttons.book-details {
+	left: 50%;
+	bottom: 10px;
+	transform: translate(-50%, 0%); /* Centers the div */
+}
+
+#bookDetailsContainer .mini-buttons-2{
+	color:var(--mb-text-color);
+	width: 100%;
+	height: 25px;
+	line-height: 25px;
+	font-size: 25px;
+	display:flex;
+	justify-content: center; /* Horizontally center the content */
+	align-items: center; /* Vertically center the content */
+	cursor:pointer;
+}
+
+#bookDetailsContainer .close-details{
+	color:var(--mb-text-color);
+	width: 25px;
+	height: 25px;
+	line-height: 25px;
+	font-size: 25px;
+	position:absolute;
+	right: 10px;
+	top: 10px;
+	cursor:pointer;
+}
+
+#bookDetailsContainer .thumbnail-wrapper{
+	cursor: pointer;
+}
+
+.mini-controls{
+	margin-top:15px;
+	display:grid;
+	grid-template-columns: 30% 40% 30%;
+	width:100%;
+}
+
 .scaled .mini-buttons {
 	opacity: 1;
 }
@@ -590,6 +631,46 @@ a {
 	padding-top:50px;
 }
 
+#bookDetailsContainer{
+	position: fixed; /* Keeps the div centered and prevents scrolling */
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, calc(-50% + 30px)); /* Centers the div */
+	width: min(500px, 100vw); /* Minimum width between 300px and 100vw */
+	height: auto; /* Minimum height between 500px and 100vh */
+	box-sizing: border-box; /* Ensures padding and border are included in size */
+	background-color:var(--mb-card-color);
+	box-shadow: 0px 2px 20px rgba(0,0,0,0.5);
+	border-radius:10px;
+	padding:20px;
+	font-size:16px;
+	line-height:20px;
+	display:flex;
+	align-items:flex-start;
+}
+#bookDetailsContainer ul{
+	padding:0px;
+	margin:0px 0px 0px 40px;
+}
+
+#bookDetailsContainer .thumbnail-wrapper{
+	box-shadow:0px 2px 10px rgba(0,0,0,0.3);
+}
+
+#bookDetailsContainer li{
+	margin-bottom:10px;
+}
+.book-details-title{
+	font-weight: 500;
+	font-size: 20px;
+	margin-left:20px;
+	margin-bottom:10px;
+}
+
+.book-details-pic-container{
+	width:150px;
+}
+
 /*
 #booksGrid{
 	padding-top: calc(175px + 60px);
@@ -613,7 +694,8 @@ a {
 #homeStripsContainer.hidden,
 #searchStripsContainer.hidden,
 #stripGridContainer.hidden,
-#stickyContainer.hidden {
+#stickyContainer.hidden,
+#bookDetailsContainer.hidden {
 	opacity: 0;
 	display: none;
 }
@@ -976,6 +1058,10 @@ span.mini-title {
 @media (max-width: 550px) {
 	.sticky-container {
 		height: 105px;
+	}
+
+	#bookDetailsContainer{
+		transform: translate(-50%, calc(-50% + 57px)); /* Centers the div */	
 	}
 
 	.libraries-list {
