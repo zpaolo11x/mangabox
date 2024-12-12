@@ -983,7 +983,6 @@
 		}
 
 		function navigateToReadBook(book, readingDirection){
-
 			setIncognito(false);
 			navigateTo(`#bookread
 						?library_id=${book.libraryId}
@@ -1261,6 +1260,7 @@
 				sectionShow(booksGrid);
 				sectionShow(seriesHeader);
 				sectionShow(seriesMiniHeader);
+				seriesMiniHeader.classList.add ("collapse");
 
 				if (focus) {
 					var item = document.getElementById(focus);
