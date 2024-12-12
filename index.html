@@ -1040,7 +1040,8 @@
 			</div>
 			`;
 			bookDetailsContainer.innerHTML = text;
-			bookDetailCover.src = await fetchMedia(`${mbBaseUrl}/api/v1/books/${book.id}/thumbnail`);
+			bookDetailCover.lazySrc = `${mbBaseUrl}/api/v1/books/${book.id}/thumbnail`;
+			addLazyLoading(bookDetailCover);
 
 		}
 
