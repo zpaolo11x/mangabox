@@ -631,7 +631,7 @@ a {
 	position: fixed; /* Keeps the div centered and prevents scrolling */
 	left: 50%;
 	top: 50%;
-	transform: translate(-50%, calc(-50% + 60px)); /* Centers the div */
+	transform: translate(-50%, calc(-50% + 30px)); /* Centers the div */
 	width: min(500px, 100vw); /* Minimum width between 300px and 100vw */
 	height: auto; /* Minimum height between 500px and 100vh */
 	box-sizing: border-box; /* Ensures padding and border are included in size */
