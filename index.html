@@ -1015,7 +1015,7 @@
 			let text = `
 			<div class="book-details-pic-container">
 				<div class="thumbnail-wrapper" title="Open Book" onclick="navigateToReadBook(currentbook, '${readingDirection}')">
-					<img class="book-thumbnail" src="${mbBaseUrl}/api/v1/books/${book.id}/thumbnail">
+					<img id="bookDetailCover" class="book-thumbnail" src="transparent.png">
 				</div>
 				<div class="mini-controls">
 					<div class="mini-buttons-2 prev-book" title="Previous book" onclick="jumpBookDetailsPrev()">
@@ -1040,6 +1040,8 @@
 			</div>
 			`;
 			bookDetailsContainer.innerHTML = text;
+			bookDetailCover.src = await fetchMedia(`${mbBaseUrl}/api/v1/books/${book.id}/thumbnail`);
+
 		}
 
 		async function buildBookItem(item, book, format, target) {
