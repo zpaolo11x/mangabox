@@ -526,7 +526,7 @@
 		}
 
 		const mediaCache = new Map();
-		const CACHE_LIMIT = 100; // Maximum number of cached items
+		const CACHE_LIMIT = 250; // Maximum number of cached items
 
 		async function fetchMedia(url) {
 			if (mediaCache.has(url)) {
