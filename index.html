@@ -526,11 +526,15 @@
 		}
 
 		const mediaCache = new Map();
+		const CACHE_LIMIT = 100; // Maximum number of cached items
 
 		async function fetchMedia(url) {
 			if (mediaCache.has(url)) {
-				console.log("already cached media "+url)
-				return mediaCache.get(url); // Return cached object URL
+				// Move the accessed item to the end to mark it as recently used
+				const value = mediaCache.get(url);
+				mediaCache.delete(url);
+				mediaCache.set(url, value);
+				return value;
 			}
 
 			try {
@@ -544,9 +548,15 @@
 				if (response.ok) {
 					const blob = await response.blob();
 					const objectURL = URL.createObjectURL(blob);
-					console.log("caching media: "+url);
-					// Cache the object URL
+
+					// Add to cache and enforce size limit
 					mediaCache.set(url, objectURL);
+					if (mediaCache.size > CACHE_LIMIT) {
+						// Remove the oldest entry
+						const oldestKey = mediaCache.keys().next().value;
+						URL.revokeObjectURL(mediaCache.get(oldestKey)); // Revoke object URL
+						mediaCache.delete(oldestKey);
+					}
 
 					return objectURL;
 				} else {
@@ -559,13 +569,14 @@
 			}
 		}
 
-		// Clean up the cache and revoke object URLs when needed
+		// Function to clear the cache entirely
 		function clearMediaCache() {
 			for (const objectURL of mediaCache.values()) {
 				URL.revokeObjectURL(objectURL);
 			}
 			mediaCache.clear();
 		}
+
 
 
 		// Set the image:
