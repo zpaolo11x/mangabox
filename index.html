@@ -525,23 +525,48 @@
 			}
 		}
 
+		const mediaCache = new Map();
+
 		async function fetchMedia(url) {
+			if (mediaCache.has(url)) {
+				console.log("already cached media "+url)
+				return mediaCache.get(url); // Return cached object URL
+			}
 
-			const response = await fetch(url, {
-				method: 'GET',
-				headers: {
-					'Authorization': mbAuthHeader,
-				},
-			});
+			try {
+				const response = await fetch(url, {
+					method: 'GET',
+					headers: {
+						'Authorization': mbAuthHeader,
+					},
+				});
 
-			if (response.ok) {
-				const blob = await response.blob();
-				return URL.createObjectURL(blob);
-			} else {
-				console.error(`Failed to load thumbnail for series ${seriesId}`, response.status);
+				if (response.ok) {
+					const blob = await response.blob();
+					const objectURL = URL.createObjectURL(blob);
+					console.log("caching media: "+url);
+					// Cache the object URL
+					mediaCache.set(url, objectURL);
+
+					return objectURL;
+				} else {
+					console.error(`Failed to load media from ${url}`, response.status);
+					return 'fallback-image.jpg';
+				}
+			} catch (error) {
+				console.error(`Error fetching media: ${error.message}`);
 				return 'fallback-image.jpg';
 			}
 		}
+
+		// Clean up the cache and revoke object URLs when needed
+		function clearMediaCache() {
+			for (const objectURL of mediaCache.values()) {
+				URL.revokeObjectURL(objectURL);
+			}
+			mediaCache.clear();
+		}
+
 
 		// Set the image:
 		// document.querySelector('#image-id').src = await fetchThumbnail('series-id');
@@ -966,25 +991,25 @@
 			`
 		}
 
-		function closeBookDetails(){
+		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
 			setTimeout(() => {
 				bookDetailsContainer.innerHTML = ''
-			},300);
+			}, 300);
 		}
-		
+
 		let currentbook = null;
 		let prevbook = null;
 		let nextbook = null;
 
-		function jumpBookDetailsPrev(){
+		function jumpBookDetailsPrev() {
 			if (prevbook != null) showBookDetails(prevbook);
 		}
-		function jumpBookDetailsNext(){
+		function jumpBookDetailsNext() {
 			if (nextbook != null) showBookDetails(nextbook);
 		}
 
-		function navigateToReadBook(book, readingDirection){
+		function navigateToReadBook(book, readingDirection) {
 			setIncognito(false);
 			navigateTo(`#bookread
 						?library_id=${book.libraryId}
@@ -1265,7 +1290,7 @@
 				sectionShow(booksGrid);
 				sectionShow(seriesHeader);
 				sectionShow(seriesMiniHeader);
-				seriesMiniHeader.classList.add ("collapse");
+				seriesMiniHeader.classList.add("collapse");
 
 				if (focus) {
 					var item = document.getElementById(focus);
@@ -2342,12 +2367,12 @@
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
 					break;
 				case 'search':
-				setIncognito(false);
-				searchInput.value = params.get('search_string');
+					setIncognito(false);
+					searchInput.value = params.get('search_string');
 					await performSearch(params.get('search_string'));
 					break;
 				case 'bookread':
-				await readBook(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
+					await readBook(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
 					break;
 				default:
 					console.log('no selection');
