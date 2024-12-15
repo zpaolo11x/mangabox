@@ -1,1 +1,2 @@
-- Slightly revised icon
+- Added caching for loaded media
+- Fixed icon files
