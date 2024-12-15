@@ -1,2 +1,2 @@
 - Added caching for loaded media
-- Fixed icon media
+- Fixed icon files
