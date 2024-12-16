@@ -1301,7 +1301,7 @@
 				sectionShow(booksGrid);
 				sectionShow(seriesHeader);
 				sectionShow(seriesMiniHeader);
-				seriesMiniHeader.classList.add("collapse");
+				seriesMiniHeader.classList.add('collapse');
 
 				if (focus) {
 					var item = document.getElementById(focus);
@@ -1496,6 +1496,7 @@
 			currentPage: 0,
 			pages: [],					// this is the array of pages data in the form url, iscover etc
 			uiPages: [],				// array of page images with alt = page number
+			uiPagesContainer: [],
 			uiSpreads: [],				// array of divs with the correct paged uiPages inside
 			uiSpreadsPages: [],		// array of arrays that associates each uiSpreads div index to its uiPages index.
 			currentPageIndex: 0,
@@ -1653,13 +1654,19 @@
 			let leftPos = 0;
 
 			dataOut.forEach((element, index) => {
+				const imgDiv = addItem('div',{
+					className: 'page-container'
+				});
 				const imgPage = addItem('img', {
 					alt: element.pageNum,
 					className: 'page multiply',
 					src: 'transparent.png',
 					hasSrc: false,
 				});
+				imgDiv.appendChild(imgPage);
+
 				rd.uiPages.push(imgPage);
+				rd.uiPagesContainer.push(imgDiv);
 
 				const imgThumb = addItem('img', {
 					className: 'page-thumb multiply',
@@ -1701,13 +1708,13 @@
 					if (dataOut[i].isCover) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
 						buildSize(spreadItem, dataOut[i].AR);
 						
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 						const coverlay = document.createElement('div');
@@ -1718,22 +1725,22 @@
 					} else if (dataOut[i].isDoubleSpread) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
 						buildSize(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i : i + 1]);
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i + 1 : i]);
 
-						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
-						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
+						spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? i : i + 1]);
+						spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? i + 1 : i]);
 
 						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
 						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
@@ -1747,6 +1754,10 @@
 
 						buildSizePic(rd.uiPages[i], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i].AR);
 						buildSizePic(rd.uiPages[i + 1], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i + 1].AR);
+						rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
+						rd.uiPagesContainer[i].style.height = rd.uiPages[i].style.height;
+						rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
+						rd.uiPagesContainer[i + 1].style.height = rd.uiPages[i + 1].style.height;
 						//rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
 						//rd.uiPages[i].style.height = spreadItem.style.height;
 						//rd.uiPages[i + 1].style.width = spreadItem.style.height * dataOut[i + 1].AR;
@@ -1758,27 +1769,27 @@
 					} else if (i < dataOut.length - 1) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
 						buildSize(spreadItem, 2 * dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
 
-						rd.uiPages[i].style.width = spreadItem.style.width * 0.5;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width * 0.5;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						rd.uiPages[i].style[rd.ltr ? 'right' : 'left'] = '0px'; // align pane to right or left based on ltr
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('single-page')
 
 						buildSize(spreadItem, dataOut[i].AR);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
@@ -1812,13 +1823,13 @@
 					if (dataOut[i].isCover) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
 						buildSize(spreadItem, dataOut[i].AR);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 						const coverlay = document.createElement('div');
@@ -1855,13 +1866,13 @@
 					else {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
 
 						buildSize(spreadItem, dataOut[i].AR);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}

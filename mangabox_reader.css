@@ -109,20 +109,31 @@ img.page:not(.loading) {
 		transform: rotate(360deg);
 	}
 }
+.page-container{
+	position:relative;
+}
 
-img.page.loading {
-	/*
-	opacity:0.5;
-	object-fit:contain;
-	filter: hue-rotate(var(--mb-h-deg));
-*/
-
+/*//TODO così si attiva anche per quelle loading in background? */
+.page-container:has(img.page.loading)::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 30%;
+	aspect-ratio:1 / 1;
+	border-radius: 50%;
 	border-top-color: var(--mb-accent);
-	animation: loader_spin_page 1s linear infinite;
+	animation: loader_spin 1s linear infinite;
+	transform: translate(-50%, -50%);
 
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
-	mask-image: radial-gradient(circle, transparent 15%, white 15%, white 20%, transparent 20%);
-	-webkit-mask-image: radial-gradient(circle, transparent 15%, white 15%, white 20%, transparent 20%);
+	mask-image: radial-gradient(circle, transparent 40%, white 40%, white 50%);
+	-webkit-mask-image: radial-gradient(circle, transparent 40%, white 40%, white 50%);
+}
+
+/* hidden viene impostato in questo caso? perché altrimenti taglia subito! */
+.page-container:has(img.page:not(.hidden))::before {
+	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
 }
 
 img.multiply {
