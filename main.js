@@ -5,7 +5,7 @@ let mainWindow;
 
 app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
 
-app.on('ready', () => {
+function createWindow() {
 	mainWindow = new BrowserWindow({
 		width: 1200,
 		height: 800,
@@ -18,7 +18,7 @@ app.on('ready', () => {
 	});
 
 	mainWindow.loadFile('index.html'); // Replace 'index.html' with your main HTML file name
-});
+};
 
 app.on('window-all-closed', () => {
 	app.quit();
@@ -27,3 +27,5 @@ app.on('window-all-closed', () => {
 ipcMain.on('quit-app', () => {
 	app.quit();
 });
+
+app.on('ready', createWindow);
