@@ -119,7 +119,7 @@ img.page:not(.loading) {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	width: 30%;
+	width: 40%;
 	aspect-ratio:1 / 1;
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
@@ -127,8 +127,8 @@ img.page:not(.loading) {
 	transform: translate(-50%, -50%);
 
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
-	mask-image: radial-gradient(circle, transparent 40%, white 40%, white 50%);
-	-webkit-mask-image: radial-gradient(circle, transparent 40%, white 40%, white 50%);
+	mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
+	-webkit-mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
 }
 
 /* hidden viene impostato in questo caso? perché altrimenti taglia subito! */
