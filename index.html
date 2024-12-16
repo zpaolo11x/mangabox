@@ -1705,7 +1705,8 @@
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
 						buildSize(spreadItem, dataOut[i].AR);
-
+						spreadItemThumb.style.width = spreadItemThumb.style.height * dataOut[i].AR;
+						
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
@@ -1722,6 +1723,7 @@
 						spreadItem.classList.add('double-page', 'flock')
 
 						buildSize(spreadItem, dataOut[i].AR);
+						spreadItemThumb.style.width = spreadItemThumb.style.height * dataOut[i].AR;
 						buildFlock(spreadItem, i, dataOut.length);
 
 						rd.uiPages[i].style.width = spreadItem.style.width;
@@ -1741,7 +1743,12 @@
 						spreadItem.classList.add('two-pages', 'flock')
 
 						buildSize(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
+						//spreadItemThumb.style.width = spreadItemThumb.style.height * (dataOut[i].AR + dataOut[i + 1].AR);
+						spreadItemThumb.style.width = `${rd.thumbHeight * (dataOut[i].AR + dataOut[i + 1].AR)}px`;
+
+						console.log(spreadItemThumb.style);
 						buildFlock(spreadItem, i, dataOut.length);
+
 						buildSizePic(rd.uiPages[i], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i].AR);
 						buildSizePic(rd.uiPages[i + 1], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i + 1].AR);
 						//rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
@@ -1759,6 +1766,7 @@
 						spreadItem.classList.add('double-page', 'flock')
 
 						buildSize(spreadItem, 2 * dataOut[i].AR);
+						spreadItemThumb.style.width = spreadItemThumb.style.height * (2 * dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
 
 						rd.uiPages[i].style.width = spreadItem.style.width * 0.5;
@@ -1773,6 +1781,7 @@
 						spreadItem.classList.add('single-page')
 
 						buildSize(spreadItem, dataOut[i].AR);
+						spreadItemThumb.style.width = spreadItemThumb.style.height * (dataOut[i].AR);
 
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
@@ -1813,6 +1822,7 @@
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
 						buildSize(spreadItem, dataOut[i].AR);
+						spreadItemThumb.style.width = spreadItemThumb.style.height * (dataOut[i].AR);
 
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
@@ -1856,6 +1866,7 @@
 						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
 
 						buildSize(spreadItem, dataOut[i].AR);
+						spreadItemThumb.style.width = spreadItemThumb.style.height * (dataOut[i].AR);
 
 						rd.uiPages[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = spreadItem.style.height;
@@ -1870,7 +1881,7 @@
 					rd.uiSpreads.push(spreadItem);
 					readerViewer.appendChild(spreadItem);
 					spreadHide(spreadItem);
-
+					
 					spreadItemThumb.addEventListener('click', () => {
 						jumpToSpread(localSpread);
 					});
