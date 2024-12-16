@@ -11,9 +11,11 @@ function createWindow() {
 		height: 800,
 		autoHideMenuBar: true,
 		webPreferences: {
-			nodeIntegration: true,
-			contextIsolation: false,
-			preload: path.join(__dirname, 'preload.js'),
+			preload: require('path').join(__dirname, 'preload.js'),
+			contextIsolation: true, // REQUIRED for contextBridge
+			enableRemoteModule: false, // Best practice for security
+			nodeIntegration: false, // Ensures better security
+			sandbox: true, // Optional: Runs preload in a secure sandbox
 		},
 	});
 
