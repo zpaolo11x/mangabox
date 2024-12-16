@@ -418,12 +418,12 @@
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 			if (!(rd.pageMode == 2)) return;
-
+console.log("RATE"+newScreenAR/readerMaxRatio);
 			if (isSectionHidden(readerContainer)) {
 				screenAR = newScreenAR;
-				readerHorizontal = newScreenAR > readerMaxRatio;
+				readerHorizontal = newScreenAR/readerMaxRatio > rd.thresholdRatio;
 			} else {
-				let newReaderHorizontal = (newScreenAR > readerMaxRatio);
+				let newReaderHorizontal = (newScreenAR/readerMaxRatio > rd.thresholdRatio);
 				if (newReaderHorizontal != readerHorizontal) {
 					screenAR = newScreenAR;
 					/*
@@ -1477,6 +1477,8 @@
 		}
 
 		let rd = {
+			thresholdRatio: 0.89,
+
 			preloadCount: 4,
 			preloadPicDelay: 300,
 			loadDelay: 100,
@@ -1690,7 +1692,7 @@
 			readerViewer.classList.remove('spread-layout');
 			readerViewer.classList.remove('page-layout');
 
-			readerHorizontal = (rd.pageMode == 0) || ((screenAR > readerMaxRatio) && !(rd.pageMode == 1));
+			readerHorizontal = (rd.pageMode == 0) || ((screenAR/readerMaxRatio > rd.thresholdRatio) && !(rd.pageMode == 1));
 
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
 
