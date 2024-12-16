@@ -78,6 +78,7 @@ img.page {
 	position: absolute;
 	border: none;
 	color: transparent;
+	opacity:1;
 }
 
 /*
@@ -95,9 +96,17 @@ img.page:not([src]) {
 .page-layout img.page {
 	display: block;
 }
-
+/*
 img.page:not(.loading) {
 	opacity: 1;
+}
+*/
+
+img.page.hidden{
+	opacity:0;
+}
+img.page:not(.hidden){
+	opacity:1;
 }
 
 @keyframes loader_spin_page {

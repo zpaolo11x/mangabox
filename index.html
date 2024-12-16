@@ -1958,6 +1958,7 @@
 							rd.uiPages[element].addEventListener('load', () => {
 								//if(rd.uiPages[element] == null) return; //TODO questa parte funziona o è inutile?
 								rd.uiPages[element].classList.remove('loading');
+								rd.uiPages[element].classList.remove('hidden');
 								if (isSectionHidden(readerContainer)) {
 									printStack('LX ');
 									return;
