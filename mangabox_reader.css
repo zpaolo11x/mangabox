@@ -423,12 +423,7 @@ div.single-page {
 .spread-thumb:has(.page-thumb.loading)::before {
 	content: "";
 	position: absolute;
-	/*top: 50%;
-	left: 50%;*/
-	/*
-	top:0px;
-	left:0px;
-	*/
+
 	top: 50%;
 	left: 50%;
 
