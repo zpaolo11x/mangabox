@@ -239,18 +239,6 @@
 	<script src="auth.js"></script>
 
 	<script>
-		const isElectron = typeof process !== 'undefined' && process.versions?.electron;
-		if (isElectron) {
-			// Electron-specific behavior
-			window.addEventListener('keydown', (event) => {
-				if (event.key === 'Escape') {
-					const userConfirmed = confirm('Do you want to quit the application?');
-					if (userConfirmed) {
-						window.electronAPI.quitApp(); // Custom Electron API to quit
-					}
-				}
-			});
-		}
 
 		function testpr(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
