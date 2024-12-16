@@ -15,7 +15,7 @@
 		hsl(35, 15%, 100%)71%,
 		hsl(35, 15%, 100%)100%;
 
-		--mb-thumb-height: 150;
+	--mb-thumb-height: 150;
 	/*
 		--colorSpread:
 		hsl(212, 30%, 52%)0%,
@@ -73,11 +73,11 @@
 	pointer-events: none;
 }
 
-img.page{
+img.page {
 	transition: opacity 0.3s;
-	position:absolute;
-	border:none;
-	color:transparent;
+	position: absolute;
+	border: none;
+	color: transparent;
 }
 
 /*
@@ -96,8 +96,8 @@ img.page:not([src]) {
 	display: block;
 }
 
-img.page:not(.loading){
-	opacity:1;
+img.page:not(.loading) {
+	opacity: 1;
 }
 
 @keyframes loader_spin_page {
@@ -110,8 +110,8 @@ img.page:not(.loading){
 	}
 }
 
-img.page.loading{
-/*
+img.page.loading {
+	/*
 	opacity:0.5;
 	object-fit:contain;
 	filter: hue-rotate(var(--mb-h-deg));
@@ -141,7 +141,7 @@ div.single-page,
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	box-sizing:content-box;
+	box-sizing: content-box;
 	/*overflow-x: hidden;*/
 }
 
@@ -202,7 +202,7 @@ div.two-pages.flock {
 	/*border-width: 0px calc(100vh * 20 / 800);*/
 	/*border-image: url('pagesM.png') 0 80 0 80;*/
 	border-image: url('pagesZ3.png') 0 80 0 80;
-	background-color:#d0cbc1;
+	background-color: #d0cbc1;
 }
 
 /*
@@ -354,7 +354,7 @@ div.single-page {
 	height: calc(var(--mb-thumb-height) + 10)px;
 	left: 0px;
 	right: 0px;
-	display:flex;
+	display: flex;
 	justify-content: left;
 	background-color: var(--mb-card-color);
 	bottom: 60px;
@@ -364,42 +364,49 @@ div.single-page {
 }
 
 #thumbStripInner {
-	display:flex;
-	padding:0;
-	margin:0;
+	display: flex;
+	padding: 0;
+	margin: 0;
 	height: calc(var(--mb-thumb-height) + 10)px;
-	margin-left:50%;
-	margin-right:50%;
+	margin-left: 50%;
+	margin-right: 50%;
 	/*flex-direction: row-reverse;*/
 }
 
-.spread-thumb{
-	position:relative;
-	display:flex;
-	padding:0;
-	margin:0;
+.spread-thumb {
+	position: relative;
+	display: flex;
+	padding: 0;
+	margin: 0;
 	height: var(--mb-thumb-height)px;
-	margin:5px;
+	margin: 5px;
 	margin-left: 5px;
 	margin-right: 5px;
 	cursor: pointer;
 	background: white;
-	box-shadow: inset rgba(0,0,0,0.1) 0px 0px 15px, rgba(0,0,0,0.45) 0px 0px 8px;
+	box-shadow: inset rgba(0, 0, 0, 0.1) 0px 0px 15px, rgba(0, 0, 0, 0.45) 0px 0px 8px;
 	border-radius: 3px;
 }
 
-.spread-thumb.current{
+.spread-thumb.current {
 	/*
 	margin-left:10px;
 	margin-right:10px;
 	*/
-	box-shadow: var(--mb-accent) 0px 0px 0px 3px, rgba(0,0,0,0.45) 0px 0px 8px;
+	box-shadow: var(--mb-accent) 0px 0px 0px 3px, rgba(0, 0, 0, 0.45) 0px 0px 8px;
 }
 
 .page-thumb {
 	/*position:absolute;*/
-	display:inline-block;
+	display: inline-block;
 	/*object-fit: contain;*/
+	transition:opacity 0.3s;
+}
+.page-thumb.hidden{
+	opacity:0;
+}
+.page-thumb:not(.hidden){
+	opacity:1;
 }
 
 .spread-thumb:has(.page-thumb.loading)::before {
@@ -411,8 +418,8 @@ div.single-page {
 	top:0px;
 	left:0px;
 	*/
-	top:50%;
-	left:50%;
+	top: 50%;
+	left: 50%;
 
 	width: 80px;
 	height: 80px;
@@ -427,6 +434,9 @@ div.single-page {
 
 }
 
+.spread-thumb:has(.page-thumb:not(.hidden))::before {
+	animation: loader_hide 1s forwards, loader_spin 1s linear 2;
+}
 
 #bottomControls {
 	grid-template-columns: 40px 40px 1fr 40px 40px;
@@ -459,12 +469,12 @@ div.single-page {
 }
 
 #controlPanel.hidden #bottomControls,
-#readerContainer.hidden #bottomControls{
+#readerContainer.hidden #bottomControls {
 	bottom: -100px;
 }
 
 #controlPanel.hidden #thumbStrip,
-#readerContainer.hidden #thumbStrip{
+#readerContainer.hidden #thumbStrip {
 	bottom: -300px;
 }
 
@@ -587,11 +597,13 @@ div.single-page {
 
 	transition: border 0.3s;
 }
+
 #touchPanel.shrink {
 	top: 60px;
 	bottom: 180px;
 	height: calc(100vh - 60px - 180px);
 }
+
 /*
 #touchPanel.incognito{
 	border-bottom: 5px solid rgba(196, 48, 212, 0.74);
