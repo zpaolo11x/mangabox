@@ -1,2 +1,2 @@
-- Added caching for loaded media
-- Fixed icon files
+- Improved loading animation
+- Fade in of pages images
