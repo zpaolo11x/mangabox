@@ -446,7 +446,7 @@ div.single-page {
 }
 
 .spread-thumb:has(.page-thumb:not(.hidden))::before {
-	animation: loader_hide 1s forwards, loader_spin 1s linear 2;
+	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
 }
 
 #bottomControls {
