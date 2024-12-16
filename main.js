@@ -27,6 +27,3 @@ app.on('window-all-closed', () => {
 ipcMain.on('quit-app', () => {
 	app.quit();
 });
-
-app.on('ready', createWindow);
-
