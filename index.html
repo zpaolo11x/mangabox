@@ -1532,6 +1532,7 @@
 			rd.currentPage = pag;
 			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
 			rd.uiPages = [];				// array of page images with alt = page number
+			rd.uiPagesContainer = [];				// array of page images with alt = page number
 			rd.uiSpreads = [];				// array of divs with the correct paged uiPages inside
 			rd.uiSpreadsPages = [];		// array of arrays that associates each uiSpreads div index to its uiPages index.
 			rd.currentPageIndex = 0;
@@ -2271,6 +2272,11 @@
 				item = null;
 			});
 
+			rd.uiPagesContainer.forEach(item => {
+				item.remove();
+				item = null;
+			});
+			
 			rd.uiSpreads.forEach(item => {
 				item.remove();
 				item = null;

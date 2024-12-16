@@ -445,7 +445,19 @@ div.single-page {
 
 }
 
+/*
 .spread-thumb:has(.page-thumb:not(.hidden))::before {
+	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
+}
+*/
+/* Case: Only one child, and it doesn't have the 'hidden' class */
+.spread-thumb:has(.page-thumb:not(.hidden):nth-of-type(1)):not(:has(.page-thumb:nth-of-type(2)))::before {
+	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
+}
+
+/* Case: Two children, and both don't have the 'hidden' class */
+.spread-thumb:has(.page-thumb:not(.hidden):nth-of-type(1))
+				 :has(.page-thumb:not(.hidden):nth-of-type(2))::before {
 	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
 }
 
