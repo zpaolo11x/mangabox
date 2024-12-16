@@ -239,6 +239,18 @@
 	<script src="auth.js"></script>
 
 	<script>
+		const isElectron = typeof process !== 'undefined' && process.versions?.electron;
+		if (isElectron) {
+			// Electron-specific behavior
+			window.addEventListener('keydown', (event) => {
+				if (event.key === 'Escape') {
+					const userConfirmed = confirm('Do you want to quit the application?');
+					if (userConfirmed) {
+						window.electronAPI.quitApp(); // Custom Electron API to quit
+					}
+				}
+			});
+		}
 
 		function testpr(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
@@ -418,12 +430,12 @@
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 			if (!(rd.pageMode == 2)) return;
-console.log("RATE"+newScreenAR/readerMaxRatio);
+			console.log("RATE" + newScreenAR / readerMaxRatio);
 			if (isSectionHidden(readerContainer)) {
 				screenAR = newScreenAR;
-				readerHorizontal = newScreenAR/readerMaxRatio > rd.thresholdRatio;
+				readerHorizontal = newScreenAR / readerMaxRatio > rd.thresholdRatio;
 			} else {
-				let newReaderHorizontal = (newScreenAR/readerMaxRatio > rd.thresholdRatio);
+				let newReaderHorizontal = (newScreenAR / readerMaxRatio > rd.thresholdRatio);
 				if (newReaderHorizontal != readerHorizontal) {
 					screenAR = newScreenAR;
 					/*
@@ -1657,7 +1669,7 @@ console.log("RATE"+newScreenAR/readerMaxRatio);
 			let leftPos = 0;
 
 			dataOut.forEach((element, index) => {
-				const imgDiv = addItem('div',{
+				const imgDiv = addItem('div', {
 					className: 'page-container'
 				});
 				const imgPage = addItem('img', {
@@ -1692,7 +1704,7 @@ console.log("RATE"+newScreenAR/readerMaxRatio);
 			readerViewer.classList.remove('spread-layout');
 			readerViewer.classList.remove('page-layout');
 
-			readerHorizontal = (rd.pageMode == 0) || ((screenAR/readerMaxRatio > rd.thresholdRatio) && !(rd.pageMode == 1));
+			readerHorizontal = (rd.pageMode == 0) || ((screenAR / readerMaxRatio > rd.thresholdRatio) && !(rd.pageMode == 1));
 
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
 
@@ -1715,7 +1727,7 @@ console.log("RATE"+newScreenAR/readerMaxRatio);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
 						buildSize(spreadItem, dataOut[i].AR);
-						
+
 						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
@@ -1887,7 +1899,7 @@ console.log("RATE"+newScreenAR/readerMaxRatio);
 					rd.uiSpreads.push(spreadItem);
 					readerViewer.appendChild(spreadItem);
 					spreadHide(spreadItem);
-					
+
 					spreadItemThumb.addEventListener('click', () => {
 						jumpToSpread(localSpread);
 					});
@@ -2278,7 +2290,7 @@ console.log("RATE"+newScreenAR/readerMaxRatio);
 				item.remove();
 				item = null;
 			});
-			
+
 			rd.uiSpreads.forEach(item => {
 				item.remove();
 				item = null;
