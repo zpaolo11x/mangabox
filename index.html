@@ -487,9 +487,8 @@
 
 		let resizeTimeout;
 
-		window.addEventListener('resize', () => {
+		function updateStickyMenu(){
 			const containerWidth = stickyContainer.getBoundingClientRect().width;
-			console.log (containerWidth);
 
 			if (containerWidth - libSizer.rightmin - libSizer.large >= 0){
 				console.log ("                            LARGE");
@@ -506,6 +505,10 @@
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-small');
 			};
+		}
+
+		window.addEventListener('resize', () => {
+			updateStickyMenu();
 			// update slider for home screen
 			updateSliderMax();
 			// Manage reader orientation
@@ -632,7 +635,7 @@
 			libSizer.large = libraryGap + libraryLarge + libraryGap + libNum * (libraryLarge + libraryGap);
 			libSizer.medium = libraryGap + libraryLarge + libraryGap + libNum * (librarySmall + libraryGap);
 			libSizer.rightmin = librarySmall * 3 + libraryGap * 3 + 150;
-
+			updateStickyMenu();
 			console.log(libSizer);
 		}
 
