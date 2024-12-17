@@ -37,7 +37,7 @@
 			</li>
 		</ul>
 		<ul id="librariesList" class="libraries-list"></ul>
-		<ul class="libraries-list buttons right-block">
+		<ul id="librariesRightBlock" class="libraries-list buttons right-block">
 			<li id="themeChanger" title="Light/Dark Theme" class="library-item">
 				<div class="thumbnail-wrapper">
 					<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
@@ -481,6 +481,26 @@
 
 		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
 		stripNextPage.addEventListener('click', () => stepPageChange(1));
+
+		const resizeObserver = new ResizeObserver(entries => {
+
+        // Margin-left auto in pixels
+        const marginLeftAuto = librariesRightBlock.getBoundingClientRect().left - librariesList.getBoundingClientRect().right;
+        console.log('Actual margin-left (auto) in pixels:', marginLeftAuto);
+
+
+			/*
+			console.log(librariesRightBlock.style);
+			for (let entry of entries) {
+				if (!stickyContainer.classList.contains('mid-size') && (entry.contentRect.width < 120)) {
+					stickyContainer.classList.add('mid-size');
+				}
+				if (stickyContainer.classList.contains('mid-size') && (entry.contentRect.width >= 120) && )
+			}
+			*/
+		});
+
+		resizeObserver.observe(searchField);
 
 		// Initialize the slider max when the page loads and on resize
 		//window.addEventListener('load', updateSliderMax); //TODO forse si può togliere

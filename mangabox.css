@@ -199,6 +199,7 @@ a {
 	line-height: var(--mb-span-size);
 	color: var(--mb-text-color);
 	transition: background-color 0.3s ease, color 0.3s ease;
+	min-width: 200px;
 }
 
 .library-item:hover {
@@ -1040,28 +1041,28 @@ span.mini-title {
 	pointer-events: none;
 }
 
+
 /* First reduction: only selected library is enlarged */
-@media (max-width: 750px) {
-	.libraries-list.right-block {
+	.sticky-container.mid-size.libraries-list.right-block {
 		grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 205px) var(--mb-button-size);
 	}
 
-	.sticky-container .library-item:not(.search-field) {
+	.sticky-container.mid-size .library-item:not(.search-field) {
 		width: var(--mb-button-size);
 	}
 
-	.sticky-container .library-item:not(.search-field).highlighted {
+	.sticky-container.mid-size .library-item:not(.search-field).highlighted {
 		width: 140px;
 	}
 
-	.sticky-container .library-name {
+	.sticky-container.mid-size .library-name {
 		opacity: 0;
 	}
 
-	.sticky-container .library-item.highlighted .library-name {
+	.sticky-container.mid-size .library-item.highlighted .library-name {
 		opacity: 1;
 	}
-}
+
 
 /* Second reduction: serach bar moved to second row */
 @media (max-width: 550px) {
