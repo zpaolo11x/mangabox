@@ -37,7 +37,7 @@
 			</li>
 		</ul>
 		<ul id="librariesList" class="libraries-list"></ul>
-		<ul class="libraries-list buttons right-block">
+		<ul id="librariesRightBlock" class="libraries-list buttons right-block">
 			<li id="themeChanger" title="Light/Dark Theme" class="library-item">
 				<div class="thumbnail-wrapper">
 					<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
@@ -488,6 +488,24 @@
 		let resizeTimeout;
 
 		window.addEventListener('resize', () => {
+			const containerWidth = stickyContainer.getBoundingClientRect().width;
+			console.log (containerWidth);
+
+			if (containerWidth - libSizer.rightmin - libSizer.large >= 0){
+				console.log ("                            LARGE");
+				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-small');
+			} else if (containerWidth - libSizer.rightmin - libSizer.medium >= 0) {
+				console.log ("                            MEDIUM");
+				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-small');
+				document.body.classList.add('sticky-medium');
+			} else {
+				console.log ("                            SMALL");
+				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-small');
+				document.body.classList.add('sticky-small');
+			};
 			// update slider for home screen
 			updateSliderMax();
 			// Manage reader orientation
@@ -597,12 +615,27 @@
 			}
 		}
 
+		let libSizer = {};
+
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
+			const libraryGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
+			const librarySmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
+			const libraryLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
+			console.log (libraries.length);
+
+			const libNum = libraries.length;
+			libSizer.large = libraryGap + libraryLarge + libraryGap + libNum * (libraryLarge + libraryGap);
+			libSizer.medium = libraryGap + libraryLarge + libraryGap + libNum * (librarySmall + libraryGap);
+			libSizer.rightmin = librarySmall * 3 + libraryGap * 3 + 150;
+
+			console.log(libSizer);
 		}
+
 
 		// This function is called when a library is selected, it manages the library menu and library naming in the URL
 		function libraryHighlight(libraryId) {
@@ -2466,7 +2499,6 @@
 		let isSingleTouch = true; // Track if it's a single-touch gesture
 
 		let currentlyScaled = null;
-
 
 		function handleTouchStart(event) {
 

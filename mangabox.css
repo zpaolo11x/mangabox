@@ -13,6 +13,7 @@
 	--mb-library-gap: 8px;
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
+	--mb-library-large: 140px;
 
 	--mb-swatches:
 		hsl(348, 92%, 38%),
@@ -148,7 +149,7 @@ a {
 .library-item {
 	box-sizing: border-box;
 	padding: calc(0.5*(var(--mb-button-size) - var(--mb-span-size)));
-	width: 140px;
+	width: var(--mb-library-large);
 	margin: 0px;
 	border-radius: 8px;
 	display: flex;
@@ -1041,44 +1042,58 @@ span.mini-title {
 }
 
 /* First reduction: only selected library is enlarged */
-@media (max-width: 750px) {
-	.libraries-list.right-block {
+	body.sticky-medium .libraries-list.right-block {
 		grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 205px) var(--mb-button-size);
 	}
 
-	.sticky-container .library-item:not(.search-field) {
+	body.sticky-medium .sticky-container .library-item:not(.search-field) {
 		width: var(--mb-button-size);
 	}
 
-	.sticky-container .library-item:not(.search-field).highlighted {
-		width: 140px;
+	body.sticky-medium .sticky-container .library-item:not(.search-field).highlighted {
+		width: var(--mb-library-large);
 	}
 
-	.sticky-container .library-name {
+	body.sticky-medium .sticky-container .library-name {
 		opacity: 0;
 	}
 
-	.sticky-container .library-item.highlighted .library-name {
+	body.sticky-medium .sticky-container .library-item.highlighted .library-name {
 		opacity: 1;
 	}
-}
+
 
 /* Second reduction: serach bar moved to second row */
-@media (max-width: 550px) {
-	.sticky-container {
+	body.sticky-small .sticky-container {
 		height: 105px;
 	}
 
-	#bookDetailsContainer{
+	body.sticky-small .sticky-container .library-item:not(.search-field) {
+		width: var(--mb-button-size);
+	}
+
+	body.sticky-small .sticky-container .library-item:not(.search-field).highlighted {
+		width: var(--mb-library-large);
+	}
+
+	body.sticky-small .sticky-container .library-name {
+		opacity: 0;
+	}
+
+	body.sticky-small .sticky-container .library-item.highlighted .library-name {
+		opacity: 1;
+	}
+
+	body.sticky-small #bookDetailsContainer{
 		transform: translate(-50%, calc(-50% + 57px)); /* Centers the div */	
 	}
 
-	.libraries-list {
+	body.sticky-small .libraries-list {
 		margin-top: 0px;
 		margin-bottom: auto;
 	}
 
-	.libraries-list.right-block {
+	body.sticky-small .libraries-list.right-block {
 		grid-template-columns: var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
 		width: calc(100vw - 20px);
 		position: absolute;
@@ -1090,15 +1105,14 @@ span.mini-title {
 		*/
 	}
 
-	#seriesMiniHeader {
+	body.sticky-small #seriesMiniHeader {
 		top: 115px;
 	}
 
-	.stripgrid-header-container{
+	body.sticky-small .stripgrid-header-container{
 		top:120px;
 	}
 
-	body {
+	body.sticky-small {
 		padding-top: 120px;
 	}
-}
