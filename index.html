@@ -487,20 +487,20 @@
 
 		let resizeTimeout;
 
-		function updateStickyMenu(){
+		function updateStickyMenu() {
 			const containerWidth = stickyContainer.getBoundingClientRect().width;
 
-			if (containerWidth - libSizer.rightmin - libSizer.large >= 0){
-				console.log ("                            LARGE");
+			if (containerWidth - libSizer.rightmin - libSizer.large >= 0) {
+				console.log("                            LARGE");
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
 			} else if (containerWidth - libSizer.rightmin - libSizer.medium >= 0) {
-				console.log ("                            MEDIUM");
+				console.log("                            MEDIUM");
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-medium');
 			} else {
-				console.log ("                            SMALL");
+				console.log("                            SMALL");
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-small');
@@ -624,12 +624,22 @@
 		async function fetchLibraries() {
 			const libraryGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
 			const librarySmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
-			const libraryLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			let libraryLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
-			console.log (libraries.length);
+			console.log(libraries.length);
+
+			const maxWidth = Array.from(librariesList.childNodes)
+				.map(item => item.childNodes[1].getBoundingClientRect().width + librarySmall)
+				.reduce((max, width) => Math.max(max, width), 0);
+
+			if (maxWidth > libraryLarge) {
+				libraryLarge = Math.ceil(maxWidth)
+				document.documentElement.style.setProperty('--mb-library-large', libraryLarge+"px");
+			}
+			console.log(maxWidth);
 
 			const libNum = libraries.length;
 			libSizer.large = libraryGap + libraryLarge + libraryGap + libNum * (libraryLarge + libraryGap);
