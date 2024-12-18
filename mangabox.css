@@ -48,6 +48,11 @@
 	--mb-bar-color: #606060;
 }
 
+html, body {
+	overscroll-behavior: none;
+	overflow-y:visible;
+ }
+ 
 #debuggerObj {
 	display: none;
 	position: fixed;
