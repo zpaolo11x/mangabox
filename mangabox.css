@@ -657,7 +657,8 @@ a {
 }
 #bookDetailsContainer ul{
 	padding:0px;
-	margin:0px 0px 0px 40px;
+	margin:0px 0px 0px 20px;
+	list-style-type: none; /* Removes the bullet points */
 }
 
 #bookDetailsContainer .thumbnail-wrapper{
@@ -677,6 +678,7 @@ a {
 .book-details-pic-container{
 	width:150px;
 }
+
 
 /*
 #booksGrid{

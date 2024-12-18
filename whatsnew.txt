@@ -1,2 +1,3 @@
 - Improved loading animation
 - Fade in of pages images
+- Better sizing of library items
