@@ -920,14 +920,15 @@
 			if (focus) {
 				var item = document.getElementById(focus);
 				const yOffset = -150;
-				const y = item.getBoundingClientRect().top + window.pageYOffset + yOffset;
-				window.scrollTo({ top: y });
+				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
+				
+				mainContainer.scrollTo({ top: y });
 
 				currentlyScaled = item.firstChild;
 				item.firstChild.classList.add('scaled');
 
 			} else {
-				window.scrollTo({ top: 0 });
+				mainContainer.scrollTo({ top: 0 });
 			}
 		}
 
@@ -1346,8 +1347,9 @@
 				if (focus) {
 					var item = document.getElementById(focus);
 					const yOffset = -150;
-					const y = item.getBoundingClientRect().top + window.pageYOffset + yOffset;
-					window.scrollTo({ top: y });
+					const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
+
+					mainContainer.scrollTo({ top: y });
 
 					//TODO FIX MOVING OUT OF ITEM, disabled for now
 
@@ -1355,7 +1357,7 @@
 					item.firstChild.classList.add('scaled');
 
 				} else {
-					window.scrollTo({ top: 0 });
+					mainContainer.scrollTo({ top: 0 });
 				}
 			}
 
@@ -2271,7 +2273,7 @@
 		});
 
 		seriesMiniHeader.addEventListener('click', () => {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
+			mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
 		});
 
 		document.addEventListener('mousemove', (event) => {

@@ -538,7 +538,7 @@ a {
 }
 
 .home-strip-parent:first-of-type {
-	margin-top: 15px;
+	margin-top: 10px;
 }
 
 .strip-all {
@@ -1167,12 +1167,4 @@ body.sticky-small .libraries-list.right-block {
 
 body.sticky-small #seriesMiniHeader {
 	top: 115px;
-}
-
-body.sticky-small .stripgrid-header-container {
-	top: 120px;
-}
-
-body.sticky-small {
-	padding-top: 120px;
 }
