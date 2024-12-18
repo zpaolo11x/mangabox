@@ -2248,20 +2248,22 @@ console.log(containerWidth);
 			seek(event.touches[0]); // Use the first touch point
 		});
 
-		document.addEventListener('scroll', function () {
+
+		mainContainer.addEventListener('scroll', function () {
+
 			//TODO: farlo succedere solo quando miniheader è visible
 			if (!isSectionHidden(seriesMiniHeader)) {
-				if ((window.scrollY > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
 					seriesMiniHeader.classList.remove('collapse');
-				} else if ((window.scrollY < 200) && !seriesMiniHeader.classList.contains('collapse')) {
+				} else if ((mainContainer.scrollTop < 200) && !seriesMiniHeader.classList.contains('collapse')) {
 					seriesMiniHeader.classList.add('collapse');
 				}
 			}
 
 			if (!isSectionHidden(stripGridContainer)) {
-				if ((window.scrollY < 5) && (stripGridHeaderContainer.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop < 5) && (stripGridHeaderContainer.classList.contains('collapse'))) {
 					stripGridHeaderContainer.classList.remove('collapse');
-				} else if ((window.scrollY > 10) && !stripGridHeaderContainer.classList.contains('collapse')) {
+				} else if ((mainContainer.scrollTop > 10) && !stripGridHeaderContainer.classList.contains('collapse')) {
 					stripGridHeaderContainer.classList.add('collapse');
 				}
 			}
