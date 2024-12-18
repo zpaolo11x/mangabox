@@ -95,7 +95,6 @@ body {
 	font-family: 'Roboto Flex', sans-serif;
 	margin: 0;
 	padding: 0;
-	padding-top: 60px;
 	background: var(--mb-page-color);
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
@@ -109,9 +108,29 @@ a {
 	transition: color 0.3s ease;
 }
 
+#mainUI {
+	position: fixed;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	display:grid;
+	grid-template-columns: auto; 
+	grid-template-rows: 60px auto; 
+}
+
+#mainContainer{
+	position:relative;
+	grid-row: 2;
+	overflow-y:auto;
+	background-color:pink;
+	border:2px solid red;
+}
+
 /* Sticky container for libraries */
 .sticky-container {
-	position: fixed;
+	grid-row: 1;
+	position: absolute;
 	display: flex;
 	align-items: center;
 	top: 0;
@@ -882,16 +901,6 @@ book-item {
 	grid-template-rows: auto 1fr;
 	gap: 20px;
 	transition: opacity 2s ease;
-	/*border-bottom: 1px solid var(--mb-accent);*/
-	/*
-	position:fixed;
-	z-index:100;
-	right:0px;
-	left:0px;
-	background: var(--mb-page-color);
-	transition: all 0.3s;
-	overflow:hidden;
-*/
 }
 
 
@@ -1110,6 +1119,10 @@ body.sticky-medium .sticky-container .library-item.highlighted .library-name {
 /* Second reduction: serach bar moved to second row */
 body.sticky-small .sticky-container {
 	height: 105px;
+	background-color: blue;;
+}
+body.sticky-small #mainUI {
+	grid-template-rows: 115px auto; 
 }
 
 body.sticky-small .sticky-container .library-item:not(.search-field) {
@@ -1147,9 +1160,6 @@ body.sticky-small .libraries-list.right-block {
 	top: 60px;
 	left: 10px;
 	padding-lefT: 0px;
-	/*padding-left: 20px;
-		padding-right: 20px;
-		*/
 }
 
 body.sticky-small #seriesMiniHeader {
