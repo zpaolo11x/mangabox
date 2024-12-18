@@ -123,8 +123,10 @@ a {
 	position:relative;
 	grid-row: 2;
 	overflow-y:auto;
+	/*
 	background-color:pink;
 	border:2px solid red;
+	*/
 }
 
 /* Sticky container for libraries */
@@ -1119,12 +1121,13 @@ body.sticky-medium .sticky-container .library-item.highlighted .library-name {
 /* Second reduction: serach bar moved to second row */
 body.sticky-small .sticky-container {
 	height: 105px;
-	background-color: blue;;
 }
 body.sticky-small #mainUI {
 	grid-template-rows: 115px auto; 
 }
-
+body.sticky-small #stripGridHeaderContainer {
+	top:115px;
+}
 body.sticky-small .sticky-container .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
