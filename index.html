@@ -26,152 +26,150 @@
 </head>
 
 <body>
-<div id="mainUI">
-	<div id="stickyContainer" class="sticky-container hidden">
-		<ul class="libraries-list buttons left-block">
-			<li id="homeButton" title="MangaBox Home" class="library-item">
-				<div class="thumbnail-wrapper">
-					<img class="library-thumbnail" src="mangabox-logo-new.svg">
-				</div>
-				<div class="library-name">Home</div>
-			</li>
-		</ul>
-		<ul id="librariesList" class="libraries-list"></ul>
-		<ul id="librariesRightBlock" class="libraries-list buttons right-block">
-			<li id="themeChanger" title="Light/Dark Theme" class="library-item">
-				<div class="thumbnail-wrapper">
-					<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
-				</div>
-			</li>
-			<li id="colorChanger" title="Theme Color" class="library-item">
-				<div class="thumbnail-wrapper">
-					<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
-				</div>
-			</li>
-			<li id="searchField" title="Search" class="library-item search-field">
-				<div id="searchIcon" class="thumbnail-wrapper">
-					<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
-				</div>
-				<input id="searchInput" type="text" class="search-input" placeholder="Search...">
-			</li>
-			<li id="logOut" title="Logout" class="library-item">
-				<div class="thumbnail-wrapper">
-					<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
-				</div>
-			</li>
-		</ul>
-	</div>
-	<div id="mainContainer">
-		<div id="seriesHeader" class="section hidden"></div>
-
-		<div id="seriesGrid" class="section hidden"></div>
-
-		<div id="booksGrid" class="section hidden"></div>
-
-		<div id="stripGridContainer" class="section hidden">
-			<div id="stripGrid" class="strip-grid"></div>
-			<div id="stripGridHeaderContainer" class="stripgrid-header-container">
-				<div id="stripGridHeader" class="strip-header">
-					<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
-				</div>
-				<div id="stripGridRight" class="stripgrid-all">
-					<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
-					</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
-				</div>
-			</div>
+	<div id="mainUI">
+		<div id="stickyContainer" class="sticky-container hidden">
+			<ul class="libraries-list buttons left-block">
+				<li id="homeButton" title="MangaBox Home" class="library-item">
+					<div class="thumbnail-wrapper">
+						<img class="library-thumbnail" src="mangabox-logo-new.svg">
+					</div>
+					<div class="library-name">Home</div>
+				</li>
+			</ul>
+			<ul id="librariesList" class="libraries-list"></ul>
+			<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+				<li id="themeChanger" title="Light/Dark Theme" class="library-item">
+					<div class="thumbnail-wrapper">
+						<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+					</div>
+				</li>
+				<li id="colorChanger" title="Theme Color" class="library-item">
+					<div class="thumbnail-wrapper">
+						<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+					</div>
+				</li>
+				<li id="searchField" title="Search" class="library-item search-field">
+					<div id="searchIcon" class="thumbnail-wrapper">
+						<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+					</div>
+					<input id="searchInput" type="text" class="search-input" placeholder="Search...">
+				</li>
+				<li id="logOut" title="Logout" class="library-item">
+					<div class="thumbnail-wrapper">
+						<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+					</div>
+				</li>
+			</ul>
 		</div>
+		<div id="mainContainer">
+			<div id="seriesHeader" class="section hidden"></div>
 
-		<div id="seriesMiniHeader" class="section hidden collapse"></div>
+			<div id="seriesGrid" class="section hidden"></div>
 
-		<div id="homeStripsContainer" class="section hidden">
-			<div class="home-strip-parent">
-				<div class="strip-header-container">
-					<div class="strip-header">
+			<div id="booksGrid" class="section hidden"></div>
+
+			<div id="stripGridContainer" class="section hidden">
+				<div id="stripGrid" class="strip-grid"></div>
+				<div id="stripGridHeaderContainer" class="stripgrid-header-container">
+					<div id="stripGridHeader" class="strip-header">
 						<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
 					</div>
-					<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
-					<div id="allKeepReading" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-				</div>
-
-				<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
-			</div>
-
-			<div class="home-strip-parent">
-				<div class="strip-header-container">
-					<div class="strip-header">
-						<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
+					<div id="stripGridRight" class="stripgrid-all">
+						<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
+						</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
 					</div>
-					<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKOnDeck" min="0" max="100" value="0"></div>
-					<div id="allOnDeck" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
 				</div>
-				<div id="homeStripOnDeck" class="home-strip on-deck"></div>
 			</div>
 
-			<div class="home-strip-parent">
-				<div class="strip-header-container">
-					<div class="strip-header">
-						<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books
+			<div id="seriesMiniHeader" class="section hidden collapse"></div>
+
+			<div id="homeStripsContainer" class="section hidden">
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
+						<div id="allKeepReading" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
 					</div>
-					<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentBooks" min="0" max="100" value="0"></div>
-					<div id="allRecentBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
+
+					<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
 				</div>
-				<div id="homeStripRecentBooks" class="home-strip recent-books"></div>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKOnDeck" min="0" max="100" value="0"></div>
+						<div id="allOnDeck" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripOnDeck" class="home-strip on-deck"></div>
+				</div>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentBooks" min="0" max="100" value="0"></div>
+						<div id="allRecentBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripRecentBooks" class="home-strip recent-books"></div>
+				</div>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentSeries" min="0" max="100" value="0"></div>
+						<div id="allRecentSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripRecentSeries" class="home-strip recent-series"></div>
+				</div>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderUpdatedSeries" min="0" max="100" value="0"></div>
+						<div id="allUpdatedSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripUpdatedSeries" class="home-strip updated-series"></div>
+				</div>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderReadBooks" min="0" max="100" value="0"></div>
+						<div id="allReadBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripReadBooks" class="home-strip updated-series"></div>
+				</div>
 			</div>
 
-			<div class="home-strip-parent">
+			<div id="searchStripsContainer" class="section hidden">
 				<div class="strip-header-container">
-					<div class="strip-header">
-						<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series
-					</div>
-					<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentSeries" min="0" max="100" value="0"></div>
-					<div id="allRecentSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+					<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
 				</div>
-				<div id="homeStripRecentSeries" class="home-strip recent-series"></div>
+				<div id="homeStripSeriesResults" class="series-results search-results"></div>
+
+				<div class="strip-header-container">
+					<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+				</div>
+				<div id="homeStripBooksResults" class="books-results search-results"></div>
 			</div>
 
-			<div class="home-strip-parent">
-				<div class="strip-header-container">
-					<div class="strip-header">
-						<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series
-					</div>
-					<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderUpdatedSeries" min="0" max="100" value="0"></div>
-					<div id="allUpdatedSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-				</div>
-				<div id="homeStripUpdatedSeries" class="home-strip updated-series"></div>
-			</div>
+			<div id="bookDetailsContainer" class="section hidden"></div>
 
-			<div class="home-strip-parent">
-				<div class="strip-header-container">
-					<div class="strip-header">
-						<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books
-					</div>
-					<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderReadBooks" min="0" max="100" value="0"></div>
-					<div id="allReadBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
-				</div>
-				<div id="homeStripReadBooks" class="home-strip updated-series"></div>
-			</div>
+			<div id="blanker"></div>
+
 		</div>
-
-		<div id="searchStripsContainer" class="section hidden">
-			<div class="strip-header-container">
-				<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
-			</div>
-			<div id="homeStripSeriesResults" class="series-results search-results"></div>
-
-			<div class="strip-header-container">
-				<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
-			</div>
-			<div id="homeStripBooksResults" class="books-results search-results"></div>
-		</div>
-
-		<div id="bookDetailsContainer" class="section hidden"></div>
-
-		<div id="blanker"></div>
-
 	</div>
-</div>
-
-
 
 	<div id="readerContainer" class="section hidden">
 		<div id="readerBackground" class="hidden reader-background"></div>
@@ -483,7 +481,7 @@
 		function updateStickyMenu() {
 			console.log("----------------------------------- STICKYSIZER");
 			const containerWidth = mainUI.getBoundingClientRect().width;
-console.log(containerWidth);
+			console.log(containerWidth);
 			if (containerWidth - libSizer.rightmin - libSizer.large >= 0) {
 				console.log("                            LARGE");
 				document.body.classList.remove('sticky-medium');
@@ -631,7 +629,7 @@ console.log(containerWidth);
 
 			if (maxWidth > libraryLarge) {
 				libraryLarge = Math.ceil(maxWidth)
-				document.documentElement.style.setProperty('--mb-library-large', libraryLarge+"px");
+				document.documentElement.style.setProperty('--mb-library-large', libraryLarge + "px");
 			}
 			console.log(maxWidth);
 
