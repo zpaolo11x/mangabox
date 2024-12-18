@@ -1053,7 +1053,7 @@ span.mini-title {
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	border-radius: 15%;
-	box-shadow: inset 0 0 0.5px 0.5px var(--mb-glyph-color);
+	box-shadow: inset 0 0 0px 1px var(--mb-glyph-color);
 	background-size: cover;
 }
 
