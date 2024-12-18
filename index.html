@@ -1113,9 +1113,11 @@
 			</div>
 			<div>
 				<div class="book-details-title">${book.metadata.title}</div>
-				<ul>
-					${summaryArray.map(element => `<li>${element}</li>`).join('')}
-				</ul>
+				<div class="ul-container">
+					<ul>
+						${summaryArray.map(element => `<li>${element}</li>`).join('')}
+					</ul>
+				</div>
 			</div>
 			<div class="close-details mini-buttons-2" onclick="closeBookDetails()">
 				<span class="fa-solid fa-xmark"></span>

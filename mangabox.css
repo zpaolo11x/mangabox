@@ -640,10 +640,11 @@ a {
 #bookDetailsContainer{
 	position: fixed; /* Keeps the div centered and prevents scrolling */
 	left: 50%;
-	top: 50%;
-	transform: translate(-50%, calc(-50% + 30px)); /* Centers the div */
-	width: min(500px, 100vw); /* Minimum width between 300px and 100vw */
-	height: auto; /* Minimum height between 500px and 100vh */
+	top: 100px;
+	transform: translate(-50%, 0); /* Centers the div */
+	width: min(550px, 100vw); /* Minimum width between 300px and 100vw */
+	max-height: calc(100vh - 150px); /* Minimum height between 500px and 100vh */
+	height: 350px;
 	box-sizing: border-box; /* Ensures padding and border are included in size */
 	background-color:var(--mb-card-color);
 	box-shadow: 0px 2px 20px rgba(0,0,0,0.5);
@@ -654,7 +655,19 @@ a {
 	display:flex;
 	align-items:flex-start;
 	transition:all 0.3s;
+	overflow-y:hidden;
 }
+
+.ul-container{
+	position:absolute;
+	overflow-y: auto; /* Enables scrolling within the ul-container */
+	left: 170px;
+	right: 15px;
+	top: 50px;
+	bottom: 20px;
+	overflow-y:auto;
+}
+
 #bookDetailsContainer ul{
 	padding:0px;
 	margin:0px 0px 0px 20px;
@@ -709,6 +722,7 @@ a {
 }
 
 #bookDetailsContainer.hidden {
+	pointer-events: none;
 	opacity: 0;
 }
 
@@ -1087,8 +1101,9 @@ span.mini-title {
 	}
 
 	body.sticky-small #bookDetailsContainer{
-		transform: translate(-50%, calc(-50% + 57px)); /* Centers the div */	
-	}
+		transform:translate(-50%, 60px); /* Centers the div */	
+		max-height: calc(100vh - 150px - 60px); /* Minimum height between 500px and 100vh */
+}
 
 	body.sticky-small .libraries-list {
 		margin-top: 0px;
