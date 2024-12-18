@@ -537,8 +537,8 @@ a {
 	scrollbar-width: none;
 }
 
-.strip-header-container:first-of-type {
-	margin-top: 10px;
+.home-strip-parent:first-of-type {
+	margin-top: 15px;
 }
 
 .strip-all {
