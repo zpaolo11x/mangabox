@@ -210,7 +210,7 @@
 		</div>
 	</div>
 
-	<div id="loginScreen" class="login-screen auth-hidden">
+	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
 			<img src="mangabox-logo-new.svg" width="80px" height="80px">
 			<img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
@@ -309,13 +309,13 @@
 
 		// Show/Hide reader pages/spreads
 		function spreadHide(item) {
-			item.classList.add('hidden-item');
+			item.classList.add('hidden-spread');
 		}
 		function spreadShow(item) {
-			item.classList.remove('hidden-item');
+			item.classList.remove('hidden-spread');
 		}
 		function isSpreadHidden(item) {
-			return (item.classList.contains('hidden-item'));
+			return (item.classList.contains('hidden-spread'));
 		}
 
 		colorChanger.addEventListener('click', () => {
@@ -417,22 +417,9 @@
 				let newReaderHorizontal = (newScreenAR / readerMaxRatio > rd.thresholdRatio);
 				if (newReaderHorizontal != readerHorizontal) {
 					screenAR = newScreenAR;
-					/*
-					rd.uiPages.forEach(item => item.remove());
-					rd.uiSpreads.forEach(item => item.remove());
-					
-					rd.uiPages = [];
-					rd.uiSpreads = [];
-*/
-					//newReaderHorizontal = readerHorizontal;
+
 					navigateTo(window.location.hash); //XXX Magari si può usare una cosa meno invasiva?
 				}
-				/*
-				else if (!readerHorizontal) {
-					screenAR = newScreenAR;
-					navigateTo(window.location.hash); //XXX Magari si può usare una cosa meno invasiva?
-				}
-				*/
 			}
 		}
 
@@ -586,12 +573,6 @@
 			}
 			mediaCache.clear();
 		}
-
-
-
-		// Set the image:
-		// document.querySelector('#image-id').src = await fetchThumbnail('series-id');
-
 
 		async function setReadStatus(seriesId, bookId, read, item, format = null) {
 			if (bookId == null) {
