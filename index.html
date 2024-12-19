@@ -26,162 +26,153 @@
 </head>
 
 <body>
+	<div id="mainUI">
+		<div id="stickyContainer" class="hidden">
+			<ul class="libraries-list buttons left-block">
+				<li id="homeButton" title="MangaBox Home" class="library-item">
+					<div class="thumbnail-wrapper">
+						<img class="library-thumbnail" src="mangabox-logo-new.svg">
+					</div>
+					<div class="library-name">Home</div>
+				</li>
+			</ul>
+			<ul id="librariesList" class="libraries-list"></ul>
+			<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+				<li id="themeChanger" title="Light/Dark Theme" class="library-item">
+					<div class="thumbnail-wrapper">
+						<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+					</div>
+				</li>
+				<li id="colorChanger" title="Theme Color" class="library-item">
+					<div class="thumbnail-wrapper">
+						<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+					</div>
+				</li>
+				<li id="searchField" title="Search" class="library-item search-field">
+					<div id="searchIcon" class="thumbnail-wrapper">
+						<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+					</div>
+					<input id="searchInput" type="text" class="search-input" placeholder="Search...">
+				</li>
+				<li id="logOut" title="Logout" class="library-item">
+					<div class="thumbnail-wrapper">
+						<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="mainContainer">
+			<div id="seriesHeader" class="section hidden"></div>
 
-	<div id="stickyContainer" class="sticky-container hidden">
-		<ul class="libraries-list buttons left-block">
-			<li id="homeButton" title="MangaBox Home" class="library-item">
-				<div class="thumbnail-wrapper">
-					<img class="library-thumbnail" src="mangabox-logo-new.svg">
+			<div id="seriesGrid" class="section hidden"></div>
+
+			<div id="booksGrid" class="section hidden"></div>
+
+			<div id="stripGridContainer" class="section hidden">
+				<div id="stripGrid" class="strip-grid"></div>
+				<div id="stripGridHeaderContainer" class="stripgrid-header-container">
+					<div id="stripGridHeader" class="strip-header">
+						<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+					</div>
+					<div id="stripGridRight" class="stripgrid-all">
+						<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
+						</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+					</div>
 				</div>
-				<div class="library-name">Home</div>
-			</li>
-		</ul>
-		<ul id="librariesList" class="libraries-list"></ul>
-		<ul class="libraries-list buttons right-block">
-			<li id="themeChanger" title="Light/Dark Theme" class="library-item">
-				<div class="thumbnail-wrapper">
-					<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+			</div>
+
+			<div id="seriesMiniHeader" class="section hidden collapse"></div>
+
+			<div id="homeStripsContainer" class="section hidden">
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
+						<div id="allKeepReading" class="strip-all"><span title="View All" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+
+					<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
 				</div>
-			</li>
-			<li id="colorChanger" title="Theme Color" class="library-item">
-				<div class="thumbnail-wrapper">
-					<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKOnDeck" min="0" max="100" value="0"></div>
+						<div id="allOnDeck" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripOnDeck" class="home-strip on-deck"></div>
 				</div>
-			</li>
-			<li id="searchField" title="Search" class="library-item search-field">
-				<div id="searchIcon" class="thumbnail-wrapper">
-					<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentBooks" min="0" max="100" value="0"></div>
+						<div id="allRecentBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripRecentBooks" class="home-strip recent-books"></div>
 				</div>
-				<input id="searchInput" type="text" class="search-input" placeholder="Search...">
-			</li>
-			<li id="logOut" title="Logout" class="library-item">
-				<div class="thumbnail-wrapper">
-					<span class="fa-solid fa-power-off glyph-dark"></span>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentSeries" min="0" max="100" value="0"></div>
+						<div id="allRecentSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripRecentSeries" class="home-strip recent-series"></div>
 				</div>
-			</li>
-		</ul>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderUpdatedSeries" min="0" max="100" value="0"></div>
+						<div id="allUpdatedSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripUpdatedSeries" class="home-strip updated-series"></div>
+				</div>
+
+				<div class="home-strip-parent">
+					<div class="strip-header-container">
+						<div class="strip-header">
+							<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books
+						</div>
+						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderReadBooks" min="0" max="100" value="0"></div>
+						<div id="allReadBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
+					</div>
+					<div id="homeStripReadBooks" class="home-strip updated-series"></div>
+				</div>
+			</div>
+
+			<div id="searchStripsContainer" class="section hidden">
+				<div class="strip-header-container">
+					<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
+				</div>
+				<div id="homeStripSeriesResults" class="series-results search-results"></div>
+
+				<div class="strip-header-container">
+					<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+				</div>
+				<div id="homeStripBooksResults" class="books-results search-results"></div>
+			</div>
+
+			<div id="bookDetailsContainer" class="section hidden"></div>
+
+			<div id="blanker"></div>
+
+		</div>
 	</div>
-
-	<div id="seriesHeader" class="section hidden"></div>
-
-	<div id="seriesGrid" class="section hidden"></div>
-
-	<div id="booksGrid" class="section hidden"></div>
-
-	<div id="stripGridContainer" class="section hidden">
-		<div id="stripGrid" class="strip-grid"></div>
-		<div id="stripGridHeaderContainer" class="stripgrid-header-container">
-			<div id="stripGridHeader" class="strip-header">
-				<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
-			</div>
-			<div id="stripGridRight" class="stripgrid-all">
-				<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
-				</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
-			</div>
-		</div>
-	</div>
-
-	<div id="seriesMiniHeader" class="section hidden collapse"></div>
-
-	<!--
-	<div id="searchStripsContainer" class="section hidden">
-		<div class="strip-header-container">
-			<div class="strip-header">
-				<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results
-			</div>
-		</div>
-	<div id="homeStripSeriesResults" class="series-results search-results"></div>
-	-->
-
-	<div id="homeStripsContainer" class="section hidden">
-		<div class="home-strip-parent">
-			<div class="strip-header-container">
-				<div class="strip-header">
-					<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
-				</div>
-				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
-				<div id="allKeepReading" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-			</div>
-
-			<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
-		</div>
-
-		<div class="home-strip-parent">
-			<div class="strip-header-container">
-				<div class="strip-header">
-					<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
-				</div>
-				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKOnDeck" min="0" max="100" value="0"></div>
-				<div id="allOnDeck" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-			</div>
-			<div id="homeStripOnDeck" class="home-strip on-deck"></div>
-		</div>
-
-		<div class="home-strip-parent">
-			<div class="strip-header-container">
-				<div class="strip-header">
-					<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books
-				</div>
-				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentBooks" min="0" max="100" value="0"></div>
-				<div id="allRecentBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
-			</div>
-			<div id="homeStripRecentBooks" class="home-strip recent-books"></div>
-		</div>
-
-		<div class="home-strip-parent">
-			<div class="strip-header-container">
-				<div class="strip-header">
-					<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series
-				</div>
-				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentSeries" min="0" max="100" value="0"></div>
-				<div id="allRecentSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-			</div>
-			<div id="homeStripRecentSeries" class="home-strip recent-series"></div>
-		</div>
-
-		<div class="home-strip-parent">
-			<div class="strip-header-container">
-				<div class="strip-header">
-					<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series
-				</div>
-				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderUpdatedSeries" min="0" max="100" value="0"></div>
-				<div id="allUpdatedSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-			</div>
-			<div id="homeStripUpdatedSeries" class="home-strip updated-series"></div>
-		</div>
-
-		<div class="home-strip-parent">
-			<div class="strip-header-container">
-				<div class="strip-header">
-					<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books
-				</div>
-				<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderReadBooks" min="0" max="100" value="0"></div>
-				<div id="allReadBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
-			</div>
-			<div id="homeStripReadBooks" class="home-strip updated-series"></div>
-		</div>
-	</div>
-
-	<div id="searchStripsContainer" class="section hidden">
-		<div class="strip-header-container">
-			<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
-		</div>
-		<div id="homeStripSeriesResults" class="series-results search-results"></div>
-
-		<div class="strip-header-container">
-			<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
-		</div>
-		<div id="homeStripBooksResults" class="books-results search-results"></div>
-	</div>
-
-	<div id="bookDetailsContainer" class="section hidden">
-
-	</div>
-
-	<div id="blanker"></div>
 
 	<div id="readerContainer" class="section hidden">
-		<div id="readerBackground" class="hidden reader-background"></div>
+		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
 
@@ -195,17 +186,17 @@
 			</div>
 
 			<div id="controlPanel" class="hidden">
-				<div id="topControls" class="reader-controls">
+				<div id="topControls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
 					<span id="bookName"></span>
 					<span id="readerPageFormat" title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
-				<div id="thumbStrip" class="reader-controls">
+				<div id="thumbStrip">
 					<div id="thumbStripInner"></div>
 				</div>
-				<div id="bottomControls" class="reader-controls">
+				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
 					<span id="leftLimit" class="bar-note"></span>
 					<div id="readerProgressBar" onclick="seek(event)">
@@ -219,7 +210,7 @@
 		</div>
 	</div>
 
-	<div id="loginScreen" class="login-screen auth-hidden">
+	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
 			<img src="mangabox-logo-new.svg" width="80px" height="80px">
 			<img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
@@ -318,13 +309,13 @@
 
 		// Show/Hide reader pages/spreads
 		function spreadHide(item) {
-			item.classList.add('hidden-item');
+			item.classList.add('hidden-spread');
 		}
 		function spreadShow(item) {
-			item.classList.remove('hidden-item');
+			item.classList.remove('hidden-spread');
 		}
 		function isSpreadHidden(item) {
-			return (item.classList.contains('hidden-item'));
+			return (item.classList.contains('hidden-spread'));
 		}
 
 		colorChanger.addEventListener('click', () => {
@@ -418,30 +409,17 @@
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 			if (!(rd.pageMode == 2)) return;
-
+			console.log("RATE" + newScreenAR / readerMaxRatio);
 			if (isSectionHidden(readerContainer)) {
 				screenAR = newScreenAR;
-				readerHorizontal = newScreenAR > readerMaxRatio;
+				readerHorizontal = newScreenAR / readerMaxRatio > rd.thresholdRatio;
 			} else {
-				let newReaderHorizontal = (newScreenAR > readerMaxRatio);
+				let newReaderHorizontal = (newScreenAR / readerMaxRatio > rd.thresholdRatio);
 				if (newReaderHorizontal != readerHorizontal) {
 					screenAR = newScreenAR;
-					/*
-					rd.uiPages.forEach(item => item.remove());
-					rd.uiSpreads.forEach(item => item.remove());
-					
-					rd.uiPages = [];
-					rd.uiSpreads = [];
-*/
-					//newReaderHorizontal = readerHorizontal;
+
 					navigateTo(window.location.hash); //XXX Magari si può usare una cosa meno invasiva?
 				}
-				/*
-				else if (!readerHorizontal) {
-					screenAR = newScreenAR;
-					navigateTo(window.location.hash); //XXX Magari si può usare una cosa meno invasiva?
-				}
-				*/
 			}
 		}
 
@@ -482,12 +460,31 @@
 		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
 		stripNextPage.addEventListener('click', () => stepPageChange(1));
 
-		// Initialize the slider max when the page loads and on resize
-		//window.addEventListener('load', updateSliderMax); //TODO forse si può togliere
-
 		let resizeTimeout;
 
+		function updateStickyMenu() {
+			console.log("----------------------------------- STICKYSIZER");
+			const containerWidth = mainUI.getBoundingClientRect().width;
+			console.log(containerWidth);
+			if (containerWidth - libSizer.rightmin - libSizer.large >= 0) {
+				console.log("                            LARGE");
+				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-small');
+			} else if (containerWidth - libSizer.rightmin - libSizer.medium >= 0) {
+				console.log("                            MEDIUM");
+				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-small');
+				document.body.classList.add('sticky-medium');
+			} else {
+				console.log("                            SMALL");
+				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-small');
+				document.body.classList.add('sticky-small');
+			};
+		}
+
 		window.addEventListener('resize', () => {
+			updateStickyMenu();
 			// update slider for home screen
 			updateSliderMax();
 			// Manage reader orientation
@@ -577,12 +574,6 @@
 			mediaCache.clear();
 		}
 
-
-
-		// Set the image:
-		// document.querySelector('#image-id').src = await fetchThumbnail('series-id');
-
-
 		async function setReadStatus(seriesId, bookId, read, item, format = null) {
 			if (bookId == null) {
 				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
@@ -597,12 +588,37 @@
 			}
 		}
 
+		let libSizer = {};
+
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
+			const libraryGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
+			const librarySmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
+			let libraryLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
+			console.log(libraries.length);
+
+			const maxWidth = Array.from(librariesList.childNodes)
+				.map(item => item.childNodes[1].getBoundingClientRect().width + librarySmall)
+				.reduce((max, width) => Math.max(max, width), 0);
+
+			if (maxWidth > libraryLarge) {
+				libraryLarge = Math.ceil(maxWidth)
+				document.documentElement.style.setProperty('--mb-library-large', libraryLarge + "px");
+			}
+			console.log(maxWidth);
+
+			const libNum = libraries.length;
+			libSizer.large = libraryGap + libraryLarge + libraryGap + libNum * (libraryLarge + libraryGap);
+			libSizer.medium = libraryGap + libraryLarge + libraryGap + libNum * (librarySmall + libraryGap);
+			libSizer.rightmin = librarySmall * 3 + libraryGap * 3 + 150;
+			updateStickyMenu();
+			console.log(libSizer);
 		}
+
 
 		// This function is called when a library is selected, it manages the library menu and library naming in the URL
 		function libraryHighlight(libraryId) {
@@ -745,7 +761,7 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				title: 'Mark as Read',
+				title: 'Mark series as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
 			markAsRead.addEventListener('click', async (event) => {
@@ -756,7 +772,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark as Unread',
+				title: 'Mark series as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
 			markAsUnread.addEventListener('click', async (event) => {
@@ -882,14 +898,15 @@
 			if (focus) {
 				var item = document.getElementById(focus);
 				const yOffset = -150;
-				const y = item.getBoundingClientRect().top + window.pageYOffset + yOffset;
-				window.scrollTo({ top: y });
+				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
+				
+				mainContainer.scrollTo({ top: y });
 
 				currentlyScaled = item.firstChild;
 				item.firstChild.classList.add('scaled');
 
 			} else {
-				window.scrollTo({ top: 0 });
+				mainContainer.scrollTo({ top: 0 });
 			}
 		}
 
@@ -1050,9 +1067,6 @@
 			console.log(book);
 			let text = `
 			<div class="book-details-pic-container">
-				<div class="thumbnail-wrapper" title="Open Book" onclick="navigateToReadBook(currentbook, '${readingDirection}')">
-					<img id="bookDetailCover" class="book-thumbnail" src="transparent.png">
-				</div>
 				<div class="mini-controls">
 					<div class="mini-buttons-2 prev-book" title="Previous book" onclick="jumpBookDetailsPrev()">
 						<span class="fa-solid fa-chevron-left"></span>
@@ -1064,12 +1078,17 @@
 						<span class="fa-solid fa-chevron-right"></span>
 					</div>			
 				</div>
+				<div id="bookDetailsContainerThumbnailWrapper" title="Open Book" onclick="navigateToReadBook(currentbook, '${readingDirection}')">
+					<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
+				</div>
 			</div>
 			<div>
 				<div class="book-details-title">${book.metadata.title}</div>
-				<ul>
-					${summaryArray.map(element => `<li>${element}</li>`).join('')}
-				</ul>
+				<div class="ul-container">
+					<ul>
+						${summaryArray.map(element => `<li>${element}</li>`).join('')}
+					</ul>
+				</div>
 			</div>
 			<div class="close-details mini-buttons-2" onclick="closeBookDetails()">
 				<span class="fa-solid fa-xmark"></span>
@@ -1180,7 +1199,7 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				title: 'Mark as Read',
+				title: 'Mark book as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
 			markAsRead.addEventListener('click', () => {
@@ -1191,7 +1210,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark as Unread',
+				title: 'Mark book as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
 			markAsUnread.addEventListener('click', () => {
@@ -1251,7 +1270,7 @@
 			addTouchScaler(booksItem, async () => {
 				const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
-				//TODO capire questa storia di historypath per esternalizzare il touchscaler
+
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
 
@@ -1301,21 +1320,20 @@
 				sectionShow(booksGrid);
 				sectionShow(seriesHeader);
 				sectionShow(seriesMiniHeader);
-				seriesMiniHeader.classList.add("collapse");
+				seriesMiniHeader.classList.add('collapse');
 
 				if (focus) {
 					var item = document.getElementById(focus);
 					const yOffset = -150;
-					const y = item.getBoundingClientRect().top + window.pageYOffset + yOffset;
-					window.scrollTo({ top: y });
+					const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
 
-					//TODO FIX MOVING OUT OF ITEM, disabled for now
+					mainContainer.scrollTo({ top: y });
 
 					currentlyScaled = item.firstChild;
 					item.firstChild.classList.add('scaled');
 
 				} else {
-					window.scrollTo({ top: 0 });
+					mainContainer.scrollTo({ top: 0 });
 				}
 			}
 
@@ -1477,6 +1495,8 @@
 		}
 
 		let rd = {
+			thresholdRatio: 0.89,
+
 			preloadCount: 4,
 			preloadPicDelay: 300,
 			loadDelay: 100,
@@ -1496,6 +1516,7 @@
 			currentPage: 0,
 			pages: [],					// this is the array of pages data in the form url, iscover etc
 			uiPages: [],				// array of page images with alt = page number
+			uiPagesContainer: [],
 			uiSpreads: [],				// array of divs with the correct paged uiPages inside
 			uiSpreadsPages: [],		// array of arrays that associates each uiSpreads div index to its uiPages index.
 			currentPageIndex: 0,
@@ -1531,6 +1552,7 @@
 			rd.currentPage = pag;
 			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
 			rd.uiPages = [];				// array of page images with alt = page number
+			rd.uiPagesContainer = [];				// array of page images with alt = page number
 			rd.uiSpreads = [];				// array of divs with the correct paged uiPages inside
 			rd.uiSpreadsPages = [];		// array of arrays that associates each uiSpreads div index to its uiPages index.
 			rd.currentPageIndex = 0;
@@ -1653,16 +1675,22 @@
 			let leftPos = 0;
 
 			dataOut.forEach((element, index) => {
+				const imgDiv = addItem('div', {
+					className: 'page-container'
+				});
 				const imgPage = addItem('img', {
 					alt: element.pageNum,
-					className: 'page multiply',
+					className: 'page multiply hidden',
 					src: 'transparent.png',
 					hasSrc: false,
 				});
+				imgDiv.appendChild(imgPage);
+
 				rd.uiPages.push(imgPage);
+				rd.uiPagesContainer.push(imgDiv);
 
 				const imgThumb = addItem('img', {
-					className: 'page-thumb multiply',
+					className: 'page-thumb multiply hidden',
 					alt: element.pageNum,
 					src: 'transparent.png',
 					lazySrc: element.thumb,
@@ -1682,7 +1710,7 @@
 			readerViewer.classList.remove('spread-layout');
 			readerViewer.classList.remove('page-layout');
 
-			readerHorizontal = (rd.pageMode == 0) || ((screenAR > readerMaxRatio) && !(rd.pageMode == 1));
+			readerHorizontal = (rd.pageMode == 0) || ((screenAR / readerMaxRatio > rd.thresholdRatio) && !(rd.pageMode == 1));
 
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
 
@@ -1701,13 +1729,13 @@
 					if (dataOut[i].isCover) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
 						buildSize(spreadItem, dataOut[i].AR);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 						const coverlay = document.createElement('div');
@@ -1718,22 +1746,22 @@
 					} else if (dataOut[i].isDoubleSpread) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
 						buildSize(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i : i + 1]);
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i + 1 : i]);
 
-						spreadItem.appendChild(rd.uiPages[rd.ltr ? i : i + 1]);
-						spreadItem.appendChild(rd.uiPages[rd.ltr ? i + 1 : i]);
+						spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? i : i + 1]);
+						spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? i + 1 : i]);
 
 						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
 						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
@@ -1741,9 +1769,16 @@
 						spreadItem.classList.add('two-pages', 'flock')
 
 						buildSize(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
+
+						console.log(spreadItemThumb.style);
 						buildFlock(spreadItem, i, dataOut.length);
+
 						buildSizePic(rd.uiPages[i], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i].AR);
 						buildSizePic(rd.uiPages[i + 1], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i + 1].AR);
+						rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
+						rd.uiPagesContainer[i].style.height = rd.uiPages[i].style.height;
+						rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
+						rd.uiPagesContainer[i + 1].style.height = rd.uiPages[i + 1].style.height;
 						//rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
 						//rd.uiPages[i].style.height = spreadItem.style.height;
 						//rd.uiPages[i + 1].style.width = spreadItem.style.height * dataOut[i + 1].AR;
@@ -1755,27 +1790,27 @@
 					} else if (i < dataOut.length - 1) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
 						buildSize(spreadItem, 2 * dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
 
-						rd.uiPages[i].style.width = spreadItem.style.width * 0.5;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width * 0.5;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						rd.uiPages[i].style[rd.ltr ? 'right' : 'left'] = '0px'; // align pane to right or left based on ltr
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					} else {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('single-page')
 
 						buildSize(spreadItem, dataOut[i].AR);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
@@ -1791,8 +1826,7 @@
 					spreadItemThumb.addEventListener('click', () => {
 						jumpToSpread(localSpread);
 					});
-					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
-
+					rd.uiSpreadsThumbs.push(spreadItemThumb);
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
@@ -1809,13 +1843,13 @@
 					if (dataOut[i].isCover) {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('cover-page', rd.ltr ? 'LTR' : 'RTL')
 
 						buildSize(spreadItem, dataOut[i].AR);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 						const coverlay = document.createElement('div');
@@ -1852,13 +1886,13 @@
 					else {
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
-						spreadItem.appendChild(rd.uiPages[i]);
+						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add(dataOut[i].isDoubleSpread ? 'double-page' : 'single-page')
 
 						buildSize(spreadItem, dataOut[i].AR);
 
-						rd.uiPages[i].style.width = spreadItem.style.width;
-						rd.uiPages[i].style.height = spreadItem.style.height;
+						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
+						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 						i++;
 					}
@@ -1874,7 +1908,7 @@
 					spreadItemThumb.addEventListener('click', () => {
 						jumpToSpread(localSpread);
 					});
-					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
+					rd.uiSpreadsThumbs.push(spreadItemThumb);
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
@@ -1939,8 +1973,8 @@
 							//rd.uiPages[element].src = rd.pages[element].url;
 							// Handle successful load
 							rd.uiPages[element].addEventListener('load', () => {
-								//if(rd.uiPages[element] == null) return; //TODO questa parte funziona o è inutile?
 								rd.uiPages[element].classList.remove('loading');
+								rd.uiPages[element].classList.remove('hidden');
 								if (isSectionHidden(readerContainer)) {
 									printStack('LX ');
 									return;
@@ -2168,14 +2202,12 @@
 		openMenu.addEventListener('click', toggleMenu);
 
 		// Seek function to move to specific spread based on click or drag
-		function seek(event) {//TODO check why it fires twice for any seek
+		function seek(event) {
 			console.log('                                     seek');
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
 
-			//rd.currentSpreadIndex = Math.floor(newProgressPercent * (rd.uiSpreads.length - 1));
-			//console.log('seekjump to' + rd.currentSpreadIndex)
 			jumpToSpread(Math.floor(newProgressPercent * (rd.uiSpreads.length - 1)));
 		}
 
@@ -2191,27 +2223,28 @@
 			seek(event.touches[0]); // Use the first touch point
 		});
 
-		document.addEventListener('scroll', function () {
-			//TODO: farlo succedere solo quando miniheader è visible
+
+		mainContainer.addEventListener('scroll', function () {
+
 			if (!isSectionHidden(seriesMiniHeader)) {
-				if ((window.scrollY > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
 					seriesMiniHeader.classList.remove('collapse');
-				} else if ((window.scrollY < 200) && !seriesMiniHeader.classList.contains('collapse')) {
+				} else if ((mainContainer.scrollTop < 200) && !seriesMiniHeader.classList.contains('collapse')) {
 					seriesMiniHeader.classList.add('collapse');
 				}
 			}
 
 			if (!isSectionHidden(stripGridContainer)) {
-				if ((window.scrollY < 5) && (stripGridHeaderContainer.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop < 5) && (stripGridHeaderContainer.classList.contains('collapse'))) {
 					stripGridHeaderContainer.classList.remove('collapse');
-				} else if ((window.scrollY > 10) && !stripGridHeaderContainer.classList.contains('collapse')) {
+				} else if ((mainContainer.scrollTop > 10) && !stripGridHeaderContainer.classList.contains('collapse')) {
 					stripGridHeaderContainer.classList.add('collapse');
 				}
 			}
 		});
 
 		seriesMiniHeader.addEventListener('click', () => {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
+			mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
 		});
 
 		document.addEventListener('mousemove', (event) => {
@@ -2253,6 +2286,11 @@
 
 		function clearReader() {
 			rd.uiPages.forEach(item => {
+				item.remove();
+				item = null;
+			});
+
+			rd.uiPagesContainer.forEach(item => {
 				item.remove();
 				item = null;
 			});
@@ -2443,7 +2481,6 @@
 		let isSingleTouch = true; // Track if it's a single-touch gesture
 
 		let currentlyScaled = null;
-
 
 		function handleTouchStart(event) {
 
