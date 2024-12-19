@@ -135,7 +135,7 @@ a {
 }
 
 /* Sticky container for libraries */
-.sticky-container {
+#stickyContainer {
 	grid-row: 1;
 	position: absolute;
 	display: flex;
@@ -242,7 +242,7 @@ a {
 }
 
 
-.sticky-container .thumbnail-wrapper {
+#stickyContainer .thumbnail-wrapper {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	min-width: var(--mb-span-size);
@@ -1106,25 +1106,25 @@ body.sticky-medium .libraries-list.right-block {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 205px) var(--mb-button-size);
 }
 
-body.sticky-medium .sticky-container .library-item:not(.search-field) {
+body.sticky-medium #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
-body.sticky-medium .sticky-container .library-item:not(.search-field).highlighted {
+body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
 }
 
-body.sticky-medium .sticky-container .library-name {
+body.sticky-medium #stickyContainer .library-name {
 	opacity: 0;
 }
 
-body.sticky-medium .sticky-container .library-item.highlighted .library-name {
+body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 	opacity: 1;
 }
 
 
 /* Second reduction: serach bar moved to second row */
-body.sticky-small .sticky-container {
+body.sticky-small #stickyContainer {
 	height: 105px;
 }
 body.sticky-small #mainUI {
@@ -1133,19 +1133,19 @@ body.sticky-small #mainUI {
 body.sticky-small #stripGridHeaderContainer {
 	top:115px;
 }
-body.sticky-small .sticky-container .library-item:not(.search-field) {
+body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
-body.sticky-small .sticky-container .library-item:not(.search-field).highlighted {
+body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
 }
 
-body.sticky-small .sticky-container .library-name {
+body.sticky-small #stickyContainer .library-name {
 	opacity: 0;
 }
 
-body.sticky-small .sticky-container .library-item.highlighted .library-name {
+body.sticky-small #stickyContainer .library-item.highlighted .library-name {
 	opacity: 1;
 }
 

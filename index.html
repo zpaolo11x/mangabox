@@ -27,7 +27,7 @@
 
 <body>
 	<div id="mainUI">
-		<div id="stickyContainer" class="sticky-container hidden">
+		<div id="stickyContainer" class="hidden">
 			<ul class="libraries-list buttons left-block">
 				<li id="homeButton" title="MangaBox Home" class="library-item">
 					<div class="thumbnail-wrapper">
@@ -172,7 +172,7 @@
 	</div>
 
 	<div id="readerContainer" class="section hidden">
-		<div id="readerBackground" class="hidden reader-background"></div>
+		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
 
@@ -186,17 +186,17 @@
 			</div>
 
 			<div id="controlPanel" class="hidden">
-				<div id="topControls" class="reader-controls">
+				<div id="topControls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
 					<span id="bookName"></span>
 					<span id="readerPageFormat" title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
-				<div id="thumbStrip" class="reader-controls">
+				<div id="thumbStrip">
 					<div id="thumbStripInner"></div>
 				</div>
-				<div id="bottomControls" class="reader-controls">
+				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
 					<span id="leftLimit" class="bar-note"></span>
 					<div id="readerProgressBar" onclick="seek(event)">

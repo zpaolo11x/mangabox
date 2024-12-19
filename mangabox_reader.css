@@ -466,11 +466,6 @@ div.single-page {
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 }
 
-/*
-#topControls:has(.incognito){
-	background-image: linear-gradient(-135deg, rgba(196, 48, 212) 40px, var(--mb-card-color) 41px);
-}
-*/
 #controlPanel {
 	transition: opacity 0.3s;
 }
