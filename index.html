@@ -90,7 +90,7 @@
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
-						<div id="allKeepReading" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
+						<div id="allKeepReading" class="strip-all"><span title="View All" class="fa-solid fa-grip glyph-dark"></span></div>
 					</div>
 
 					<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
@@ -783,7 +783,7 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				title: 'Mark as Read',
+				title: 'Mark series as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
 			markAsRead.addEventListener('click', async (event) => {
@@ -794,7 +794,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark as Unread',
+				title: 'Mark series as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
 			markAsUnread.addEventListener('click', async (event) => {
@@ -1221,7 +1221,7 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				title: 'Mark as Read',
+				title: 'Mark book as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
 			markAsRead.addEventListener('click', () => {
@@ -1232,7 +1232,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark as Unread',
+				title: 'Mark book as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
 			markAsUnread.addEventListener('click', () => {
