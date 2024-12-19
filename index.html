@@ -473,9 +473,6 @@
 		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
 		stripNextPage.addEventListener('click', () => stepPageChange(1));
 
-		// Initialize the slider max when the page loads and on resize
-		//window.addEventListener('load', updateSliderMax); //TODO forse si può togliere
-
 		let resizeTimeout;
 
 		function updateStickyMenu() {
@@ -1292,7 +1289,7 @@
 			addTouchScaler(booksItem, async () => {
 				const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
-				//TODO capire questa storia di historypath per esternalizzare il touchscaler
+
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
 
@@ -1350,8 +1347,6 @@
 					const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
 
 					mainContainer.scrollTo({ top: y });
-
-					//TODO FIX MOVING OUT OF ITEM, disabled for now
 
 					currentlyScaled = item.firstChild;
 					item.firstChild.classList.add('scaled');
@@ -1850,8 +1845,7 @@
 					spreadItemThumb.addEventListener('click', () => {
 						jumpToSpread(localSpread);
 					});
-					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
-
+					rd.uiSpreadsThumbs.push(spreadItemThumb);
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
@@ -1933,7 +1927,7 @@
 					spreadItemThumb.addEventListener('click', () => {
 						jumpToSpread(localSpread);
 					});
-					rd.uiSpreadsThumbs.push(spreadItemThumb); //TODO Check if it is used
+					rd.uiSpreadsThumbs.push(spreadItemThumb);
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
@@ -1998,7 +1992,6 @@
 							//rd.uiPages[element].src = rd.pages[element].url;
 							// Handle successful load
 							rd.uiPages[element].addEventListener('load', () => {
-								//if(rd.uiPages[element] == null) return; //TODO questa parte funziona o è inutile?
 								rd.uiPages[element].classList.remove('loading');
 								rd.uiPages[element].classList.remove('hidden');
 								if (isSectionHidden(readerContainer)) {
@@ -2228,14 +2221,12 @@
 		openMenu.addEventListener('click', toggleMenu);
 
 		// Seek function to move to specific spread based on click or drag
-		function seek(event) {//TODO check why it fires twice for any seek
+		function seek(event) {
 			console.log('                                     seek');
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
 
-			//rd.currentSpreadIndex = Math.floor(newProgressPercent * (rd.uiSpreads.length - 1));
-			//console.log('seekjump to' + rd.currentSpreadIndex)
 			jumpToSpread(Math.floor(newProgressPercent * (rd.uiSpreads.length - 1)));
 		}
 
@@ -2254,7 +2245,6 @@
 
 		mainContainer.addEventListener('scroll', function () {
 
-			//TODO: farlo succedere solo quando miniheader è visible
 			if (!isSectionHidden(seriesMiniHeader)) {
 				if ((mainContainer.scrollTop > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
 					seriesMiniHeader.classList.remove('collapse');
