@@ -121,7 +121,7 @@ a {
 	bottom:0;
 	display:grid;
 	grid-template-columns: auto; 
-	grid-template-rows: auto auto; 
+	grid-template-rows: 60px auto; 
 }
 
 #mainContainer{
@@ -143,10 +143,11 @@ a {
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	padding: 10px;
+	padding: var(--mb-library-gap) 10px ;
 	z-index: 1000;
 	transition: all 0.3s ease;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+	flex-wrap: nowrap;
 }
 
 .libraries-list {
@@ -1128,14 +1129,21 @@ body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 
 
 /* Second reduction: serach bar moved to second row */
+
 body.sticky-small #stickyContainer {
-	height: 105px;
+/*	height: 105px; */
+	flex-wrap: wrap;
+}
+body.sticky-small #librariesRightBlock {
+	margin-top: 10px;
+	background-color:indigo;
 }
 body.sticky-small #mainUI {
-	grid-template-rows: 115px auto; 
+	grid-template-rows: 114px auto; 
 }
+
 body.sticky-small #stripGridHeaderContainer {
-	top:115px;
+	top:114px;
 }
 body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
@@ -1160,20 +1168,17 @@ body.sticky-small #bookDetailsContainer {
 	/* Minimum height between 500px and 100vh */
 }
 
-body.sticky-small .libraries-list {
-	margin-top: 0px;
-	margin-bottom: auto;
-}
-
 body.sticky-small .libraries-list.right-block {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
 	width: calc(100vw - 20px);
+	/*
 	position: absolute;
 	top: 60px;
 	left: 10px;
 	padding-lefT: 0px;
+	*/
 }
 
 body.sticky-small #seriesMiniHeader {
-	top: 115px;
+	top: 114px;
 }
