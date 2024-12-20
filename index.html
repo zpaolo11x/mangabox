@@ -37,10 +37,10 @@
 				</li>
 			</ul>
 			<ul id="librariesList" class="libraries-list"></ul>
-			<ul class="libraries-list buttons">
-				<li id="libraryMenu" title="Library Menu" class="library-item"></li>
+			<ul class="libraries-list buttons options-block">
+				<li id="libraryMenu" title="Library Menu" class="library-item">
 					<div class="thumbnail-wrapper">
-						<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+						<span class="fa-solid fa-bars glyph-dark"></span>
 					</div>
 				</li>				
 			</ul>
@@ -599,9 +599,9 @@
 
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
-			const libraryGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
-			const librarySmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
-			let libraryLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			const libGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
+			const libSmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
+			let libLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
@@ -609,19 +609,19 @@
 			console.log(libraries.length);
 
 			const maxWidth = Array.from(librariesList.childNodes)
-				.map(item => item.childNodes[1].getBoundingClientRect().width + librarySmall)
+				.map(item => item.childNodes[1].getBoundingClientRect().width + libSmall)
 				.reduce((max, width) => Math.max(max, width), 0);
 
-			if (maxWidth > libraryLarge) {
-				libraryLarge = Math.ceil(maxWidth)
-				document.documentElement.style.setProperty('--mb-library-large', libraryLarge + "px");
+			if (maxWidth > libLarge) {
+				libLarge = Math.ceil(maxWidth)
+				document.documentElement.style.setProperty('--mb-library-large', libLarge + "px");
 			}
 			console.log(maxWidth);
 
 			const libNum = libraries.length;
-			libSizer.large = libraryGap + libraryLarge + libraryGap + libNum * (libraryLarge + libraryGap);
-			libSizer.medium = libraryGap + libraryLarge + libraryGap + libNum * (librarySmall + libraryGap);
-			libSizer.rightmin = librarySmall * 3 + libraryGap * 3 + 150;
+			libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
+			libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
+			libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
 			updateStickyMenu();
 			console.log(libSizer);
 		}

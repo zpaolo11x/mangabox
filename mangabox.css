@@ -121,7 +121,7 @@ a {
 	bottom:0;
 	display:grid;
 	grid-template-columns: auto; 
-	grid-template-rows: 60px auto; 
+	grid-template-rows: auto auto; 
 }
 
 #mainContainer{
@@ -137,15 +137,13 @@ a {
 /* Sticky container for libraries */
 #stickyContainer {
 	grid-row: 1;
-	position: absolute;
 	display: flex;
 	align-items: center;
 	top: 0;
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	height: 50px;
-	padding: 5px 10px;
+	padding: 10px;
 	z-index: 1000;
 	transition: all 0.3s ease;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
@@ -159,10 +157,16 @@ a {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	height: var(--mb-button-size);
+	background-color:pink;
 }
 
 .libraries-list.left-block {
 	margin-right: var(--mb-library-gap);
+}
+
+.libraries-list.options-block {
+	margin-left: var(--mb-library-gap);
 }
 
 .libraries-list.right-block {
