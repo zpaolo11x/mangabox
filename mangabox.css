@@ -1134,10 +1134,12 @@ body.sticky-small #stickyContainer {
 /*	height: 105px; */
 	flex-wrap: wrap;
 }
+
 body.sticky-small #librariesRightBlock {
 	margin-top: 10px;
 	background-color:indigo;
 }
+
 body.sticky-small #mainUI {
 	grid-template-rows: 114px auto; 
 }
@@ -1145,6 +1147,7 @@ body.sticky-small #mainUI {
 body.sticky-small #stripGridHeaderContainer {
 	top:114px;
 }
+
 body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
@@ -1163,20 +1166,12 @@ body.sticky-small #stickyContainer .library-item.highlighted .library-name {
 
 body.sticky-small #bookDetailsContainer {
 	transform: translate(-50%, 60px);
-	/* Centers the div */
 	max-height: calc(100vh - 150px - 60px);
-	/* Minimum height between 500px and 100vh */
 }
 
 body.sticky-small .libraries-list.right-block {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
 	width: calc(100vw - 20px);
-	/*
-	position: absolute;
-	top: 60px;
-	left: 10px;
-	padding-lefT: 0px;
-	*/
 }
 
 body.sticky-small #seriesMiniHeader {
