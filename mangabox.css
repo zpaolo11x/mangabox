@@ -170,6 +170,26 @@ a {
 	margin-left: var(--mb-library-gap);
 }
 
+#libraryMenu{
+	transition:opacity 0.3s;
+}
+
+#libraryMenu.disabled{
+	opacity:0;
+}
+
+#libraryMenu:not(.disabled){
+	opacity:1;
+}
+
+#extraMenuBar{
+	width:100vw;
+	height:60px;
+	background:lightgreen;
+	position:fixed;
+	z-index:1000;
+}
+
 .libraries-list.right-block {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 265px) var(--mb-button-size);
 	margin-left: auto;
@@ -1171,7 +1191,7 @@ body.sticky-small #bookDetailsContainer {
 
 body.sticky-small .libraries-list.right-block {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
-	width: calc(100vw - 20px);
+	width: 100%;
 }
 
 body.sticky-small #seriesMiniHeader {

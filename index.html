@@ -27,46 +27,51 @@
 
 <body>
 	<div id="mainUI">
-		<div id="stickyContainer" class="hidden">
-			<ul class="libraries-list buttons left-block">
-				<li id="homeButton" title="MangaBox Home" class="library-item">
-					<div class="thumbnail-wrapper">
-						<img class="library-thumbnail" src="mangabox-logo-new.svg">
-					</div>
-					<div class="library-name">Home</div>
-				</li>
-			</ul>
-			<ul id="librariesList" class="libraries-list"></ul>
-			<ul class="libraries-list buttons options-block">
-				<li id="libraryMenu" title="Library Menu" class="library-item">
-					<div class="thumbnail-wrapper">
-						<span class="fa-solid fa-bars glyph-dark"></span>
-					</div>
-				</li>				
-			</ul>
-			<ul id="librariesRightBlock" class="libraries-list buttons right-block">
-				<li id="themeChanger" title="Light/Dark Theme" class="library-item">
-					<div class="thumbnail-wrapper">
-						<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
-					</div>
-				</li>
-				<li id="colorChanger" title="Theme Color" class="library-item">
-					<div class="thumbnail-wrapper">
-						<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
-					</div>
-				</li>
-				<li id="searchField" title="Search" class="library-item search-field">
-					<div id="searchIcon" class="thumbnail-wrapper">
-						<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
-					</div>
-					<input id="searchInput" type="text" class="search-input" placeholder="Search...">
-				</li>
-				<li id="logOut" title="Logout" class="library-item">
-					<div class="thumbnail-wrapper">
-						<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
-					</div>
-				</li>
-			</ul>
+		<div>
+			<div id="stickyContainer" class="hidden">
+				<ul class="libraries-list buttons left-block">
+					<li id="homeButton" title="MangaBox Home" class="library-item">
+						<div class="thumbnail-wrapper">
+							<img class="library-thumbnail" src="mangabox-logo-new.svg">
+						</div>
+						<div class="library-name">Home</div>
+					</li>
+				</ul>
+				<ul id="librariesList" class="libraries-list"></ul>
+				<ul class="libraries-list buttons options-block">
+					<li id="libraryMenu" title="Library Menu" class="library-item disabled">
+						<div class="thumbnail-wrapper">
+							<span class="fa-solid fa-bars glyph-dark"></span>
+						</div>
+					</li>
+				</ul>
+				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+						</div>
+					</li>
+					<li id="colorChanger" title="Theme Color" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+						</div>
+					</li>
+					<li id="searchField" title="Search" class="library-item search-field">
+						<div id="searchIcon" class="thumbnail-wrapper">
+							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+						</div>
+						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
+					</li>
+					<li id="logOut" title="Logout" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div id="extraMenuBar">
+				test
+			</div>
 		</div>
 		<div id="mainContainer">
 			<div id="seriesHeader" class="section hidden"></div>
@@ -906,7 +911,7 @@
 				var item = document.getElementById(focus);
 				const yOffset = -150;
 				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
-				
+
 				mainContainer.scrollTo({ top: y });
 
 				currentlyScaled = item.firstChild;
@@ -932,6 +937,7 @@
 			await libraryHighlight(libraryId);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 			displaySeries(allSeries, seriesGrid, seriesId);
+			libraryMenu.classList.remove('disabled');
 		}
 
 		function displayLibraries(libraries) {
@@ -2399,6 +2405,7 @@
 
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+			libraryMenu.classList.add('disabled');
 			closeBookDetails();
 			screenAR = getScreenAR();
 			switch (path) {
