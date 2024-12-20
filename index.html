@@ -69,7 +69,7 @@
 					</li>
 				</ul>
 			</div>
-			<div id="extraMenuBar">
+			<div id="extraMenuBar" class="hidden">
 				test
 			</div>
 		</div>
@@ -330,10 +330,15 @@
 			return (item.classList.contains('hidden-spread'));
 		}
 
+		libraryMenu.addEventListener('click', () => {
+			console.log(extraMenuBar.classList);
+			sectionToggle(extraMenuBar);
+		});
+
 		colorChanger.addEventListener('click', () => {
 			accentId = (accentId + 1) % swatches.length;
 			changeAccent(accentId);
-		})
+		});
 
 		logOut.addEventListener('click', () => {
 			sectionHide(stickyContainer);
@@ -2406,6 +2411,7 @@
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
 			libraryMenu.classList.add('disabled');
+			sectionHide(extraMenuBar);
 			closeBookDetails();
 			screenAR = getScreenAR();
 			switch (path) {

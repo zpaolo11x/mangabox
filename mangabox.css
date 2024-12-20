@@ -159,7 +159,6 @@ a {
 	padding: 0;
 	margin: 0;
 	height: var(--mb-button-size);
-	background-color:pink;
 }
 
 .libraries-list.left-block {
@@ -185,9 +184,19 @@ a {
 #extraMenuBar{
 	width:100vw;
 	height:60px;
-	background:lightgreen;
+	background:var(--mb-card-color);
 	position:fixed;
 	z-index:1000;
+	box-shadow: 0 20px 15px -20px rgba(0, 0, 0, 0.15);
+	transition: all 0.3s;
+}
+
+#extraMenuBar.hidden{
+	opacity:0;
+}
+
+#extraMenuBar:not(.hidden){
+	opacity:1;
 }
 
 .libraries-list.right-block {
@@ -1157,7 +1166,6 @@ body.sticky-small #stickyContainer {
 
 body.sticky-small #librariesRightBlock {
 	margin-top: 10px;
-	background-color:indigo;
 }
 
 body.sticky-small #mainUI {
