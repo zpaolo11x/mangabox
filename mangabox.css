@@ -180,6 +180,9 @@ a {
 #libraryMenu:not(.disabled){
 	opacity:1;
 }
+#menuBars{
+	z-index:1000;
+}
 
 #extraMenuBar{
 	width:100vw;
