@@ -185,8 +185,13 @@ a {
 }
 
 #extraMenuBar{
+	display: flex;
+	align-items: center;
+
+	padding: var(--mb-library-gap) 10px ;
+
 	width:100vw;
-	height:60px;
+	height:44px;
 	background:var(--mb-card-color);
 	position:fixed;
 	z-index:1000;
@@ -279,7 +284,8 @@ a {
 }
 
 
-#stickyContainer .thumbnail-wrapper {
+#stickyContainer .thumbnail-wrapper,
+#extraMenuBar .thumbnail-wrapper {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	min-width: var(--mb-span-size);
