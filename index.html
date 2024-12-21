@@ -70,7 +70,8 @@
 				</ul>
 			</div>
 			<div id="extraMenuBar" class="hidden">
-				<ul class="libraries-list buttons">
+				<ul id="extraButtons" class="libraries-list buttons">
+					<!--
 					<li title="" class="filter-item highlighted">
 						<div class="thumbnail-wrapper">
 							<span class="fa-solid fa-arrow-up glyph-dark"></span>
@@ -85,7 +86,7 @@
 						</div>
 						<div class="thumbnail-wrapper">
 							<span class="fa-regular fa-clock glyph-dark no-theme-icon"></span>
-						</div>				
+						</div>
 					</li>
 					<li title="" class="filter-item">
 						<div class="thumbnail-wrapper">
@@ -103,6 +104,7 @@
 							<span class="fa-regular fa-circle-check glyph-dark"></span>
 						</div>
 					</li>
+					-->
 				</ul>
 			</div>
 		</div>
@@ -319,7 +321,7 @@
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
 			Array.from(document.getElementsByClassName(classSelector)).forEach((item) => {
-				if (!item.classList.contains('no-theme-icon')){
+				if (!item.classList.contains('no-theme-icon')) {
 					item.classList.remove(toDark ? lightClass : darkClass);
 					item.classList.add(toDark ? darkClass : lightClass);
 				}
@@ -457,6 +459,74 @@
 			sectionShow(searchStripsContainer);
 		}
 
+
+		const filterButtons = [
+			{
+				name: 'sort_by_title',
+				iconClass: 'fa-solid fa-heading glyph-dark',
+				switches: [
+					{
+						name: 'a_to_z',
+						iconClass: 'fa-solid fa-arrow-up glyph-dark'
+					}, {
+						name: 'z_to_a',
+						iconClass: 'fa-solid fa-arrow-down glyph-dark'
+					}
+				],
+			},
+			{
+				name: 'sort_by_date',
+				iconClass: 'fa-regular fa-clock glyph-dark no-theme-icon',
+				switches: [
+					{
+						name: '9_to_1',
+						iconClass: 'fa-solid fa-arrow-up glyph-dark'
+					}, {
+						name: '1_to_9',
+						iconClass: 'fa-solid fa-arrow-down glyph-dark'
+					}
+				],
+			},
+			{
+				name: 'filter_by_read',
+				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+				switches: [
+					{
+						name: 'all',
+						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark'
+					}, {
+						name: 'read',
+						iconClass: 'fa-solid fa-circle glyph-dark'
+					}, {
+						name: 'unread',
+						iconClass: 'fa-regular fa-circle glyph-dark'
+					}
+				],
+			},
+		];
+
+		filterButtons.forEach(button => {
+			const liItem = addItem('li',{
+				className:`filter-item`,
+				status:0,
+			});
+			const divOrder = addItem('div',{
+				className:`thumbnail-wrapper`,
+				innerHTML:`<span class="${button.switches[0].iconClass}"></span>`
+			});
+			const divIcon = addItem('div',{
+				className:`thumbnail-wrapper`,
+				innerHTML:`<span class="${button.iconClass}"></span>`
+			});
+			liItem.appendChild(divOrder);
+			liItem.appendChild(divIcon);
+			extraButtons.appendChild(liItem);
+			liItem.addEventListener('click', () => {
+				liItem.status = ((liItem.status + 1) % button.switches.length);
+				divOrder.innerHTML = `<span class="${button.switches[liItem.status].iconClass}"></span>`
+				//alert (liItem.status);
+			})
+		});
 
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
