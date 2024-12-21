@@ -589,6 +589,10 @@ a {
 	margin-top: 10px;
 }
 
+#searchStripsContainer {
+	margin-top:10px;
+}
+
 .strip-all {
 	width: 54px;
 	font-size: 25px;
