@@ -240,7 +240,8 @@ a {
 	width: auto;
 }
 
-.library-item span.fa-solid {
+.library-item span.fa-solid,
+.library-item span.fa-regular {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
@@ -601,7 +602,8 @@ a {
 	padding: 0px;
 }
 
-.strip-all .fa-solid {
+.strip-all .fa-solid,
+.strip-all .fa-regular {
 	text-align: center;
 	width: 44px;
 	margin-left: 0px;
