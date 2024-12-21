@@ -218,7 +218,7 @@ a {
 	box-sizing: border-box;
 	width: calc(var(--mb-span-size)+var(--mb-library-gap));
 	margin: 0px;
-	padding:0px;
+	padding: 0px var(--mb-library-gap);
 	border-radius: 8px;
 	display: flex;
 	flex-direction: row;

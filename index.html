@@ -73,7 +73,7 @@
 				<ul class="libraries-list buttons">
 					<li title="" class="filter-item">
 						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-arrow-up-a-z glyph-dark"></span>
+							<span class="fa-solid fa-arrow-up glyph-dark"></span>
 						</div>
 						<div class="thumbnail-wrapper">
 							<span class="fa-solid fa-heading glyph-dark"></span>
@@ -81,18 +81,18 @@
 					</li>
 					<li title="" class="filter-item">
 						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-arrow-up-1-9 glyph-dark"></span>
+							<span class="fa-solid fa-arrow-up glyph-dark"></span>
 						</div>
 						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-clock glyph-dark"></span>
+							<span class="fa-regular fa-clock glyph-dark no-theme-icon"></span>
 						</div>				
 					</li>
 					<li title="" class="filter-item">
 						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-arrow-up-1-9 glyph-dark"></span>
+							<span class="fa-solid fa-arrow-up glyph-dark"></span>
 						</div>
 						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-calendar-plus glyph-dark"></span>
+							<span class="fa-regular fa-calendar-plus glyph-dark"></span>
 						</div>
 					</li>
 					<li title="" class="filter-item">
@@ -319,8 +319,10 @@
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
 			Array.from(document.getElementsByClassName(classSelector)).forEach((item) => {
-				item.classList.remove(toDark ? lightClass : darkClass);
-				item.classList.add(toDark ? darkClass : lightClass);
+				if (!item.classList.contains('no-theme-icon')){
+					item.classList.remove(toDark ? lightClass : darkClass);
+					item.classList.add(toDark ? darkClass : lightClass);
+				}
 			});
 		}
 
