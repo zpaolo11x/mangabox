@@ -479,12 +479,12 @@
 						name: '9_to_1',
 						caption: 'by Date',
 						iconClass: 'fa-solid fa-arrow-up-9-1 glyph-dark',
-						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
+						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
 					}, {
 						name: '1_to_9',
 						caption: 'by Date',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
+						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
 					}
 				],
 			},
