@@ -538,17 +538,20 @@
 
 				if (button.switches[liItem.status].sortFunction) {
 					divs.sort((a, b) => {
-						return button.switches[liItem.status].sortFunction(a,b);
+						return button.switches[liItem.status].sortFunction(a, b);
 					});
-					divs.forEach(div => seriesGrid.appendChild(div));
+					divs.forEach((item, index) => {
+						item.style.order = index;
+					});
+					//divs.forEach(div => seriesGrid.appendChild(div));
 				} else {
-					console.log ("FILTER");
+					console.log("FILTER");
 					divs.forEach(div => {
-    					if (button.switches[liItem.status].filterFunction(div)) {
-      					div.style.display = ''; // Show the div
-    					} else {
-      					div.style.display = 'none'; // Hide the div
-    					}
+						if (button.switches[liItem.status].filterFunction(div)) {
+							div.style.display = ''; // Show the div
+						} else {
+							div.style.display = 'none'; // Hide the div
+						}
 					});
 				}
 			})
