@@ -214,6 +214,24 @@ a {
 	padding-left: var(--mb-library-gap);
 }
 
+.filter-item {
+	box-sizing: border-box;
+	width: calc(var(--mb-span-size)+var(--mb-library-gap));
+	margin: 0px;
+	padding:0px;
+	border-radius: 8px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	overflow: hidden;
+	font-size: 25px;
+	height: var(--mb-button-size);
+	transition: background-color 0.3s ease, width 0.3s ease;
+}
+
 .library-item {
 	box-sizing: border-box;
 	padding: calc(0.5*(var(--mb-button-size) - var(--mb-span-size)));
@@ -241,12 +259,15 @@ a {
 }
 
 .library-item span.fa-solid,
-.library-item span.fa-regular {
+.library-item span.fa-regular,
+.filter-item span.fa-solid,
+.filter-item span.fa-regular {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
 	font-size: 25px;
 }
+
 
 .library-item.search-field.highlighted span.fa-solid {
 	color: white;
@@ -271,7 +292,8 @@ a {
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.library-item:hover {
+.library-item:hover,
+.filter-item:hover {
 	background-color: var(--mb-hover-color);
 }
 
@@ -292,7 +314,6 @@ a {
 	min-width: var(--mb-span-size);
 	min-height: var(--mb-span-size);
 	padding-top: 0;
-
 }
 
 
