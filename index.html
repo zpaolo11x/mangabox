@@ -462,28 +462,26 @@
 
 		const filterButtons = [
 			{
-				name: 'sort_by_title',
+				name: 'sorting',
 				iconClass: 'fa-solid fa-heading glyph-dark',
 				switches: [
 					{
 						name: 'a_to_z',
-						iconClass: 'fa-solid fa-arrow-up glyph-dark'
+						caption: 'by Title',
+						iconClass: 'fa-solid fa-arrow-up-a-z glyph-dark'
 					}, {
 						name: 'z_to_a',
-						iconClass: 'fa-solid fa-arrow-down glyph-dark'
-					}
-				],
-			},
-			{
-				name: 'sort_by_date',
-				iconClass: 'fa-regular fa-clock glyph-dark no-theme-icon',
-				switches: [
+						caption: 'by Title',
+						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark'
+					},
 					{
 						name: '9_to_1',
-						iconClass: 'fa-solid fa-arrow-up glyph-dark'
+						caption: 'by Date',
+						iconClass: 'fa-solid fa-arrow-up-9-1 glyph-dark'
 					}, {
 						name: '1_to_9',
-						iconClass: 'fa-solid fa-arrow-down glyph-dark'
+						caption: 'by Date',
+						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark'
 					}
 				],
 			},
@@ -493,12 +491,15 @@
 				switches: [
 					{
 						name: 'all',
+						caption: 'All',
 						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark'
 					}, {
 						name: 'read',
+						caption: 'Read',
 						iconClass: 'fa-solid fa-circle glyph-dark'
 					}, {
 						name: 'unread',
+						caption: 'Unread',
 						iconClass: 'fa-regular fa-circle glyph-dark'
 					}
 				],
@@ -507,23 +508,24 @@
 
 		filterButtons.forEach(button => {
 			const liItem = addItem('li',{
-				className:`filter-item`,
+				className:`library-item`,
 				status:0,
-			});
-			const divOrder = addItem('div',{
-				className:`thumbnail-wrapper`,
-				innerHTML:`<span class="${button.switches[0].iconClass}"></span>`
 			});
 			const divIcon = addItem('div',{
 				className:`thumbnail-wrapper`,
-				innerHTML:`<span class="${button.iconClass}"></span>`
+				innerHTML:`<span class="${button.switches[0].iconClass}"></span>`
 			});
-			liItem.appendChild(divOrder);
+			const divCaption = addItem('div',{
+				className:`library-name`,
+				innerHTML:`${button.switches[0].caption}`
+			});
 			liItem.appendChild(divIcon);
+			liItem.appendChild(divCaption);
 			extraButtons.appendChild(liItem);
 			liItem.addEventListener('click', () => {
 				liItem.status = ((liItem.status + 1) % button.switches.length);
-				divOrder.innerHTML = `<span class="${button.switches[liItem.status].iconClass}"></span>`
+				divIcon.innerHTML = `<span class="${button.switches[liItem.status].iconClass}"></span>`;
+				divCaption.innerHTML = `${button.switches[liItem.status].caption}`;
 				//alert (liItem.status);
 			})
 		});
