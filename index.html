@@ -529,7 +529,9 @@
 			liItem.appendChild(divIcon);
 			liItem.appendChild(divCaption);
 			extraButtons.appendChild(liItem);
-			liItem.addEventListener('click', () => {
+			liItem.addEventListener('click', async() => {
+				await executeFade(1);
+
 				liItem.status = ((liItem.status + 1) % button.switches.length);
 				divIcon.innerHTML = `<span class="${button.switches[liItem.status].iconClass}"></span>`;
 				divCaption.innerHTML = `${button.switches[liItem.status].caption}`;
@@ -554,6 +556,8 @@
 						}
 					});
 				}
+				await executeFade(0);
+
 			})
 		});
 
