@@ -468,20 +468,23 @@
 					{
 						name: 'a_to_z',
 						caption: 'by Title',
-						iconClass: 'fa-solid fa-arrow-up-a-z glyph-dark'
+						iconClass: 'fa-solid fa-arrow-up-a-z glyph-dark',
+						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 					}, {
 						name: 'z_to_a',
 						caption: 'by Title',
-						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark'
-					},
-					{
+						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
+						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
+					}, {
 						name: '9_to_1',
 						caption: 'by Date',
-						iconClass: 'fa-solid fa-arrow-up-9-1 glyph-dark'
+						iconClass: 'fa-solid fa-arrow-up-9-1 glyph-dark',
+						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 					}, {
 						name: '1_to_9',
 						caption: 'by Date',
-						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark'
+						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 					}
 				],
 			},
@@ -507,17 +510,17 @@
 		];
 
 		filterButtons.forEach(button => {
-			const liItem = addItem('li',{
-				className:`library-item`,
-				status:0,
+			const liItem = addItem('li', {
+				className: `library-item`,
+				status: 0,
 			});
-			const divIcon = addItem('div',{
-				className:`thumbnail-wrapper`,
-				innerHTML:`<span class="${button.switches[0].iconClass}"></span>`
+			const divIcon = addItem('div', {
+				className: `thumbnail-wrapper`,
+				innerHTML: `<span class="${button.switches[0].iconClass}"></span>`
 			});
-			const divCaption = addItem('div',{
-				className:`library-name`,
-				innerHTML:`${button.switches[0].caption}`
+			const divCaption = addItem('div', {
+				className: `library-name`,
+				innerHTML: `${button.switches[0].caption}`
 			});
 			liItem.appendChild(divIcon);
 			liItem.appendChild(divCaption);
@@ -526,6 +529,14 @@
 				liItem.status = ((liItem.status + 1) % button.switches.length);
 				divIcon.innerHTML = `<span class="${button.switches[liItem.status].iconClass}"></span>`;
 				divCaption.innerHTML = `${button.switches[liItem.status].caption}`;
+
+				const divs = Array.from(seriesGrid.children);
+				console.log(divs);
+				divs.sort((a, b) => {
+					return button.switches[liItem.status].sortFunction(a,b);
+				});
+				divs.forEach(div => seriesGrid.appendChild(div));
+
 				//alert (liItem.status);
 			})
 		});
@@ -973,6 +984,9 @@
 				});
 				noPointerDown(artistLabel);
 			}
+
+			item.mbSeriesTitle = serie.metadata.title ?? "";
+			item.mbSeriesDate = altTitle.time ?? "0000";
 
 			seriesItem.append(
 				thumbnailWrapper,
