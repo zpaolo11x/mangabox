@@ -201,6 +201,7 @@ a {
 
 #extraMenuBar.hidden{
 	opacity:0;
+	pointer-events:none;
 }
 
 #extraMenuBar:not(.hidden){
