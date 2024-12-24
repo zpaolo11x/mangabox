@@ -147,7 +147,7 @@ a {
 	z-index: 1000;
 	transition: all 0.3s ease;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
-	flex-wrap: nowrap;
+	flex-wrap: wrap;
 }
 
 .libraries-list {
@@ -193,7 +193,7 @@ a {
 	width:100vw;
 	height:44px;
 	background:var(--mb-card-color);
-	position:fixed;
+	/*position:fixed;*/
 	z-index:1000;
 	box-shadow: 0 20px 15px -20px rgba(0, 0, 0, 0.15);
 	transition: all 0.3s;
