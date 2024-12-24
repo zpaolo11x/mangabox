@@ -121,7 +121,12 @@ a {
 	bottom:0;
 	display:grid;
 	grid-template-columns: auto; 
-	grid-template-rows: 60px auto; 
+	grid-template-rows: 60px auto;
+	transition: grid-template-rows 0.2s;
+}
+
+#mainUI:not(:has(#extraMenuBar.hidden)){
+	grid-template-rows: 112px auto; 
 }
 
 #mainContainer{
@@ -1213,6 +1218,9 @@ body.sticky-small #mainUI {
 
 body.sticky-small #stripGridHeaderContainer {
 	top:114px;
+}
+body.sticky-small #mainUI:not(:has(#extraMenuBar.hidden)){
+	grid-template-rows: 166px auto; 
 }
 
 body.sticky-small #stickyContainer .library-item:not(.search-field) {
