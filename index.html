@@ -70,42 +70,7 @@
 				</ul>
 			</div>
 			<div id="extraMenuBar" class="hidden">
-				<ul id="extraButtons" class="libraries-list buttons">
-					<!--
-					<li title="" class="filter-item highlighted">
-						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-arrow-up glyph-dark"></span>
-						</div>
-						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-heading glyph-dark"></span>
-						</div>
-					</li>
-					<li title="" class="filter-item">
-						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-arrow-up glyph-dark"></span>
-						</div>
-						<div class="thumbnail-wrapper">
-							<span class="fa-regular fa-clock glyph-dark no-theme-icon"></span>
-						</div>
-					</li>
-					<li title="" class="filter-item">
-						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-arrow-up glyph-dark"></span>
-						</div>
-						<div class="thumbnail-wrapper">
-							<span class="fa-regular fa-calendar-plus glyph-dark"></span>
-						</div>
-					</li>
-					<li title="" class="filter-item highlighted">
-						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-circle-half-stroke glyph-dark"></span>
-						</div>
-						<div class="thumbnail-wrapper">
-							<span class="fa-regular fa-circle-check glyph-dark"></span>
-						</div>
-					</li>
-					-->
-				</ul>
+				<ul id="extraButtons" class="libraries-list buttons"></ul>
 			</div>
 		</div>
 		<div id="mainContainer">
@@ -513,10 +478,38 @@
 			},
 		];
 
+		function getButtons() {
+			console.log(extraButtons);
+			let stringOut = '';
+			const { path, params } = parseHashAndParams();
+
+			Array.from(extraButtons.childNodes).forEach(button => {
+				params.set(button.mbButtonName, button.mbButtonStatus);
+			});
+
+			console.log(path);
+			console.log(params);
+
+			stringOut = path;
+			let i = 0;
+			params.forEach((value, param) => {
+				if (i == 0) {
+					stringOut = stringOut + '?' + param + "=" + value
+				} else {
+					stringOut = stringOut + '&' + param + "=" + value
+				};
+				i++;
+				//stringOut = stringOut + key + "=" + value;
+			});
+			console.log("STRINGOUT");
+			console.log(stringOut);
+		}
+
 		filterButtons.forEach(button => {
 			const liItem = addItem('li', {
 				className: `library-item`,
-				status: 0,
+				mbButtonStatus: 0,
+				mbButtonName: button.name,
 			});
 			const divIcon = addItem('div', {
 				className: `thumbnail-wrapper`,
@@ -529,18 +522,18 @@
 			liItem.appendChild(divIcon);
 			liItem.appendChild(divCaption);
 			extraButtons.appendChild(liItem);
-			liItem.addEventListener('click', async() => {
+			liItem.addEventListener('click', async () => {
 				await executeFade(1);
 
-				liItem.status = ((liItem.status + 1) % button.switches.length);
-				divIcon.innerHTML = `<span class="${button.switches[liItem.status].iconClass}"></span>`;
-				divCaption.innerHTML = `${button.switches[liItem.status].caption}`;
+				liItem.mbButtonStatus = ((liItem.mbButtonStatus + 1) % button.switches.length);
+				divIcon.innerHTML = `<span class="${button.switches[liItem.mbButtonStatus].iconClass}"></span>`;
+				divCaption.innerHTML = `${button.switches[liItem.mbButtonStatus].caption}`;
 
 				const divs = Array.from(seriesGrid.children);
 
-				if (button.switches[liItem.status].sortFunction) {
+				if (button.switches[liItem.mbButtonStatus].sortFunction) {
 					divs.sort((a, b) => {
-						return button.switches[liItem.status].sortFunction(a, b);
+						return button.switches[liItem.mbButtonStatus].sortFunction(a, b);
 					});
 					divs.forEach((item, index) => {
 						item.style.order = index;
@@ -549,7 +542,7 @@
 				} else {
 					console.log("FILTER");
 					divs.forEach(div => {
-						if (button.switches[liItem.status].filterFunction(div)) {
+						if (button.switches[liItem.mbButtonStatus].filterFunction(div)) {
 							div.style.display = ''; // Show the div
 						} else {
 							div.style.display = 'none'; // Hide the div
@@ -557,7 +550,11 @@
 					});
 				}
 				await executeFade(0);
-
+				getButtons();
+				/*
+				da usare per settare il path
+				history.replaceState(null, '', jumpString(newSpreadTarget));
+				*/
 			})
 		});
 
@@ -2333,7 +2330,7 @@
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
 				}, rd.loadDelay);
-			}
+			};
 
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
