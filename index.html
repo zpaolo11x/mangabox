@@ -527,15 +527,15 @@
 			button.item.addEventListener('click', async () => {
 				await executeFade(1);
 
-				button.item.mbButtonStatus = ((button.item.mbButtonStatus + 1) % button.switches.length);
-				divIcon.innerHTML = `<span class="${button.switches[button.item.mbButtonStatus].iconClass}"></span>`;
-				divCaption.innerHTML = `${button.switches[button.item.mbButtonStatus].caption}`;
+				button.selected = ((button.selected + 1) % button.switches.length);
+				divIcon.innerHTML = `<span class="${button.switches[button.selected].iconClass}"></span>`;
+				divCaption.innerHTML = `${button.switches[button.selected].caption}`;
 
 				const divs = Array.from(seriesGrid.children);
 
-				if (button.switches[button.item.mbButtonStatus].sortFunction) {
+				if (button.switches[button.selected].sortFunction) {
 					divs.sort((a, b) => {
-						return button.switches[button.item.mbButtonStatus].sortFunction(a, b);
+						return button.switches[button.selected].sortFunction(a, b);
 					});
 					divs.forEach((item, index) => {
 						item.style.order = index;
@@ -544,7 +544,7 @@
 				} else {
 					console.log("FILTER");
 					divs.forEach(div => {
-						if (button.switches[liItem.mbButtonStatus].filterFunction(div)) {
+						if (button.switches[button.selected].filterFunction(div)) {
 							div.style.display = ''; // Show the div
 						} else {
 							div.style.display = 'none'; // Hide the div
