@@ -478,27 +478,25 @@
 			},
 		];
 
-		function getButtonsString() {
+		function buildAddressString(inputBundle) {
+			const { path, params } = inputBundle;
+			let stringOut = `#${path}`;
+			let i = 0;
+			params.forEach((value, param) => {
+				stringOut = `${stringOut}${i == 0 ? '?' : '&'}${param}=${value}`;
+				i++;
+			});
+			return stringOut;
+		}
+
+		function getButtonsBundle() {
 			console.log(extraButtons);
-			let stringOut = '';
 			const { path, params } = parseHashAndParams();
 
 			Array.from(extraButtons.childNodes).forEach(button => {
 				params.set(button.mbButtonName, button.mbButtonStatus);
 			});
-
-			console.log(path);
-			console.log(params);
-
-			stringOut = `#${path}`;
-			let i = 0;
-			params.forEach((value, param) => {
-				stringOut = `${stringOut}${i==0?'?':'&'}${param}=${value}`;
-				i++;
-			});
-			console.log("STRINGOUT");
-			console.log(stringOut);
-			return(stringOut);
+			return ({ path, params });
 		}
 
 		filterButtons.forEach(button => {
@@ -546,7 +544,7 @@
 					});
 				}
 				await executeFade(0);
-				history.replaceState(null, '', getButtonsString());
+				history.replaceState(null, '', buildAddressString(getButtonsBundle()));
 			})
 		});
 
