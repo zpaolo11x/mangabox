@@ -250,6 +250,8 @@
 		let accentId = Number(localStorage.getItem('mbAccentColor')) ?? 0;
 		let darkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
 
+		let libraryFilters = localStorage.getItem('mbLibraryFilters') ?? {};
+
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 
@@ -550,6 +552,15 @@
 					});
 				}
 				await executeFade(0);
+				const { path, params } = parseHashAndParams();
+				const libraryId = params.get('library_id');
+				let filterOut = {};
+				filterButtons.forEach(button => {
+					filterOut[button.name] = button.selected;
+				});
+				console.log(libraryFilters);
+				libraryFilters[libraryId] = filterOut;
+				console.log(libraryFilters);
 				history.replaceState(null, '', buildAddressString(getButtonsBundle()));
 			})
 		});
