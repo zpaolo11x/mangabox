@@ -41,7 +41,7 @@
 				<ul class="libraries-list buttons options-block">
 					<li id="libraryMenu" title="Library Menu" class="library-item disabled">
 						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-bars glyph-dark"></span>
+							<span id="libraryMenuIcon" class="fa-solid fa-bars glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
@@ -250,7 +250,8 @@
 		let accentId = Number(localStorage.getItem('mbAccentColor')) ?? 0;
 		let darkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
 
-		let libraryFilters = localStorage.getItem('mbLibraryFilters') ?? {};
+		let libraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
+		console.log(libraryFilters);
 
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
@@ -432,6 +433,8 @@
 				selected: 0,
 				iconClass: 'fa-solid fa-heading glyph-dark',
 				item: null,
+				icon: null,
+				caption: null,
 				switches: [
 					{
 						name: 'a_to_z',
@@ -458,9 +461,11 @@
 			},
 			filter_by_read: {
 				name: 'filter_by_read',
-				selected:0,
+				selected: 0,
 				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
 				item: null,
+				icon: null,
+				caption: null,
 				switches: [
 					{
 						name: 'all',
@@ -502,66 +507,92 @@
 		function getButtonsBundle() {
 			console.log(extraButtons);
 			const { path, params } = parseHashAndParams();
-			
+
 			filterButtons.forEach(button => {
 				params.set(button.name, button.selected);
 			});
 			return ({ path, params });
 		}
 
+		function saveLibraryFilters() {
+			const { path, params } = parseHashAndParams();
+			const libraryId = params.get('library_id');
+			let filterOut = {};
+			filterButtons.forEach(button => {
+				filterOut[button.name] = button.selected;
+			});
+			console.log(filterOut);
+			libraryFilters[libraryId] = filterOut;
+			console.log(libraryFilters);
+			localStorage.setItem('mbLibraryFilters', JSON.stringify(libraryFilters));
+
+		}
+
+		function fetchLibraryFilters(libraryId) {
+			filterValues = libraryFilters[libraryId];
+			console.log("filtervalues:");
+			if (filterValues) {
+				console.log(filterValues);
+				filterButtons.forEach(button => {
+					filterTable[button.name].selected = filterValues[button.name];
+					applyLibraryFilters(button)
+				});
+			}
+		}
+
+		async function applyLibraryFilters(button) {
+			const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
+
+			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-bars glyph-dark" : "fa-solid fa-bars mb-accent glyph-dark"
+
+			button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}"></span>`;
+			button.caption.innerHTML = `${button.switches[button.selected].caption}`;
+
+			const divs = Array.from(seriesGrid.children);
+
+			if (button.switches[button.selected].sortFunction) {
+				divs.sort((a, b) => {
+					return button.switches[button.selected].sortFunction(a, b);
+				});
+				divs.forEach((item, index) => {
+					item.style.order = index;
+				});
+				//divs.forEach(div => seriesGrid.appendChild(div));
+			} else {
+				console.log("FILTER");
+				divs.forEach(div => {
+					if (button.switches[button.selected].filterFunction(div)) {
+						div.style.display = ''; // Show the div
+					} else {
+						div.style.display = 'none'; // Hide the div
+					}
+				});
+			}
+		}
+
 		filterButtons.forEach(button => {
 			button.item = addItem('li', {
 				className: `library-item`,
 			});
-			const divIcon = addItem('div', {
+			button.icon = addItem('div', {
 				className: `thumbnail-wrapper`,
 				innerHTML: `<span class="${button.switches[0].iconClass}"></span>`
 			});
-			const divCaption = addItem('div', {
+			button.caption = addItem('div', {
 				className: `library-name`,
 				innerHTML: `${button.switches[0].caption}`
 			});
-			button.item.appendChild(divIcon);
-			button.item.appendChild(divCaption);
+			button.item.appendChild(button.icon);
+			button.item.appendChild(button.caption);
 			extraButtons.appendChild(button.item);
 			button.item.addEventListener('click', async () => {
-				await executeFade(1);
-
 				button.selected = ((button.selected + 1) % button.switches.length);
-				divIcon.innerHTML = `<span class="${button.switches[button.selected].iconClass}"></span>`;
-				divCaption.innerHTML = `${button.switches[button.selected].caption}`;
-
-				const divs = Array.from(seriesGrid.children);
-
-				if (button.switches[button.selected].sortFunction) {
-					divs.sort((a, b) => {
-						return button.switches[button.selected].sortFunction(a, b);
-					});
-					divs.forEach((item, index) => {
-						item.style.order = index;
-					});
-					//divs.forEach(div => seriesGrid.appendChild(div));
-				} else {
-					console.log("FILTER");
-					divs.forEach(div => {
-						if (button.switches[button.selected].filterFunction(div)) {
-							div.style.display = ''; // Show the div
-						} else {
-							div.style.display = 'none'; // Hide the div
-						}
-					});
-				}
+				await executeFade(1);
+				applyLibraryFilters(button);
 				await executeFade(0);
-				const { path, params } = parseHashAndParams();
-				const libraryId = params.get('library_id');
-				let filterOut = {};
-				filterButtons.forEach(button => {
-					filterOut[button.name] = button.selected;
-				});
-				console.log(libraryFilters);
-				libraryFilters[libraryId] = filterOut;
-				console.log(libraryFilters);
-				history.replaceState(null, '', buildAddressString(getButtonsBundle()));
+				saveLibraryFilters();
+
+				//history.replaceState(null, '', buildAddressString(getButtonsBundle()));
 			})
 		});
 
@@ -1088,6 +1119,7 @@
 			await libraryHighlight(libraryId);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 			displaySeries(allSeries, seriesGrid, seriesId);
+			fetchLibraryFilters(libraryId);
 			libraryMenu.classList.remove('disabled');
 		}
 
