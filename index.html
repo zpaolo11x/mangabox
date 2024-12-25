@@ -478,7 +478,7 @@
 			},
 		];
 
-		function getButtons() {
+		function getButtonsString() {
 			console.log(extraButtons);
 			let stringOut = '';
 			const { path, params } = parseHashAndParams();
@@ -490,19 +490,15 @@
 			console.log(path);
 			console.log(params);
 
-			stringOut = path;
+			stringOut = `#${path}`;
 			let i = 0;
 			params.forEach((value, param) => {
-				if (i == 0) {
-					stringOut = stringOut + '?' + param + "=" + value
-				} else {
-					stringOut = stringOut + '&' + param + "=" + value
-				};
+				stringOut = `${stringOut}${i==0?'?':'&'}${param}=${value}`;
 				i++;
-				//stringOut = stringOut + key + "=" + value;
 			});
 			console.log("STRINGOUT");
 			console.log(stringOut);
+			return(stringOut);
 		}
 
 		filterButtons.forEach(button => {
@@ -550,11 +546,7 @@
 					});
 				}
 				await executeFade(0);
-				getButtons();
-				/*
-				da usare per settare il path
-				history.replaceState(null, '', jumpString(newSpreadTarget));
-				*/
+				history.replaceState(null, '', getButtonsString());
 			})
 		});
 
