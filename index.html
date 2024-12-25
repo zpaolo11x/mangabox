@@ -500,9 +500,9 @@
 		function getButtonsBundle() {
 			console.log(extraButtons);
 			const { path, params } = parseHashAndParams();
-
-			Array.from(extraButtons.childNodes).forEach(button => {
-				params.set(button.mbButtonName, button.mbButtonStatus);
+			
+			filterButtons.forEach(button => {
+				params.set(button.name, button.selected);
 			});
 			return ({ path, params });
 		}
@@ -510,8 +510,6 @@
 		filterButtons.forEach(button => {
 			button.item = addItem('li', {
 				className: `library-item`,
-				mbButtonStatus: 0,
-				mbButtonName: button.name,
 			});
 			const divIcon = addItem('div', {
 				className: `thumbnail-wrapper`,
