@@ -427,7 +427,9 @@
 		const filterTable = {
 			sorting: {
 				name: 'sorting',
+				selected: 0,
 				iconClass: 'fa-solid fa-heading glyph-dark',
+				item: null,
 				switches: [
 					{
 						name: 'a_to_z',
@@ -454,7 +456,9 @@
 			},
 			filter_by_read: {
 				name: 'filter_by_read',
+				selected:0,
 				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+				item: null,
 				switches: [
 					{
 						name: 'all',
@@ -504,7 +508,7 @@
 		}
 
 		filterButtons.forEach(button => {
-			const liItem = addItem('li', {
+			button.item = addItem('li', {
 				className: `library-item`,
 				mbButtonStatus: 0,
 				mbButtonName: button.name,
@@ -517,21 +521,21 @@
 				className: `library-name`,
 				innerHTML: `${button.switches[0].caption}`
 			});
-			liItem.appendChild(divIcon);
-			liItem.appendChild(divCaption);
-			extraButtons.appendChild(liItem);
-			liItem.addEventListener('click', async () => {
+			button.item.appendChild(divIcon);
+			button.item.appendChild(divCaption);
+			extraButtons.appendChild(button.item);
+			button.item.addEventListener('click', async () => {
 				await executeFade(1);
 
-				liItem.mbButtonStatus = ((liItem.mbButtonStatus + 1) % button.switches.length);
-				divIcon.innerHTML = `<span class="${button.switches[liItem.mbButtonStatus].iconClass}"></span>`;
-				divCaption.innerHTML = `${button.switches[liItem.mbButtonStatus].caption}`;
+				button.item.mbButtonStatus = ((button.item.mbButtonStatus + 1) % button.switches.length);
+				divIcon.innerHTML = `<span class="${button.switches[button.item.mbButtonStatus].iconClass}"></span>`;
+				divCaption.innerHTML = `${button.switches[button.item.mbButtonStatus].caption}`;
 
 				const divs = Array.from(seriesGrid.children);
 
-				if (button.switches[liItem.mbButtonStatus].sortFunction) {
+				if (button.switches[button.item.mbButtonStatus].sortFunction) {
 					divs.sort((a, b) => {
-						return button.switches[liItem.mbButtonStatus].sortFunction(a, b);
+						return button.switches[button.item.mbButtonStatus].sortFunction(a, b);
 					});
 					divs.forEach((item, index) => {
 						item.style.order = index;
