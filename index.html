@@ -424,9 +424,8 @@
 			sectionShow(searchStripsContainer);
 		}
 
-
-		const filterButtons = [
-			{
+		const filterTable = {
+			sorting: {
 				name: 'sorting',
 				iconClass: 'fa-solid fa-heading glyph-dark',
 				switches: [
@@ -453,7 +452,7 @@
 					}
 				],
 			},
-			{
+			filter_by_read: {
 				name: 'filter_by_read',
 				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
 				switches: [
@@ -476,6 +475,11 @@
 					}
 				],
 			},
+		};
+
+		const filterButtons = [
+			filterTable.sorting,
+			filterTable.filter_by_read
 		];
 
 		function buildAddressString(inputBundle) {
