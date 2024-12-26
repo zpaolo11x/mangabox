@@ -472,15 +472,14 @@
 						caption: 'All items',
 						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
 						filterFunction: (a) => ((a.mbSeriesRead == true) || (a.mbSeriesRead == false))
-
 					}, {
 						name: 'read',
-						caption: 'Read only',
+						caption: 'Read',
 						iconClass: 'fa-solid fa-circle glyph-dark',
 						filterFunction: (a) => (a.mbSeriesRead == true)
 					}, {
 						name: 'unread',
-						caption: 'Unread only',
+						caption: 'Unread',
 						iconClass: 'fa-regular fa-circle glyph-dark',
 						filterFunction: (a) => (a.mbSeriesRead == false)
 					}
@@ -542,38 +541,45 @@
 				console.log(filterValues);
 				filterButtons.forEach(button => {
 					filterTable[button.name].selected = filterValues[button.name];
-					applyLibraryFilters(button)
 				});
+				applyLibraryFilters()
 			}
 		}
 
-		async function applyLibraryFilters(button) {
-			const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
+		async function applyLibraryFilters() {
+			filterButtons.forEach(button => {
+				const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
-			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
+				libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
 
-			button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
-			button.caption.innerHTML = `${button.switches[button.selected].caption}`;
+				button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
+				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
 
-			const divs = Array.from(seriesGrid.children);
+				const divs = Array.from(seriesGrid.children);
 
-			if (button.switches[button.selected].sortFunction) {
-				divs.sort((a, b) => {
-					return button.switches[button.selected].sortFunction(a, b);
-				});
-				divs.forEach((item, index) => {
-					item.style.order = index;
-				});
-			} else {
-				console.log("FILTER");
-				divs.forEach(div => {
-					if (button.switches[button.selected].filterFunction(div)) {
-						div.style.display = '';
-					} else {
-						div.style.display = 'none';
-					}
-				});
-			}
+				if (button.switches[button.selected].sortFunction) {
+					divs.sort((a, b) => {
+						return button.switches[button.selected].sortFunction(a, b);
+					});
+					divs.forEach((item, index) => {
+						item.style.order = index;
+					});
+				} else {
+					console.log("FILTER");
+					divs.forEach(div => {
+						const currentVal = div.style.display != 'none';
+						console.log(currentVal);
+						let newVal = true;
+						if (button.switches[button.selected].filterFunction(div)) {
+							newVal = currentVal;
+						} else {
+							newVal = false;
+						}
+						div.style.display = newVal ? '' : 'none';
+
+					});
+				}
+			});
 		}
 
 		filterButtons.forEach(button => {
@@ -594,7 +600,7 @@
 			button.item.addEventListener('click', async () => {
 				button.selected = ((button.selected + 1) % button.switches.length);
 				await executeFade(1);
-				applyLibraryFilters(button);
+				applyLibraryFilters();
 				await executeFade(0);
 				saveLibraryFilters();
 			})
@@ -609,8 +615,8 @@
 				await executeFade(1);
 				filterButtons.forEach(button => {
 					button.selected = 0;
-					applyLibraryFilters(button);
 				});
+				applyLibraryFilters();
 				await executeFade(0);
 				saveLibraryFilters();
 			}
