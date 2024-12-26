@@ -547,15 +547,19 @@
 		}
 
 		async function applyLibraryFilters() {
+			console.log("START FILTERING");
+			const divs = Array.from(seriesGrid.children);
+
+			divs.forEach(div => {
+				div.infilter = true;
+			});
+
+			const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
+			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
+
 			filterButtons.forEach(button => {
-				const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
-
-				libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
-
 				button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
 				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
-
-				const divs = Array.from(seriesGrid.children);
 
 				if (button.switches[button.selected].sortFunction) {
 					divs.sort((a, b) => {
@@ -565,20 +569,13 @@
 						item.style.order = index;
 					});
 				} else {
-					console.log("FILTER");
-					divs.forEach(div => {
-						const currentVal = div.style.display != 'none';
-						console.log(currentVal);
-						let newVal = true;
-						if (button.switches[button.selected].filterFunction(div)) {
-							newVal = currentVal;
-						} else {
-							newVal = false;
-						}
-						div.style.display = newVal ? '' : 'none';
-
+					divs.forEach((div) => {
+						div.infilter = div.infilter && button.switches[button.selected].filterFunction(div);
 					});
 				}
+			});
+			divs.forEach((div) => {
+				div.style.display = div.infilter ? '' : 'none';
 			});
 		}
 
