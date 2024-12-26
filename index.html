@@ -439,7 +439,7 @@
 					{
 						name: 'a_to_z',
 						caption: 'by Title',
-						iconClass: 'fa-solid fa-arrow-up-a-z glyph-dark',
+						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 					}, {
 						name: 'z_to_a',
@@ -449,13 +449,13 @@
 					}, {
 						name: '9_to_1',
 						caption: 'by Date',
-						iconClass: 'fa-solid fa-arrow-up-9-1 glyph-dark',
-						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
+						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
 					}, {
 						name: '1_to_9',
 						caption: 'by Date',
-						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
+						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
 					}
 				],
 			},
