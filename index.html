@@ -71,13 +71,6 @@
 			</div>
 			<div id="extraMenuBar" class="hidden">
 				<ul id="extraButtons" class="libraries-list buttons"></ul>
-				<ul class="libraries-list buttons">
-					<li id="resetFilters" title="Reset filters" class="library-item">
-						<div class="thumbnail-wrapper">
-							<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
-						</div>
-					</li>
-				</ul>
 			</div>
 		</div>
 		<div id="mainContainer">
@@ -577,6 +570,22 @@
 				saveLibraryFilters();
 			})
 		});
+
+		extraButtons.appendChild(addItem('li', {
+			className: `library-item`,
+			innerHTML: `<div class="thumbnail-wrapper">
+								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
+							</div>`,
+			onclick: async () => {
+				await executeFade(1);
+				filterButtons.forEach(button => {
+					button.selected = 0;
+					applyLibraryFilters(button);
+				});
+				await executeFade(0);
+				saveLibraryFilters();
+			}
+		}));
 
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
