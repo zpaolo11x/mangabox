@@ -71,6 +71,13 @@
 			</div>
 			<div id="extraMenuBar" class="hidden">
 				<ul id="extraButtons" class="libraries-list buttons"></ul>
+				<ul class="libraries-list buttons">
+					<li id="resetFilters" title="Reset filters" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span class="fa-solid fa-xmark glyph-dark"></span>
+						</div>
+					</li>
+				</ul>
 			</div>
 		</div>
 		<div id="mainContainer">
@@ -493,27 +500,6 @@
 			filterTable.filter_by_read
 		];
 
-		function buildAddressString(inputBundle) {
-			const { path, params } = inputBundle;
-			let stringOut = `#${path}`;
-			let i = 0;
-			params.forEach((value, param) => {
-				stringOut = `${stringOut}${i == 0 ? '?' : '&'}${param}=${value}`;
-				i++;
-			});
-			return stringOut;
-		}
-
-		function getButtonsBundle() {
-			console.log(extraButtons);
-			const { path, params } = parseHashAndParams();
-
-			filterButtons.forEach(button => {
-				params.set(button.name, button.selected);
-			});
-			return ({ path, params });
-		}
-
 		function saveLibraryFilters() {
 			const { path, params } = parseHashAndParams();
 			const libraryId = params.get('library_id');
@@ -525,7 +511,6 @@
 			libraryFilters[libraryId] = filterOut;
 			console.log(libraryFilters);
 			localStorage.setItem('mbLibraryFilters', JSON.stringify(libraryFilters));
-
 		}
 
 		function fetchLibraryFilters(libraryId) {
@@ -557,14 +542,13 @@
 				divs.forEach((item, index) => {
 					item.style.order = index;
 				});
-				//divs.forEach(div => seriesGrid.appendChild(div));
 			} else {
 				console.log("FILTER");
 				divs.forEach(div => {
 					if (button.switches[button.selected].filterFunction(div)) {
-						div.style.display = ''; // Show the div
+						div.style.display = '';
 					} else {
-						div.style.display = 'none'; // Hide the div
+						div.style.display = 'none';
 					}
 				});
 			}
@@ -591,8 +575,6 @@
 				applyLibraryFilters(button);
 				await executeFade(0);
 				saveLibraryFilters();
-
-				//history.replaceState(null, '', buildAddressString(getButtonsBundle()));
 			})
 		});
 
