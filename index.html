@@ -1118,17 +1118,7 @@
 			});
 
 			sectionShow(target); //XXX serve un fade qui???
-			if (focus) {
-				var item = document.getElementById(focus);
-				const yOffset = -150;
-				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
-
-				mainContainer.scrollTo({ top: y });
-
-				currentlyScaled = item.firstChild;
-				item.firstChild.classList.add('scaled');
-
-			} else {
+			if (!focus){
 				mainContainer.scrollTo({ top: 0 });
 			}
 		}
@@ -1143,12 +1133,26 @@
 			return (allSeries);
 		}
 
+		function focusItem(focus) {
+			console.log(focus);
+			var item = document.getElementById(focus);
+			console.log(item);
+			const yOffset = -150;
+			const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
+
+			mainContainer.scrollTo({ top: y });
+
+			currentlyScaled = item.firstChild;
+			item.firstChild.classList.add('scaled');
+		}
+
 		// Compose function that opens a specific library based on it ID
 		async function openLibrary(libraryId, seriesId) {
 			await libraryHighlight(libraryId);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
-			displaySeries(allSeries, seriesGrid, seriesId);
+			await displaySeries(allSeries, seriesGrid, seriesId);
 			fetchLibraryFilters(libraryId);
+			if (seriesId) focusItem(seriesId);
 			libraryMenu.classList.remove('disabled');
 		}
 
