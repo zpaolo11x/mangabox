@@ -438,22 +438,22 @@
 				switches: [
 					{
 						name: 'a_to_z',
-						caption: 'by Title',
+						caption: 'Sort by title',
 						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 					}, {
 						name: 'z_to_a',
-						caption: 'by Title',
+						caption: 'Sort by title',
 						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
 						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 					}, {
 						name: '9_to_1',
-						caption: 'by Date',
+						caption: 'Sort by date',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
 					}, {
 						name: '1_to_9',
-						caption: 'by Date',
+						caption: 'Sort by date',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
 					}
@@ -469,20 +469,48 @@
 				switches: [
 					{
 						name: 'all',
-						caption: 'All',
+						caption: 'All items',
 						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
 						filterFunction: (a) => ((a.mbSeriesRead == true) || (a.mbSeriesRead == false))
 
 					}, {
 						name: 'read',
-						caption: 'Read',
+						caption: 'Read only',
 						iconClass: 'fa-solid fa-circle glyph-dark',
 						filterFunction: (a) => (a.mbSeriesRead == true)
 					}, {
 						name: 'unread',
-						caption: 'Unread',
+						caption: 'Unread only',
 						iconClass: 'fa-regular fa-circle glyph-dark',
 						filterFunction: (a) => (a.mbSeriesRead == false)
+					}
+				],
+			},
+			filter_by_direction: {
+				name: 'filter_by_direction',
+				selected: 0,
+				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+				item: null,
+				icon: null,
+				caption: null,
+				switches: [
+					{
+						name: 'all',
+						caption: 'All dirs',
+						iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
+						filterFunction: (a) => ((a.mbSeriesLTR == true) || (a.mbSeriesLTR == false))
+
+					}, {
+						name: 'l_to_r',
+						caption: 'L to R',
+						iconClass: 'fa-solid fa-arrow-right glyph-dark',
+						filterFunction: (a) => (a.mbSeriesLTR == true)
+
+					}, {
+						name: 'r_to_l',
+						caption: 'R to L',
+						iconClass: 'fa-solid fa-arrow-left glyph-dark',
+						filterFunction: (a) => (a.mbSeriesLTR == false)
 					}
 				],
 			},
@@ -490,7 +518,8 @@
 
 		const filterButtons = [
 			filterTable.sorting,
-			filterTable.filter_by_read
+			filterTable.filter_by_read,
+			filterTable.filter_by_direction
 		];
 
 		function saveLibraryFilters() {
@@ -1034,6 +1063,7 @@
 			item.mbSeriesTitle = serie.metadata.title ?? "";
 			item.mbSeriesDate = altTitle.time ?? "0000";
 			item.mbSeriesRead = (unreadCount == 0);
+			item.mbSeriesLTR = (serie.metadata.readingDirection == "LEFT_TO_RIGHT");
 
 			seriesItem.append(
 				thumbnailWrapper,
