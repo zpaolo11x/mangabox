@@ -543,7 +543,7 @@
 		async function applyLibraryFilters(button) {
 			const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
-			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-bars glyph-dark" : "fa-solid fa-bars mb-accent glyph-dark"
+			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
 
 			button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}"></span>`;
 			button.caption.innerHTML = `${button.switches[button.selected].caption}`;
