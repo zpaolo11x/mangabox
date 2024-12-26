@@ -545,7 +545,7 @@
 
 			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
 
-			button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}"></span>`;
+			button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
 			button.caption.innerHTML = `${button.switches[button.selected].caption}`;
 
 			const divs = Array.from(seriesGrid.children);
