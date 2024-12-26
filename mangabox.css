@@ -324,7 +324,6 @@ a {
 	padding-top: 0;
 }
 
-
 .library-thumbnail,
 .series-thumbnail,
 .book-thumbnail,
@@ -1227,6 +1226,9 @@ body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
+body.sticky-small #extraMenuBar .library-item {
+	width: var(--mb-button-size);
+}
 body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
 }
