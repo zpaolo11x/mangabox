@@ -121,7 +121,12 @@ a {
 	bottom:0;
 	display:grid;
 	grid-template-columns: auto; 
-	grid-template-rows: 60px auto; 
+	grid-template-rows: 60px auto;
+	transition: grid-template-rows 0.2s;
+}
+
+#mainUI:not(:has(#extraMenuBar.hidden)){
+	grid-template-rows: 112px auto; 
 }
 
 #mainContainer{
@@ -137,18 +142,17 @@ a {
 /* Sticky container for libraries */
 #stickyContainer {
 	grid-row: 1;
-	position: absolute;
 	display: flex;
 	align-items: center;
 	top: 0;
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	height: 50px;
-	padding: 5px 10px;
+	padding: var(--mb-library-gap) 10px ;
 	z-index: 1000;
 	transition: all 0.3s ease;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
+	flex-wrap: nowrap;
 }
 
 .libraries-list {
@@ -159,10 +163,54 @@ a {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	height: var(--mb-button-size);
 }
 
 .libraries-list.left-block {
 	margin-right: var(--mb-library-gap);
+}
+
+.libraries-list.options-block {
+	margin-left: var(--mb-library-gap);
+}
+
+#libraryMenu{
+	transition:opacity 0.3s;
+}
+
+#libraryMenu.disabled{
+	opacity:0;
+}
+
+#libraryMenu:not(.disabled){
+	opacity:1;
+}
+#menuBars{
+	z-index:1000;
+}
+
+#extraMenuBar{
+	display: flex;
+	align-items: center;
+
+	padding: 0px 10px var(--mb-library-gap) 10px ;
+
+	width:100vw;
+	height:44px;
+	background:var(--mb-card-color);
+	position:fixed;
+	z-index:1000;
+	box-shadow: 0 20px 15px -20px rgba(0, 0, 0, 0.15);
+	transition: all 0.3s;
+}
+
+#extraMenuBar.hidden{
+	opacity:0;
+	pointer-events:none;
+}
+
+#extraMenuBar:not(.hidden){
+	opacity:1;
 }
 
 .libraries-list.right-block {
@@ -170,6 +218,24 @@ a {
 	margin-left: auto;
 	margin-right: 0px;
 	padding-left: var(--mb-library-gap);
+}
+
+.filter-item {
+	box-sizing: border-box;
+	width: calc(var(--mb-span-size)+0.5*var(--mb-library-gap));
+	margin: 0px;
+	padding: 0px 0.5*var(--mb-library-gap);
+	border-radius: 8px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	overflow: hidden;
+	font-size: 25px;
+	height: var(--mb-button-size);
+	transition: background-color 0.3s ease, width 0.3s ease;
 }
 
 .library-item {
@@ -198,14 +264,20 @@ a {
 	width: auto;
 }
 
-.library-item span.fa-solid {
+.library-item span.fa-solid,
+.library-item span.fa-regular,
+.filter-item span.fa-solid,
+.filter-item span.fa-regular {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
 	font-size: 25px;
 }
 
-.library-item.search-field.highlighted span.fa-solid {
+
+.library-item.search-field.highlighted span.fa-solid,
+.filter-item.highlighted span.fa-solid,
+.filter-item.highlighted span.fa-regular {
 	color: white;
 	opacity: 1;
 }
@@ -228,7 +300,8 @@ a {
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.library-item:hover {
+.library-item:hover,
+.filter-item:hover {
 	background-color: var(--mb-hover-color);
 }
 
@@ -242,15 +315,14 @@ a {
 }
 
 
-#stickyContainer .thumbnail-wrapper {
+#stickyContainer .thumbnail-wrapper,
+#extraMenuBar .thumbnail-wrapper {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	min-width: var(--mb-span-size);
 	min-height: var(--mb-span-size);
 	padding-top: 0;
-
 }
-
 
 .library-thumbnail,
 .series-thumbnail,
@@ -546,6 +618,10 @@ a {
 	margin-top: 10px;
 }
 
+#searchStripsContainer {
+	margin-top:10px;
+}
+
 .strip-all {
 	width: 54px;
 	font-size: 25px;
@@ -554,7 +630,8 @@ a {
 	padding: 0px;
 }
 
-.strip-all .fa-solid {
+.strip-all .fa-solid,
+.strip-all .fa-regular {
 	text-align: center;
 	width: 44px;
 	margin-left: 0px;
@@ -1074,7 +1151,15 @@ span.mini-title {
 	box-shadow: inset 0 0 0px 1px var(--mb-glyph-color);
 	background-size: cover;
 }
-
+.glyph-flag-button {
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-size: cover;
+	background-size: 60%; /* Scale the background to 80% */
+	background-position: center; /* Center the background */
+	background-repeat: no-repeat; /* Prevent the background from repeating */
+}
 .glyph-ltr {
 	background: linear-gradient(90deg, var(--mb-glyph-color) 25%, transparent 25.5%, transparent 37.5%, var(--mb-glyph-color) 38%);
 	background-clip: text;
@@ -1124,19 +1209,34 @@ body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 
 
 /* Second reduction: serach bar moved to second row */
+
 body.sticky-small #stickyContainer {
-	height: 105px;
+/*	height: 105px; */
+	flex-wrap: wrap;
 }
+
+body.sticky-small #librariesRightBlock {
+	margin-top: 10px;
+}
+
 body.sticky-small #mainUI {
-	grid-template-rows: 115px auto; 
+	grid-template-rows: 114px auto; 
 }
+
 body.sticky-small #stripGridHeaderContainer {
-	top:115px;
+	top:114px;
 }
+body.sticky-small #mainUI:not(:has(#extraMenuBar.hidden)){
+	grid-template-rows: 166px auto; 
+}
+
 body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
+body.sticky-small #extraMenuBar .library-item {
+	width: var(--mb-button-size);
+}
 body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
 }
@@ -1151,25 +1251,15 @@ body.sticky-small #stickyContainer .library-item.highlighted .library-name {
 
 body.sticky-small #bookDetailsContainer {
 	transform: translate(-50%, 60px);
-	/* Centers the div */
 	max-height: calc(100vh - 150px - 60px);
-	/* Minimum height between 500px and 100vh */
-}
-
-body.sticky-small .libraries-list {
-	margin-top: 0px;
-	margin-bottom: auto;
 }
 
 body.sticky-small .libraries-list.right-block {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
-	width: calc(100vw - 20px);
-	position: absolute;
-	top: 60px;
-	left: 10px;
-	padding-lefT: 0px;
+	width: 100%;
+	padding-left:0px;
 }
 
 body.sticky-small #seriesMiniHeader {
-	top: 115px;
+	top: 114px;
 }

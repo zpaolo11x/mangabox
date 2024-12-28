@@ -27,39 +27,51 @@
 
 <body>
 	<div id="mainUI">
-		<div id="stickyContainer" class="hidden">
-			<ul class="libraries-list buttons left-block">
-				<li id="homeButton" title="MangaBox Home" class="library-item">
-					<div class="thumbnail-wrapper">
-						<img class="library-thumbnail" src="mangabox-logo-new.svg">
-					</div>
-					<div class="library-name">Home</div>
-				</li>
-			</ul>
-			<ul id="librariesList" class="libraries-list"></ul>
-			<ul id="librariesRightBlock" class="libraries-list buttons right-block">
-				<li id="themeChanger" title="Light/Dark Theme" class="library-item">
-					<div class="thumbnail-wrapper">
-						<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
-					</div>
-				</li>
-				<li id="colorChanger" title="Theme Color" class="library-item">
-					<div class="thumbnail-wrapper">
-						<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
-					</div>
-				</li>
-				<li id="searchField" title="Search" class="library-item search-field">
-					<div id="searchIcon" class="thumbnail-wrapper">
-						<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
-					</div>
-					<input id="searchInput" type="text" class="search-input" placeholder="Search...">
-				</li>
-				<li id="logOut" title="Logout" class="library-item">
-					<div class="thumbnail-wrapper">
-						<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
-					</div>
-				</li>
-			</ul>
+		<div id="menuBars">
+			<div id="stickyContainer" class="hidden">
+				<ul class="libraries-list buttons left-block">
+					<li id="homeButton" title="MangaBox Home" class="library-item">
+						<div class="thumbnail-wrapper">
+							<img class="library-thumbnail" src="mangabox-logo-new.svg">
+						</div>
+						<div class="library-name">Home</div>
+					</li>
+				</ul>
+				<ul id="librariesList" class="libraries-list"></ul>
+				<ul class="libraries-list buttons options-block">
+					<li id="libraryMenu" title="Library Menu" class="library-item disabled">
+						<div class="thumbnail-wrapper">
+							<span id="libraryMenuIcon" class="fa-solid fa-sliders glyph-dark"></span>
+						</div>
+					</li>
+				</ul>
+				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+						</div>
+					</li>
+					<li id="colorChanger" title="Theme Color" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+						</div>
+					</li>
+					<li id="searchField" title="Search" class="library-item search-field">
+						<div id="searchIcon" class="thumbnail-wrapper">
+							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+						</div>
+						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
+					</li>
+					<li id="logOut" title="Logout" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div id="extraMenuBar" class="hidden">
+				<ul id="extraButtons" class="libraries-list buttons"></ul>
+			</div>
 		</div>
 		<div id="mainContainer">
 			<div id="seriesHeader" class="section hidden"></div>
@@ -238,6 +250,9 @@
 		let accentId = Number(localStorage.getItem('mbAccentColor')) ?? 0;
 		let darkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
 
+		let libraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
+		console.log(libraryFilters);
+
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 
@@ -274,8 +289,10 @@
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
 			Array.from(document.getElementsByClassName(classSelector)).forEach((item) => {
-				item.classList.remove(toDark ? lightClass : darkClass);
-				item.classList.add(toDark ? darkClass : lightClass);
+				if (!item.classList.contains('no-theme-icon')) {
+					item.classList.remove(toDark ? lightClass : darkClass);
+					item.classList.add(toDark ? darkClass : lightClass);
+				}
 			});
 		}
 
@@ -318,10 +335,15 @@
 			return (item.classList.contains('hidden-spread'));
 		}
 
+		libraryMenu.addEventListener('click', () => {
+			console.log(extraMenuBar.classList);
+			sectionToggle(extraMenuBar);
+		});
+
 		colorChanger.addEventListener('click', () => {
 			accentId = (accentId + 1) % swatches.length;
 			changeAccent(accentId);
-		})
+		});
 
 		logOut.addEventListener('click', () => {
 			sectionHide(stickyContainer);
@@ -405,6 +427,239 @@
 			sectionShow(searchStripsContainer);
 		}
 
+		const filterTable = {
+			sorting: {
+				name: 'sorting',
+				selected: 0,
+				iconClass: 'fa-solid fa-heading glyph-dark',
+				item: null,
+				icon: null,
+				caption: null,
+				title: 'Sort items',
+				switches: [
+					{
+						name: 'a_to_z',
+						caption: 'By title',
+						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
+						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
+					}, {
+						name: 'z_to_a',
+						caption: 'By title',
+						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
+						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
+					}, {
+						name: '9_to_1',
+						caption: 'By date',
+						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
+					}, {
+						name: '1_to_9',
+						caption: 'By date',
+						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
+					}
+				],
+			},
+			filter_by_read: {
+				name: 'filter_by_read',
+				selected: 0,
+				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+				item: null,
+				icon: null,
+				caption: null,
+				title: 'Filter by read status',
+				switches: [
+					{
+						name: 'all',
+						caption: 'All',
+						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
+						filterFunction: (a) => true
+					}, {
+						name: 'read',
+						caption: 'Read',
+						iconClass: 'fa-solid fa-circle glyph-dark',
+						filterFunction: (a) => (a.mbSeriesRead == true)
+					}, {
+						name: 'unread',
+						caption: 'Unread',
+						iconClass: 'fa-regular fa-circle glyph-dark',
+						filterFunction: (a) => (a.mbSeriesRead == false)
+					}
+				],
+			},
+			filter_by_direction: {
+				name: 'filter_by_direction',
+				selected: 0,
+				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+				item: null,
+				icon: null,
+				caption: null,
+				title: 'Filter by reading direction',
+				switches: [
+					{
+						name: 'all',
+						caption: 'All',
+						iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
+						filterFunction: (a) => true
+
+					}, {
+						name: 'l_to_r',
+						caption: 'L to R',
+						iconClass: 'fa-solid fa-arrow-right glyph-dark',
+						filterFunction: (a) => (a.mbSeriesLTR == true)
+
+					}, {
+						name: 'r_to_l',
+						caption: 'R to L',
+						iconClass: 'fa-solid fa-arrow-left glyph-dark',
+						filterFunction: (a) => (a.mbSeriesLTR == false)
+					}
+				],
+			},
+			filter_by_language: {
+				name: 'filter_by_language',
+				selected: 0,
+				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+				item: null,
+				icon: null,
+				caption: null,
+				title: 'Filter by language',
+				switches: [
+					{
+						name: 'all',
+						caption: 'All',
+						iconClass: 'fa-solid fa-earth-europe glyph-dark',
+						filterFunction: (a) => true
+					}
+				],
+			},
+		};
+
+		async function buildLanguageList() {
+			const languageList = await callAPI(`/api/v1/languages`);
+			console.log("languagelist");
+			console.log(languageList);
+			languageList.forEach(item => {
+				filterTable.filter_by_language.switches.push({
+					name: item,
+						caption: item.toUpperCase(),
+						//iconClass: 'fa-solid fa-flag glyph-dark',
+						iconClass: "fa-solid fa-square glyph-dark glyph-flag-button",
+						iconStyle:`background-image:url('flags/${item}.svg`,
+//		`<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
+
+						filterFunction: (a) => a.mbSeriesLanguage == item
+				})
+			});
+		};
+		buildLanguageList();
+
+		const filterButtons = [
+			filterTable.sorting,
+			filterTable.filter_by_read,
+			filterTable.filter_by_direction,
+			filterTable.filter_by_language
+		];
+
+		function saveLibraryFilters() {
+			const { path, params } = parseHashAndParams();
+			const libraryId = params.get('library_id');
+			let filterOut = {};
+			filterButtons.forEach(button => {
+				filterOut[button.name] = button.selected;
+			});
+			console.log(filterOut);
+			libraryFilters[libraryId] = filterOut;
+			console.log(libraryFilters);
+			localStorage.setItem('mbLibraryFilters', JSON.stringify(libraryFilters));
+		}
+
+		function fetchLibraryFilters(libraryId) {
+			filterValues = libraryFilters[libraryId];
+			console.log("filtervalues:");
+			if (filterValues) {
+				console.log(filterValues);
+				filterButtons.forEach(button => {
+					filterTable[button.name].selected = filterValues[button.name];
+				});
+				applyLibraryFilters()
+			}
+		}
+
+		async function applyLibraryFilters() {
+			console.log("START FILTERING");
+			const divs = Array.from(seriesGrid.children);
+
+			divs.forEach(div => {
+				div.infilter = true;
+			});
+
+			const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
+			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
+
+			filterButtons.forEach(button => {
+				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
+				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
+
+				if (button.switches[button.selected].sortFunction) {
+					divs.sort((a, b) => {
+						return button.switches[button.selected].sortFunction(a, b);
+					});
+					divs.forEach((item, index) => {
+						item.style.order = index;
+					});
+				} else {
+					divs.forEach((div) => {
+						div.infilter = div.infilter && button.switches[button.selected].filterFunction(div);
+					});
+				}
+			});
+			divs.forEach((div) => {
+				div.style.display = div.infilter ? '' : 'none';
+			});
+		}
+
+		filterButtons.forEach(button => {
+			button.item = addItem('li', {
+				className: `library-item`,
+				title: button.title,
+			});
+			button.icon = addItem('div', {
+				className: `thumbnail-wrapper`,
+				innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
+			});
+			button.caption = addItem('div', {
+				className: `library-name`,
+				innerHTML: `${button.switches[0].caption}`
+			});
+			button.item.appendChild(button.icon);
+			button.item.appendChild(button.caption);
+			extraButtons.appendChild(button.item);
+			button.item.addEventListener('click', async () => {
+				button.selected = ((button.selected + 1) % button.switches.length);
+				await executeFade(1);
+				applyLibraryFilters();
+				await executeFade(0);
+				saveLibraryFilters();
+			})
+		});
+
+		extraButtons.appendChild(addItem('li', {
+			title: 'Reset filters and sorting',
+			className: `library-item`,
+			innerHTML: `<div class="thumbnail-wrapper">
+								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
+							</div>`,
+			onclick: async () => {
+				await executeFade(1);
+				filterButtons.forEach(button => {
+					button.selected = 0;
+				});
+				applyLibraryFilters();
+				await executeFade(0);
+				saveLibraryFilters();
+			}
+		}));
 
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
@@ -592,9 +847,9 @@
 
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
-			const libraryGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
-			const librarySmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
-			let libraryLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			const libGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
+			const libSmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
+			let libLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
@@ -602,19 +857,19 @@
 			console.log(libraries.length);
 
 			const maxWidth = Array.from(librariesList.childNodes)
-				.map(item => item.childNodes[1].getBoundingClientRect().width + librarySmall)
+				.map(item => item.childNodes[1].getBoundingClientRect().width + libSmall)
 				.reduce((max, width) => Math.max(max, width), 0);
 
-			if (maxWidth > libraryLarge) {
-				libraryLarge = Math.ceil(maxWidth)
-				document.documentElement.style.setProperty('--mb-library-large', libraryLarge + "px");
+			if (maxWidth > libLarge) {
+				libLarge = Math.ceil(maxWidth)
+				document.documentElement.style.setProperty('--mb-library-large', libLarge + "px");
 			}
 			console.log(maxWidth);
 
 			const libNum = libraries.length;
-			libSizer.large = libraryGap + libraryLarge + libraryGap + libNum * (libraryLarge + libraryGap);
-			libSizer.medium = libraryGap + libraryLarge + libraryGap + libNum * (librarySmall + libraryGap);
-			libSizer.rightmin = librarySmall * 3 + libraryGap * 3 + 150;
+			libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
+			libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
+			libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
 			updateStickyMenu();
 			console.log(libSizer);
 		}
@@ -850,6 +1105,12 @@
 				noPointerDown(artistLabel);
 			}
 
+			item.mbSeriesTitle = serie.metadata.title ?? "";
+			item.mbSeriesDate = altTitle.time ?? "0000";
+			item.mbSeriesRead = (unreadCount == 0);
+			item.mbSeriesLTR = (serie.metadata.readingDirection == "LEFT_TO_RIGHT");
+			item.mbSeriesLanguage = serie.metadata.language;
+
 			seriesItem.append(
 				thumbnailWrapper,
 				seriesTitle,
@@ -895,17 +1156,7 @@
 			});
 
 			sectionShow(target); //XXX serve un fade qui???
-			if (focus) {
-				var item = document.getElementById(focus);
-				const yOffset = -150;
-				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
-				
-				mainContainer.scrollTo({ top: y });
-
-				currentlyScaled = item.firstChild;
-				item.firstChild.classList.add('scaled');
-
-			} else {
+			if (!focus) {
 				mainContainer.scrollTo({ top: 0 });
 			}
 		}
@@ -920,11 +1171,27 @@
 			return (allSeries);
 		}
 
+		function focusItem(focus) {
+			console.log(focus);
+			var item = document.getElementById(focus);
+			console.log(item);
+			const yOffset = -150;
+			const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
+
+			mainContainer.scrollTo({ top: y });
+
+			currentlyScaled = item.firstChild;
+			item.firstChild.classList.add('scaled');
+		}
+
 		// Compose function that opens a specific library based on it ID
 		async function openLibrary(libraryId, seriesId) {
 			await libraryHighlight(libraryId);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
-			displaySeries(allSeries, seriesGrid, seriesId);
+			await displaySeries(allSeries, seriesGrid, seriesId);
+			fetchLibraryFilters(libraryId);
+			if (seriesId) focusItem(seriesId);
+			libraryMenu.classList.remove('disabled');
 		}
 
 		function displayLibraries(libraries) {
@@ -1227,7 +1494,7 @@
 				const bookDetails = addItem('div', {
 					className: 'mini-buttons book-details',
 					title: 'Book Details',
-					innerHTML: `<span class="fa-solid fa-bars"></span>`
+					innerHTML: `<span class="fa-solid fa-align-justify"></span>`
 				});
 				bookDetails.addEventListener('click', async (event) => {
 					event.stopPropagation();
@@ -2173,7 +2440,7 @@
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
 				}, rd.loadDelay);
-			}
+			};
 
 
 			history.replaceState(null, '', jumpString(newSpreadTarget));
@@ -2392,6 +2659,8 @@
 
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+			libraryMenu.classList.add('disabled');
+			sectionHide(extraMenuBar);
 			closeBookDetails();
 			screenAR = getScreenAR();
 			switch (path) {
