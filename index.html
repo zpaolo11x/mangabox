@@ -439,22 +439,22 @@
 				switches: [
 					{
 						name: 'a_to_z',
-						caption: 'Sort by title',
+						caption: 'By title',
 						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 					}, {
 						name: 'z_to_a',
-						caption: 'Sort by title',
+						caption: 'By title',
 						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
 						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 					}, {
 						name: '9_to_1',
-						caption: 'Sort by date',
+						caption: 'By date',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
 					}, {
 						name: '1_to_9',
-						caption: 'Sort by date',
+						caption: 'By date',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
 					}
@@ -471,7 +471,7 @@
 				switches: [
 					{
 						name: 'all',
-						caption: 'All items',
+						caption: 'All',
 						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
 						filterFunction: (a) => true
 					}, {
@@ -498,7 +498,7 @@
 				switches: [
 					{
 						name: 'all',
-						caption: 'All dirs',
+						caption: 'All',
 						iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
 						filterFunction: (a) => true
 
@@ -527,7 +527,7 @@
 				switches: [
 					{
 						name: 'all',
-						caption: 'All langs.',
+						caption: 'All',
 						iconClass: 'fa-solid fa-earth-europe glyph-dark',
 						filterFunction: (a) => true
 					}
@@ -543,7 +543,7 @@
 			languageList.forEach(item => {
 				filterTable.filter_by_language.switches.push({
 					name: item,
-						caption: item + ' lang.',
+						caption: item.toUpperCase(),
 						iconClass: 'fa-solid fa-flag glyph-dark',
 //		`<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 
