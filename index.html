@@ -533,7 +533,6 @@
 					}
 				],
 			},
-
 		};
 
 		async function buildLanguageList() {
@@ -544,7 +543,9 @@
 				filterTable.filter_by_language.switches.push({
 					name: item,
 						caption: item.toUpperCase(),
-						iconClass: 'fa-solid fa-flag glyph-dark',
+						//iconClass: 'fa-solid fa-flag glyph-dark',
+						iconClass: "fa-solid fa-square glyph-dark glyph-flag-button",
+						iconStyle:`background-image:url('flags/${item}.svg`,
 //		`<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 
 						filterFunction: (a) => a.mbSeriesLanguage == item
@@ -597,7 +598,7 @@
 			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
 
 			filterButtons.forEach(button => {
-				button.icon.innerHTML = `<span class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
+				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
 				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
 
 				if (button.switches[button.selected].sortFunction) {
@@ -625,7 +626,7 @@
 			});
 			button.icon = addItem('div', {
 				className: `thumbnail-wrapper`,
-				innerHTML: `<span class="${button.switches[0].iconClass}"></span>`
+				innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
 			});
 			button.caption = addItem('div', {
 				className: `library-name`,
