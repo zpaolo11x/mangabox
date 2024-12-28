@@ -1,3 +1,1 @@
-- Improved loading animation
-- Fade in of pages images
-- Better sizing of library items
+- Added sorting and filtering options to series

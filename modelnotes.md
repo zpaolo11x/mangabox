@@ -1,5 +1,19 @@
 *Notes on model*
 
+**Sort and Filter**
+
+Sort buttons: 
+- by title
+- by release
+- by added
+
+Each can be clicked multiple times to switch sort direction. The selected button is highlighted. By default, if no tag is in the url bar, it's by title a-z.
+
+Filter buttons: 
+- 1 button with three states: unread, read, both
+or
+- three buttons in a exclusoion group with read, unread, both and no text.
+
 **Preload stack:**
 
 Preload is started every time one of three functions is called: 
