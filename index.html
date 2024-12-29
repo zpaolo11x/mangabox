@@ -740,9 +740,7 @@
 
 		window.addEventListener('resize', () => {
 			updateStickyMenu();
-			// update slider for home screen
 			updateSliderMax();
-			// Manage reader orientation
 			clearTimeout(resizeTimeout);
 			resizeTimeout = setTimeout(updateReaderOrientation, 500); // Adjust delay as needed
 		});
@@ -1603,8 +1601,6 @@
 					mainContainer.scrollTo({ top: 0 });
 				}
 			}
-
-
 		}
 
 		// Function to trigger the home page layout
@@ -1617,15 +1613,10 @@
 			stripGrid.innerHTML = '';
 
 			let keepReadingArray = (await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`)).content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
-
 			let onDeckArray = (await callAPI(`/api/v1/books/ondeck`)).content;
-
 			let recentBooksArray = (await callAPI(`/api/v1/books?page=0&size=20&sort=created,desc`)).content;
-
 			let recentSeriesArray = (await callAPI(`/api/v1/series/new`)).content;
-
 			let updatedSeriesArray = (await callAPI(`/api/v1/series/updated`)).content;
-
 			let readBooksArray = (await callAPI(`/api/v1/books?read_status=READ&sort=readProgress.readDate,desc`)).content;
 
 			sectionShow(homeStripsContainer);
