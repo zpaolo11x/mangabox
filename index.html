@@ -1608,8 +1608,8 @@
 
 			libraryHighlight('homeButton');
 
-			seriesGrid.innerHTML = ''; // Clear the series grid
-			booksGrid.innerHTML = ''; // Clear the series grid
+			seriesGrid.innerHTML = '';
+			booksGrid.innerHTML = '';
 			stripGrid.innerHTML = '';
 
 			let keepReadingArray = (await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`)).content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
