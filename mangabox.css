@@ -684,7 +684,7 @@ a {
 
 @media (max-width: 500px) {
 	.strip-header-container {
-		grid-template-columns: auto 100px 54px;
+		grid-template-columns: auto 70px 54px;
 	}
 }
 
