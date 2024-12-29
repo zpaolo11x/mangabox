@@ -1645,7 +1645,7 @@
 			navigateTo('#dashboard');
 		});
 
-
+		console.log("DEFINING DASHBOARD ELEMENTS");
 		dashboardElements = {
 			allKeepReading: {
 				code: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
@@ -1706,6 +1706,8 @@
 		}
 
 		async function dashboardAll(element, page) {
+			console.log("------------------------------------DASHBOARD");
+			console.log(element);
 			libraryHighlight('homeButton');
 
 			seriesGrid.innerHTML = ''; // Clear the series grid
@@ -1713,6 +1715,7 @@
 			stripGrid.innerHTML = '';
 
 			sectionShow(stripGridContainer);
+			console.log(element);
 			stripGridHeader.innerHTML = dashboardElements[element].code;
 			const data = await dashboardElements[element].getItems(page);
 			const array = data.content;
@@ -2645,16 +2648,11 @@
 		function parseHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
-
-			// Parse parameters if they exist
-			const params = new URLSearchParams(paramString || '');
-
-			// Return both path and params
+			const params = paramString == undefined ? null : new URLSearchParams(paramString ?? '');
 			return { path, params };
 		}
 
 		async function loadContent() {
-			console.log("                                                           LOADCONENT");
 			const { path, params } = parseHashAndParams();
 
 			await executeFade(1);
@@ -2668,7 +2666,7 @@
 				case 'dashboard':
 					searchInput.value = '';
 					setIncognito(false);
-					if (params.size == 0) {
+					if ((params == null) || (params.size == 0)) {
 						await selectHome();
 					} else {
 						dashboardAll(params.get('all'), params.get('page'));

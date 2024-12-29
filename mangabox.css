@@ -254,6 +254,7 @@ a {
 	font-size: 16px;
 	height: var(--mb-button-size);
 	transition: background-color 0.3s ease, width 0.3s ease;
+	text-transform: uppercase;
 }
 
 .library-item:not(:has(.library-name)) {
