@@ -96,7 +96,7 @@
 			<div id="seriesMiniHeader" class="section hidden collapse"></div>
 
 			<div id="homeStripsContainer" class="section hidden">
-				<div class="home-strip-parent">
+				<div id="homeStripKeepReadingParent" class="home-strip-parent">
 					<div class="strip-header-container">
 						<div class="strip-header">
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
@@ -108,7 +108,7 @@
 					<div id="homeStripKeepReading" class="home-strip keep-reading"></div>
 				</div>
 
-				<div class="home-strip-parent">
+				<div id="homeStripOnDeckParent" class="home-strip-parent">
 					<div class="strip-header-container">
 						<div class="strip-header">
 							<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
@@ -119,7 +119,7 @@
 					<div id="homeStripOnDeck" class="home-strip on-deck"></div>
 				</div>
 
-				<div class="home-strip-parent">
+				<div id="homeStripRecentBooksParent" class="home-strip-parent">
 					<div class="strip-header-container">
 						<div class="strip-header">
 							<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Recently Added Books
@@ -130,7 +130,7 @@
 					<div id="homeStripRecentBooks" class="home-strip recent-books"></div>
 				</div>
 
-				<div class="home-strip-parent">
+				<div id="homeStripRecentSeriesParent" class="home-strip-parent">
 					<div class="strip-header-container">
 						<div class="strip-header">
 							<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Recently Added Series
@@ -141,7 +141,7 @@
 					<div id="homeStripRecentSeries" class="home-strip recent-series"></div>
 				</div>
 
-				<div class="home-strip-parent">
+				<div id="homeStripUpdatedSeriesParent" class="home-strip-parent">
 					<div class="strip-header-container">
 						<div class="strip-header">
 							<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Recently Updated Series
@@ -152,7 +152,7 @@
 					<div id="homeStripUpdatedSeries" class="home-strip updated-series"></div>
 				</div>
 
-				<div class="home-strip-parent">
+				<div id="homeStripReadBooksParent" class="home-strip-parent">
 					<div class="strip-header-container">
 						<div class="strip-header">
 							<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Recently Read Books
@@ -1618,6 +1618,13 @@
 			let recentSeriesArray = (await callAPI(`/api/v1/series/new`)).content;
 			let updatedSeriesArray = (await callAPI(`/api/v1/series/updated`)).content;
 			let readBooksArray = (await callAPI(`/api/v1/books?read_status=READ&sort=readProgress.readDate,desc`)).content;
+
+			homeStripKeepReadingParent.style.display = (keepReadingArray.length == 0) ? 'none' : 'block';
+			homeStripOnDeckParent.style.display = (onDeckArray.length == 0) ? 'none' : 'block';
+			homeStripRecentBooksParent.style.display = (recentBooksArray.length == 0) ? 'none' : 'block';
+			homeStripRecentSeriesParent.style.display = (recentSeriesArray.length == 0) ? 'none' : 'block';
+			homeStripUpdatedSeriesParent.style.display = (updatedSeriesArray.length == 0) ? 'none' : 'block';
+			homeStripReadBooksParent.style.display = (readBooksArray.length == 0) ? 'none' : 'block';
 
 			sectionShow(homeStripsContainer);
 

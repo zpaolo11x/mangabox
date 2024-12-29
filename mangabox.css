@@ -573,9 +573,8 @@ a {
 }
 
 .home-strip-parent:not(:has(.book-item, .series-item)) {
-	display: none;
+	/*display: none;*/
 }
-
 
 .home-strip.search-results {
 	flex-wrap: wrap;
