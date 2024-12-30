@@ -542,13 +542,13 @@
 			languageList.forEach(item => {
 				filterTable.filter_by_language.switches.push({
 					name: item,
-						caption: item.toUpperCase(),
-						//iconClass: 'fa-solid fa-flag glyph-dark',
-						iconClass: "fa-solid fa-square glyph-dark glyph-flag-button",
-						iconStyle:`background-image:url('flags/${item}.svg`,
-//		`<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
+					caption: item.toUpperCase(),
+					//iconClass: 'fa-solid fa-flag glyph-dark',
+					iconClass: "fa-solid fa-square glyph-dark glyph-flag-button",
+					iconStyle: `background-image:url('flags/${item}.svg`,
+					//		`<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 
-						filterFunction: (a) => a.mbSeriesLanguage == item
+					filterFunction: (a) => a.mbSeriesLanguage == item
 				})
 			});
 		};
@@ -739,10 +739,12 @@
 		}
 
 		window.addEventListener('resize', () => {
-			updateStickyMenu();
-			updateSliderMax();
 			clearTimeout(resizeTimeout);
-			resizeTimeout = setTimeout(updateReaderOrientation, 500); // Adjust delay as needed
+			resizeTimeout = setTimeout(() => {
+				updateStickyMenu();
+				updateSliderMax();
+				updateReaderOrientation();
+			}, 250); // Adjust delay as needed //XXXWAS 500
 		});
 
 		// Fade in and Fade out routines
