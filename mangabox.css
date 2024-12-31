@@ -256,6 +256,10 @@ a {
 	transition: background-color 0.3s ease, width 0.3s ease;
 }
 
+.filter-item:not(:has(.library-name)) {
+	width: var(--mb-filter-button-size);
+}
+
 .library-item {
 	user-select: none;
 	box-sizing: border-box;
@@ -280,9 +284,7 @@ a {
 .library-item:not(:has(.library-name)) {
 	width: var(--mb-button-size);
 }
-.filter-item:not(:has(.library-name)) {
-	width: var(--mb-filter-button-size);
-}
+
 .library-item.search-field {
 	width: auto;
 }
