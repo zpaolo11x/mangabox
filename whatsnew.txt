@@ -1,1 +1,1 @@
-- 
+- Fixes of rotation and menu sizing
