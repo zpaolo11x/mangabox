@@ -14,6 +14,11 @@
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
 	--mb-library-large: 140px;
+	--mb-filter-button-size: 34px;
+	--mb-filter-span-size: 30px;
+
+	--mb-panel-full-height: calc(var(--mb-button-size)+var(--mb-filter-button-size)+2*var(--mb-library-gap)); 
+
 
 	--mb-swatches:
 		hsl(348, 92%, 38%),
@@ -126,7 +131,7 @@ a {
 }
 
 #mainUI:not(:has(#extraMenuBar.hidden)){
-	grid-template-rows: 112px auto; 
+	grid-template-rows: calc(var(--mb-button-size) + var(--mb-filter-button-size) + 3 * var(--mb-library-gap)) auto;
 }
 
 #mainContainer{
@@ -166,6 +171,18 @@ a {
 	height: var(--mb-button-size);
 }
 
+.filters-list {
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-columns: repeat(auto-fill);
+	gap: var(--mb-library-gap);
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	padding-bottom: var(--mb-library-gap);
+	height: var(--mb-filter-button-size);
+}
+
 .libraries-list.left-block {
 	margin-right: var(--mb-library-gap);
 }
@@ -193,10 +210,10 @@ a {
 	display: flex;
 	align-items: center;
 
-	padding: 0px 10px var(--mb-library-gap) 10px ;
+	padding: 0px 10px 0px 10px ;
 
 	width:100vw;
-	height:44px;
+	height:calc(var(--mb-filter-button-size) + var(--mb-library-gap));
 	background:var(--mb-card-color);
 	position:fixed;
 	z-index:1000;
@@ -223,9 +240,9 @@ a {
 .filter-item {
 	user-select: none;
 	box-sizing: border-box;
-	width: 110px;
+	width: 100px;
 	margin: 0px;
-	padding: 0px 0.5*var(--mb-library-gap);
+	padding: calc(0.5*(var(--mb-filter-button-size) - var(--mb-filter-span-size)));;
 	border-radius: 8px;
 	display: flex;
 	flex-direction: row;
@@ -235,7 +252,7 @@ a {
 	transition: all 0.3s ease;
 	overflow: hidden;
 	font-size: 16px;
-	height: var(--mb-button-size);
+	height: var(--mb-filter-button-size);
 	transition: background-color 0.3s ease, width 0.3s ease;
 }
 
@@ -263,21 +280,28 @@ a {
 .library-item:not(:has(.library-name)) {
 	width: var(--mb-button-size);
 }
-
+.filter-item:not(:has(.library-name)) {
+	width: var(--mb-filter-button-size);
+}
 .library-item.search-field {
 	width: auto;
 }
 
 .library-item span.fa-solid,
-.library-item span.fa-regular,
-.filter-item span.fa-solid,
-.filter-item span.fa-regular {
+.library-item span.fa-regular {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
 	font-size: 25px;
 }
 
+.filter-item span.fa-solid,
+.filter-item span.fa-regular {
+	width: var(--mb-filter-span-size);
+	height: var(--mb-filter-span-size);
+	line-height: var(--mb-filter-span-size);
+	font-size: 20px;
+}
 
 .library-item.search-field.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-solid,
@@ -319,12 +343,19 @@ a {
 }
 
 
-#stickyContainer .thumbnail-wrapper,
+#stickyContainer .thumbnail-wrapper{
+width: var(--mb-span-size);
+height: var(--mb-span-size);
+min-width: var(--mb-span-size);
+min-height: var(--mb-span-size);
+padding-top: 0;
+}
+
 #extraMenuBar .thumbnail-wrapper {
-	width: var(--mb-span-size);
-	height: var(--mb-span-size);
-	min-width: var(--mb-span-size);
-	min-height: var(--mb-span-size);
+	width: var(--mb-filter-span-size);
+	height: var(--mb-filter-span-size);
+	min-width: var(--mb-filter-span-size);
+	min-height: var(--mb-filter-span-size);
 	padding-top: 0;
 }
 
@@ -1194,9 +1225,10 @@ body.sticky-small #mainUI:not(:has(#extraMenuBar.hidden)){
 body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
-
-body.sticky-small #extraMenuBar .library-item,
 body.sticky-small #extraMenuBar .filter-item {
+	width: var(--mb-filter-button-size);
+}
+body.sticky-small #extraMenuBar .library-item {
 	width: var(--mb-button-size);
 }
 body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
