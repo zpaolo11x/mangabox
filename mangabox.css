@@ -217,7 +217,7 @@ a {
 	background:var(--mb-card-color);
 	position:fixed;
 	z-index:1000;
-	box-shadow: 0 20px 15px -20px rgba(0, 0, 0, 0.15);
+	box-shadow: 0 20px 15px -18px rgba(0, 0, 0, 0.15);
 	transition: all 0.3s;
 }
 
