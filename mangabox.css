@@ -221,8 +221,9 @@ a {
 }
 
 .filter-item {
+	user-select: none;
 	box-sizing: border-box;
-	width: calc(var(--mb-span-size)+0.5*var(--mb-library-gap));
+	width: 110px;
 	margin: 0px;
 	padding: 0px 0.5*var(--mb-library-gap);
 	border-radius: 8px;
@@ -233,12 +234,13 @@ a {
 	cursor: pointer;
 	transition: all 0.3s ease;
 	overflow: hidden;
-	font-size: 25px;
+	font-size: 16px;
 	height: var(--mb-button-size);
 	transition: background-color 0.3s ease, width 0.3s ease;
 }
 
 .library-item {
+	user-select: none;
 	box-sizing: border-box;
 	padding: calc(0.5*(var(--mb-button-size) - var(--mb-span-size)));
 	width: var(--mb-library-large);
@@ -1193,7 +1195,8 @@ body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
-body.sticky-small #extraMenuBar .library-item {
+body.sticky-small #extraMenuBar .library-item,
+body.sticky-small #extraMenuBar .filter-item {
 	width: var(--mb-button-size);
 }
 body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
