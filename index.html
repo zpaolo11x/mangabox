@@ -1614,12 +1614,16 @@
 			booksGrid.innerHTML = '';
 			stripGrid.innerHTML = '';
 
+			sectionShow(homeStripsContainer);
+
 			let keepReadingArray = (await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`)).content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 			let onDeckArray = (await callAPI(`/api/v1/books/ondeck`)).content;
 			let recentBooksArray = (await callAPI(`/api/v1/books?page=0&size=20&sort=created,desc`)).content;
 			let recentSeriesArray = (await callAPI(`/api/v1/series/new`)).content;
 			let updatedSeriesArray = (await callAPI(`/api/v1/series/updated`)).content;
 			let readBooksArray = (await callAPI(`/api/v1/books?read_status=READ&sort=readProgress.readDate,desc`)).content;
+
+//			if (!((parseHashAndParams().path == "dashboard") ||  (parseHashAndParams().path == ""))) return;
 
 			homeStripKeepReadingParent.style.display = (keepReadingArray.length == 0) ? 'none' : 'block';
 			homeStripOnDeckParent.style.display = (onDeckArray.length == 0) ? 'none' : 'block';
@@ -1628,7 +1632,6 @@
 			homeStripUpdatedSeriesParent.style.display = (updatedSeriesArray.length == 0) ? 'none' : 'block';
 			homeStripReadBooksParent.style.display = (readBooksArray.length == 0) ? 'none' : 'block';
 
-			sectionShow(homeStripsContainer);
 
 			displayBooks(keepReadingArray, homeStripKeepReading, 'compact');
 			displayBooks(onDeckArray, homeStripOnDeck, 'compact');
