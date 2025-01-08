@@ -177,11 +177,16 @@
 
 	<script>
 
+		//--- General Functions 
 		function testpr(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
+		
+		function addItem(itemkind, properties) {
+			return Object.assign(document.createElement(itemkind), properties);
+		}
 
-		//--- LOCAL STORAGE RECALL
+		//--- Local Storage Loading
 
 		// Theme settings
 		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
@@ -204,7 +209,7 @@
 		let readerMaxRatio = 1;
 		let readerHorizontal = true;
 
-		//--- THEME MANAGEMENT 
+		//--- Theme Management 
 
 		const swatches = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches')
@@ -305,6 +310,7 @@
 			if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 		})
 
+		//--- Search Functions 
 		async function performSearch(searchString) {
 			libraryHighlight('searchField');
 
@@ -363,6 +369,8 @@
 			setTimeout(updateSliderMax, 10);
 			sectionShow(searchStripsContainer);
 		}
+
+		//--- Library Filtering 
 
 		const filterTable = {
 			sorting: {
@@ -640,7 +648,6 @@
 		let resizeTimeout;
 
 		function updateStickyMenu() {
-			console.log("----------------------------------- STICKYSIZER");
 			const containerWidth = mainUI.getBoundingClientRect().width;
 			console.log(containerWidth);
 			if (containerWidth - libSizer.rightmin - libSizer.large >= 0) {
@@ -679,6 +686,7 @@
 			await wait(100);
 		}
 
+		//--- API Call Function
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 			try {
 				const response = await fetch(`${mbBaseUrl}${API_url}`, {
@@ -699,6 +707,7 @@
 			}
 		}
 
+		//--- Media Cache 
 		const mediaCache = new Map();
 		const CACHE_LIMIT = 250; // Maximum number of cached items
 
@@ -815,6 +824,8 @@
 			displaySeries(filteredItems, seriesGrid);
 		}
 
+		//--- Touch And Hover Scaler
+		
 		function noPointerDown(item) {
 			item.addEventListener('pointerup', (event) => {
 				event.stopPropagation();
@@ -864,11 +875,6 @@
 			item.addEventListener('mouseleave', () => {
 				item.classList.remove('scaled');
 			});
-		}
-
-
-		function addItem(itemkind, properties) {
-			return Object.assign(document.createElement(itemkind), properties);
 		}
 
 		async function buildSeriesItem(item, serie) {
