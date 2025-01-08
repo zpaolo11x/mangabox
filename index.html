@@ -181,14 +181,17 @@
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
 
-		// Load local storage settings
+		/// LOCAL STORAGE RECALL
+
+		// Theme settings
 		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
 		let mbDarkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
+		// Library filters
 		let mbLibraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
-
+		// Authentication data
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
-
+		// Reader page mode
 		let mbPageMode = Number(localStorage.getItem('mbPageMode')) ?? 2;
 
 		const basePath = ''; //'/mangabox/';
@@ -200,6 +203,8 @@
 		let screenAR = getScreenAR();
 		let readerMaxRatio = 1;
 		let readerHorizontal = true;
+
+		/// THEME MANAGEMENT
 
 		const swatches = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches')
