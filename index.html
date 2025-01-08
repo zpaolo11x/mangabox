@@ -181,11 +181,10 @@
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
 
+		// Load local storage settings
 		let accentId = Number(localStorage.getItem('mbAccentColor')) ?? 0;
 		let darkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
-
 		let libraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
-		console.log(libraryFilters);
 
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
@@ -266,8 +265,8 @@
 			return (item.classList.contains('hidden-spread'));
 		}
 
+		// Event listeners for main menu buttons
 		libraryMenu.addEventListener('click', () => {
-			console.log(extraMenuBar.classList);
 			sectionToggle(extraMenuBar);
 		});
 
@@ -474,15 +473,13 @@
 				filterTable.filter_by_language.switches.push({
 					name: item,
 					caption: item.toUpperCase(),
-					//iconClass: 'fa-solid fa-flag glyph-dark',
 					iconClass: "fa-solid fa-square glyph-dark glyph-flag-button",
 					iconStyle: `background-image:url('flags/${item}.svg`,
-					//		`<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
-
 					filterFunction: (a) => a.mbSeriesLanguage == item
 				})
 			});
 		};
+
 		buildLanguageList();
 
 		const filterButtons = [
@@ -499,17 +496,13 @@
 			filterButtons.forEach(button => {
 				filterOut[button.name] = button.selected;
 			});
-			console.log(filterOut);
 			libraryFilters[libraryId] = filterOut;
-			console.log(libraryFilters);
 			localStorage.setItem('mbLibraryFilters', JSON.stringify(libraryFilters));
 		}
 
 		function fetchLibraryFilters(libraryId) {
 			filterValues = libraryFilters[libraryId];
-			console.log("filtervalues:");
 			if (filterValues) {
-				console.log(filterValues);
 				filterButtons.forEach(button => {
 					filterTable[button.name].selected = filterValues[button.name];
 				});
@@ -549,6 +542,8 @@
 				div.style.display = div.infilter ? '' : 'none';
 			});
 		}
+
+		// Build filter buttons items
 
 		filterButtons.forEach(button => {
 			button.item = addItem('li', {
@@ -595,7 +590,7 @@
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 			if (!(rd.pageMode == 2)) return;
-			console.log("RATE" + newScreenAR / readerMaxRatio);
+
 			if (isSectionHidden(readerContainer)) {
 				screenAR = newScreenAR;
 				readerHorizontal = newScreenAR / readerMaxRatio > rd.thresholdRatio;
