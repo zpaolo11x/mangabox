@@ -182,12 +182,14 @@
 		}
 
 		// Load local storage settings
-		let accentId = Number(localStorage.getItem('mbAccentColor')) ?? 0;
-		let darkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
-		let libraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
+		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
+		let mbDarkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
+		let mbLibraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
 
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
+
+		let mbPageMode = Number(localStorage.getItem('mbPageMode')) ?? 2;
 
 		const basePath = ''; //'/mangabox/';
 
@@ -214,7 +216,7 @@
 			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
 			metaThemeColor.setAttribute('content', `hsl(${swatches[id][0]},100%,10%)`);
 			*/
-			localStorage.setItem('mbAccentColor', accentId)
+			localStorage.setItem('mbAccentColor', mbAccentColor)
 		}
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
@@ -271,8 +273,8 @@
 		});
 
 		colorChanger.addEventListener('click', () => {
-			accentId = (accentId + 1) % swatches.length;
-			changeAccent(accentId);
+			mbAccentColor = (mbAccentColor + 1) % swatches.length;
+			changeAccent(mbAccentColor);
 		});
 
 		logOut.addEventListener('click', () => {
@@ -284,8 +286,8 @@
 		})
 
 		themeChanger.addEventListener('click', () => {
-			darkTheme = !darkTheme;
-			changeTheme(darkTheme);
+			mbDarkTheme = !mbDarkTheme;
+			changeTheme(mbDarkTheme);
 		})
 
 		searchInput.addEventListener('keydown', (event) => {
@@ -496,12 +498,12 @@
 			filterButtons.forEach(button => {
 				filterOut[button.name] = button.selected;
 			});
-			libraryFilters[libraryId] = filterOut;
-			localStorage.setItem('mbLibraryFilters', JSON.stringify(libraryFilters));
+			mbLibraryFilters[libraryId] = filterOut;
+			localStorage.setItem('mbLibraryFilters', JSON.stringify(mbLibraryFilters));
 		}
 
 		function fetchLibraryFilters(libraryId) {
-			filterValues = libraryFilters[libraryId];
+			filterValues = mbLibraryFilters[libraryId];
 			if (filterValues) {
 				filterButtons.forEach(button => {
 					filterTable[button.name].selected = filterValues[button.name];
@@ -589,7 +591,7 @@
 
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
-			if (!(rd.pageMode == 2)) return;
+			if (!(mbPageMode == 2)) return;
 
 			if (isSectionHidden(readerContainer)) {
 				screenAR = newScreenAR;
@@ -961,7 +963,7 @@
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: `<span class='${darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: `<span class='${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				title: `Filter time: ${altTitle.time}`
 			});
@@ -1301,7 +1303,7 @@
 				const volumeNumberLabel = document.createElement('span');
 				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
 				const pagesLabel = document.createElement('span');
-				pagesLabel.innerHTML = `<span class="${darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
+				pagesLabel.innerHTML = `<span class="${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
 				mainRow.appendChild(volumeNumberLabel);
 				mainRow.appendChild(pagesLabel);
 			} else {
@@ -1325,7 +1327,7 @@
 				const volumeNumberLabel = document.createElement('span');
 				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
 				const pagesLabel = document.createElement('span');
-				pagesLabel.innerHTML = `<span class="${darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
+				pagesLabel.innerHTML = `<span class="${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
 				secondRow.appendChild(volumeNumberLabel);
 				secondRow.appendChild(pagesLabel);
 			} else if (format == 'timeline') {
@@ -1341,7 +1343,7 @@
 					}).format(new Date(book.readProgress.readDate))
 					: '';
 
-				timeLabel.innerHTML = `<span class='${darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`;
+				timeLabel.innerHTML = `<span class='${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`;
 				secondRow.appendChild(volumeNumberLabelShort);
 				secondRow.appendChild(timeLabel);
 			}
@@ -1705,8 +1707,8 @@
 		}
 
 		async function bootSequence() {
-			changeAccent(accentId);
-			changeTheme(darkTheme);
+			changeAccent(mbAccentColor);
+			changeTheme(mbDarkTheme);
 			setIncognito(false);
 
 			sectionShow(stickyContainer);
@@ -1732,7 +1734,6 @@
 				{ icon: 'reader-buttons fa-solid fa-note-sticky', title: 'Page Layout: Single Page' },
 				{ icon: 'reader-buttons fa-solid fa-rotate', title: 'Page Layout: Automatic' }
 			],
-			pageMode: Number(localStorage.getItem('mbPageMode')) ?? 2,
 
 			ltr: null,
 			currentPage: 0,
@@ -1760,8 +1761,8 @@
 			incognito: false
 		};
 
-		readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
-		readerPageFormat.title = rd.pageModes[rd.pageMode].title;
+		readerPageFormat.className = rd.pageModes[mbPageMode].icon;
+		readerPageFormat.title = rd.pageModes[mbPageMode].title;
 
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
@@ -1932,7 +1933,7 @@
 			readerViewer.classList.remove('spread-layout');
 			readerViewer.classList.remove('page-layout');
 
-			readerHorizontal = (rd.pageMode == 0) || ((screenAR / readerMaxRatio > rd.thresholdRatio) && !(rd.pageMode == 1));
+			readerHorizontal = (mbPageMode == 0) || ((screenAR / readerMaxRatio > rd.thresholdRatio) && !(mbPageMode == 1));
 
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
 
@@ -2570,16 +2571,16 @@
 		})
 
 		function switchPageFormat(newId) {
-			rd.pageMode = newId;
-			readerPageFormat.className = rd.pageModes[rd.pageMode].icon;
-			readerPageFormat.title = rd.pageModes[rd.pageMode].title;
+			mbPageMode = newId;
+			readerPageFormat.className = rd.pageModes[mbPageMode].icon;
+			readerPageFormat.title = rd.pageModes[mbPageMode].title;
 
-			localStorage.setItem('mbPageMode', rd.pageMode);
+			localStorage.setItem('mbPageMode', mbPageMode);
 			navigateTo(window.location.hash);
 		}
 
 		readerPageFormat.addEventListener('click', () => {
-			switchPageFormat((rd.pageMode + 1) % 3);
+			switchPageFormat((mbPageMode + 1) % 3);
 		})
 
 		function updateProgressBar() {
