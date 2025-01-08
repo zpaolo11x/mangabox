@@ -1530,7 +1530,7 @@
 			stripGrid.innerHTML = '';
 
 			sectionShow(homeStripsContainer);
-			console.log("STARTPOP");
+
 			await Promise.all(
 				Object.entries(dashboardElements).map(async ([name, item]) => {
 					const resultsObject = await item.getItems(0, 20);
@@ -1540,9 +1540,6 @@
 					item.showItems(resultsObject.content, item.homeStrip);
 				})
 			);
-			console.log("STOPPOP");
-			
-			console.log("UPDATESLIDER");
 			setTimeout(updateSliderMax, 10);
 
 		}
@@ -1554,12 +1551,6 @@
 		console.log("DEFINING DASHBOARD ELEMENTS");
 		dashboardElements = {
 			keepReading: {
-				caption: "Keep Reading",
-				icon: "fa-solid fa-book-bookmark glyph-dark",
-				element: null,
-				scrollBar: null,
-				gridButton: null,
-				homeStrip: null,
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
 				getItems: async (page, size) => {
 					const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
@@ -1568,13 +1559,15 @@
 				},
 				showItems: async (input, target) => {
 					displayBooks(input, target, 'compact');
-				}
+				},
+				element: null,
+				scrollBar: null,
+				gridButton: null,
+				homeStrip: null,
 			},
 
 
 			onDeck: {
-				caption: "On Deck",
-				icon: "fa-solid fa-inbox glyph-dark",
 				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/books/ondeck`));
@@ -1585,8 +1578,6 @@
 			},
 
 			recentBooks: {
-				caption: "Last Added Books",
-				icon: "fa-solid fa-book glyph-dark",
 				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
@@ -1597,8 +1588,6 @@
 			},
 
 			recentSeries: {
-				caption: "Last Added Series",
-				icon: "fa-solid fa-layer-group glyph-dark",
 				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
@@ -1609,8 +1598,6 @@
 			},
 
 			updatedSeries: {
-				caption: "Last Updated Series",
-				icon: "fa-solid fa-bullhorn glyph-dark",
 				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
@@ -1621,8 +1608,6 @@
 			},
 
 			readBooks: {
-				caption: "Last Read Books",
-				icon: "fa-solid fa-square-check glyph-dark",
 				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
@@ -1667,7 +1652,6 @@
 			});
 			item.scrollBar = addItem('div', {
 				className: 'custom-scrollbar',
-				//innerHTML: `<input type="range" class="range-bar" min="0" max="100" value="0">`,
 			});
 			item.scrollInput = addItem('input', {
 				type: "range",
