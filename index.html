@@ -181,7 +181,7 @@
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
 
-		/// LOCAL STORAGE RECALL
+		//--- LOCAL STORAGE RECALL
 
 		// Theme settings
 		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
@@ -204,7 +204,7 @@
 		let readerMaxRatio = 1;
 		let readerHorizontal = true;
 
-		/// THEME MANAGEMENT
+		//--- THEME MANAGEMENT 
 
 		const swatches = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches')
@@ -2271,7 +2271,6 @@
 				: rd.uiSpreadsPages[index][1] ?? rd.uiSpreadsPages[index][0]))
 			);
 		}
-
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString(index) {
 			const newPage = getPage(index);
