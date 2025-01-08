@@ -95,75 +95,8 @@
 
 			<div id="seriesMiniHeader" class="section hidden collapse"></div>
 
-			<div id="homeStripsContainer" class="section hidden">
-				<div id="homeStripKeepReadingParent" class="home-strip-parent">
-					<div class="strip-header-container">
-						<div class="strip-header">
-							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
-						</div>
-						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKeepReading" min="0" max="100" value="0"></div>
-						<div id="allKeepReading" class="strip-all"><span title="View All" class="fa-solid fa-grip glyph-dark"></span></div>
-					</div>
-
-					<div id="homeStripKeepReading" class="home-strip"></div>
-				</div>
-
-				<div id="homeStripOnDeckParent" class="home-strip-parent">
-					<div class="strip-header-container">
-						<div class="strip-header">
-							<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck
-						</div>
-						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderKOnDeck" min="0" max="100" value="0"></div>
-						<div id="allOnDeck" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-					</div>
-					<div id="homeStripOnDeck" class="home-strip"></div>
-				</div>
-
-				<div id="homeStripRecentBooksParent" class="home-strip-parent">
-					<div class="strip-header-container">
-						<div class="strip-header">
-							<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books
-						</div>
-						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentBooks" min="0" max="100" value="0"></div>
-						<div id="allRecentBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
-					</div>
-					<div id="homeStripRecentBooks" class="home-strip"></div>
-				</div>
-
-				<div id="homeStripRecentSeriesParent" class="home-strip-parent">
-					<div class="strip-header-container">
-						<div class="strip-header">
-							<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series
-						</div>
-						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderRecentSeries" min="0" max="100" value="0"></div>
-						<div id="allRecentSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-					</div>
-					<div id="homeStripRecentSeries" class="home-strip"></div>
-				</div>
-
-				<div id="homeStripUpdatedSeriesParent" class="home-strip-parent">
-					<div class="strip-header-container">
-						<div class="strip-header">
-							<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series
-						</div>
-						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderUpdatedSeries" min="0" max="100" value="0"></div>
-						<div id="allUpdatedSeries" class="strip-all"><span title="See All" class="fa-solid fa-grip glyph-dark"></span></div>
-					</div>
-					<div id="homeStripUpdatedSeries" class="home-strip"></div>
-				</div>
-
-				<div id="homeStripReadBooksParent" class="home-strip-parent">
-					<div class="strip-header-container">
-						<div class="strip-header">
-							<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books
-						</div>
-						<div class="custom-scrollbar"><input type="range" class="range-bar" id="scrollSliderReadBooks" min="0" max="100" value="0"></div>
-						<div id="allReadBooks" class="strip-all"><span title="See 50 Books" class="fa-solid fa-grip glyph-dark"></span></div>
-					</div>
-					<div id="homeStripReadBooks" class="home-strip"></div>
-				</div>
-			</div>
-
+			<div id="homeStripsContainer" class="section hidden"></div>
+			
 			<div id="searchStripsContainer" class="section hidden">
 				<div class="strip-header-container">
 					<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
@@ -181,6 +114,7 @@
 			<div id="blanker"></div>
 
 		</div>
+
 	</div>
 
 	<div id="readerContainer" class="section hidden">
@@ -257,9 +191,6 @@
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 
 		const basePath = ''; //'/mangabox/';
-
-		const scrollBars = Array.from(document.getElementsByClassName('range-bar'));
-		const homeStrips = Array.from(document.getElementsByClassName('home-strip'));
 
 		function getScreenAR() {
 			return (window.innerWidth / window.innerHeight);
@@ -682,30 +613,19 @@
 		function updateSliderMax() {
 			if (isSectionHidden(homeStripsContainer)) return;
 
-			scrollBars.forEach((bar, index) => {
-				bar.max = homeStrips[index].scrollWidth - homeStrips[index].clientWidth;
-				// Check if the content overflows
-				const isOverflowing = homeStrips[index].scrollWidth > homeStrips[index].clientWidth;
-				// Show or hide controls based on overflow
-				bar.style.display = isOverflowing ? 'block' : 'none';
+			Object.entries(dashboardElements).forEach(([name, item]) => {
 
-				const visibleRatio = homeStrips[index].clientWidth / homeStrips[index].scrollWidth;
-				const thumbWidth = (100 * visibleRatio); // Minimum width of 14px
+				item.scrollInput.max = item.homeStrip.scrollWidth - item.homeStrip.clientWidth;
+				const isOverflowing = item.homeStrip.scrollWidth > item.homeStrip.clientWidth;
+				console.log(isOverflowing);
+				item.scrollInput.style.display = isOverflowing ? 'block' : 'none';
 
-				bar.style.setProperty('--thumb-width', `${thumbWidth}%`);
+				const visibleRatio = item.homeStrip.clientWidth / item.homeStrip.scrollWidth;
+				const thumbWidth = (100 * visibleRatio);
+
+				item.scrollInput.style.setProperty('--thumb-width', `${thumbWidth}%`);
 			});
-		}
-
-		scrollBars.forEach((bar, index) => {
-			bar.addEventListener('input', () => {
-				homeStrips[index].scrollLeft = bar.value;
-			});
-
-			homeStrips[index].addEventListener('scroll', () => {
-				bar.value = homeStrips[index].scrollLeft;
-			});
-		});
-
+		};
 
 		function stepPageChange(increment) {
 			const { path, params } = parseHashAndParams();
@@ -1615,31 +1535,43 @@
 			stripGrid.innerHTML = '';
 
 			sectionShow(homeStripsContainer);
-
-			let keepReadingArray = (await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`)).content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
-			let onDeckArray = (await callAPI(`/api/v1/books/ondeck`)).content;
-			let recentBooksArray = (await callAPI(`/api/v1/books?page=0&size=20&sort=created,desc`)).content;
-			let recentSeriesArray = (await callAPI(`/api/v1/series/new`)).content;
-			let updatedSeriesArray = (await callAPI(`/api/v1/series/updated`)).content;
-			let readBooksArray = (await callAPI(`/api/v1/books?read_status=READ&sort=readProgress.readDate,desc`)).content;
-
-//			if (!((parseHashAndParams().path == "dashboard") ||  (parseHashAndParams().path == ""))) return;
-
-			homeStripKeepReadingParent.style.display = (keepReadingArray.length == 0) ? 'none' : 'block';
-			homeStripOnDeckParent.style.display = (onDeckArray.length == 0) ? 'none' : 'block';
-			homeStripRecentBooksParent.style.display = (recentBooksArray.length == 0) ? 'none' : 'block';
-			homeStripRecentSeriesParent.style.display = (recentSeriesArray.length == 0) ? 'none' : 'block';
-			homeStripUpdatedSeriesParent.style.display = (updatedSeriesArray.length == 0) ? 'none' : 'block';
-			homeStripReadBooksParent.style.display = (readBooksArray.length == 0) ? 'none' : 'block';
-
-
-			displayBooks(keepReadingArray, homeStripKeepReading, 'compact');
-			displayBooks(onDeckArray, homeStripOnDeck, 'compact');
-			displayBooks(recentBooksArray, homeStripRecentBooks, 'compact');
-			displaySeries(recentSeriesArray, homeStripRecentSeries);
-			displaySeries(updatedSeriesArray, homeStripUpdatedSeries);
-			displayBooks(readBooksArray, homeStripReadBooks, 'timeline');
-
+			console.log("STARTPOP");
+			await Promise.all(
+				Object.entries(dashboardElements).map(async ([name, item]) => {
+					const resultsObject = await item.getItems(0, 20);
+					console.log(name);
+					console.log(resultsObject);
+					item.element.style.display = resultsObject.empty ? 'none' : 'block';
+					item.showItems(resultsObject.content, item.homeStrip);
+				})
+			);
+			console.log("STOPPOP");
+			/*
+						let keepReadingArray = (await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`)).content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
+						let onDeckArray = (await callAPI(`/api/v1/books/ondeck`)).content;
+						let recentBooksArray = (await callAPI(`/api/v1/books?page=0&size=20&sort=created,desc`)).content;
+						let recentSeriesArray = (await callAPI(`/api/v1/series/new`)).content;
+						let updatedSeriesArray = (await callAPI(`/api/v1/series/updated`)).content;
+						let readBooksArray = (await callAPI(`/api/v1/books?read_status=READ&sort=readProgress.readDate,desc`)).content;
+			*/
+			//			if (!((parseHashAndParams().path == "dashboard") ||  (parseHashAndParams().path == ""))) return;
+			/* //TODO RIFARE 
+							homeStripKeepReadingParent.style.display = (keepReadingArray.length == 0) ? 'none' : 'block';
+							homeStripOnDeckParent.style.display = (onDeckArray.length == 0) ? 'none' : 'block';
+							homeStripRecentBooksParent.style.display = (recentBooksArray.length == 0) ? 'none' : 'block';
+							homeStripRecentSeriesParent.style.display = (recentSeriesArray.length == 0) ? 'none' : 'block';
+							homeStripUpdatedSeriesParent.style.display = (updatedSeriesArray.length == 0) ? 'none' : 'block';
+							homeStripReadBooksParent.style.display = (readBooksArray.length == 0) ? 'none' : 'block';
+			
+			
+							displayBooks(keepReadingArray, homeStripKeepReading, 'compact');
+							displayBooks(onDeckArray, homeStripOnDeck, 'compact');
+							displayBooks(recentBooksArray, homeStripRecentBooks, 'compact');
+							displaySeries(recentSeriesArray, homeStripRecentSeries);
+							displaySeries(updatedSeriesArray, homeStripUpdatedSeries);
+							displayBooks(readBooksArray, homeStripReadBooks, 'timeline');
+			*/
+			console.log("UPDATESLIDER");
 			setTimeout(updateSliderMax, 10);
 
 		}
@@ -1650,62 +1582,104 @@
 
 		console.log("DEFINING DASHBOARD ELEMENTS");
 		dashboardElements = {
-			allKeepReading: {
-				code: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
-				getItems: async (page) => {
+			keepReading: {
+				caption: "Keep Reading",
+				icon: "fa-solid fa-book-bookmark glyph-dark",
+				element: null,
+				scrollBar: null,
+				gridButton: null,
+				homeStrip: null,
+				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
+				getItems: async (page, size) => {
 					const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
 					out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
-				showItems: async (input) => {
-					displayBooks(input, stripGrid, 'compact');
+				showItems: async (input, target) => {
+					displayBooks(input, target, 'compact');
 				}
 			},
-			allOnDeck: {
-				code: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
-				getItems: async (page) => {
+
+
+			onDeck: {
+				caption: "On Deck",
+				icon: "fa-solid fa-inbox glyph-dark",
+				element: null,
+				scrollBar: null,
+				gridButton: null,
+				homeStrip: null,
+				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
+				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/books/ondeck`));
 				},
-				showItems: async (input) => {
-					displayBooks(input, stripGrid, 'compact');
-				}
-			},
-			allRecentBooks: {
-				code: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
-				getItems: async (page) => {
-					return (await callAPI(`/api/v1/books?page=${page}&size=50&sort=created,desc`));
+				showItems: async (input, target) => {
+					displayBooks(input, target, 'compact');
 				},
-				showItems: async (input) => {
-					displayBooks(input, stripGrid, 'compact');
+			},
+
+			recentBooks: {
+				caption: "Last Added Books",
+				icon: "fa-solid fa-book glyph-dark",
+				element: null,
+				scrollBar: null,
+				gridButton: null,
+				homeStrip: null,
+				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
+				getItems: async (page, size) => {
+					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
+				},
+				showItems: async (input, target) => {
+					displayBooks(input, target, 'compact');
 				}
 			},
-			allRecentSeries: {
-				code: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
-				getItems: async (page) => {
+
+			recentSeries: {
+				caption: "Last Added Series",
+				icon: "fa-solid fa-layer-group glyph-dark",
+				element: null,
+				scrollBar: null,
+				gridButton: null,
+				homeStrip: null,
+				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
+				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
 				},
-				showItems: async (input) => {
-					displaySeries(input, stripGrid);
+				showItems: async (input, target) => {
+					displaySeries(input, target);
 				}
 			},
-			allUpdatedSeries: {
-				code: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
-				getItems: async (page) => {
+
+			updatedSeries: {
+				caption: "Last Updated Series",
+				icon: "fa-solid fa-bullhorn glyph-dark",
+				element: null,
+				scrollBar: null,
+				gridButton: null,
+				homeStrip: null,
+				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
+				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
 				},
-				showItems: async (input) => {
-					displaySeries(input, stripGrid);
+				showItems: async (input, target) => {
+					displaySeries(input, target);
 				}
 			},
-			allReadBooks: {
-				code: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
-				getItems: async (page) => {
-					return (await callAPI(`/api/v1/books?page=${page}&size=50&read_status=READ&sort=readProgress.readDate,desc`));
+
+			readBooks: {
+				caption: "Last Read Books",
+				icon: "fa-solid fa-square-check glyph-dark",
+				element: null,
+				scrollBar: null,
+				gridButton: null,
+				homeStrip: null,
+				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
+				getItems: async (page, size) => {
+					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
 				},
-				showItems: async (input) => {
-					displayBooks(input, stripGrid, 'timeline');
+				showItems: async (input, target) => {
+					displayBooks(input, target, 'timeline');
 				},
-			}
+			},
 		}
 
 		async function dashboardAll(element, page) {
@@ -1719,8 +1693,8 @@
 
 			sectionShow(stripGridContainer);
 			console.log(element);
-			stripGridHeader.innerHTML = dashboardElements[element].code;
-			const data = await dashboardElements[element].getItems(page);
+			stripGridHeader.innerHTML = dashboardElements[element].headerCode;
+			const data = await dashboardElements[element].getItems(page, 50);
 			const array = data.content;
 
 			stripPrevPage.classList.remove('disabled');
@@ -1728,18 +1702,57 @@
 			if (page <= 0) stripPrevPage.classList.add('disabled');
 			if (page >= data.totalPages - 1) stripNextPage.classList.add('disabled');
 
-			dashboardElements[element].showItems(array);
+			dashboardElements[element].showItems(array, stripGrid);
 		}
 
-
-
-		[allKeepReading, allOnDeck, allRecentBooks, allRecentSeries, allUpdatedSeries, allReadBooks].forEach((element) => {
-			element.addEventListener('click', async (event) => {
-				//dashboardAll(event.target.parentElement.id);
-				navigateTo('#dashboard?all=' + event.target.parentElement.id + '&page=0')
+		Object.entries(dashboardElements).forEach(([name, item]) => {
+			console.log(name);
+			item.element = addItem('div', { className: 'home-strip-parent' });
+			const headerContainer = addItem('div', { className: 'strip-header-container' });
+			const stripHeader = addItem('div', {
+				className: 'strip-header',
+				innerHTML: item.headerCode,
 			});
-		});
+			item.scrollBar = addItem('div', {
+				className: 'custom-scrollbar',
+				//innerHTML: `<input type="range" class="range-bar" min="0" max="100" value="0">`,
+			});
+			item.scrollInput = addItem('input', {
+				type: "range",
+				className: "range-bar",
+				min: "0",
+				max: "100",
+				value: "0"
+			});
+			item.gridButton = addItem('div', {
+				className: 'strip-all',
+				innerHTML: '<span title="View All" class="fa-solid fa-grip glyph-dark"></span>',
+			});
+			item.homeStrip = addItem('div', {
+				className: 'home-strip',
+			})
+			item.gridButton.addEventListener('click', async () => {
+				navigateTo('#dashboard?all=' + name + '&page=0')
+			});
+			item.scrollInput.addEventListener('input', () => {
+				console.log(item.scrollInput.value);
+				item.homeStrip.scrollLeft = item.scrollInput.value;
+			});
+			item.homeStrip.addEventListener('scroll', () => {
+				item.scrollInput.value = item.homeStrip.scrollLeft;
+			});
 
+			item.scrollBar.appendChild(item.scrollInput);
+
+			headerContainer.appendChild(stripHeader);
+			headerContainer.appendChild(item.scrollBar);
+			headerContainer.appendChild(item.gridButton);
+
+			item.element.appendChild(headerContainer);
+			item.element.appendChild(item.homeStrip);
+
+			homeStripsContainer.appendChild(item.element);
+		});
 
 		// Open a whole series fetching all its books and showing them with the correct header
 		// if seriesdata is not available at the moment of the call, it fetches it from the server
