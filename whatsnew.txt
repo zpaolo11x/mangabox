@@ -1,1 +1,3 @@
 - Fixes of rotation and menu sizing
+- Redesigned filter buttons
+- Improved dashboard code
