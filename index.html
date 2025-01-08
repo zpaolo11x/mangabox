@@ -1580,10 +1580,6 @@
 			onDeck: {
 				caption: "On Deck",
 				icon: "fa-solid fa-inbox glyph-dark",
-				element: null,
-				scrollBar: null,
-				gridButton: null,
-				homeStrip: null,
 				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/books/ondeck`));
@@ -1596,10 +1592,6 @@
 			recentBooks: {
 				caption: "Last Added Books",
 				icon: "fa-solid fa-book glyph-dark",
-				element: null,
-				scrollBar: null,
-				gridButton: null,
-				homeStrip: null,
 				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
@@ -1612,10 +1604,6 @@
 			recentSeries: {
 				caption: "Last Added Series",
 				icon: "fa-solid fa-layer-group glyph-dark",
-				element: null,
-				scrollBar: null,
-				gridButton: null,
-				homeStrip: null,
 				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
@@ -1628,10 +1616,6 @@
 			updatedSeries: {
 				caption: "Last Updated Series",
 				icon: "fa-solid fa-bullhorn glyph-dark",
-				element: null,
-				scrollBar: null,
-				gridButton: null,
-				homeStrip: null,
 				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
@@ -1644,10 +1628,6 @@
 			readBooks: {
 				caption: "Last Read Books",
 				icon: "fa-solid fa-square-check glyph-dark",
-				element: null,
-				scrollBar: null,
-				gridButton: null,
-				homeStrip: null,
 				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
 				getItems: async (page, size) => {
 					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
@@ -1671,12 +1651,13 @@
 			console.log(element);
 			stripGridHeader.innerHTML = dashboardElements[element].headerCode;
 			const data = await dashboardElements[element].getItems(page, 50);
+			console.log(data);
 			const array = data.content;
 
 			stripPrevPage.classList.remove('disabled');
 			stripNextPage.classList.remove('disabled');
-			if (page <= 0) stripPrevPage.classList.add('disabled');
-			if (page >= data.totalPages - 1) stripNextPage.classList.add('disabled');
+			if (data.first) stripPrevPage.classList.add('disabled');
+			if (data.last) stripNextPage.classList.add('disabled');
 
 			dashboardElements[element].showItems(array, stripGrid);
 		}
