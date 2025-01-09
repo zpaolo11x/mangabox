@@ -815,6 +815,7 @@
 		}
 
 		//MB Touch And Hover Scaler 
+		let currentlyScaled = null;
 
 		function noPointerDown(item) {
 			item.addEventListener('pointerup', (event) => {
@@ -2681,14 +2682,15 @@
 
 		if (loginScreen.classList.contains('auth-hidden')) bootSequence();
 
+
+		//MB Reader touch response fucntions
+		let isSingleTouch = true; // Track if it's a single-touch gesture
+		
 		let sweepX = 0;
 		let sweepY = 0;
 
 		let touchStartX = 0;
 		let touchStartY = 0;
-		let isSingleTouch = true; // Track if it's a single-touch gesture
-
-		let currentlyScaled = null;
 
 		function handleTouchStart(event) {
 
