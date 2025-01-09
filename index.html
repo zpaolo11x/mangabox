@@ -177,7 +177,7 @@
 
 	<script>
 
-		/// General Functions /// 
+		// MB General Functions  
 		function testpr(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
@@ -186,7 +186,7 @@
 			return Object.assign(document.createElement(itemkind), properties);
 		}
 
-		/// Local Storage Loading ///
+		// MB Local Storage Loading 
 
 		// Theme settings
 		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
@@ -209,7 +209,7 @@
 		let readerMaxRatio = 1;
 		let readerHorizontal = true;
 
-		/// Theme Management ///
+		// MB Theme Management //
 
 		const swatches = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches')
@@ -310,7 +310,7 @@
 			if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 		})
 
-		/// Search Functions ///
+		// MB Search Functions 
 		async function performSearch(searchString) {
 			libraryHighlight('searchField');
 
@@ -370,7 +370,7 @@
 			sectionShow(searchStripsContainer);
 		}
 
-		/// Library Filtering ///
+		// MB Library Filtering 
 
 		const filterTable = {
 			sorting: {
@@ -686,7 +686,7 @@
 			await wait(100);
 		}
 
-		/// API Call Function ///
+		// MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 			try {
 				const response = await fetch(`${mbBaseUrl}${API_url}`, {
@@ -707,7 +707,7 @@
 			}
 		}
 
-		/// Media Cache ///
+		// MB Media Cache 
 		const mediaCache = new Map();
 		const CACHE_LIMIT = 250; // Maximum number of cached items
 
@@ -824,7 +824,7 @@
 			displaySeries(filteredItems, seriesGrid);
 		}
 
-		/// Touch And Hover Scaler ///
+		// MB Touch And Hover Scaler 
 
 		function noPointerDown(item) {
 			item.addEventListener('pointerup', (event) => {
