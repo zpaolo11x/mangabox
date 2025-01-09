@@ -2441,6 +2441,7 @@
 			}
 
 		}
+
 		function jumpToSpread(newSpreadTarget) {
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
@@ -2483,6 +2484,7 @@
 			updateProgressBar();
 		}
 
+		// Reader UI Control Buttons
 		function toggleMenu() {
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
@@ -2584,7 +2586,7 @@
 			}
 		});
 
-
+		//MB URL Parsing and LoadContent Function 
 		function parseHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
