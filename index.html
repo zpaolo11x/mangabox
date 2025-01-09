@@ -1929,7 +1929,9 @@
 			rightLimit.innerText = rd.ltr ? rd.uiPages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
-			updateViewer();
+			populateSpread(rd.currentSpreadIndex);
+			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
+			
 			centerThumb();
 			updateProgressBar();
 		}
@@ -1961,7 +1963,7 @@
 		}
 
 		//MB Reader Fetch Page Function
-		// Fetch page data
+		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId) {
 
 			const data = await callAPI(`/api/v1/books/${bookId}/pages`);
@@ -2226,7 +2228,7 @@
 			return dataOut;
 		}
 
-		// TIMEOUT MANAGEMENT
+		// Starts timeout for element id of the preload stack
 		function startTimeout(id, duration, callback) {
 			const timeoutId = setTimeout(() => {
 				// Execute the callback when the timeout finishes
@@ -2246,6 +2248,7 @@
 			rd.preloadStack = {};
 		}
 
+		// Calculate stack size for the image loading stack
 		function picLoadStackSize() {
 			let out = 0;
 			rd.picLoadStack.forEach(element => {
@@ -2262,6 +2265,9 @@
 			out = 'tot:' + rd.picLoadStack.length + ' ' + out + ' *';
 			console.log(out);
 		}
+
+		// Actually load media in the selected index, isPreload is true if the population action is
+		// triggered by a preload, so it doesn't trigger further preloads
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
@@ -2320,12 +2326,6 @@
 
 			// Wait for all fetches to complete
 			await Promise.all(promises);
-		}
-
-		// Update the viewer for the current page or spread
-		function updateViewer() {
-			populateSpread(rd.currentSpreadIndex);
-			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 		}
 
 		function handleLeftArrow() {
