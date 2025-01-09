@@ -482,8 +482,6 @@
 
 		async function buildLanguageList() {
 			const languageList = await callAPI(`/api/v1/languages`);
-			console.log("languagelist");
-			console.log(languageList);
 			languageList.forEach(item => {
 				filterTable.filter_by_language.switches.push({
 					name: item,
@@ -526,7 +524,6 @@
 		}
 
 		async function applyLibraryFilters() {
-			console.log("START FILTERING");
 			const divs = Array.from(seriesGrid.children);
 
 			divs.forEach(div => {
@@ -649,18 +646,14 @@
 
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
-			console.log(containerWidth);
 			if (containerWidth - libSizer.rightmin - libSizer.large >= 0) {
-				console.log("                            LARGE");
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
 			} else if (containerWidth - libSizer.rightmin - libSizer.medium >= 0) {
-				console.log("                            MEDIUM");
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-medium');
 			} else {
-				console.log("                            SMALL");
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-small');
@@ -785,7 +778,6 @@
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
-			console.log(libraries.length);
 
 			const maxWidth = Array.from(librariesList.childNodes)
 				.map(item => item.childNodes[1].getBoundingClientRect().width + libSmall)
@@ -795,14 +787,12 @@
 				libLarge = Math.ceil(maxWidth)
 				document.documentElement.style.setProperty('--mb-library-large', libLarge + "px");
 			}
-			console.log(maxWidth);
 
 			const libNum = libraries.length;
 			libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
 			libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
 			libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
 			updateStickyMenu();
-			console.log(libSizer);
 		}
 
 
@@ -866,7 +856,7 @@
 
 				if (currentlyScaled != null) {
 					currentlyScaled.classList.remove('scaled');
-					//currentlyScaled = null; //TODO check, ho tolto questo ma forse serve a qualcosa???
+					//currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
 				}
 
 				item.classList.add('scaled');
@@ -1100,9 +1090,7 @@
 		}
 
 		function focusItem(focus) {
-			console.log(focus);
 			var item = document.getElementById(focus);
-			console.log(item);
 			const yOffset = -150;
 			const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
 
@@ -1259,7 +1247,7 @@
 			}
 			sectionShow(bookDetailsContainer);
 			let summaryArray = book.metadata.summary.split(/\r?\n/);
-			console.log(book);
+
 			let text = `
 			<div class="book-details-pic-container">
 				<div class="mini-controls">
@@ -1547,8 +1535,6 @@
 			await Promise.all(
 				Object.entries(dashboardElements).map(async ([name, item]) => {
 					const resultsObject = await item.getItems(0, 20);
-					console.log(name);
-					console.log(resultsObject);
 					item.element.style.display = resultsObject.empty ? 'none' : 'block';
 					item.showItems(resultsObject.content, item.homeStrip);
 				})
@@ -1561,7 +1547,6 @@
 			navigateTo('#dashboard');
 		});
 
-		console.log("DEFINING DASHBOARD ELEMENTS");
 		dashboardElements = {
 			keepReading: {
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
@@ -1633,7 +1618,6 @@
 
 		async function dashboardAll(element, page) {
 
-			console.log(element);
 			libraryHighlight('homeButton');
 
 			seriesGrid.innerHTML = ''; // Clear the series grid
@@ -1641,10 +1625,10 @@
 			stripGrid.innerHTML = '';
 
 			sectionShow(stripGridContainer);
-			console.log(element);
+
 			stripGridHeader.innerHTML = dashboardElements[element].headerCode;
 			const data = await dashboardElements[element].getItems(page, 50);
-			console.log(data);
+
 			const array = data.content;
 
 			stripPrevPage.classList.remove('disabled');
@@ -1656,7 +1640,7 @@
 		}
 
 		Object.entries(dashboardElements).forEach(([name, item]) => {
-			console.log(name);
+
 			item.element = addItem('div', { className: 'home-strip-parent' });
 			const headerContainer = addItem('div', { className: 'strip-header-container' });
 			const stripHeader = addItem('div', {
@@ -1684,7 +1668,6 @@
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
 			item.scrollInput.addEventListener('input', () => {
-				console.log(item.scrollInput.value);
 				item.homeStrip.scrollLeft = item.scrollInput.value;
 			});
 			item.homeStrip.addEventListener('scroll', () => {
@@ -1810,29 +1793,21 @@
 		}
 
 		function preloadPages(startSpreadIndex, count) {
-			//return; //XXX REMOVED PRELOAD
 			if (isSectionHidden(readerContainer)) return;
-			console.log("preloadPages: " + startSpreadIndex + " +/- " + count);
 			for (let i = 1; i <= count; i++) {
 				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack))) {
-					console.log('startTimeout POS ' + (startSpreadIndex + i))
 					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
-							console.log('                     ABORT');
 							return;
 						}
-						console.log("A3 " + i);
 						populateSpread(startSpreadIndex + i, true);
 					});
 				}
 				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack))) {
-					console.log('startTimeout NEG ' + (startSpreadIndex - i))
 					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
-							console.log('                     ABORT');
 							return;
 						}
-						console.log("A4 " + i);
 						populateSpread(startSpreadIndex - i, true);
 					});
 				}
@@ -2004,7 +1979,6 @@
 
 						buildSize(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 
-						console.log(spreadItemThumb.style);
 						buildFlock(spreadItem, i, dataOut.length);
 
 						buildSizePic(rd.uiPages[i], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i].AR);
@@ -2165,7 +2139,6 @@
 
 		// Function to clear all timeouts (optional, if you need this functionality)
 		function clearAllTimeouts() {
-			console.log("clearAllTimeouts");
 			Object.values(rd.preloadStack).forEach(timer => {
 				clearTimeout(timer);
 			});
@@ -2191,7 +2164,7 @@
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
-			console.log("populateSpread:" + spreadIndex);
+
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
@@ -2250,7 +2223,6 @@
 
 		// Update the viewer for the current page or spread
 		function updateViewer() {
-			console.log("A5");
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 		}
@@ -2297,10 +2269,8 @@
 		}
 
 		function purgeLoading() {
-			console.log('purgeLoading');
 			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
 				const item = rd.picLoadStack[i];
-				console.log('purged page ' + item);
 				rd.uiPages[item].hasSrc = false;
 				rd.uiPages[item].src = 'transparent.png';
 				rd.picLoadStack.splice(i, 1); // Remove the element at index i
@@ -2376,8 +2346,6 @@
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
 
-			console.log('                                  jumpto:' + newSpreadTarget);
-
 			purgeLoading();
 
 			if (rd.jumpTimeout === null) {
@@ -2387,7 +2355,6 @@
 				rd.jumpTimeout = setTimeout(() => {
 					if (isSectionHidden(readerContainer)) return;
 					spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-					console.log("A1");
 					populateSpread(localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
@@ -2401,7 +2368,6 @@
 				rd.jumpTimeout = setTimeout(() => {
 					if (isSectionHidden(readerContainer)) return;
 					spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
-					console.log("A2");
 					populateSpread(localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 					rd.jumpTimeout = null;
@@ -2436,7 +2402,6 @@
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {
-			console.log('                                     seek');
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
@@ -2545,7 +2510,6 @@
 		}
 
 		function handleCloseReader() {
-			console.log("******************** CLOSE READER ***********************");
 			hideMenu();
 			incognitoMark.classList.remove('incognito');
 
@@ -2738,19 +2702,19 @@
 
 			if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
 				if (diffX > 0) {
+					// Swipe right
 					handleLeftArrow();
-					console.log('Swipe Right');
 				} else {
+					// Swipe left
 					handleRightArrow();
-					console.log('Swipe Left');
 				}
 				isSingleTouch = false; // Reset to prevent repeat action on the same swipe
 			} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
 				if (diffY > 0) {
+					// Swipe down
 					handleCloseReader();
-					console.log('Swipe Down');
 				} else {
-					console.log('Swipe Up');
+					//Swipe up, do nothing
 				}
 				isSingleTouch = false;
 			}
