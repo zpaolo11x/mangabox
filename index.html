@@ -1218,16 +1218,6 @@
 			if (nextbook != null) showBookDetails(nextbook);
 		}
 
-		function navigateToReadBook(book, readingDirection) {
-			setIncognito(false);
-			navigateTo(`#bookread
-						?library_id=${book.libraryId}
-						&series_id=${book.seriesId}
-						&book_id=${book.id}
-						&dir=${(readingDirection == 'RIGHT_TO_LEFT' ? 'rtl' : 'ltr')}
-						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
-		}
-
 		async function showBookDetails(book) {
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
 			const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
@@ -1716,16 +1706,17 @@
 
 		//MB Reader Functions and Data
 
+		// General reader data structure
 		let rd = {
-			thresholdRatio: 0.89,
+			thresholdRatio: 0.89,	//Orientation threshold
 
-			preloadCount: 4,
-			preloadPicDelay: 300,
-			loadDelay: 100,
-			jumpTimeout: null,
+			preloadCount: 4,			// Imge preload count
+			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
+			loadDelay: 100,			// Delay used when jumping to a spread before really updating
+			jumpTimeout: null,		// Timeout counter for jumping to spreads
 
-			preloadStack: {}, // Contains all the preload timers, one for each spread that's going to be loaded
-			picLoadStack: [], // Contains all load image objects, both direct load and preload
+			preloadStack: {}, 		// Contains all the preload timers, one for each spread that's going to be loaded
+			picLoadStack: [], 		// Contains all load image objects, both direct load and preload
 
 			pageModes: [
 				{ icon: 'reader-buttons fa-solid fa-book-open', title: 'Page Layout: Two Pages' },
@@ -1759,9 +1750,22 @@
 			incognito: false
 		};
 
+		// Update read mode icon
 		readerPageFormat.className = rd.pageModes[mbPageMode].icon;
 		readerPageFormat.title = rd.pageModes[mbPageMode].title;
 
+		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers readBook function
+		function navigateToReadBook(book, readingDirection) {
+			setIncognito(false);
+			navigateTo(`#bookread
+						?library_id=${book.libraryId}
+						&series_id=${book.seriesId}
+						&book_id=${book.id}
+						&dir=${(readingDirection == 'RIGHT_TO_LEFT' ? 'rtl' : 'ltr')}
+						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
+		}
+
+		// Function that setups the reader for a specific book, this is not run directly
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
 			clearReader(); //TODO forse eccessivo?
@@ -1796,7 +1800,7 @@
 
 		}
 
-
+		// Reader cleanup functions to remove all dangling spreads and pages
 		function clearReader() {
 			rd.uiPages.forEach(item => {
 				item.remove();
@@ -1824,6 +1828,7 @@
 			});
 		}
 
+		// Setup close button
 		function handleCloseReader() {
 			hideMenu();
 			incognitoMark.classList.remove('incognito');
@@ -1843,6 +1848,7 @@
 			handleCloseReader();
 		})
 
+		// Setup incognito button
 		function setIncognito(status) {
 			readerIncognito.classList.remove('incognito');
 			incognitoMark.classList.remove('incognito');
@@ -1859,6 +1865,7 @@
 			setIncognito(!rd.incognito);
 		})
 
+		// Setup page format button
 		function switchPageFormat(newId) {
 			mbPageMode = newId;
 			readerPageFormat.className = rd.pageModes[mbPageMode].icon;
@@ -1883,9 +1890,9 @@
 
 			const newPage = getPage(rd.currentSpreadIndex);
 			readerPage.innerText = newPage;
-
 		}
 
+		// This function triggers multiple preloads starting from the current spread
 		function preloadPages(startSpreadIndex, count) {
 			if (isSectionHidden(readerContainer)) return;
 			for (let i = 1; i <= count; i++) {
@@ -1907,7 +1914,6 @@
 				}
 			}
 		}
-
 
 		// Initialize viewer with page data
 		async function initViewer() {
