@@ -1715,7 +1715,7 @@
 		}
 
 		//MB Reader Functions and Data
-		
+
 		let rd = {
 			thresholdRatio: 0.89,
 
@@ -1796,6 +1796,96 @@
 
 		}
 
+
+		function clearReader() {
+			rd.uiPages.forEach(item => {
+				item.remove();
+				item = null;
+			});
+
+			rd.uiPagesContainer.forEach(item => {
+				item.remove();
+				item = null;
+			});
+
+			rd.uiSpreads.forEach(item => {
+				item.remove();
+				item = null;
+			});
+
+			rd.uiPagesThumbs.forEach(item => {
+				item.remove();
+				item = null;
+			});
+
+			rd.uiSpreadsThumbs.forEach(item => {
+				item.remove();
+				item = null;
+			});
+		}
+
+		function handleCloseReader() {
+			hideMenu();
+			incognitoMark.classList.remove('incognito');
+
+			clearTimeout(rd.jumpTimeout);
+			setTimeout(() => {
+				clearReader();
+			}, 300); //300ms timeout so the reader can slide out
+
+			purgeLoading();
+			clearAllTimeouts();
+
+			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
+		}
+
+		readerClose.addEventListener('click', () => {
+			handleCloseReader();
+		})
+
+		function setIncognito(status) {
+			readerIncognito.classList.remove('incognito');
+			incognitoMark.classList.remove('incognito');
+
+			if (status) {
+				readerIncognito.classList.add('incognito');
+				incognitoMark.classList.add('incognito')
+			};
+
+			rd.incognito = status;
+		}
+
+		readerIncognito.addEventListener('click', () => {
+			setIncognito(!rd.incognito);
+		})
+
+		function switchPageFormat(newId) {
+			mbPageMode = newId;
+			readerPageFormat.className = rd.pageModes[mbPageMode].icon;
+			readerPageFormat.title = rd.pageModes[mbPageMode].title;
+
+			localStorage.setItem('mbPageMode', mbPageMode);
+			navigateTo(window.location.hash);
+		}
+
+		readerPageFormat.addEventListener('click', () => {
+			switchPageFormat((mbPageMode + 1) % 3);
+		})
+
+		function updateProgressBar() {
+			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
+			readerProgress.style.width = `${progressPercent}%`;
+			readerProgress.style.float = rd.ltr ? 'left' : 'right';
+
+			readerPage.style.left = rd.ltr
+				? `min(max(0px, calc(${progressPercent}% - 20px)), calc(100% - 40px))`
+				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
+
+			const newPage = getPage(rd.currentSpreadIndex);
+			readerPage.innerText = newPage;
+
+		}
+
 		function preloadPages(startSpreadIndex, count) {
 			if (isSectionHidden(readerContainer)) return;
 			for (let i = 1; i <= count; i++) {
@@ -1864,6 +1954,7 @@
 
 		}
 
+		//MB Reader Fetch Page Function
 		// Fetch page data
 		async function fetchPages(bookId) {
 
@@ -2283,6 +2374,7 @@
 			clearAllTimeouts();
 		}
 
+		// Thumbnail scrolling functions
 		function smoothScroll(container, targetScrollLeft, duration = 500) {
 			const start = container.scrollLeft;
 			const change = targetScrollLeft - start;
@@ -2485,95 +2577,6 @@
 				currentlyScaled = null;
 			}
 		});
-
-		function clearReader() {
-			rd.uiPages.forEach(item => {
-				item.remove();
-				item = null;
-			});
-
-			rd.uiPagesContainer.forEach(item => {
-				item.remove();
-				item = null;
-			});
-
-			rd.uiSpreads.forEach(item => {
-				item.remove();
-				item = null;
-			});
-
-			rd.uiPagesThumbs.forEach(item => {
-				item.remove();
-				item = null;
-			});
-
-			rd.uiSpreadsThumbs.forEach(item => {
-				item.remove();
-				item = null;
-			});
-		}
-
-		function handleCloseReader() {
-			hideMenu();
-			incognitoMark.classList.remove('incognito');
-
-			clearTimeout(rd.jumpTimeout);
-			setTimeout(() => {
-				clearReader();
-			}, 300); //300ms timeout so the reader can slide out
-
-			purgeLoading();
-			clearAllTimeouts();
-
-			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-		}
-
-		readerClose.addEventListener('click', () => {
-			handleCloseReader();
-		})
-
-		function setIncognito(status) {
-			readerIncognito.classList.remove('incognito');
-			incognitoMark.classList.remove('incognito');
-
-			if (status) {
-				readerIncognito.classList.add('incognito');
-				incognitoMark.classList.add('incognito')
-			};
-
-			rd.incognito = status;
-		}
-
-		readerIncognito.addEventListener('click', () => {
-			setIncognito(!rd.incognito);
-		})
-
-		function switchPageFormat(newId) {
-			mbPageMode = newId;
-			readerPageFormat.className = rd.pageModes[mbPageMode].icon;
-			readerPageFormat.title = rd.pageModes[mbPageMode].title;
-
-			localStorage.setItem('mbPageMode', mbPageMode);
-			navigateTo(window.location.hash);
-		}
-
-		readerPageFormat.addEventListener('click', () => {
-			switchPageFormat((mbPageMode + 1) % 3);
-		})
-
-		function updateProgressBar() {
-			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
-			readerProgress.style.width = `${progressPercent}%`;
-			readerProgress.style.float = rd.ltr ? 'left' : 'right';
-
-			readerPage.style.left = rd.ltr
-				? `min(max(0px, calc(${progressPercent}% - 20px)), calc(100% - 40px))`
-				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
-
-			const newPage = getPage(rd.currentSpreadIndex);
-			readerPage.innerText = newPage;
-
-		}
 
 
 		function parseHashAndParams() {
