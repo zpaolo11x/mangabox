@@ -1201,16 +1201,16 @@
 
 		//MB Book Details Panel 
 
+		let currentbook = null;
+		let prevbook = null;
+		let nextbook = null;
+		
 		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
 			setTimeout(() => {
 				bookDetailsContainer.innerHTML = ''
 			}, 300);
 		}
-
-		let currentbook = null;
-		let prevbook = null;
-		let nextbook = null;
 
 		function jumpBookDetailsPrev() {
 			if (prevbook != null) showBookDetails(prevbook);
