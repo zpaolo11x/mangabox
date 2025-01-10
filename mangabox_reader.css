@@ -375,7 +375,7 @@ div.single-page {
 
 #thumbStrip {
 	position: fixed;
-	height: calc(var(--mb-thumb-height-px) + 50px);
+	height: calc(var(--mb-thumb-height-px) + 30px);
 	left: 0px;
 	right: 0px;
 	display: flex;
@@ -389,21 +389,27 @@ div.single-page {
 
 #thumbStripButton {
 	height: 20px;
-	background-color: red;
 	position: fixed;
+	width:150px;
+	/*background-color: red;*/
 	left: 50%;
 	transform: translateX(-50%); /* Center it horizontally */
-	bottom: calc(var(--mb-thumb-height-px) + 60px + 50px - 20px);
+	bottom: calc(var(--mb-thumb-height-px) + 60px + 30px);
 	z-index:10;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
+	text-align: center;
 
+}
+
+.thumb-arrow{
+	font-size:10px;
 }
 
 #thumbStripInner {
 	display: flex;
 	padding: 0;
 	margin: 0;
-	height: calc(var(--mb-thumb-height-px) + 50px);
+	height: calc(var(--mb-thumb-height-px) + 10px);
 	margin-left: 50%;
 	margin-right: 50%;
 	/*flex-direction: row-reverse;*/
@@ -505,12 +511,12 @@ div.single-page {
 
 #controlPanel.hidden #thumbStrip,
 #readerContainer.hidden #thumbStrip {
-	bottom: -300px;
+	bottom: -600px;
 }
 
 #controlPanel.hidden #thumbStripButton,
 #readerContainer.hidden #thumbStripButton {
-	bottom: calc(var(--mb-thumb-height-px) - 300px + 50px - 20px);
+	bottom: calc(var(--mb-thumb-height-px) - 600px + 50px - 20px);
 }
 
 #bookName {

@@ -142,7 +142,11 @@
 				<div id="thumbStrip">
 					<div id="thumbStripInner"></div>
 				</div>
-				<div id="thumbStripButton"><span id="thumbUpArrow" class="fa-solid fa-caret-up glyph-dark"></span></div>
+				<div id="thumbStripButton">
+					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				</div>
 
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
@@ -1854,9 +1858,6 @@
 		// Setup incognito button
 		function setIncognito(status) {
 
-			document.documentElement.style.setProperty('--mb-thumb-height-px', status ? '300px' : '150px');
-			centerThumb(true);
-			
 			readerIncognito.classList.remove('incognito');
 			incognitoMark.classList.remove('incognito');
 
@@ -1885,6 +1886,12 @@
 		readerPageFormat.addEventListener('click', () => {
 			switchPageFormat((mbPageMode + 1) % 3);
 		})
+
+		thumbStripButton.addEventListener('click', () => {
+			const currentVal = getComputedStyle(document.documentElement).getPropertyValue('--mb-thumb-height-px')
+			document.documentElement.style.setProperty('--mb-thumb-height-px', (currentVal == '150px') ? '300px' : '150px');
+			centerThumb(true);
+		});
 
 		function updateProgressBar() {
 			console.log("updateProgressBar");
