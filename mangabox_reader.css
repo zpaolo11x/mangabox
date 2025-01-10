@@ -394,11 +394,10 @@ div.single-page {
 	/*background-color: red;*/
 	left: 50%;
 	transform: translateX(-50%); /* Center it horizontally */
-	bottom: calc(var(--mb-thumb-height-px) + 60px + 30px);
+	bottom: calc(var(--mb-thumb-height-px) + 60px + 10px);
 	z-index:10;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 	text-align: center;
-
 }
 
 .thumb-arrow{
