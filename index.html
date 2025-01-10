@@ -1890,6 +1890,7 @@
 				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
 
 			const newPage = getPage(rd.currentSpreadIndex);
+			//TODO IF the latest spread is a two page one, and we are targeting the penutlimate page, return the last one
 			readerPage.innerText = newPage;
 		}
 
