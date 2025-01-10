@@ -1902,12 +1902,12 @@
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
 
-			readerPage.style.left = rd.ltr
-				? `min(max(0px, calc(${progressPercent}% - 20px)), calc(100% - 40px))`
-				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
-
-			console.log("getB");
 			[rd.currentPage, readerPage.innerText] = getPage(rd.currentSpreadIndex);
+
+			readerPage.style.left = rd.ltr
+				? `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
+				: `min(max(0px, calc(${100 - progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
+
 		}
 
 		// This function triggers multiple preloads starting from the current spread
@@ -2366,21 +2366,18 @@
 
 		function getPage(index) {
 			console.log("getPage:" + index);
-			//TODO controllare perché viene triggerato due volte con left e right
 			let pageNumber = (1 + Number((rd.ltr
 				? rd.uiSpreadsPages[index][0]
 				: rd.uiSpreadsPages[index][1] ?? rd.uiSpreadsPages[index][0]))
 			);
 
 			const twoPages = rd.uiSpreads[index].classList.contains("two-pages");
+			const lastSpread = (twoPages && (index == (rd.uiSpreads.length - 1)));
 
-			if (twoPages && (index == (rd.uiSpreads.length - 1))) {
-				pageNumber = pageNumber + 1;
-			}
-
-			const out = rd.ltr
-				? [pageNumber, (twoPages ? (pageNumber - 1) + " " : "") + pageNumber]
-				: [pageNumber, pageNumber + (twoPages ? " " + (pageNumber - 1) : "")];
+			const out = [
+				(lastSpread && rd.ltr) ? pageNumber + 1: pageNumber,
+				pageNumber + (twoPages ? " " + (pageNumber + (rd.ltr ? 1 : -1)) : "" )
+			];
 
 			return out;
 		}
@@ -2395,6 +2392,7 @@
 			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
+				console.log("updatepage: "+rd.currentPage);
 				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.then(data => console.log('Read progress updated:', data))
 					.catch(error => console.error('Error:', error));
