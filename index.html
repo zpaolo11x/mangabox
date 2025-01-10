@@ -142,6 +142,8 @@
 				<div id="thumbStrip">
 					<div id="thumbStripInner"></div>
 				</div>
+				<div id="thumbStripButton"><span id="thumbUpArrow" class="fa-solid fa-caret-up glyph-dark"></span></div>
+
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
 					<span id="leftLimit" class="bar-note"></span>
@@ -1851,6 +1853,10 @@
 
 		// Setup incognito button
 		function setIncognito(status) {
+
+			document.documentElement.style.setProperty('--mb-thumb-height-px', status ? '300px' : '150px');
+			centerThumb(true);
+			
 			readerIncognito.classList.remove('incognito');
 			incognitoMark.classList.remove('incognito');
 
@@ -2009,8 +2015,9 @@
 					src: 'transparent.png',
 					lazySrc: element.thumb,
 				});
-				imgThumb.style.height = rd.thumbHeight + 'px';
-				imgThumb.style.width = (rd.thumbHeight * element.AR) + 'px';
+				//imgThumb.style.height = "var(--mb-thumb-height-px)";
+				imgThumb.style.aspectRatio = element.AR;
+				//imgThumb.style.width = (rd.thumbHeight * element.AR) + 'px';
 				addLazyLoading(imgThumb);
 				rd.uiPagesThumbs.push(imgThumb);
 
@@ -2422,7 +2429,7 @@
 			requestAnimationFrame(animateScroll);
 		}
 
-		function centerThumb() {
+		function centerThumb(fast = false) {
 			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
 			// maybe each time the old and current spreads are updated I could call this function with old and current to
 			// remove one class and add the other...
@@ -2446,7 +2453,11 @@
 
 				const targetScrollLeft = -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
 
-				smoothScroll(thumbStrip, targetScrollLeft, 300);
+				if (!fast) {
+					smoothScroll(thumbStrip, targetScrollLeft, 300);
+				} else {
+					thumbStrip.scrollLeft = targetScrollLeft;
+				};
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
 

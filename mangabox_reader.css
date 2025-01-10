@@ -16,6 +16,7 @@
 		hsl(35, 15%, 100%)100%;
 
 	--mb-thumb-height: 150;
+	--mb-thumb-height-px: 150px;
 	/*
 		--colorSpread:
 		hsl(212, 30%, 52%)0%,
@@ -78,7 +79,7 @@ img.page {
 	position: absolute;
 	border: none;
 	color: transparent;
-	opacity:1;
+	opacity: 1;
 }
 
 /*
@@ -96,17 +97,19 @@ img.page:not([src]) {
 .page-layout img.page {
 	display: block;
 }
+
 /*
 img.page:not(.loading) {
 	opacity: 1;
 }
 */
 
-img.page.hidden{
-	opacity:0;
+img.page.hidden {
+	opacity: 0;
 }
-img.page:not(.hidden){
-	opacity:1;
+
+img.page:not(.hidden) {
+	opacity: 1;
 }
 
 @keyframes loader_spin_page {
@@ -118,8 +121,9 @@ img.page:not(.hidden){
 		transform: rotate(360deg);
 	}
 }
-.page-container{
-	position:relative;
+
+.page-container {
+	position: relative;
 }
 
 /*//TODO così si attiva anche per quelle loading in background? */
@@ -129,7 +133,7 @@ img.page:not(.hidden){
 	top: 50%;
 	left: 50%;
 	height: 30%;
-	aspect-ratio:1 / 1;
+	aspect-ratio: 1 / 1;
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
 	animation: loader_spin 1s linear infinite;
@@ -371,23 +375,35 @@ div.single-page {
 
 #thumbStrip {
 	position: fixed;
-	height: calc(var(--mb-thumb-height) + 10)px;
+	height: calc(var(--mb-thumb-height-px) + 50px);
 	left: 0px;
 	right: 0px;
 	display: flex;
-	justify-content: left;
+	justify-content: left; /*change to center*/
 	background-color: var(--mb-card-color);
 	bottom: 60px;
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 	overflow-x: auto;
+	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
+}
+
+#thumbStripButton {
+	height: 20px;
+	background-color: red;
+	position: fixed;
+	left: 50%;
+	transform: translateX(-50%); /* Center it horizontally */
+	bottom: calc(var(--mb-thumb-height-px) + 60px + 50px - 20px);
+	z-index:10;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
+
 }
 
 #thumbStripInner {
 	display: flex;
 	padding: 0;
 	margin: 0;
-	height: calc(var(--mb-thumb-height) + 10)px;
+	height: calc(var(--mb-thumb-height-px) + 50px);
 	margin-left: 50%;
 	margin-right: 50%;
 	/*flex-direction: row-reverse;*/
@@ -398,7 +414,8 @@ div.single-page {
 	display: flex;
 	padding: 0;
 	margin: 0;
-	height: var(--mb-thumb-height)px;
+	top: 20px;
+	height: var(--mb-thumb-height-px);
 	margin: 5px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -420,13 +437,15 @@ div.single-page {
 	/*position:absolute;*/
 	display: inline-block;
 	/*object-fit: contain;*/
-	transition:opacity 0.3s;
+	transition: opacity 0.3s;
 }
-.page-thumb.hidden{
-	opacity:0;
+
+.page-thumb.hidden {
+	opacity: 0;
 }
-.page-thumb:not(.hidden){
-	opacity:1;
+
+.page-thumb:not(.hidden) {
+	opacity: 1;
 }
 
 .spread-thumb:has(.page-thumb.loading)::before {
@@ -487,6 +506,11 @@ div.single-page {
 #controlPanel.hidden #thumbStrip,
 #readerContainer.hidden #thumbStrip {
 	bottom: -300px;
+}
+
+#controlPanel.hidden #thumbStripButton,
+#readerContainer.hidden #thumbStripButton {
+	bottom: calc(var(--mb-thumb-height-px) - 300px + 50px - 20px);
 }
 
 #bookName {
