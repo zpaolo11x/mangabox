@@ -1888,8 +1888,11 @@
 		})
 
 		thumbStripButton.addEventListener('click', () => {
-			const currentVal = getComputedStyle(document.documentElement).getPropertyValue('--mb-thumb-height-px')
-			document.documentElement.style.setProperty('--mb-thumb-height-px', (currentVal == '150px') ? '300px' : '150px');
+			rd.thumbHeight = rd.thumbHeight == 150 ? 300 : 150;
+			if (window.innerHeight - rd.thumbHeight - 60 - 60 - 30 < 0) {
+				rd.thumbHeight = window.innerHeight - 60 - 60 - 30;
+			}
+			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight+'px');
 			centerThumb(true);
 		});
 
