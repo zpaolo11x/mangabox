@@ -1881,6 +1881,7 @@
 		})
 
 		function updateProgressBar() {
+			console.log("updateProgressBar");
 			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
@@ -1889,6 +1890,7 @@
 				? `min(max(0px, calc(${progressPercent}% - 20px)), calc(100% - 40px))`
 				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
 
+			console.log("getB");
 			const newPage = getPage(rd.currentSpreadIndex);
 			readerPage.innerText = newPage;
 		}
@@ -2259,7 +2261,7 @@
 		}
 
 		function printStack(str_in) {
-			return;
+			return; //XXX Disable debug of preload stack
 			let out = str_in + ' *';
 			rd.picLoadStack.forEach(element => {
 				out = out + ' ' + element;
@@ -2347,6 +2349,7 @@
 		}
 
 		function getPage(index) {
+			console.log("getPage:"+index);
 			//TODO controllare perché viene triggerato due volte con left e right
 			let pageNumber =  (1 + Number((rd.ltr
 				? rd.uiSpreadsPages[index][0]
@@ -2359,6 +2362,7 @@
 		}
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString(index) {
+			console.log("getA");
 			const newPage = getPage(index);
 			const stringOut = `${basePath}#bookread
 			?library_id=${rd.libraryId}
