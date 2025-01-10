@@ -1204,7 +1204,7 @@
 		let currentbook = null;
 		let prevbook = null;
 		let nextbook = null;
-		
+
 		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
 			setTimeout(() => {
@@ -1891,8 +1891,7 @@
 				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
 
 			console.log("getB");
-			rd.currentPage = getPage(rd.currentSpreadIndex);
-			readerPage.innerText = rd.currentPage;
+			[rd.currentPage, readerPage.innerText] = getPage(rd.currentSpreadIndex);
 		}
 
 		// This function triggers multiple preloads starting from the current spread
@@ -1934,7 +1933,7 @@
 
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
-			
+
 			centerThumb();
 			updateProgressBar();
 		}
@@ -2349,16 +2348,24 @@
 		}
 
 		function getPage(index) {
-			console.log("getPage:"+index);
+			console.log("getPage:" + index);
 			//TODO controllare perché viene triggerato due volte con left e right
-			let pageNumber =  (1 + Number((rd.ltr
+			let pageNumber = (1 + Number((rd.ltr
 				? rd.uiSpreadsPages[index][0]
 				: rd.uiSpreadsPages[index][1] ?? rd.uiSpreadsPages[index][0]))
 			);
-			if (rd.uiSpreads[index].classList.contains("two-pages") && (index == (rd.uiSpreads.length - 1))) {
+
+			const twoPages = rd.uiSpreads[index].classList.contains("two-pages");
+
+			if (twoPages && (index == (rd.uiSpreads.length - 1))) {
 				pageNumber = pageNumber + 1;
 			}
-			return pageNumber;
+
+			const out = rd.ltr
+				? [pageNumber, (twoPages ? (pageNumber - 1) + "|" : "") + pageNumber]
+				: [pageNumber, pageNumber + (twoPages ? "|" + (pageNumber - 1) : "")];
+
+			return out;
 		}
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
@@ -2692,7 +2699,7 @@
 
 		//MB Reader touch response fucntions
 		let isSingleTouch = true; // Track if it's a single-touch gesture
-		
+
 		let sweepX = 0;
 		let sweepY = 0;
 
