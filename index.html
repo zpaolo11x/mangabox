@@ -1890,7 +1890,6 @@
 				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
 
 			const newPage = getPage(rd.currentSpreadIndex);
-			//TODO IF the latest spread is a two page one, and we are targeting the penutlimate page, return the last one
 			readerPage.innerText = newPage;
 		}
 
@@ -2260,6 +2259,7 @@
 		}
 
 		function printStack(str_in) {
+			return;
 			let out = str_in + ' *';
 			rd.picLoadStack.forEach(element => {
 				out = out + ' ' + element;
@@ -2347,10 +2347,15 @@
 		}
 
 		function getPage(index) {
-			return (1 + Number((rd.ltr
+			//TODO controllare perché viene triggerato due volte con left e right
+			let pageNumber =  (1 + Number((rd.ltr
 				? rd.uiSpreadsPages[index][0]
 				: rd.uiSpreadsPages[index][1] ?? rd.uiSpreadsPages[index][0]))
 			);
+			if (rd.uiSpreads[index].classList.contains("two-pages") && (index == (rd.uiSpreads.length - 1))) {
+				pageNumber = pageNumber + 1;
+			}
+			return pageNumber;
 		}
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString(index) {
