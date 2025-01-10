@@ -1891,8 +1891,8 @@
 				: `min(max(0px, calc(${100 - progressPercent}% - 20px)), calc(100% - 40px))`
 
 			console.log("getB");
-			const newPage = getPage(rd.currentSpreadIndex);
-			readerPage.innerText = newPage;
+			rd.currentPage = getPage(rd.currentSpreadIndex);
+			readerPage.innerText = rd.currentPage;
 		}
 
 		// This function triggers multiple preloads starting from the current spread
@@ -2361,18 +2361,17 @@
 			return pageNumber;
 		}
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
-		function jumpString(index) {
+		function jumpString() {
 			console.log("getA");
-			const newPage = getPage(index);
 			const stringOut = `${basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
 			&book_id=${rd.bookId}
 			&dir=${rd.ltr ? 'ltr' : 'rtl'}
-			&pag=${newPage}`;
+			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
-				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: newPage }), false)
+				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.then(data => console.log('Read progress updated:', data))
 					.catch(error => console.error('Error:', error));
 			}
@@ -2488,11 +2487,9 @@
 				}, rd.loadDelay);
 			};
 
-
-			history.replaceState(null, '', jumpString(newSpreadTarget));
-
 			centerThumb();
 			updateProgressBar();
+			history.replaceState(null, '', jumpString());
 		}
 
 		// Reader UI Control Buttons
