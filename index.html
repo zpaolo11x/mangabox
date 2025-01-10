@@ -2362,8 +2362,8 @@
 			}
 
 			const out = rd.ltr
-				? [pageNumber, (twoPages ? (pageNumber - 1) + "|" : "") + pageNumber]
-				: [pageNumber, pageNumber + (twoPages ? "|" + (pageNumber - 1) : "")];
+				? [pageNumber, (twoPages ? (pageNumber - 1) + " " : "") + pageNumber]
+				: [pageNumber, pageNumber + (twoPages ? " " + (pageNumber - 1) : "")];
 
 			return out;
 		}
