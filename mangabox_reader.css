@@ -398,6 +398,8 @@ div.single-page {
 	z-index:10;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 	text-align: center;
+	cursor: pointer;
+
 }
 
 .thumb-arrow{
