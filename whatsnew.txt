@@ -1,1 +1,2 @@
 - Updated application name
+- Skip interstitials for servers behind zrok
