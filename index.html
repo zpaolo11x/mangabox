@@ -687,27 +687,27 @@
 
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
-  try {
-    const response = await fetch(`${mbBaseUrl}${API_url}`, {
-      method: method,
-      headers: {
-        'Authorization': mbAuthHeader,
-        'Content-Type': 'application/json',
-        'skip_zrok_interstitial': '1' // Add header to skip interstitial
-      },
-      body: body
-    });
-    
-    if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-    
-    if (returnval) {
-      const output = await response.json();
-      return output;
-    }
-  } catch (error) {
-    console.error('Fetch libraries error:', error);
-  }
-}
+			try {
+				const response = await fetch(`${mbBaseUrl}${API_url}`, {
+					method: method,
+					headers: {
+						'Authorization': mbAuthHeader,
+						'Content-Type': 'application/json',
+						'skip_zrok_interstitial': '1' // Add header to skip interstitial
+					},
+					body: body
+				});
+
+				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+
+				if (returnval) {
+					const output = await response.json();
+					return output;
+				}
+			} catch (error) {
+				console.error('Fetch libraries error:', error);
+			}
+		}
 
 
 		//MB Media Cache 
@@ -715,45 +715,47 @@
 		const CACHE_LIMIT = 250; // Maximum number of cached items
 
 		async function fetchMedia(url) {
-			if (mediaCache.has(url)) {
-				// Move the accessed item to the end to mark it as recently used
-				const value = mediaCache.get(url);
-				mediaCache.delete(url);
-				mediaCache.set(url, value);
-				return value;
-			}
+  if (mediaCache.has(url)) {
+    // Move the accessed item to the end to mark it as recently used
+    const value = mediaCache.get(url);
+    mediaCache.delete(url);
+    mediaCache.set(url, value);
+    return value;
+  }
 
-			try {
-				const response = await fetch(url, {
-					method: 'GET',
-					headers: {
-						'Authorization': mbAuthHeader,
-					},
-				});
+  try {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': mbAuthHeader,
+        'skip_zrok_interstitial': '1' // Add header to skip interstitial
+      }
+    });
 
-				if (response.ok) {
-					const blob = await response.blob();
-					const objectURL = URL.createObjectURL(blob);
+    if (response.ok) {
+      const blob = await response.blob();
+      const objectURL = URL.createObjectURL(blob);
 
-					// Add to cache and enforce size limit
-					mediaCache.set(url, objectURL);
-					if (mediaCache.size > CACHE_LIMIT) {
-						// Remove the oldest entry
-						const oldestKey = mediaCache.keys().next().value;
-						URL.revokeObjectURL(mediaCache.get(oldestKey)); // Revoke object URL
-						mediaCache.delete(oldestKey);
-					}
+      // Add to cache and enforce size limit
+      mediaCache.set(url, objectURL);
+      if (mediaCache.size > CACHE_LIMIT) {
+        // Remove the oldest entry
+        const oldestKey = mediaCache.keys().next().value;
+        URL.revokeObjectURL(mediaCache.get(oldestKey)); // Revoke object URL
+        mediaCache.delete(oldestKey);
+      }
 
-					return objectURL;
-				} else {
-					console.error(`Failed to load media from ${url}`, response.status);
-					return 'fallback-image.jpg';
-				}
-			} catch (error) {
-				console.error(`Error fetching media: ${error.message}`);
-				return 'fallback-image.jpg';
-			}
-		}
+      return objectURL;
+    } else {
+      console.error(`Failed to load media from ${url}`, response.status);
+      return 'fallback-image.jpg';
+    }
+  } catch (error) {
+    console.error(`Error fetching media: ${error.message}`);
+    return 'fallback-image.jpg';
+  }
+}
+
 
 		// Function to clear the cache entirely
 		function clearMediaCache() {
@@ -1896,7 +1898,7 @@
 			if (window.innerHeight - rd.thumbHeight - 60 - 60 - 30 < 0) {
 				rd.thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight+'px');
+			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight + 'px');
 			centerThumb(true);
 		});
 
@@ -2379,8 +2381,8 @@
 			const lastSpread = (twoPages && (index == (rd.uiSpreads.length - 1)));
 
 			const out = [
-				(lastSpread && rd.ltr) ? pageNumber + 1: pageNumber,
-				pageNumber + (twoPages ? " " + (pageNumber + (rd.ltr ? 1 : -1)) : "" )
+				(lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber,
+				pageNumber + (twoPages ? " " + (pageNumber + (rd.ltr ? 1 : -1)) : "")
 			];
 
 			return out;
@@ -2396,7 +2398,7 @@
 			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
-				console.log("updatepage: "+rd.currentPage);
+				console.log("updatepage: " + rd.currentPage);
 				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.then(data => console.log('Read progress updated:', data))
 					.catch(error => console.error('Error:', error));
