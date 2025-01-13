@@ -687,24 +687,28 @@
 
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
-			try {
-				const response = await fetch(`${mbBaseUrl}${API_url}`, {
-					method: method,
-					headers: {
-						'Authorization': mbAuthHeader,
-						'Content-Type': 'application/json'
-					},
-					body: body
-				});
-				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-				if (returnval) {
-					const output = await response.json();
-					return (output);
-				}
-			} catch (error) {
-				console.error('Fetch libraries error:', error);
-			}
-		}
+  try {
+    const response = await fetch(`${mbBaseUrl}${API_url}`, {
+      method: method,
+      headers: {
+        'Authorization': mbAuthHeader,
+        'Content-Type': 'application/json',
+        'skip_zrok_interstitial': '1' // Add header to skip interstitial
+      },
+      body: body
+    });
+    
+    if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+    
+    if (returnval) {
+      const output = await response.json();
+      return output;
+    }
+  } catch (error) {
+    console.error('Fetch libraries error:', error);
+  }
+}
+
 
 		//MB Media Cache 
 		const mediaCache = new Map();
