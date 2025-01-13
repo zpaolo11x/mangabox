@@ -1,4 +1,1 @@
-- Fixed rotation and menu sizing
-- Fixed last double page not marking volume as read
-- Redesigned filter buttons
-- Improved dashboard code
+- 
