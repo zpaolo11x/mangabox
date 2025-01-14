@@ -1903,7 +1903,6 @@
 		});
 
 		function updateProgressBar() {
-			console.log("updateProgressBar");
 			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
@@ -2283,7 +2282,7 @@
 		}
 
 		function printStack(str_in) {
-			return; //XXX Disable debug of preload stack
+			//return; //XXX Disable debug of preload stack
 			let out = str_in + ' *';
 			rd.picLoadStack.forEach(element => {
 				out = out + ' ' + element;
@@ -2371,7 +2370,6 @@
 		}
 
 		function getPage(index) {
-			console.log("getPage:" + index);
 			let pageNumber = (1 + Number((rd.ltr
 				? rd.uiSpreadsPages[index][0]
 				: rd.uiSpreadsPages[index][1] ?? rd.uiSpreadsPages[index][0]))
@@ -2389,7 +2387,6 @@
 		}
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-			console.log("getA");
 			const stringOut = `${basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
@@ -2398,7 +2395,6 @@
 			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
-				console.log("updatepage: " + rd.currentPage);
 				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.then(data => console.log('Read progress updated:', data))
 					.catch(error => console.error('Error:', error));
