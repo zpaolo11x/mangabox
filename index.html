@@ -1922,16 +1922,20 @@
 				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack))) {
 					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
+							console.log("overquota");
 							return;
 						}
+						console.log("ps B");
 						populateSpread(startSpreadIndex + i, true);
 					});
 				}
 				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack))) {
 					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
+							console.log("overquota");
 							return;
 						}
+						console.log("ps C");
 						populateSpread(startSpreadIndex - i, true);
 					});
 				}
@@ -1951,7 +1955,7 @@
 			leftLimit.innerText = rd.ltr ? 1 : rd.uiPages.length;
 			rightLimit.innerText = rd.ltr ? rd.uiPages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
-
+console.log("ps A");
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 
@@ -2296,7 +2300,7 @@
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
-
+console.log(rd.picLoadStack);
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
@@ -2324,6 +2328,7 @@
 									rd.picLoadStack.splice(index, 1); // Remove from stack
 								};
 								if (!isPreload) {
+									console.log("preload 1");
 									preloadPages(spreadIndex, rd.preloadCount)
 								}
 							});
@@ -2341,10 +2346,13 @@
 						if (index !== -1) {
 							rd.picLoadStack.splice(index, 1);
 						}
-						// Force preload when landing on a cached image
+						//XXX REMOVED Force preload when landing on a cached image
+						
 						if (!isPreload) {
+							console.log("preload 2");
 							preloadPages(spreadIndex, rd.preloadCount)
 						}
+						
 					}
 				}
 			});
@@ -2490,17 +2498,23 @@
 			purgeLoading();
 
 			if (rd.jumpTimeout === null) {
+				console.log("timeout null");
 				rd.oldSpreadIndex = localOldSpreadIndex;
 				rd.currentSpreadIndex = localNewSpreadIndex;
 
 				rd.jumpTimeout = setTimeout(() => {
 					if (isSectionHidden(readerContainer)) return;
 					spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+					console.log("type1-a");
 					populateSpread(localNewSpreadIndex);
+					console.log("type1-b");
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+					clearTimeout(rd.jumpTimeout);//XXX Added but needed?
 					rd.jumpTimeout = null;
 				}, rd.loadDelay);
+
 			} else {
+				console.log("timeout clear");
 				clearTimeout(rd.jumpTimeout);
 				rd.jumpTimeout = null;
 
@@ -2509,8 +2523,10 @@
 				rd.jumpTimeout = setTimeout(() => {
 					if (isSectionHidden(readerContainer)) return;
 					spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
+					console.log("type2");
 					populateSpread(localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+					clearTimeout(rd.jumpTimeout);//XXX Added but needed?
 					rd.jumpTimeout = null;
 				}, rd.loadDelay);
 			};
