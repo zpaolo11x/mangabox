@@ -2509,7 +2509,6 @@ console.log(rd.picLoadStack);
 					populateSpread(localNewSpreadIndex);
 					console.log("type1-b");
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-					clearTimeout(rd.jumpTimeout);//XXX Added but needed?
 					rd.jumpTimeout = null;
 				}, rd.loadDelay);
 
@@ -2526,7 +2525,6 @@ console.log(rd.picLoadStack);
 					console.log("type2");
 					populateSpread(localNewSpreadIndex);
 					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-					clearTimeout(rd.jumpTimeout);//XXX Added but needed?
 					rd.jumpTimeout = null;
 				}, rd.loadDelay);
 			};
