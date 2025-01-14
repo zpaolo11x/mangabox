@@ -2497,6 +2497,16 @@ console.log(rd.picLoadStack);
 
 			purgeLoading();
 
+			rd.oldSpreadIndex = localOldSpreadIndex;
+			rd.currentSpreadIndex = localNewSpreadIndex;
+
+			if (isSectionHidden(readerContainer)) return;
+			
+			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+			populateSpread(localNewSpreadIndex);
+			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+		
+/*
 			if (rd.jumpTimeout === null) {
 				console.log("timeout null");
 				rd.oldSpreadIndex = localOldSpreadIndex;
@@ -2528,7 +2538,7 @@ console.log(rd.picLoadStack);
 					rd.jumpTimeout = null;
 				}, rd.loadDelay);
 			};
-
+*/
 			centerThumb();
 			updateProgressBar();
 			history.replaceState(null, '', jumpString());
