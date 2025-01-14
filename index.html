@@ -1781,6 +1781,10 @@
 		// Function that setups the reader for a specific book, this is not run directly
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
+			Object.entries(dashboardElements).forEach(([name, item]) => {
+				console.log(item);
+				item.homeStrip.innerHTML = "";
+			});		
 			clearReader(); //TODO forse eccessivo?
 			clearAllTimeouts();
 			rd.picLoadStack = [];
