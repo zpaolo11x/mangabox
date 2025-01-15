@@ -775,7 +775,7 @@
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				//item.innerHTML = '';
 				const bookData = await callAPI(`/api/v1/books/${bookId}`);
-				buildBookItem(item, bookData, format);
+				buildBookItem(item, bookData, format, null);
 			}
 		}
 
