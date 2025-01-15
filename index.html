@@ -320,6 +320,8 @@
 
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
+				binSave('');
+
 				if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 			}
 		});
@@ -840,6 +842,7 @@
 		let currentlyScaled = null;
 
 		function binSave(binValue) {
+			console.log("                                BINSAVE:"+binValue);
 			mbDashboardBin = binValue;
 			localStorage.setItem('mbDashboardBin', binValue);
 		}
@@ -994,6 +997,7 @@
 			});
 			timeLabel.addEventListener('click', async (event) => {
 				event.stopPropagation();
+				if (target.binName) binSave(target.binName);
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
 			noPointerDown(timeLabel);
@@ -1024,10 +1028,12 @@
 				artistRow.appendChild(artLabel);
 				storyLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
+					if (target.binName) binSave(target.binName);
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				artLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
+					if (target.binName) binSave(target.binName);
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
 				noPointerDown(artLabel);
@@ -1041,6 +1047,7 @@
 				artistRow.appendChild(artistLabel);
 				artistLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
+					if (target.binName) binSave(target.binName);
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 					//getFilteredSeries(altTitle.story, serie.id);
 				});
@@ -1331,6 +1338,7 @@
 				mainRow.textContent = book.seriesTitle;
 				mainRow.addEventListener('click', (event) => {
 					event.stopPropagation();
+					if (target.binName) binSave(target.binName);
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
 				noPointerDown(mainRow);
@@ -2721,7 +2729,6 @@
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
 					break;
 				case 'search':
-					binSave('');
 					setIncognito(false);
 					searchInput.value = params.get('search_string');
 					await performSearch(params.get('search_string'));
