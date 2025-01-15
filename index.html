@@ -768,12 +768,10 @@
 		async function setReadStatus(seriesId, bookId, read, item, format = null) {
 			if (bookId == null) {
 				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
-				//item.innerHTML = '';
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData);
 			} else {
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
-				//item.innerHTML = '';
 				const bookData = await callAPI(`/api/v1/books/${bookId}`);
 				buildBookItem(item, bookData, format, null);
 			}
@@ -1067,13 +1065,10 @@
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target, focus = null) {
 
-			//XXX Is this needed or innerHTML="" is enough?
-			target.innerhtml = '';
-			/*
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
-			*/
+			
 			series.forEach(async (serie) => {
 
 				const seriesContainer = document.createElement('div');
@@ -1484,13 +1479,11 @@
 			*/
 			// focus is the book id to focus on
 
-			//XXX Is this needed or innerHTML="" is enough?
-			target.innerhtml = '';
-			/*
+			
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
-			*/
+			
 			
 			if (books.length === 0) {
 				const noBooksMsg = document.createElement('p');
