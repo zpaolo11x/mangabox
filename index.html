@@ -1059,9 +1059,8 @@
 				booksLabel
 			);
 
-			addTouchScaler(seriesItem, () => {
-				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
-			});
+			addTouchScaler(seriesItem, () => navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`))
+
 			item.appendChild(seriesItem);
 		}
 
@@ -1463,7 +1462,7 @@
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
-				console.log(target.bin);
+
 				navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
@@ -1677,7 +1676,6 @@
 			});
 			item.homeStrip = addItem('div', {
 				className: 'home-strip',
-				bin: name,
 			})
 			item.gridButton.addEventListener('click', async () => {
 				navigateTo('#dashboard?all=' + name + '&page=0')
@@ -1777,7 +1775,6 @@
 		readerPageFormat.className = rd.pageModes[mbPageMode].icon;
 		readerPageFormat.title = rd.pageModes[mbPageMode].title;
 
-		//TODO Use this function also in buildBookItem
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers readBook function
 		function navigateToReadBook(book, readingDirection) {
 			setIncognito(false);
@@ -2683,13 +2680,10 @@ console.log(rd.picLoadStack);
 				case 'dashboard':
 					searchInput.value = '';
 					setIncognito(false);
-					console.log(params);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
-					} else if (params.get('all')){
+					} else {
 						dashboardAll(params.get('all'), params.get('page'));
-					} else if (params.get('bin')){
-						selectHome(params.get('bin'))
 					}
 					break;
 				case 'library':
