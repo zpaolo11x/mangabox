@@ -1172,7 +1172,6 @@
 				listItem.appendChild(libraryName);
 
 				listItem.addEventListener('click', () => {
-					binSave('');
 					currentPath = parseHashAndParams();
 					if ((currentPath.path == 'series') && (currentPath.params.get('library_id') == library.id)) {
 						navigateTo(`#library?library_id=${library.id}&series_id=${currentPath.params.get('series_id')}`);
@@ -1694,6 +1693,7 @@
 				binName: name,
 			})
 			item.gridButton.addEventListener('click', async () => {
+				binSave(name);
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
 			item.scrollInput.addEventListener('input', () => {
@@ -2710,6 +2710,7 @@
 					}
 					break;
 				case 'library':
+					binSave('');
 					searchInput.value = '';
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
@@ -2720,6 +2721,7 @@
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
 					break;
 				case 'search':
+					binSave('');
 					setIncognito(false);
 					searchInput.value = params.get('search_string');
 					await performSearch(params.get('search_string'));
