@@ -1067,6 +1067,7 @@
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target, focus = null) {
 
+			//XXX Is this needed or innerHTML="" is enough?
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
@@ -1480,6 +1481,8 @@
 				- timeline: will show latest read date
 			*/
 			// focus is the book id to focus on
+
+			//XXX Is this needed or innerHTML="" is enough?
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
