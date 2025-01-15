@@ -1068,10 +1068,12 @@
 		async function displaySeries(series, target, focus = null) {
 
 			//XXX Is this needed or innerHTML="" is enough?
+			target.innerhtml = '';
+			/*
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
-
+			*/
 			series.forEach(async (serie) => {
 
 				const seriesContainer = document.createElement('div');
@@ -1483,10 +1485,13 @@
 			// focus is the book id to focus on
 
 			//XXX Is this needed or innerHTML="" is enough?
+			target.innerhtml = '';
+			/*
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
-
+			*/
+			
 			if (books.length === 0) {
 				const noBooksMsg = document.createElement('p');
 				noBooksMsg.textContent = 'No books available';
