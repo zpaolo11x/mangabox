@@ -2705,7 +2705,7 @@
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
 						if (dashboardBin) {
-							const y = dashboardElements[dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop;
+							const y = dashboardElements[dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop - 10;
 
 							mainContainer.scrollTo({ top: y });
 							binSave('');
