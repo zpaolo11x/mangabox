@@ -318,8 +318,7 @@
 
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
-				binSave('');
-
+				dashboardBin = '';
 				if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 			}
 		});
@@ -839,11 +838,6 @@
 		//MB Touch And Hover Scaler 
 		let currentlyScaled = null;
 
-		function binSave(binValue) {
-			console.log("                                BINSAVE:"+binValue);
-			dashboardBin = binValue;
-		}
-
 		function noPointerDown(item) {
 			item.addEventListener('pointerup', (event) => {
 				event.stopPropagation();
@@ -994,7 +988,7 @@
 			});
 			timeLabel.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				if (target.binName) binSave(target.binName);
+				if (target.binName) dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
 			noPointerDown(timeLabel);
@@ -1025,12 +1019,12 @@
 				artistRow.appendChild(artLabel);
 				storyLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) binSave(target.binName);
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				artLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) binSave(target.binName);
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
 				noPointerDown(artLabel);
@@ -1044,7 +1038,7 @@
 				artistRow.appendChild(artistLabel);
 				artistLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) binSave(target.binName);
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 					//getFilteredSeries(altTitle.story, serie.id);
 				});
@@ -1079,7 +1073,7 @@
 			);
 
 			addTouchScaler(seriesItem, () => {
-				if (target.binName) binSave(target.binName);
+				if (target.binName) dashboardBin = target.binName;
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
@@ -1335,7 +1329,7 @@
 				mainRow.textContent = book.seriesTitle;
 				mainRow.addEventListener('click', (event) => {
 					event.stopPropagation();
-					if (target.binName) binSave(target.binName);
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
 				noPointerDown(mainRow);
@@ -1481,7 +1475,7 @@
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
-				if (target.binName) binSave(target.binName);
+				if (target.binName) dashboardBin = target.binName;
 				navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
@@ -1698,7 +1692,7 @@
 				binName: name,
 			})
 			item.gridButton.addEventListener('click', async () => {
-				binSave(name);
+				dashboardBin = name;
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
 			item.scrollInput.addEventListener('input', () => {
@@ -2708,14 +2702,14 @@
 							const y = dashboardElements[dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop - 10;
 
 							mainContainer.scrollTo({ top: y });
-							binSave('');
+							dashboardBin = '';
 						}
 					} else {
 						dashboardAll(params.get('all'), params.get('page'));
 					}
 					break;
 				case 'library':
-					binSave('');
+					dashboardBin = '';;
 					searchInput.value = '';
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
