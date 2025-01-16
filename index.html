@@ -208,15 +208,6 @@
 		// Reader page mode
 		let mbPageMode = Number(localStorage.getItem('mbPageMode')) ?? 2;
 
-		// Dashboard bin selection
-		let mbDashboardBin = localStorage.getItem('mbDashboardBin') ?? "";
-		/*
-			When an item from a bin is opened, the mbDashboardBin is set, so when the dashboard is reloaded
-			it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
-			In this way subsequent clicks on dashboard button will load the top position.
-			This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
-		*/
-
 		const basePath = ''; //'/mangabox/';
 
 		function getScreenAR() {
@@ -226,6 +217,13 @@
 		let screenAR = getScreenAR();
 		let readerMaxRatio = 1;
 		let readerHorizontal = true;
+		let dashboardBin = "";
+		/*
+			When an item from a bin is opened, the dashboardBin is set, so when the dashboard is reloaded
+			it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
+			In this way subsequent clicks on dashboard button will load the top position.
+			This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
+		*/
 
 		//MB Theme Management 
 
@@ -843,8 +841,7 @@
 
 		function binSave(binValue) {
 			console.log("                                BINSAVE:"+binValue);
-			mbDashboardBin = binValue;
-			localStorage.setItem('mbDashboardBin', binValue);
+			dashboardBin = binValue;
 		}
 
 		function noPointerDown(item) {
@@ -1557,7 +1554,7 @@
 		// Function to trigger the home page layout
 		async function selectHome() {
 
-			console.log(mbDashboardBin);
+			console.log(dashboardBin);
 
 			libraryHighlight('homeButton');
 
@@ -2707,8 +2704,8 @@
 					setIncognito(false);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
-						if (mbDashboardBin) {
-							const y = dashboardElements[mbDashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop;
+						if (dashboardBin) {
+							const y = dashboardElements[dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop;
 
 							mainContainer.scrollTo({ top: y });
 							binSave('');
