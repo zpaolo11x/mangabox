@@ -1,3 +1,8 @@
+---
+layout: default
+title: Welcome to MangaBox
+---
+
 <picture><img alt="MangaBox Logo" src="mangabox-logo-new-with-name.svg" width=450px></picture>
 
 MangaBox is a simple Electron client for Komga.
