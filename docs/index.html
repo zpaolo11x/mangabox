@@ -9,6 +9,12 @@
 	<meta name="keywords" content="MangaBox, Komga, Electron, Manga Reader, Library Management">
 	<title>MangaBox</title>
 	<style>
+		:root {
+			--font-size: 0.95em;
+			--text-color: #555;
+			--padding-size: 30px;
+		}
+
 		body {
 			font-family: Arial, sans-serif;
 			line-height: 1.6;
@@ -21,7 +27,7 @@
 		.container {
 			max-width: 800px;
 			margin: 30px auto;
-			padding: 20px;
+			padding: var(--padding-size);
 			background-color: #fff;
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 			border-radius: 10px;
@@ -36,8 +42,8 @@
 		.grid {
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
-			gap: 40px;
-			margin-top: 40px;
+			gap: var(--padding-size);
+			margin-top: var(--padding-size);
 		}
 
 		.grid-item {
@@ -56,8 +62,8 @@
 		.grid-item p {
 			text-align: left;
 			margin-top: 10px;
-			font-size: 0.95em;
-			color: #555;
+			margin-bottom: 10px;
+			color: var(--text-color);
 			line-height: 1.4;
 		}
 
