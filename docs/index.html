@@ -48,7 +48,6 @@
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
         }
 
         .grid-item p {
@@ -56,30 +55,17 @@
             font-size: 0.95em;
         }
 
-        /* Lightbox styling */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        a img {
+            transition: transform 0.2s ease-in-out;
         }
 
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        a img:hover {
+            transform: scale(1.05);
         }
-
-        .lightbox.active {
-            display: flex;
-        }
+		  a {
+			text-decoration: none;
+			color:#880020;
+		  }
 
         footer {
             margin-top: 30px;
@@ -97,52 +83,37 @@
 
         <div class="grid">
             <div class="grid-item">
-                <img alt="MangaBox main UI" src="MangaBox_001.png" width="350" class="clickable">
+                <a href="MangaBox_001.png">
+                    <img alt="MangaBox main UI" src="MangaBox_001.png" width="350">
+                </a>
                 <p>Clean design tailored for few libraries, it doesn't feature library management but only reading.</p>
             </div>
 
             <div class="grid-item">
-                <img alt="MangaBox library view" src="MangaBox_002.png" width="350" class="clickable">
+                <a href="MangaBox_002.png">
+                    <img alt="MangaBox library view" src="MangaBox_002.png" width="350">
+                </a>
                 <p>Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".</p>
             </div>
 
             <div class="grid-item">
-                <img alt="MangaBox series view" src="MangaBox_004.png" width="350" class="clickable">
+                <a href="MangaBox_004.png">
+                    <img alt="MangaBox series view" src="MangaBox_004.png" width="350">
+                </a>
                 <p>There's no book view (yet) but a series view with all volumes.</p>
             </div>
 
             <div class="grid-item">
-                <img alt="MangaBox reading mode" src="MangaBox_003.png" width="350" class="clickable">
+                <a href="MangaBox_003.png">
+                    <img alt="MangaBox reading mode" src="MangaBox_003.png" width="350">
+                </a>
                 <p>Reading mode supports two pages and single page, with "paper-like" effects.</p>
             </div>
-        </div>
-
-        <!-- Lightbox -->
-        <div class="lightbox" id="lightbox">
-            <img id="lightbox-img" alt="">
         </div>
 
         <footer>
             &copy; 2025 MangaBox by <a href="https://github.com/zpaolo11x">zpaolo11x</a>. All rights reserved.
         </footer>
-
-        <script>
-            // JavaScript for lightbox functionality
-            const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            const clickableImages = document.querySelectorAll('.clickable');
-
-            clickableImages.forEach(img => {
-                img.addEventListener('click', () => {
-                    lightboxImg.src = img.src;
-                    lightbox.classList.add('active');
-                });
-            });
-
-            lightbox.addEventListener('click', () => {
-                lightbox.classList.remove('active');
-            });
-        </script>
     </div>
 </body>
 </html>
