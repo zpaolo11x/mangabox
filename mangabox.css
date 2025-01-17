@@ -377,7 +377,7 @@ padding-top: 0;
 	height: 100%;
 	object-fit: cover;
 	object-position: center;
-	transition: opacity 0.3s ease;
+	transition: opacity 0.4s ease-in-out;
 	/*was 0.5 maybe?*/
 
 	/* Adjust the duration as needed */
@@ -407,7 +407,6 @@ padding-top: 0;
 	border-top-color: var(--mb-accent);
 	animation: loader_spin 1s linear infinite;
 	transform: translate(-50%, -50%);
-
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
 	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
