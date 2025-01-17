@@ -348,7 +348,8 @@
 					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
 					start.push(Number(dateArray[0]));
 					stop.push(Number(dateArray[1] ?? dateArray[0]));
-					filterArray.push(!((start[i] >= Number(searchYear[1])) || (stop[i] <= Number(searchYear[0]))));
+
+					filterArray.push(!((start[i] > Number(searchYear[1])) || (stop[i] < Number(searchYear[0]))));
 				}
 
 				const filteredSeries = dataArray.filter((item, index) =>
