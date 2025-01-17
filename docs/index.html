@@ -32,21 +32,27 @@
             text-align: center;
         }
 
-        .content {
-            text-align: left;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .content img {
-            display: block;
-            margin: 20px auto;
-            max-width: 85%;
+        .grid-item {
+            text-align: center;
+        }
+
+        .grid-item img {
+            max-width: 100%;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .content p {
-            margin: 20px 0;
+        .grid-item p {
+            margin-top: 10px;
+            font-size: 0.95em;
         }
 
         a img {
@@ -69,31 +75,36 @@
     <div class="container">
         <img class="title-image" alt="MangaBox Logo" src="mangabox-logo-new-with-name.svg" width="450">
 
-        <div class="content">
-            <p>MangaBox is a simple Electron client for Komga.</p>
+        <p>MangaBox is a simple Electron client for Komga.</p>
 
-            <a href="MangaBox_001.png">
-                <img alt="MangaBox main UI" src="MangaBox_001.png" width="400">
-            </a>
-            <p>Clean design tailored for few libraries, it doesn't feature library management but only reading.</p>
+        <div class="grid">
+            <div class="grid-item">
+                <a href="MangaBox_001.png">
+                    <img alt="MangaBox main UI" src="MangaBox_001.png" width="350">
+                </a>
+                <p>Clean design tailored for few libraries, it doesn't feature library management but only reading.</p>
+            </div>
 
-            <p>It has a rich library view with metadata taken from "alternate title" fields like "Story", "Art" and "Time".</p>
+            <div class="grid-item">
+                <a href="MangaBox_002.png">
+                    <img alt="MangaBox library view" src="MangaBox_002.png" width="350">
+                </a>
+                <p>Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".</p>
+            </div>
 
-            <a href="MangaBox_002.png">
-                <img alt="MangaBox library view" src="MangaBox_002.png" width="400">
-            </a>
+            <div class="grid-item">
+                <a href="MangaBox_004.png">
+                    <img alt="MangaBox series view" src="MangaBox_004.png" width="350">
+                </a>
+                <p>There's no book view (yet) but a series view with all volumes.</p>
+            </div>
 
-            <p>There's no book view (yet) but a series view with all volumes.</p>
-
-            <a href="MangaBox_004.png">
-                <img alt="MangaBox series view" src="MangaBox_004.png" width="400">
-            </a>
-
-            <p>Reading mode supports two pages and single page, with "paper-like" effects.</p>
-
-            <a href="MangaBox_003.png">
-                <img alt="MangaBox reading mode" src="MangaBox_003.png" width="400">
-            </a>
+            <div class="grid-item">
+                <a href="MangaBox_003.png">
+                    <img alt="MangaBox reading mode" src="MangaBox_003.png" width="350">
+                </a>
+                <p>Reading mode supports two pages and single page, with "paper-like" effects.</p>
+            </div>
         </div>
 
         <footer>
