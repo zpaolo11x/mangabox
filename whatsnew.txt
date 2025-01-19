@@ -1,4 +1,5 @@
 - Updated application name
+- Improved load animation fade
 - Skip interstitials for servers behind zrok
 - Faster page flipping
 - Fix y: year search
