@@ -11,8 +11,14 @@
 	<style>
 		:root {
 			--font-size: 0.95em;
-			--text-color: #555;
 			--padding-size: 30px;
+
+			--background-color: #f9f9f9;
+			--container-color: #fff;
+
+			--text-color-main: #333;
+			--text-color-caption: #555;
+			--text-color-footer: #666;
 		}
 
 		body {
@@ -20,15 +26,15 @@
 			line-height: 1.6;
 			margin: 0;
 			padding: 0;
-			background-color: #f9f9f9;
-			color: #333;
+			background-color: var(--background-color);
+			color: var(--text-color-main);
 		}
 
 		.container {
 			max-width: 800px;
 			margin: 30px auto;
 			padding: var(--padding-size);
-			background-color: #fff;
+			background-color: var(--container-color);
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 			border-radius: 10px;
 		}
@@ -63,7 +69,7 @@
 			text-align: left;
 			margin-top: 10px;
 			margin-bottom: 10px;
-			color: var(--text-color);
+			color: var(--text-color--caption);
 			line-height: 1.4;
 		}
 
@@ -97,7 +103,7 @@
 			margin-top: 30px;
 			text-align: center;
 			font-size: 0.9em;
-			color: #666;
+			color: var(--text-color-footer);
 		}
 
 		/* Add this to the existing styles */
