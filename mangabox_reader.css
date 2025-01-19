@@ -492,6 +492,15 @@ div.single-page {
 	animation: loader_spin 1s linear 2;
 }
 
+.spread-thumb:has(.page-thumb.finished:nth-of-type(1)):not(:has(.page-thumb:nth-of-type(2)))::before,
+.spread-thumb:has(.page-thumb.finished:nth-of-type(1)):has(.page-thumb.finished:nth-of-type(2))::before {
+	opacity:0;
+	background: none;
+	mask-image: none;
+	-webkit-mask-image: none;
+
+}
+
 #bottomControls {
 	grid-template-columns: 40px 40px 1fr 40px 40px;
 	bottom: 0px;

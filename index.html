@@ -2760,6 +2760,10 @@
 						img.classList.add('loaded');
 						img.classList.remove('hidden');
 						img.classList.remove('loading');
+						setTimeout(()=>{
+							img.classList.remove('loaded');
+							img.classList.add('finished');
+						}, 1000);
 					});
 					if (img.complete) {
 						img.classList.add('loaded');

@@ -450,6 +450,16 @@ padding-top: 0;
 	animation: loader_spin 1s linear 2;
 }
 
+.thumbnail-wrapper:has(.series-thumbnail.finished)::before,
+.thumbnail-wrapper:has(.book-thumbnail.finished)::before,
+#bookDetailsContainerThumbnailWrapper:has(.book-thumbnail.finished)::before	{
+	opacity:0;
+	background: none;
+	mask-image: none;
+	-webkit-mask-image: none;
+
+}
+
 .series-fader,
 .book-fader {
 	box-shadow: inset rgba(128, 128, 128, 0.5) 0px 0px 20px -10px;
