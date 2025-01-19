@@ -394,12 +394,9 @@ padding-top: 0;
 	pointer-events: none;
 }
 
-.thumbnail-wrapper:has(.series-thumbnail.loading)::before,
-.thumbnail-wrapper:has(.book-thumbnail.loading)::before,
-#bookDetailsContainerThumbnailWrapper:has(.book-thumbnail.loading)::before,
-.thumbnail-wrapper:has(.series-thumbnail:not(.hidden))::before,
-.thumbnail-wrapper:has(.book-thumbnail:not(.hidden))::before,
-#bookDetailsContainerThumbnailWrapper:has(.book-thumbnail:not(.hidden))::before {
+.thumbnail-wrapper:has(.series-thumbnail)::before,
+.thumbnail-wrapper:has(.book-thumbnail)::before,
+#bookDetailsContainerThumbnailWrapper:has(.book-thumbnail)::before{
 	content: "";
 	position: absolute;
 	top: 50%;
@@ -407,11 +404,14 @@ padding-top: 0;
 	width: 80px;
 	height: 80px;
 	border-radius: 50%;
+	opacity:0;
+
 	border-top-color: var(--mb-accent);
 	transform: translate(-50%, -50%);
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
 	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
+	transition:opacity 0.4s;
 }
 
 @keyframes loader_spin {
@@ -430,16 +430,24 @@ padding-top: 0;
 	}
 }
 
+@keyframes loader_show {
+	to {
+		opacity: 1;
+	}
+}
+
 .thumbnail-wrapper:has(.series-thumbnail.loading)::before,
 .thumbnail-wrapper:has(.book-thumbnail.loading)::before,
 #bookDetailsContainerThumbnailWrapper:has(.book-thumbnail.loading)::before {
-animation: loader_spin 1s linear infinite;
+	opacity:1;
+	animation: loader_spin 1s linear infinite;
 }
 
-.thumbnail-wrapper:has(.series-thumbnail:not(.hidden))::before,
-.thumbnail-wrapper:has(.book-thumbnail:not(.hidden))::before,
-#bookDetailsContainerThumbnailWrapper:has(.book-thumbnail:not(.hidden))::before	{
-	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
+.thumbnail-wrapper:has(.series-thumbnail.loaded)::before,
+.thumbnail-wrapper:has(.book-thumbnail.loaded)::before,
+#bookDetailsContainerThumbnailWrapper:has(.book-thumbnail.loaded)::before	{
+	opacity:0;
+	animation: loader_spin 1s linear 2;
 }
 
 .series-fader,

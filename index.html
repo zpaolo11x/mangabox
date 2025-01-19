@@ -2344,8 +2344,9 @@
 							//rd.uiPages[element].src = rd.pages[element].url;
 							// Handle successful load
 							rd.uiPages[element].addEventListener('load', () => {
-								rd.uiPages[element].classList.remove('loading');
+								rd.uiPages[element].classList.add('loaded');
 								rd.uiPages[element].classList.remove('hidden');
+								rd.uiPages[element].classList.remove('loading');
 								if (isSectionHidden(readerContainer)) {
 									printStack('LX ');
 									return;
@@ -2369,6 +2370,8 @@
 
 					// Immediately handle cached images
 					else if (rd.uiPages[element].complete) {
+						rd.uiPages[element].classList.add('loaded');
+						rd.uiPages[element].classList.remove('hidden');
 						rd.uiPages[element].classList.remove('loading');
 						const index = rd.picLoadStack.indexOf(element);
 						if (index !== -1) {
@@ -2754,10 +2757,12 @@
 					delete img.lazySrc;
 
 					img.addEventListener('load', () => {
+						img.classList.add('loaded');
 						img.classList.remove('hidden');
 						img.classList.remove('loading');
 					});
 					if (img.complete) {
+						img.classList.add('loaded');
 						img.classList.remove('hidden');
 						img.classList.remove('loading');
 					}
