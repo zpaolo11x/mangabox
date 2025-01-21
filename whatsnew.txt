@@ -1,1 +1,2 @@
-- 
+- Redesigned login screen
+- Added Remember Me toggle
