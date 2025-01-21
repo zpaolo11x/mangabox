@@ -996,7 +996,7 @@
 			})
 			noPointerDown(markAsUnread);
 
-			// Find alternate title with label "Time"
+			// Find alternate title with label 'Time'
 			const altTitle = getAltTitles(serie);
 
 			// Fetch and display the number of books and alternate title
@@ -1282,7 +1282,7 @@
 			if (book.number > 1) {
 				prevbook = seriesBooks.content[book.number - 2];
 			}
-			if (book.number < seriesBooks.size) {
+			if (book.number < seriesData.booksCount) {
 				nextbook = seriesBooks.content[book.number];
 			}
 			sectionShow(bookDetailsContainer);
