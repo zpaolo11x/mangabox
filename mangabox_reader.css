@@ -126,8 +126,7 @@ img.page:not(.hidden) {
 	position: relative;
 }
 
-/*//TODO così si attiva anche per quelle loading in background? */
-.page-container:has(img.page.loading)::before {
+.page-container:has(img.page)::before {
 	content: "";
 	position: absolute;
 	top: 50%;
@@ -136,17 +135,23 @@ img.page:not(.hidden) {
 	aspect-ratio: 1 / 1;
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
-	animation: loader_spin 1s linear infinite;
 	transform: translate(-50%, -50%);
-
+	opacity:0;
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
 	mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
 	-webkit-mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
+	transition: opacity 0.5s;
+}
+
+.page-container:has(img.page.loading)::before {
+	opacity:1;
+	animation: loader_spin 1s linear infinite;
 }
 
 /* hidden viene impostato in questo caso? perché altrimenti taglia subito! */
-.page-container:has(img.page:not(.hidden))::before {
-	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
+.page-container:has(img.page.loaded)::before {
+	opacity:0;
+	animation: loader_spin 1s linear 2;
 }
 
 img.multiply {
@@ -455,7 +460,7 @@ div.single-page {
 	opacity: 1;
 }
 
-.spread-thumb:has(.page-thumb.loading)::before {
+.spread-thumb:has(.page-thumb)::before {
 	content: "";
 	position: absolute;
 
@@ -465,19 +470,35 @@ div.single-page {
 	width: 80px;
 	height: 80px;
 	transform: translate(-50%, -50%);
-	animation: loader_spin 1s linear infinite;
+	
+	opacity:0;
 
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
 	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
-
+	transition:opacity 0.5s;
 }
 
-.spread-thumb:has(.page-thumb:not(.hidden):nth-of-type(1)):not(:has(.page-thumb:nth-of-type(2)))::before,
-.spread-thumb:has(.page-thumb:not(.hidden):nth-of-type(1)):has(.page-thumb:not(.hidden):nth-of-type(2))::before {
-	animation: loader_hide 0.5s forwards, loader_spin 1s linear 2;
+.spread-thumb:has(.page-thumb.loading)::before {
+	opacity:1;
+	animation: loader_spin 1s linear infinite;
+}
+
+.spread-thumb:has(.page-thumb.loaded:nth-of-type(1)):not(:has(.page-thumb:nth-of-type(2)))::before,
+.spread-thumb:has(.page-thumb.loaded:nth-of-type(1)):has(.page-thumb.loaded:nth-of-type(2))::before {
+	opacity:0;
+	animation: loader_spin 1s linear 5;
+}
+
+.spread-thumb:has(.page-thumb.finished:nth-of-type(1)):not(:has(.page-thumb:nth-of-type(2)))::before,
+.spread-thumb:has(.page-thumb.finished:nth-of-type(1)):has(.page-thumb.finished:nth-of-type(2))::before {
+	opacity:0;
+	background: none;
+	mask-image: none;
+	-webkit-mask-image: none;
+
 }
 
 #bottomControls {

@@ -197,11 +197,14 @@
 		// Theme settings
 		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
 		let mbDarkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
+
 		// Library filters
 		let mbLibraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
+
 		// Authentication data
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
+
 		// Reader page mode
 		let mbPageMode = Number(localStorage.getItem('mbPageMode')) ?? 2;
 
@@ -214,6 +217,13 @@
 		let screenAR = getScreenAR();
 		let readerMaxRatio = 1;
 		let readerHorizontal = true;
+		let dashboardBin = "";
+		/*
+			When an item from a bin is opened, the dashboardBin is set, so when the dashboard is reloaded
+			it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
+			In this way subsequent clicks on dashboard button will load the top position.
+			This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
+		*/
 
 		//MB Theme Management 
 
@@ -308,6 +318,7 @@
 
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
+				dashboardBin = '';
 				if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 			}
 		});
@@ -337,7 +348,8 @@
 					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
 					start.push(Number(dateArray[0]));
 					stop.push(Number(dateArray[1] ?? dateArray[0]));
-					filterArray.push(!((start[i] >= Number(searchYear[1])) || (stop[i] <= Number(searchYear[0]))));
+
+					filterArray.push(!((start[i] > Number(searchYear[1])) || (stop[i] < Number(searchYear[0]))));
 				}
 
 				const filteredSeries = dataArray.filter((item, index) =>
@@ -692,19 +704,23 @@
 					method: method,
 					headers: {
 						'Authorization': mbAuthHeader,
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					},
 					body: body
 				});
+
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+
 				if (returnval) {
 					const output = await response.json();
-					return (output);
+					return output;
 				}
 			} catch (error) {
 				console.error('Fetch libraries error:', error);
 			}
 		}
+
 
 		//MB Media Cache 
 		const mediaCache = new Map();
@@ -724,7 +740,8 @@
 					method: 'GET',
 					headers: {
 						'Authorization': mbAuthHeader,
-					},
+						'skip_zrok_interstitial': '1' // Add header to skip interstitial
+					}
 				});
 
 				if (response.ok) {
@@ -751,6 +768,7 @@
 			}
 		}
 
+
 		// Function to clear the cache entirely
 		function clearMediaCache() {
 			for (const objectURL of mediaCache.values()) {
@@ -762,14 +780,12 @@
 		async function setReadStatus(seriesId, bookId, read, item, format = null) {
 			if (bookId == null) {
 				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
-				//item.innerHTML = '';
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
-				buildSeriesItem(item, seriesData);
+				buildSeriesItem(item, seriesData, null);
 			} else {
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
-				//item.innerHTML = '';
 				const bookData = await callAPI(`/api/v1/books/${bookId}`);
-				buildBookItem(item, bookData, format);
+				buildBookItem(item, bookData, format, null);
 			}
 		}
 
@@ -875,7 +891,7 @@
 		}
 
 		//MB Series Items Creation
-		async function buildSeriesItem(item, serie) {
+		async function buildSeriesItem(item, serie, target) {
 			//item.firstChild.remove();
 			if (item.childNodes[0]) {
 				item.childNodes[0].remove();
@@ -973,6 +989,7 @@
 			});
 			timeLabel.addEventListener('click', async (event) => {
 				event.stopPropagation();
+				if (target.binName) dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
 			noPointerDown(timeLabel);
@@ -1003,10 +1020,12 @@
 				artistRow.appendChild(artLabel);
 				storyLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				artLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
 				noPointerDown(artLabel);
@@ -1020,6 +1039,7 @@
 				artistRow.appendChild(artistLabel);
 				artistLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 					//getFilteredSeries(altTitle.story, serie.id);
 				});
@@ -1053,7 +1073,10 @@
 				booksLabel
 			);
 
-			addTouchScaler(seriesItem, () => navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`))
+			addTouchScaler(seriesItem, () => {
+				if (target.binName) dashboardBin = target.binName;
+				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
+			});
 
 			item.appendChild(seriesItem);
 		}
@@ -1071,7 +1094,7 @@
 				seriesContainer.classList.add('series-container'); //XXX was ending with , 'fade-in');
 				seriesContainer.id = serie.id;
 
-				buildSeriesItem(seriesContainer, serie);
+				buildSeriesItem(seriesContainer, serie, target);
 
 				target.appendChild(seriesContainer);
 			});
@@ -1148,7 +1171,6 @@
 				listItem.appendChild(libraryName);
 
 				listItem.addEventListener('click', () => {
-
 					currentPath = parseHashAndParams();
 					if ((currentPath.path == 'series') && (currentPath.params.get('library_id') == library.id)) {
 						navigateTo(`#library?library_id=${library.id}&series_id=${currentPath.params.get('series_id')}`);
@@ -1308,6 +1330,7 @@
 				mainRow.textContent = book.seriesTitle;
 				mainRow.addEventListener('click', (event) => {
 					event.stopPropagation();
+					if (target.binName) dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
 				noPointerDown(mainRow);
@@ -1453,7 +1476,7 @@
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
-
+				if (target.binName) dashboardBin = target.binName;
 				navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
@@ -1474,9 +1497,12 @@
 				- timeline: will show latest read date
 			*/
 			// focus is the book id to focus on
+
+
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
+
 
 			if (books.length === 0) {
 				const noBooksMsg = document.createElement('p');
@@ -1522,6 +1548,8 @@
 
 		// Function to trigger the home page layout
 		async function selectHome() {
+
+			console.log(dashboardBin);
 
 			libraryHighlight('homeButton');
 
@@ -1662,8 +1690,10 @@
 			});
 			item.homeStrip = addItem('div', {
 				className: 'home-strip',
+				binName: name,
 			})
 			item.gridButton.addEventListener('click', async () => {
+				dashboardBin = name;
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
 			item.scrollInput.addEventListener('input', () => {
@@ -1775,6 +1805,10 @@
 		// Function that setups the reader for a specific book, this is not run directly
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
+			Object.entries(dashboardElements).forEach(([name, item]) => {
+				console.log(item);
+				item.homeStrip.innerHTML = '';
+			});
 			clearReader(); //TODO forse eccessivo?
 			clearAllTimeouts();
 			rd.picLoadStack = [];
@@ -1892,12 +1926,11 @@
 			if (window.innerHeight - rd.thumbHeight - 60 - 60 - 30 < 0) {
 				rd.thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight+'px');
+			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight + 'px');
 			centerThumb(true);
 		});
 
 		function updateProgressBar() {
-			console.log("updateProgressBar");
 			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
@@ -1917,16 +1950,20 @@
 				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack))) {
 					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
+							console.log("overquota");
 							return;
 						}
+						console.log("ps B");
 						populateSpread(startSpreadIndex + i, true);
 					});
 				}
 				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack))) {
 					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
 						if (picLoadStackSize() >= 20000000) {
+							console.log("overquota");
 							return;
 						}
+						console.log("ps C");
 						populateSpread(startSpreadIndex - i, true);
 					});
 				}
@@ -1946,7 +1983,7 @@
 			leftLimit.innerText = rd.ltr ? 1 : rd.uiPages.length;
 			rightLimit.innerText = rd.ltr ? rd.uiPages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
-
+			console.log("ps A");
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 
@@ -2277,7 +2314,7 @@
 		}
 
 		function printStack(str_in) {
-			return; //XXX Disable debug of preload stack
+			//return; //XXX Disable debug of preload stack
 			let out = str_in + ' *';
 			rd.picLoadStack.forEach(element => {
 				out = out + ' ' + element;
@@ -2291,7 +2328,7 @@
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
-
+			console.log(rd.picLoadStack);
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
@@ -2307,8 +2344,9 @@
 							//rd.uiPages[element].src = rd.pages[element].url;
 							// Handle successful load
 							rd.uiPages[element].addEventListener('load', () => {
-								rd.uiPages[element].classList.remove('loading');
+								rd.uiPages[element].classList.add('loaded');
 								rd.uiPages[element].classList.remove('hidden');
+								rd.uiPages[element].classList.remove('loading');
 								if (isSectionHidden(readerContainer)) {
 									printStack('LX ');
 									return;
@@ -2319,6 +2357,7 @@
 									rd.picLoadStack.splice(index, 1); // Remove from stack
 								};
 								if (!isPreload) {
+									console.log("preload 1");
 									preloadPages(spreadIndex, rd.preloadCount)
 								}
 							});
@@ -2331,15 +2370,20 @@
 
 					// Immediately handle cached images
 					else if (rd.uiPages[element].complete) {
+						rd.uiPages[element].classList.add('loaded');
+						rd.uiPages[element].classList.remove('hidden');
 						rd.uiPages[element].classList.remove('loading');
 						const index = rd.picLoadStack.indexOf(element);
 						if (index !== -1) {
 							rd.picLoadStack.splice(index, 1);
 						}
-						// Force preload when landing on a cached image
+						//XXX REMOVED Force preload when landing on a cached image
+
 						if (!isPreload) {
+							console.log("preload 2");
 							preloadPages(spreadIndex, rd.preloadCount)
 						}
+
 					}
 				}
 			});
@@ -2365,7 +2409,6 @@
 		}
 
 		function getPage(index) {
-			console.log("getPage:" + index);
 			let pageNumber = (1 + Number((rd.ltr
 				? rd.uiSpreadsPages[index][0]
 				: rd.uiSpreadsPages[index][1] ?? rd.uiSpreadsPages[index][0]))
@@ -2375,15 +2418,14 @@
 			const lastSpread = (twoPages && (index == (rd.uiSpreads.length - 1)));
 
 			const out = [
-				(lastSpread && rd.ltr) ? pageNumber + 1: pageNumber,
-				pageNumber + (twoPages ? " " + (pageNumber + (rd.ltr ? 1 : -1)) : "" )
+				(lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber,
+				pageNumber + (twoPages ? " " + (pageNumber + (rd.ltr ? 1 : -1)) : "")
 			];
 
 			return out;
 		}
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-			console.log("getA");
 			const stringOut = `${basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
@@ -2392,7 +2434,6 @@
 			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
-				console.log("updatepage: "+rd.currentPage);
 				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.then(data => console.log('Read progress updated:', data))
 					.catch(error => console.error('Error:', error));
@@ -2487,32 +2528,48 @@
 
 			purgeLoading();
 
-			if (rd.jumpTimeout === null) {
-				rd.oldSpreadIndex = localOldSpreadIndex;
-				rd.currentSpreadIndex = localNewSpreadIndex;
+			rd.oldSpreadIndex = localOldSpreadIndex;
+			rd.currentSpreadIndex = localNewSpreadIndex;
 
-				rd.jumpTimeout = setTimeout(() => {
-					if (isSectionHidden(readerContainer)) return;
-					spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-					populateSpread(localNewSpreadIndex);
-					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-					rd.jumpTimeout = null;
-				}, rd.loadDelay);
-			} else {
-				clearTimeout(rd.jumpTimeout);
-				rd.jumpTimeout = null;
+			if (isSectionHidden(readerContainer)) return;
 
-				rd.currentSpreadIndex = localNewSpreadIndex;
+			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+			populateSpread(localNewSpreadIndex);
+			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
-				rd.jumpTimeout = setTimeout(() => {
-					if (isSectionHidden(readerContainer)) return;
-					spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
-					populateSpread(localNewSpreadIndex);
-					spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-					rd.jumpTimeout = null;
-				}, rd.loadDelay);
-			};
-
+			/*
+						if (rd.jumpTimeout === null) {
+							console.log("timeout null");
+							rd.oldSpreadIndex = localOldSpreadIndex;
+							rd.currentSpreadIndex = localNewSpreadIndex;
+			
+							rd.jumpTimeout = setTimeout(() => {
+								if (isSectionHidden(readerContainer)) return;
+								spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+								console.log("type1-a");
+								populateSpread(localNewSpreadIndex);
+								console.log("type1-b");
+								spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+								rd.jumpTimeout = null;
+							}, rd.loadDelay);
+			
+						} else {
+							console.log("timeout clear");
+							clearTimeout(rd.jumpTimeout);
+							rd.jumpTimeout = null;
+			
+							rd.currentSpreadIndex = localNewSpreadIndex;
+			
+							rd.jumpTimeout = setTimeout(() => {
+								if (isSectionHidden(readerContainer)) return;
+								spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
+								console.log("type2");
+								populateSpread(localNewSpreadIndex);
+								spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+								rd.jumpTimeout = null;
+							}, rd.loadDelay);
+						};
+			*/
 			centerThumb();
 			updateProgressBar();
 			history.replaceState(null, '', jumpString());
@@ -2637,6 +2694,7 @@
 			sectionHide(extraMenuBar);
 			closeBookDetails();
 			screenAR = getScreenAR();
+
 			switch (path) {
 				case '':
 				case 'dashboard':
@@ -2644,11 +2702,18 @@
 					setIncognito(false);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
+						if (dashboardBin) {
+							const y = dashboardElements[dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop - 10;
+
+							mainContainer.scrollTo({ top: y });
+							dashboardBin = '';
+						}
 					} else {
 						dashboardAll(params.get('all'), params.get('page'));
 					}
 					break;
 				case 'library':
+					dashboardBin = '';;
 					searchInput.value = '';
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
@@ -2692,10 +2757,16 @@
 					delete img.lazySrc;
 
 					img.addEventListener('load', () => {
+						img.classList.add('loaded');
 						img.classList.remove('hidden');
 						img.classList.remove('loading');
+						setTimeout(()=>{
+							img.classList.remove('loaded');
+							img.classList.add('finished');
+						}, 1000);
 					});
 					if (img.complete) {
+						img.classList.add('loaded');
 						img.classList.remove('hidden');
 						img.classList.remove('loading');
 					}
