@@ -9,10 +9,17 @@ if (!localStorage.getItem('mbAuthHeader') || !localStorage.getItem('mbBaseUrl'))
 }
 
 function login() {
-	const mbBaseUrl = document.getElementById('mbBaseUrl').value;
+	let mbBaseUrl = document.getElementById('mbBaseUrl').value;
 	const username = document.getElementById('username').value;
 	const password = document.getElementById('password').value;
 	const rememberMe = document.getElementById('rememberMe').checked;
+
+	if (!/^https?:\/\//i.test(mbBaseUrl)) {
+		// Add http:// if no protocol is present
+		mbBaseUrl = 'https://' + mbBaseUrl;
+	}
+
+	mbBaseUrl = mbBaseUrl.replace(/\/$/, '');
 
 	const mbAuthHeader = 'Basic ' + btoa(`${username}:${password}`);
 
