@@ -5,7 +5,7 @@
 	--mb-l: 38%;
 
 	--mb-accent: hsl(var(--mb-h), var(--mb-s), var(--mb-l));
-	--mb-accent-light: hsl(var(--mb-h), var(--mb-s), var(--mb-l));
+	--mb-accent-light: hsl(var(--mb-h), var(--mb-s), calc(var(--mb-l)*1.1));
 	--mb-accent-active: hsl(var(--mb-h), 48%, 84%);
 	--mb-accent-a30: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.3);
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
@@ -36,6 +36,7 @@
 	--mb-card-color: #ffffff;
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
+	--mb-active-color: #f0f0f0;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
@@ -47,6 +48,7 @@
 	--mb-card-color: #353535;
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
+	--mb-active-color: #656565;
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-glyph-color: rgba(255, 255, 255, 0.75);
@@ -333,6 +335,11 @@ a {
 .library-item:hover,
 .filter-item:hover {
 	background-color: var(--mb-hover-color);
+}
+
+.library-item:active,
+.filter-item:active {
+	background-color: var(--mb-active-color);
 }
 
 .thumbnail-wrapper {
@@ -933,6 +940,12 @@ book-item {
 	border-bottom: 1px solid var(--mb-accent);
 	margin-bottom: 4px;
 	align-items: stretch;
+}
+
+.series-title {
+	line-height:16px;
+	margin-bottom:3px;
+	margin-top:3px;
 }
 
 .book-row {

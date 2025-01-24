@@ -932,7 +932,7 @@
 			const seriesTitle = addItem('div', {
 				innerHTML: `
 								<div class="title-row data-row top-row">
-									<div style="flex-grow:1">${serie.metadata.title}</div>
+									<div style="flex-grow:1" class="series-title">${serie.metadata.title}</div>
 									<div class="glyph-dark" style="text-align:right">${LTR}</div>
 										${spacer}
 									<div class="glyph-div" style="text-align:right">${LNG}</div>
@@ -1208,14 +1208,36 @@
 		}
 
 		function getAltTitles(serie) {
+
 			const labels = ['Time', 'Story', 'Art'];
-			return labels.reduce((out, label) => {
+			const altTitle = labels.reduce((out, label) => {
 				const altTitle = serie.metadata.alternateTitles.find(
 					(alt) => alt.label === label
 				);
 				out[label.toLowerCase()] = altTitle ? altTitle.title : 'N/A';
 				return out;
 			}, {});
+
+			console.log(altTitle);
+			
+			if (altTitle.time == 'N/A') {
+				altTitle.time = serie.booksMetadata.releaseDate.split("-")[0];
+			};
+			
+			if (altTitle.story == 'N/A') {
+				const bookWriter = serie.booksMetadata.authors.find(
+					(alt) => alt.role === "writer"
+				);
+				altTitle.story = bookWriter ? bookWriter.name : "N/A";
+			}
+			if (altTitle.art == 'N/A') {
+				const bookWriter = serie.booksMetadata.authors.find(
+					(alt) => alt.role === "penciller"
+				);
+				altTitle.art = bookWriter ? bookWriter.name : "N/A";
+			}
+			return altTitle;
+
 		}
 
 
