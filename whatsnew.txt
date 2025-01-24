@@ -1,2 +1,4 @@
 - Redesigned login screen
 - Added Remember Me toggle
+- Metadata from first book
+- Spacing tweaks
