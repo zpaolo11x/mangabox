@@ -1,5 +1,4 @@
-- Updated application name
-- Improved load animation fade
-- Skip interstitials for servers behind zrok
-- Faster page flipping
-- Fix y: year search
+- Redesigned login screen
+- Added Remember Me toggle
+- Metadata from first book
+- Spacing tweaks

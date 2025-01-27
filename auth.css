@@ -40,12 +40,11 @@
 	color: inherit;           /* Inherits text color */
 
 	box-sizing: border-box;
-	margin-top:15px;
 	height:30px;
 	width:280px;
 	border-radius:4px;
 	border:1px #c0c0c0 solid;
-	padding-left:10px;
+	padding-left:35px/*WAS 10px*/;
 	padding-right:10px;
 	font-size:16px;
 
@@ -65,7 +64,7 @@
 	margin:0px;
 	padding:0px;
 	display: grid;
-	grid-template-columns: auto 80px; 
+	grid-template-columns: auto 120px; 
 	width: 280px;
 	gap:15px;
 
@@ -77,23 +76,22 @@
 	background:#ddd;
 	border:1px solid #aaa;
 	border-radius:4px;
-	margin-top:15px;
 	height:30px;
 	width:100%;
-	
+	margin-top:15px;
 	transition:0.3s all;
 	color:black;
-
 }
 
 .login-button:hover{
 	border:1px solid var(--mb-accent);
-	background-color:#eee;
+	/*background-color:#eee;*/
 }
 
 .login-button:active{
 	border:1px solid var(--mb-accent);
 	background-color: var(--mb-accent);
+	color:white;
 }
 
 .auth-hidden {
@@ -104,4 +102,95 @@
     color: red;
     font-size: 0.9em;
     margin-top: 10px;
+}
+
+
+.remember-me-container {
+	display: flex;
+	align-items: center;
+	margin-top: 15px;
+	width: 100%; /* Match the width of input boxes */
+}
+
+.remember-me-checkbox {
+	appearance: none; /* Remove the default checkbox appearance */
+	width: 20px;
+	height: 20px;
+	border: 1px solid #c0c0c0;
+	border-radius: 4px;
+	background: #fff; /* Default white background */
+	margin: 0px 10px 0px 0px;
+	position: relative;
+	cursor: pointer; /* Indicate it's clickable */
+	transition: all 0.3s, box-shadow 0.1s;
+}
+
+.remember-me-checkbox:hover {
+	border-color: var(--mb-accent);
+}
+
+.remember-me-checkbox:focus {
+	border-color: var(--mb-accent);
+	box-shadow: 0px 0px 5px var(--mb-accent-a50);
+}
+
+.remember-me-checkbox:checked {
+	border-color: var(--mb-accent); /* Change border to accent color */
+	background-color: var(--mb-accent); /* Accent color background */
+}
+
+.remember-me-checkbox:checked::after {
+	content: '\f00c'; /* FontAwesome checkmark */
+	font-family: 'Font Awesome 6 Free'; /* Ensure proper font */
+	font-weight: 900; /* Bold weight for FontAwesome icons */
+	color: #fff; /* White checkmark */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 14px;
+}
+
+.remember-me-label {
+	font-size: 14px;
+	color: #555;
+	cursor: pointer; /* Matches cursor with checkbox */
+}
+
+.input-wrapper {
+	position: relative;
+	width: 100%;
+	margin-top:15px;
+
+}
+
+.input-wrapper i {
+	box-sizing: border-box; 
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	color: #555; /* White icon color */
+	background-color: #ddd; /* Accent color */
+	width: 30px;
+	height: 30px;
+	border-radius: 4px 0px 0px 4px;
+	border:1px solid #aaa;
+	border-right: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 16px;
+	pointer-events: none; /* Make the icon not respond to hover directly */
+	transition: all 0.3s; 
+}
+
+.input-wrapper:hover i{
+	border-color:var(--mb-accent);
+	background-color:#ddd;
+}
+
+.input-wrapper:focus-within i{
+	background-color:var(--mb-accent);
+	border-color:var(--mb-accent);
+	color:#fff;
 }

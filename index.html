@@ -161,21 +161,40 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
-			<img src="mangabox-logo-new.svg" width="80px" height="80px">
-			<img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
-			<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
-			<input type="text" class="login-input" id="username" placeholder="Username">
-			<input type="password" class="login-input" id="password" placeholder="Password">
-			<div class="login-buttons">
-				<button class="login-button" onclick="login()">Login</button>
-				<button class="login-button" onclick="loginTest()">Test</button>
-			</div>
-			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
+			 <img src="mangabox-logo-new.svg" width="80px" height="80px">
+			 <img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
+			 
+			 <div class="input-wrapper" title="Server Address">
+				  <i class="fas fa-link"></i> <!-- Example icon for the base URL -->
+				  <input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+			 </div>
+			 
+			 <div class="input-wrapper" title="Username">
+				  <i class="fas fa-user"></i> <!-- Icon for username -->
+				  <input type="text" class="login-input" id="username" placeholder="Username">
+			 </div>
+			 
+			 <div class="input-wrapper" title="Password">
+				  <i class="fas fa-lock"></i> <!-- Icon for password -->
+				  <input type="password" class="login-input" id="password" placeholder="Password">
+			 </div>
+  
+			 <div class="login-buttons">
+				  <div class="remember-me-container">
+						<input type="checkbox" id="rememberMe" class="remember-me-checkbox">
+						<label for="rememberMe" class="remember-me-label">Remember Me</label>
+				  </div>
+				  <button class="login-button" onclick="login()">Login</button>
+			 </div>
+			 
+			 <p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
 		</div>
-	</div>
+  </div>
+  
+
 
 	<div id="debuggerObj"></div>
 
@@ -204,6 +223,10 @@
 		// Authentication data
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
+		const mbRememberMe = localStorage.getItem('mbRememberMe');
+		if (!mbRememberMe) {
+			localStorage.removeItem('mbAuthHeader');
+		};
 
 		// Reader page mode
 		let mbPageMode = Number(localStorage.getItem('mbPageMode')) ?? 2;
@@ -909,7 +932,7 @@
 			const seriesTitle = addItem('div', {
 				innerHTML: `
 								<div class="title-row data-row top-row">
-									<div style="flex-grow:1">${serie.metadata.title}</div>
+									<div style="flex-grow:1" class="series-title">${serie.metadata.title}</div>
 									<div class="glyph-dark" style="text-align:right">${LTR}</div>
 										${spacer}
 									<div class="glyph-div" style="text-align:right">${LNG}</div>
@@ -973,7 +996,7 @@
 			})
 			noPointerDown(markAsUnread);
 
-			// Find alternate title with label "Time"
+			// Find alternate title with label 'Time'
 			const altTitle = getAltTitles(serie);
 
 			// Fetch and display the number of books and alternate title
@@ -1185,14 +1208,36 @@
 		}
 
 		function getAltTitles(serie) {
+
 			const labels = ['Time', 'Story', 'Art'];
-			return labels.reduce((out, label) => {
+			const altTitle = labels.reduce((out, label) => {
 				const altTitle = serie.metadata.alternateTitles.find(
 					(alt) => alt.label === label
 				);
 				out[label.toLowerCase()] = altTitle ? altTitle.title : 'N/A';
 				return out;
 			}, {});
+
+			console.log(altTitle);
+			
+			if (altTitle.time == 'N/A') {
+				altTitle.time = serie.booksMetadata.releaseDate.split("-")[0];
+			};
+			
+			if (altTitle.story == 'N/A') {
+				const bookWriter = serie.booksMetadata.authors.find(
+					(alt) => alt.role === "writer"
+				);
+				altTitle.story = bookWriter ? bookWriter.name : "N/A";
+			}
+			if (altTitle.art == 'N/A') {
+				const bookWriter = serie.booksMetadata.authors.find(
+					(alt) => alt.role === "penciller"
+				);
+				altTitle.art = bookWriter ? bookWriter.name : "N/A";
+			}
+			return altTitle;
+
 		}
 
 
@@ -1259,7 +1304,7 @@
 			if (book.number > 1) {
 				prevbook = seriesBooks.content[book.number - 2];
 			}
-			if (book.number < seriesBooks.size) {
+			if (book.number < seriesData.booksCount) {
 				nextbook = seriesBooks.content[book.number];
 			}
 			sectionShow(bookDetailsContainer);
@@ -2760,7 +2805,7 @@
 						img.classList.add('loaded');
 						img.classList.remove('hidden');
 						img.classList.remove('loading');
-						setTimeout(()=>{
+						setTimeout(() => {
 							img.classList.remove('loaded');
 							img.classList.add('finished');
 						}, 1000);
