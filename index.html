@@ -356,8 +356,12 @@
 
 			if (searchString.includes('y:')) {
 
-				const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
-
+				//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+				const unFilteredSeries = await callAPI(
+					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+					'POST',
+					`{"condition": {"libraryId": {"operator": "isNot","value": ""}}}`
+				);
 				const dataArray = unFilteredSeries.content;
 				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
 
@@ -386,24 +390,11 @@
 				return
 			}
 
-			const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
-			const unFilteredSeries2 = await callAPI(
-				`/api/v1/series/list?page=0&unpaged=true`,
+			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const unFilteredSeries = await callAPI(
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST',
-				`{
-					"condition": {
-						"libraryId": {
-							"operator": "isNot",
-							"value": ""
-						}
-					},
-					"sort": [
-						{
-							"property": "title",
-							"direction": "ASC"
-						}
-					]
-				}`
+				`{"condition": {"libraryId": {"operator": "isNot","value": ""}}}`
 			);
 
 			console.log(unFilteredSeries);
@@ -870,7 +861,12 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
-			const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const unFilteredSeries = await callAPI(
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'POST',
+				`{"condition": {"libraryId": {"operator": "isNot","value": ""}}}`
+			);
 
 			const filteredItems = unFilteredSeries.content.filter(item =>
 				item.metadata.alternateTitles.some(
@@ -1153,7 +1149,12 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
-			const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			//const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const allSeriesPage = await callAPI(
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'POST',
+				`{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
+			);
 			allSeries = allSeriesPage.content;
 			// now it gets the series sorted by name so no need to elaborate the sorting, but for custom sorting based for example on title time?
 			//allSeries.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
