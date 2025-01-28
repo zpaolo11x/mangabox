@@ -395,9 +395,6 @@
 				'POST',`{"condition": {"libraryId": {"operator": "isNot","value": ""}}}`
 			);
 
-			console.log(unFilteredSeries);
-			console.log(unFilteredSeries2)
-
 			const filteredSeries = unFilteredSeries.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||
 				item.metadata.titleSort.toLowerCase().includes(searchString) ||
@@ -407,7 +404,11 @@
 			);
 			displaySeries(filteredSeries, homeStripSeriesResults);
 
-			const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const unFilteredBooks = await callAPI(
+					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.titleSort,asc`, //TODO sort by relevance with new filtering search?
+					'POST',`{"condition": {"seriesId": {"operator": "isNot","value": ""}}}`
+				);
 
 			const filteredBooks = unFilteredBooks.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||
@@ -1313,7 +1314,12 @@
 
 		async function showBookDetails(book) {
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
-			const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
+			//const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
+			const seriesBooks = await callAPI(
+					`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
+					'POST',`{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
+				);
+				console.log(seriesBooks);
 			const readingDirection = seriesData.metadata.readingDirection;
 
 			currentbook = book;
@@ -1642,8 +1648,13 @@
 			keepReading: {
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
 				getItems: async (page, size) => {
-					const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
-					out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
+				//	const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
+					const out = await callAPI(
+						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
+						'POST',`{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
+					);
+
+					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
 				showItems: async (input, target) => {
@@ -1785,15 +1796,12 @@
 
 			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 			//const books = await fetchBooks(seriesId);
-			let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);
-			
-			//TODO FIX API
-			/*
+			//let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);			
 			let books = await callAPI(
 					`/api/v1/books/list?page=0&unpaged=true`, //TODO add sorting?
 					'POST',`{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
 				);
-			*/
+			
 
 			books = books.content;
 
