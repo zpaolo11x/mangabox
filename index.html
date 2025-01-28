@@ -161,39 +161,39 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
-			 <img src="mangabox-logo-new.svg" width="80px" height="80px">
-			 <img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
-			 
-			 <div class="input-wrapper" title="Server Address">
-				  <i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				  <input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
-			 </div>
-			 
-			 <div class="input-wrapper" title="Username">
-				  <i class="fas fa-user"></i> <!-- Icon for username -->
-				  <input type="text" class="login-input" id="username" placeholder="Username">
-			 </div>
-			 
-			 <div class="input-wrapper" title="Password">
-				  <i class="fas fa-lock"></i> <!-- Icon for password -->
-				  <input type="password" class="login-input" id="password" placeholder="Password">
-			 </div>
-  
-			 <div class="login-buttons">
-				  <div class="remember-me-container">
-						<input type="checkbox" id="rememberMe" class="remember-me-checkbox">
-						<label for="rememberMe" class="remember-me-label">Remember Me</label>
-				  </div>
-				  <button class="login-button" onclick="login()">Login</button>
-			 </div>
-			 
-			 <p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
+			<img src="mangabox-logo-new.svg" width="80px" height="80px">
+			<img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
+
+			<div class="input-wrapper" title="Server Address">
+				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
+				<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+			</div>
+
+			<div class="input-wrapper" title="Username">
+				<i class="fas fa-user"></i> <!-- Icon for username -->
+				<input type="text" class="login-input" id="username" placeholder="Username">
+			</div>
+
+			<div class="input-wrapper" title="Password">
+				<i class="fas fa-lock"></i> <!-- Icon for password -->
+				<input type="password" class="login-input" id="password" placeholder="Password">
+			</div>
+
+			<div class="login-buttons">
+				<div class="remember-me-container">
+					<input type="checkbox" id="rememberMe" class="remember-me-checkbox">
+					<label for="rememberMe" class="remember-me-label">Remember Me</label>
+				</div>
+				<button class="login-button" onclick="login()">Login</button>
+			</div>
+
+			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
 		</div>
-  </div>
-  
+	</div>
+
 
 
 	<div id="debuggerObj"></div>
@@ -357,6 +357,7 @@
 			if (searchString.includes('y:')) {
 
 				const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+
 				const dataArray = unFilteredSeries.content;
 				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
 
@@ -386,6 +387,27 @@
 			}
 
 			const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const unFilteredSeries2 = await callAPI(
+				`/api/v1/series/list?page=0&unpaged=true`,
+				'POST',
+				`{
+					"condition": {
+						"libraryId": {
+							"operator": "isNot",
+							"value": ""
+						}
+					},
+					"sort": [
+						{
+							"property": "title",
+							"direction": "ASC"
+						}
+					]
+				}`
+			);
+
+			console.log(unFilteredSeries);
+			console.log(unFilteredSeries2)
 
 			const filteredSeries = unFilteredSeries.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||
@@ -1219,11 +1241,11 @@
 			}, {});
 
 			console.log(altTitle);
-			
+
 			if (altTitle.time == 'N/A') {
 				altTitle.time = serie.booksMetadata.releaseDate.split("-")[0];
 			};
-			
+
 			if (altTitle.story == 'N/A') {
 				const bookWriter = serie.booksMetadata.authors.find(
 					(alt) => alt.role === "writer"
