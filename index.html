@@ -1680,7 +1680,11 @@
 			recentBooks: {
 				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
+					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
+					return (await callAPI(
+						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
+						'POST',`{"condition":{"allOf":[]}}`//TODO USE THIS SYNTAX FOR OTHERS
+					));
 				},
 				showItems: async (input, target) => {
 					displayBooks(input, target, 'compact');
@@ -1710,7 +1714,11 @@
 			readBooks: {
 				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
+					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
+					return (await callAPI(
+						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
+						'POST',`{"condition":{"readStatus":{"operator":"is","value":"READ"}}}`
+					));
 				},
 				showItems: async (input, target) => {
 					displayBooks(input, target, 'timeline');
@@ -1801,7 +1809,6 @@
 					`/api/v1/books/list?page=0&unpaged=true`, //TODO add sorting?
 					'POST',`{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
 				);
-			
 
 			books = books.content;
 
