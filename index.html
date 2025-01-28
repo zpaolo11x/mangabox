@@ -359,7 +359,7 @@
 				//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
-					'POST',`{"condition": {"libraryId": {"operator": "isNot","value": ""}}}`
+					'POST',`{"condition": {"allOf": []}}`
 				);
 				const dataArray = unFilteredSeries.content;
 				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
@@ -392,7 +392,7 @@
 			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
-				'POST',`{"condition": {"libraryId": {"operator": "isNot","value": ""}}}`
+				'POST',`{"condition": {"allOf": []}}`
 			);
 
 			const filteredSeries = unFilteredSeries.content.filter(item =>
@@ -407,7 +407,7 @@
 			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
 					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.titleSort,asc`, //TODO sort by relevance with new filtering search?
-					'POST',`{"condition": {"seriesId": {"operator": "isNot","value": ""}}}`
+					'POST',`{"condition": {"allOf": []}}`
 				);
 
 			const filteredBooks = unFilteredBooks.content.filter(item =>
@@ -863,7 +863,7 @@
 			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
-				'POST',`{"condition": {"libraryId": {"operator": "isNot","value": ""}}}`
+				'POST',`{"condition": {"allOf": []}}`
 			);
 
 			const filteredItems = unFilteredSeries.content.filter(item =>
@@ -1683,7 +1683,7 @@
 					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
 					return (await callAPI(
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
-						'POST',`{"condition":{"allOf":[]}}`//TODO USE THIS SYNTAX FOR OTHERS
+						'POST',`{"condition":{"allOf":[]}}`
 					));
 				},
 				showItems: async (input, target) => {
