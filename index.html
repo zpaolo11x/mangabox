@@ -1239,8 +1239,6 @@
 				return out;
 			}, {});
 
-			console.log(altTitle);
-
 			if (altTitle.time == 'N/A') {
 				altTitle.time = serie.booksMetadata.releaseDate.split("-")[0];
 			};
@@ -1320,7 +1318,6 @@
 					`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
 					'POST',`{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
 				);
-				console.log(seriesBooks);
 			const readingDirection = seriesData.metadata.readingDirection;
 
 			currentbook = book;
@@ -1620,8 +1617,6 @@
 		// Function to trigger the home page layout
 		async function selectHome() {
 
-			console.log(dashboardBin);
-
 			libraryHighlight('homeButton');
 
 			seriesGrid.innerHTML = '';
@@ -1895,7 +1890,6 @@
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
 			Object.entries(dashboardElements).forEach(([name, item]) => {
-				console.log(item);
 				item.homeStrip.innerHTML = '';
 			});
 			clearReader(); //TODO forse eccessivo?
