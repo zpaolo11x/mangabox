@@ -1802,7 +1802,7 @@
 			//const books = await fetchBooks(seriesId);
 			//let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);			
 			let books = await callAPI(
-					`/api/v1/books/list?page=0&unpaged=true`, //TODO add sorting?
+					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO add sorting?
 					'POST',`{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
 				);
 
