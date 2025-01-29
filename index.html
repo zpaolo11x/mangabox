@@ -406,9 +406,10 @@
 
 			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
-					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.titleSort,asc`, //TODO sort by relevance with new filtering search?
+					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
 					'POST',`{"condition": {"allOf": []}}`
 				);
+			unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
 
 			const filteredBooks = unFilteredBooks.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||

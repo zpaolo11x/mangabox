@@ -1,1 +1,3 @@
 - Fix library menu button responsivity
+- Fix deprecated API calls
+- Improved serach result sorting
