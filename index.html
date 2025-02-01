@@ -1264,11 +1264,7 @@
 			const altTitle = getAltTitles(serie);
 			const creditString = altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
-				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">
-						${altTitle.story}
-					</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">
-						${altTitle.art}
-					</a>`;
+				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`;
 
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
