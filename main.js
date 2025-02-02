@@ -17,8 +17,9 @@ app.on('ready', () => {
   });
 
   mainWindow.loadFile('index.html'); // Replace 'index.html' with your main HTML file name
-  //mainWindow.webContents.setVisualZoomLevelLimits(1, 5);
+  mainWindow.webContents.setVisualZoomLevelLimits(1, 5);
   // Check URL changes and enable zoom conditionally
+ /* 
   mainWindow.webContents.on('did-navigate', (_, url) => {
 	if (url.includes('bookread')) {
 	  // ✅ Enable pinch-to-zoom only when URL contains "reader.html"
@@ -28,6 +29,7 @@ app.on('ready', () => {
 	  mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
 	}
  });
+ */
 });
 
 app.on('window-all-closed', () => {
