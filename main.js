@@ -17,6 +17,8 @@ app.on('ready', () => {
   });
 
   mainWindow.loadFile('index.html'); // Replace 'index.html' with your main HTML file name
+  mainWindow.webContents.setVisualZoomLevelLimits(1, 5);
+
 });
 
 app.on('window-all-closed', () => {
