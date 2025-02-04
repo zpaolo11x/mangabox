@@ -78,32 +78,3 @@ function showLoginDialog() {
 function hideLoginDialog() {
 	document.getElementById('loginScreen').classList.add('auth-hidden');
 }
-/*
-async function fetchLibraries() {
-	const mbAuthHeader = localStorage.getItem('mbAuthHeader');
-	const mbBaseUrl = localStorage.getItem('mbBaseUrl');
-
-	if (!mbAuthHeader || !mbBaseUrl) {
-		 showLoginDialog();
-		 return;
-	}
-
-	try {
-		 const response = await fetch(`${mbBaseUrl}/api/v1/libraries`, {
-			  headers: { 'Authorization': mbAuthHeader }
-		 });
-
-		 if (response.ok) {
-			  const data = await response.json();
-			  console.log('Libraries:', data); // Handle the data as needed
-		 } else if (response.status === 401) {
-			  // Invalid or expired auth
-			  localStorage.removeItem('mbAuthHeader');
-			  localStorage.removeItem('mbBaseUrl');
-			  showLoginDialog();
-		 }
-	} catch (error) {
-		 console.error('Fetch libraries error:', error);
-	}
-}
-*/
