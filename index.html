@@ -224,7 +224,13 @@
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 		const mbRememberMe = localStorage.getItem('mbRememberMe');
-		if (!mbRememberMe) {
+		console.log("REMEMBERME:" + mbRememberMe + " vs " + rememberMe.checked);
+		rememberMe.checked = (mbRememberMe == 'true');
+		console.log(rememberMe.checked);
+
+		//Questa cosa qui spostarla quando uno chiude la finestra!
+		if (mbRememberMe != 'true') {
+			console.log("XXXXX");
 			localStorage.removeItem('mbAuthHeader');
 		};
 
@@ -326,7 +332,18 @@
 			changeAccent(mbAccentColor);
 		});
 
-		logOut.addEventListener('click', () => {
+		logOut.addEventListener('click', async () => {
+
+			//await callAPI('/api/logout','POST');
+			/*fetch(`${mbBaseUrl}/api/logout`, {
+				method: 'POST',
+				credentials: "include", // Required to send cookies!
+				headers: {
+					'Authorization': mbAuthHeader,
+					'skip_zrok_interstitial': '1',
+				}
+			});
+			*/
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 			localStorage.removeItem('mbAuthHeader');
@@ -359,7 +376,7 @@
 				//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
-					'POST',`{"condition": {"allOf": []}}`
+					'POST', `{"condition": {"allOf": []}}`
 				);
 				const dataArray = unFilteredSeries.content;
 				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
@@ -392,7 +409,7 @@
 			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
-				'POST',`{"condition": {"allOf": []}}`
+				'POST', `{"condition": {"allOf": []}}`
 			);
 
 			const filteredSeries = unFilteredSeries.content.filter(item =>
@@ -406,9 +423,9 @@
 
 			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
-					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
-					'POST',`{"condition": {"allOf": []}}`
-				);
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
+				'POST', `{"condition": {"allOf": []}}`
+			);
 			unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
 
 			const filteredBooks = unFilteredBooks.content.filter(item =>
@@ -547,7 +564,7 @@
 			});
 		};
 
-		buildLanguageList();
+		//buildLanguageList();
 
 		const filterButtons = [
 			filterTable.sorting,
@@ -739,7 +756,7 @@
 				const response = await fetch(`${mbBaseUrl}${API_url}`, {
 					method: method,
 					headers: {
-						'Authorization': mbAuthHeader,
+						//'Authorization': mbAuthHeader,
 						'Content-Type': 'application/json',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					},
@@ -775,7 +792,7 @@
 				const response = await fetch(url, {
 					method: 'GET',
 					headers: {
-						'Authorization': mbAuthHeader,
+						//'Authorization': mbAuthHeader,
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					}
 				});
@@ -864,7 +881,7 @@
 			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
-				'POST',`{"condition": {"allOf": []}}`
+				'POST', `{"condition": {"allOf": []}}`
 			);
 
 			const filteredItems = unFilteredSeries.content.filter(item =>
@@ -1151,7 +1168,7 @@
 			//const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const allSeriesPage = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
-				'POST',`{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
+				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
 			);
 			allSeries = allSeriesPage.content;
 			// now it gets the series sorted by name so no need to elaborate the sorting, but for custom sorting based for example on title time?
@@ -1311,9 +1328,9 @@
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
 			//const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
 			const seriesBooks = await callAPI(
-					`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
-					'POST',`{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
-				);
+				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
+				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
+			);
 			const readingDirection = seriesData.metadata.readingDirection;
 
 			currentbook = book;
@@ -1640,10 +1657,10 @@
 			keepReading: {
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
 				getItems: async (page, size) => {
-				//	const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
+					//	const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
 					const out = await callAPI(
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
-						'POST',`{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
+						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
 
 					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
@@ -1675,7 +1692,7 @@
 					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
 					return (await callAPI(
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
-						'POST',`{"condition":{"allOf":[]}}`
+						'POST', `{"condition":{"allOf":[]}}`
 					));
 				},
 				showItems: async (input, target) => {
@@ -1709,7 +1726,7 @@
 					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
 					return (await callAPI(
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
-						'POST',`{"condition":{"readStatus":{"operator":"is","value":"READ"}}}`
+						'POST', `{"condition":{"readStatus":{"operator":"is","value":"READ"}}}`
 					));
 				},
 				showItems: async (input, target) => {
@@ -1798,9 +1815,9 @@
 			//const books = await fetchBooks(seriesId);
 			//let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);			
 			let books = await callAPI(
-					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
-					'POST',`{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
-				);
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
+			);
 
 			books = books.content;
 
@@ -1813,6 +1830,8 @@
 			changeAccent(mbAccentColor);
 			changeTheme(mbDarkTheme);
 			setIncognito(false);
+
+			buildLanguageList();
 
 			sectionShow(stickyContainer);
 
