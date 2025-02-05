@@ -224,9 +224,11 @@
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 		const mbRememberMe = localStorage.getItem('mbRememberMe');
-		console.log("REMEMBERME:"+mbRememberMe+" vs "+rememberMe.checked);
+		console.log("REMEMBERME:" + mbRememberMe + " vs " + rememberMe.checked);
 		rememberMe.checked = (mbRememberMe == 'true');
 		console.log(rememberMe.checked);
+
+		//Questa cosa qui spostarla quando uno chiude la finestra!
 		if (mbRememberMe != 'true') {
 			console.log("XXXXX");
 			localStorage.removeItem('mbAuthHeader');
@@ -331,7 +333,7 @@
 		});
 
 		logOut.addEventListener('click', async () => {
-			
+
 			//await callAPI('/api/logout','POST');
 			/*fetch(`${mbBaseUrl}/api/logout`, {
 				method: 'POST',
