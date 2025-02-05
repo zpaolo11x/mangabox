@@ -224,7 +224,11 @@
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 		const mbRememberMe = localStorage.getItem('mbRememberMe');
-		if (!mbRememberMe) {
+		console.log("REMEMBERME:"+mbRememberMe+" vs "+rememberMe.checked);
+		rememberMe.checked = (mbRememberMe == 'true');
+		console.log(rememberMe.checked);
+		if (mbRememberMe != 'true') {
+			console.log("XXXXX");
 			localStorage.removeItem('mbAuthHeader');
 		};
 
@@ -328,7 +332,7 @@
 
 		logOut.addEventListener('click', async () => {
 			
-			await callAPI('/api/logout','POST');
+			//await callAPI('/api/logout','POST');
 			/*fetch(`${mbBaseUrl}/api/logout`, {
 				method: 'POST',
 				credentials: "include", // Required to send cookies!
@@ -750,7 +754,7 @@
 				const response = await fetch(`${mbBaseUrl}${API_url}`, {
 					method: method,
 					headers: {
-						//'Authorization': mbAuthHeader,
+						'Authorization': mbAuthHeader,
 						'Content-Type': 'application/json',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					},
@@ -786,7 +790,7 @@
 				const response = await fetch(url, {
 					method: 'GET',
 					headers: {
-						//'Authorization': mbAuthHeader,
+						'Authorization': mbAuthHeader,
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					}
 				});

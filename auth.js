@@ -34,7 +34,7 @@ function login() {
 		.then(response => {
 			console.log(response);
 			if (response.ok) {
-				if (rememberMe) localStorage.setItem('mbRememberMe', rememberMe);
+				localStorage.setItem('mbRememberMe', rememberMe);
 				localStorage.setItem('mbAuthHeader', mbAuthHeader); // Save auth header
 				localStorage.setItem('mbBaseUrl', mbBaseUrl);       // Save base URL
 				hideLoginDialog();
