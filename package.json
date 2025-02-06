@@ -10,7 +10,7 @@
 	},
 	"devDependencies": {
 		"electron": "^26.1.0",
-		"electron-builder": "^24.3.0"
+		"electron-builder": "^24.13.3"
 	},
 	"build": {
 		"appId": "com.mangabox.app",

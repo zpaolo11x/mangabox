@@ -51,15 +51,10 @@ jobs:
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
-        shell: bash
-
-      - name: Update AppImage runtime
-        if: matrix.sys == 'linux'
         run: |
-          curl -L https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage -o appimagetool
-          chmod +x appimagetool
-          ./appimagetool --update dist/*.AppImage
+          export USE_SYSTEM_APPIMAGETOOL=true
+          npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
+        shell: bash
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
