@@ -25,7 +25,7 @@
 		],
 		"mac": {
 			"target": "dmg",
-			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",		
+			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
 			"icon": "assets/icons/mangabox.icns",
 			"category": "public.app-category.utilities"
 		},
@@ -34,14 +34,16 @@
 		},
 		"win": {
 			"target": "portable",
-			"artifactName": "MangaBox-${version}-Windows-${arch}.exe",		
+			"artifactName": "MangaBox-${version}-Windows-${arch}.exe",
 			"icon": "assets/icons/mangabox.ico"
 		},
 		"linux": {
 			"target": "AppImage",
-			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",		
-			"icon": "assets/icons/mangabox.png"
+			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",
+			"icon": "assets/icons/mangabox.png",
+			"appImage": {
+				"systemIntegration": "false"
+			}
 		}
 	}
- }
- 
+}
