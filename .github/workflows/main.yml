@@ -48,13 +48,20 @@ jobs:
           echo "version=$version" >> $GITHUB_ENV
         shell: bash
 
+      - name: Download new AppImage tool
+        if: matrix.sys == 'linux'
+        run: |
+          curl -L https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage -o appimagetool
+          chmod +x appimagetool
+          echo "APPIMAGE_TOOL=$(pwd)/appimagetool" >> $GITHUB_ENV
+
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          export USE_SYSTEM_APPIMAGETOOL=true
-          npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
+          # Do not set USE_SYSTEM_APPIMAGETOOL; APPIMAGE_TOOL is used instead.
+        run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
+
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
