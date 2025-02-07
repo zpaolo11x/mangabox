@@ -1873,6 +1873,8 @@
 			isDraggingProgressBar: false,
 
 			thumbHeight: getComputedStyle(document.documentElement).getPropertyValue('--mb-thumb-height'),//120,
+			thumbZoom: false,
+
 			uiPagesThumbs: [],
 			uiSpreadsThumbs: [],
 
@@ -1933,6 +1935,7 @@
 
 			readerViewer.innerHTML = '';
 
+			setThumbZoom(false);
 			sectionShow(readerContainer);
 
 			initViewer();
@@ -2019,13 +2022,18 @@
 			switchPageFormat((mbPageMode + 1) % 3);
 		})
 
-		thumbStripButton.addEventListener('click', () => {
-			rd.thumbHeight = rd.thumbHeight == 150 ? 300 : 150;
+		function setThumbZoom(status){
+			rd.thumbZoom = status;
+			rd.thumbHeight = status ? 300 : 150;
 			if (window.innerHeight - rd.thumbHeight - 60 - 60 - 30 < 0) {
 				rd.thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
 			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight + 'px');
 			centerThumb(true);
+		}
+
+		thumbStripButton.addEventListener('click', () => {
+			setThumbZoom(!rd.thumbZoom);
 		});
 
 		function updateProgressBar() {
@@ -2506,6 +2514,15 @@
 			jumpToSpread(rd.ltr ? rd.uiSpreads.length - 1 : 0);
 		}
 
+		function handleSmallThumbs() {
+			setThumbZoom(false);
+		};
+
+		function handleLargeThumbs() {
+			setThumbZoom(true);
+		};
+		
+
 		function getPage(index) {
 			let pageNumber = (1 + Number((rd.ltr
 				? rd.uiSpreadsPages[index][0]
@@ -2886,62 +2903,57 @@
 
 
 		//MB Reader touch response fucntions
-		let isSingleTouch = true; // Track if it's a single-touch gesture
 
-		let sweepX = 0;
-		let sweepY = 0;
+		function enableTouchResponse(item, threshold, onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown) {
+			item.SingleTouch = true;
+			item.TouchStartX = 0;
+			item.TouchStartY = 0;
 
-		let touchStartX = 0;
-		let touchStartY = 0;
-
-		function handleTouchStart(event) {
-
-			if (window.visualViewport.scale > 1) return;
-			if (event.touches.length > 1) {
-				isSingleTouch = false; // Multiple touches: ignore for swipe
-				return;
+			function handleTouchStart(event) {
+				if (window.visualViewport.scale > 1) return;
+				if (event.touches.length > 1) {
+					item.SingleTouch = false; // Multiple touches: ignore for swipe
+					return;
+				}
+				item.SingleTouch = true;
+				item.TouchStartX = event.touches[0].clientX;
+				item.TouchStartY = event.touches[0].clientY;
 			}
 
-			isSingleTouch = true;
-			touchStartX = event.touches[0].clientX;
-			touchStartY = event.touches[0].clientY;
-		}
+			function handleTouchMove(event) {
+				if (window.visualViewport.scale > 1 || !item.SingleTouch) return;
 
-		function handleTouchMove(event) {
-			if (window.visualViewport.scale > 1 || !isSingleTouch) return;
+				const touchEndX = event.touches[0].clientX;
+				const touchEndY = event.touches[0].clientY;
 
-			const touchEndX = event.touches[0].clientX;
-			const touchEndY = event.touches[0].clientY;
+				const diffX = touchEndX - item.TouchStartX;
+				const diffY = touchEndY - item.TouchStartY;
 
-			const diffX = touchEndX - touchStartX;
-			const diffY = touchEndY - touchStartY;
 
-			// Threshold for swipes
-			const threshold = 30; // Customize as needed
-
-			if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
-				if (diffX > 0) {
-					// Swipe right
-					handleLeftArrow();
-				} else {
-					// Swipe left
-					handleRightArrow();
+				if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
+					if (diffX > 0) {
+						onSwipeRight?.(); // Call custom right swipe function
+					} else {
+						onSwipeLeft?.(); // Call custom left swipe function
+					}
+					item.SingleTouch = false; // Prevent repeat action on the same swipe
+				} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
+					if (diffY > 0) {
+						onSwipeDown?.(); // Call custom down swipe function
+					} else {
+						onSwipeUp?.(); // Call custom down swipe function
+					}
+					item.SingleTouch = false;
 				}
-				isSingleTouch = false; // Reset to prevent repeat action on the same swipe
-			} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
-				if (diffY > 0) {
-					// Swipe down
-					handleCloseReader();
-				} else {
-					//Swipe up, do nothing
-				}
-				isSingleTouch = false;
 			}
+
+			item.addEventListener('touchstart', handleTouchStart);
+			item.addEventListener('touchmove', handleTouchMove);
 		}
 
-		// Add event listeners
-		touchPanel.addEventListener('touchstart', handleTouchStart);
-		touchPanel.addEventListener('touchmove', handleTouchMove);
+		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
+
+		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
 
 	</script>
 </body>
