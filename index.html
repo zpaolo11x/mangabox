@@ -2021,7 +2021,7 @@
 			switchPageFormat((mbPageMode + 1) % 3);
 		})
 
-		function setThumbZoom(status){
+		function setThumbZoom(status) {
 			rd.thumbZoom = status;
 			let thumbHeight = status ? 300 : 150;
 			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
@@ -2048,29 +2048,28 @@
 
 		}
 
+		function preloadPage(index) {
+			if (picLoadStackSize() >= 20000000) {
+				console.log("overquota");
+				return;
+			}
+			//console.log("ps " + (index > startSpreadIndex ? 'B' : 'C'));
+			populateSpread(index, true);
+		}
+
 		// This function triggers multiple preloads starting from the current spread
 		function preloadPages(startSpreadIndex, count) {
 			if (isSectionHidden(readerContainer)) return;
+
 			for (let i = 1; i <= count; i++) {
-				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack))) {
-					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
-						if (picLoadStackSize() >= 20000000) {
-							console.log("overquota");
-							return;
-						}
-						console.log("ps B");
-						populateSpread(startSpreadIndex + i, true);
-					});
+				const forwardIndex = startSpreadIndex + i;
+				const backwardIndex = startSpreadIndex - i;
+
+				if (forwardIndex < rd.uiSpreads.length && !(forwardIndex in rd.preloadStack)) {
+					startTimeout(forwardIndex, rd.preloadPicDelay * i, () => preloadPage(forwardIndex));
 				}
-				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack))) {
-					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
-						if (picLoadStackSize() >= 20000000) {
-							console.log("overquota");
-							return;
-						}
-						console.log("ps C");
-						populateSpread(startSpreadIndex - i, true);
-					});
+				if (backwardIndex >= 0 && !(backwardIndex in rd.preloadStack)) {
+					startTimeout(backwardIndex, rd.preloadPicDelay * i, () => preloadPage(backwardIndex));
 				}
 			}
 		}
@@ -2520,7 +2519,7 @@
 		function handleLargeThumbs() {
 			setThumbZoom(true);
 		};
-		
+
 
 		function getPage(index) {
 			let pageNumber = (1 + Number((rd.ltr
