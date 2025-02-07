@@ -1,3 +1,4 @@
+- Add vertical swipe to scale thumb view 
 - Fix library menu button responsivity
 - Fix deprecated API calls
-- Improved serach result sorting
+- Improve serach result sorting
