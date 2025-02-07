@@ -1872,7 +1872,6 @@
 			oldSpreadIndex: 0,
 			isDraggingProgressBar: false,
 
-			thumbHeight: getComputedStyle(document.documentElement).getPropertyValue('--mb-thumb-height'),//120,
 			thumbZoom: false,
 
 			uiPagesThumbs: [],
@@ -2024,11 +2023,11 @@
 
 		function setThumbZoom(status){
 			rd.thumbZoom = status;
-			rd.thumbHeight = status ? 300 : 150;
-			if (window.innerHeight - rd.thumbHeight - 60 - 60 - 30 < 0) {
-				rd.thumbHeight = window.innerHeight - 60 - 60 - 30;
+			let thumbHeight = status ? 300 : 150;
+			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
+				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight + 'px');
+			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
 			centerThumb(true);
 		}
 
@@ -2170,7 +2169,7 @@
 				});
 				imgThumb.style.height = "var(--mb-thumb-height-px)";
 				imgThumb.style.aspectRatio = element.AR;
-				//imgThumb.style.width = (rd.thumbHeight * element.AR) + 'px';
+
 				addLazyLoading(imgThumb);
 				rd.uiPagesThumbs.push(imgThumb);
 
