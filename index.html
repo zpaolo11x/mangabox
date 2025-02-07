@@ -2908,7 +2908,7 @@
 			item.TouchStartY = 0;
 
 			function handleTouchStart(event) {
-				if (window.visualViewport.scale > 1) return;
+				if (window.visualViewport.scale > 1.01) return;
 				if (event.touches.length > 1) {
 					item.SingleTouch = false; // Multiple touches: ignore for swipe
 					return;
@@ -2919,7 +2919,7 @@
 			}
 
 			function handleTouchMove(event) {
-				if (window.visualViewport.scale > 1 || !item.SingleTouch) return;
+				if (window.visualViewport.scale > 1.01 || !item.SingleTouch) return;
 
 				const touchEndX = event.touches[0].clientX;
 				const touchEndY = event.touches[0].clientY;
