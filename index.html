@@ -2940,7 +2940,7 @@
 					if (diffY > 0) {
 						onSwipeDown?.(); // Call custom down swipe function
 					} else {
-						onSwipeUp?.(); // Call custom down swipe function
+						onSwipeUp?.(); // Call custom up swipe function
 					}
 					item.SingleTouch = false;
 				}
@@ -2951,7 +2951,6 @@
 		}
 
 		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
-
 		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
 
 	</script>
