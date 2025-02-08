@@ -1,6 +1,6 @@
 {
 	"name": "mangabox",
-	"version": "0.0.17",
+	"version": "0.0.18",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Komga desktop client using Electron",
 	"main": "main.js",
@@ -9,8 +9,8 @@
 		"build": "electron-builder"
 	},
 	"devDependencies": {
-		"electron": "^26.1.0",
-		"electron-builder": "^24.3.0"
+		"electron": "^34.1.0",
+		"electron-builder": "^26.0.5"
 	},
 	"build": {
 		"appId": "com.mangabox.app",
@@ -25,7 +25,7 @@
 		],
 		"mac": {
 			"target": "dmg",
-			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",		
+			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
 			"icon": "assets/icons/mangabox.icns",
 			"category": "public.app-category.utilities"
 		},
@@ -34,14 +34,13 @@
 		},
 		"win": {
 			"target": "portable",
-			"artifactName": "MangaBox-${version}-Windows-${arch}.exe",		
+			"artifactName": "MangaBox-${version}-Windows-${arch}.exe",
 			"icon": "assets/icons/mangabox.ico"
 		},
 		"linux": {
 			"target": "AppImage",
-			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",		
+			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",
 			"icon": "assets/icons/mangabox.png"
 		}
 	}
- }
- 
+}

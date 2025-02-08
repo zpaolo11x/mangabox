@@ -1,3 +1,44 @@
+*API NOTES*
+
+/series/list
+
+Body to filter and show all the series from a certain library
+{
+  "condition": {
+    "libraryId": {
+      "operator": "is",
+      "value": "56"
+    }
+  }
+}
+
+All series from all libraries
+{
+  "condition": {
+    "libraryId": {
+      "operator": "isNot",
+      "value": ""
+    }
+  }
+}
+
+sort ascending by name?
+{
+  "condition": {
+    "libraryId": {
+      "operator": "isNot",
+      "value": ""
+    }
+  },
+  "sort": [
+    {
+      "property": "title",
+      "direction": "ASC"
+    }
+  ]
+}
+
+
 *Notes on model*
 
 **Sort and Filter**

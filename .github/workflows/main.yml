@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - devtest
+      - devtest_TEMP
 
 jobs:
   build:
@@ -13,15 +14,19 @@ jobs:
       matrix:
         include:
           - os: macos-latest
+            sys: mac
             arch: x64
             name: macOS-x64
           - os: macos-latest
+            sys: mac
             arch: arm64
             name: macOS-arm64
           - os: ubuntu-latest
+            sys: linux
             arch: x64
             name: Linux
           - os: windows-latest
+            sys: win
             arch: x64
             name: Windows
     steps:
@@ -46,21 +51,8 @@ jobs:
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          if [ "${{ matrix.os }}" == "macos-latest" ]; then
-            npm run build -- --mac --${{ matrix.arch }}
-          elif [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
-            npm run build -- --linux
-          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
-            npm run build -- --win
-          fi
+        run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
-        if: matrix.os != 'windows-latest'
-
-      - name: Build the app (Windows)
-        run: npm run build -- --win
-        shell: pwsh
-        if: matrix.os == 'windows-latest'
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4

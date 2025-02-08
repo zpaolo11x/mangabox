@@ -161,39 +161,39 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
-			 <img src="mangabox-logo-new.svg" width="80px" height="80px">
-			 <img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
-			 
-			 <div class="input-wrapper" title="Server Address">
-				  <i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				  <input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
-			 </div>
-			 
-			 <div class="input-wrapper" title="Username">
-				  <i class="fas fa-user"></i> <!-- Icon for username -->
-				  <input type="text" class="login-input" id="username" placeholder="Username">
-			 </div>
-			 
-			 <div class="input-wrapper" title="Password">
-				  <i class="fas fa-lock"></i> <!-- Icon for password -->
-				  <input type="password" class="login-input" id="password" placeholder="Password">
-			 </div>
-  
-			 <div class="login-buttons">
-				  <div class="remember-me-container">
-						<input type="checkbox" id="rememberMe" class="remember-me-checkbox">
-						<label for="rememberMe" class="remember-me-label">Remember Me</label>
-				  </div>
-				  <button class="login-button" onclick="login()">Login</button>
-			 </div>
-			 
-			 <p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
+			<img src="mangabox-logo-new.svg" width="80px" height="80px">
+			<img src="mangabox-name.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
+
+			<div class="input-wrapper" title="Server Address">
+				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
+				<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+			</div>
+
+			<div class="input-wrapper" title="Username">
+				<i class="fas fa-user"></i> <!-- Icon for username -->
+				<input type="text" class="login-input" id="username" placeholder="Username">
+			</div>
+
+			<div class="input-wrapper" title="Password">
+				<i class="fas fa-lock"></i> <!-- Icon for password -->
+				<input type="password" class="login-input" id="password" placeholder="Password">
+			</div>
+
+			<div class="login-buttons">
+				<div class="remember-me-container">
+					<input type="checkbox" id="rememberMe" class="remember-me-checkbox">
+					<label for="rememberMe" class="remember-me-label">Remember Me</label>
+				</div>
+				<button class="login-button" onclick="login()">Login</button>
+			</div>
+
+			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
 		</div>
-  </div>
-  
+	</div>
+
 
 
 	<div id="debuggerObj"></div>
@@ -224,7 +224,11 @@
 		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
 		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
 		const mbRememberMe = localStorage.getItem('mbRememberMe');
-		if (!mbRememberMe) {
+
+		rememberMe.checked = (mbRememberMe == 'true');
+
+		//Questa cosa qui spostarla quando uno chiude la finestra!
+		if (mbRememberMe != 'true') {
 			localStorage.removeItem('mbAuthHeader');
 		};
 
@@ -326,7 +330,18 @@
 			changeAccent(mbAccentColor);
 		});
 
-		logOut.addEventListener('click', () => {
+		logOut.addEventListener('click', async () => {
+
+			//await callAPI('/api/logout','POST');
+			/*fetch(`${mbBaseUrl}/api/logout`, {
+				method: 'POST',
+				credentials: "include", // Required to send cookies!
+				headers: {
+					'Authorization': mbAuthHeader,
+					'skip_zrok_interstitial': '1',
+				}
+			});
+			*/
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 			localStorage.removeItem('mbAuthHeader');
@@ -356,7 +371,11 @@
 
 			if (searchString.includes('y:')) {
 
-				const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+				//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+				const unFilteredSeries = await callAPI(
+					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+					'POST', `{"condition": {"allOf": []}}`
+				);
 				const dataArray = unFilteredSeries.content;
 				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
 
@@ -385,7 +404,11 @@
 				return
 			}
 
-			const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const unFilteredSeries = await callAPI(
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'POST', `{"condition": {"allOf": []}}`
+			);
 
 			const filteredSeries = unFilteredSeries.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||
@@ -396,7 +419,12 @@
 			);
 			displaySeries(filteredSeries, homeStripSeriesResults);
 
-			const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const unFilteredBooks = await callAPI(
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
+				'POST', `{"condition": {"allOf": []}}`
+			);
+			unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
 
 			const filteredBooks = unFilteredBooks.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||
@@ -534,7 +562,7 @@
 			});
 		};
 
-		buildLanguageList();
+		//buildLanguageList();
 
 		const filterButtons = [
 			filterTable.sorting,
@@ -701,6 +729,7 @@
 			};
 		}
 
+
 		window.addEventListener('resize', () => {
 			clearTimeout(resizeTimeout);
 			resizeTimeout = setTimeout(() => {
@@ -709,6 +738,21 @@
 				updateReaderOrientation();
 			}, 250);
 		});
+
+		function fixZoomOnRotate() {
+			let metaViewport = document.querySelector('meta[name="viewport"]');
+			if (!metaViewport) return;
+
+			// Temporarily disable zoom
+			metaViewport.content = "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no";
+
+			setTimeout(() => {
+				// Restore zoom capability after layout stabilizes
+				metaViewport.content = "width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1";
+			}, 50); // Adjust timeout as needed
+		}
+
+		window.addEventListener("orientationchange", fixZoomOnRotate);
 
 		// Fade in and Fade out routines
 		function wait(ms) {
@@ -848,7 +892,11 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
-			const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const unFilteredSeries = await callAPI(
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'POST', `{"condition": {"allOf": []}}`
+			);
 
 			const filteredItems = unFilteredSeries.content.filter(item =>
 				item.metadata.alternateTitles.some(
@@ -1131,7 +1179,11 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
-			const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			//const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
+			const allSeriesPage = await callAPI(
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
+			);
 			allSeries = allSeriesPage.content;
 			// now it gets the series sorted by name so no need to elaborate the sorting, but for custom sorting based for example on title time?
 			//allSeries.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
@@ -1218,12 +1270,10 @@
 				return out;
 			}, {});
 
-			console.log(altTitle);
-			
 			if (altTitle.time == 'N/A') {
 				altTitle.time = serie.booksMetadata.releaseDate.split("-")[0];
 			};
-			
+
 			if (altTitle.story == 'N/A') {
 				const bookWriter = serie.booksMetadata.authors.find(
 					(alt) => alt.role === "writer"
@@ -1245,11 +1295,7 @@
 			const altTitle = getAltTitles(serie);
 			const creditString = altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
-				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">
-						${altTitle.story}
-					</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">
-						${altTitle.art}
-					</a>`;
+				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`;
 
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
@@ -1294,7 +1340,11 @@
 
 		async function showBookDetails(book) {
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
-			const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
+			//const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
+			const seriesBooks = await callAPI(
+				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
+				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
+			);
 			const readingDirection = seriesData.metadata.readingDirection;
 
 			currentbook = book;
@@ -1594,8 +1644,6 @@
 		// Function to trigger the home page layout
 		async function selectHome() {
 
-			console.log(dashboardBin);
-
 			libraryHighlight('homeButton');
 
 			seriesGrid.innerHTML = '';
@@ -1623,8 +1671,13 @@
 			keepReading: {
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
 				getItems: async (page, size) => {
-					const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
-					out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
+					//	const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
+					const out = await callAPI(
+						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
+						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
+					);
+
+					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
 				showItems: async (input, target) => {
@@ -1650,7 +1703,11 @@
 			recentBooks: {
 				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
+					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
+					return (await callAPI(
+						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
+						'POST', `{"condition":{"allOf":[]}}`
+					));
 				},
 				showItems: async (input, target) => {
 					displayBooks(input, target, 'compact');
@@ -1680,7 +1737,11 @@
 			readBooks: {
 				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
+					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
+					return (await callAPI(
+						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
+						'POST', `{"condition":{"readStatus":{"operator":"is","value":"READ"}}}`
+					));
 				},
 				showItems: async (input, target) => {
 					displayBooks(input, target, 'timeline');
@@ -1766,7 +1827,12 @@
 
 			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 			//const books = await fetchBooks(seriesId);
-			let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);
+			//let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);			
+			let books = await callAPI(
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
+			);
+
 			books = books.content;
 
 			await libraryHighlight(libraryId);
@@ -1778,6 +1844,8 @@
 			changeAccent(mbAccentColor);
 			changeTheme(mbDarkTheme);
 			setIncognito(false);
+
+			buildLanguageList();
 
 			sectionShow(stickyContainer);
 
@@ -1818,7 +1886,8 @@
 			oldSpreadIndex: 0,
 			isDraggingProgressBar: false,
 
-			thumbHeight: getComputedStyle(document.documentElement).getPropertyValue('--mb-thumb-height'),//120,
+			thumbZoom: false,
+
 			uiPagesThumbs: [],
 			uiSpreadsThumbs: [],
 
@@ -1851,7 +1920,6 @@
 		function readBook(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
 			Object.entries(dashboardElements).forEach(([name, item]) => {
-				console.log(item);
 				item.homeStrip.innerHTML = '';
 			});
 			clearReader(); //TODO forse eccessivo?
@@ -1880,6 +1948,7 @@
 
 			readerViewer.innerHTML = '';
 
+			setThumbZoom(false);
 			sectionShow(readerContainer);
 
 			initViewer();
@@ -1966,13 +2035,18 @@
 			switchPageFormat((mbPageMode + 1) % 3);
 		})
 
-		thumbStripButton.addEventListener('click', () => {
-			rd.thumbHeight = rd.thumbHeight == 150 ? 300 : 150;
-			if (window.innerHeight - rd.thumbHeight - 60 - 60 - 30 < 0) {
-				rd.thumbHeight = window.innerHeight - 60 - 60 - 30;
+		function setThumbZoom(status) {
+			rd.thumbZoom = status;
+			let thumbHeight = status ? 300 : 150;
+			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
+				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', rd.thumbHeight + 'px');
+			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
 			centerThumb(true);
+		}
+
+		thumbStripButton.addEventListener('click', () => {
+			setThumbZoom(!rd.thumbZoom);
 		});
 
 		function updateProgressBar() {
@@ -1988,29 +2062,26 @@
 
 		}
 
+		function preloadPage(index) {
+			if (picLoadStackSize() >= 20000000) {
+				return;
+			}
+			populateSpread(index, true);
+		}
+
 		// This function triggers multiple preloads starting from the current spread
 		function preloadPages(startSpreadIndex, count) {
 			if (isSectionHidden(readerContainer)) return;
+
 			for (let i = 1; i <= count; i++) {
-				if ((startSpreadIndex + i < rd.uiSpreads.length) && (!((startSpreadIndex) + i in rd.preloadStack))) {
-					startTimeout(startSpreadIndex + i, rd.preloadPicDelay * i, () => {
-						if (picLoadStackSize() >= 20000000) {
-							console.log("overquota");
-							return;
-						}
-						console.log("ps B");
-						populateSpread(startSpreadIndex + i, true);
-					});
+				const forwardIndex = startSpreadIndex + i;
+				const backwardIndex = startSpreadIndex - i;
+
+				if (forwardIndex < rd.uiSpreads.length && !(forwardIndex in rd.preloadStack)) {
+					startTimeout(forwardIndex, rd.preloadPicDelay * i, () => preloadPage(forwardIndex));
 				}
-				if ((startSpreadIndex - i >= 0) && (!((startSpreadIndex) - i in rd.preloadStack))) {
-					startTimeout(startSpreadIndex - i, rd.preloadPicDelay * i, () => {
-						if (picLoadStackSize() >= 20000000) {
-							console.log("overquota");
-							return;
-						}
-						console.log("ps C");
-						populateSpread(startSpreadIndex - i, true);
-					});
+				if (backwardIndex >= 0 && !(backwardIndex in rd.preloadStack)) {
+					startTimeout(backwardIndex, rd.preloadPicDelay * i, () => preloadPage(backwardIndex));
 				}
 			}
 		}
@@ -2028,7 +2099,7 @@
 			leftLimit.innerText = rd.ltr ? 1 : rd.uiPages.length;
 			rightLimit.innerText = rd.ltr ? rd.uiPages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
-			console.log("ps A");
+
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 
@@ -2109,7 +2180,7 @@
 				});
 				imgThumb.style.height = "var(--mb-thumb-height-px)";
 				imgThumb.style.aspectRatio = element.AR;
-				//imgThumb.style.width = (rd.thumbHeight * element.AR) + 'px';
+
 				addLazyLoading(imgThumb);
 				rd.uiPagesThumbs.push(imgThumb);
 
@@ -2359,7 +2430,7 @@
 		}
 
 		function printStack(str_in) {
-			//return; //XXX Disable debug of preload stack
+			return; //XXX Disable debug of preload stack
 			let out = str_in + ' *';
 			rd.picLoadStack.forEach(element => {
 				out = out + ' ' + element;
@@ -2373,7 +2444,7 @@
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
-			console.log(rd.picLoadStack);
+
 			const promises = rd.uiSpreadsPages[spreadIndex].map(async (element, index) => {
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
@@ -2402,7 +2473,6 @@
 									rd.picLoadStack.splice(index, 1); // Remove from stack
 								};
 								if (!isPreload) {
-									console.log("preload 1");
 									preloadPages(spreadIndex, rd.preloadCount)
 								}
 							});
@@ -2425,7 +2495,6 @@
 						//XXX REMOVED Force preload when landing on a cached image
 
 						if (!isPreload) {
-							console.log("preload 2");
 							preloadPages(spreadIndex, rd.preloadCount)
 						}
 
@@ -2452,6 +2521,15 @@
 		function handleRightLimit() {
 			jumpToSpread(rd.ltr ? rd.uiSpreads.length - 1 : 0);
 		}
+
+		function handleSmallThumbs() {
+			setThumbZoom(false);
+		};
+
+		function handleLargeThumbs() {
+			setThumbZoom(true);
+		};
+
 
 		function getPage(index) {
 			let pageNumber = (1 + Number((rd.ltr
@@ -2582,39 +2660,6 @@
 			populateSpread(localNewSpreadIndex);
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
-			/*
-						if (rd.jumpTimeout === null) {
-							console.log("timeout null");
-							rd.oldSpreadIndex = localOldSpreadIndex;
-							rd.currentSpreadIndex = localNewSpreadIndex;
-			
-							rd.jumpTimeout = setTimeout(() => {
-								if (isSectionHidden(readerContainer)) return;
-								spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-								console.log("type1-a");
-								populateSpread(localNewSpreadIndex);
-								console.log("type1-b");
-								spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-								rd.jumpTimeout = null;
-							}, rd.loadDelay);
-			
-						} else {
-							console.log("timeout clear");
-							clearTimeout(rd.jumpTimeout);
-							rd.jumpTimeout = null;
-			
-							rd.currentSpreadIndex = localNewSpreadIndex;
-			
-							rd.jumpTimeout = setTimeout(() => {
-								if (isSectionHidden(readerContainer)) return;
-								spreadHide(rd.uiSpreads[rd.oldSpreadIndex]);
-								console.log("type2");
-								populateSpread(localNewSpreadIndex);
-								spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-								rd.jumpTimeout = null;
-							}, rd.loadDelay);
-						};
-			*/
 			centerThumb();
 			updateProgressBar();
 			history.replaceState(null, '', jumpString());
@@ -2833,62 +2878,56 @@
 
 
 		//MB Reader touch response fucntions
-		let isSingleTouch = true; // Track if it's a single-touch gesture
 
-		let sweepX = 0;
-		let sweepY = 0;
+		function enableTouchResponse(item, threshold, onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown) {
+			item.SingleTouch = true;
+			item.TouchStartX = 0;
+			item.TouchStartY = 0;
 
-		let touchStartX = 0;
-		let touchStartY = 0;
-
-		function handleTouchStart(event) {
-
-			if (window.visualViewport.scale > 1) return;
-			if (event.touches.length > 1) {
-				isSingleTouch = false; // Multiple touches: ignore for swipe
-				return;
+			function handleTouchStart(event) {
+				if (window.visualViewport.scale > 1.01) return;
+				if (event.touches.length > 1) {
+					item.SingleTouch = false; // Multiple touches: ignore for swipe
+					return;
+				}
+				item.SingleTouch = true;
+				item.TouchStartX = event.touches[0].clientX;
+				item.TouchStartY = event.touches[0].clientY;
 			}
 
-			isSingleTouch = true;
-			touchStartX = event.touches[0].clientX;
-			touchStartY = event.touches[0].clientY;
-		}
+			function handleTouchMove(event) {
+				if (window.visualViewport.scale > 1.01 || !item.SingleTouch) return;
 
-		function handleTouchMove(event) {
-			if (window.visualViewport.scale > 1 || !isSingleTouch) return;
+				const touchEndX = event.touches[0].clientX;
+				const touchEndY = event.touches[0].clientY;
 
-			const touchEndX = event.touches[0].clientX;
-			const touchEndY = event.touches[0].clientY;
+				const diffX = touchEndX - item.TouchStartX;
+				const diffY = touchEndY - item.TouchStartY;
 
-			const diffX = touchEndX - touchStartX;
-			const diffY = touchEndY - touchStartY;
 
-			// Threshold for swipes
-			const threshold = 30; // Customize as needed
-
-			if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
-				if (diffX > 0) {
-					// Swipe right
-					handleLeftArrow();
-				} else {
-					// Swipe left
-					handleRightArrow();
+				if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
+					if (diffX > 0) {
+						onSwipeRight?.(); // Call custom right swipe function
+					} else {
+						onSwipeLeft?.(); // Call custom left swipe function
+					}
+					item.SingleTouch = false; // Prevent repeat action on the same swipe
+				} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
+					if (diffY > 0) {
+						onSwipeDown?.(); // Call custom down swipe function
+					} else {
+						onSwipeUp?.(); // Call custom up swipe function
+					}
+					item.SingleTouch = false;
 				}
-				isSingleTouch = false; // Reset to prevent repeat action on the same swipe
-			} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
-				if (diffY > 0) {
-					// Swipe down
-					handleCloseReader();
-				} else {
-					//Swipe up, do nothing
-				}
-				isSingleTouch = false;
 			}
+
+			item.addEventListener('touchstart', handleTouchStart);
+			item.addEventListener('touchmove', handleTouchMove);
 		}
 
-		// Add event listeners
-		touchPanel.addEventListener('touchstart', handleTouchStart);
-		touchPanel.addEventListener('touchmove', handleTouchMove);
+		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
+		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
 
 	</script>
 </body>

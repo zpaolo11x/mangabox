@@ -199,6 +199,7 @@ a {
 
 #libraryMenu.disabled{
 	opacity:0;
+	pointer-events: none;
 }
 
 #libraryMenu:not(.disabled){
