@@ -1,4 +1,5 @@
 - Add vertical swipe to scale thumb view 
+- Fix rotation zooming on iOS PWA
 - Fix library menu button responsivity
 - Fix deprecated API calls
 - Improve serach result sorting
