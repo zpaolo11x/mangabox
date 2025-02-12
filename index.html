@@ -2036,13 +2036,24 @@
 		})
 
 		function setThumbZoom(status) {
+			thumbStrip.style.overflow = "hidden";
+
 			rd.thumbZoom = status;
+			const oldWidth = thumbStripInner.clientWidth;
+			
 			let thumbHeight = status ? 300 : 150;
 			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
 				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
 			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
-			centerThumb(true);
+			
+			const newWidth = thumbStripInner.clientWidth;
+			
+			scrollScaler = newWidth / oldWidth;
+			thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+			//centerThumb(true);
+			thumbStrip.style.overflow = "auto";
+
 		}
 
 		thumbStripButton.addEventListener('click', () => {
@@ -2632,8 +2643,8 @@
 				if (!fast) {
 					smoothScroll(thumbStrip, targetScrollLeft, 300);
 				} else {
-					smoothScroll(thumbStrip, targetScrollLeft, 10);
-					//thumbStrip.scrollLeft = targetScrollLeft;
+					//smoothScroll(thumbStrip, targetScrollLeft, 150);
+					thumbStrip.scrollLeft = targetScrollLeft;
 				};
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
