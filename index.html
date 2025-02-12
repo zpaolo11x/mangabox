@@ -1296,7 +1296,7 @@
 			const creditString = altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`;
-
+			
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
@@ -1304,7 +1304,7 @@
 				</div>
 			</div>
 			<div class="header-title">
-				<span class="title">${serie.metadata.title}</span>
+				<span class="title">${serie.metadata.title}<img width=20px height=20px style="margin-left:15px; margin-top:2px; vertical-align: top; border-radius:3px;" src="flags/${serie.metadata.language}.svg"></span>
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
