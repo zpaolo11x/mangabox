@@ -2632,7 +2632,8 @@
 				if (!fast) {
 					smoothScroll(thumbStrip, targetScrollLeft, 300);
 				} else {
-					thumbStrip.scrollLeft = targetScrollLeft;
+					smoothScroll(thumbStrip, targetScrollLeft, 10);
+					//thumbStrip.scrollLeft = targetScrollLeft;
 				};
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
