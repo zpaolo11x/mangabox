@@ -2037,9 +2037,9 @@
 		})
 
 		function setThumbZoom(status) {
-			thumbStrip.style.overflow = "hidden";
-
 			rd.thumbZoom = status;
+			rd.thumbsWidth = thumbStripInner.clientWidth;
+			thumbStrip.style.overflow = "hidden";
 			const oldWidth = thumbStripInner.clientWidth;
 			
 			let thumbHeight = status ? 300 : 150;
@@ -2053,7 +2053,6 @@
 			const scrollScaler = newWidth / oldWidth;
 			thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
 			//centerThumb(true);
-			thumbStrip.style.overflow = "auto";
 
 		}
 
@@ -2068,19 +2067,25 @@ const resizeObserver = new ResizeObserver(entries => {
 		const newWidth = thumbStripInner.clientWidth;
 		const scrollScaler = newWidth / oldWidth;
 		thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
-rd.thumbsWidth = newWidth;
+		rd.thumbsWidth = newWidth;
       console.log("Size changed:", entry.contentRect.width, entry.contentRect.height);
     }
 });
+
 resizeObserver.observe(thumbStripInner);
 
 //TODO remove this and trigger rd.thumbsWidth when zoom is initiated
+
 thumbStripInner.addEventListener("transitionrun", () => {
-	rd.thumbsWidth = thumbStripInner.clientWidth;
+
 	console.log("Transition started")
 });
 thumbStripInner.addEventListener("transitionstart", () => console.log("Transition actually started"));
-thumbStripInner.addEventListener("transitionend", () => console.log("Transition ended"));
+thumbStripInner.addEventListener("transitionend", () => {
+	thumbStrip.style.overflow = "auto";
+	console.log("Transition ended")
+
+});
 
 
 		function updateProgressBar() {
