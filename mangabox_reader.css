@@ -435,6 +435,7 @@ div.single-page {
 	background: white;
 	box-shadow: inset rgba(0, 0, 0, 0.1) 0px 0px 15px, rgba(0, 0, 0, 0.45) 0px 0px 8px;
 	border-radius: 3px;
+	transition: height 0.3s;
 }
 
 .spread-thumb.current {
@@ -449,7 +450,7 @@ div.single-page {
 	/*position:absolute;*/
 	display: inline-block;
 	/*object-fit: contain;*/
-	transition: opacity 0.3s;
+	transition: opacity 0.3s, height 0.3s;
 }
 
 .page-thumb.hidden {
