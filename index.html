@@ -1296,7 +1296,7 @@
 			const creditString = altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`;
-			
+
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
@@ -2041,15 +2041,15 @@
 			rd.thumbsWidth = thumbStripInner.clientWidth;
 			thumbStrip.style.overflow = "hidden";
 			const oldWidth = thumbStripInner.clientWidth;
-			
+
 			let thumbHeight = status ? 300 : 150;
 			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
 				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
 			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
-			
+
 			const newWidth = thumbStripInner.clientWidth;
-			
+
 			const scrollScaler = newWidth / oldWidth;
 			thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
 			//centerThumb(true);
@@ -2061,31 +2061,32 @@
 		});
 
 
-const resizeObserver = new ResizeObserver(entries => {
-    for (let entry of entries) {
-		const oldWidth = rd.thumbsWidth;
-		const newWidth = thumbStripInner.clientWidth;
-		const scrollScaler = newWidth / oldWidth;
-		thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
-		rd.thumbsWidth = newWidth;
-      console.log("Size changed:", entry.contentRect.width, entry.contentRect.height);
-    }
-});
+		const resizeObserver = new ResizeObserver(entries => {
+			for (let entry of entries) {
+				const oldWidth = rd.thumbsWidth;
+				const newWidth = thumbStripInner.clientWidth;
+				const scrollScaler = newWidth / oldWidth;
+				thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+				rd.thumbsWidth = newWidth;
+				testpr("Size changed:", entry.contentRect.width, entry.contentRect.height);
+			}
+		});
 
-resizeObserver.observe(thumbStripInner);
+		resizeObserver.observe(thumbStripInner);
 
-//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
+		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
 
-thumbStripInner.addEventListener("transitionrun", () => {
+		thumbStripInner.addEventListener("transitionrun", () => {
 
-	console.log("Transition started")
-});
-thumbStripInner.addEventListener("transitionstart", () => console.log("Transition actually started"));
-thumbStripInner.addEventListener("transitionend", () => {
-	thumbStrip.style.overflow = "auto";
-	console.log("Transition ended")
+			testpr("Transition started")
+		});
+		thumbStripInner.addEventListener("transitionstart", () => testpr("Transition actually started"));
 
-});
+		thumbStripInner.addEventListener("transitionend", () => {
+			thumbStrip.style.overflow = "auto";
+			testpr("Transition ended")
+
+		});
 
 
 		function updateProgressBar() {

@@ -1,3 +1,4 @@
+- Add smooth scaling transition for thumbnails
 - Add language flag in series summary
 - Improve touch response routines
 - Fix thumbnails disappearing on zoom
