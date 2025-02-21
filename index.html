@@ -1304,7 +1304,7 @@
 				</div>
 			</div>
 			<div class="header-title">
-				<span class="title">${serie.metadata.title}</span>
+				<span class="title">${serie.metadata.title}<img width=20px height=20px style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg"></span>
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
@@ -1860,7 +1860,7 @@
 		let rd = {
 			thresholdRatio: 0.89,	//Orientation threshold
 
-			preloadCount: 4,			// Imge preload count
+			preloadCount: 15,			// Imge preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
 			jumpTimeout: null,		// Timeout counter for jumping to spreads
@@ -1887,6 +1887,7 @@
 			isDraggingProgressBar: false,
 
 			thumbZoom: false,
+			thumbsWidth: 0,
 
 			uiPagesThumbs: [],
 			uiSpreadsThumbs: [],
@@ -2037,17 +2038,56 @@
 
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
+			rd.thumbsWidth = thumbStripInner.clientWidth;
+			thumbStrip.style.overflow = "hidden";
+			const oldWidth = thumbStripInner.clientWidth;
+
 			let thumbHeight = status ? 300 : 150;
 			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
 				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
 			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
-			centerThumb(true);
+
+			const newWidth = thumbStripInner.clientWidth;
+
+			const scrollScaler = newWidth / oldWidth;
+			thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+			//centerThumb(true);
+
 		}
 
 		thumbStripButton.addEventListener('click', () => {
 			setThumbZoom(!rd.thumbZoom);
 		});
+
+
+		const resizeObserver = new ResizeObserver(entries => {
+			for (let entry of entries) {
+				const oldWidth = rd.thumbsWidth;
+				const newWidth = thumbStripInner.clientWidth;
+				const scrollScaler = newWidth / oldWidth;
+				thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+				rd.thumbsWidth = newWidth;
+				testpr("Size changed:", entry.contentRect.width, entry.contentRect.height);
+			}
+		});
+
+		resizeObserver.observe(thumbStripInner);
+
+		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
+
+		thumbStripInner.addEventListener("transitionrun", () => {
+
+			testpr("Transition started")
+		});
+		thumbStripInner.addEventListener("transitionstart", () => testpr("Transition actually started"));
+
+		thumbStripInner.addEventListener("transitionend", () => {
+			thumbStrip.style.overflow = "auto";
+			testpr("Transition ended")
+
+		});
+
 
 		function updateProgressBar() {
 			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
@@ -2069,6 +2109,10 @@
 			populateSpread(index, true);
 		}
 
+		function calcDelay(i, delay, scale, power) {
+			return ((delay * (1 - scale) + (i ** power) * delay * scale))
+		}
+
 		// This function triggers multiple preloads starting from the current spread
 		function preloadPages(startSpreadIndex, count) {
 			if (isSectionHidden(readerContainer)) return;
@@ -2078,10 +2122,10 @@
 				const backwardIndex = startSpreadIndex - i;
 
 				if (forwardIndex < rd.uiSpreads.length && !(forwardIndex in rd.preloadStack)) {
-					startTimeout(forwardIndex, rd.preloadPicDelay * i, () => preloadPage(forwardIndex));
+					startTimeout(forwardIndex, calcDelay(i, 300, 0.25, 2), () => preloadPage(forwardIndex));
 				}
 				if (backwardIndex >= 0 && !(backwardIndex in rd.preloadStack)) {
-					startTimeout(backwardIndex, rd.preloadPicDelay * i, () => preloadPage(backwardIndex));
+					startTimeout(backwardIndex, calcDelay(i, 300, 0.25, 2), () => preloadPage(backwardIndex));
 				}
 			}
 		}
@@ -2628,6 +2672,7 @@
 				if (!fast) {
 					smoothScroll(thumbStrip, targetScrollLeft, 300);
 				} else {
+					//smoothScroll(thumbStrip, targetScrollLeft, 150);
 					thumbStrip.scrollLeft = targetScrollLeft;
 				};
 
