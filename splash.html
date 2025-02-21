@@ -1,0 +1,15 @@
+<html>
+<body style="text-align: center; font-family: Arial;">
+    <h2>Loading...</h2>
+    <img src="icon.png" width="128">
+    <p id="loading-message">Initializing...</p>
+    <script>
+        const messages = ["Loading...", "Preparing UI...", "Fetching data..."];
+        let index = 0;
+        setInterval(() => {
+            document.getElementById("loading-message").innerText = messages[index % messages.length];
+            index++;
+        }, 1000);
+    </script>
+</body>
+</html>
