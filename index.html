@@ -398,6 +398,7 @@
 					filterArray[index]
 				);
 				displaySeries(filteredSeries, homeStripSeriesResults);
+				focusItem('top');
 				setTimeout(updateSliderMax, 10);
 				sectionShow(searchStripsContainer);
 
@@ -418,6 +419,7 @@
 				)
 			);
 			displaySeries(filteredSeries, homeStripSeriesResults);
+			focusItem('top');
 
 			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
@@ -433,7 +435,7 @@
 					tagIn => tagIn.toLowerCase().includes(searchString)
 				)
 			);
-			displayBooks(filteredBooks, homeStripBooksResults, 'compact');
+			displayBooks(filteredBooks, homeStripBooksResults, 'compact', 'top');
 
 			setTimeout(updateSliderMax, 10);
 			sectionShow(searchStripsContainer);
@@ -921,6 +923,8 @@
 			);
 
 			displaySeries(filteredItems, seriesGrid);
+			focusItem('top');
+
 		}
 
 		//MB Touch And Hover Scaler 
@@ -1169,7 +1173,7 @@
 		}
 
 		// Creates and populates the series grid with the data from the series array.
-		async function displaySeries(series, target, focus = null) {
+		async function displaySeries(series, target) {
 
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
@@ -1187,9 +1191,6 @@
 			});
 
 			sectionShow(target); //XXX serve un fade qui???
-			if (!focus) {
-				mainContainer.scrollTo({ top: 0 });
-			}
 		}
 
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
@@ -1207,23 +1208,27 @@
 		}
 
 		function focusItem(focus) {
-			var item = document.getElementById(focus);
-			const yOffset = -150;
-			const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
+			if (focus == 'top') {
+				mainContainer.scrollTo({ top: 0 });	
+			} else if (focus) {
+				var item = document.getElementById(focus);
+				const yOffset = -150;
+				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
 
-			mainContainer.scrollTo({ top: y });
+				mainContainer.scrollTo({ top: y });
 
-			currentlyScaled = item.firstChild;
-			item.firstChild.classList.add('scaled');
+				currentlyScaled = item.firstChild;
+				item.firstChild.classList.add('scaled');
+			}
 		}
 
 		// Compose function that opens a specific library based on it ID
 		async function openLibrary(libraryId, seriesId) {
 			await libraryHighlight(libraryId);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
-			await displaySeries(allSeries, seriesGrid, seriesId);
+			await displaySeries(allSeries, seriesGrid);
 			fetchLibraryFilters(libraryId);
-			if (seriesId) focusItem(seriesId);
+			focusItem(seriesId || 'top');
 			libraryMenu.classList.remove('disabled');
 		}
 
@@ -1639,6 +1644,8 @@
 				sectionShow(seriesMiniHeader);
 				seriesMiniHeader.classList.add('collapse');
 
+				focusItem(focus);
+				/*
 				if (focus) {
 					var item = document.getElementById(focus);
 					const yOffset = -150;
@@ -1652,6 +1659,7 @@
 				} else {
 					mainContainer.scrollTo({ top: 0 });
 				}
+				*/
 			}
 		}
 
@@ -1736,7 +1744,7 @@
 					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
 				},
 				showItems: async (input, target) => {
-					displaySeries(input, target, 'noscroll');
+					displaySeries(input, target);
 				}
 			},
 
@@ -1746,7 +1754,7 @@
 					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
 				},
 				showItems: async (input, target) => {
-					displaySeries(input, target, 'noscroll');
+					displaySeries(input, target);
 				}
 			},
 
