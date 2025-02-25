@@ -851,8 +851,24 @@
 				buildSeriesItem(item, seriesData, null);
 			} else {
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
-				const bookData = await callAPI(`/api/v1/books/${bookId}`);
-				buildBookItem(item, bookData, format, null);
+				const { path, params } = parseHashAndParams();
+				if (path == 'dashboard' || path == '') {
+					console.log(mainContainer.scrollTop);
+					const oldTop = mainContainer.scrollTop;
+					await Promise.all(
+						Object.entries(dashboardElements).map(async ([name, item]) => {
+							const resultsObject = await item.getItems(0, 20);
+							//item.element.style.display = resultsObject.empty ? 'none' : 'block';
+							item.showItems(resultsObject.content, item.homeStrip);
+						})
+					);
+					setTimeout(updateSliderMax, 10);
+					console.log(mainContainer.scrollTop);
+					mainContainer.scrollTop = oldTop;
+				} else {
+					const bookData = await callAPI(`/api/v1/books/${bookId}`);
+					buildBookItem(item, bookData, format, null);
+				}
 			}
 		}
 
@@ -1720,7 +1736,7 @@
 					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
 				},
 				showItems: async (input, target) => {
-					displaySeries(input, target);
+					displaySeries(input, target, 'noscroll');
 				}
 			},
 
@@ -1730,7 +1746,7 @@
 					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
 				},
 				showItems: async (input, target) => {
-					displaySeries(input, target);
+					displaySeries(input, target, 'noscroll');
 				}
 			},
 
