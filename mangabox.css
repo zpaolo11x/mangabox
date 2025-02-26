@@ -234,7 +234,7 @@ a {
 }
 
 .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 265px) var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 265px) var(--mb-button-size);
 	margin-left: auto;
 	margin-right: 0px;
 	padding-left: var(--mb-library-gap);
@@ -1221,7 +1221,7 @@ span.mini-title {
 
 /* First reduction: only selected library is enlarged */
 body.sticky-medium .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 205px) var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 205px) var(--mb-button-size);
 }
 
 body.sticky-medium #stickyContainer .library-item:not(.search-field) {
@@ -1290,7 +1290,7 @@ body.sticky-small #bookDetailsContainer {
 }
 
 body.sticky-small .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
 	width: 100%;
 	padding-left:0px;
 }

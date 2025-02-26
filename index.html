@@ -46,6 +46,11 @@
 					</li>
 				</ul>
 				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+					<li id="toggleFullscreen" title="Toggle Fullscreen" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span class="fa-solid fa-expand glyph-dark"></span>
+						</div>
+					</li>
 					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
 						<div class="thumbnail-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
@@ -324,6 +329,17 @@
 		libraryMenu.addEventListener('click', () => {
 			sectionToggle(extraMenuBar);
 		});
+
+		toggleFullscreen.addEventListener("click", () => {
+			if (!document.fullscreenElement) {
+				document.documentElement.requestFullscreen().catch(err => {
+					console.error(`Error attempting to enable fullscreen: ${err.message}`);
+				});
+			} else {
+				document.exitFullscreen();
+			}
+		});
+
 
 		colorChanger.addEventListener('click', () => {
 			mbAccentColor = (mbAccentColor + 1) % swatches.length;
@@ -898,7 +914,7 @@
 			const libNum = libraries.length;
 			libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
 			libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
-			libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
+			libSizer.rightmin = libSmall * 4 + libGap * 4 + 150;
 			updateStickyMenu();
 		}
 
@@ -1209,7 +1225,7 @@
 
 		function focusItem(focus) {
 			if (focus == 'top') {
-				mainContainer.scrollTo({ top: 0 });	
+				mainContainer.scrollTo({ top: 0 });
 			} else if (focus) {
 				var item = document.getElementById(focus);
 				const yOffset = -150;
