@@ -741,7 +741,7 @@
 			}, 250);
 		});
 
-		function fixZoomOnRotate() {
+		function fixZoomOnPWA() {
 			let metaViewport = document.querySelector('meta[name="viewport"]');
 			if (!metaViewport) return;
 
@@ -754,8 +754,8 @@
 			}, 50); // Adjust timeout as needed
 		}
 
-		window.addEventListener("orientationchange", fixZoomOnRotate);
-
+		window.addEventListener("orientationchange", fixZoomOnPWA);
+		document.addEventListener("visibilitychange", fixZoomOnPWA);
 		// Fade in and Fade out routines
 		function wait(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));
