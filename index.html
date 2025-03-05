@@ -1741,7 +1741,7 @@
 			recentSeries: {
 				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/series/new?page=0&unpaged=true`));
+					return (await callAPI(`/api/v1/series/new?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
 					displaySeries(input, target);
@@ -1751,7 +1751,7 @@
 			updatedSeries: {
 				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/series/updated?page=0&unpaged=true`));
+					return (await callAPI(`/api/v1/series/updated?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
 					displaySeries(input, target);

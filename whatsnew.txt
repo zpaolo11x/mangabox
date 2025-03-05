@@ -1,2 +1,3 @@
 - Mark as read updates dashboard lists
 - Fixed unwanted zooming on Safari PWA
+- Reduced number of series in dashboard to 20
