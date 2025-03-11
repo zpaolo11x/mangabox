@@ -55,6 +55,14 @@
 	--mb-bar-color: #606060;
 }
 
+@font-face {
+	font-family: 'Roboto Flex';
+	src: url('./webfonts/roboto-flex-v27-latin-regular.woff2') format('woff2');
+	font-weight: 100 1000; /* Matches variable weight range */
+	font-display: swap;
+	font-style: normal;
+ }
+
 html, body {
 	overscroll-behavior: none;
 	overflow-y:visible;
