@@ -6,6 +6,7 @@ on:
       - main
       - devtest
       - devtest_TEMP
+      - devtest_fa
 
 jobs:
   build:
