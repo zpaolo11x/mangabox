@@ -488,15 +488,15 @@
 						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
 						filterFunction: (a) => true
 					}, {
-						name: 'read',
-						caption: 'Read',
-						iconClass: 'fa-solid fa-circle glyph-dark',
-						filterFunction: (a) => (a.mbSeriesRead == true)
-					}, {
 						name: 'unread',
 						caption: 'Unread',
 						iconClass: 'fa-regular fa-circle glyph-dark',
 						filterFunction: (a) => (a.mbSeriesRead == false)
+					}, {
+						name: 'read',
+						caption: 'Read',
+						iconClass: 'fa-solid fa-circle glyph-dark',
+						filterFunction: (a) => (a.mbSeriesRead == true)
 					}
 				],
 			},
