@@ -365,7 +365,8 @@
 		//MB Search Functions 
 
 		function timeSplit(inTime){
-			let outTime = inTime.replace('TBD', '9999').split('-');
+			let outTime = inTime ?? "1111";
+			outTime = outTime.replace('TBD', '9999').split('-');
 			if (outTime.length == 1) outTime.push(outTime[0]);
 			return outTime
 		}
@@ -1153,9 +1154,9 @@
 			}
 
 			item.mbSeriesTitle = serie.metadata.title ?? "";
-			item.mbSeriesDate = altTitle.time ?? "1111";
-			item.mbSeriesStart = timeSplit(item.mbSeriesDate)[0];
-			item.mbSeriesStop = timeSplit(item.mbSeriesDate)[1];
+
+			item.mbSeriesStart = timeSplit(altTitle.time)[0];
+			item.mbSeriesStop = timeSplit(altTitle.time)[1];
 
 			item.mbSeriesRead = (unreadCount == 0);
 			item.mbSeriesLTR = (serie.metadata.readingDirection == "LEFT_TO_RIGHT");
