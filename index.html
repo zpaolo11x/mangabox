@@ -365,7 +365,7 @@
 		//MB Search Functions 
 
 		function timeSplit(inTime){
-			let outTime = inTime.replace('TBD', '5000').split('-');
+			let outTime = inTime.replace('TBD', '9999').split('-');
 			if (outTime.length == 1) outTime.push(outTime[0]);
 			return outTime
 		}
@@ -469,22 +469,22 @@
 						name: '9_to_1',
 						caption: 'By start',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => a.mbSeriesStart.localeCompare(b.mbSeriesStart)
+						sortFunction: (a, b) => ((Number(a.mbSeriesStart)*10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart)*10000 + Number(b.mbSeriesStop))) 
 					}, {
 						name: '1_to_9',
 						caption: 'By start',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => b.mbSeriesStart.localeCompare(a.mbSeriesStart)
+						sortFunction: (a, b) => ((Number(b.mbSeriesStart)*10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart)*10000 + Number(a.mbSeriesStop))) 
 					}, {
 						name: '9_to_1',
 						caption: 'By end',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => a.mbSeriesStop.localeCompare(b.mbSeriesStop)
+						sortFunction: (a, b) => ((Number(a.mbSeriesStop)*10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop)*10000 + Number(b.mbSeriesStart))) 
 					}, {
 						name: '1_to_9',
 						caption: 'By end',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => b.mbSeriesStop.localeCompare(a.mbSeriesStop)
+						sortFunction: (a, b) => ((Number(b.mbSeriesStop)*10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop)*10000 + Number(a.mbSeriesStart))) 
 					}
 				],
 			},
@@ -1153,7 +1153,7 @@
 			}
 
 			item.mbSeriesTitle = serie.metadata.title ?? "";
-			item.mbSeriesDate = altTitle.time ?? "0000";
+			item.mbSeriesDate = altTitle.time ?? "1111";
 			item.mbSeriesStart = timeSplit(item.mbSeriesDate)[0];
 			item.mbSeriesStop = timeSplit(item.mbSeriesDate)[1];
 
