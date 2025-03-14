@@ -363,6 +363,13 @@
 		})
 
 		//MB Search Functions 
+
+		function timeSplit(inTime){
+			let outTime = inTime.replace('TBD', '5000').split('-');
+			if (outTime.length == 1) outTime.push(outTime[0]);
+			return outTime
+		}
+
 		async function performSearch(searchString) {
 			libraryHighlight('searchField');
 
@@ -374,9 +381,7 @@
 					'POST', `{"condition": {"allOf": []}}`
 				);
 				const dataArray = unFilteredSeries.content;
-				const searchYear = (searchString.split('y:')[1].split(' ')[0]).replace('TBD', '5000').split('-');
-
-				if (searchYear.length == 1) searchYear.push(searchYear[0]);
+				const searchYear = timeSplit(searchString.split('y:')[1].split(' ')[0]);
 
 				let start = [];
 				let stop = [];
@@ -462,14 +467,24 @@
 						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 					}, {
 						name: '9_to_1',
-						caption: 'By date',
+						caption: 'By start',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => a.mbSeriesDate.localeCompare(b.mbSeriesDate)
+						sortFunction: (a, b) => a.mbSeriesStart.localeCompare(b.mbSeriesStart)
 					}, {
 						name: '1_to_9',
-						caption: 'By date',
+						caption: 'By start',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => b.mbSeriesDate.localeCompare(a.mbSeriesDate)
+						sortFunction: (a, b) => b.mbSeriesStart.localeCompare(a.mbSeriesStart)
+					}, {
+						name: '9_to_1',
+						caption: 'By end',
+						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+						sortFunction: (a, b) => a.mbSeriesStop.localeCompare(b.mbSeriesStop)
+					}, {
+						name: '1_to_9',
+						caption: 'By end',
+						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+						sortFunction: (a, b) => b.mbSeriesStop.localeCompare(a.mbSeriesStop)
 					}
 				],
 			},
@@ -1139,6 +1154,9 @@
 
 			item.mbSeriesTitle = serie.metadata.title ?? "";
 			item.mbSeriesDate = altTitle.time ?? "0000";
+			item.mbSeriesStart = timeSplit(item.mbSeriesDate)[0];
+			item.mbSeriesStop = timeSplit(item.mbSeriesDate)[1];
+
 			item.mbSeriesRead = (unreadCount == 0);
 			item.mbSeriesLTR = (serie.metadata.readingDirection == "LEFT_TO_RIGHT");
 			item.mbSeriesLanguage = serie.metadata.language;
