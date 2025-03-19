@@ -1,5 +1,5 @@
-- Add smooth scaling transition for thumbnails
-- Add language flag in series summary
-- Improve touch response routines
-- Fix thumbnails disappearing on zoom
-- Update AppImage and Electron workflow
+- Sort by start date and end date
+- Mark as read updates dashboard lists
+- Reduced number of series in dashboard to 20
+- Fixed unwanted zooming on Safari PWA
+- Moved icons and fonts to local folders
