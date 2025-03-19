@@ -871,7 +871,6 @@
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				const { path, params } = parseHashAndParams();
 				if (path == 'dashboard' || path == '') {
-					console.log(mainContainer.scrollTop);
 					const oldTop = mainContainer.scrollTop;
 					await Promise.all(
 						Object.entries(dashboardElements).map(async ([name, item]) => {
@@ -881,7 +880,6 @@
 						})
 					);
 					setTimeout(updateSliderMax, 10);
-					console.log(mainContainer.scrollTop);
 					mainContainer.scrollTop = oldTop;
 				} else {
 					const bookData = await callAPI(`/api/v1/books/${bookId}`);
