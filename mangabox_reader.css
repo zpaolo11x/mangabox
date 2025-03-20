@@ -170,7 +170,7 @@ div.single-page,
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-
+	box-sizing: content-box;
 	transition: transform 0.3s; /* Smooth transition */
 }
 
