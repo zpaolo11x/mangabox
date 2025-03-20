@@ -2222,8 +2222,10 @@
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId) {
 
+			// Get the pages data structure from komga for the current book
 			const data = await callAPI(`/api/v1/books/${bookId}/pages`);
 
+			// Create dataOut structure with the fields from fetched data
 			const dataOut = data.map(page => ({
 				url: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
@@ -2242,6 +2244,7 @@
 
 			let leftPos = 0;
 
+			// Create html structure for every page and related page thumbnails
 			dataOut.forEach((element, index) => {
 				const imgDiv = addItem('div', {
 					className: 'page-container'
@@ -2273,14 +2276,37 @@
 				//thumbStripInner.insertBefore(imgThumb, parent.firstChild);
 			});
 
+			// Prepare "spreads" structure based on the layout chosen in the UI
+
 			let i = 0;
 			let spreadTotal = 0;
 
 			readerViewer.classList.remove('spread-layout');
 			readerViewer.classList.remove('page-layout');
 
+			/* mbPageMode is:
+				0 : two pages side by side, fit inside the window with no cuts
+				1 : one page: each page, even double spreads, is shown alone on the screen with no cuts
+				2 : mode 0 and mode 1 are selected based on the actual screen aspect ratio, whichever is better for reducing margins
+			*/
+
 			readerHorizontal = (mbPageMode == 0) || ((screenAR / readerMaxRatio > rd.thresholdRatio) && !(mbPageMode == 1));
 
+			// If readerHorizontal is true spread-layout is used, otherwise page-layout.
+			/* TODO NEW PAGE LAYOUTS:
+				
+				Let's add a new mode where pages are always assembled in spreads, but instead of fitting them in the screen,
+				they fit based on a single page. Assuming that spreads are symmetric, just align half of the spread. How?
+				- Calculate the half size of spreads (easier, works for every spread based on its size)
+				- Use page dimensions unless it's a double spread (more complicated since it needs to differentiate 1p to 2p)
+
+				How to scroll it?
+				- For 2x1p soreads get the page from the url, get the spread number, center the related 
+				  spread based on its attached pages and based on the number above. 
+				- For 2p spreads where there's no left or right page, you can center on right side for RTL and on left for LTR, 
+				  but how to manage page turns? Is there a way to know if the previous page was befor or after the one?
+
+			*/
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
 
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
