@@ -2639,13 +2639,11 @@
 				||
 				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-left'))
 			){
-				console.log("A");
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left-now")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
 			}
 			else {
-				console.log("B");
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "spread-left-now");
@@ -2660,13 +2658,11 @@
 				||
 				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-right'))
 			){
-				console.log("C");
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right-now")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
 			}
 			else {
-				console.log("D");
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "spread-right-now");
