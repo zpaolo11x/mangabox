@@ -2633,11 +2633,15 @@
 		}
 
 		function handleLeftArrow() {
-			jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
+		rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
+		rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
+			//jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
 		}
 
 		function handleRightArrow() {
-			jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
+			rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
+			rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
+			//jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
 		}
 
 		function handleLeftLimit() {

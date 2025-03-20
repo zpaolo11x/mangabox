@@ -170,13 +170,20 @@ div.single-page,
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	box-sizing: content-box;
-	/*overflow-x: hidden;*/
+
+	transition: transform 0.3s; /* Smooth transition */
 }
 
-div.spread-left{
-	left: 0%
+/* Move element to the left */
+div.spread-left {
+	transform: translate(-75%, -50%)!important; /* Shifts further left */
 }
+
+/* Move element to the right */
+div.spread-right {
+	transform: translate(-25%, -50%)!important; /* Shifts further right */
+}
+
 
 .LTR #coverlay {
 	background-image:
