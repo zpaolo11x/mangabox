@@ -2358,7 +2358,7 @@
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
 						spreadItem.appendChild(rd.uiPagesContainer[i]);
-						spreadItem.classList.add('double-page', 'flock')
+						spreadItem.classList.add('double-page', 'flock', 'spread-left');
 
 						buildSize2P(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2377,7 +2377,7 @@
 						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
 						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
 
-						spreadItem.classList.add('two-pages', 'flock')
+						spreadItem.classList.add('two-pages', 'flock', 'spread-left');
 
 						buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 						buildFlock(spreadItem, i, dataOut.length);
