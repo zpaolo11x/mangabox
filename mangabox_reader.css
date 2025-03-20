@@ -171,21 +171,34 @@ div.single-page,
 	top: 50%;
 	transform: translate(-50%, -50%);
 	box-sizing: content-box;
-	transition: transform 0.3s; /* Smooth transition */
 }
 
 /* Move element to the left */
 div.spread-left {
-	transform: translate(-75%, -50%)!important; /* Shifts further left */
 	box-sizing: content-box;
+	transform: translate(-75%, -50%)!important; /* Shifts further left */
+	transition: transform 0.3s; /* Smooth transition */
 }
 
 /* Move element to the right */
 div.spread-right {
-	transform: translate(-25%, -50%)!important; /* Shifts further right */
 	box-sizing: content-box;
+	transform: translate(-25%, -50%)!important; /* Shifts further right */
+	transition: transform 0.3s; /* Smooth transition */
+}
+/* Move element to the left */
+div.spread-left-now {
+	box-sizing: content-box;
+	transform: translate(-75%, -50%)!important; /* Shifts further left */
+	transition: none; /* Smooth transition */
 }
 
+/* Move element to the right */
+div.spread-right-now {
+	box-sizing: content-box;
+	transform: translate(-25%, -50%)!important; /* Shifts further right */
+	transition: none; /* Smooth transition */
+}
 
 .LTR #coverlay {
 	background-image:

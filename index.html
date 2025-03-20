@@ -2358,7 +2358,7 @@
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
 						spreadItem.appendChild(rd.uiPagesContainer[i]);
-						spreadItem.classList.add('double-page', 'flock', 'spread-left');
+						spreadItem.classList.add('double-page', 'flock', 'spread-left-now');
 
 						buildSize2P(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2377,7 +2377,7 @@
 						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
 						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
 
-						spreadItem.classList.add('two-pages', 'flock', 'spread-left');
+						spreadItem.classList.add('two-pages', 'flock', 'spread-left-now');
 
 						buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2633,15 +2633,45 @@
 		}
 
 		function handleLeftArrow() {
-		rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
-		rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
-			//jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
+
+			if (
+				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-left-now'))	
+				||
+				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-left'))
+			){
+				console.log("A");
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left-now")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
+			}
+			else {
+				console.log("B");
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "spread-left-now");
+				//rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
+			}
 		}
 
 		function handleRightArrow() {
-			rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
-			rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
-			//jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
+
+			if (
+				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-right-now'))	
+				||
+				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-right'))
+			){
+				console.log("C");
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right-now")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
+			}
+			else {
+				console.log("D");
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "spread-right-now");
+				//rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
+			}
 		}
 
 		function handleLeftLimit() {
@@ -2772,8 +2802,8 @@
 			}
 
 		}
-
-		function jumpToSpread(newSpreadTarget) {
+   // TODO Verificare negli altri casi se usare una spreadClass neutra
+		function jumpToSpread(newSpreadTarget, spreadClass = "spread-left-now") {
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
@@ -2787,10 +2817,20 @@
 
 			if (isSectionHidden(readerContainer)) return;
 
+
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
 			populateSpread(localNewSpreadIndex);
-			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
+			console.log(rd.uiSpreads[localNewSpreadIndex].classList);
+			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-left");
+			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-right");
+			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-left-now");
+			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-right-now");
+			rd.uiSpreads[localNewSpreadIndex].classList.add(spreadClass);
+			console.log(rd.uiSpreads[localNewSpreadIndex].classList);
+
+			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+			
 			centerThumb();
 			updateProgressBar();
 			history.replaceState(null, '', jumpString());
