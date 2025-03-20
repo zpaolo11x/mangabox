@@ -160,6 +160,13 @@ img.multiply {
 	-webkit-filter: sepia(5%) opacity(100%);
 }
 
+div.spread-left,
+div.spread-right {
+    will-change: transform;
+	 contain: paint;
+
+}
+
 div.double-page,
 div.two-pages,
 div.cover-page,
@@ -176,27 +183,27 @@ div.single-page,
 /* Move element to the left */
 div.spread-left {
 	box-sizing: content-box;
-	transform: translate(-75%, -50%)!important; /* Shifts further left */
-	transition: transform 0.3s; /* Smooth transition */
+	transform: translate(-75%, -50%) translateZ(0)!important; /* Shifts further left */
+	transition: transform 0.5s; /* Smooth transition */
 }
 
 /* Move element to the right */
 div.spread-right {
 	box-sizing: content-box;
-	transform: translate(-25%, -50%)!important; /* Shifts further right */
-	transition: transform 0.3s; /* Smooth transition */
+	transform: translate(-25%, -50%) translateZ(0)!important; /* Shifts further right */
+	transition: transform 0.5s; /* Smooth transition */
 }
 /* Move element to the left */
 div.spread-left-now {
 	box-sizing: content-box;
-	transform: translate(-75%, -50%)!important; /* Shifts further left */
+	transform: translate(-75%, -50%) translateZ(0)!important; /* Shifts further left */
 	transition: none; /* Smooth transition */
 }
 
 /* Move element to the right */
 div.spread-right-now {
 	box-sizing: content-box;
-	transform: translate(-25%, -50%)!important; /* Shifts further right */
+	transform: translate(-25%, -50%) translateZ(0)!important; /* Shifts further right */
 	transition: none; /* Smooth transition */
 }
 
