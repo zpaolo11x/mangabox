@@ -175,7 +175,6 @@ div.single-page,
 
 /* Move element to the left */
 div.spread-left {
-
 	box-sizing: content-box;
 	transform: translate(-75%, -50%)!important;
 	transition: transform 0.5s linear;
@@ -183,14 +182,12 @@ div.spread-left {
 
 /* Move element to the right */
 div.spread-right {
-
 	box-sizing: content-box;
 	transform: translate(-25%, -50%)!important;
 	transition: transform 0.5s linear;
 }
 /* Move element to the left */
 div.spread-left-now {
-
 	box-sizing: content-box;
 	transform: translate(-75%, -50%)!important;
 	transition: none; 
@@ -198,7 +195,6 @@ div.spread-left-now {
 
 /* Move element to the right */
 div.spread-right-now {
-
 	box-sizing: content-box;
 	transform: translate(-25%, -50%)!important;
 	transition: none;
