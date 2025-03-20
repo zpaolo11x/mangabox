@@ -2358,7 +2358,7 @@
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
 						spreadItem.appendChild(rd.uiPagesContainer[i]);
-						spreadItem.classList.add('double-page', 'spread-left-now');
+						spreadItem.classList.add('double-page', 'spread-left');
 
 						buildSize2P(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2377,7 +2377,7 @@
 						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
 						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
 
-						spreadItem.classList.add('two-pages', 'spread-left-now');
+						spreadItem.classList.add('two-pages', 'spread-left');
 
 						buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2634,38 +2634,26 @@
 
 		function handleLeftArrow() {
 
-			if (
-				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-left-now'))	
-				||
-				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-left'))
-			){
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left-now")
+			if (rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-left')){
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.add("smooth-div")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
 			}
 			else {
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "spread-left-now");
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "spread-left");
 				//rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
 			}
 		}
 
 		function handleRightArrow() {
 
-			if (
-				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-right-now'))	
-				||
-				(rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-right'))
-			){
+			if (rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-right')){
 				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right-now")
+				rd.uiSpreads[rd.currentSpreadIndex].classList.add("smooth-div")
 				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
 			}
 			else {
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "spread-right-now");
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "spread-right");
 				//rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
 			}
 		}
@@ -2799,7 +2787,7 @@
 
 		}
    // TODO Verificare negli altri casi se usare una spreadClass neutra
-		function jumpToSpread(newSpreadTarget, spreadClass = "spread-left-now") {
+		function jumpToSpread(newSpreadTarget, spreadClass = "spread-left") {
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
@@ -2815,15 +2803,16 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+			rd.uiSpreads[localOldSpreadIndex].classList.remove("spread-left");
+			rd.uiSpreads[localOldSpreadIndex].classList.remove("spread-right");
+			rd.uiSpreads[localOldSpreadIndex].classList.remove("smooth-div");
+
 			populateSpread(localNewSpreadIndex);
 
-			console.log(rd.uiSpreads[localNewSpreadIndex].classList);
 			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-left");
 			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-right");
-			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-left-now");
-			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-right-now");
+			rd.uiSpreads[localNewSpreadIndex].classList.remove("smooth-div");
 			rd.uiSpreads[localNewSpreadIndex].classList.add(spreadClass);
-			console.log(rd.uiSpreads[localNewSpreadIndex].classList);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 			
