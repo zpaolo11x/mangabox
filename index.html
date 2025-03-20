@@ -241,6 +241,7 @@
 		let screenAR = getScreenAR();
 		let readerMaxRatio = 1;
 		let readerHorizontal = true;
+		let fitSinglePage = true;
 		let dashboardBin = "";
 		/*
 			When an item from a bin is opened, the dashboardBin is set, so when the dashboard is reloaded
@@ -2202,6 +2203,12 @@
 			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
 		}
 
+		// Size the spread for a two pages spread with fit on page
+		function buildSize2P(item, ratio) {
+			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
+			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
+		}
+
 		function buildFlock(item, index, total) {
 			const flockRate = [
 				rd.ltr ? (1.0 - index / total) : (index / total),
@@ -2290,7 +2297,16 @@
 				2 : mode 0 and mode 1 are selected based on the actual screen aspect ratio, whichever is better for reducing margins
 			*/
 
+			// TODO change formula below to account for fitSinglePage 
+
 			readerHorizontal = (mbPageMode == 0) || ((screenAR / readerMaxRatio > rd.thresholdRatio) && !(mbPageMode == 1));
+
+			/* TODO keep the three modes, but 
+				mode 0 is forced 2x1p 
+				mode 1 is forced 1p (even for double spreads)
+				mode 2 autorotates between 2p horizontal and 2p vertical!
+			
+			*/
 
 			// If readerHorizontal is true spread-layout is used, otherwise page-layout.
 			/* TODO NEW PAGE LAYOUTS:
@@ -2311,7 +2327,7 @@
 
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
-			if (readerHorizontal) {
+			if (readerHorizontal || fitSinglePage) {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
 					const spreadItemThumb = document.createElement('div');
@@ -2344,7 +2360,7 @@
 						spreadItem.appendChild(rd.uiPagesContainer[i]);
 						spreadItem.classList.add('double-page', 'flock')
 
-						buildSize(spreadItem, dataOut[i].AR);
+						buildSize2P(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
 
 						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
@@ -2363,12 +2379,11 @@
 
 						spreadItem.classList.add('two-pages', 'flock')
 
-						buildSize(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
-
+						buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 						buildFlock(spreadItem, i, dataOut.length);
 
-						buildSizePic(rd.uiPages[i], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i].AR);
-						buildSizePic(rd.uiPages[i + 1], dataOut[i].AR + dataOut[i + 1].AR, dataOut[i + 1].AR);
+						buildSizePic(rd.uiPages[i], dataOut[i].AR, dataOut[i].AR);
+						buildSizePic(rd.uiPages[i + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
 						rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
 						rd.uiPagesContainer[i].style.height = rd.uiPages[i].style.height;
 						rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
