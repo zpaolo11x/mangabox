@@ -333,7 +333,7 @@ div.single-page {
 	align-items: center;
 	height: 100vh;
 	/*overflow: hidden;*/
-	transition: transform 0.001s;
+	transition: transform 0.1s;
 
 	background: none;
 }
