@@ -343,12 +343,12 @@ div.single-page {
 }
 
 /* Move element to the left */
-.spread-left {
+.spread-left-page-page {
 	transform: translate(-62.5%, -50%)!important;
 }
 
 /* Move element to the right */
-.spread-right {
+.spread-left-page {
 	transform: translate(-12.5%, -50%)!important;
 }
 
