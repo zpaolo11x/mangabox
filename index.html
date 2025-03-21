@@ -2460,7 +2460,7 @@
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
-				readerViewer.classList.add(currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page'));
+				spreadSetFocus(currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page'));
 
 			} else {
 				while (i < dataOut.length) {
@@ -2838,7 +2838,7 @@
 
 			populateSpread(localNewSpreadIndex);
 
-			readerViewer.classList.add(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass);
+			spreadSetFocus(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
