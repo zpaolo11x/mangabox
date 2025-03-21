@@ -174,17 +174,17 @@ div.single-page,
 }
 
 div.smooth-div{
-	/*transition: transform 0.3s linear;*/
+	transition: transform 0.3s linear;
 }
 
 /* Move element to the left */
 div.spread-left {
-	/*transform: translate(-75%, -50%)!important;*/
+	transform: translate(-75%, -50%)!important;
 }
 
 /* Move element to the right */
 div.spread-right {
-	/*transform: translate(-25%, -50%)!important;*/
+	transform: translate(-25%, -50%)!important;
 }
 
 .LTR #coverlay {
@@ -331,11 +331,12 @@ div.single-page {
 }
 
 #readerViewer {
-	position: fixed;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
+	position: absolute;
+
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	box-sizing: content-box;
 
 	margin: 0;
 	padding: 0;
@@ -343,7 +344,8 @@ div.single-page {
 	flex-direction: column;
 	align-items: center;
 	height: 100vh;
-	overflow: hidden;
+	width: 100vw;
+	/*overflow: hidden;*/
 
 	background: none;
 }

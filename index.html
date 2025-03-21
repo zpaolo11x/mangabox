@@ -2324,6 +2324,7 @@
 
 			*/
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
+			readerViewer.classList.add('spread-left');
 
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
@@ -2361,7 +2362,7 @@
 						spreadItem.classList.add('double-page', 'spread-left');
 
 						buildSize2P(spreadItem, dataOut[i].AR);
-						buildFlock(spreadItem, i, dataOut.length);
+						//buildFlock(spreadItem, i, dataOut.length);
 
 						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
@@ -2380,7 +2381,7 @@
 						spreadItem.classList.add('two-pages', 'spread-left');
 
 						buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
-						buildFlock(spreadItem, i, dataOut.length);
+						//buildFlock(spreadItem, i, dataOut.length);
 
 						buildSizePic(rd.uiPages[i], dataOut[i].AR, dataOut[i].AR);
 						buildSizePic(rd.uiPages[i + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
@@ -2403,7 +2404,7 @@
 						spreadItem.classList.add('double-page')
 
 						buildSize(spreadItem, 2 * dataOut[i].AR);
-						buildFlock(spreadItem, i, dataOut.length);
+						//buildFlock(spreadItem, i, dataOut.length);
 
 						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width * 0.5;
 						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
@@ -2634,10 +2635,10 @@
 
 		function handleLeftArrow() {
 
-			if (rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-left')){
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-left")
-				rd.uiSpreads[rd.currentSpreadIndex].classList.add("smooth-div")
-				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-right")
+			if (readerViewer.classList.contains('spread-left')){
+				readerViewer.classList.remove("spread-left")
+				readerViewer.classList.add("smooth-div")
+				readerViewer.classList.add("spread-right")
 			}
 			else {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "spread-left");
@@ -2647,10 +2648,10 @@
 
 		function handleRightArrow() {
 
-			if (rd.uiSpreads[rd.currentSpreadIndex].classList.contains('spread-right')){
-				rd.uiSpreads[rd.currentSpreadIndex].classList.remove("spread-right")
-				rd.uiSpreads[rd.currentSpreadIndex].classList.add("smooth-div")
-				rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left")
+			if (readerViewer.classList.contains('spread-right')){
+				readerViewer.classList.remove("spread-right")
+				readerViewer.classList.add("smooth-div")
+				readerViewer.classList.add("spread-left")
 			}
 			else {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "spread-right");
@@ -2803,16 +2804,13 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-			rd.uiSpreads[localOldSpreadIndex].classList.remove("spread-left");
-			rd.uiSpreads[localOldSpreadIndex].classList.remove("spread-right");
-			rd.uiSpreads[localOldSpreadIndex].classList.remove("smooth-div");
+			readerViewer.classList.remove("spread-left");
+			readerViewer.classList.remove("spread-right");
+			readerViewer.classList.remove("smooth-div");
 
 			populateSpread(localNewSpreadIndex);
 
-			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-left");
-			rd.uiSpreads[localNewSpreadIndex].classList.remove("spread-right");
-			rd.uiSpreads[localNewSpreadIndex].classList.remove("smooth-div");
-			rd.uiSpreads[localNewSpreadIndex].classList.add(spreadClass);
+			readerViewer.classList.add(spreadClass);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 			
