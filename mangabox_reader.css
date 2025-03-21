@@ -333,12 +333,13 @@ div.single-page {
 	align-items: center;
 	height: 100vh;
 	/*overflow: hidden;*/
+	transition: transform 0.1s;
 
 	background: none;
 }
 
 .smooth-div{
-	transition: transform 0.2s;
+	transition: transform 0.2s!important;
 }
 
 /* Move element to the left */
