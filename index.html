@@ -2026,6 +2026,14 @@
 			});
 		}
 
+		function spreadSetFocus(focusString){
+			readerViewer.classList.remove('focus-right-page', 'focus-left-page', 'focus-center');
+			if (focusString != "none") {
+				readerViewer.classList.add(focusString);
+			}
+		}
+
+
 		// Setup close button
 		function handleCloseReader() {
 			hideMenu();
@@ -2033,10 +2041,8 @@
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
-				readerViewer.classList.remove("focus-right-page");
-				readerViewer.classList.remove("focus-left-page");
-				readerViewer.classList.add("smooth-div")
-				readerViewer.classList.remove("focus-center");
+				spreadSetFocus("none");
+				readerViewer.classList.remove("smooth-div");
 				clearReader();
 			}, 300); //300ms timeout so the reader can slide out
 
@@ -2373,7 +2379,7 @@
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
 						spreadItem.appendChild(rd.uiPagesContainer[i]);
-						spreadItem.classList.add('double-page', 'flock', 'focus-right-page');
+						spreadItem.classList.add('double-page', 'flock');
 
 						buildSize2P(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2392,7 +2398,7 @@
 						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
 						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
 
-						spreadItem.classList.add('two-pages', 'flock', 'focus-right-page');
+						spreadItem.classList.add('two-pages', 'flock');
 
 						buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2654,9 +2660,8 @@
 			}
 			else {
 				if (readerViewer.classList.contains('focus-right-page')) {
-					readerViewer.classList.remove("focus-right-page")
+					spreadSetFocus('focus-left-page');
 					readerViewer.classList.add("smooth-div")
-					readerViewer.classList.add("focus-left-page")
 				}
 				else {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page");
@@ -2670,9 +2675,8 @@
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? "focus-right-page" : "focus-left-page");
 			} else {
 				if (readerViewer.classList.contains('focus-left-page')) {
-					readerViewer.classList.remove("focus-left-page")
+					spreadSetFocus('focus-right-page');
 					readerViewer.classList.add("smooth-div")
-					readerViewer.classList.add("focus-right-page")
 				}
 				else {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page");
@@ -2829,8 +2833,7 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-			readerViewer.classList.remove("focus-right-page");
-			readerViewer.classList.remove("focus-left-page");
+			spreadSetFocus('none');
 			readerViewer.classList.remove("smooth-div");
 
 			populateSpread(localNewSpreadIndex);

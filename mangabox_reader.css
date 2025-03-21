@@ -344,12 +344,12 @@ div.single-page {
 
 /* Move element to the left */
 .focus-right-page {
-	transform: translate(-62.5%, -50%)!important;
+	transform: translate(-75%, -50%)!important;
 }
 
 /* Move element to the right */
 .focus-left-page {
-	transform: translate(-12.5%, -50%)!important;
+	transform: translate(-25%, -50%)!important;
 }
 
 #readerViewer.spread-layout {
