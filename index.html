@@ -2303,7 +2303,7 @@
 				2 : mode 0 and mode 1 are selected based on the actual screen aspect ratio, whichever is better for reducing margins
 			*/
 
-			// TODO change formula below to account for fitSinglePage 
+			//TODO change formula below to account for fitSinglePage 
 
 			readerHorizontal = (mbPageMode == 0) || ((screenAR / readerMaxRatio > rd.thresholdRatio) && !(mbPageMode == 1));
 
@@ -2794,7 +2794,7 @@
 			}
 
 		}
-   // TODO Verificare negli altri casi se usare una spreadClass neutra
+   //TODO Verificare negli altri casi se usare una spreadClass neutra
 		function jumpToSpread(newSpreadTarget, spreadClass = "spread-left") {
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
