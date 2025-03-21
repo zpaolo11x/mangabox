@@ -173,19 +173,7 @@ div.single-page,
 	box-sizing: content-box;
 }
 
-div.smooth-div{
-	transition: transform 0.3s linear;
-}
 
-/* Move element to the left */
-div.spread-left {
-	transform: translate(-75%, -50%)!important;
-}
-
-/* Move element to the right */
-div.spread-right {
-	transform: translate(-25%, -50%)!important;
-}
 
 .LTR #coverlay {
 	background-image:
@@ -344,10 +332,23 @@ div.single-page {
 	flex-direction: column;
 	align-items: center;
 	height: 100vh;
-	width: 100vw;
 	/*overflow: hidden;*/
 
 	background: none;
+}
+
+.smooth-div{
+	transition: transform 0.3s linear;
+}
+
+/* Move element to the left */
+.spread-left {
+	transform: translate(-62.5%, -50%)!important;
+}
+
+/* Move element to the right */
+.spread-right {
+	transform: translate(-12.5%, -50%)!important;
 }
 
 #readerViewer.spread-layout {
@@ -365,13 +366,13 @@ div.single-page {
 }
 
 #readerContainer.hidden #readerViewer {
-	top: 100vh;
-	transition: top 0.3s ease;
+	/*top: 100vh;
+	transition: top 0.3s ease;*/
 }
 
 #readerContainer:not(.hidden) #readerViewer {
-	top: 0px;
-	transition: top 0.3s ease 0.5s;
+	/*top: 0px;
+	transition: top 0.3s ease 0.5s;*/
 }
 
 #bottomControls,

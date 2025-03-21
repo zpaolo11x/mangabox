@@ -2249,6 +2249,9 @@
 			readerMaxRatio = Math.max(...dataOut.map(item => item.width / item.height));
 			if (readerMaxRatio < 1) readerMaxRatio = 2 * readerMaxRatio;
 
+			readerViewer.style.height='100vh';
+			readerViewer.style.width='calc('+readerMaxRatio+' * 100vh)';
+
 			let leftPos = 0;
 
 			// Create html structure for every page and related page thumbnails
@@ -2440,6 +2443,7 @@
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
+				console.log(dataOut);
 			} else {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
