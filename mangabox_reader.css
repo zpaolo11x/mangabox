@@ -338,7 +338,7 @@ div.single-page {
 }
 
 .smooth-div{
-	transition: transform 0.3s linear;
+	transition: transform 0.2s;
 }
 
 /* Move element to the left */

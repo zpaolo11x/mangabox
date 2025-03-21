@@ -2249,8 +2249,10 @@
 			readerMaxRatio = Math.max(...dataOut.map(item => item.width / item.height));
 			if (readerMaxRatio < 1) readerMaxRatio = 2 * readerMaxRatio;
 
-			readerViewer.style.height='100vh';
-			readerViewer.style.width='calc('+readerMaxRatio+' * 100vh)';
+			// readerViewer.style.height='100vh';
+			readerViewer.style.height=`calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
+			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
+			readerViewer.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 			let leftPos = 0;
 
