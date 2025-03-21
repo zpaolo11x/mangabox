@@ -323,7 +323,7 @@ div.single-page {
 
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+
 	box-sizing: content-box;
 
 	margin: 0;
@@ -336,20 +336,6 @@ div.single-page {
 	transition: transform 0.5s;
 
 	background: none;
-}
-
-.smooth-div{
-	transition: transform 0.5s!important;
-}
-
-/* Move element to the left */
-.focus-right-page {
-	transform: translate(-75%, -50%)!important;
-}
-
-/* Move element to the right */
-.focus-left-page {
-	transform: translate(-25%, -50%)!important;
 }
 
 #readerViewer.spread-layout {

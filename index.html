@@ -1941,7 +1941,9 @@
 			historyPath: '',
 			bookPath: '',
 
-			incognito: false
+			incognito: false,
+
+			focus: 'focus-center'
 		};
 
 		// Update read mode icon
@@ -1989,6 +1991,8 @@
 			rd.seriesId = seriesId;
 			rd.bookId = bookId;
 
+			rd.focus = 'focus-center';
+
 			readerViewer.innerHTML = '';
 
 			setThumbZoom(false);
@@ -2027,10 +2031,25 @@
 		}
 
 		function spreadSetFocus(focusString){
-			readerViewer.classList.remove('focus-right-page', 'focus-left-page', 'focus-center');
-			if (focusString != "none") {
-				readerViewer.classList.add(focusString);
+			switch (focusString) {
+				case 'none':
+				case 'focus-center':
+					readerViewer.style.transform = 'translate(-50%, -50%)';
+					break;
+				case 'focus-right-page':
+					readerViewer.style.transform = 'translate(-75%, -50%)';
+					break;
+				case 'focus-left-page':
+					readerViewer.style.transform = 'translate(-25%, -50%)';
+					break;
+				case 'focus-center':
+					readerViewer.style.transform = 'translate(-50%, -50%)';
+					break;
+				default:
+					break;
 			}
+			rd.focus = focusString;
+
 		}
 
 
@@ -2659,7 +2678,7 @@
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), rd.ltr ? "focus-left-page" : "focus-right-page");
 			}
 			else {
-				if (readerViewer.classList.contains('focus-right-page')) {
+				if (rd.focus == 'focus-right-page') {
 					spreadSetFocus('focus-left-page');
 					readerViewer.classList.add("smooth-div")
 				}
@@ -2674,7 +2693,7 @@
 			if ((rd.pages[rd.uiSpreadsPages[rd.currentSpreadIndex][0]].isCover)) {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? "focus-right-page" : "focus-left-page");
 			} else {
-				if (readerViewer.classList.contains('focus-left-page')) {
+				if (rd.focus == 'focus-left-page') {
 					spreadSetFocus('focus-right-page');
 					readerViewer.classList.add("smooth-div")
 				}
