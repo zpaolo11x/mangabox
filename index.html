@@ -365,7 +365,7 @@
 
 		//MB Search Functions 
 
-		function timeSplit(inTime){
+		function timeSplit(inTime) {
 			let outTime = inTime ?? "1111";
 			outTime = outTime.replace('TBD', '9999').split('-');
 			if (outTime.length == 1) outTime.push(outTime[0]);
@@ -471,22 +471,22 @@
 						name: '9_to_1',
 						caption: 'By start',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => ((Number(a.mbSeriesStart)*10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart)*10000 + Number(b.mbSeriesStop))) 
+						sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
 					}, {
 						name: '1_to_9',
 						caption: 'By start',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => ((Number(b.mbSeriesStart)*10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart)*10000 + Number(a.mbSeriesStop))) 
+						sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 					}, {
 						name: '9_to_1',
 						caption: 'By end',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => ((Number(a.mbSeriesStop)*10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop)*10000 + Number(b.mbSeriesStart))) 
+						sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
 					}, {
 						name: '1_to_9',
 						caption: 'By end',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => ((Number(b.mbSeriesStop)*10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop)*10000 + Number(a.mbSeriesStart))) 
+						sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
 					}
 				],
 			},
@@ -2033,6 +2033,10 @@
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
+				readerViewer.classList.remove("focus-right-page");
+				readerViewer.classList.remove("focus-left-page");
+				readerViewer.classList.add("smooth-div")
+				readerViewer.classList.remove("focus-center");
 				clearReader();
 			}, 300); //300ms timeout so the reader can slide out
 
@@ -2251,7 +2255,7 @@
 			if (readerMaxRatio < 1) readerMaxRatio = 2 * readerMaxRatio;
 
 			// readerViewer.style.height='100vh';
-			readerViewer.style.height=`calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
+			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
 			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
@@ -2330,11 +2334,12 @@
 
 			*/
 			readerViewer.classList.add(readerHorizontal ? 'spread-layout' : 'page-layout');
-			readerViewer.classList.add('spread-left-page-page');
 
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
 			if (readerHorizontal || fitSinglePage) {
+				let currentPageSingle = false;
+
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
 					const spreadItemThumb = document.createElement('div');
@@ -2354,7 +2359,10 @@
 
 						rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
 						rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
-						if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+						if (dataOut[i].isCurrent) {
+							currentPageSingle = true;
+							rd.currentSpreadIndex = spreadTotal;
+						}
 						i++;
 						const coverlay = document.createElement('div');
 						coverlay.id = 'coverlay';
@@ -2365,7 +2373,7 @@
 						spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
 						spreadItem.appendChild(rd.uiPagesContainer[i]);
-						spreadItem.classList.add('double-page', 'flock', 'spread-left-page-page');
+						spreadItem.classList.add('double-page', 'flock', 'focus-right-page');
 
 						buildSize2P(spreadItem, dataOut[i].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2384,7 +2392,7 @@
 						rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
 						rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
 
-						spreadItem.classList.add('two-pages', 'flock', 'spread-left-page-page');
+						spreadItem.classList.add('two-pages', 'flock', 'focus-right-page');
 
 						buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 						buildFlock(spreadItem, i, dataOut.length);
@@ -2446,7 +2454,8 @@
 					thumbStripInner.appendChild(spreadItemThumb);
 
 				}
-				console.log(dataOut);
+				readerViewer.classList.add(currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page'));
+
 			} else {
 				while (i < dataOut.length) {
 					const spreadItem = document.createElement('div');
@@ -2631,7 +2640,6 @@
 						if (!isPreload) {
 							preloadPages(spreadIndex, rd.preloadCount)
 						}
-
 					}
 				}
 			});
@@ -2641,28 +2649,35 @@
 		}
 
 		function handleLeftArrow() {
-
-			if (readerViewer.classList.contains('spread-left-page-page')){
-				readerViewer.classList.remove("spread-left-page-page")
-				readerViewer.classList.add("smooth-div")
-				readerViewer.classList.add("spread-left-page")
+			if ((rd.pages[rd.uiSpreadsPages[rd.currentSpreadIndex][0]].isCover)) {
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), rd.ltr ? "focus-left-page" : "focus-right-page");
 			}
 			else {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "spread-left-page-page");
-				//rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left-page-page")
+				if (readerViewer.classList.contains('focus-right-page')) {
+					readerViewer.classList.remove("focus-right-page")
+					readerViewer.classList.add("smooth-div")
+					readerViewer.classList.add("focus-left-page")
+				}
+				else {
+					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page");
+					//rd.uiSpreads[rd.currentSpreadIndex].classList.add("focus-right-page")
+				}
 			}
 		}
 
 		function handleRightArrow() {
-
-			if (readerViewer.classList.contains('spread-left-page')){
-				readerViewer.classList.remove("spread-left-page")
-				readerViewer.classList.add("smooth-div")
-				readerViewer.classList.add("spread-left-page-page")
-			}
-			else {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "spread-left-page");
-				//rd.uiSpreads[rd.currentSpreadIndex].classList.add("spread-left-page")
+			if ((rd.pages[rd.uiSpreadsPages[rd.currentSpreadIndex][0]].isCover)) {
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? "focus-right-page" : "focus-left-page");
+			} else {
+				if (readerViewer.classList.contains('focus-left-page')) {
+					readerViewer.classList.remove("focus-left-page")
+					readerViewer.classList.add("smooth-div")
+					readerViewer.classList.add("focus-right-page")
+				}
+				else {
+					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page");
+					//rd.uiSpreads[rd.currentSpreadIndex].classList.add("focus-left-page")
+				}
 			}
 		}
 
@@ -2794,13 +2809,16 @@
 			}
 
 		}
-   //TODO Verificare negli altri casi se usare una spreadClass neutra
-		function jumpToSpread(newSpreadTarget, spreadClass = "spread-left-page-page") {
+		//TODO Verificare negli altri casi se usare una spreadClass neutra
+		function jumpToSpread(newSpreadTarget, spreadClass = null) {
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
+			if ((rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]].isCover)) {
+				spreadClass = "focus-center"
+			}
 
 			purgeLoading();
 
@@ -2811,16 +2829,16 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-			readerViewer.classList.remove("spread-left-page-page");
-			readerViewer.classList.remove("spread-left-page");
+			readerViewer.classList.remove("focus-right-page");
+			readerViewer.classList.remove("focus-left-page");
 			readerViewer.classList.remove("smooth-div");
 
 			populateSpread(localNewSpreadIndex);
 
-			readerViewer.classList.add(spreadClass);
+			readerViewer.classList.add(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-			
+
 			centerThumb();
 			updateProgressBar();
 			history.replaceState(null, '', jumpString());

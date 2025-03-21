@@ -333,7 +333,7 @@ div.single-page {
 	align-items: center;
 	height: 100vh;
 	/*overflow: hidden;*/
-	transition: transform 0.1s;
+	transition: transform 0.001s;
 
 	background: none;
 }
@@ -343,12 +343,12 @@ div.single-page {
 }
 
 /* Move element to the left */
-.spread-left-page-page {
+.focus-right-page {
 	transform: translate(-62.5%, -50%)!important;
 }
 
 /* Move element to the right */
-.spread-left-page {
+.focus-left-page {
 	transform: translate(-12.5%, -50%)!important;
 }
 
