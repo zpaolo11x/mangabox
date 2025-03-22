@@ -94,10 +94,6 @@ img.page:not([src]) {
 	height: 100vh;
 }
 
-.page-layout img.page {
-	display: block;
-}
-
 /*
 img.page:not(.loading) {
 	opacity: 1;
@@ -335,30 +331,20 @@ div.single-page {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
+
 	height: 100vh;
 	/*overflow: hidden;*/
 	transition: transform 0.5s;
 
 	background: none;
+	gap: 0px;
 }
 
 #readerViewer.smooth-div{
 	transition: top 0.3s ease 0.5s, transform 0.5s!important;
 }
 
-#readerViewer.spread-layout {
-	display: flex;
-	justify-content: center;
-	gap: 0px;
-	height: 100vh;
-}
-
-#readerViewer.page-layout {
-	display: flex;
-	justify-content: center;
-	gap: 0px;
-	width: 100vw;
-}
 
 #readerContainer.hidden #readerViewer {
 	top: 150%;
@@ -520,7 +506,7 @@ div.single-page {
 }
 
 #topControls {
-	grid-template-columns: 40px 1fr 40px 40px;
+	grid-template-columns: 40px 1fr 40px;
 	top: 0px;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 }

@@ -132,7 +132,6 @@
 				<div id="topControls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
 					<span id="bookName"></span>
-					<span id="readerPageFormat" title="Page Format" class="reader-buttons fa-solid fa-book-open"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
@@ -228,9 +227,6 @@
 		if (mbRememberMe != 'true') {
 			localStorage.removeItem('mbAuthHeader');
 		};
-
-		// Reader page mode
-		let mbPageMode = Number(localStorage.getItem('mbPageMode')) ?? 2;
 
 		const basePath = ''; //'/mangabox/';
 
@@ -684,7 +680,6 @@
 			}
 		}));
 
-		// TODO CLEANUP
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 
@@ -692,9 +687,7 @@
 				screenAR = newScreenAR;
 				readerHorizontal = newScreenAR / readerMaxRatio > rd.thresholdRatio;
 			} else {
-				console.log(readerHorizontal);
 				let newReaderHorizontal = (newScreenAR / readerMaxRatio > rd.thresholdRatio);
-				console.log(newReaderHorizontal);
 				if (newReaderHorizontal != readerHorizontal) {
 					readerViewer.classList.add("smooth-div");
 					screenAR = newScreenAR;
@@ -704,7 +697,6 @@
 						spreadSetFocus(rd.ltr ? 'focus-left-page' : 'focus-right-page');
 					}
 					readerHorizontal = newReaderHorizontal;
-
 				}
 			}
 		}
@@ -1908,7 +1900,7 @@
 
 		// General reader data structure
 		let rd = {
-			thresholdRatio: 0.89,	//Orientation threshold
+			thresholdRatio: 1.0,	//Orientation threshold
 
 			preloadCount: 15,			// Imge preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
@@ -1917,12 +1909,6 @@
 
 			preloadStack: {}, 		// Contains all the preload timers, one for each spread that's going to be loaded
 			picLoadStack: [], 		// Contains all load image objects, both direct load and preload
-
-			pageModes: [
-				{ icon: 'reader-buttons fa-solid fa-book-open', title: 'Page Layout: Two Pages' },
-				{ icon: 'reader-buttons fa-solid fa-note-sticky', title: 'Page Layout: Single Page' },
-				{ icon: 'reader-buttons fa-solid fa-rotate', title: 'Page Layout: Automatic' }
-			],
 
 			ltr: null,
 			currentPage: 0,
@@ -1953,10 +1939,6 @@
 
 			spreadFocus: 'focus-center'
 		};
-
-		// Update read mode icon
-		readerPageFormat.className = rd.pageModes[mbPageMode].icon;
-		readerPageFormat.title = rd.pageModes[mbPageMode].title;
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers readBook function
 		function navigateToReadBook(book, readingDirection) {
@@ -2099,20 +2081,6 @@
 
 		readerIncognito.addEventListener('click', () => {
 			setIncognito(!rd.incognito);
-		})
-
-		// Setup page format button
-		function switchPageFormat(newId) {
-			mbPageMode = newId;
-			readerPageFormat.className = rd.pageModes[mbPageMode].icon;
-			readerPageFormat.title = rd.pageModes[mbPageMode].title;
-
-			localStorage.setItem('mbPageMode', mbPageMode);
-			navigateTo(window.location.hash);
-		}
-
-		readerPageFormat.addEventListener('click', () => {
-			switchPageFormat((mbPageMode + 1) % 3);
 		})
 
 		function setThumbZoom(status) {
@@ -2331,43 +2299,7 @@
 			let i = 0;
 			let spreadTotal = 0;
 
-			readerViewer.classList.remove('spread-layout');
-			readerViewer.classList.remove('page-layout');
-
-			/* mbPageMode is:
-				0 : two pages side by side, fit inside the window with no cuts
-				1 : one page: each page, even double spreads, is shown alone on the screen with no cuts
-				2 : mode 0 and mode 1 are selected based on the actual screen aspect ratio, whichever is better for reducing margins
-			*/
-
-			//TODO change formula below to account for fitSinglePage 
-
 			readerHorizontal = ((screenAR / readerMaxRatio > rd.thresholdRatio));
-
-			/* TODO keep the three modes, but 
-				mode 0 is forced 2x1p 
-				mode 1 is forced 1p (even for double spreads)
-				mode 2 autorotates between 2p horizontal and 2p vertical!
-			
-			*/
-
-			// If readerHorizontal is true spread-layout is used, otherwise page-layout.
-			/* TODO NEW PAGE LAYOUTS:
-				
-				Let's add a new mode where pages are always assembled in spreads, but instead of fitting them in the screen,
-				they fit based on a single page. Assuming that spreads are symmetric, just align half of the spread. How?
-				- Calculate the half size of spreads (easier, works for every spread based on its size)
-				- Use page dimensions unless it's a double spread (more complicated since it needs to differentiate 1p to 2p)
-
-				How to scroll it?
-				- For 2x1p soreads get the page from the url, get the spread number, center the related 
-				  spread based on its attached pages and based on the number above. 
-				- For 2p spreads where there's no left or right page, you can center on right side for RTL and on left for LTR, 
-				  but how to manage page turns? Is there a way to know if the previous page was befor or after the one?
-
-			*/
-			readerViewer.classList.add('spread-layout');
-
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
 			let currentPageSingle = false;
@@ -2775,7 +2707,8 @@
 			const localNewSpreadIndex = newSpreadTarget;
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
-			if ((rd.uiSpreads[localNewSpreadIndex].classList.contains('cover-page')) || (rd.uiSpreads[localNewSpreadIndex].classList.contains('single-page'))) {
+
+			if (readerHorizontal || rd.uiSpreads[localNewSpreadIndex].singlePage) {
 				spreadClass = "focus-center"
 			}
 
