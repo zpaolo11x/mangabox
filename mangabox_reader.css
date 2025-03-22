@@ -156,8 +156,11 @@ img.page:not(.hidden) {
 
 img.multiply {
 	mix-blend-mode: multiply;
+/*
+	REMOVED TO IMPROVE SAFARI SPEED ON IOS/IPADOS
 	filter: sepia(5%) opacity(100%);
 	-webkit-filter: sepia(5%) opacity(100%);
+*/
 }
 
 div.double-page,
@@ -323,6 +326,7 @@ div.single-page {
 
 	top: 50%;
 	left: 50%;
+	transform: translate(-50%, -50%);
 
 	box-sizing: content-box;
 
@@ -336,6 +340,10 @@ div.single-page {
 	transition: transform 0.5s;
 
 	background: none;
+}
+
+#readerViewer.smooth-div{
+	transition: top 0.3s ease 0.5s, transform 0.5s!important;
 }
 
 #readerViewer.spread-layout {
@@ -353,13 +361,13 @@ div.single-page {
 }
 
 #readerContainer.hidden #readerViewer {
-	/*top: 100vh;
-	transition: top 0.3s ease;*/
+	top: 150%;
+	transition: top 0.3s ease;
 }
 
 #readerContainer:not(.hidden) #readerViewer {
-	/*top: 0px;
-	transition: top 0.3s ease 0.5s;*/
+	top: 50%;
+	transition: top 0.3s ease 0.5s, transform 0.001s;
 }
 
 #bottomControls,
