@@ -2679,8 +2679,8 @@
 			}
 			else {
 				if (rd.focus == 'focus-right-page') {
-					spreadSetFocus('focus-left-page');
 					readerViewer.classList.add("smooth-div")
+					spreadSetFocus('focus-left-page');
 				}
 				else {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page");
@@ -2694,8 +2694,8 @@
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? "focus-right-page" : "focus-left-page");
 			} else {
 				if (rd.focus == 'focus-left-page') {
-					spreadSetFocus('focus-right-page');
 					readerViewer.classList.add("smooth-div")
+					spreadSetFocus('focus-right-page');
 				}
 				else {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page");
