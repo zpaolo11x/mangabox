@@ -697,6 +697,7 @@
 				let newReaderHorizontal = (newScreenAR / readerMaxRatio > rd.thresholdRatio);
 				console.log(newReaderHorizontal);
 				if (newReaderHorizontal != readerHorizontal) {
+					readerViewer.classList.add("smooth-div");
 					screenAR = newScreenAR;
 					if (newReaderHorizontal || rd.uiSpreads[rd.currentSpreadIndex].singlePage) {
 						spreadSetFocus('focus-center');
@@ -704,6 +705,7 @@
 						spreadSetFocus(rd.ltr ? 'focus-left-page' : 'focus-right-page');
 					}
 					readerHorizontal = newReaderHorizontal;
+
 				}
 			}
 		}
