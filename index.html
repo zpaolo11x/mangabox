@@ -2252,8 +2252,7 @@
 				size: page.sizeBytes
 			}));
 
-			readerMaxRatio = Math.max(...dataOut.map(item => item.width / item.height));
-			if (readerMaxRatio < 1) readerMaxRatio = 2 * readerMaxRatio;
+			readerMaxRatio = Math.max(...dataOut.map(item => (item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height ));
 
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
