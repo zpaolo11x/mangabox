@@ -2210,6 +2210,7 @@
 
 		function buildFlock(item, index, total) {
 			if (rd.uiSpreads[index].singlePage) {
+				readerViewer.style.boxShadow = 'none';
 				readerViewer.style.left = `50%`;
 				readerViewer.style.borderWidth = `0px 0px 0px 0px`;
 				return
@@ -2223,6 +2224,7 @@
 			const flockCut = Math.min(360 * total * 2 / 700, 360);
 			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
 
+			readerViewer.style.boxShadow = '0px 0px 15px 0px rgba(60, 40, 30, 0.8)';
 			readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
 			readerViewer.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
 			readerViewer.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
