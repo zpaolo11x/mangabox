@@ -2216,11 +2216,9 @@
 			const flockCut = Math.min(360 * total / 700, 360);
 			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
 
-			//item.style.transform = `translate(calc(-50% - ${flockOffset[2]}vh), -50%)`;
-			item.style.left = `calc(50% - ${flockOffset[2]}vh)`;
-			item.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
-			item.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
-
+			readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
+			readerViewer.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
+			readerViewer.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
 		}
 
 		//MB Reader Fetch Page Function
@@ -2333,7 +2331,7 @@
 					spreadItem.classList.add('double-page', 'flock');
 
 					buildSize2P(spreadItem, dataOut[i].AR);
-					buildFlock(spreadItem, i, dataOut.length);
+					//buildFlock(spreadItem, i, dataOut.length);
 
 					rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
 					rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
@@ -2353,7 +2351,7 @@
 					spreadItem.classList.add('two-pages', 'flock');
 
 					buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
-					buildFlock(spreadItem, i, dataOut.length);
+					//buildFlock(spreadItem, i, dataOut.length);
 
 					buildSizePic(rd.uiPages[i], dataOut[i].AR, dataOut[i].AR);
 					buildSizePic(rd.uiPages[i + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
@@ -2377,7 +2375,7 @@
 					spreadItem.classList.add('double-page', 'flock')
 
 					buildSize(spreadItem, 2 * dataOut[i].AR);
-					buildFlock(spreadItem, i, dataOut.length);
+					//buildFlock(spreadItem, i, dataOut.length);
 
 					rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width * 0.5;
 					rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
@@ -2692,6 +2690,8 @@
 		}
 		//TODO Verificare negli altri casi se usare una spreadClass neutra
 		function jumpToSpread(newSpreadTarget, spreadClass = null) {
+			
+			buildFlock(readerViewer, newSpreadTarget, rd.uiSpreads.length)
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
