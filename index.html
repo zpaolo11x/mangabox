@@ -2020,20 +2020,30 @@
 			});
 		}
 
-		function spreadSetFocus(focusString) {
+		function spreadSetFocus(focusString, smoothMove = false) {
+			console.log("ltr :" + rd.ltr);
+			console.log("from:" + rd.spreadFocus);
+			console.log("to  :" + focusString);
+			console.log("smth:" + smoothMove);
+			console.log("----------");
 			switch (focusString) {
 				case 'none':
 				case 'focus-center':
-					readerViewer.style.transform = 'translate(-50%, -50%)';
-					break;
+				readerViewer.animate(
+						[{ transform: "translate(-50%, -50%)" }, { transform: "translate(-50%, -50%)" }],
+						{ duration: 0, easing: "ease", fill: "forwards" }
+					);					break;
 				case 'focus-right-page':
-					readerViewer.style.transform = 'translate(-75%, -50%)';
+					readerViewer.animate(
+						[{ transform: "translate(-50%, -50%)" }, { transform: "translate(-75%, -50%)" }],
+						{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
+					);
 					break;
 				case 'focus-left-page':
-					readerViewer.style.transform = 'translate(-25%, -50%)';
-					break;
-				case 'focus-center':
-					readerViewer.style.transform = 'translate(-50%, -50%)';
+					readerViewer.animate(
+						[{ transform: "translate(-50%, -50%)" }, { transform: "translate(-25%, -50%)" }],
+						{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
+					);
 					break;
 				default:
 					break;
@@ -2252,7 +2262,7 @@
 				size: page.sizeBytes
 			}));
 
-			readerMaxRatio = Math.max(...dataOut.map(item => (item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height ));
+			readerMaxRatio = Math.max(...dataOut.map(item => (item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height));
 
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
@@ -2543,8 +2553,8 @@
 				}
 				else {
 					if (rd.spreadFocus == 'focus-right-page') {
-						readerViewer.classList.add("smooth-div")
-						spreadSetFocus('focus-left-page');
+						//readerViewer.classList.add("smooth-div")
+						spreadSetFocus('focus-left-page', true);
 					}
 					else {
 						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page");
@@ -2559,10 +2569,11 @@
 			} else {
 				if ((rd.uiSpreadsPages[rd.currentSpreadIndex].singlePage)) {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? "focus-right-page" : "focus-left-page");
-				} else {
+				}
+				else {
 					if (rd.spreadFocus == 'focus-left-page') {
-						readerViewer.classList.add("smooth-div")
-						spreadSetFocus('focus-right-page');
+						//readerViewer.classList.add("smooth-div")
+						spreadSetFocus('focus-right-page', true);
 					}
 					else {
 						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page");
@@ -2720,7 +2731,7 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-			spreadSetFocus('none');
+			//spreadSetFocus('none');
 			readerViewer.classList.remove("smooth-div");
 
 			populateSpread(localNewSpreadIndex);

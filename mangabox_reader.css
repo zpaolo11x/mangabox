@@ -335,14 +335,14 @@ div.single-page {
 
 	height: 100vh;
 	/*overflow: hidden;*/
-	transition: transform 0.5s;
+	/*transition: top 0.3s ease 0.5s;*/
 
 	background: none;
 	gap: 0px;
 }
 
 #readerViewer.smooth-div{
-	transition: top 0.3s ease 0.5s, transform 0.5s!important;
+	/*transition: top 0.3s ease 0.5s, transform 0.5s!important;*/
 }
 
 
