@@ -2212,8 +2212,8 @@
 				rd.ltr ? (index / total) : (1.0 - index / total),
 				rd.ltr ? - 0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
 			]
-			const bookThickness = (80 - (80 / (800 * 800)) * (total - 800) * (total - 800)) / 800;//Was 40/800 and (15 / 800) * (dataOut.length / 100) before
-			const flockCut = Math.min(360 * total / 700, 360);
+			const bookThickness = (80 - (80 / (800 * 800)) * (total*2 - 800) * (total*2 - 800)) / 800;//Was 40/800 and (15 / 800) * (dataOut.length / 100) before
+			const flockCut = Math.min(360 * total * 2 / 700, 360);
 			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
 
 			readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
@@ -2242,7 +2242,7 @@
 				size: page.sizeBytes
 			}));
 
-			readerMaxRatio = Math.max(...dataOut.map(item => (item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height));
+			readerMaxRatio = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
@@ -2330,8 +2330,9 @@
 					spreadItem.appendChild(rd.uiPagesContainer[i]);
 					spreadItem.classList.add('double-page', 'flock');
 
-					buildSize2P(spreadItem, dataOut[i].AR);
+					buildSize2P(spreadItem, dataOut[i].AR); //TODO Da verificare se usare questo o quello sotto
 					//buildFlock(spreadItem, i, dataOut.length);
+					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 					rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
 					rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
@@ -2352,6 +2353,7 @@
 
 					buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
 					//buildFlock(spreadItem, i, dataOut.length);
+					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 					buildSizePic(rd.uiPages[i], dataOut[i].AR, dataOut[i].AR);
 					buildSizePic(rd.uiPages[i + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);

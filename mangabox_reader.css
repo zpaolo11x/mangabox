@@ -207,6 +207,9 @@ div.two-pages {
 		linear-gradient(90deg, var(--colorSpread));
 	background-repeat: repeat, no-repeat, no-repeat;
 	background-size: 10% 10%, 100% 100%, 100% 100%;
+	align-items: center;
+	justify-content: center;
+
 }
 
 #readerViewer {
@@ -286,7 +289,7 @@ div.single-page {
 	/*overflow: hidden;*/
 	/*transition: top 0.3s ease 0.5s;*/
 
-	background: none;
+	/*background: none;*/
 	gap: 0px;
 }
 
