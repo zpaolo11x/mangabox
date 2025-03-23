@@ -2183,6 +2183,8 @@
 			rightLimit.innerText = rd.ltr ? rd.uiPages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
+			buildFlock(readerViewer, rd.currentSpreadIndex, rd.uiSpreads.length)
+
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 
@@ -2207,6 +2209,11 @@
 		}
 
 		function buildFlock(item, index, total) {
+			if (rd.uiSpreads[index].singlePage) {
+				readerViewer.style.left = `50%`;
+				readerViewer.style.borderWidth = `0px 0px 0px 0px`;
+				return
+			}
 			const flockRate = [
 				rd.ltr ? (1.0 - index / total) : (index / total),
 				rd.ltr ? (index / total) : (1.0 - index / total),
