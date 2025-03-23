@@ -689,12 +689,12 @@
 			} else {
 				let newReaderHorizontal = (newScreenAR / readerMaxRatio > rd.thresholdRatio);
 				if (newReaderHorizontal != readerHorizontal) {
-					readerViewer.classList.add("smooth-div");
+
 					screenAR = newScreenAR;
 					if (newReaderHorizontal || rd.uiSpreads[rd.currentSpreadIndex].singlePage) {
-						spreadSetFocus('focus-center');
+						spreadSetFocus('focus-center', true);
 					} else {
-						spreadSetFocus(rd.ltr ? 'focus-left-page' : 'focus-right-page');
+						spreadSetFocus(rd.ltr ? 'focus-left-page' : 'focus-right-page', true);
 					}
 					readerHorizontal = newReaderHorizontal;
 				}
@@ -2020,36 +2020,19 @@
 			});
 		}
 
-		function spreadSetFocus(focusString, smoothMove = false) {
-			console.log("ltr :" + rd.ltr);
-			console.log("from:" + rd.spreadFocus);
-			console.log("to  :" + focusString);
-			console.log("smth:" + smoothMove);
-			console.log("----------");
-			switch (focusString) {
-				case 'none':
-				case 'focus-center':
-				readerViewer.animate(
-						[{ transform: "translate(-50%, -50%)" }, { transform: "translate(-50%, -50%)" }],
-						{ duration: 0, easing: "ease", fill: "forwards" }
-					);					break;
-				case 'focus-right-page':
-					readerViewer.animate(
-						[{ transform: "translate(-50%, -50%)" }, { transform: "translate(-75%, -50%)" }],
-						{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
-					);
-					break;
-				case 'focus-left-page':
-					readerViewer.animate(
-						[{ transform: "translate(-50%, -50%)" }, { transform: "translate(-25%, -50%)" }],
-						{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
-					);
-					break;
-				default:
-					break;
-			}
-			rd.spreadFocus = focusString;
+		const frames = {
+			"focus-right-page": 'translate(-75%, -50%)',
+			"focus-left-page": 'translate(-25%, -50%)',
+			"focus-center": 'translate(-50%, -50%)',
+			"none": 'translate(-50%, -50%)',
+		}
 
+		function spreadSetFocus(focusString, smoothMove = false) {
+			readerViewer.animate(						
+						[{ transform: frames[rd.spreadFocus] }, { transform: frames[focusString] }],
+						{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
+					);	
+			rd.spreadFocus = focusString;
 		}
 
 
@@ -2061,7 +2044,6 @@
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
 				spreadSetFocus("none");
-				readerViewer.classList.remove("smooth-div");
 				clearReader();
 			}, 300); //300ms timeout so the reader can slide out
 
@@ -2553,7 +2535,6 @@
 				}
 				else {
 					if (rd.spreadFocus == 'focus-right-page') {
-						//readerViewer.classList.add("smooth-div")
 						spreadSetFocus('focus-left-page', true);
 					}
 					else {
@@ -2572,7 +2553,6 @@
 				}
 				else {
 					if (rd.spreadFocus == 'focus-left-page') {
-						//readerViewer.classList.add("smooth-div")
 						spreadSetFocus('focus-right-page', true);
 					}
 					else {
@@ -2731,8 +2711,6 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-			//spreadSetFocus('none');
-			readerViewer.classList.remove("smooth-div");
 
 			populateSpread(localNewSpreadIndex);
 
