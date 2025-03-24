@@ -2728,22 +2728,6 @@
 			spreadSetFocus(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-			console.log(rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]]);
-			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][0]].animate(
-				[
-					{ width: '0px', },
-					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]].width, }
-				],
-				{ duration: 500, easing: "ease", fill: "forwards" }
-			);
-			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][1]].animate(
-				[
-					{ width: '0px', },
-					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][1]].width, }
-				],
-				{ duration: 500, easing: "ease", fill: "forwards" }
-			);
-
 
 			centerThumb();
 			updateProgressBar();
