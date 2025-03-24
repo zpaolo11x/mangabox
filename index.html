@@ -309,6 +309,7 @@
 		}
 		function spreadShow(item) {
 			item.classList.remove('hidden-spread');
+			item.style.zIndex = 1000; //TODO ZINDEX TESTS
 		}
 		function isSpreadHidden(item) {
 			return (item.classList.contains('hidden-spread'));
