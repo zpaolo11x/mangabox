@@ -2261,6 +2261,49 @@
 			let leftPos = 0;
 
 			// Create html structure for every page and related page thumbnails
+			let i1 = 0;
+			let element = null;
+			let doubleSpread = false;
+			while (i1 < dataOut.length) {
+				console.log(i1);
+				element = dataOut[i1];
+				const imgDiv = addItem('div', {
+					className: 'page-container'
+				});
+				const imgPage = addItem('img', {
+					alt: element.pageNum,
+					className: 'page multiply hidden',
+					src: 'transparent.png',
+					hasSrc: false,
+					lazySrc: element.url,
+				});
+				imgDiv.appendChild(imgPage);
+
+				rd.uiPages.push(imgPage);
+				rd.uiPagesContainer.push(imgDiv);
+
+				const imgThumb = addItem('img', {
+					className: 'page-thumb multiply hidden',
+					alt: element.pageNum,
+					src: 'transparent.png',
+					lazySrc: element.thumb,
+				});
+				imgThumb.style.height = "var(--mb-thumb-height-px)";
+				imgThumb.style.aspectRatio = element.AR;
+
+				addLazyLoading(imgThumb);
+				rd.uiPagesThumbs.push(imgThumb);
+				if ((element.isDoubleSpread && !doubleSpread)) {
+					doubleSpread = true;
+				}
+				else {
+					doubleSpread = false; 
+					i1++
+				}
+			}
+
+			console.log(rd.uiPagesThumbs);
+/*
 			dataOut.forEach((element, index) => {
 				const imgDiv = addItem('div', {
 					className: 'page-container'
@@ -2291,10 +2334,13 @@
 				//thumbStripInner.appendChild(imgThumb);
 				//thumbStripInner.insertBefore(imgThumb, parent.firstChild);
 			});
-
+*/
 			// Prepare "spreads" structure based on the layout chosen in the UI
 
-			let i = 0;
+			let i = 0; // Counter of page number
+			let ipic = 0; // Counter of related image element
+			doubleSpread = false;
+
 			let spreadTotal = 0;
 
 			readerHorizontal = ((screenAR / readerMaxRatio > rd.thresholdRatio));
@@ -2309,6 +2355,7 @@
 				spreadItem.classList.add('spread-layout');
 				spreadItemThumb.classList.add('spread-thumb');
 
+				// This is an array of the page numbers
 				let spreadArray = [i];
 
 				if (dataOut[i].isCover) {
@@ -2320,19 +2367,54 @@
 
 					buildSize(spreadItem, dataOut[i].AR);
 
-					rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
-					rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
+					rd.uiPages[ipic].style.width = rd.uiPagesContainer[ipic].style.width = spreadItem.style.width;
+					rd.uiPages[ipic].style.height = rd.uiPagesContainer[ipic].style.height = spreadItem.style.height;
 					if (dataOut[i].isCurrent) {
 						currentPageSingle = true;
 						rd.currentSpreadIndex = spreadTotal;
 					}
 					i++;
+					ipic++;
 					const coverlay = document.createElement('div');
 					coverlay.id = 'coverlay';
 					coverlay.style.width = spreadItem.style.width;
 					coverlay.style.height = spreadItem.style.height;
 					spreadItem.appendChild(coverlay);
 				} else if (dataOut[i].isDoubleSpread) {
+					
+					spreadItem.singlePage = false;
+					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic : ipic + 1]);
+					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic + 1 : ipic]);
+
+					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic : ipic + 1]);
+					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic + 1 : ipic]);
+
+					rd.uiPages[ipic].style[rd.ltr ? 'left' : 'right'] = '0px';
+					rd.uiPages[ipic + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
+
+					spreadItem.classList.add('two-pages', 'flock');
+
+					buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
+					//buildFlock(spreadItem, i, dataOut.length);
+					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
+
+					buildSizePic(rd.uiPages[ipic], dataOut[i].AR, dataOut[i].AR);
+					buildSizePic(rd.uiPages[ipic + 1], dataOut[i].AR, dataOut[i].AR);
+					//rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
+					rd.uiPagesContainer[ipic].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					rd.uiPagesContainer[ipic].style.height = rd.uiPages[ipic].style.height;
+					//rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
+					rd.uiPagesContainer[ipic + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					rd.uiPagesContainer[ipic + 1].style.height = rd.uiPages[ipic + 1].style.height;
+//TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
+
+					spreadArray.push(i + 1);
+					if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
+					ipic += 2;
+					i++;
+
+
+					/*
 					spreadItem.singlePage = false;
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
 
@@ -2347,16 +2429,17 @@
 					rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
 					if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 					i++;
+					*/
 				} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
 					spreadItem.singlePage = false;
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i : i + 1]);
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? i + 1 : i]);
+					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic : ipic + 1]);
+					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic + 1 : ipic]);
 
-					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? i : i + 1]);
-					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? i + 1 : i]);
+					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic : ipic + 1]);
+					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic + 1 : ipic]);
 
-					rd.uiPages[i].style[rd.ltr ? 'left' : 'right'] = '0px';
-					rd.uiPages[i + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
+					rd.uiPages[ipic].style[rd.ltr ? 'left' : 'right'] = '0px';
+					rd.uiPages[ipic + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
 
 					spreadItem.classList.add('two-pages', 'flock');
 
@@ -2364,20 +2447,21 @@
 					//buildFlock(spreadItem, i, dataOut.length);
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPages[i], dataOut[i].AR, dataOut[i].AR);
-					buildSizePic(rd.uiPages[i + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
+					buildSizePic(rd.uiPages[ipic], dataOut[i].AR, dataOut[i].AR);
+					buildSizePic(rd.uiPages[ipic + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
 					//rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
-					rd.uiPagesContainer[i].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					rd.uiPagesContainer[i].style.height = rd.uiPages[i].style.height;
+					rd.uiPagesContainer[ipic].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					rd.uiPagesContainer[ipic].style.height = rd.uiPages[ipic].style.height;
 					//rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
-					rd.uiPagesContainer[i + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					rd.uiPagesContainer[i + 1].style.height = rd.uiPages[i + 1].style.height;
+					rd.uiPagesContainer[ipic + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					rd.uiPagesContainer[ipic + 1].style.height = rd.uiPages[ipic + 1].style.height;
 //TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
 
 					spreadArray.push(i + 1);
 					if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 					if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
 					i += 2;
+					ipic += 2;
 				} else if (i < dataOut.length - 1) {
 					spreadItem.singlePage = false;
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
@@ -2484,7 +2568,7 @@
 						rd.uiPages[element].classList.add('loading');
 						try {
 							// Fetch the image
-							const blobUrl = await fetchMedia(rd.pages[element].url);
+							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
 							rd.uiPages[element].src = blobUrl;
 							rd.uiPages[element].hasSrc = true;
 							//rd.uiPages[element].src = rd.pages[element].url;
