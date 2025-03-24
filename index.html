@@ -309,7 +309,6 @@
 		}
 		function spreadShow(item) {
 			item.classList.remove('hidden-spread');
-			item.style.zIndex = 1000; //TODO ZINDEX TESTS
 		}
 		function isSpreadHidden(item) {
 			return (item.classList.contains('hidden-spread'));
@@ -2029,10 +2028,10 @@
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false) {
-			readerViewer.animate(						
-						[{ transform: frames[focusString] }],
-						{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
-					);	
+			readerViewer.animate(
+				[{ transform: frames[focusString] }],
+				{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
+			);
 			rd.spreadFocus = focusString;
 		}
 
@@ -2221,7 +2220,7 @@
 				rd.ltr ? (index / total) : (1.0 - index / total),
 				rd.ltr ? - 0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
 			]
-			const bookThickness = (80 - (80 / (800 * 800)) * (total*2 - 800) * (total*2 - 800)) / 800;//Was 40/800 and (15 / 800) * (dataOut.length / 100) before
+			const bookThickness = (80 - (80 / (800 * 800)) * (total * 2 - 800) * (total * 2 - 800)) / 800;//Was 40/800 and (15 / 800) * (dataOut.length / 100) before
 			const flockCut = Math.min(360 * total * 2 / 700, 360);
 			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
 
@@ -2702,7 +2701,7 @@
 		}
 		//TODO Verificare negli altri casi se usare una spreadClass neutra
 		function jumpToSpread(newSpreadTarget, spreadClass = null) {
-			
+
 			buildFlock(readerViewer, newSpreadTarget, rd.uiSpreads.length)
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
@@ -2729,6 +2728,22 @@
 			spreadSetFocus(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+			console.log(rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]]);
+			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][0]].animate(
+				[
+					{ width: '0px', },
+					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]].width, }
+				],
+				{ duration: 500, easing: "ease", fill: "forwards" }
+			);
+			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][1]].animate(
+				[
+					{ width: '0px', },
+					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][1]].width, }
+				],
+				{ duration: 500, easing: "ease", fill: "forwards" }
+			);
+
 
 			centerThumb();
 			updateProgressBar();
