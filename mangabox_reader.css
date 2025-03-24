@@ -76,7 +76,7 @@
 
 img.page {
 	transition: opacity 0.3s;
-	position: absolute;
+	/*position: absolute;*/ /*TODO It was position: absolute but removed for floating*/
 	border: none;
 	color: transparent;
 	opacity: 1;
@@ -121,7 +121,8 @@ img.page:not(.hidden) {
 .page-container {
 	position: relative;
 	overflow:hidden;
-	background:orange;
+	background:none;
+	border: green 5px solid;
 }
 
 .page-container:has(img.page)::before {
