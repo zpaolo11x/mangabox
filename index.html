@@ -2389,8 +2389,11 @@
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic : ipic + 1]);
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic + 1 : ipic]);
 
-					rd.uiPages[ipic].style[rd.ltr ? 'left' : 'right'] = '0px';
-					rd.uiPages[ipic + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
+					//rd.uiPages[ipic].style[rd.ltr ? 'left' : 'right'] = '0px';
+					//rd.uiPages[ipic + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
+
+					rd.uiPages[ipic].style.float = rd.ltr ? 'left' : 'right';
+					rd.uiPages[ipic + 1].style.float = rd.ltr ? 'right' : 'left';
 
 					spreadItem.classList.add('two-pages', 'flock');
 
@@ -2398,14 +2401,23 @@
 					//buildFlock(spreadItem, i, dataOut.length);
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPages[ipic], dataOut[i].AR, dataOut[i].AR);
-					buildSizePic(rd.uiPages[ipic + 1], dataOut[i].AR, dataOut[i].AR);
+					//buildSizePic(rd.uiPages[ipic], dataOut[i].AR, dataOut[i].AR);
+					//buildSizePic(rd.uiPages[ipic + 1], dataOut[i].AR, dataOut[i].AR);
+
+					buildSizePic(rd.uiPagesContainer[ipic], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[ipic + 1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
+					
+					//buildSizePic(rd.uiPages[ipic], readerMaxRatio, readerMaxRatio);
+					//buildSizePic(rd.uiPages[ipic + 1], readerMaxRatio, readerMaxRatio);
+					rd.uiPages[ipic].style.height = rd.uiPagesContainer[ipic].style.height;
+					rd.uiPages[ipic + 1].style.height = rd.uiPagesContainer[ipic + 1].style.height;
+				
 					//rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
-					rd.uiPagesContainer[ipic].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					rd.uiPagesContainer[ipic].style.height = rd.uiPages[ipic].style.height;
+					//rd.uiPagesContainer[ipic].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					//rd.uiPagesContainer[ipic].style.height = rd.uiPages[ipic].style.height;
 					//rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
-					rd.uiPagesContainer[ipic + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					rd.uiPagesContainer[ipic + 1].style.height = rd.uiPages[ipic + 1].style.height;
+					//rd.uiPagesContainer[ipic + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					//rd.uiPagesContainer[ipic + 1].style.height = rd.uiPages[ipic + 1].style.height;
 //TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
 
 					spreadArray.push(i + 1);
@@ -2439,12 +2451,14 @@
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic + 1 : ipic]);
 
 					
+					/*
 					rd.uiPages[ipic].style[rd.ltr ? 'left' : 'right'] = '0px';
 					rd.uiPages[ipic + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
-					/*
+					*/
+					
 					rd.uiPages[ipic].style.float = rd.ltr ? 'right' : 'left';
 					rd.uiPages[ipic + 1].style.float = rd.ltr ? 'left' : 'right';
-					*/
+
 					spreadItem.classList.add('two-pages', 'flock');
 
 					buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
@@ -2820,34 +2834,25 @@
 			console.log(rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]]);
 			
 			
-			
+			/*
 			rd.uiSpreads[localNewSpreadIndex].animate(
 				[{transform: 'translate(-100%, -50%)'},{transform: 'translate(-50%, -50%)'}],
 				{ duration: 550, easing: "linear", fill: "forwards" }
 			)
-			
-			
+			*/
 			
 			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][0]].animate(
 				[
-					{  width: '0%' }, // Fully clipped
-					{  width: '100%' } // Fully visible
-					//TODO Questo va riferito alla vera dimensione di spreadpagescontainer che è metà del booklet
-					/*
-					{ width: '0px', },
-					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]].width, }
-					*/
+					{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
+					{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
 				],
 				{ duration: 1000, easing: "linear", fill: "forwards" }
 			);
+
 			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][1]].animate(
 				[
-					{  width: '0%' }, // Fully clipped
-					{  width: '100%' } // Fully visible
-					/*
-					{ width: '0px', },
-					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][1]].width, }
-					 */
+					{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
+					{ clipPath: 'inset(0 0 0 0)' } // Fully visible
 				],
 				{ duration: 1000, easing: "linear", fill: "forwards" }
 			);
