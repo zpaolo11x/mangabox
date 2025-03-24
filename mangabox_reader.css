@@ -121,6 +121,7 @@ img.page:not(.hidden) {
 .page-container {
 	position: relative;
 	overflow:hidden;
+	background:orange;
 }
 
 .page-container:has(img.page)::before {

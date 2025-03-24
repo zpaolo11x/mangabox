@@ -2366,14 +2366,14 @@
 
 					buildSizePic(rd.uiPages[i], dataOut[i].AR, dataOut[i].AR);
 					buildSizePic(rd.uiPages[i + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
-					rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
+					//rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
+					rd.uiPagesContainer[i].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
 					rd.uiPagesContainer[i].style.height = rd.uiPages[i].style.height;
-					rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
+					//rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
+					rd.uiPagesContainer[i + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
 					rd.uiPagesContainer[i + 1].style.height = rd.uiPages[i + 1].style.height;
-					//rd.uiPages[i].style.width = spreadItem.style.height * dataOut[i].AR;
-					//rd.uiPages[i].style.height = spreadItem.style.height;
-					//rd.uiPages[i + 1].style.width = spreadItem.style.height * dataOut[i + 1].AR;
-					//rd.uiPages[i + 1].style.height = spreadItem.style.height;
+//TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
+
 					spreadArray.push(i + 1);
 					if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
 					if (dataOut[i + 1].isCurrent) rd.currentSpreadIndex = spreadTotal;
