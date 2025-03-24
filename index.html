@@ -2813,19 +2813,35 @@
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 			console.log(rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]]);
+			
+			/*
+			rd.uiSpreads[localNewSpreadIndex].animate(
+				[{transform: 'translate(-100%, -50%)'},{transform: 'translate(-50%, -50%)'}],{ duration: 1000, easing: "ease", fill: "forwards" }
+			)
+			*/
+			
 			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][0]].animate(
 				[
+					{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
+					{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+					//TODO Questo va riferito alla vera dimensione di spreadpagescontainer che è metà del booklet
+					/*
 					{ width: '0px', },
 					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][0]].width, }
+					*/
 				],
-				{ duration: 500, easing: "ease", fill: "forwards" }
+				{ duration: 1000, easing: "linear", fill: "forwards" }
 			);
 			rd.uiPagesContainer[rd.uiSpreadsPages[localNewSpreadIndex][1]].animate(
 				[
+					{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
+					{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+					/*
 					{ width: '0px', },
 					{ width: rd.pages[rd.uiSpreadsPages[localNewSpreadIndex][1]].width, }
+					 */
 				],
-				{ duration: 500, easing: "ease", fill: "forwards" }
+				{ duration: 1000, easing: "linear", fill: "forwards" }
 			);
 
 

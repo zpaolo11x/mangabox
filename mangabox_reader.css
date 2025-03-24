@@ -269,7 +269,7 @@ div.single-page {
 
 div.double-page,
 div.two-pages{
-	box-shadow: 0px 0px 15px 0px rgba(60, 40, 30, 0.3);
+	/*box-shadow: 0px 0px 15px 0px rgba(60, 40, 30, 0.3);*/
 }
 
 div.cover-page,
@@ -593,7 +593,7 @@ div.single-page {
 .hidden-spread {
 	opacity: 0;
 	z-index: 99!important;
-	transition: opacity 0.5s ease 0.5s; /* 0.5s delay before opacity transition */
+	transition: opacity 0.5s ease 1.0s; /* 0.5s delay before opacity transition */
 
 	/*display: none;*/
 }
