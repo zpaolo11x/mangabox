@@ -2029,7 +2029,7 @@
 
 		function spreadSetFocus(focusString, smoothMove = false) {
 			readerViewer.animate(						
-						[{ transform: frames[rd.spreadFocus] }, { transform: frames[focusString] }],
+						[{ transform: frames[focusString] }],
 						{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
 					);	
 			rd.spreadFocus = focusString;
