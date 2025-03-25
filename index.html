@@ -2306,38 +2306,6 @@
 			}
 
 			console.log(rd.uiPagesThumbs);
-			/*
-						dataOut.forEach((element, index) => {
-							const imgDiv = addItem('div', {
-								className: 'page-container'
-							});
-							const imgPage = addItem('img', {
-								alt: element.pageNum,
-								className: 'page multiply hidden',
-								src: 'transparent.png',
-								hasSrc: false,
-							});
-							imgDiv.appendChild(imgPage);
-			
-							rd.uiPages.push(imgPage);
-							rd.uiPagesContainer.push(imgDiv);
-			
-							const imgThumb = addItem('img', {
-								className: 'page-thumb multiply hidden',
-								alt: element.pageNum,
-								src: 'transparent.png',
-								lazySrc: element.thumb,
-							});
-							imgThumb.style.height = "var(--mb-thumb-height-px)";
-							imgThumb.style.aspectRatio = element.AR;
-			
-							addLazyLoading(imgThumb);
-							rd.uiPagesThumbs.push(imgThumb);
-			
-							//thumbStripInner.appendChild(imgThumb);
-							//thumbStripInner.insertBefore(imgThumb, parent.firstChild);
-						});
-			*/
 			// Prepare "spreads" structure based on the layout chosen in the UI
 
 			let i = 0; // Counter of page number
@@ -2457,23 +2425,30 @@
 					rd.uiPages[ipic].style.float = rd.ltr ? 'right' : 'left';
 					rd.uiPages[ipic + 1].style.float = rd.ltr ? 'left' : 'right';
 
+					rd.uiPagesContainer[ipic].classList.add(rd.ltr ? 'left-page' : 'right-page');
+					rd.uiPagesContainer[ipic + 1].classList.add(rd.ltr ? 'right-page' : 'left-page');
+
 					spreadItem.classList.add('two-pages', 'flock');
 
-					buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
+					buildSize2P(spreadItem, readerMaxRatio);
 					//buildFlock(spreadItem, i, dataOut.length);
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPages[ipic], dataOut[i].AR, dataOut[i].AR);
-					buildSizePic(rd.uiPages[ipic + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
-					//rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
-					rd.uiPagesContainer[ipic].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					rd.uiPagesContainer[ipic].style.height = rd.uiPages[ipic].style.height;
-					//rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
-					rd.uiPagesContainer[ipic + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					rd.uiPagesContainer[ipic + 1].style.height = rd.uiPages[ipic + 1].style.height;
+					buildSizePic(rd.uiPagesContainer[ipic], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[ipic + 1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
 
-					rd.uiPagesContainer[ipic].classList.add(rd.ltr ? 'left-page' : 'right-page');
-					rd.uiPagesContainer[ipic + 1].classList.add(rd.ltr ? 'right-page' : 'left-page');
+					rd.uiPages[ipic].style.height = rd.uiPagesContainer[ipic].style.height;
+					rd.uiPages[ipic + 1].style.height = rd.uiPagesContainer[ipic + 1].style.height;
+
+					//buildSizePic(rd.uiPages[ipic], dataOut[i].AR, dataOut[i].AR);
+					//buildSizePic(rd.uiPages[ipic + 1], dataOut[i + 1].AR, dataOut[i + 1].AR);
+					//OLD			rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
+					//rd.uiPagesContainer[ipic].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					//rd.uiPagesContainer[ipic].style.height = rd.uiPages[ipic].style.height;
+					//OLD			rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
+					//rd.uiPagesContainer[ipic + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
+					//rd.uiPagesContainer[ipic + 1].style.height = rd.uiPages[ipic + 1].style.height;
+
 
 					//TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
 
