@@ -2300,44 +2300,44 @@
 					doubleSpread = true;
 				}
 				else {
-					doubleSpread = false; 
+					doubleSpread = false;
 					i1++
 				}
 			}
 
 			console.log(rd.uiPagesThumbs);
-/*
-			dataOut.forEach((element, index) => {
-				const imgDiv = addItem('div', {
-					className: 'page-container'
-				});
-				const imgPage = addItem('img', {
-					alt: element.pageNum,
-					className: 'page multiply hidden',
-					src: 'transparent.png',
-					hasSrc: false,
-				});
-				imgDiv.appendChild(imgPage);
-
-				rd.uiPages.push(imgPage);
-				rd.uiPagesContainer.push(imgDiv);
-
-				const imgThumb = addItem('img', {
-					className: 'page-thumb multiply hidden',
-					alt: element.pageNum,
-					src: 'transparent.png',
-					lazySrc: element.thumb,
-				});
-				imgThumb.style.height = "var(--mb-thumb-height-px)";
-				imgThumb.style.aspectRatio = element.AR;
-
-				addLazyLoading(imgThumb);
-				rd.uiPagesThumbs.push(imgThumb);
-
-				//thumbStripInner.appendChild(imgThumb);
-				//thumbStripInner.insertBefore(imgThumb, parent.firstChild);
-			});
-*/
+			/*
+						dataOut.forEach((element, index) => {
+							const imgDiv = addItem('div', {
+								className: 'page-container'
+							});
+							const imgPage = addItem('img', {
+								alt: element.pageNum,
+								className: 'page multiply hidden',
+								src: 'transparent.png',
+								hasSrc: false,
+							});
+							imgDiv.appendChild(imgPage);
+			
+							rd.uiPages.push(imgPage);
+							rd.uiPagesContainer.push(imgDiv);
+			
+							const imgThumb = addItem('img', {
+								className: 'page-thumb multiply hidden',
+								alt: element.pageNum,
+								src: 'transparent.png',
+								lazySrc: element.thumb,
+							});
+							imgThumb.style.height = "var(--mb-thumb-height-px)";
+							imgThumb.style.aspectRatio = element.AR;
+			
+							addLazyLoading(imgThumb);
+							rd.uiPagesThumbs.push(imgThumb);
+			
+							//thumbStripInner.appendChild(imgThumb);
+							//thumbStripInner.insertBefore(imgThumb, parent.firstChild);
+						});
+			*/
 			// Prepare "spreads" structure based on the layout chosen in the UI
 
 			let i = 0; // Counter of page number
@@ -2385,7 +2385,7 @@
 					coverlay.style.height = spreadItem.style.height;
 					spreadItem.appendChild(coverlay);
 				} else if (dataOut[i].isDoubleSpread) {
-					
+
 					spreadItem.singlePage = false;
 
 					// Crop double spreads thumbnails
@@ -2408,7 +2408,7 @@
 
 					rd.uiPagesContainer[ipic].classList.add(rd.ltr ? 'left-page' : 'right-page');
 					rd.uiPagesContainer[ipic + 1].classList.add(rd.ltr ? 'right-page' : 'left-page');
-					
+
 					spreadItem.classList.add('two-pages', 'flock');
 
 					buildSize2P(spreadItem, readerMaxRatio);
@@ -2420,7 +2420,7 @@
 
 					buildSizePic(rd.uiPagesContainer[ipic], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
 					buildSizePic(rd.uiPagesContainer[ipic + 1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
-					
+
 					buildSizePic(rd.uiPages[ipic], dataOut[i].AR * 0.5, dataOut[i].AR * 0.5);
 					buildSizePic(rd.uiPages[ipic + 1], dataOut[i].AR * 0.5, dataOut[i].AR * 0.5);
 
@@ -2448,12 +2448,12 @@
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic : ipic + 1]);
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic + 1 : ipic]);
 
-					
+
 					/*
 					rd.uiPages[ipic].style[rd.ltr ? 'left' : 'right'] = '0px';
 					rd.uiPages[ipic + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
 					*/
-					
+
 					rd.uiPages[ipic].style.float = rd.ltr ? 'right' : 'left';
 					rd.uiPages[ipic + 1].style.float = rd.ltr ? 'left' : 'right';
 
@@ -2475,7 +2475,7 @@
 					rd.uiPagesContainer[ipic].classList.add(rd.ltr ? 'left-page' : 'right-page');
 					rd.uiPagesContainer[ipic + 1].classList.add(rd.ltr ? 'right-page' : 'left-page');
 
-//TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
+					//TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
 
 					spreadArray.push(i + 1);
 					spreadImagesArray.push(ipic + 1);
@@ -2648,7 +2648,7 @@
 
 		function handleLeftArrow() {
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-center", "turn-right");
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-center");
 			} else {
 				if ((rd.uiSpreadsPagenums[rd.currentSpreadIndex].singlePage)) {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), rd.ltr ? "focus-left-page" : "focus-right-page");
@@ -2658,7 +2658,7 @@
 						spreadSetFocus('focus-left-page', true);
 					}
 					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page", "turn-right");
+						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page");
 					}
 				}
 			}
@@ -2666,7 +2666,7 @@
 
 		function handleRightArrow() {
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-center", "turn-left");
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-center");
 			} else {
 				if ((rd.uiSpreadsPagenums[rd.currentSpreadIndex].singlePage)) {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? "focus-right-page" : "focus-left-page");
@@ -2676,7 +2676,7 @@
 						spreadSetFocus('focus-right-page', true);
 					}
 					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page", "turn-left");
+						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page");
 					}
 				}
 			}
@@ -2810,13 +2810,13 @@
 			}
 		}
 
-		function pageTurn(index, oldindex, turnDirection){
+		function pageTurn(index, oldindex, turnDirection) {
 			const turnSpeed = 500;
 			//turnDirection can be "turn-right" or "turn-left"
-			
+
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 
-			if (turnDirection == 'turn-right'){
+			if (turnDirection == 'turn-right') {
 				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
 
 				rd.uiPagesContainer[rd.uiSpreadsImages[index][rd.ltr ? 1 : 0]].animate(
@@ -2884,14 +2884,25 @@
 			spreadSetFocus(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass, true);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
-						
+
 			/*
 			rd.uiSpreads[localNewSpreadIndex].animate(
 				[{transform: 'translate(-100%, -50%)'},{transform: 'translate(-50%, -50%)'}],
 				{ duration: 550, easing: "linear", fill: "forwards" }
 			)
 			*/
-			if (turnDirection != null) pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection)
+			let turnDirectionCalc = null;
+
+			if (turnDirection != null) {
+				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection)
+			} else {
+				if (rd.ltr) {
+					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-left' : 'turn-right';
+				} else {
+					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-right' : 'turn-left';
+				}
+				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc)
+			}
 
 			centerThumb();
 			updateProgressBar();
