@@ -2331,6 +2331,7 @@ function buildFlock(item, index, total) {
 					src: 'transparent.png',
 					hasSrc: false,
 					lazySrc: dataOut[i_image].url,
+					size: dataOut[i_image].size
 				});
 				imgDiv.appendChild(imgPage);
 
@@ -2389,7 +2390,16 @@ function buildFlock(item, index, total) {
 					arrayPagenums = [i_image];
 					arrayImageRefs = [i_counter];
 					spreadKind = 'two-pages';
-					if ((i_image + 1 < dataOut.length) && (dataOut[i_image + 1].isDoubleSpread)) {
+
+					if (i_image == dataOut.length - 1){
+						rd.uiSpreadsPagenums.push([i_image]);
+						rd.uiSpreadsImageRefs.push([i_counter]);
+						rd.uiSpreadsKind.push('cover');
+						i_counter++;
+						i_image++;
+						i_spread++;
+					} 
+					else if ((i_image + 1 < dataOut.length) && (dataOut[i_image + 1].isDoubleSpread)) {
 						console.log("Single");
 						// This is an orphan page!
 
@@ -2402,6 +2412,7 @@ function buildFlock(item, index, total) {
 							className: 'page multiply hidden',
 							src: 'transparent.png',
 							hasSrc: true,
+							size: 0
 						});
 						imgDivBlank.appendChild(imgPageBlank);
 
@@ -2458,6 +2469,8 @@ function buildFlock(item, index, total) {
 			console.log(rd.uiSpreadsImageRefs); 		// Image reference number for each spread
 			console.log("uiSpreadsKind");
 			console.log(rd.uiSpreadsKind);
+			console.log('uiPages');
+			console.log(rd.uiPages);
 			// Prepare "spreads" structure based on the layout chosen in the UI
 
 			let i = 0; // Counter of page number
@@ -2688,7 +2701,7 @@ return dataOut;
 		function picLoadStackSize() {
 			let out = 0;
 			rd.picLoadStack.forEach(element => {
-				out += rd.pages[element].size;
+				out += rd.uiPages[element].size;
 			});
 			return (out);
 		}
@@ -2709,7 +2722,7 @@ return dataOut;
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
 
-			const promises = rd.uiSpreadsPagenums[spreadIndex].map(async (element, index) => {
+			const promises = rd.uiSpreadsImageRefs[spreadIndex].map(async (element, index) => {
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
 						//rd.uiPages[element].src = 'anim5.gif';
@@ -2942,44 +2955,68 @@ return dataOut;
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 
 			// TODO Sistemare le cover in modo che siano anche quelle single page e poi togliere questo fix
-			if (rd.uiSpreadsImageRefs[index].length == 1) return;
+			//if (rd.uiSpreadsImageRefs[index].length == 1) return;
+			
+			if (rd.uiSpreadsImageRefs[index].length != 1) {
+				if (turnDirection == 'turn-right') {
+					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
 
-			if (turnDirection == 'turn-right') {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
+					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
+						[
+							{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
+							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+						],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
 
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
-					[
-						{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
+					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
+						[
+							{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
+							{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+						],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
+				} else {
+					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
 
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
-					[
-						{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
+					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
+						[
+							{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
+							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+						],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
+
+					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
+						[
+							{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
+							{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+						],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
+				}
 			} else {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
+				if (turnDirection == 'turn-right') {
+					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
 
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
-					[
-						{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
+					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]].animate(
+						[
+							{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
+							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+						],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
+				} else {
+					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
 
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
-					[
-						{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
+					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]].animate(
+						[
+							{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
+							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+						],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
+				}
 			}
 		}
 
