@@ -2188,7 +2188,7 @@
 			}
 
 			leftLimit.innerText = rd.ltr ? 1 : rd.uiPages.length;
-			rightLimit.innerText = rd.ltr ? rd.uiPages.length : 1;
+			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			buildFlock(readerViewer, rd.currentSpreadIndex, rd.uiSpreads.length)
@@ -2475,6 +2475,11 @@ function buildFlock(item, index, total) {
 			console.log(rd.uiSpreadsKind);
 			console.log('uiPages');
 			console.log(rd.uiPages);
+			console.log('uiPagesThumbs');
+			console.log(rd.uiPagesThumbs);
+			console.log('uiSpreadsThumbs');
+			console.log(rd.uiSpreadsThumbs.length);
+			console.log(rd.uiSpreadsThumbs);
 			// Prepare "spreads" structure based on the layout chosen in the UI
 
 			let i = 0; // Counter of page number
