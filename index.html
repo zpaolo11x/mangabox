@@ -2386,29 +2386,31 @@
 				} else if (dataOut[i].isDoubleSpread) {
 					
 					spreadItem.singlePage = false;
-					rd.uiPagesThumbs[rd.ltr ? ipic : ipic + 1].style.clipPath = 'inset(0 50% 0 0)';
-					rd.uiPagesThumbs[rd.ltr ? ipic + 1 : ipic].style.clipPath = 'inset(0 0 0 50%)';
+
+					// Crop double spreads thumbnails
+					rd.uiPagesThumbs[ipic].style.aspectRatio = dataOut[i].AR * 0.5;
+					rd.uiPagesThumbs[ipic + 1].style.aspectRatio = dataOut[i].AR * 0.5;
+					rd.uiPagesThumbs[ipic].style.objectFit = 'cover';
+					rd.uiPagesThumbs[ipic + 1].style.objectFit = 'cover';
+					rd.uiPagesThumbs[ipic].style.objectPosition = rd.ltr ? 'left' : 'right';
+					rd.uiPagesThumbs[ipic + 1].style.objectPosition = rd.ltr ? 'right' : 'left';
 
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic : ipic + 1]);
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic + 1 : ipic]);
 
-
-
+					// Add page containers
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic : ipic + 1]);
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic + 1 : ipic]);
 
-					//rd.uiPages[ipic].style[rd.ltr ? 'left' : 'right'] = '0px';
-					//rd.uiPages[ipic + 1].style[rd.ltr ? 'right' : 'left'] = '0px';
-
-					rd.uiPages[ipic].style.float = rd.ltr ? 'left' : 'right';
-					rd.uiPages[ipic + 1].style.float = rd.ltr ? 'right' : 'left';
+					rd.uiPages[ipic].style.float = rd.ltr ? 'right' : 'left';
+					rd.uiPages[ipic + 1].style.float = rd.ltr ? 'left' : 'right';
 
 					rd.uiPagesContainer[ipic].classList.add(rd.ltr ? 'left-page' : 'right-page');
 					rd.uiPagesContainer[ipic + 1].classList.add(rd.ltr ? 'right-page' : 'left-page');
 					
 					spreadItem.classList.add('two-pages', 'flock');
 
-					buildSize2P(spreadItem, dataOut[i].AR + dataOut[i + 1].AR);
+					buildSize2P(spreadItem, readerMaxRatio);
 					//buildFlock(spreadItem, i, dataOut.length);
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
@@ -2418,18 +2420,17 @@
 					buildSizePic(rd.uiPagesContainer[ipic], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
 					buildSizePic(rd.uiPagesContainer[ipic + 1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
 					
-					//buildSizePic(rd.uiPages[ipic], readerMaxRatio, readerMaxRatio);
-					//buildSizePic(rd.uiPages[ipic + 1], readerMaxRatio, readerMaxRatio);
+					buildSizePic(rd.uiPages[ipic], dataOut[i].AR * 0.5, dataOut[i].AR * 0.5);
+					buildSizePic(rd.uiPages[ipic + 1], dataOut[i].AR * 0.5, dataOut[i].AR * 0.5);
+
+					rd.uiPages[ipic].style.objectFit = 'cover';
+					rd.uiPages[ipic + 1].style.objectFit = 'cover';
+
+					rd.uiPages[ipic].style.objectPosition = rd.ltr ? 'left' : 'right';
+					rd.uiPages[ipic + 1].style.objectPosition = rd.ltr ? 'right' : 'left';
+
 					rd.uiPages[ipic].style.height = rd.uiPagesContainer[ipic].style.height;
 					rd.uiPages[ipic + 1].style.height = rd.uiPagesContainer[ipic + 1].style.height;
-				
-					//rd.uiPagesContainer[i].style.width = rd.uiPages[i].style.width;
-					//rd.uiPagesContainer[ipic].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					//rd.uiPagesContainer[ipic].style.height = rd.uiPages[ipic].style.height;
-					//rd.uiPagesContainer[i + 1].style.width = rd.uiPages[i + 1].style.width;
-					//rd.uiPagesContainer[ipic + 1].style.width = `calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh))`;
-					//rd.uiPagesContainer[ipic + 1].style.height = rd.uiPages[ipic + 1].style.height;
-//TODO CENTRARE LE PAGINE AL CENTRO DEL PAGE CONTAINER
 
 					spreadArray.push(i);
 					spreadImagesArray.push(ipic + 1);
