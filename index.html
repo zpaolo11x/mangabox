@@ -2386,8 +2386,13 @@
 				} else if (dataOut[i].isDoubleSpread) {
 					
 					spreadItem.singlePage = false;
+					rd.uiPagesThumbs[rd.ltr ? ipic : ipic + 1].style.clipPath = 'inset(0 50% 0 0)';
+					rd.uiPagesThumbs[rd.ltr ? ipic + 1 : ipic].style.clipPath = 'inset(0 0 0 50%)';
+
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic : ipic + 1]);
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic + 1 : ipic]);
+
+
 
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic : ipic + 1]);
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? ipic + 1 : ipic]);
