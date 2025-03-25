@@ -2451,7 +2451,10 @@
 				if (spreadKind == 'cover') {
 					let imageIndex = rd.uiSpreadsImageRefs[index][0];
 					let pageRef = rd.uiSpreadsPagenums[index][0];
-
+console.log("BUILDCOVER");
+console.log(imageIndex);
+console.log(pageRef);
+console.log(rd.uiPagesThumbs[imageIndex]);
 					spreadItem.singlePage = true; //TODO forse non servirà in futuro
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[imageIndex]);
 
@@ -2525,7 +2528,7 @@
 					rd.uiPagesThumbs[imageIndex2].style.objectPosition = rd.ltr ? 'right' : 'left';
 
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2]);
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? imageIndex2 : ipic]);
+					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1]);
 
 					// Add page containers
 					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2]);
@@ -2868,6 +2871,8 @@ return dataOut;
 			});
 
 			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
+			console.log("TARGET");
+			console.log(targetElement);
 			if (targetElement) {
 				// Step scroll
 				//	thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
@@ -2904,6 +2909,9 @@ return dataOut;
 			//turnDirection can be "turn-right" or "turn-left"
 
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
+
+			// TODO Sistemare le cover in modo che siano anche quelle single page e poi togliere questo fix
+			if (rd.uiSpreadsImageRefs[index].length == 1) return;
 
 			if (turnDirection == 'turn-right') {
 				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
