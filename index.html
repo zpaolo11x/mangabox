@@ -2313,6 +2313,7 @@
 					src: 'transparent.png',
 					lazySrc: dataOut[i_image].thumb,
 				});
+				console.log(imgThumb);
 				imgThumb.style.height = "var(--mb-thumb-height-px)";
 				imgThumb.style.aspectRatio = dataOut[i_image].AR;
 
@@ -2394,8 +2395,8 @@
 
 						i_spread++;
 						i_image++;
-						rd.uiSpreadsPagenums.push(arrayPagenums);
-						rd.uiSpreadsImageRefs.push(arrayImageRefs);
+						rd.uiSpreadsPagenums.push(arrayPagenums.reverse());
+						rd.uiSpreadsImageRefs.push(arrayImageRefs.reverse());
 						rd.uiSpreadsKind.push(spreadKind);
 					} else {
 						console.log("Double");
