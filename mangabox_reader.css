@@ -339,7 +339,7 @@ div.single-page {
 }
 
 #readerContainer.hidden #readerViewer {
-	top: 150%;
+	top: 200%;
 	transition: top 0.3s ease;
 }
 
