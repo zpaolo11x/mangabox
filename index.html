@@ -2029,6 +2029,7 @@
 			"none": 'translate(-50%, -50%)',
 		}
 
+		//TODO Verificare se smoothMove è ancora utile
 		function spreadSetFocus(focusString, smoothMove = false) {
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
@@ -2657,7 +2658,7 @@
 						spreadSetFocus('focus-left-page', true);
 					}
 					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page");
+						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page", "turn-right");
 					}
 				}
 			}
@@ -2675,7 +2676,7 @@
 						spreadSetFocus('focus-right-page', true);
 					}
 					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page");
+						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page", "turn-left");
 					}
 				}
 			}
@@ -2880,7 +2881,7 @@
 
 			populateSpread(localNewSpreadIndex);
 
-			spreadSetFocus(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass);
+			spreadSetFocus(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass, true);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 						
