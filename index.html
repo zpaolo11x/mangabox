@@ -2824,7 +2824,7 @@
 						{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
 						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
 					],
-					{ duration: turnSpeed, easing: "linear", fill: "forwards" }
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
 				);
 
 				rd.uiPagesContainer[rd.uiSpreadsImages[index][rd.ltr ? 0 : 1]].animate(
@@ -2832,7 +2832,7 @@
 						{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
 						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
 					],
-					{ duration: turnSpeed, easing: "linear", fill: "forwards" }
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
 				);
 			} else {
 				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
@@ -2842,7 +2842,7 @@
 						{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
 						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
 					],
-					{ duration: turnSpeed, easing: "linear", fill: "forwards" }
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
 				);
 
 				rd.uiPagesContainer[rd.uiSpreadsImages[index][rd.ltr ? 1 : 0]].animate(
@@ -2850,7 +2850,7 @@
 						{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
 						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
 					],
-					{ duration: turnSpeed, easing: "linear", fill: "forwards" }
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
 				);
 			}
 		}
