@@ -345,7 +345,7 @@ div.single-page {
 
 #readerContainer:not(.hidden) #readerViewer {
 	top: 50%;
-	transition: top 0.3s ease 0.5s;
+	transition: top 0.3s ease 0.5s,left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease;
 }
 
 #bottomControls,
