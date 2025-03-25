@@ -2439,22 +2439,6 @@
 					i++;
 
 
-					/*
-					spreadItem.singlePage = false;
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
-
-					spreadItem.appendChild(rd.uiPagesContainer[i]);
-					spreadItem.classList.add('double-page', 'flock');
-
-					buildSize2P(spreadItem, dataOut[i].AR); //TODO Da verificare se usare questo o quello sotto
-					//buildFlock(spreadItem, i, dataOut.length);
-					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
-
-					rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
-					rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
-					if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
-					i++;
-					*/
 				} else if ((dataOut.length > i + 1) && !(dataOut[i + 1].isDoubleSpread)) {
 					spreadItem.singlePage = false;
 					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? ipic : ipic + 1]);
