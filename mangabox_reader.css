@@ -266,6 +266,10 @@ div.two-pages {
 	border-color: transparent;
 
 	border-image: url('pagesZ3.png') 0 80 0 80;
+	/*
+	border-color:red;
+	border-style: solid;
+	*/
 	/*background-color: #d0cbc1;*/
 
 	/*border: 3px red solid!important;*/
