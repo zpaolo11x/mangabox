@@ -2151,6 +2151,7 @@
 			if (picLoadStackSize() >= 20000000) {
 				return;
 			}
+			//TODO Problem arises when running this line
 			populateSpread(index, true);
 		}
 
@@ -2160,7 +2161,7 @@
 
 		// This function triggers multiple preloads starting from the current spread
 		function preloadPages(startSpreadIndex, count) {
-			//TODO Returning from this fixes disappearing flock on safari
+			//TODO Returning from this fixes disappearing flock on safari, see function preloadPage
 			if (isSectionHidden(readerContainer)) return;
 
 			for (let i = 1; i <= count; i++) {
@@ -2186,7 +2187,7 @@
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
-			leftLimit.innerText = rd.ltr ? 1 : rd.uiPages.length;
+			leftLimit.innerText = rd.ltr ? 1 : rd.pages.length;
 			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
@@ -2696,9 +2697,11 @@
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
-			alert("Index:"+spreadIndex+" Preload:"+isPreload+" ImageRefs:"+rd.uiSpreadsImageRefs[spreadIndex]);
+			//alert("Index:"+spreadIndex+" Preload:"+isPreload+" ImageRefs:"+rd.uiSpreadsImageRefs[spreadIndex]);
+			const zeroindex = spreadIndex == 0;
 
 			const promises = rd.uiSpreadsImageRefs[spreadIndex].map(async (element, index) => {
+
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
 						//rd.uiPages[element].src = 'anim5.gif';
