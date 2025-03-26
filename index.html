@@ -2424,7 +2424,7 @@
 					rd.uiSpreadsKind.push(spreadKind);
 				}
 			}
-/*
+			/*
 			console.log('FINE BLOCCO');
 			console.log('uiSpreadsPagenums');
 			console.log(rd.uiSpreadsPagenums); 	// page number for each spread
@@ -2439,19 +2439,11 @@
 			console.log('uiSpreadsThumbs');
 			console.log(rd.uiSpreadsThumbs.length);
 			console.log(rd.uiSpreadsThumbs);
-*/
+			*/
 			// Prepare 'spreads' structure based on the layout chosen in the UI
-
-			let i = 0; // Counter of page number
-			let ipic = 0; // Counter of image elements. Double spreads have one page number and two image elements 
-			doubleSpread = false;
-
-			let spreadTotal = 0;
 
 			readerHorizontal = ((screenAR / readerMaxRatio > rd.thresholdRatio));
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
-
-			let currentPageSingle = false;
 
 			// Populate and create spread structure
 			rd.uiSpreadsKind.forEach((spreadKind, index) => {
@@ -2492,7 +2484,6 @@
 					rd.uiPages[imageIndex].style.height = rd.uiPagesContainer[imageIndex].style.height;
 
 					if (dataOut[pageRef].isCurrent) {
-						currentPageSingle = true;
 						rd.currentSpreadIndex = index;
 					}
 
@@ -2502,7 +2493,6 @@
 					coverlay.style.width = rd.uiPagesContainer[imageIndex].style.width;
 					coverlay.style.height = rd.uiPagesContainer[imageIndex].style.height;
 					rd.uiPagesContainer[imageIndex].appendChild(coverlay);
-
 				}
 				else if ((spreadKind == 'back-cover')) {
 					let imageIndex = rd.uiSpreadsImageRefs[index][0];
@@ -2535,7 +2525,6 @@
 					rd.uiPages[imageIndex].style.height = rd.uiPagesContainer[imageIndex].style.height;
 
 					if (dataOut[pageRef].isCurrent) {
-						currentPageSingle = true;
 						rd.currentSpreadIndex = index;
 					}
 
@@ -2648,7 +2637,6 @@
 			});
 			//spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
-
 
 			return dataOut;
 		}
@@ -2783,6 +2771,7 @@
 			if (readerHorizontal) {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), 'focus-center');
 			} else {
+				//TODO Verificare se .singlepage serve qui o no, ricontrollare tutto
 				if ((rd.uiSpreads[rd.currentSpreadIndex].singlePage)) {
 					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? 'focus-right-page' : 'focus-left-page');
 				}
