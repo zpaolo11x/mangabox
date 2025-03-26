@@ -1900,7 +1900,7 @@
 		let rd = {
 			thresholdRatio: 1.0,	//Orientation threshold
 
-			preloadCount: 15,			// Imge preload count
+			preloadCount: 3,	//WAS 15		// Imge preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
 			jumpTimeout: null,		// Timeout counter for jumping to spreads
@@ -2033,7 +2033,7 @@
 		}
 
 		//TODO Verificare se smoothMove è ancora utile
-		function spreadSetFocus(focusString, smoothMove = false) {
+		function spreadSetFocus(focusString, smoothMove = false) {			
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
 				{ duration: smoothMove ? 500 : 0, easing: 'ease', fill: 'forwards' }
@@ -2160,6 +2160,7 @@
 
 		// This function triggers multiple preloads starting from the current spread
 		function preloadPages(startSpreadIndex, count) {
+			//TODO Returning from this fixes disappearing flock on safari
 			if (isSectionHidden(readerContainer)) return;
 
 			for (let i = 1; i <= count; i++) {
@@ -2221,7 +2222,6 @@
 		//readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease";
 
 		function buildFlock(index, total) {
-			
 			//TODO SISTEAMRE IL BORDO MINIMO
 			//if (index < 5) index = 0;
 			//if (index > total - 5) index = total;
@@ -2293,7 +2293,6 @@
 			let secondPage = false;
 
 			while (i_image < dataOut.length) {
-				console.log('i_image:' + i_image);
 				// Create an image entry for page image
 				const imgDiv = addItem('div', {
 					className: 'page-container'
@@ -2318,7 +2317,6 @@
 					src: 'transparent.png',
 					lazySrc: dataOut[i_image].thumb,
 				});
-				console.log(imgThumb);
 				imgThumb.style.height = 'var(--mb-thumb-height-px)';
 				imgThumb.style.aspectRatio = dataOut[i_image].AR;
 
@@ -2326,7 +2324,6 @@
 				rd.uiPagesThumbs.push(imgThumb);
 
 				if (dataOut[i_image].isCover) {
-					console.log('isCover');
 					// Element is a cover
 					rd.uiSpreadsPagenums.push([i_image]);
 					rd.uiSpreadsImageRefs.push([i_counter]);
@@ -2336,9 +2333,7 @@
 					i_spread++;
 				}
 				else if ((dataOut[i_image].isDoubleSpread && !doubleSpread)) {
-					console.log('isDoubleSpread');
 					// Element is a double spread and we ar not running second spread pass
-					console.log('DOUBLESPREAD');
 					doubleSpread = true;
 					arrayPagenums = [i_image];
 					arrayImageRefs = [i_counter];
@@ -2346,7 +2341,6 @@
 					i_counter++;
 				}
 				else if (dataOut[i_image].isDoubleSpread && doubleSpread) {
-					console.log('SecondDoubleSpread');
 					// Element is a double spread, this is the second picture
 					doubleSpread = false;
 					arrayPagenums.push(i_image);
@@ -2359,7 +2353,6 @@
 					rd.uiSpreadsKind.push(spreadKind);
 				}
 				else if (!secondPage) {
-					console.log('TwoPages');
 					arrayPagenums = [i_image];
 					arrayImageRefs = [i_counter];
 					spreadKind = 'two-pages';
@@ -2373,7 +2366,6 @@
 						i_spread++;
 					}
 					else if ((i_image + 1 < dataOut.length) && (dataOut[i_image + 1].isDoubleSpread)) {
-						console.log('Single');
 						// This is an orphan page!
 
 						// Create blank page
@@ -2414,15 +2406,12 @@
 						rd.uiSpreadsImageRefs.push(arrayImageRefs.reverse());
 						rd.uiSpreadsKind.push(spreadKind);
 					} else {
-						console.log('Double');
-
 						secondPage = true;
 						i_counter++;
 						i_image++;
 					}
 				}
 				else if (secondPage) {
-					console.log('SecondPage');
 					secondPage = false;
 					arrayPagenums.push(i_image);
 					arrayImageRefs.push(i_counter);
@@ -2434,7 +2423,7 @@
 					rd.uiSpreadsKind.push(spreadKind);
 				}
 			}
-
+/*
 			console.log('FINE BLOCCO');
 			console.log('uiSpreadsPagenums');
 			console.log(rd.uiSpreadsPagenums); 	// page number for each spread
@@ -2449,6 +2438,7 @@
 			console.log('uiSpreadsThumbs');
 			console.log(rd.uiSpreadsThumbs.length);
 			console.log(rd.uiSpreadsThumbs);
+*/
 			// Prepare 'spreads' structure based on the layout chosen in the UI
 
 			let i = 0; // Counter of page number
@@ -2655,57 +2645,12 @@
 				thumbStripInner.appendChild(spreadItemThumb);
 
 			});
-			console.log('CURRENTINDEX:' + rd.currentSpreadIndex)
 			//spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
 
 
 			return dataOut;
 		}
-		/*
-					while (i < dataOut.length) {
-		
-		
-						 else if (dataOut[i].isDoubleSpread) {
-		
-		
-		
-		
-						} else if ((dataOut.length > i + 1)) {
-						} else {
-							spreadItem.singlePage = true;
-		
-							spreadItemThumb.appendChild(rd.uiPagesThumbs[i]);
-		
-							spreadItem.appendChild(rd.uiPagesContainer[i]);
-							spreadItem.classList.add('single-page')
-		
-							buildSize(spreadItem, dataOut[i].AR);
-		
-							rd.uiPages[i].style.width = rd.uiPagesContainer[i].style.width = spreadItem.style.width;
-							rd.uiPages[i].style.height = rd.uiPagesContainer[i].style.height = spreadItem.style.height;
-							if (dataOut[i].isCurrent) rd.currentSpreadIndex = spreadTotal;
-							i++;
-						}
-						const localSpread = spreadTotal;
-		
-						spreadTotal++;
-		
-						rd.uiSpreadsPagenums.push(spreadArray);
-						rd.uiSpreadsImageRefs.push(spreadImagesArray);
-		
-			
-		
-					}
-		
-					spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
-		
-					console.log(rd.uiSpreadsPagenums);
-					console.log(rd.uiSpreadsImageRefs);
-		
-					return dataOut;
-				}
-		*/
 
 		// Starts timeout for element id of the preload stack
 		function startTimeout(id, duration, callback) {
@@ -2751,6 +2696,7 @@
 
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
+			alert("Index:"+spreadIndex+" Preload:"+isPreload+" ImageRefs:"+rd.uiSpreadsImageRefs[spreadIndex]);
 
 			const promises = rd.uiSpreadsImageRefs[spreadIndex].map(async (element, index) => {
 				if (rd.picLoadStack.indexOf(element) == -1) {
@@ -2945,19 +2891,8 @@
 			});
 
 			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
-			console.log('TARGET');
-			console.log(targetElement);
-			if (targetElement) {
-				// Step scroll
-				//	thumbStrip.scrollLeft = - thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
 
-				// Smooth Scroll
-				/*
-				thumbStrip.scrollTo({
-					left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
-					behavior: 'smooth'
-				});			
-				*/
+			if (targetElement) {
 
 				const targetScrollLeft = -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
 
