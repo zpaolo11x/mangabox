@@ -2189,13 +2189,16 @@
 			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
-			buildFlock(readerViewer, rd.currentSpreadIndex, rd.uiSpreads.length)
+			//TODO SOSTITUITO CON LA RIGA SOTTO
+			buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
 
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 
 			centerThumb();
 			updateProgressBar();
+			
+			jumpToSpread(rd.currentSpreadIndex);
 		}
 
 		function buildSizePic(item, ratio, picratio) {
@@ -2217,7 +2220,8 @@
 		// Add this once when initializing the viewer
 		//readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease";
 
-		function buildFlock(item, index, total) {
+		function buildFlock(index, total) {
+			console.log("XXXXXXXXXXXXXXXXXXXX BUILDFLOCK ")
 			/*
 			if (rd.uiSpreads[index].singlePage) {
 				 readerViewer.style.transition = "none"; // Disable transition for single pages
@@ -3029,27 +3033,27 @@
 			const animData = { duration: turnSpeed, easing: 'ease', fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
-			const turnRight_RP = [
+			const appearR2L_slideinL2R = [
 				{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
 			];
-			const turnRight_LP = [
+			const appearL2R = [
 				{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 0)' } // Fully visible
 			];
-			const turnLeft_LP = [
+			const appearL2R_sildeinR2L = [
 				{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
 			];
-			const turnLeft_RP = [
+			const appearR2L = [
 				{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 0)' } // Fully visible
 			];
-			const clipFromLeftEdge = [
+			const clipL2R = [
 				{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 100%)' } // Fully visible
 			];
-			const clipFromRightEdge = [
+			const clipR2L = [
 				{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
 				{ clipPath: 'inset(0 100% 0 0)' } // Fully visible
 			];
@@ -3065,23 +3069,23 @@
 				let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
 				let leftPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
-					rightPage.animate(turnRight_RP, animData);
-					leftPage.animate(turnRight_LP, animData);
-					leftPage_old.animate(clipFromLeftEdge, animData);
+					rightPage.animate(appearR2L_slideinL2R, animData);
+					leftPage.animate(appearL2R, animData);
+					leftPage_old.animate(clipL2R, animData);
 				} else {
-					rightPage.animate(turnLeft_RP, animData);
-					leftPage.animate(turnLeft_LP, animData);					
-					rightPage_old.animate(clipFromRightEdge, animData);
+					rightPage.animate(appearR2L, animData);
+					leftPage.animate(appearL2R_sildeinR2L, animData);					
+					rightPage_old.animate(clipR2L, animData);
 				}
 			} else if (startCover && stopCover) {
 				let startCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
 				let stopCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 				if (turnDirection == 'turn-right') {
-					startCover.animate(clipFromLeftEdge, animInstant);
-					stopCover.animate(turnLeft_RP, animInstant);
+					startCover.animate(clipL2R, animInstant);
+					stopCover.animate(appearR2L, animInstant);
 				} else {
-					startCover.animate(clipFromRightEdge, animInstant);
-					stopCover.animate(turnRight_LP, animInstant);
+					startCover.animate(clipR2L, animInstant);
+					stopCover.animate(appearL2R, animInstant);
 				}
 			} else if (startCover) {
 				// Start Page (cover or back cover)
@@ -3090,11 +3094,11 @@
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
-					rightPage.animate(turnRight_RP, animData);
-					leftPage.animate(turnRight_LP, animData);
+					rightPage.animate(appearR2L_slideinL2R, animData);
+					leftPage.animate(appearL2R, animData);
 				} else {
-					rightPage.animate(turnLeft_RP, animData);
-					leftPage.animate(turnLeft_LP, animData);
+					rightPage.animate(appearR2L, animData);
+					leftPage.animate(appearL2R_sildeinR2L, animData);
 				}
 			} else if (stopCover) {
 				// Start Page (mid spread)
@@ -3104,11 +3108,11 @@
 				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 
 				if (turnDirection == 'turn-right') {
-					leftPage.animate(clipFromLeftEdge, animData);
-					coverPage.animate(turnRight_RP, animData);
+					leftPage.animate(clipL2R, animData);
+					coverPage.animate(appearR2L_slideinL2R, animData);
 				} else {
-					rightPage.animate(clipFromRightEdge, animData);
-					coverPage.animate(turnLeft_LP, animData);
+					rightPage.animate(clipR2L, animData);
+					coverPage.animate(appearL2R_sildeinR2L, animData);
 				}
 			}
 		}
@@ -3132,7 +3136,7 @@
 		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null) {
 
 
-			buildFlock(readerViewer, newSpreadTarget, rd.uiSpreads.length)
+			buildFlock(newSpreadTarget, rd.uiSpreads.length)
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
