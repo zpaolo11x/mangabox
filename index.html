@@ -3069,92 +3069,38 @@
 					rightPage.animate(turnLeft_RP, animData);
 					leftPage.animate(turnLeft_LP, animData);					
 				}
-			} else if (startCover && stopCover){
-
-			}
-			
-			/*
-			if (rd.uiSpreadsImageRefs[index].length != 1) {
+			} else if (startCover && stopCover) {
+				//TODO In this case best to not animate
+			} else if (startCover) {
+				// Start Page (cover or back cover)
+				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
+				// Stop Page (mid spread)
+				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
+				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
-					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
-
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
-						[
-							{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
-							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
-
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
-						[
-							{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
-							{ clipPath: 'inset(0 0 0 0)' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
+					rightPage.animate(turnRight_RP, animData);
+					leftPage.animate(turnRight_LP, animData);
 				} else {
-					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
-
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
-						[
-							{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
-							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
-
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
-						[
-							{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
-							{ clipPath: 'inset(0 0 0 0)' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
+					rightPage.animate(turnLeft_RP, animData);
+					leftPage.animate(turnLeft_LP, animData);
 				}
-			} else {
-				let cover = rd.uiSpreadsKind[index] == 'cover-page';
+			} else if (stopCover) {
+				// Start Page (mid spread)
+				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
+				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
+				// Stop Page (cover or back cover)
+				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 
 				if (turnDirection == 'turn-right') {
-					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
-
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]].animate(
-						[
-							{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
-							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][cover ? 0 : 1]].animate(
-						[
-							{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
-							{ clipPath: 'inset(0 0 0 100%)' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
-					spreadSetFocus('focus-right-page', true);
+					leftPage.animate(bottomTurnCoverRight, animData);
+					coverPage.animate(turnRight_RP, animData);
 				} else {
-					rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
-
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]].animate(
-						[
-							{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
-							{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
-					rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][cover ? 0 : 1]].animate(
-						[
-							{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
-							{ clipPath: 'inset(0 100% 0 0)' } // Fully visible
-						],
-						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-					);
+					rightPage.animate(bottomTurnCoverLeft, animData);
+					coverPage.animate(turnLeft_LP, animData);
 				}
 			}
-			*/
 		}
-
+		
 		//TODO Verificare negli altri casi se usare una spreadClass neutra
 		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null) {
 
