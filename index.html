@@ -257,7 +257,7 @@
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
 				document.documentElement.style.setProperty(varName, swatches[id][index]);
 			});
-			document.documentElement.style.setProperty('--mb-h-deg', swatches[id][0] + "deg");
+			document.documentElement.style.setProperty('--mb-h-deg', swatches[id][0] + 'deg');
 			/*
 			// Custom colored top bar
 			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
@@ -362,7 +362,7 @@
 		//MB Search Functions 
 
 		function timeSplit(inTime) {
-			let outTime = inTime ?? "1111";
+			let outTime = inTime ?? '1111';
 			outTime = outTime.replace('TBD', '9999').split('-');
 			if (outTime.length == 1) outTime.push(outTime[0]);
 			return outTime
@@ -567,7 +567,7 @@
 				filterTable.filter_by_language.switches.push({
 					name: item,
 					caption: item.toUpperCase(),
-					iconClass: "fa-solid fa-square glyph-dark glyph-flag-button",
+					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
 					iconStyle: `background-image:url('flags/${item}.svg`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
 				})
@@ -612,7 +612,7 @@
 			});
 
 			const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
-			libraryMenuIcon.className = isFiltered == 0 ? "fa-solid fa-sliders glyph-dark" : "fa-solid fa-sliders mb-accent glyph-dark"
+			libraryMenuIcon.className = isFiltered == 0 ? 'fa-solid fa-sliders glyph-dark' : 'fa-solid fa-sliders mb-accent glyph-dark'
 
 			filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
@@ -758,17 +758,17 @@
 			if (!metaViewport) return;
 
 			// Temporarily disable zoom
-			metaViewport.content = "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no";
+			metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
 
 			setTimeout(() => {
 				// Restore zoom capability after layout stabilizes
-				metaViewport.content = "width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1";
+				metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
 			}, 50); // Adjust timeout as needed
 		}
 
-		window.addEventListener("orientationchange", fixZoomOnPWA);
-		document.addEventListener("visibilitychange", fixZoomOnPWA);
-		window.addEventListener("pageshow", (event) => {
+		window.addEventListener('orientationchange', fixZoomOnPWA);
+		document.addEventListener('visibilitychange', fixZoomOnPWA);
+		window.addEventListener('pageshow', (event) => {
 			if (event.persisted) fixZoomOnPWA();
 		});
 		// Fade in and Fade out routines
@@ -905,7 +905,7 @@
 
 			if (maxWidth > libLarge) {
 				libLarge = Math.ceil(maxWidth)
-				document.documentElement.style.setProperty('--mb-library-large', libLarge + "px");
+				document.documentElement.style.setProperty('--mb-library-large', libLarge + 'px');
 			}
 
 			const libNum = libraries.length;
@@ -1150,13 +1150,13 @@
 				noPointerDown(artistLabel);
 			}
 
-			item.mbSeriesTitle = serie.metadata.title ?? "";
+			item.mbSeriesTitle = serie.metadata.title ?? '';
 
 			item.mbSeriesStart = timeSplit(altTitle.time)[0];
 			item.mbSeriesStop = timeSplit(altTitle.time)[1];
 
 			item.mbSeriesRead = (unreadCount == 0);
-			item.mbSeriesLTR = (serie.metadata.readingDirection == "LEFT_TO_RIGHT");
+			item.mbSeriesLTR = (serie.metadata.readingDirection == 'LEFT_TO_RIGHT');
 			item.mbSeriesLanguage = serie.metadata.language;
 
 			seriesItem.append(
@@ -1308,20 +1308,20 @@
 			}, {});
 
 			if (altTitle.time == 'N/A') {
-				altTitle.time = serie.booksMetadata.releaseDate.split("-")[0];
+				altTitle.time = serie.booksMetadata.releaseDate.split('-')[0];
 			};
 
 			if (altTitle.story == 'N/A') {
 				const bookWriter = serie.booksMetadata.authors.find(
-					(alt) => alt.role === "writer"
+					(alt) => alt.role === 'writer'
 				);
-				altTitle.story = bookWriter ? bookWriter.name : "N/A";
+				altTitle.story = bookWriter ? bookWriter.name : 'N/A';
 			}
 			if (altTitle.art == 'N/A') {
 				const bookWriter = serie.booksMetadata.authors.find(
-					(alt) => alt.role === "penciller"
+					(alt) => alt.role === 'penciller'
 				);
-				altTitle.art = bookWriter ? bookWriter.name : "N/A";
+				altTitle.art = bookWriter ? bookWriter.name : 'N/A';
 			}
 			return altTitle;
 
@@ -1558,7 +1558,7 @@
 			bookOverlay.appendChild(markAsUnread);
 
 
-			if (book.metadata.summary != "") {
+			if (book.metadata.summary != '') {
 				const bookDetails = addItem('div', {
 					className: 'mini-buttons book-details',
 					title: 'Book Details',
@@ -1824,11 +1824,11 @@
 				className: 'custom-scrollbar',
 			});
 			item.scrollInput = addItem('input', {
-				type: "range",
-				className: "range-bar",
-				min: "0",
-				max: "100",
-				value: "0"
+				type: 'range',
+				className: 'range-bar',
+				min: '0',
+				max: '100',
+				value: '0'
 			});
 			item.gridButton = addItem('div', {
 				className: 'strip-all',
@@ -2026,17 +2026,17 @@
 		}
 
 		const frames = {
-			"focus-right-page": 'translate(-75%, -50%)',
-			"focus-left-page": 'translate(-25%, -50%)',
-			"focus-center": 'translate(-50%, -50%)',
-			"none": 'translate(-50%, -50%)',
+			'focus-right-page': 'translate(-75%, -50%)',
+			'focus-left-page': 'translate(-25%, -50%)',
+			'focus-center': 'translate(-50%, -50%)',
+			'none': 'translate(-50%, -50%)',
 		}
 
 		//TODO Verificare se smoothMove è ancora utile
 		function spreadSetFocus(focusString, smoothMove = false) {
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
-				{ duration: smoothMove ? 500 : 0, easing: "ease", fill: "forwards" }
+				{ duration: smoothMove ? 500 : 0, easing: 'ease', fill: 'forwards' }
 			);
 			rd.spreadFocus = focusString;
 		}
@@ -2049,7 +2049,7 @@
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
-				spreadSetFocus("none");
+				spreadSetFocus('none');
 				clearReader();
 			}, 400); //300ms timeout so the reader can slide out
 
@@ -2084,7 +2084,7 @@
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
 			rd.thumbsWidth = thumbStripInner.clientWidth;
-			thumbStrip.style.overflow = "hidden";
+			thumbStrip.style.overflow = 'hidden';
 			const oldWidth = thumbStripInner.clientWidth;
 
 			let thumbHeight = status ? 300 : 150;
@@ -2113,7 +2113,7 @@
 				const scrollScaler = newWidth / oldWidth;
 				thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
 				rd.thumbsWidth = newWidth;
-				testpr("Size changed:", entry.contentRect.width, entry.contentRect.height);
+				testpr('Size changed:', entry.contentRect.width, entry.contentRect.height);
 			}
 		});
 
@@ -2121,15 +2121,15 @@
 
 		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
 
-		thumbStripInner.addEventListener("transitionrun", () => {
+		thumbStripInner.addEventListener('transitionrun', () => {
 
-			testpr("Transition started")
+			testpr('Transition started')
 		});
-		thumbStripInner.addEventListener("transitionstart", () => testpr("Transition actually started"));
+		thumbStripInner.addEventListener('transitionstart', () => testpr('Transition actually started'));
 
-		thumbStripInner.addEventListener("transitionend", () => {
-			thumbStrip.style.overflow = "auto";
-			testpr("Transition ended")
+		thumbStripInner.addEventListener('transitionend', () => {
+			thumbStrip.style.overflow = 'auto';
+			testpr('Transition ended')
 
 		});
 
@@ -2229,8 +2229,8 @@
 			readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease"; // Restore transition
 			*/
 			//TODO SISTEAMRE IL BORDO MINIMO
-			if (index == 1) index = 0;
-			if (index == total - 1) index = total;
+			//if (index < 5) index = 0;
+			//if (index > total - 5) index = total;
 
 			const flockRate = [
 				rd.ltr ? (1.0 - index / total) : (index / total),
@@ -2322,7 +2322,7 @@
 			let secondPage = false;
 
 			while (i_image < dataOut.length) {
-				console.log("i_image:" + i_image);
+				console.log('i_image:' + i_image);
 				// Create an image entry for page image
 				const imgDiv = addItem('div', {
 					className: 'page-container'
@@ -2348,14 +2348,14 @@
 					lazySrc: dataOut[i_image].thumb,
 				});
 				console.log(imgThumb);
-				imgThumb.style.height = "var(--mb-thumb-height-px)";
+				imgThumb.style.height = 'var(--mb-thumb-height-px)';
 				imgThumb.style.aspectRatio = dataOut[i_image].AR;
 
 				addLazyLoading(imgThumb);
 				rd.uiPagesThumbs.push(imgThumb);
 
 				if (dataOut[i_image].isCover) {
-					console.log("isCover");
+					console.log('isCover');
 					// Element is a cover
 					rd.uiSpreadsPagenums.push([i_image]);
 					rd.uiSpreadsImageRefs.push([i_counter]);
@@ -2365,9 +2365,9 @@
 					i_spread++;
 				}
 				else if ((dataOut[i_image].isDoubleSpread && !doubleSpread)) {
-					console.log("isDoubleSpread");
+					console.log('isDoubleSpread');
 					// Element is a double spread and we ar not running second spread pass
-					console.log("DOUBLESPREAD");
+					console.log('DOUBLESPREAD');
 					doubleSpread = true;
 					arrayPagenums = [i_image];
 					arrayImageRefs = [i_counter];
@@ -2375,7 +2375,7 @@
 					i_counter++;
 				}
 				else if (dataOut[i_image].isDoubleSpread && doubleSpread) {
-					console.log("SecondDoubleSpread");
+					console.log('SecondDoubleSpread');
 					// Element is a double spread, this is the second picture
 					doubleSpread = false;
 					arrayPagenums.push(i_image);
@@ -2388,7 +2388,7 @@
 					rd.uiSpreadsKind.push(spreadKind);
 				}
 				else if (!secondPage) {
-					console.log("TwoPages");
+					console.log('TwoPages');
 					arrayPagenums = [i_image];
 					arrayImageRefs = [i_counter];
 					spreadKind = 'two-pages';
@@ -2402,7 +2402,7 @@
 						i_spread++;
 					}
 					else if ((i_image + 1 < dataOut.length) && (dataOut[i_image + 1].isDoubleSpread)) {
-						console.log("Single");
+						console.log('Single');
 						// This is an orphan page!
 
 						// Create blank page
@@ -2427,7 +2427,7 @@
 							alt: '',
 							src: 'transparent.png',
 						});
-						imgThumbBlank.style.height = "var(--mb-thumb-height-px)";
+						imgThumbBlank.style.height = 'var(--mb-thumb-height-px)';
 						imgThumbBlank.style.aspectRatio = dataOut[i_image].AR;
 
 						rd.uiPagesThumbs.push(imgThumbBlank);
@@ -2443,7 +2443,7 @@
 						rd.uiSpreadsImageRefs.push(arrayImageRefs.reverse());
 						rd.uiSpreadsKind.push(spreadKind);
 					} else {
-						console.log("Double");
+						console.log('Double');
 
 						secondPage = true;
 						i_counter++;
@@ -2451,7 +2451,7 @@
 					}
 				}
 				else if (secondPage) {
-					console.log("SecondPage");
+					console.log('SecondPage');
 					secondPage = false;
 					arrayPagenums.push(i_image);
 					arrayImageRefs.push(i_counter);
@@ -2464,12 +2464,12 @@
 				}
 			}
 
-			console.log("FINE BLOCCO");
-			console.log("uiSpreadsPagenums");
+			console.log('FINE BLOCCO');
+			console.log('uiSpreadsPagenums');
 			console.log(rd.uiSpreadsPagenums); 	// page number for each spread
-			console.log("uiSpreadsImageRefs");
+			console.log('uiSpreadsImageRefs');
 			console.log(rd.uiSpreadsImageRefs); 		// Image reference number for each spread
-			console.log("uiSpreadsKind");
+			console.log('uiSpreadsKind');
 			console.log(rd.uiSpreadsKind);
 			console.log('uiPages');
 			console.log(rd.uiPages);
@@ -2478,7 +2478,7 @@
 			console.log('uiSpreadsThumbs');
 			console.log(rd.uiSpreadsThumbs.length);
 			console.log(rd.uiSpreadsThumbs);
-			// Prepare "spreads" structure based on the layout chosen in the UI
+			// Prepare 'spreads' structure based on the layout chosen in the UI
 
 			let i = 0; // Counter of page number
 			let ipic = 0; // Counter of image elements. Double spreads have one page number and two image elements 
@@ -2691,7 +2691,7 @@
 				thumbStripInner.appendChild(spreadItemThumb);
 
 			});
-			console.log("CURRENTINDEX:" + rd.currentSpreadIndex)
+			console.log('CURRENTINDEX:' + rd.currentSpreadIndex)
 			//spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
 
@@ -2850,17 +2850,17 @@
 
 		function handleLeftArrow() {
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-center");
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), 'focus-center');
 			} else {
 				if ((rd.uiSpreads[rd.currentSpreadIndex].singlePage)) {
-					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), rd.ltr ? "focus-left-page" : "focus-right-page");
+					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), rd.ltr ? 'focus-left-page' : 'focus-right-page');
 				}
 				else {
 					if (rd.spreadFocus == 'focus-right-page') {
 						spreadSetFocus('focus-left-page', true);
 					}
 					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), "focus-right-page");
+						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), 'focus-right-page');
 					}
 				}
 			}
@@ -2868,17 +2868,17 @@
 
 		function handleRightArrow() {
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-center");
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), 'focus-center');
 			} else {
 				if ((rd.uiSpreads[rd.currentSpreadIndex].singlePage)) {
-					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? "focus-right-page" : "focus-left-page");
+					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? 'focus-right-page' : 'focus-left-page');
 				}
 				else {
 					if (rd.spreadFocus == 'focus-left-page') {
 						spreadSetFocus('focus-right-page', true);
 					}
 					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), "focus-left-page");
+						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), 'focus-left-page');
 					}
 				}
 			}
@@ -2907,12 +2907,12 @@
 				: rd.uiSpreadsPagenums[index][1] ?? rd.uiSpreadsPagenums[index][0]))
 			);
 
-			const twoPages = rd.uiSpreads[index].classList.contains("two-pages");
+			const twoPages = rd.uiSpreads[index].classList.contains('two-pages');
 			const lastSpread = (twoPages && (index == (rd.uiSpreads.length - 1)));
 
 			const out = [
 				(lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber,
-				pageNumber + (twoPages ? " " + (pageNumber + (rd.ltr ? 1 : -1)) : "")
+				pageNumber + (twoPages ? ' ' + (pageNumber + (rd.ltr ? 1 : -1)) : '')
 			];
 
 			return out;
@@ -2981,7 +2981,7 @@
 			});
 
 			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
-			console.log("TARGET");
+			console.log('TARGET');
 			console.log(targetElement);
 			if (targetElement) {
 				// Step scroll
@@ -2991,7 +2991,7 @@
 				/*
 				thumbStrip.scrollTo({
 					left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
-					behavior: "smooth"
+					behavior: 'smooth'
 				});			
 				*/
 
@@ -3026,8 +3026,8 @@
 
 			// Animation preparation
 			const turnSpeed = 500;
-			const animData = { duration: turnSpeed, easing: "ease", fill: "forwards" };
-			const animInstant = { duration: 0, easing: "linear", fill: "forwards" };
+			const animData = { duration: turnSpeed, easing: 'ease', fill: 'forwards' };
+			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const turnRight_RP = [
 				{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
@@ -3057,7 +3057,7 @@
 			const startCover = rd.uiSpreadsImageRefs[oldindex].length == 1
 			const stopCover = rd.uiSpreadsImageRefs[index].length == 1
 
-			//turnDirection can be "turn-right" or "turn-left"
+			//turnDirection can be 'turn-right' or 'turn-left'
 
 			if (!startCover && !stopCover) {
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
@@ -3116,13 +3116,13 @@
 		function getCenterClass(spreadIndex){
 			let spreadClassX = null;
 			if ((rd.uiSpreadsKind[spreadIndex]=='cover-page')) {
-				spreadClassX = (rd.ltr ? "focus-right-page" : "focus-left-page")
+				spreadClassX = (rd.ltr ? 'focus-right-page' : 'focus-left-page')
 			} else if (readerHorizontal && (rd.uiSpreadsKind[spreadIndex]=='back-cover')) {
-				spreadClassX = (rd.ltr ? "focus-left-page" : "focus-right-page")
+				spreadClassX = (rd.ltr ? 'focus-left-page' : 'focus-right-page')
 			} else if (readerHorizontal) {
-				spreadClassX = "focus-center"
+				spreadClassX = 'focus-center'
 			} else {
-				spreadClassX = (rd.ltr ? "focus-left-page" : "focus-right-page")
+				spreadClassX = (rd.ltr ? 'focus-left-page' : 'focus-right-page')
 			}
 
 			return spreadClassX
@@ -3160,7 +3160,7 @@
 			/*
 			rd.uiSpreads[localNewSpreadIndex].animate(
 				[{transform: 'translate(-100%, -50%)'},{transform: 'translate(-50%, -50%)'}],
-				{ duration: 550, easing: "linear", fill: "forwards" }
+				{ duration: 550, easing: 'linear', fill: 'forwards' }
 			)
 			*/
 			let turnDirectionCalc = null;
