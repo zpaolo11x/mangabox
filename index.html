@@ -2198,7 +2198,7 @@
 			centerThumb();
 			updateProgressBar();
 			
-			jumpToSpread(rd.currentSpreadIndex);
+			//jumpToSpread(rd.currentSpreadIndex);
 		}
 
 		function buildSizePic(item, ratio, picratio) {
@@ -2221,17 +2221,7 @@
 		//readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease";
 
 		function buildFlock(index, total) {
-			console.log("XXXXXXXXXXXXXXXXXXXX BUILDFLOCK ")
-			/*
-			if (rd.uiSpreads[index].singlePage) {
-				 readerViewer.style.transition = "none"; // Disable transition for single pages
-				 readerViewer.style.boxShadow = 'none';
-				 readerViewer.style.left = `50%`;
-				 readerViewer.style.borderWidth = `0px 0px 0px 0px`;
-				 return;
-			}
-			readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease"; // Restore transition
-			*/
+			
 			//TODO SISTEAMRE IL BORDO MINIMO
 			//if (index < 5) index = 0;
 			//if (index > total - 5) index = total;
@@ -2252,29 +2242,6 @@
 			readerViewer.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
 		}
 
-		/*
-				function buildFlock(item, index, total) {
-					if (rd.uiSpreads[index].singlePage) {
-						readerViewer.style.boxShadow = 'none';
-						readerViewer.style.left = `50%`;
-						readerViewer.style.borderWidth = `0px 0px 0px 0px`;
-						return
-					}
-					const flockRate = [
-						rd.ltr ? (1.0 - index / total) : (index / total),
-						rd.ltr ? (index / total) : (1.0 - index / total),
-						rd.ltr ? - 0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
-					]
-					const bookThickness = (80 - (80 / (800 * 800)) * (total * 2 - 800) * (total * 2 - 800)) / 800;//Was 40/800 and (15 / 800) * (dataOut.length / 100) before
-					const flockCut = Math.min(360 * total * 2 / 700, 360);
-					const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
-		
-					readerViewer.style.boxShadow = '0px 0px 15px 0px rgba(60, 40, 30, 0.8)';
-					readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
-					readerViewer.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
-					readerViewer.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
-				}
-		*/
 		//MB Reader Fetch Page Function
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId) {
@@ -2514,7 +2481,6 @@
 					spreadItem.classList.add('cover-page')
 
 					buildSize2P(spreadItem, readerMaxRatio);
-					//buildFlock(spreadItem, i, dataOut.length);
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 
@@ -2558,7 +2524,6 @@
 					spreadItem.classList.add('cover-page')
 
 					buildSize2P(spreadItem, readerMaxRatio);
-					//buildFlock(spreadItem, i, dataOut.length);
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 
@@ -2610,10 +2575,9 @@
 					rd.uiPagesContainer[imageIndex1].classList.add(rd.ltr ? 'left-page' : 'right-page');
 					rd.uiPagesContainer[imageIndex2].classList.add(rd.ltr ? 'right-page' : 'left-page');
 
-					spreadItem.classList.add('two-pages', 'flock');
+					spreadItem.classList.add('two-pages');
 
 					buildSize2P(spreadItem, readerMaxRatio);
-					//buildFlock(spreadItem, i, dataOut.length);
 					//TODO Ma questo serve????
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
@@ -2654,14 +2618,10 @@
 					rd.uiPagesContainer[imageIndex1].classList.add(rd.ltr ? 'left-page' : 'right-page');
 					rd.uiPagesContainer[imageIndex2].classList.add(rd.ltr ? 'right-page' : 'left-page');
 
-					spreadItem.classList.add('two-pages', 'flock');
+					spreadItem.classList.add('two-pages');
 
 					buildSize2P(spreadItem, readerMaxRatio);
-					//buildFlock(spreadItem, i, dataOut.length);
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
-
-					//buildSizePic(rd.uiPages[ipic], dataOut[i].AR, dataOut[i].AR);
-					//buildSizePic(rd.uiPages[ipic + 1], dataOut[i].AR, dataOut[i].AR);
 
 					buildSizePic(rd.uiPagesContainer[imageIndex1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
 					buildSizePic(rd.uiPagesContainer[imageIndex2], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
@@ -3154,11 +3114,8 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
-
 			populateSpread(localNewSpreadIndex);
-
 			spreadSetFocus(spreadClassX, true);
-
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
 			/*
