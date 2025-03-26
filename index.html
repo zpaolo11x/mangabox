@@ -691,12 +691,10 @@
 				if (newReaderHorizontal != readerHorizontal) {
 
 					screenAR = newScreenAR;
-					if (newReaderHorizontal || rd.uiSpreads[rd.currentSpreadIndex].singlePage) {
-						spreadSetFocus('focus-center', true);
-					} else {
-						spreadSetFocus(rd.ltr ? 'focus-left-page' : 'focus-right-page', true);
-					}
+
 					readerHorizontal = newReaderHorizontal;
+					spreadSetFocus(getCenterClass(rd.currentSpreadIndex), true);
+
 				}
 			}
 		}
@@ -2694,8 +2692,8 @@
 
 			});
 			console.log("CURRENTINDEX:" + rd.currentSpreadIndex)
-			spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
-
+			//spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
+			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
 
 
 			return dataOut;
@@ -3115,8 +3113,37 @@
 			}
 		}
 		
+		function getCenterClass(spreadIndex){
+			let spreadClassX = null;
+			if ((rd.uiSpreadsKind[spreadIndex]=='cover-page')) {
+				spreadClassX = (rd.ltr ? "focus-right-page" : "focus-left-page")
+			} else if (readerHorizontal && (rd.uiSpreadsKind[spreadIndex]=='back-cover')) {
+				spreadClassX = (rd.ltr ? "focus-left-page" : "focus-right-page")
+			} else if (readerHorizontal) {
+				spreadClassX = "focus-center"
+			} else {
+				spreadClassX = (rd.ltr ? "focus-left-page" : "focus-right-page")
+			}
+			/*
+			if (readerHorizontal && !(rd.uiSpreads[spreadIndex].singlePage)) {
+				spreadClassX = "focus-center"
+			} 
+			else if (readerHorizontal && (rd.uiSpreadsKind[spreadIndex]=='cover-page')) {
+				spreadClassX = (rd.ltr ? "focus-right-page" : "focus-left-page")
+			}
+			else if (readerHorizontal && (rd.uiSpreadsKind[spreadIndex]=='back-cover')) {
+				spreadClassX = (rd.ltr ? "focus-left-page" : "focus-right-page")
+			}
+			else {
+				spreadClassX = (rd.ltr ? "focus-left-page" : "focus-right-page")
+			}
+				*/
+			return spreadClassX
+		}
+
 		//TODO Verificare negli altri casi se usare una spreadClass neutra
 		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null) {
+
 
 			buildFlock(readerViewer, newSpreadTarget, rd.uiSpreads.length)
 
@@ -3125,9 +3152,7 @@
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
 
-			if (readerHorizontal || rd.uiSpreads[localNewSpreadIndex].singlePage) {
-				spreadClass = "focus-center"
-			}
+			let spreadClassX = getCenterClass(localNewSpreadIndex);
 
 			purgeLoading();
 
@@ -3141,7 +3166,7 @@
 
 			populateSpread(localNewSpreadIndex);
 
-			spreadSetFocus(spreadClass == null ? (rd.ltr ? "focus-left-page" : "focus-right-page") : spreadClass, true);
+			spreadSetFocus(spreadClassX, true);
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
