@@ -3045,11 +3045,11 @@
 				{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 0)' } // Fully visible
 			];
-			const bottomTurnCoverRight = [
+			const clipFromLeftEdge = [
 				{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 100%)' } // Fully visible
 			];
-			const bottomTurnCoverLeft = [
+			const clipFromRightEdge = [
 				{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
 				{ clipPath: 'inset(0 100% 0 0)' } // Fully visible
 			];
@@ -3062,12 +3062,16 @@
 			if (!startCover && !stopCover) {
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
+				let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
+				let leftPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(turnRight_RP, animData);
 					leftPage.animate(turnRight_LP, animData);
+					leftPage_old.animate(clipFromLeftEdge, animData);
 				} else {
 					rightPage.animate(turnLeft_RP, animData);
 					leftPage.animate(turnLeft_LP, animData);					
+					rightPage_old.animate(clipFromRightEdge, animData);
 				}
 			} else if (startCover && stopCover) {
 				//TODO In this case best to not animate
@@ -3092,10 +3096,10 @@
 				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 
 				if (turnDirection == 'turn-right') {
-					leftPage.animate(bottomTurnCoverRight, animData);
+					leftPage.animate(clipFromLeftEdge, animData);
 					coverPage.animate(turnRight_RP, animData);
 				} else {
-					rightPage.animate(bottomTurnCoverLeft, animData);
+					rightPage.animate(clipFromRightEdge, animData);
 					coverPage.animate(turnLeft_LP, animData);
 				}
 			}
