@@ -3029,6 +3029,8 @@
 			// Animation preparation
 			const turnSpeed = 500;
 			const animData = { duration: turnSpeed, easing: "ease", fill: "forwards" };
+			const animInstant = { duration: 0, easing: "linear", fill: "forwards" };
+
 			const turnRight_RP = [
 				{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
@@ -3074,7 +3076,15 @@
 					rightPage_old.animate(clipFromRightEdge, animData);
 				}
 			} else if (startCover && stopCover) {
-				//TODO In this case best to not animate
+				let startCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
+				let stopCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
+				if (turnDirection == 'turn-right') {
+					startCover.animate(clipFromLeftEdge, animInstant);
+					stopCover.animate(turnLeft_RP, animInstant);
+				} else {
+					startCover.animate(clipFromRightEdge, animInstant);
+					stopCover.animate(turnRight_LP, animInstant);
+				}
 			} else if (startCover) {
 				// Start Page (cover or back cover)
 				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
