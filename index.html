@@ -118,8 +118,8 @@
 		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
-		<img id="leftFlock" src="pagesZ3.png">
-		<img id="rightFlock" src="pagesZ3.png">
+		<img id="leftFlock" src="ph_left.png">
+		<img id="rightFlock" src="ph_right.png">
 
 		<div id="readerOverlay">
 			<div id="incognitoMark"></div>
@@ -2239,6 +2239,7 @@
 			const flockCut = Math.min(360 * total * 2 / 700, 360);
 			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
 
+
 			/*TODO RIVEDERE readerViewer.style.boxShadow = '0px 0px 15px 0px rgba(60, 40, 30, 0.8)';*/
 			//readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
 			//readerViewer.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
@@ -2272,6 +2273,13 @@
 			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
 			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
+
+			rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
+			leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
+			rightFlock.style.width = `calc(0.15 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			leftFlock.style.width = `calc(0.15 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
+			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 
 			let leftPos = 0;
 

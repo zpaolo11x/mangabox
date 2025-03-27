@@ -260,21 +260,32 @@ div.two-pages {
 
 #leftFlock,#rightFlock{
 	z-index:100;
-	position:absolute;
+	position:fixed;
 }
 
 #leftFlock{
 	width:100px;
 	height:100%;
+	top:50%;
+	left:50%;
+	opacity: 0.5;
+	/*
 	top: 50%;
 	left: 100%;
-	transform: translate(calc(-50% - 300px), -50%);
+	*/
+	/*transform: translate(calc(-50% - 300px), -50%);*/
 }
 #rightFlock{
-	width:100px;	top: 50%;
+	width:100px;
 	height:100%;
+	top:50%;
+	left:50%;
+	opacity: 0.5;
+	/*
+	top: 50%;
 	left: 0%;
-	transform: translate(calc(-50% + 300px), -50%);
+	*/
+	/*transform: translate(calc(-50% + 300px), -50%);*/
 }
 
 #readerViewer {
