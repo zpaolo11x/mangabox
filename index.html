@@ -3085,12 +3085,13 @@ alert(index);
 		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null) {
 
 
-			buildFlock(newSpreadTarget, rd.uiSpreads.length)
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
+
+			buildFlock(newSpreadTarget, rd.uiSpreads.length)
 
 			let spreadClassX = getCenterClass(localNewSpreadIndex);
 
