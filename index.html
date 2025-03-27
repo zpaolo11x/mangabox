@@ -2212,7 +2212,10 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			//TODO SOSTITUITO CON LA RIGA SOTTO
-			buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
+			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
+			let clips = buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
+			rd.leftFlock.style.clipPath = clips.left;
+			rd.rightFlock.style.clipPath = clips.right;
 
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
@@ -2253,29 +2256,38 @@
 				`inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`,
 				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
 
+			return({left: clipLeft, right: clipRight})
+/*
 			if (index < 5) clipRight = `inset(0 50% 0 50%)`;
 			if (index > total - 5) clipLeft = `inset(0 50% 0 50%)`;
 
-			if ((index == 0) || (index == total)){
+			if ((index == 0) || (index == total)) {
 				[clipLeft, clipRight] = [
-				`inset(0 50% 0 50%)`,
-				`inset(0 50% 0 50%)`]
+					`inset(0 50% 0 50%)`,
+					`inset(0 50% 0 50%)`]
 			}
-			rd.leftFlock.style.clipPath = clipLeft;
-			rd.rightFlock.style.clipPath = clipRight;
-
-
-/*
-			const flockRate = [
-				rd.ltr ? (1.0 - index / total) : (index / total),
-				rd.ltr ? (index / total) : (1.0 - index / total),
-				rd.ltr ? -0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
-			];
-
-			const bookThickness = (80 - (80 / (800 * 800)) * (total * 2 - 800) * (total * 2 - 800)) / 800;
-			const flockCut = Math.min(360 * total * 2 / 700, 360);
-			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
 */
+			
+			/*
+			if  ((from == null) || !((index == 0) || (index == total - 1) || (from == 0) || (from == total - 1))){
+				console.log("STANDARDCLIP")
+				rd.leftFlock.style.clipPath = clipLeft;
+				rd.rightFlock.style.clipPath = clipRight;
+			}
+			*/
+
+
+			/*
+						const flockRate = [
+							rd.ltr ? (1.0 - index / total) : (index / total),
+							rd.ltr ? (index / total) : (1.0 - index / total),
+							rd.ltr ? -0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
+						];
+			
+						const bookThickness = (80 - (80 / (800 * 800)) * (total * 2 - 800) * (total * 2 - 800)) / 800;
+						const flockCut = Math.min(360 * total * 2 / 700, 360);
+						const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
+			*/
 
 			/*TODO RIVEDERE readerViewer.style.boxShadow = '0px 0px 15px 0px rgba(60, 40, 30, 0.8)';*/
 			//readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
@@ -3011,6 +3023,9 @@
 			const stopCover = rd.uiSpreadsImageRefs[index].length == 1
 
 			//turnDirection can be 'turn-right' or 'turn-left'
+			rd.leftFlock.style.transition = 'clip-path 0.3s';
+			rd.rightFlock.style.transition = 'clip-path 0.3s';
+			clipFlock = buildFlock(index, rd.uiSpreads.length)
 
 			if (!startCover && !stopCover) {
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
@@ -3026,6 +3041,9 @@
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage_old.animate(clipR2L, animData);
 				}
+				rd.leftFlock.style.clipPath = clipFlock.left;
+				rd.rightFlock.style.clipPath = clipFlock.right;
+
 			} else if (startCover && stopCover) {
 				let startCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
 				let stopCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
@@ -3043,13 +3061,17 @@
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
+					rd.rightFlock.style.transition = 'clip-path 0.3s ease 0.5s';
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
 				} else {
+					rd.leftFlock.style.transition = 'clip-path 0.3s ease 0.5s';
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 				}
-			} else if (stopCover) {
+				rd.leftFlock.style.clipPath = clipFlock.left;
+				rd.rightFlock.style.clipPath = clipFlock.right;
+			} else if (stopCover) {					
 				// Start Page (mid spread)
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
@@ -3057,9 +3079,15 @@
 				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 
 				if (turnDirection == 'turn-right') {
+					rd.leftFlock.style.transition = 'clip-path 0s';
+					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
+					rd.rightFlock.style.clipPath = clipFlock.right;				
 					leftPage.animate(clipL2R, animData);
 					coverPage.animate(appearR2L_slideinL2R, animData);
 				} else {
+					rd.rightFlock.style.transition = 'clip-path 0s';
+					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`
+					rd.leftFlock.style.clipPath = clipFlock.left;				
 					rightPage.animate(clipR2L, animData);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 				}
@@ -3091,7 +3119,7 @@
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
 
-			buildFlock(newSpreadTarget, rd.uiSpreads.length)
+			buildFlock(newSpreadTarget, localOldSpreadIndex, rd.uiSpreads.length)
 
 			let spreadClassX = getCenterClass(localNewSpreadIndex);
 
