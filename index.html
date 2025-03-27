@@ -2213,7 +2213,10 @@
 
 			//TODO SOSTITUITO CON LA RIGA SOTTO
 			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
-			let clips = buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
+			let clips = ((rd.currentSpreadIndex == 0) || (rd.currentSpreadIndex == rd.uiSpreads.length - 1)) 
+							? {left: `inset(0 50% 0 50%)`, right: `inset(0 50% 0 50%)`} 
+							: buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
+			
 			rd.leftFlock.style.clipPath = clips.left;
 			rd.rightFlock.style.clipPath = clips.right;
 
@@ -3047,6 +3050,11 @@
 			} else if (startCover && stopCover) {
 				let startCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
 				let stopCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
+				rd.leftFlock.style.transition = 'clip-path 0s';
+				rd.rightFlock.style.transition = 'clip-path 0s';
+				rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
+				rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;
+
 				if (turnDirection == 'turn-right') {
 					startCover.animate(clipL2R, animInstant);
 					stopCover.animate(appearR2L, animInstant);
@@ -3061,11 +3069,11 @@
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
-					rd.rightFlock.style.transition = 'clip-path 0.3s ease 0.5s';
+					rd.rightFlock.style.transition = 'clip-path 0.15s ease 0.5s';
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
 				} else {
-					rd.leftFlock.style.transition = 'clip-path 0.3s ease 0.5s';
+					rd.leftFlock.style.transition = 'clip-path 0.15s ease 0.5s';
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 				}
@@ -3081,13 +3089,13 @@
 				if (turnDirection == 'turn-right') {
 					rd.leftFlock.style.transition = 'clip-path 0s';
 					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
-					rd.rightFlock.style.clipPath = clipFlock.right;				
+					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;				
 					leftPage.animate(clipL2R, animData);
 					coverPage.animate(appearR2L_slideinL2R, animData);
 				} else {
 					rd.rightFlock.style.transition = 'clip-path 0s';
 					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`
-					rd.leftFlock.style.clipPath = clipFlock.left;				
+					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;				
 					rightPage.animate(clipR2L, animData);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 				}
