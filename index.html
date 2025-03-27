@@ -1941,7 +1941,11 @@
 
 			incognito: false,
 
-			spreadFocus: 'focus-center'
+			spreadFocus: 'focus-center',
+
+										// These two parameters shape the page width and flock width for a full book
+			flockPicRate: 0.2,	// Full book flock size in ratio of the height, the image is stretched to fill
+			flockPicCut: 0.7,		// Portion of the full book image that's acutally used on a full book
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers readBook function
@@ -2230,7 +2234,7 @@
 			//if (index > total - 5) index = total;
 
 			// book size is a parabola based on number of spreads capped at 400 spreads
-			const fullBook = 1.0 * (total/400 > 1 ? 1 : ((1 - (total/400 - 1) * (total/400 - 1)), 1.0));
+			const fullBook = rd.flockPicCut * (total/400 > 1 ? 1 : ((1 - (total/400 - 1) * (total/400 - 1)), 1.0));
 			const pageRate = rd.ltr ? index/total : 1.0 - index / total;
 
 			leftFlock.style.clipPath = `inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`;
@@ -2283,15 +2287,11 @@
 			readerViewer.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 			//Position and shape the flock 
-			/*
-			Flock picture size determines the maximum size of the book and also the 
-			size of the pages. buildflock then cuts this using a formula. At the moment 
-			*/
 			// TODO check the height vs clipped modes 
 			rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 			leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			rightFlock.style.width = `calc(0.15 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
-			leftFlock.style.width = `calc(0.15 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			rightFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			leftFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
 			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 
