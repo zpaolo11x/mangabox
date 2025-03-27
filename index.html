@@ -2248,7 +2248,7 @@
 			// book size is a parabola based on number of spreads capped at 400 spreads
 			const fullBook = rd.flockPicCut * (total / 400 > 1 ? 1 : ((1 - (total / 400 - 1) * (total / 400 - 1))));
 			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
-alert(index);
+
 			[clipLeft, clipRight] = [
 				`inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`,
 				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
