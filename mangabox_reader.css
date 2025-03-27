@@ -264,15 +264,15 @@ div.two-pages {
 
 	border-style: solid;
 	border-color: transparent;
-
-	border-image: url('pagesZ3.png') 0 80 0 80;
+	
 	/*
+	border-image: url('pagesZ3.png') 0 80 0 80;
 	border-color:red;
 	border-style: solid;
 	*/
 	/*background-color: #d0cbc1;*/
 
-	/*border: 3px red solid!important;*/
+	border: 3px red solid;
 }
 
 .page-container.cover-page-RTL {
