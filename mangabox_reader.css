@@ -269,6 +269,7 @@ div.two-pages {
 	height:100%;
 	top:50%;
 	left:50%;
+	z-index:0;
 	/*
 	top: 50%;
 	left: 100%;
@@ -280,6 +281,7 @@ div.two-pages {
 	height:100%;
 	top:50%;
 	left:50%;
+	z-index:0;
 	/*
 	top: 50%;
 	left: 0%;

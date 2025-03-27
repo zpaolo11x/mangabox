@@ -2213,10 +2213,10 @@
 
 			//TODO SOSTITUITO CON LA RIGA SOTTO
 			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
-			let clips = ((rd.currentSpreadIndex == 0) || (rd.currentSpreadIndex == rd.uiSpreads.length - 1)) 
-							? {left: `inset(0 50% 0 50%)`, right: `inset(0 50% 0 50%)`} 
-							: buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
-			
+			let clips = ((rd.currentSpreadIndex == 0) || (rd.currentSpreadIndex == rd.uiSpreads.length - 1))
+				? { left: `inset(0 50% 0 50%)`, right: `inset(0 50% 0 50%)` }
+				: buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
+
 			rd.leftFlock.style.clipPath = clips.left;
 			rd.rightFlock.style.clipPath = clips.right;
 
@@ -2226,8 +2226,6 @@
 
 			centerThumb();
 			updateProgressBar();
-
-			//jumpToSpread(rd.currentSpreadIndex);
 		}
 
 		function buildSizePic(item, ratio, picratio) {
@@ -2260,18 +2258,18 @@
 				`inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`,
 				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
 
-			return({left: clipLeft, right: clipRight})
-/*
-			if (index < 5) clipRight = `inset(0 50% 0 50%)`;
-			if (index > total - 5) clipLeft = `inset(0 50% 0 50%)`;
-
-			if ((index == 0) || (index == total)) {
-				[clipLeft, clipRight] = [
-					`inset(0 50% 0 50%)`,
-					`inset(0 50% 0 50%)`]
-			}
-*/
+			return ({ left: clipLeft, right: clipRight })
+			/*
+						if (index < 5) clipRight = `inset(0 50% 0 50%)`;
+						if (index > total - 5) clipLeft = `inset(0 50% 0 50%)`;
 			
+						if ((index == 0) || (index == total)) {
+							[clipLeft, clipRight] = [
+								`inset(0 50% 0 50%)`,
+								`inset(0 50% 0 50%)`]
+						}
+			*/
+
 			/*
 			if  ((from == null) || !((index == 0) || (index == total - 1) || (from == 0) || (from == total - 1))){
 				console.log("STANDARDCLIP")
@@ -2830,37 +2828,27 @@
 
 		function handleLeftArrow() {
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), 'focus-center');
-			} else {
-				if ((rd.uiSpreads[rd.currentSpreadIndex].singlePage)) {
-					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), rd.ltr ? 'focus-left-page' : 'focus-right-page');
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
+			}
+			else {
+				if (rd.spreadFocus == 'focus-right-page') {
+					spreadSetFocus('focus-left-page', true);
 				}
 				else {
-					if (rd.spreadFocus == 'focus-right-page') {
-						spreadSetFocus('focus-left-page', true);
-					}
-					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), 'focus-right-page');
-					}
+					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), 'focus-right-page');
 				}
 			}
 		}
 
 		function handleRightArrow() {
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), 'focus-center');
+				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
 			} else {
-				//TODO Verificare se .singlepage serve qui o no, ricontrollare tutto
-				if ((rd.uiSpreads[rd.currentSpreadIndex].singlePage)) {
-					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), rd.ltr ? 'focus-right-page' : 'focus-left-page');
+				if (rd.spreadFocus == 'focus-left-page') {
+					spreadSetFocus('focus-right-page', true);
 				}
 				else {
-					if (rd.spreadFocus == 'focus-left-page') {
-						spreadSetFocus('focus-right-page', true);
-					}
-					else {
-						jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), 'focus-left-page');
-					}
+					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), 'focus-left-page');
 				}
 			}
 		}
@@ -2868,7 +2856,7 @@
 		function handleLeftLimit() {
 			jumpToSpread(rd.ltr ? 0 : rd.uiSpreads.length - 1);
 		}
-		//FIXME Trovar perché sballa pasand oda 0 a last
+
 		function handleRightLimit() {
 			jumpToSpread(rd.ltr ? rd.uiSpreads.length - 1 : 0);
 		}
@@ -2986,12 +2974,12 @@
 
 		function pageTurn(index, oldindex, turnDirection) {
 			//Z-index control
-			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
+			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 3;
 
 			if (turnDirection == 'turn-right') {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
+				rd.uiSpreads[oldindex].style.zIndex = 2 + rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
 			} else {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
+				rd.uiSpreads[oldindex].style.zIndex = 2 + rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
 			}
 
 			// Animation preparation
@@ -3081,7 +3069,7 @@
 				}
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
-			} else if (stopCover) {					
+			} else if (stopCover) {
 				// Start Page (mid spread)
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
@@ -3091,31 +3079,31 @@
 				if (turnDirection == 'turn-right') {
 					rd.leftFlock.style.transition = 'clip-path 0s';
 					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
-					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;				
+					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;
 					leftPage.animate(clipL2R, animData);
 					coverPage.animate(appearR2L_slideinL2R, animData);
 				} else {
 					rd.rightFlock.style.transition = 'clip-path 0s';
 					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`
-					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;				
+					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
 					rightPage.animate(clipR2L, animData);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 				}
 			}
 		}
 
+		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
 		function getCenterClass(spreadIndex) {
 			let spreadClassX = null;
 			if ((rd.uiSpreadsKind[spreadIndex] == 'cover-page')) {
 				spreadClassX = (rd.ltr ? 'focus-right-page' : 'focus-left-page')
-			} else if (readerHorizontal && (rd.uiSpreadsKind[spreadIndex] == 'back-cover')) {
+			} else if (rd.uiSpreadsKind[spreadIndex] == 'back-cover') {
 				spreadClassX = (rd.ltr ? 'focus-left-page' : 'focus-right-page')
 			} else if (readerHorizontal) {
 				spreadClassX = 'focus-center'
 			} else {
 				spreadClassX = (rd.ltr ? 'focus-left-page' : 'focus-right-page')
 			}
-
 			return spreadClassX
 		}
 
@@ -3130,6 +3118,7 @@
 			buildFlock(newSpreadTarget, localOldSpreadIndex, rd.uiSpreads.length)
 
 			let spreadClassX = getCenterClass(localNewSpreadIndex);
+			if (spreadClass != null) spreadClassX = spreadClass;
 
 			purgeLoading();
 
@@ -3153,11 +3142,15 @@
 			let turnDirectionCalc = null;
 
 			if (turnDirection != null) {
+				console.log("Z")
 				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection)
 			} else {
+				console.log("X")
 				if (rd.ltr) {
+					console.log("Y")
 					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-left' : 'turn-right';
 				} else {
+					console.log("W")
 					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-right' : 'turn-left';
 				}
 				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc)
