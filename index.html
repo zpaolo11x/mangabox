@@ -118,6 +118,8 @@
 		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
+		<img id="leftFlock" src="pagesZ3.png">
+		<img id="rightFlock" src="pagesZ3.png">
 
 		<div id="readerOverlay">
 			<div id="incognitoMark"></div>
@@ -2558,7 +2560,7 @@
 					spreadItem.classList.add('two-pages');
 
 					buildSize2P(spreadItem, readerMaxRatio);
-					//TODO Ma questo serve????
+					//TODO Ma questo serve???? FArlo uguale a readerViewer?
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 					buildSizePic(rd.uiPagesContainer[imageIndex1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
