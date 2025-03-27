@@ -2244,17 +2244,28 @@
 
 		function buildFlock(index, total) {
 			//TODO SISTEAMRE IL BORDO MINIMO
-			if (index < 5) index = 0;
-			if (index > total - 5) index = total;
 
 			// book size is a parabola based on number of spreads capped at 400 spreads
 			const fullBook = rd.flockPicCut * (total / 400 > 1 ? 1 : ((1 - (total / 400 - 1) * (total / 400 - 1))));
 			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
+alert(index);
+			[clipLeft, clipRight] = [
+				`inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`,
+				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
 
-			rd.leftFlock.style.clipPath = `inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`;
-			rd.rightFlock.style.clipPath = `inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`;
+			if (index < 5) clipRight = `inset(0 50% 0 50%)`;
+			if (index > total - 5) clipLeft = `inset(0 50% 0 50%)`;
+
+			if ((index == 0) || (index == total)){
+				[clipLeft, clipRight] = [
+				`inset(0 50% 0 50%)`,
+				`inset(0 50% 0 50%)`]
+			}
+			rd.leftFlock.style.clipPath = clipLeft;
+			rd.rightFlock.style.clipPath = clipRight;
 
 
+/*
 			const flockRate = [
 				rd.ltr ? (1.0 - index / total) : (index / total),
 				rd.ltr ? (index / total) : (1.0 - index / total),
@@ -2264,7 +2275,7 @@
 			const bookThickness = (80 - (80 / (800 * 800)) * (total * 2 - 800) * (total * 2 - 800)) / 800;
 			const flockCut = Math.min(360 * total * 2 / 700, 360);
 			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
-
+*/
 
 			/*TODO RIVEDERE readerViewer.style.boxShadow = '0px 0px 15px 0px rgba(60, 40, 30, 0.8)';*/
 			//readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
