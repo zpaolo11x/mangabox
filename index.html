@@ -2222,6 +2222,7 @@
 
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
+			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
 
 			centerThumb();
 			updateProgressBar();
@@ -2713,6 +2714,7 @@
 
 			});
 			//spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
+			//TODO Qui non funziona bene, spostato  dopo initviewer, si può togliere?
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
 
 			return dataOut;
@@ -3119,8 +3121,6 @@
 
 		//TODO Verificare negli altri casi se usare una spreadClass neutra
 		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null) {
-
-
 
 			const localOldSpreadIndex = rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
