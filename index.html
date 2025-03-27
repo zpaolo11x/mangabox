@@ -118,8 +118,8 @@
 		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
-		<img id="leftFlock" src="ph_left.png">
-		<img id="rightFlock" src="ph_right.png">
+		<img id="leftFlock" src="pagesZ3.png">
+		<img id="rightFlock" src="pagesZ3.png">
 
 		<div id="readerOverlay">
 			<div id="incognitoMark"></div>
@@ -2235,6 +2235,12 @@
 				rd.ltr ? -0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
 			];
 
+			const fullBook = Math.min (2 * total / 800, 1.0);
+			const pageRate = rd.ltr ? index/total : 1.0 - index / total;
+
+			leftFlock.style.clipPath = `inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`;
+			rightFlock.style.clipPath = `inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`;
+
 			const bookThickness = (80 - (80 / (800 * 800)) * (total * 2 - 800) * (total * 2 - 800)) / 800;
 			const flockCut = Math.min(360 * total * 2 / 700, 360);
 			const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
@@ -2274,10 +2280,12 @@
 			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
+			//Position and shape the flock 
+			// TODO check the height vs clipped modes 
 			rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 			leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			rightFlock.style.width = `calc(0.15 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
-			leftFlock.style.width = `calc(0.15 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			rightFlock.style.width = `calc(0.20 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			leftFlock.style.width = `calc(0.20 * (min(200vw, ${100 * readerMaxRatio}vh)))`;
 			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 
