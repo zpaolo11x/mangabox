@@ -2724,6 +2724,12 @@
 						try {
 							// Fetch the image
 							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
+							
+							// These lines reduce stuttering
+							const img = new Image();
+							img.src = blobUrl;
+							await img.decode();
+							
 							rd.uiPages[element].src = blobUrl;
 							rd.uiPages[element].hasSrc = true;
 							//rd.uiPages[element].src = rd.pages[element].url;
