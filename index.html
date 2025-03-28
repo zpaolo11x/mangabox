@@ -2282,8 +2282,19 @@
 				size: page.sizeBytes
 			}));
 
-			readerMaxRatio = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
+			//readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
+			readerMaxRatio = dataOut.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
+                        .reduce((sum, ratio) => sum + ratio, 0) / dataOut.length;
+/*
+			let textout="";
+dataOut.forEach(page => {
+	textout+=page.width + " " + page.height+" "+(page.width/page.height)+" "+((page.width/page.height)<1?2*(page.width/page.height):(page.width/page.height))+" "+readerMaxRatioOLD+" "+readerMaxRatio+"X"
+});
+console.log(textout);
+*/
 
+
+//console.log(readerMaxRatio);
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
 			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
