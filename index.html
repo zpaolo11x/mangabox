@@ -2259,43 +2259,7 @@
 				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
 
 			return ({ left: clipLeft, right: clipRight })
-			/*
-						if (index < 5) clipRight = `inset(0 50% 0 50%)`;
-						if (index > total - 5) clipLeft = `inset(0 50% 0 50%)`;
-			
-						if ((index == 0) || (index == total)) {
-							[clipLeft, clipRight] = [
-								`inset(0 50% 0 50%)`,
-								`inset(0 50% 0 50%)`]
-						}
-			*/
-
-			/*
-			if  ((from == null) || !((index == 0) || (index == total - 1) || (from == 0) || (from == total - 1))){
-				console.log("STANDARDCLIP")
-				rd.leftFlock.style.clipPath = clipLeft;
-				rd.rightFlock.style.clipPath = clipRight;
 			}
-			*/
-
-
-			/*
-						const flockRate = [
-							rd.ltr ? (1.0 - index / total) : (index / total),
-							rd.ltr ? (index / total) : (1.0 - index / total),
-							rd.ltr ? -0.5 * (1.0 - 2 * index / total) : 0.5 * (1.0 - 2 * index / total)
-						];
-			
-						const bookThickness = (80 - (80 / (800 * 800)) * (total * 2 - 800) * (total * 2 - 800)) / 800;
-						const flockCut = Math.min(360 * total * 2 / 700, 360);
-						const flockOffset = flockRate.map(rate => 100 * bookThickness * rate);
-			*/
-
-			/*TODO RIVEDERE readerViewer.style.boxShadow = '0px 0px 15px 0px rgba(60, 40, 30, 0.8)';*/
-			//readerViewer.style.left = `calc(50% - ${flockOffset[2]}vh)`;
-			//readerViewer.style.borderWidth = `0px ${flockOffset[0]}vh 0px ${flockOffset[1]}vh`;
-			//readerViewer.style.borderImageSlice = `0 ${flockCut * flockRate[0]} 0 ${flockCut * flockRate[1]}`;
-		}
 
 		//MB Reader Fetch Page Function
 		// Master function that builds all the pages slots for the book spreads
@@ -2500,24 +2464,8 @@
 					rd.uiSpreadsKind.push(spreadKind);
 				}
 			}
-			/*
-			console.log('FINE BLOCCO');
-			console.log('uiSpreadsPagenums');
-			console.log(rd.uiSpreadsPagenums); 	// page number for each spread
-			console.log('uiSpreadsImageRefs');
-			console.log(rd.uiSpreadsImageRefs); 		// Image reference number for each spread
-			console.log('uiSpreadsKind');
-			console.log(rd.uiSpreadsKind);
-			console.log('uiPages');
-			console.log(rd.uiPages);
-			console.log('uiPagesThumbs');
-			console.log(rd.uiPagesThumbs);
-			console.log('uiSpreadsThumbs');
-			console.log(rd.uiSpreadsThumbs.length);
-			console.log(rd.uiSpreadsThumbs);
-			*/
-			// Prepare 'spreads' structure based on the layout chosen in the UI
 
+			// Prepare 'spreads' structure based on the layout chosen in the UI
 			readerHorizontal = ((screenAR / readerMaxRatio > rd.thresholdRatio));
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
@@ -3142,15 +3090,11 @@
 			let turnDirectionCalc = null;
 
 			if (turnDirection != null) {
-				console.log("Z")
 				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection)
 			} else {
-				console.log("X")
 				if (rd.ltr) {
-					console.log("Y")
 					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-left' : 'turn-right';
 				} else {
-					console.log("W")
 					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-right' : 'turn-left';
 				}
 				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc)
