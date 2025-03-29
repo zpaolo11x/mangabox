@@ -3296,7 +3296,7 @@ console.log(textout);
 					const img = entry.target;
 					img.classList.add('loading');
 
-					// Set the actual src from lazySrc
+					// TODO Set the actual src from lazySrc, check if needed
 					const imageUrl = await fetchMedia(img.lazySrc);
 					img.src = imageUrl;
 
