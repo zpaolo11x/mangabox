@@ -2939,12 +2939,12 @@ console.log(textout);
 
 		function pageTurn(index, oldindex, turnDirection) {
 			//Z-index control
-			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 3;
+			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 
 			if (turnDirection == 'turn-right') {
-				rd.uiSpreads[oldindex].style.zIndex = 2 + rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
+				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
 			} else {
-				rd.uiSpreads[oldindex].style.zIndex = 2 + rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
+				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
 			}
 
 			// Animation preparation
