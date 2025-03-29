@@ -259,7 +259,6 @@ div.two-pages {
 }
 
 #leftFlock,#rightFlock{
-	z-index:100;
 	position:fixed;
 	/*transition: clip-path 0.3s;*/
 }
