@@ -2799,6 +2799,9 @@ console.log(textout);
 
 			if (rd.pageTurning == "left") return;
 			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
+			if ((rd.currentSpreadIndex == 1) && !rd.ltr && (rd.pageTurning != null)) return;
+			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && rd.ltr && (rd.pageTurning != null)) return;
+
 			if (readerHorizontal) {
 				jumpToSpread(newSpread);
 			}
@@ -2817,6 +2820,8 @@ console.log(textout);
 
 			if (rd.pageTurning == "right") return;
 			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
+			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) return;
+			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) return;
 
 			if (readerHorizontal) {
 				jumpToSpread(newSpread);
@@ -3004,8 +3009,8 @@ console.log(textout);
 
 			// Animation preparation
 			const turnSpeed = 500;
-			const animData = { duration: turnSpeed, easing: 'linear', fill: 'forwards' };
-			const animDataHalf = { duration: turnSpeed * 0.5, easing: 'linear', fill: 'forwards' };
+			const animData = { duration: turnSpeed, easing: 'ease', fill: 'forwards' };
+			const animDataHalf = { duration: turnSpeed * 0.5, easing: 'ease', fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
@@ -3041,9 +3046,9 @@ console.log(textout);
 			rd.rightFlock.style.transition = 'clip-path 0.3s';
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
 
-			if (!startCover && !stopCover) {
-				rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
+			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
+			if (!startCover && !stopCover) {
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
@@ -3059,10 +3064,6 @@ console.log(textout);
 					//TODO removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}
-				clearTimeout(rd.turnTimeout);
-				rd.turnTimeout = setTimeout(() => {
-					rd.pageTurning = null;
-				}, turnSpeed);
 
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
@@ -3120,6 +3121,11 @@ console.log(textout);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 				}
 			}
+
+			clearTimeout(rd.turnTimeout);
+				rd.turnTimeout = setTimeout(() => {
+					rd.pageTurning = null;
+				}, turnSpeed);
 		}
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
