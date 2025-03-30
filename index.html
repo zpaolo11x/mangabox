@@ -2997,7 +2997,8 @@ console.log(textout);
 
 			// Animation preparation
 			const turnSpeed = 500;
-			const animData = { duration: turnSpeed, easing: 'ease', fill: 'forwards' };
+			const animData = { duration: turnSpeed, easing: 'linear', fill: 'forwards' };
+			const animDataHalf = { duration: turnSpeed * 0.5, easing: 'linear', fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
@@ -3044,12 +3045,12 @@ console.log(textout);
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
 					//TODO removed to avoid slip below page
-					//leftPage_old.animate(clipL2R, animData);
+					leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					//TODO removed to avoid slip below page
-					//rightPage_old.animate(clipR2L, animData);
+					rightPage_old.animate(clipR2L, animDataHalf);
 				}
 				rd.turnTimeout = setTimeout(() => {
 					rd.pageTurning = null;
