@@ -2798,7 +2798,9 @@ console.log(textout);
 			let newSpread = rd.currentSpreadIndex + (rd.ltr ? -1 : 1);
 
 			if (rd.pageTurning == "left") return;
+			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) return;
 			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
+
 			if ((rd.currentSpreadIndex == 1) && !rd.ltr && (rd.pageTurning != null)) return;
 			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && rd.ltr && (rd.pageTurning != null)) return;
 
@@ -2819,7 +2821,10 @@ console.log(textout);
 			let newSpread = rd.currentSpreadIndex + (rd.ltr ? 1 : -1);
 
 			if (rd.pageTurning == "right") return;
+
+			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) return;
 			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
+			
 			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) return;
 			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) return;
 
