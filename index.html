@@ -2795,34 +2795,37 @@ console.log(textout);
 		}
 
 		function handleLeftArrow() {
-			testpr(rd.pageTurning);
+			let newSpread = rd.currentSpreadIndex + (rd.ltr ? -1 : 1);
 
 			if (rd.pageTurning == "left") return;
+			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
+				jumpToSpread(newSpread);
 			}
 			else {
 				if (rd.spreadFocus == 'focus-right-page') {
 					spreadSetFocus('focus-left-page', true);
 				}
 				else {
-					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1), 'focus-right-page');
+					jumpToSpread(newSpread, 'focus-right-page');
 				}
 			}
 		}
 
 		function handleRightArrow() {
-			testpr(rd.pageTurning);
+			let newSpread = rd.currentSpreadIndex + (rd.ltr ? 1 : -1);
 
 			if (rd.pageTurning == "right") return;
+			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
+
 			if (readerHorizontal) {
-				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
+				jumpToSpread(newSpread);
 			} else {
 				if (rd.spreadFocus == 'focus-left-page') {
 					spreadSetFocus('focus-right-page', true);
 				}
 				else {
-					jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1), 'focus-left-page');
+					jumpToSpread(newSpread, 'focus-left-page');
 				}
 			}
 		}
@@ -3040,7 +3043,7 @@ console.log(textout);
 
 			if (!startCover && !stopCover) {
 				rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
-testpr("\n----"+rd.pageTurning+"\n")
+
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
@@ -3049,34 +3052,35 @@ testpr("\n----"+rd.pageTurning+"\n")
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
 					//TODO removed to avoid slip below page
-					leftPage_old.animate(clipL2R, animDataHalf);
+					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					//TODO removed to avoid slip below page
-					rightPage_old.animate(clipR2L, animDataHalf);
+					//rightPage_old.animate(clipR2L, animDataHalf);
 				}
+				clearTimeout(rd.turnTimeout);
 				rd.turnTimeout = setTimeout(() => {
 					rd.pageTurning = null;
-				},turnSpeed);
+				}, turnSpeed);
 
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
 
 			} else if (startCover && stopCover) {
-				let startCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
-				let stopCover = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
+				let startCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
+				let stopCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 				rd.leftFlock.style.transition = 'clip-path 0s';
 				rd.rightFlock.style.transition = 'clip-path 0s';
 				rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
 				rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;
 
 				if (turnDirection == 'turn-right') {
-					startCover.animate(clipL2R, animInstant);
-					stopCover.animate(appearR2L, animInstant);
+					startCoverPage.animate(clipL2R, animInstant);
+					stopCoverPage.animate(appearR2L, animInstant);
 				} else {
-					startCover.animate(clipR2L, animInstant);
-					stopCover.animate(appearL2R, animInstant);
+					startCoverPage.animate(clipR2L, animInstant);
+					stopCoverPage.animate(appearL2R, animInstant);
 				}
 			} else if (startCover) {
 				// Start Page (cover or back cover)
