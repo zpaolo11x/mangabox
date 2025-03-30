@@ -1950,6 +1950,9 @@
 			flockPicCut: 0.7,		// Portion of the full book image that's acutally used on a full book
 			leftFlock: null,
 			rightFlock: null,
+
+			turnTimeout: null,
+			pageTurning: null,
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers readBook function
@@ -2792,6 +2795,7 @@ console.log(textout);
 		}
 
 		function handleLeftArrow() {
+			if (rd.pageTurning == (rd.ltr ? "left" : "right")) return;
 			if (readerHorizontal) {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
 			}
@@ -2806,6 +2810,7 @@ console.log(textout);
 		}
 
 		function handleRightArrow() {
+			if (rd.pageTurning == (rd.ltr ? "right" : "left")) return;
 			if (readerHorizontal) {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
 			} else {
@@ -2983,7 +2988,7 @@ console.log(textout);
 		function pageTurn(index, oldindex, turnDirection) {
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
-
+			
 			if (turnDirection == 'turn-right') {
 				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
 			} else {
@@ -3029,6 +3034,8 @@ console.log(textout);
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
 
 			if (!startCover && !stopCover) {
+				rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
+
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
@@ -3044,6 +3051,10 @@ console.log(textout);
 					//TODO removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animData);
 				}
+				rd.turnTimeout = setTimeout(() => {
+					rd.pageTurning = null;
+				},turnSpeed);
+
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
 
