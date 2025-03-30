@@ -2795,7 +2795,9 @@ console.log(textout);
 		}
 
 		function handleLeftArrow() {
-			if (rd.pageTurning == (rd.ltr ? "left" : "right")) return;
+			testpr(rd.pageTurning);
+
+			if (rd.pageTurning == "left") return;
 			if (readerHorizontal) {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? -1 : 1));
 			}
@@ -2810,7 +2812,9 @@ console.log(textout);
 		}
 
 		function handleRightArrow() {
-			if (rd.pageTurning == (rd.ltr ? "right" : "left")) return;
+			testpr(rd.pageTurning);
+
+			if (rd.pageTurning == "right") return;
 			if (readerHorizontal) {
 				jumpToSpread(rd.currentSpreadIndex + (rd.ltr ? 1 : -1));
 			} else {
@@ -3018,12 +3022,12 @@ console.log(textout);
 				{ clipPath: 'inset(0 0 0 0)' } // Fully visible
 			];
 			const clipL2R = [
-				{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
-				{ clipPath: 'inset(0 0 0 100%)' } // Fully visible
+				{ clipPath: 'inset(0 0 0 0)' }, // Fully visible
+				{ clipPath: 'inset(0 0 0 100%)' } // Fully clipped
 			];
 			const clipR2L = [
-				{ clipPath: 'inset(0 0 0 0)' }, // Fully clipped
-				{ clipPath: 'inset(0 100% 0 0)' } // Fully visible
+				{ clipPath: 'inset(0 0 0 0)' }, // Fully visible
+				{ clipPath: 'inset(0 100% 0 0)' } // Fully clipped
 			];
 
 			const startCover = rd.uiSpreadsImageRefs[oldindex].length == 1
@@ -3036,7 +3040,7 @@ console.log(textout);
 
 			if (!startCover && !stopCover) {
 				rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
-
+testpr("\n----"+rd.pageTurning+"\n")
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]

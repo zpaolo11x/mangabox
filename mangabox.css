@@ -69,7 +69,7 @@ html, body {
  }
  
 #debuggerObj {
-	display: none;
+	/*display: none;*/
 	position: fixed;
 	z-index: 10000;
 	font-size: 20px;
