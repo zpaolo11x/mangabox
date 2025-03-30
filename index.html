@@ -2936,7 +2936,50 @@ console.log(textout);
 				*/
 			}
 		}
+		function pageTurnOLD(index, oldindex, turnDirection) {
+			const turnSpeed = 500;
+			//turnDirection can be "turn-right" or "turn-left"
 
+			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
+
+			if (turnDirection == 'turn-right') {
+				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
+
+				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
+					[
+						{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
+						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+					],
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+				);
+
+				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
+					[
+						{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
+						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+					],
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+				);
+			} else {
+				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
+
+				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
+					[
+						{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
+						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+					],
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+				);
+
+				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
+					[
+						{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
+						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+					],
+					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+				);
+			}
+		}
 		function pageTurn(index, oldindex, turnDirection) {
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
@@ -2993,11 +3036,13 @@ console.log(textout);
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
-					leftPage_old.animate(clipL2R, animData);
+					//TODO removed to avoid slip below page
+					//leftPage_old.animate(clipL2R, animData);
 				} else {
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
-					rightPage_old.animate(clipR2L, animData);
+					//TODO removed to avoid slip below page
+					//rightPage_old.animate(clipR2L, animData);
 				}
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
