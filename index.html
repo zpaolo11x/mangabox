@@ -3009,9 +3009,10 @@
 		}
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
+
 			//TODO Quando si parte da una cover, rallentare il margine del drop per tenere conto del ritardo con cui compare il flock
-
-
+			rd.uiSpreads[index].classList.remove ('darkened')
+			if (oldindex != index) rd.uiSpreads[oldindex].classList.add ('darkened')
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 

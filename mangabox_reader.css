@@ -276,6 +276,19 @@ div.two-pages {
 	z-index:50;
 }
 
+@keyframes pagefilter {
+	from {
+	  filter: brightness(100%) sepia(0%);
+	}
+	to {
+	  filter: brightness(70%) sepia(30%);
+	}
+ }
+ 
+ .darkened {
+	animation: pagefilter 0.25s ease-in 0.25s forwards;
+ }
+
 #leftDrop{
 	position:fixed;
 	aspect-ratio: 1 / 10;
