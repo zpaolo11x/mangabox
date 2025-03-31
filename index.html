@@ -3089,8 +3089,8 @@ console.log(clipFlock);
 				let stopCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 				rd.leftFlock.style.transition = 'clip-path 0s';
 				rd.rightFlock.style.transition = 'clip-path 0s';
-				rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
-				rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;
+				rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
+				rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
 
 				if (turnDirection == 'turn-right') {
 					startCoverPage.animate(clipL2R, animInstant);
@@ -3099,6 +3099,10 @@ console.log(clipFlock);
 					startCoverPage.animate(clipR2L, animInstant);
 					stopCoverPage.animate(appearL2R, animInstant);
 				}
+				
+				rd.leftDrop.style.marginRight = (0.1 * 0 * 100 * 1/readerMaxRatio) + '%';
+				rd.rightDrop.style.marginLeft = (0.1 * 0 * 100 * 1/readerMaxRatio) + '%';
+
 			} else if (startCover) {
 				// Start Page (cover or back cover)
 				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
@@ -3110,7 +3114,7 @@ console.log(clipFlock);
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
 					rd.rightDrop.animate(
-						[{ left: '50%' }],
+						[{ left: '100%' }],
 						{ duration: turnSpeed*0.5, easing: easeO, fill: "forwards", delay: turnSpeed*0.5 }
 					);
 				} else {
@@ -3118,7 +3122,7 @@ console.log(clipFlock);
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rd.leftDrop.animate(
-						[{ right: '50%' }],
+						[{ right: '100%' }],
 						{ duration: turnSpeed*0.5, easing: easeO, fill: "forwards", delay: turnSpeed*0.5 }
 					);
 				}
@@ -3136,22 +3140,22 @@ console.log(clipFlock);
 
 				if (turnDirection == 'turn-right') {
 					rd.leftFlock.style.transition = 'clip-path 0s';
-					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
-					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;
+					rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
+					rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
 					leftPage.animate(clipL2R, animData);
 					coverPage.animate(appearR2L_slideinL2R, animData);
 					rd.leftDrop.animate(
-						[{ right: '0%' }],
+						[{ right: '50%' }],
 						{ duration: turnSpeed, easing: ease0, fill: "forwards" }
 					);
 				} else {
 					rd.rightFlock.style.transition = 'clip-path 0s';
-					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`
-					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
+					rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`
+					rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
 					rightPage.animate(clipR2L, animData);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 					rd.rightDrop.animate(
-						[{ left: '0%' }],
+						[{ left: '50%' }],
 						{ duration: turnSpeed, easing: ease0, fill: "forwards" }
 					);
 				}
