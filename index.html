@@ -2239,6 +2239,20 @@
 			rd.leftDrop.style.marginRight = (0.1 * clips.dropL * 100) + '%';
 			rd.rightDrop.style.marginLeft = (0.1 * clips.dropR * 100) + '%';
 
+			if (rd.currentSpreadIndex == 0) {
+				if (rd.ltr) {
+					rd.leftDrop.style.right = '0%';
+				} else {
+					rd.rightDrop.style.left = '0%';
+				}
+			}
+			if (rd.currentSpreadIndex == rd.uiSpreads.length - 1) {
+				if (rd.ltr) {
+					rd.rightDrop.style.left = '0%';
+				} else {
+					rd.leftDrop.style.right = '0%';
+				}
+			}
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));

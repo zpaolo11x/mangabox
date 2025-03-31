@@ -276,6 +276,7 @@ div.two-pages {
 	z-index:100;
 	/*background-image: linear-gradient(270deg, rgba(60, 40, 30, 0.15) 0%, rgba(0, 00, 0, 0) 30%);*/
 	background-image: linear-gradient(270deg, rgba(200, 0, 0, 1) 0%, rgba(200, 0, 0, 0) 100%);
+	transition: margin 0.3s;
 }
 
 #rightDrop{
@@ -286,6 +287,7 @@ div.two-pages {
 	left:50%;
 	z-index:100;
 	background-image: linear-gradient(90deg, rgba(0, 0, 200, 1) 0%, rgba(0, 0, 200, 0) 100%);
+	transition: margin 0.3s;
 }
 
 #readerViewer {
