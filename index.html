@@ -3058,6 +3058,9 @@
 			//turnDirection can be 'turn-right' or 'turn-left'
 			rd.leftFlock.style.transition = 'clip-path 0.3s';
 			rd.rightFlock.style.transition = 'clip-path 0.3s';
+			rd.leftDrop.style.transition = 'margin 0.3s';
+			rd.rightDrop.style.transition = 'margin 0.3s';
+
 			console.log("X");
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
 			console.log(clipFlock);
@@ -3098,7 +3101,8 @@
 				rd.rightFlock.style.transition = 'clip-path 0s';
 				rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
 				rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
-
+				rd.leftDrop.style.transition = 'margin 0s';
+				rd.rightDrop.style.transition = 'margin 0s';
 				rd.leftDrop.style.marginRight = 0;
 				rd.rightDrop.style.marginLeft = 0;
 
@@ -3121,6 +3125,7 @@
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
 					rd.rightFlock.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
+					rd.rightDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
 					rd.rightDrop.animate(
@@ -3129,6 +3134,7 @@
 					);
 				} else {
 					rd.leftFlock.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
+					rd.leftDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rd.leftDrop.animate(
