@@ -1950,6 +1950,8 @@
 			flockPicCut: 0.7,		// Portion of the full book image that's acutally used on a full book
 			leftFlock: null,
 			rightFlock: null,
+			leftDrop: null,
+			rightDrop: null,
 
 			turnTimeout: null,
 			pageTurning: null,
@@ -2046,6 +2048,17 @@
 				rd.rightFlock.remove();
 				rd.rightFlock = null;
 			}
+
+			if (rd.leftDrop) {
+				rd.leftDrop.remove();
+				rd.leftDrop = null;
+			};
+
+			if (rd.rightDrop) {
+				rd.rightDrop.remove();
+				rd.rightDrop = null;
+			}
+
 		}
 
 		const frames = {
@@ -2261,7 +2274,7 @@
 				`inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`,
 				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
 
-			return ({ left: clipLeft, right: clipRight })
+			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR:fullBook * (1 - pageRate) })
 			}
 
 		//MB Reader Fetch Page Function
@@ -2313,8 +2326,18 @@ console.log(textout);
 				src: 'pagesZ3.png',
 			});
 
+			rd.leftDrop = addItem('div', {
+				id: 'leftDrop',
+			});
+
+			rd.rightDrop = addItem('div', {
+				id: 'rightDrop',
+			});
+
 			readerViewer.appendChild(rd.leftFlock);
 			readerViewer.appendChild(rd.rightFlock);
+			readerViewer.appendChild(rd.leftDrop);
+			readerViewer.appendChild(rd.rightDrop);
 
 			//Position and shape the flock 
 			// TODO check the height vs clipped modes 
@@ -2324,7 +2347,8 @@ console.log(textout);
 			rd.leftFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
 			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-
+			rd.rightDrop.style.transform = `translate(calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
+			rd.leftDrop.style.transform = `translate(calc(-0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
 			let leftPos = 0;
 
 			// Create html structure for every page and related page thumbnails
@@ -3072,6 +3096,9 @@ console.log(textout);
 
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
+
+				rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100) + '%';
+				rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100) + '%';
 
 			} else if (startCover && stopCover) {
 				let startCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
