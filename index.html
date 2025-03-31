@@ -3003,6 +3003,9 @@
 		}
 
 		function pageTurn(index, oldindex, turnDirection) {
+			//TODO Quando si parte da una cover, rallentare il margine del drop per tenere conto del ritardo con cui compare il flock
+
+
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 
@@ -3087,43 +3090,26 @@
 			} else if (startCover && stopCover) {
 				let startCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
 				let stopCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
+
 				rd.leftFlock.style.transition = 'clip-path 0s';
 				rd.rightFlock.style.transition = 'clip-path 0s';
 				rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
 				rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
 
-				if (turnDirection == 'turn-right') {
-					startCoverPage.animate(clipL2R, animInstant);
-					stopCoverPage.animate(appearR2L, animInstant);
-				} else {
-					startCoverPage.animate(clipR2L, animInstant);
-					stopCoverPage.animate(appearL2R, animInstant);
-				}
-
-				//TODO Aggiustare il dropping qui
 				rd.leftDrop.style.marginRight = 0;
 				rd.rightDrop.style.marginLeft = 0;
 
 				if (turnDirection == 'turn-right') {
-					rd.rightDrop.animate(
-						[{ left: '100%' }],
-						animInstant
-					);
-					rd.leftDrop.animate(
-						[{ right: '50%' }],
-						animInstant
-					);
+					startCoverPage.animate(clipL2R, animInstant);
+					stopCoverPage.animate(appearR2L, animInstant);
+					rd.rightDrop.animate([{ left: '100%' }], animInstant);
+					rd.leftDrop.animate([{ right: '50%' }], animInstant);
 				} else {
-					rd.leftDrop.animate(
-						[{ right: '100%' }],
-						animInstant
-					);
-					rd.rightDrop.animate(
-						[{ left: '50%' }],
-						animInstant
-					);
+					startCoverPage.animate(clipR2L, animInstant);
+					stopCoverPage.animate(appearL2R, animInstant);
+					rd.leftDrop.animate([{ right: '100%' }],	animInstant);
+					rd.rightDrop.animate([{ left: '50%' }], animInstant);
 				}
-
 			} else if (startCover) {
 				// Start Page (cover or back cover)
 				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
