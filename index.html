@@ -2230,11 +2230,14 @@
 			//TODO SOSTITUITO CON LA RIGA SOTTO
 			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
 			let clips = ((rd.currentSpreadIndex == 0) || (rd.currentSpreadIndex == rd.uiSpreads.length - 1))
-				? { left: `inset(0 50% 0 50%)`, right: `inset(0 50% 0 50%)` }
+				? { left: `inset(0 50% 0 50%)`, right: `inset(0 50% 0 50%)`, dropL: 0, dropR: 0 }
 				: buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
 
+			//TODO Maybe substitute it with a function? and also the part above...
 			rd.leftFlock.style.clipPath = clips.left;
 			rd.rightFlock.style.clipPath = clips.right;
+			rd.leftDrop.style.marginRight = (0.1 * clips.dropL * 100) + '%';
+			rd.rightDrop.style.marginLeft = (0.1 * clips.dropR * 100) + '%';
 
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
@@ -2274,8 +2277,8 @@
 				`inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`,
 				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
 
-			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR:fullBook * (1 - pageRate) })
-			}
+			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR: fullBook * (1 - pageRate) })
+		}
 
 		//MB Reader Fetch Page Function
 		// Master function that builds all the pages slots for the book spreads
@@ -2300,17 +2303,17 @@
 
 			//readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			readerMaxRatio = dataOut.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
-                        .reduce((sum, ratio) => sum + ratio, 0) / dataOut.length;
-/*
-			let textout="";
-dataOut.forEach(page => {
-	textout+=page.width + " " + page.height+" "+(page.width/page.height)+" "+((page.width/page.height)<1?2*(page.width/page.height):(page.width/page.height))+" "+readerMaxRatioOLD+" "+readerMaxRatio+"X"
-});
-console.log(textout);
-*/
+				.reduce((sum, ratio) => sum + ratio, 0) / dataOut.length;
+			/*
+						let textout="";
+			dataOut.forEach(page => {
+				textout+=page.width + " " + page.height+" "+(page.width/page.height)+" "+((page.width/page.height)<1?2*(page.width/page.height):(page.width/page.height))+" "+readerMaxRatioOLD+" "+readerMaxRatio+"X"
+			});
+			console.log(textout);
+			*/
 
 
-//console.log(readerMaxRatio);
+			//console.log(readerMaxRatio);
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
 			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
@@ -2762,12 +2765,12 @@ console.log(textout);
 						try {
 							// Fetch the image
 							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
-							
+
 							// These lines reduce stuttering
 							const img = new Image();
 							img.src = blobUrl;
 							await img.decode();
-							
+
 							rd.uiPages[element].src = blobUrl;
 							rd.uiPages[element].hasSrc = true;
 							//rd.uiPages[element].src = rd.pages[element].url;
@@ -2848,7 +2851,7 @@ console.log(textout);
 
 			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) return;
 			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
-			
+
 			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) return;
 			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) return;
 
@@ -2982,59 +2985,18 @@ console.log(textout);
 				*/
 			}
 		}
-		function pageTurnOLD(index, oldindex, turnDirection) {
-			const turnSpeed = 500;
-			//turnDirection can be "turn-right" or "turn-left"
 
-			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
-
-			if (turnDirection == 'turn-right') {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
-
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
-					[
-						{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
-
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
-					[
-						{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
-			} else {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
-
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]].animate(
-					[
-						{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
-
-				rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]].animate(
-					[
-						{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
-						{ clipPath: 'inset(0 0 0 0)' } // Fully visible
-					],
-					{ duration: turnSpeed, easing: "ease", fill: "forwards" }
-				);
-			}
-		}
 		function pageTurn(index, oldindex, turnDirection) {
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
-			
+
 			if (turnDirection == 'turn-right') {
 				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
 			} else {
 				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
 			}
+
+			rd.leftDrop.style.zIndex = rd.rightDrop.style.zIndex = 0;
 
 			// Animation preparation
 			const turnSpeed = 500;
@@ -3075,6 +3037,9 @@ console.log(textout);
 			rd.rightFlock.style.transition = 'clip-path 0.3s';
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
 
+			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100) + '%';
+			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100) + '%';
+
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
 			if (!startCover && !stopCover) {
@@ -3096,9 +3061,6 @@ console.log(textout);
 
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
-
-				rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100) + '%';
-				rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100) + '%';
 
 			} else if (startCover && stopCover) {
 				let startCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
@@ -3125,10 +3087,18 @@ console.log(textout);
 					rd.rightFlock.style.transition = 'clip-path 0.15s ease 0.5s';
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
+					rd.rightDrop.animate(
+						[{ left: '50%' }],
+						{ duration: turnSpeed*1.0, easing: "ease", fill: "forwards", delay: turnSpeed*0.25 }
+					);
 				} else {
 					rd.leftFlock.style.transition = 'clip-path 0.15s ease 0.5s';
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
+					rd.leftDrop.animate(
+						[{ right: '50%' }],
+						{ duration: turnSpeed*1.0, easing: "ease", fill: "forwards", delay: turnSpeed*0.25 }
+					);
 				}
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;
@@ -3139,25 +3109,36 @@ console.log(textout);
 				// Stop Page (cover or back cover)
 				let coverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 
+				rd.leftDrop.style.marginRight = 0;
+				rd.rightDrop.style.marginLeft = 0;
+
 				if (turnDirection == 'turn-right') {
 					rd.leftFlock.style.transition = 'clip-path 0s';
 					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
 					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`;
 					leftPage.animate(clipL2R, animData);
 					coverPage.animate(appearR2L_slideinL2R, animData);
+					rd.leftDrop.animate(
+						[{ right: '0%' }],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
 				} else {
 					rd.rightFlock.style.transition = 'clip-path 0s';
 					rd.rightFlock.style.clipPath = `inset(0 50% 0 50%)`
 					rd.leftFlock.style.clipPath = `inset(0 50% 0 50%)`;
 					rightPage.animate(clipR2L, animData);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
+					rd.rightDrop.animate(
+						[{ left: '0%' }],
+						{ duration: turnSpeed, easing: "ease", fill: "forwards" }
+					);
 				}
 			}
 
 			clearTimeout(rd.turnTimeout);
-				rd.turnTimeout = setTimeout(() => {
-					rd.pageTurning = null;
-				}, turnSpeed);
+			rd.turnTimeout = setTimeout(() => {
+				rd.pageTurning = null;
+			}, turnSpeed);
 		}
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
