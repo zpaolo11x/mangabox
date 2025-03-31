@@ -2229,6 +2229,7 @@
 
 			//TODO SOSTITUITO CON LA RIGA SOTTO
 			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
+			/*
 			let clips = ((rd.currentSpreadIndex == 0) || (rd.currentSpreadIndex == rd.uiSpreads.length - 1))
 				? { left: `inset(0 50% 0 50%)`, right: `inset(0 50% 0 50%)`, dropL: 0, dropR: 0 }
 				: buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
@@ -2253,6 +2254,7 @@
 					rd.leftDrop.style.right = '0%';
 				}
 			}
+				*/
 			populateSpread(rd.currentSpreadIndex);
 			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
@@ -2288,8 +2290,8 @@
 			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
 
 			[clipLeft, clipRight] = [
-				`inset(0 50% 0 ${50 - 50 * fullBook * pageRate}%)`,
-				`inset(0 ${50 - 50 * fullBook * (1 - pageRate)}% 0 50%)`]
+				`inset(0 0 0 ${100 - 100 * fullBook * pageRate}%)`,
+				`inset(0 ${100 - 100 * fullBook * (1 - pageRate)}% 0 0)`]
 
 			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR: fullBook * (1 - pageRate) })
 		}
@@ -2335,12 +2337,12 @@
 
 			rd.leftFlock = addItem('img', {
 				id: 'leftFlock',
-				src: 'pagesZ3.png',
+				src: 'ph_left.png',
 			});
 
 			rd.rightFlock = addItem('img', {
 				id: 'rightFlock',
-				src: 'pagesZ3.png',
+				src: 'ph_right.png',
 			});
 
 			rd.leftDrop = addItem('div', {
@@ -2358,14 +2360,14 @@
 
 			//Position and shape the flock 
 			// TODO check the height vs clipped modes 
-			rd.rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			rd.leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			rd.rightFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
-			rd.leftFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			//rd.rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
+			//rd.leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
+			//rd.rightFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
+			//rd.leftFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
 			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
 			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			rd.rightDrop.style.transform = `translate(calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
-			rd.leftDrop.style.transform = `translate(calc(-0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
+			//rd.rightDrop.style.transform = `translate(calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
+			//rd.leftDrop.style.transform = `translate(calc(-0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
 			let leftPos = 0;
 
 			// Create html structure for every page and related page thumbnails

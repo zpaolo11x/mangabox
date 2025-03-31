@@ -258,13 +258,22 @@ div.two-pages {
 
 }
 
-#leftFlock,#rightFlock{
+#leftFlock{
 	position:fixed;
-	width:100px;
+	aspect-ratio: 1 / 10;
 	height:100%;
-	top:50%;
-	left:50%;
-	z-index:0;
+	top:0;
+	right:100%;
+	z-index:200;
+}
+
+#rightFlock{
+	position:fixed;
+	aspect-ratio: 1 / 10;
+	height:100%;
+	top:0;
+	left:100%;
+	z-index:200;
 }
 
 #leftDrop{
@@ -272,11 +281,11 @@ div.two-pages {
 	aspect-ratio: 1 / 10;
 	height:100%;
 	top:0;
-	right:50%;
-	z-index:100;
+	right:100%;
 	/*background-image: linear-gradient(270deg, rgba(60, 40, 30, 0.15) 0%, rgba(0, 00, 0, 0) 30%);*/
 	background-image: linear-gradient(270deg, rgba(200, 0, 0, 1) 0%, rgba(200, 0, 0, 0) 100%);
 	transition: margin 0.3s;
+	z-index: 100;
 }
 
 #rightDrop{
@@ -284,10 +293,10 @@ div.two-pages {
 	aspect-ratio: 1 / 10;
 	height:100%;
 	top:0;
-	left:50%;
-	z-index:100;
+	left:100%;
 	background-image: linear-gradient(90deg, rgba(0, 0, 200, 1) 0%, rgba(0, 0, 200, 0) 100%);
 	transition: margin 0.3s;
+	z-index:100;
 }
 
 #readerViewer {
