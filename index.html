@@ -2257,7 +2257,7 @@
 				}
 			}
 				*/
-			
+
 			//TODO Tolto ma non serve più? 
 			//populateSpread(rd.currentSpreadIndex);
 			//spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
@@ -3010,9 +3010,8 @@
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
 
-			//TODO Quando si parte da una cover, rallentare il margine del drop per tenere conto del ritardo con cui compare il flock
-			rd.uiSpreads[index].classList.remove ('darkened')
-			if (oldindex != index) rd.uiSpreads[oldindex].classList.add ('darkened')
+			rd.uiSpreads[index].classList.remove('darkened')
+			if (oldindex != index) rd.uiSpreads[oldindex].classList.add('darkened')
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 
@@ -3121,7 +3120,7 @@
 				} else {
 					startCoverPage.animate(clipR2L, animInstant);
 					stopCoverPage.animate(appearL2R, animInstant);
-					rd.leftDrop.animate([{ right: '100%' }],	animInstant);
+					rd.leftDrop.animate([{ right: '100%' }], animInstant);
 					rd.rightDrop.animate([{ left: '50%' }], animInstant);
 				}
 			} else if (startCover) {
@@ -3208,7 +3207,7 @@
 		//TODO Verificare negli altri casi se usare una spreadClass neutra
 		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null, force = false) {
 
-			const localOldSpreadIndex = force ? 0  : rd.currentSpreadIndex;
+			const localOldSpreadIndex = force ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (!force && (localOldSpreadIndex == localNewSpreadIndex))) return;
