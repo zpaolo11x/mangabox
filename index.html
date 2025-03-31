@@ -2227,6 +2227,8 @@
 			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
+			jumpToSpread(rd.currentSpreadIndex, null, null, true);
+
 			//TODO SOSTITUITO CON LA RIGA SOTTO
 			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
 			/*
@@ -2255,12 +2257,16 @@
 				}
 			}
 				*/
-			populateSpread(rd.currentSpreadIndex);
-			spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
-			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
+			
+			//TODO Tolto ma non serve più? 
+			//populateSpread(rd.currentSpreadIndex);
+			//spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
+			//spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
 
-			centerThumb();
-			updateProgressBar();
+			//centerThumb();
+			//updateProgressBar();
+
+
 		}
 
 		function buildSizePic(item, ratio, picratio) {
@@ -3002,7 +3008,7 @@
 			}
 		}
 
-		function pageTurn(index, oldindex, turnDirection) {
+		function pageTurn(index, oldindex, turnDirection, force = false) {
 			//TODO Quando si parte da una cover, rallentare il margine del drop per tenere conto del ritardo con cui compare il flock
 
 
@@ -3022,7 +3028,7 @@
 			const easeO = 'cubic-bezier(0.29, 0.5, 0.58, 1)'
 
 			// Animation preparation
-			const turnSpeed = 500;
+			const turnSpeed = force ? 0 : 500;
 			const animData = { duration: turnSpeed, easing: ease0, fill: 'forwards' };
 			//const animDataHalf = { duration: turnSpeed * 0.5, easing: 'ease-in-out', fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
@@ -3199,12 +3205,12 @@
 		}
 
 		//TODO Verificare negli altri casi se usare una spreadClass neutra
-		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null) {
+		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null, force = false) {
 
-			const localOldSpreadIndex = rd.currentSpreadIndex;
+			const localOldSpreadIndex = force ? 0  : rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
 
-			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (localOldSpreadIndex == localNewSpreadIndex)) return;
+			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (!force && (localOldSpreadIndex == localNewSpreadIndex))) return;
 
 			//buildFlock(newSpreadTarget, localOldSpreadIndex, rd.uiSpreads.length)
 
@@ -3233,14 +3239,14 @@
 			let turnDirectionCalc = null;
 
 			if (turnDirection != null) {
-				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection)
+				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection, force)
 			} else {
 				if (rd.ltr) {
 					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-left' : 'turn-right';
 				} else {
 					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-right' : 'turn-left';
 				}
-				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc)
+				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, force)
 			}
 
 			centerThumb();
