@@ -2290,8 +2290,8 @@
 			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
 
 			[clipLeft, clipRight] = [
-				`inset(0 0 0 ${100 * fullBook * (1 - pageRate)}%)`,
-				`inset(0 ${100 * fullBook * pageRate}% 0 0)`]
+				`inset(0 0 0 ${100 * ((1.0 - fullBook) + fullBook * (1 - pageRate))}%)`,
+				`inset(0 ${100 * (1.0 - fullBook + fullBook * pageRate)}% 0 0)`]
 
 			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR: fullBook * (1 - pageRate) })
 		}
@@ -3055,8 +3055,9 @@
 			//turnDirection can be 'turn-right' or 'turn-left'
 			rd.leftFlock.style.transition = 'clip-path 0.3s';
 			rd.rightFlock.style.transition = 'clip-path 0.3s';
+			console.log("X");
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
-
+console.log(clipFlock);
 			//TODO Come è fatto questo? perché era (0.1 * clipGlock.dropL * 100)% ??? Che percento è?
 			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100 * 1/readerMaxRatio) + '%';
 			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100 * 1/readerMaxRatio) + '%';
