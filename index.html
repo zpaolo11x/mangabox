@@ -3057,10 +3057,10 @@
 			rd.rightFlock.style.transition = 'clip-path 0.3s';
 			console.log("X");
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
-console.log(clipFlock);
+			console.log(clipFlock);
 			//TODO Come è fatto questo? perché era (0.1 * clipGlock.dropL * 100)% ??? Che percento è?
-			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100 * 1/readerMaxRatio) + '%';
-			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100 * 1/readerMaxRatio) + '%';
+			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100 * 1 / readerMaxRatio) + '%';
+			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100 * 1 / readerMaxRatio) + '%';
 
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
@@ -3099,9 +3099,30 @@ console.log(clipFlock);
 					startCoverPage.animate(clipR2L, animInstant);
 					stopCoverPage.animate(appearL2R, animInstant);
 				}
-				
-				rd.leftDrop.style.marginRight = (0.1 * 0 * 100 * 1/readerMaxRatio) + '%';
-				rd.rightDrop.style.marginLeft = (0.1 * 0 * 100 * 1/readerMaxRatio) + '%';
+
+				//TODO Aggiustare il dropping qui
+				rd.leftDrop.style.marginRight = 0;
+				rd.rightDrop.style.marginLeft = 0;
+
+				if (turnDirection == 'turn-right') {
+					rd.rightDrop.animate(
+						[{ left: '100%' }],
+						animInstant
+					);
+					rd.leftDrop.animate(
+						[{ right: '50%' }],
+						animInstant
+					);
+				} else {
+					rd.leftDrop.animate(
+						[{ right: '100%' }],
+						animInstant
+					);
+					rd.rightDrop.animate(
+						[{ left: '50%' }],
+						animInstant
+					);
+				}
 
 			} else if (startCover) {
 				// Start Page (cover or back cover)
@@ -3115,7 +3136,7 @@ console.log(clipFlock);
 					leftPage.animate(appearL2R, animData);
 					rd.rightDrop.animate(
 						[{ left: '100%' }],
-						{ duration: turnSpeed*0.5, easing: easeO, fill: "forwards", delay: turnSpeed*0.5 }
+						{ duration: turnSpeed * 0.5, easing: easeO, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				} else {
 					rd.leftFlock.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
@@ -3123,7 +3144,7 @@ console.log(clipFlock);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rd.leftDrop.animate(
 						[{ right: '100%' }],
-						{ duration: turnSpeed*0.5, easing: easeO, fill: "forwards", delay: turnSpeed*0.5 }
+						{ duration: turnSpeed * 0.5, easing: easeO, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				}
 				rd.leftFlock.style.clipPath = clipFlock.left;
