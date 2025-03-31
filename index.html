@@ -2286,12 +2286,12 @@
 			//TODO SISTEAMRE IL BORDO MINIMO
 
 			// book size is a parabola based on number of spreads capped at 400 spreads
-			const fullBook = rd.flockPicCut * (total / 400 > 1 ? 1 : ((1 - (total / 400 - 1) * (total / 400 - 1))));
+			const fullBook = (total / 400 > 1 ? 1 : ((1 - (total / 400 - 1) * (total / 400 - 1))));
 			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
 
 			[clipLeft, clipRight] = [
-				`inset(0 0 0 ${100 - 100 * fullBook * pageRate}%)`,
-				`inset(0 ${100 - 100 * fullBook * (1 - pageRate)}% 0 0)`]
+				`inset(0 0 0 ${100 * fullBook * (1 - pageRate)}%)`,
+				`inset(0 ${100 * fullBook * pageRate}% 0 0)`]
 
 			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR: fullBook * (1 - pageRate) })
 		}
@@ -2337,12 +2337,12 @@
 
 			rd.leftFlock = addItem('img', {
 				id: 'leftFlock',
-				src: 'ph_left.png',
+				src: 'pagesLeft.png',
 			});
 
 			rd.rightFlock = addItem('img', {
 				id: 'rightFlock',
-				src: 'ph_right.png',
+				src: 'pagesRight.png',
 			});
 
 			rd.leftDrop = addItem('div', {
@@ -3057,8 +3057,9 @@
 			rd.rightFlock.style.transition = 'clip-path 0.3s';
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
 
-			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100) + '%';
-			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100) + '%';
+			//TODO Come è fatto questo? perché era (0.1 * clipGlock.dropL * 100)% ??? Che percento è?
+			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100 * 1/readerMaxRatio) + '%';
+			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100 * 1/readerMaxRatio) + '%';
 
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 

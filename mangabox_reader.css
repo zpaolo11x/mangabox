@@ -264,7 +264,7 @@ div.two-pages {
 	height:100%;
 	top:0;
 	right:100%;
-	z-index:200;
+	z-index:50;
 }
 
 #rightFlock{
@@ -273,7 +273,7 @@ div.two-pages {
 	height:100%;
 	top:0;
 	left:100%;
-	z-index:200;
+	z-index:50;
 }
 
 #leftDrop{
