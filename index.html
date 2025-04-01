@@ -2806,6 +2806,12 @@
 			let newSpread = rd.currentSpreadIndex + (rd.ltr ? -1 : 1);
 
 			if (rd.pageTurning == "left") return;
+
+			if ((newSpread == rd.uiSpreads.length) && (!readerHorizontal) && (rd.spreadFocus == 'focus-right-page')) {
+				spreadSetFocus('focus-left-page', true);
+				return;
+			}
+
 			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) return;
 			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
 
@@ -2830,12 +2836,28 @@
 
 			if (rd.pageTurning == "right") return;
 
-			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) return;
-			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
+			if ((newSpread == rd.uiSpreads.length) && (!readerHorizontal) && (rd.spreadFocus == 'focus-left-page')) {
+				spreadSetFocus('focus-right-page', true);
+				return;
+			}
 
-			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) return;
-			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) return;
+			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) {
+				console.log("A");
+				return
+			};
+			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)){
+				console.log("B")
+				return;
+			}
 
+			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) {
+				console.log("C")
+				return;
+			}
+			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) {
+				console.log("D")
+				return;
+			}
 			if (readerHorizontal) {
 				jumpToSpread(newSpread);
 			} else {
