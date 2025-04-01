@@ -2227,46 +2227,7 @@
 			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
-			//TODO Correggere perché marca come reading anche appena aperto, usare "force" per evitare l'inghippo
 			jumpToSpread(rd.currentSpreadIndex, null, null, true);
-
-			//TODO SOSTITUITO CON LA RIGA jumpToSpread
-			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
-			/*
-			let clips = ((rd.currentSpreadIndex == 0) || (rd.currentSpreadIndex == rd.uiSpreads.length - 1))
-				? { left: `inset(0 50% 0 50%)`, right: `inset(0 50% 0 50%)`, dropL: 0, dropR: 0 }
-				: buildFlock(rd.currentSpreadIndex, rd.uiSpreads.length);
-
-			//TODO Maybe substitute it with a function? and also the part above...
-			rd.leftFlock.style.clipPath = clips.left;
-			rd.rightFlock.style.clipPath = clips.right;
-			rd.leftDrop.style.marginRight = (0.1 * clips.dropL * 100) + '%';
-			rd.rightDrop.style.marginLeft = (0.1 * clips.dropR * 100) + '%';
-
-			if (rd.currentSpreadIndex == 0) {
-				if (rd.ltr) {
-					rd.leftDrop.style.right = '0%';
-				} else {
-					rd.rightDrop.style.left = '0%';
-				}
-			}
-			if (rd.currentSpreadIndex == rd.uiSpreads.length - 1) {
-				if (rd.ltr) {
-					rd.rightDrop.style.left = '0%';
-				} else {
-					rd.leftDrop.style.right = '0%';
-				}
-			}
-				*/
-
-			//TODO Tolto ma non serve più? 
-			//populateSpread(rd.currentSpreadIndex);
-			//spreadShow(rd.uiSpreads[rd.currentSpreadIndex]);
-			//spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
-
-			//centerThumb();
-			//updateProgressBar();
-
 
 		}
 
@@ -2290,8 +2251,6 @@
 		//readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease";
 
 		function buildFlock(index, total) {
-			//TODO SISTEAMRE IL BORDO MINIMO
-
 			// book size is a parabola based on number of spreads capped at 400 spreads
 			const fullBook = (total / 400 > 1 ? 1 : ((1 - (total / 400 - 1) * (total / 400 - 1))));
 			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
@@ -3253,7 +3212,7 @@
 
 			centerThumb();
 			updateProgressBar();
-			history.replaceState(null, '', jumpString());
+			if (!force) history.replaceState(null, '', jumpString());
 		}
 
 		// Reader UI Control Buttons
