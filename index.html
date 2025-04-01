@@ -2227,9 +2227,10 @@
 			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
+			//TODO Correggere perché marca come reading anche appena aperto, usare "force" per evitare l'inghippo
 			jumpToSpread(rd.currentSpreadIndex, null, null, true);
 
-			//TODO SOSTITUITO CON LA RIGA SOTTO
+			//TODO SOSTITUITO CON LA RIGA jumpToSpread
 			//buildFlock(rd.currentSpreadIndex, null, rd.uiSpreads.length);
 			/*
 			let clips = ((rd.currentSpreadIndex == 0) || (rd.currentSpreadIndex == rd.uiSpreads.length - 1))
@@ -2843,6 +2844,7 @@
 			await Promise.all(promises);
 		}
 
+		//TODO Correggere questi: quando salti all'ultimo spread, se non è un singolo devi poter andare a sinistra in modalità verticale!
 		function handleLeftArrow() {
 			let newSpread = rd.currentSpreadIndex + (rd.ltr ? -1 : 1);
 
