@@ -3060,8 +3060,8 @@
 			if (!startCover && !stopCover) {
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
-				let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
-				let leftPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
+				//let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
+				//let leftPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
@@ -3137,11 +3137,11 @@
 
 				rd.leftDrop.style.marginRight = 0;
 				rd.rightDrop.style.marginLeft = 0;
+				rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
+				rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
 
 				if (turnDirection == 'turn-right') {
 					rd.leftFlock.style.transition = 'clip-path 0s';
-					rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
-					rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
 					leftPage.animate(clipL2R, animData);
 					coverPage.animate(appearR2L_slideinL2R, animData);
 					rd.leftDrop.animate(
@@ -3150,8 +3150,6 @@
 					);
 				} else {
 					rd.rightFlock.style.transition = 'clip-path 0s';
-					rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`
-					rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
 					rightPage.animate(clipR2L, animData);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 					rd.rightDrop.animate(
