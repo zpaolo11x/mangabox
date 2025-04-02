@@ -695,7 +695,7 @@
 					screenAR = newScreenAR;
 
 					readerHorizontal = newReaderHorizontal;
-					spreadSetFocus(getCenterClass(rd.currentSpreadIndex), true);
+					spreadSetFocus(getCenterClass(rd.currentSpreadIndex), true, false);
 
 				}
 			}
@@ -2067,10 +2067,11 @@
 		}
 
 		//TODO Verificare se smoothMove è ancora utile
-		function spreadSetFocus(focusString, smoothMove = false) {
+		function spreadSetFocus(focusString, smoothMove = false, delay = false) {
+
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
-				{ duration: smoothMove ? 500 : 0, easing: 'ease', fill: 'forwards' }
+				{ duration: smoothMove ? 500 : 0, easing: 'ease', fill: 'forwards', delay: smoothMove ? (delay ? 250 : 0) : 0 }
 			);
 			rd.spreadFocus = focusString;
 		}
@@ -2083,7 +2084,7 @@
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
-				spreadSetFocus('none');
+				spreadSetFocus('none', false, false);
 				clearReader();
 			}, 400); //300ms timeout so the reader can slide out
 
@@ -2682,7 +2683,7 @@
 			});
 			//spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
 			//TODO Qui non funziona bene, spostato  dopo initviewer, si può togliere?
-			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
+			spreadSetFocus(getCenterClass(rd.currentSpreadIndex), false, false);
 
 			return dataOut;
 		}
@@ -2808,7 +2809,7 @@
 			if (rd.pageTurning == "left") return;
 
 			if ((newSpread == rd.uiSpreads.length) && (!readerHorizontal) && (rd.spreadFocus == 'focus-right-page')) {
-				spreadSetFocus('focus-left-page', true);
+				spreadSetFocus('focus-left-page', true, false);
 				return;
 			}
 
@@ -2823,7 +2824,7 @@
 			}
 			else {
 				if (rd.spreadFocus == 'focus-right-page') {
-					spreadSetFocus('focus-left-page', true);
+					spreadSetFocus('focus-left-page', true, false);
 				}
 				else {
 					jumpToSpread(newSpread, 'focus-right-page');
@@ -2837,7 +2838,7 @@
 			if (rd.pageTurning == "right") return;
 
 			if ((newSpread == rd.uiSpreads.length) && (!readerHorizontal) && (rd.spreadFocus == 'focus-left-page')) {
-				spreadSetFocus('focus-right-page', true);
+				spreadSetFocus('focus-right-page', true, false);
 				return;
 			}
 
@@ -2862,7 +2863,7 @@
 				jumpToSpread(newSpread);
 			} else {
 				if (rd.spreadFocus == 'focus-left-page') {
-					spreadSetFocus('focus-right-page', true);
+					spreadSetFocus('focus-right-page', true, false);
 				}
 				else {
 					jumpToSpread(newSpread, 'focus-left-page');
@@ -3202,7 +3203,7 @@
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
 			populateSpread(localNewSpreadIndex);
-			spreadSetFocus(spreadClassX, true);
+			spreadSetFocus(spreadClassX, true, true);
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
 			/*
