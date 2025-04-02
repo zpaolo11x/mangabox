@@ -1953,6 +1953,12 @@
 
 			turnTimeout: null,
 			pageTurning: null,
+
+			speedTurn: 500,			// Speed of turning page animation
+			speedScroll: 625,			// Speed of spread page scrolling
+			speedScrollDelay: 125,	// Delay of spread page scrolling during page turn
+			speedScrollTurn: 500,	// Speed of spread page scrolling during page turn
+
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers readBook function
@@ -2069,7 +2075,7 @@
 		//TODO Verificare se smoothMove è ancora utile
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
 
-			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [500, 125] : [750, 0]) 
+			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0]) 
 			
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
@@ -3012,7 +3018,7 @@
 			const easeO = 'cubic-bezier(0.29, 0.5, 0.58, 1)'
 
 			// Animation preparation
-			const turnSpeed = force ? 0 : 500;
+			const turnSpeed = force ? 0 : rd.speedTurn;
 			const animData = { duration: turnSpeed, easing: ease0, fill: 'forwards' };
 			//const animDataHalf = { duration: turnSpeed * 0.5, easing: 'ease-in-out', fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
