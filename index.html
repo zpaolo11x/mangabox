@@ -2067,11 +2067,13 @@
 		}
 
 		//TODO Verificare se smoothMove è ancora utile
-		function spreadSetFocus(focusString, smoothMove = false, delay = false) {
+		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
 
+			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [500, 125] : [750, 0]) 
+			
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
-				{ duration: smoothMove ? 500 : 0, easing: 'ease', fill: 'forwards', delay: smoothMove ? (delay ? 250 : 0) : 0 }
+				{ duration: duration, easing: 'ease', fill: 'forwards', delay: delay }
 			);
 			rd.spreadFocus = focusString;
 		}
