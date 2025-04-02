@@ -2062,7 +2062,6 @@
 				rd.rightDrop.remove();
 				rd.rightDrop = null;
 			}
-
 		}
 
 		const frames = {
@@ -2141,13 +2140,11 @@
 			const scrollScaler = newWidth / oldWidth;
 			thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
 			//centerThumb(true);
-
 		}
 
 		thumbStripButton.addEventListener('click', () => {
 			setThumbZoom(!rd.thumbZoom);
 		});
-
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
@@ -2176,7 +2173,6 @@
 
 		});
 
-
 		function updateProgressBar() {
 			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
@@ -2187,14 +2183,12 @@
 			readerPage.style.left = rd.ltr
 				? `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
 				: `min(max(0px, calc(${100 - progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
-
 		}
 
 		function preloadPage(index) {
 			if (picLoadStackSize() >= 20000000) {
 				return;
 			}
-			//TODO Problem arises when running this line
 			populateSpread(index, true);
 		}
 
@@ -2235,7 +2229,6 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			jumpToSpread(rd.currentSpreadIndex, null, null, true);
-
 		}
 
 		function buildSizePic(item, ratio, picratio) {
@@ -2781,7 +2774,6 @@
 									preloadPages(spreadIndex, rd.preloadCount)
 								}
 							});
-
 						} catch (error) {
 							console.error(`Failed to load image for element ${element}:`, error);
 							// Handle error (optional: remove from stack or show fallback)
@@ -2810,7 +2802,6 @@
 			await Promise.all(promises);
 		}
 
-		//TODO Correggere questi: quando salti all'ultimo spread, se non è un singolo devi poter andare a sinistra in modalità verticale!
 		function handleLeftArrow() {
 			let newSpread = rd.currentSpreadIndex + (rd.ltr ? -1 : 1);
 
