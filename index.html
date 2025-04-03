@@ -2074,8 +2074,8 @@
 		//TODO Verificare se smoothMove è ancora utile
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
 
-			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0]) 
-			
+			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0])
+
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
 				{ duration: duration, easing: 'ease', fill: 'forwards', delay: delay }
@@ -2845,7 +2845,7 @@
 				console.log("A");
 				return
 			};
-			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)){
+			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) {
 				console.log("B")
 				return;
 			}
@@ -2991,7 +2991,7 @@
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
 
-			rd.uiSpreads[index].classList.remove('darkened')
+			rd.uiSpreads[index].classList.remove('darkened') //TODO maybe change this to use animate instead?
 			if (oldindex != index) rd.uiSpreads[oldindex].classList.add('darkened')
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
@@ -3038,6 +3038,11 @@
 				{ clipPath: 'inset(0 0 0 0)' }, // Fully visible
 				{ clipPath: 'inset(0 100% 0 0)' } // Fully clipped
 			];
+			const unFade = [
+				{ filter: 'brightness(80%) sepia(30%)' },
+				{ filter: 'brightness(100%) sepia(0%)' }
+			];
+
 
 			const startCover = rd.uiSpreadsImageRefs[oldindex].length == 1
 			const stopCover = rd.uiSpreadsImageRefs[index].length == 1
@@ -3065,14 +3070,19 @@
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
+					leftPage.animate(unfade, {duration: rd.speedTurn, easing: 'ease-in'});
 					//Removed to avoid slip below page
 					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
+					rightPage.animate(unfade, {duration: rd.speedTurn, easing: 'ease-in'});
+
 					//Removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}
+
+
 
 				rd.leftFlock.style.clipPath = clipFlock.left;
 				rd.rightFlock.style.clipPath = clipFlock.right;

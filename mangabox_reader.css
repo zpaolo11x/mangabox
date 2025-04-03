@@ -276,7 +276,7 @@ div.two-pages {
 	z-index:50;
 }
 
-@keyframes pagefilter {
+@keyframes pagedarken {
 	from {
 	  filter: brightness(100%) sepia(0%);
 	}
@@ -286,7 +286,7 @@ div.two-pages {
  }
  
  .darkened {
-	animation: pagefilter 0.25s ease-in 0.25s forwards;
+	animation: pagedarken 0.25s ease-in 0.25s forwards;
  }
 
 #leftDrop{
