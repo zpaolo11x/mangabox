@@ -212,8 +212,10 @@
 		//MB Local Storage Loading 
 
 		// Theme settings
+		const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+
 		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
-		let mbDarkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0) == 1;
+		let mbDarkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0);
 
 		// Library filters
 		let mbLibraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
@@ -250,6 +252,22 @@
 
 		//MB Theme Management 
 
+		const themeControl = [
+			{
+				label: "light",
+				icon: "fa-sun",
+				isDark: 0
+			},{
+				label: "dark",
+				icon: "fa-moon",
+				isDark: 1
+			},{
+				label: "system",
+				icon: "fa-a",
+				isDark: 2
+			}
+		]
+
 		const swatches = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches')
 			.match(/hsl\([^)]*\)/g)
@@ -277,19 +295,32 @@
 			});
 		}
 
-		function changeTheme(toDark) {
+		function changeTheme() {
+			let toDark = false;
+
+			if (mbDarkTheme != 2) {
+				toDark = (mbDarkTheme == 1)
+			} else {
+				toDark = prefersDarkMode.matches ? true : false
+			}
+
 			// Set css theme to dark or light
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
-
+			
+			themeLabel.classList.remove('fa-sun','fa-moon','fa-a'); //TODO make it a foreach
+			console.log(mbDarkTheme);
+			themeLabel.classList.add(themeControl[mbDarkTheme].icon);
 			// Change fa icons for light or dark theme
-			swapThemeClass('theme-label', 'fa-sun', 'fa-moon', toDark);
+			//swapThemeClass('theme-label', 'fa-sun', 'fa-moon', toDark);//TODO maybe move it from here to manage auto icon
 			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
 
 			// Save theme setting in local storage
-			localStorage.setItem('mbDarkTheme', toDark ? 1 : 0)
+			localStorage.setItem('mbDarkTheme', mbDarkTheme)
 		}
+
+		prefersDarkMode.addEventListener('change', changeTheme);
 
 		// Show/Hide section functions
 		function sectionHide(item) {
@@ -326,6 +357,11 @@
 			changeAccent(mbAccentColor);
 		});
 
+		themeChanger.addEventListener('click', () => {
+			mbDarkTheme = (mbDarkTheme + 1) % themeControl.length;
+			changeTheme();
+		})
+
 		logOut.addEventListener('click', async () => {
 
 			//await callAPI('/api/logout','POST');
@@ -343,11 +379,6 @@
 			localStorage.removeItem('mbAuthHeader');
 			history.pushState(null, '', basePath);
 			location.reload(true);
-		})
-
-		themeChanger.addEventListener('click', () => {
-			mbDarkTheme = !mbDarkTheme;
-			changeTheme(mbDarkTheme);
 		})
 
 		searchInput.addEventListener('keydown', (event) => {
@@ -1884,7 +1915,7 @@
 
 		async function bootSequence() {
 			changeAccent(mbAccentColor);
-			changeTheme(mbDarkTheme);
+			changeTheme();
 			setIncognito(false);
 
 			buildLanguageList();
