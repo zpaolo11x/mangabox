@@ -254,15 +254,15 @@
 
 		const themeControl = [
 			{
-				label: "light",
+				label: "Light theme",
 				icon: "fa-sun",
 				isDark: 0
 			},{
-				label: "dark",
+				label: "Dark theme",
 				icon: "fa-moon",
 				isDark: 1
 			},{
-				label: "system",
+				label: "System theme",
 				icon: "fa-a",
 				isDark: 2
 			}
@@ -307,11 +307,12 @@
 			// Set css theme to dark or light
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 			
-			themeLabel.classList.remove('fa-sun','fa-moon','fa-a'); //TODO make it a foreach
-			console.log(mbDarkTheme);
+			themeControl.forEach(item => {
+				themeLabel.classList.remove(item.icon);
+			});
 			themeLabel.classList.add(themeControl[mbDarkTheme].icon);
+			themeLabel.title = themeControl[mbDarkTheme].label;
 			// Change fa icons for light or dark theme
-			//swapThemeClass('theme-label', 'fa-sun', 'fa-moon', toDark);//TODO maybe move it from here to manage auto icon
 			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
