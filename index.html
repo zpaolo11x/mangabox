@@ -3070,13 +3070,13 @@
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
-					leftPage.animate(unfade, {duration: rd.speedTurn, easing: 'ease-in'});
+					leftPage.animate(unFade, {duration: rd.speedTurn, easing: 'ease-in'});
 					//Removed to avoid slip below page
 					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
-					rightPage.animate(unfade, {duration: rd.speedTurn, easing: 'ease-in'});
+					rightPage.animate(unFade, {duration: rd.speedTurn, easing: 'ease-in'});
 
 					//Removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
