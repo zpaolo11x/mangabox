@@ -369,15 +369,17 @@ div.single-page {
 	background-position: left, left, left;
 }
 
+/*
 div.double-page,
 div.two-pages{
-	/*box-shadow: 0px 0px 15px 0px rgba(60, 40, 30, 0.3);*/
+	box-shadow: 0px 0px 15px 0px rgba(60, 40, 30, 0.3);
 }
 
 div.cover-page,
 div.single-page {
-	/*box-shadow: 0px 0px 15px 0px rgba(60, 40, 30, 0.8);*/
+	box-shadow: 0px 0px 15px 0px rgba(60, 40, 30, 0.8);
 }
+*/
 
 #readerViewer {
 	position: absolute;
