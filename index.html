@@ -2103,10 +2103,8 @@
 			'none': 'translate(-50%, -50%)',
 		}
 
-		//TODO Verificare se smoothMove è ancora utile
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
-
-			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0])
+			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0]);
 
 			readerViewer.animate(
 				[{ transform: frames[focusString] }],
@@ -2230,7 +2228,6 @@
 
 		// This function triggers multiple preloads starting from the current spread
 		function preloadPages(startSpreadIndex, count) {
-			//TODO Returning from this fixes disappearing flock on safari, see function preloadPage
 			if (isSectionHidden(readerContainer)) return;
 
 			for (let i = 1; i <= count; i++) {
@@ -2318,16 +2315,7 @@
 			//readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			readerMaxRatio = dataOut.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / dataOut.length;
-			/*
-						let textout="";
-			dataOut.forEach(page => {
-				textout+=page.width + " " + page.height+" "+(page.width/page.height)+" "+((page.width/page.height)<1?2*(page.width/page.height):(page.width/page.height))+" "+readerMaxRatioOLD+" "+readerMaxRatio+"X"
-			});
-			console.log(textout);
-			*/
 
-
-			//console.log(readerMaxRatio);
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
 			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
@@ -2637,7 +2625,7 @@
 					spreadItem.classList.add('two-pages');
 
 					buildSize2P(spreadItem, readerMaxRatio);
-					//TODO Ma questo serve???? FArlo uguale a readerViewer?
+					//TODO Ma questo serve???? Farlo uguale a readerViewer?
 					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
 					buildSizePic(rd.uiPagesContainer[imageIndex1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
@@ -2714,7 +2702,7 @@
 				thumbStripInner.appendChild(spreadItemThumb);
 
 			});
-			//spreadSetFocus(readerHorizontal ? 'focus-center' : (currentPageSingle ? 'focus-center' : (rd.ltr ? 'focus-left-page' : 'focus-right-page')));
+
 			//TODO Qui non funziona bene, spostato  dopo initviewer, si può togliere?
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex), false, false);
 
@@ -2873,23 +2861,12 @@
 				return;
 			}
 
-			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) {
-				console.log("A");
-				return
-			};
-			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) {
-				console.log("B")
-				return;
-			}
+			if ((newSpread == -1) || (newSpread == rd.uiSpreads.length)) return;
+			if (((newSpread == 0) || (newSpread == rd.uiSpreads.length - 1)) && (rd.pageTurning != null)) return;
 
-			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) {
-				console.log("C")
-				return;
-			}
-			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) {
-				console.log("D")
-				return;
-			}
+			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) return;
+			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) return;
+
 			if (readerHorizontal) {
 				jumpToSpread(newSpread);
 			} else {
@@ -3109,7 +3086,6 @@
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, {duration: rd.speedTurn, easing: 'ease-in'});
-
 					//Removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}
