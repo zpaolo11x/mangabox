@@ -3013,13 +3013,13 @@
 
 			rd.leftDrop.style.zIndex = rd.rightDrop.style.zIndex = 0;
 
-			const ease0 = 'cubic-bezier(0.42, 0, 0.58, 1)'
-			const easeI = 'cubic-bezier(0.42, 0, 0.71, 1)'
-			const easeO = 'cubic-bezier(0.29, 0.5, 0.58, 1)'
+			const easeFull = 'cubic-bezier(0.42, 0, 0.58, 1)'
+			const easeIn = 'cubic-bezier(0.42, 0, 0.71, 1)'
+			const easeOut = 'cubic-bezier(0.29, 0.5, 0.58, 1)'
 
 			// Animation preparation
 			const turnSpeed = force ? 0 : rd.speedTurn;
-			const animData = { duration: turnSpeed, easing: ease0, fill: 'forwards' };
+			const animData = { duration: turnSpeed, easing: easeFull, fill: 'forwards' };
 			//const animDataHalf = { duration: turnSpeed * 0.5, easing: 'ease-in-out', fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
@@ -3132,7 +3132,7 @@
 					leftPage.animate(appearL2R, animData);
 					rd.rightDrop.animate(
 						[{ left: '100%' }],
-						{ duration: turnSpeed * 0.5, easing: easeO, fill: "forwards", delay: turnSpeed * 0.5 }
+						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				} else {
 					rd.leftFlock.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
@@ -3141,7 +3141,7 @@
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rd.leftDrop.animate(
 						[{ right: '100%' }],
-						{ duration: turnSpeed * 0.5, easing: easeO, fill: "forwards", delay: turnSpeed * 0.5 }
+						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				}
 				rd.leftFlock.style.clipPath = clipFlock.left;
@@ -3164,7 +3164,7 @@
 					coverPage.animate(appearR2L_slideinL2R, animData);
 					rd.leftDrop.animate(
 						[{ right: '50%' }],
-						{ duration: turnSpeed, easing: ease0, fill: "forwards" }
+						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
 					);
 				} else {
 					rd.rightFlock.style.transition = 'clip-path 0s';
@@ -3172,7 +3172,7 @@
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 					rd.rightDrop.animate(
 						[{ left: '50%' }],
-						{ duration: turnSpeed, easing: ease0, fill: "forwards" }
+						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
 					);
 				}
 			}
