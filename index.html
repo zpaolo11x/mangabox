@@ -134,9 +134,15 @@
 
 			<div id="controlPanel" class="hidden">
 				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
-					<span id="bookName"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
+					<div class="reader-buttons">
+						<span id="readerClose" title="Close Reader" class="fa-solid fa-xmark"></span>
+					</div>
+					<div>
+						<span id="bookName"></span>
+					</div>
+					<div class="reader-buttons">
+						<span id="readerIncognito" title="Incognito Reading" class="fa-solid fa-ghost"></span>
+					</div>
 				</div>
 
 				<div id="thumbStrip">
@@ -149,14 +155,18 @@
 				</div>
 
 				<div id="bottomControls">
-					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
+					<div class="reader-buttons">
+						<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
+					</div>
 					<span id="leftLimit" class="bar-note"></span>
 					<div id="readerProgressBar" onclick="seek(event)">
 						<div id="readerProgress"></div>
 						<div id="readerPage"></div>
 					</div>
 					<span id="rightLimit" class="bar-note"></span>
-					<span id="rightArrow" class="reader-buttons fa-solid fa-caret-right"></span>
+					<div class="reader-buttons">
+						<span id="rightArrow" class="reader-buttons fa-solid fa-caret-right"></span>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -257,11 +267,11 @@
 				label: "Light theme",
 				icon: "fa-sun",
 				isDark: 0
-			},{
+			}, {
 				label: "Dark theme",
 				icon: "fa-moon",
 				isDark: 1
-			},{
+			}, {
 				label: "System theme",
 				icon: "fa-wand-magic-sparkles",
 				isDark: 2
@@ -306,7 +316,7 @@
 
 			// Set css theme to dark or light
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
-			
+
 			themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
 			});
@@ -3081,13 +3091,13 @@
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
-					leftPage.animate(unFade, {duration: rd.speedTurn, easing: 'ease-in'});
+					leftPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
 					//Removed to avoid slip below page
 					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
-					rightPage.animate(unFade, {duration: rd.speedTurn, easing: 'ease-in'});
+					rightPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
 					//Removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}

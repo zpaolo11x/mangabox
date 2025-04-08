@@ -667,8 +667,6 @@ div.single-page {
 	height: 40px;
 	padding: 0px;
 	margin: 0px;
-	font-size: 25px;
-	line-height: 40px;
 	background-color: var(--mb-accent);
 	color: white;
 	border: none;
@@ -676,6 +674,14 @@ div.single-page {
 	cursor: pointer;
 	transition: background-color 0.3s;
 	text-align: center;
+	vertical-align:middle;
+}
+
+.reader-buttons span{
+	padding: 0px;
+	margin: 0px;
+	font-size: 25px;
+	line-height: 40px;
 }
 
 .bar-note {
