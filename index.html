@@ -215,7 +215,8 @@
 		const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 
 		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
-		let mbDarkTheme = (Number(localStorage.getItem('mbDarkTheme')) ?? 0);
+		let mbThemePrefs = (Number(localStorage.getItem('mbThemePrefs')) ?? 0);
+		let mbDarkTheme = false; //TODO va bene così o già qui chiamo il chngetheme?
 
 		// Library filters
 		let mbLibraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
@@ -298,8 +299,8 @@
 		function changeTheme() {
 			let toDark = false;
 
-			if (mbDarkTheme != 2) {
-				toDark = (mbDarkTheme == 1)
+			if (mbThemePrefs != 2) {
+				toDark = (mbThemePrefs == 1)
 			} else {
 				toDark = prefersDarkMode.matches ? true : false
 			}
@@ -310,15 +311,17 @@
 			themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
 			});
-			themeLabel.classList.add(themeControl[mbDarkTheme].icon);
-			themeLabel.title = themeControl[mbDarkTheme].label;
+			themeLabel.classList.add(themeControl[mbThemePrefs].icon);
+			themeLabel.title = themeControl[mbThemePrefs].label;
 			// Change fa icons for light or dark theme
 			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
 
 			// Save theme setting in local storage
-			localStorage.setItem('mbDarkTheme', mbDarkTheme)
+			localStorage.setItem('mbThemePrefs', mbThemePrefs);
+
+			mbDarkTheme = toDark;
 		}
 
 		prefersDarkMode.addEventListener('change', changeTheme);
@@ -359,7 +362,7 @@
 		});
 
 		themeChanger.addEventListener('click', () => {
-			mbDarkTheme = (mbDarkTheme + 1) % themeControl.length;
+			mbThemePrefs = (mbThemePrefs + 1) % themeControl.length;
 			changeTheme();
 		})
 
@@ -1916,6 +1919,7 @@
 
 		async function bootSequence() {
 			changeAccent(mbAccentColor);
+			// Apply first theme change
 			changeTheme();
 			setIncognito(false);
 
@@ -1925,7 +1929,9 @@
 
 			let series_data = null;
 			await fetchLibraries();
-			loadContent();
+			await loadContent();
+			// Refresh theme change after content load
+			//changeTheme();//TODO Non va, deve essere automatico. Perché quando crea un nuovo item sbaglia tema?
 		}
 
 		//MB Reader Functions and Data
