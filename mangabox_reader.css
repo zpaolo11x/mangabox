@@ -265,6 +265,13 @@ div.two-pages {
 	top:0;
 	right:100%;
 	z-index:50;
+	
+	background-image: linear-gradient(to left, #928678 0%, #D4CDC5 100%);
+	background-repeat: repeat-x;
+	background-size: calc(100% / 18) 100%;
+	background-position: right top;
+	
+	/*image-rendering:pixelated;*/
 }
 
 #rightFlock{
@@ -274,6 +281,15 @@ div.two-pages {
 	top:0;
 	left:100%;
 	z-index:50;
+	
+	background-image: linear-gradient(to right, #928678 0%, #D4CDC5 100%);
+	background-repeat: repeat-x;
+	background-size: calc(100% / 18) 100%;
+	background-position: left top;
+	
+	/*image-rendering: pixelated;*/
+
+
 }
 
 @keyframes pagedarken {

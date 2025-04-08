@@ -1976,8 +1976,8 @@
 			spreadFocus: 'focus-center',
 
 			// These two parameters shape the page width and flock width for a full book
-			flockPicRate: 0.2,		// Full book flock size in ratio of the height, the image is stretched to fill
-			flockPicCut: 0.7,			// Portion of the full book image that's acutally used on a full book
+			//flockPicRate: 0.2,		// Full book flock size in ratio of the height, the image is stretched to fill
+			//flockPicCut: 0.7,			// Portion of the full book image that's acutally used on a full book
 			leftFlock: null,
 			rightFlock: null,
 			leftDrop: null,
@@ -2321,12 +2321,12 @@
 			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
 
-			rd.leftFlock = addItem('img', {
+			rd.leftFlock = addItem('div', {
 				id: 'leftFlock',
 				src: 'pagesLeft.png',
 			});
 
-			rd.rightFlock = addItem('img', {
+			rd.rightFlock = addItem('div', {
 				id: 'rightFlock',
 				src: 'pagesRight.png',
 			});
