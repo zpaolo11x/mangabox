@@ -91,7 +91,8 @@
 
 img.page {
 	transition: opacity 0.3s;
-	/*position: absolute;*/ /*TODO It was position: absolute but removed for floating*/
+	/*position: absolute;*/
+	/*TODO It was position: absolute but removed for floating*/
 	border: none;
 	color: transparent;
 	opacity: 1;
@@ -135,8 +136,8 @@ img.page:not(.hidden) {
 
 .page-container {
 	position: relative;
-	overflow:hidden;
-	background:white;
+	overflow: hidden;
+	background: white;
 	/*border: green 5px solid!important;*/
 }
 
@@ -144,14 +145,15 @@ img.page:not(.hidden) {
 	filter: sepia(5%);
 	-webkit-filter: sepia(5%);
 
-		background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAD9QTFRF////////////////////////////////////////////////////////////////////////////////////NZumWwAAABV0Uk5TT1R3b0AqZkpzO1hians1f10wg0Ujj3EqfQAABp1JREFUeJwlVseS6zoOJZiTgt39/1/42lZmJge3RguVF5QMnCggBP5/VYG3YAulg3WgsK+bYHyI0wA/m4PSgGq6A4dZnJIC+74h1qR5WL6+NSbYpelmB3km9SfMOCzcS6yUJ7LCq8epfW1VLGqSylx5O1ayvy6ioz/1tSZ8bj4N1Zk0uCTeXl+Tp5Zosnn64DGjn/QTkxLRELbPt+kk2RjpWGsiKplL4GBf4IJX1mtwqgIj5VHVtcvTqEYAcwiWh2CkMZmabNGAfXxNPnBOC5H7VDUZ5O5k/fz86bDuMon6DqaxfnGa5z56gRf9vh7Gc+ms/Ixn2MEiKWk9KKO1aeA7gMpiqFiUjTzpGybI4GoVwWZCrnfu0RZxrcd8SncoFTgrgoRaNAxaOvG7B7HcoxIntiaLykTKnoBoEVinRcVkJGzUw7WSRxw/tUa/gzAX4Gb89mybW5jY2G1PowvSq4OnL+xro30aUzbXrFMH8DyU7sSj4TTxRf57H8Q9S76mXroAQSKnhB+yyMAIlJVeDbyqnbH+lQpIC57UZvb55H639HHt7syx73T+tAaAu5o2PPxuUPzzao3TP8uGKjxRdcf3jYPNLCRWLDGb46e4hQuC3ACct+r0dyKnhijkw4bQj3qAdBUt//v5CDF0PaX/mN7KQjLAb2UNl+nfMdfWbSOJ60oY2zt5B1IHc5l/VafVXMySgLqFqQZrHvlPZYowPVAH7K68T39LzS6q2kRQz3IJQcsw24SytPyYnuVrWenggqTnlIGd3KREphLIKz/cn6q5/4Tf1wiPe+D3o1lxu2o8TvSWxcAxoIB5pqxy0s3tbN407Q+vr8shFwQcr6D/oK9JH6AUaeOEeXOU7VZsOjEuzzkKyPp6HeYY75j+oe2y7f1xt0matkQcuk+plJmpBUG75nF1ThSk4sRXW5Ql/iNI02nmh+6FKJz/cA+icxXL6NleQD4+NRCt6EbZYDBn+qyxczz+7wdrKukUJe2kChaV/JvFUUUjUoc8H9SzC4w9q6k8sozO8ZeraMYqnvkQ5mmeJCJ40QOvqzkS5mgH+CFCcch5Pl7bGzXTWJgp2iRfc+H8Ht3X+z1SgOUhU77JDDoDAi+Q943LSoZLHC4byfLxcpsv0k1Pstras+zVdIgTTJe9jaZ/VAhcDmNJ9g5lxoHYIWxi8la9JuroiEQQ1OqAVxP71G+o7xPU4W5ZB1dZkjLkxSZCN+n3USkKOguXxZ9Y0GK3/9L1I1wvzdDTCPLUauTV0AolD7I8o809tJ99/qL0kkTBrO2et6UHlWhHCuMAmpYGjymYEEwdHIMsClGQpN/K/164/lhO5i6R/aFEY5Se1VMaVGC1Yi5Nl8eY6HL3t0idLfUEL9h/c6KMnWy4UyVl0794m55E19te6Cs6xCV1BfJQy8hOgDXd58sFe7sbhZTNwTNluWPk2osVSd1maCtyRNXyur8SQcEMrh/XMUTG4HlFIVMfg+/hXW7ds8K9svnQpZRIX0XADtpvg2JVqACyJjD1/s0BDfYig4Ve5TAHdInARxH80zERQaJqC6EY7pUtH+JC94hBaOtNM+hYdV125vMhNBxqyj0QkD7XgVyAYmH0n89y51ketDJfkNDHkBJVVgJVh+qnbvcYl3oQpOo0oZMBAjF9dPlnvHZbdlFqa61LLFDQ7sCzwbRcUjYs6Mg1Pag5px7QJnW8numRRbAPX445Qidd8ioO0wuHibUWZ7JJXIZWUVXy4zaXlIQNiDLM5eZ+Q/EQvrWJhtFAQ34dCEjv6uyCQ+QcYBSRRG8u0eBH0T2qEt2zHrINdWCXG5IwyfVj2vkKPFeFLFb7eRWKaUow2fxOqTtQ6SZGyQR4jYCdxRAIS77XVoZ63IaVDqLMASddPpTry6Lo9G0amdGewOADa755sWhp2f1dHBEPkXAuX9Pl49gpMtYv74kH2i0Oht4cnJyDytbdnZfGRo+oXSzTfw1rjqlCoyjFg6Pd8wwSAxJpAsGDPgwmyWMhUhPmfK3jxiJT7V6vpMpyop1M3RwsBPHPzCf84CHkJshTxbP+63jO2AWlucPTr31em60y64MB6+/P0AaetjzZio9j/C68UUxXlrxoOc34KL51GrEg+0HB0hSpvUGpVqABMEG72X9L9Ftf+AdAdB1ssjvxfVycpenEjgfzmbOQ8QGH3f+88/n7wfBTd/Ecc1x8DOKuexiK2EY3fIu+xkrg5oD1Cd/fdFo0DuGpNIUdyeyjSfSEYzcouAZZyf8AzN6ATrI99+cAAAAASUVORK5CYII="),
+	background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAD9QTFRF////////////////////////////////////////////////////////////////////////////////////NZumWwAAABV0Uk5TT1R3b0AqZkpzO1hians1f10wg0Ujj3EqfQAABp1JREFUeJwlVseS6zoOJZiTgt39/1/42lZmJge3RguVF5QMnCggBP5/VYG3YAulg3WgsK+bYHyI0wA/m4PSgGq6A4dZnJIC+74h1qR5WL6+NSbYpelmB3km9SfMOCzcS6yUJ7LCq8epfW1VLGqSylx5O1ayvy6ioz/1tSZ8bj4N1Zk0uCTeXl+Tp5Zosnn64DGjn/QTkxLRELbPt+kk2RjpWGsiKplL4GBf4IJX1mtwqgIj5VHVtcvTqEYAcwiWh2CkMZmabNGAfXxNPnBOC5H7VDUZ5O5k/fz86bDuMon6DqaxfnGa5z56gRf9vh7Gc+ms/Ixn2MEiKWk9KKO1aeA7gMpiqFiUjTzpGybI4GoVwWZCrnfu0RZxrcd8SncoFTgrgoRaNAxaOvG7B7HcoxIntiaLykTKnoBoEVinRcVkJGzUw7WSRxw/tUa/gzAX4Gb89mybW5jY2G1PowvSq4OnL+xro30aUzbXrFMH8DyU7sSj4TTxRf57H8Q9S76mXroAQSKnhB+yyMAIlJVeDbyqnbH+lQpIC57UZvb55H639HHt7syx73T+tAaAu5o2PPxuUPzzao3TP8uGKjxRdcf3jYPNLCRWLDGb46e4hQuC3ACct+r0dyKnhijkw4bQj3qAdBUt//v5CDF0PaX/mN7KQjLAb2UNl+nfMdfWbSOJ60oY2zt5B1IHc5l/VafVXMySgLqFqQZrHvlPZYowPVAH7K68T39LzS6q2kRQz3IJQcsw24SytPyYnuVrWenggqTnlIGd3KREphLIKz/cn6q5/4Tf1wiPe+D3o1lxu2o8TvSWxcAxoIB5pqxy0s3tbN407Q+vr8shFwQcr6D/oK9JH6AUaeOEeXOU7VZsOjEuzzkKyPp6HeYY75j+oe2y7f1xt0matkQcuk+plJmpBUG75nF1ThSk4sRXW5Ql/iNI02nmh+6FKJz/cA+icxXL6NleQD4+NRCt6EbZYDBn+qyxczz+7wdrKukUJe2kChaV/JvFUUUjUoc8H9SzC4w9q6k8sozO8ZeraMYqnvkQ5mmeJCJ40QOvqzkS5mgH+CFCcch5Pl7bGzXTWJgp2iRfc+H8Ht3X+z1SgOUhU77JDDoDAi+Q943LSoZLHC4byfLxcpsv0k1Pstras+zVdIgTTJe9jaZ/VAhcDmNJ9g5lxoHYIWxi8la9JuroiEQQ1OqAVxP71G+o7xPU4W5ZB1dZkjLkxSZCN+n3USkKOguXxZ9Y0GK3/9L1I1wvzdDTCPLUauTV0AolD7I8o809tJ99/qL0kkTBrO2et6UHlWhHCuMAmpYGjymYEEwdHIMsClGQpN/K/164/lhO5i6R/aFEY5Se1VMaVGC1Yi5Nl8eY6HL3t0idLfUEL9h/c6KMnWy4UyVl0794m55E19te6Cs6xCV1BfJQy8hOgDXd58sFe7sbhZTNwTNluWPk2osVSd1maCtyRNXyur8SQcEMrh/XMUTG4HlFIVMfg+/hXW7ds8K9svnQpZRIX0XADtpvg2JVqACyJjD1/s0BDfYig4Ve5TAHdInARxH80zERQaJqC6EY7pUtH+JC94hBaOtNM+hYdV125vMhNBxqyj0QkD7XgVyAYmH0n89y51ketDJfkNDHkBJVVgJVh+qnbvcYl3oQpOo0oZMBAjF9dPlnvHZbdlFqa61LLFDQ7sCzwbRcUjYs6Mg1Pag5px7QJnW8numRRbAPX445Qidd8ioO0wuHibUWZ7JJXIZWUVXy4zaXlIQNiDLM5eZ+Q/EQvrWJhtFAQ34dCEjv6uyCQ+QcYBSRRG8u0eBH0T2qEt2zHrINdWCXG5IwyfVj2vkKPFeFLFb7eRWKaUow2fxOqTtQ6SZGyQR4jYCdxRAIS77XVoZ63IaVDqLMASddPpTry6Lo9G0amdGewOADa755sWhp2f1dHBEPkXAuX9Pl49gpMtYv74kH2i0Oht4cnJyDytbdnZfGRo+oXSzTfw1rjqlCoyjFg6Pd8wwSAxJpAsGDPgwmyWMhUhPmfK3jxiJT7V6vpMpyop1M3RwsBPHPzCf84CHkJshTxbP+63jO2AWlucPTr31em60y64MB6+/P0AaetjzZio9j/C68UUxXlrxoOc34KL51GrEg+0HB0hSpvUGpVqABMEG72X9L9Ftf+AdAdB1ssjvxfVycpenEjgfzmbOQ8QGH3f+88/n7wfBTd/Ecc1x8DOKuexiK2EY3fIu+xkrg5oD1Cd/fdFo0DuGpNIUdyeyjSfSEYzcouAZZyf8AzN6ATrI99+cAAAAASUVORK5CYII="),
 		radial-gradient(130% 60%,
 			rgba(255, 255, 255, 0) 70%,
 			rgba(0, 0, 0, 0.1) 100%),
 		linear-gradient(90deg, var(--colorSpreadSX));
-		background-repeat: repeat, no-repeat, no-repeat;
-		background-size: 10% 10%, 100% 100%, 100% 100%;
+	background-repeat: repeat, no-repeat, no-repeat;
+	background-size: 10% 10%, 100% 100%, 100% 100%;
 }
+
 .page-container.right-page {
 	filter: sepia(5%);
 	-webkit-filter: sepia(5%);
@@ -161,9 +163,9 @@ img.page:not(.hidden) {
 			rgba(255, 255, 255, 0) 70%,
 			rgba(0, 0, 0, 0.1) 100%),
 		linear-gradient(90deg, var(--colorSpreadDX));
-		background-repeat: repeat, no-repeat, no-repeat;
-		background-size: 10% 10%, 100% 100%, 100% 100%;
-	}
+	background-repeat: repeat, no-repeat, no-repeat;
+	background-size: 10% 10%, 100% 100%, 100% 100%;
+}
 
 .page-container:has(img.page)::before {
 	content: "";
@@ -175,7 +177,7 @@ img.page:not(.hidden) {
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
 	transform: translate(-50%, -50%);
-	opacity:0;
+	opacity: 0;
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
 	mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
 	-webkit-mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
@@ -183,19 +185,19 @@ img.page:not(.hidden) {
 }
 
 .page-container:has(img.page.loading)::before {
-	opacity:1;
+	opacity: 1;
 	animation: loader_spin 1s linear infinite;
 }
 
 /* hidden viene impostato in questo caso? perché altrimenti taglia subito! */
 .page-container:has(img.page.loaded)::before {
-	opacity:0;
+	opacity: 0;
 	animation: loader_spin 1s linear 2;
 }
 
 img.multiply {
 	mix-blend-mode: multiply;
-/*
+	/*
 	REMOVED TO IMPROVE SAFARI SPEED ON IOS/IPADOS
 	filter: sepia(5%) opacity(100%);
 	-webkit-filter: sepia(5%) opacity(100%);
@@ -216,11 +218,11 @@ div.single-page,
 	/*z-index: 100;*/
 }
 
-#coverlayer{
+#coverlayer {
 	position: absolute;
-	left:0px;
-	top:0px;
-	
+	left: 0px;
+	top: 0px;
+
 }
 
 #coverlayer.LTR {
@@ -253,73 +255,74 @@ div.two-pages {
 
 }
 
-#leftFlock{
-	position:fixed;
+#leftFlock {
+	position: fixed;
 	aspect-ratio: 1 / 10;
-	height:100%;
-	top:0;
-	right:100%;
-	z-index:50;
-	
+	height: 100%;
+	top: 0;
+	right: 100%;
+	z-index: 50;
+
 	background-image: linear-gradient(to left, #928678 0%, #D4CDC5 100%);
 	background-repeat: repeat-x;
 	background-size: calc(100% / 18) 100%;
 	background-position: right top;
-	
+
 	/*image-rendering:pixelated;*/
 }
 
-#rightFlock{
-	position:fixed;
+#rightFlock {
+	position: fixed;
 	aspect-ratio: 1 / 10;
-	height:100%;
-	top:0;
-	left:100%;
-	z-index:50;
-	
+	height: 100%;
+	top: 0;
+	left: 100%;
+	z-index: 50;
+
 	background-image: linear-gradient(to right, #928678 0%, #D4CDC5 100%);
 	background-repeat: repeat-x;
 	background-size: calc(100% / 18) 100%;
 	background-position: left top;
-	
+
 	/*image-rendering: pixelated;*/
 }
 
 @keyframes pagedarken {
 	from {
-	  filter: brightness(100%) sepia(0%);
+		filter: brightness(100%) sepia(0%);
 	}
-	to {
-	  filter: brightness(70%) sepia(30%);
-	}
- }
- 
- .darkened {
-	animation: pagedarken 0.25s ease-in 0.25s forwards;
- }
 
-#leftDrop{
-	position:fixed;
+	to {
+		filter: brightness(70%) sepia(30%);
+	}
+}
+
+.darkened {
+	animation: pagedarken 0.25s ease-in 0.25s forwards;
+}
+
+#leftDrop {
+	position: fixed;
 	aspect-ratio: 1 / 10;
-	height:100%;
-	top:0;
-	right:100%;
+	height: 100%;
+	top: 0;
+	right: 100%;
 	background-image: linear-gradient(270deg, rgba(60, 40, 30, 0.15) 0%, rgba(0, 00, 0, 0) 30%);
 	/*background-image: linear-gradient(270deg, rgba(200, 0, 0, 1) 0%, rgba(200, 0, 0, 0) 100%);*/
 	transition: margin 0.3s;
 	z-index: 100;
 }
 
-#rightDrop{
-	position:fixed;
+#rightDrop {
+	position: fixed;
 	aspect-ratio: 1 / 10;
-	height:100%;
-	top:0;
-	left:100%;
+	height: 100%;
+	top: 0;
+	left: 100%;
 	background-image: linear-gradient(90deg, rgba(60, 40, 30, 0.15) 0%, rgba(0, 00, 0, 0) 30%);
 	/*background-image: linear-gradient(90deg, rgba(0, 0, 200, 1) 0%, rgba(0, 0, 200, 0) 100%);*/
 	transition: margin 0.3s;
-	z-index:100;
+	z-index: 100;
 }
 
 #readerViewer {
@@ -328,7 +331,7 @@ div.two-pages {
 
 	border-style: solid;
 	border-color: transparent;
-	
+
 	/*
 	border-image: url('pagesZ3.png') 0 80 0 80;
 	border-color:red;
@@ -421,7 +424,7 @@ div.single-page {
 
 #readerContainer:not(.hidden) #readerViewer {
 	top: 50%;
-	transition: top 0.3s ease 0.5s,left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease;
+	transition: top 0.3s ease 0.5s, left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease;
 }
 
 #bottomControls,
@@ -449,7 +452,8 @@ div.single-page {
 	left: 0px;
 	right: 0px;
 	display: flex;
-	justify-content: left; /*change to center*/
+	justify-content: left;
+	/*change to center*/
 	background-color: var(--mb-card-color);
 	bottom: 60px;
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
@@ -460,20 +464,21 @@ div.single-page {
 #thumbStripButton {
 	height: 20px;
 	position: fixed;
-	width:150px;
+	width: 150px;
 	/*background-color: red;*/
 	left: 50%;
-	transform: translateX(-50%); /* Center it horizontally */
+	transform: translateX(-50%);
+	/* Center it horizontally */
 	bottom: calc(var(--mb-thumb-height-px) + 60px + 10px);
-	z-index:10;
+	z-index: 10;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 	text-align: center;
 	cursor: pointer;
 
 }
 
-.thumb-arrow{
-	font-size:10px;
+.thumb-arrow {
+	font-size: 10px;
 }
 
 #thumbStripInner {
@@ -536,31 +541,31 @@ div.single-page {
 	width: 80px;
 	height: 80px;
 	transform: translate(-50%, -50%);
-	
-	opacity:0;
+
+	opacity: 0;
 
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
 	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
-	transition:opacity 0.5s;
+	transition: opacity 0.5s;
 }
 
 .spread-thumb:has(.page-thumb.loading)::before {
-	opacity:1;
+	opacity: 1;
 	animation: loader_spin 1s linear infinite;
 }
 
 .spread-thumb:has(.page-thumb.loaded:nth-of-type(1)):not(:has(.page-thumb:nth-of-type(2)))::before,
 .spread-thumb:has(.page-thumb.loaded:nth-of-type(1)):has(.page-thumb.loaded:nth-of-type(2))::before {
-	opacity:0;
+	opacity: 0;
 	animation: loader_spin 1s linear 5;
 }
 
 .spread-thumb:has(.page-thumb.finished:nth-of-type(1)):not(:has(.page-thumb:nth-of-type(2)))::before,
 .spread-thumb:has(.page-thumb.finished:nth-of-type(1)):has(.page-thumb.finished:nth-of-type(2))::before {
-	opacity:0;
+	opacity: 0;
 	background: none;
 	mask-image: none;
 	-webkit-mask-image: none;
@@ -671,10 +676,8 @@ div.single-page {
 	cursor: pointer;
 	transition: background-color 0.3s;
 	text-align: center;
-	vertical-align:middle;
+	vertical-align: middle;
 }
-
-
 
 .bar-note {
 	width: 40px;
@@ -709,7 +712,8 @@ div.single-page {
 .hidden-spread {
 	opacity: 0;
 	/*z-index: 10!important;*/
-	transition: opacity 0.2s ease 0.5s; /* 0.5s delay before opacity transition */
+	transition: opacity 0.2s ease 0.5s;
+	/* 0.5s delay before opacity transition */
 	/*display: none;*/
 }
 
