@@ -25,7 +25,6 @@
 		hsl(35, 15%, 70.58%)99.9%,
 		hsl(35, 15%, 54.90%)100%;
 
-
 	--colorSpreadDX:
 		hsl(35, 15%, 54.90%)0%,
 		hsl(35, 15%, 78.43%)0.2%,
@@ -37,11 +36,7 @@
 
 	--mb-thumb-height: 150;
 	--mb-thumb-height-px: 150px;
-	/*
-		--colorSpread:
-		hsl(212, 30%, 52%)0%,
-		hsl(35, 85%, 100%)100%;
-		*/
+
 }
 
 #readerBackground {
