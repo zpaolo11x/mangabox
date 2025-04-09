@@ -169,7 +169,7 @@
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+				<input type="text" class="login-input" id="mb.baseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
 			</div>
 
 			<div class="input-wrapper" title="Username">
@@ -209,82 +209,101 @@
 			return Object.assign(document.createElement(itemkind), properties);
 		}
 
-		//MB Local Storage Loading 
-
-		// Theme settings
-		const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
-
-		let mbAccentColor = Number(localStorage.getItem('mbAccentColor')) ?? 0;
-		let mbThemePrefs = (Number(localStorage.getItem('mbThemePrefs')) ?? 0);
-		let mbDarkTheme = false; //TODO va bene così o già qui chiamo il chngetheme?
-
-		// Library filters
-		let mbLibraryFilters = JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}');
-
-		// Authentication data
-		const mbAuthHeader = localStorage.getItem('mbAuthHeader');
-		const mbBaseUrl = localStorage.getItem('mbBaseUrl');
-		const mbRememberMe = localStorage.getItem('mbRememberMe');
-
-		rememberMe.checked = (mbRememberMe == 'true');
-
-		//Questa cosa qui spostarla quando uno chiude la finestra!
-		if (mbRememberMe != 'true') {
-			localStorage.removeItem('mbAuthHeader');
-		};
-
-		const basePath = ''; //'/mangabox/';
-
 		function getScreenAR() {
 			return (window.innerWidth / window.innerHeight);
 		}
 
-		let screenAR = getScreenAR();
-		let readerMaxRatio = 1;
-		let readerHorizontal = true;
-		let fitSinglePage = true;
-		let dashboardBin = "";
-		/*
-			When an item from a bin is opened, the dashboardBin is set, so when the dashboard is reloaded
-			it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
-			In this way subsequent clicks on dashboard button will load the top position.
-			This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
-		*/
+		//MB Main Variable Setup 
+
+		// Main MangaBox data structure, for variables that are common to the whole app
+		let mb = {
+			// Local storage variable setup
+			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
+			accentColor: Number(localStorage.getItem('mbAccentColor')) ?? 0,
+			themePrefs: Number(localStorage.getItem('mbThemePrefs')) ?? 0,
+			darkTheme: false,
+			libraryFilters: JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}'),
+			authHeader: localStorage.getItem('mbAuthHeader'),
+			baseUrl: localStorage.getItem('mbBaseUrl'),
+			rememberMe: localStorage.getItem('mbRememberMe'),
+
+			basePath: '', //'/mangabox/'
+
+			// Scaling of selected item control
+			currentlyScaled: null,
+
+			// Current book references for book details
+			currentBook: null,
+			prevBook: null,
+			nextBook: null,
+
+			// Screen aspect ratio functions
+			screenAR: getScreenAR(),
+			readerMaxRatio: 1,
+			readerHorizontal: true,
+			resizeTimeout: null,
+
+			// Filter table placeholders
+			filterTable: null,
+			filterButtons: null,
+
+			libSizer: {}, // Used to calculate libraries button size
+			dashboardBin: "",
+			/*
+				When an item from a bin is opened, the mb.dashboardBin is set, so when the dashboard is reloaded
+				it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
+				In this way subsequent clicks on dashboard button will load the top position.
+				This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
+			*/
+
+			// Theme management variables
+			themeControl: [
+				{
+					label: "Light theme",
+					icon: "fa-sun",
+					isDark: 0
+				}, {
+					label: "Dark theme",
+					icon: "fa-moon",
+					isDark: 1
+				}, {
+					label: "System theme",
+					icon: "fa-wand-magic-sparkles",
+					isDark: 2
+				}
+			],
+
+			swatches: getComputedStyle(document.documentElement)
+				.getPropertyValue('--mb-swatches')
+				.match(/hsl\([^)]*\)/g)
+				.map(swatch => swatch.match(/(\d+%?)/g)),
+
+			// Media Cache
+			mediaCache: new Map(), 	//Media cache table structure
+			cacheLimit: 250,			//Limit of items in media cache
+		}
+
+		//MB Local Storage Update
+		rememberMe.checked = (mb.rememberMe == 'true');
+
+		//Questa cosa qui spostarla quando uno chiude la finestra!
+		if (mb.rememberMe != 'true') {
+			localStorage.removeItem('mbAuthHeader');
+		};
 
 		//MB Theme Management 
 
-		const themeControl = [
-			{
-				label: "Light theme",
-				icon: "fa-sun",
-				isDark: 0
-			}, {
-				label: "Dark theme",
-				icon: "fa-moon",
-				isDark: 1
-			}, {
-				label: "System theme",
-				icon: "fa-wand-magic-sparkles",
-				isDark: 2
-			}
-		]
-
-		const swatches = getComputedStyle(document.documentElement)
-			.getPropertyValue('--mb-swatches')
-			.match(/hsl\([^)]*\)/g)
-			.map(swatch => swatch.match(/(\d+%?)/g));
-
 		function changeAccent(id) {
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
-				document.documentElement.style.setProperty(varName, swatches[id][index]);
+				document.documentElement.style.setProperty(varName, mb.swatches[id][index]);
 			});
-			document.documentElement.style.setProperty('--mb-h-deg', swatches[id][0] + 'deg');
+			document.documentElement.style.setProperty('--mb-h-deg', mb.swatches[id][0] + 'deg');
 			/*
 			// Custom colored top bar
 			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-			metaThemeColor.setAttribute('content', `hsl(${swatches[id][0]},100%,10%)`);
+			metaThemeColor.setAttribute('content', `hsl(${mb.swatches[id][0]},100%,10%)`);
 			*/
-			localStorage.setItem('mbAccentColor', mbAccentColor)
+			localStorage.setItem('mbAccentColor', mb.accentColor)
 		}
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
@@ -299,32 +318,32 @@
 		function changeTheme() {
 			let toDark = false;
 
-			if (mbThemePrefs != 2) {
-				toDark = (mbThemePrefs == 1)
+			if (mb.themePrefs != 2) {
+				toDark = (mb.themePrefs == 1)
 			} else {
-				toDark = prefersDarkMode.matches ? true : false
+				toDark = mb.prefersDarkMode.matches ? true : false
 			}
 
 			// Set css theme to dark or light
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
-			themeControl.forEach(item => {
+			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
 			});
-			themeLabel.classList.add(themeControl[mbThemePrefs].icon);
-			themeLabel.title = themeControl[mbThemePrefs].label;
+			themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
+			themeLabel.title = mb.themeControl[mb.themePrefs].label;
 			// Change fa icons for light or dark theme
 			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
 
 			// Save theme setting in local storage
-			localStorage.setItem('mbThemePrefs', mbThemePrefs);
+			localStorage.setItem('mbThemePrefs', mb.themePrefs);
 
-			mbDarkTheme = toDark;
+			mb.darkTheme = toDark;
 		}
 
-		prefersDarkMode.addEventListener('change', changeTheme);
+		mb.prefersDarkMode.addEventListener('change', changeTheme);
 
 		// Show/Hide section functions
 		function sectionHide(item) {
@@ -357,23 +376,23 @@
 		});
 
 		colorChanger.addEventListener('click', () => {
-			mbAccentColor = (mbAccentColor + 1) % swatches.length;
-			changeAccent(mbAccentColor);
+			mb.accentColor = (mb.accentColor + 1) % mb.swatches.length;
+			changeAccent(mb.accentColor);
 		});
 
 		themeChanger.addEventListener('click', () => {
-			mbThemePrefs = (mbThemePrefs + 1) % themeControl.length;
+			mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
 			changeTheme();
 		})
 
 		logOut.addEventListener('click', async () => {
 
 			//await callAPI('/api/logout','POST');
-			/*fetch(`${mbBaseUrl}/api/logout`, {
+			/*fetch(`${mb.baseUrl}/api/logout`, {
 				method: 'POST',
 				credentials: "include", // Required to send cookies!
 				headers: {
-					'Authorization': mbAuthHeader,
+					'Authorization': mb.authHeader,
 					'skip_zrok_interstitial': '1',
 				}
 			});
@@ -381,13 +400,13 @@
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 			localStorage.removeItem('mbAuthHeader');
-			history.pushState(null, '', basePath);
+			history.pushState(null, '', mb.basePath);
 			location.reload(true);
 		})
 
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
-				dashboardBin = '';
+				mb.dashboardBin = '';
 				if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 			}
 		});
@@ -480,7 +499,7 @@
 
 		//MB Library Filtering 
 
-		const filterTable = {
+		mb.filterTable = {
 			sorting: {
 				name: 'sorting',
 				selected: 0,
@@ -601,7 +620,7 @@
 		async function buildLanguageList() {
 			const languageList = await callAPI(`/api/v1/languages`);
 			languageList.forEach(item => {
-				filterTable.filter_by_language.switches.push({
+				mb.filterTable.filter_by_language.switches.push({
 					name: item,
 					caption: item.toUpperCase(),
 					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
@@ -613,29 +632,29 @@
 
 		//buildLanguageList();
 
-		const filterButtons = [
-			filterTable.sorting,
-			filterTable.filter_by_read,
-			filterTable.filter_by_direction,
-			filterTable.filter_by_language
+		mb.filterButtons = [
+			mb.filterTable.sorting,
+			mb.filterTable.filter_by_read,
+			mb.filterTable.filter_by_direction,
+			mb.filterTable.filter_by_language
 		];
 
 		function saveLibraryFilters() {
 			const { path, params } = parseHashAndParams();
 			const libraryId = params.get('library_id');
 			let filterOut = {};
-			filterButtons.forEach(button => {
+			mb.filterButtons.forEach(button => {
 				filterOut[button.name] = button.selected;
 			});
-			mbLibraryFilters[libraryId] = filterOut;
-			localStorage.setItem('mbLibraryFilters', JSON.stringify(mbLibraryFilters));
+			mb.libraryFilters[libraryId] = filterOut;
+			localStorage.setItem('mbLibraryFilters', JSON.stringify(mb.libraryFilters));
 		}
 
 		function fetchLibraryFilters(libraryId) {
-			filterValues = mbLibraryFilters[libraryId];
+			filterValues = mb.libraryFilters[libraryId];
 			if (filterValues) {
-				filterButtons.forEach(button => {
-					filterTable[button.name].selected = filterValues[button.name];
+				mb.filterButtons.forEach(button => {
+					mb.filterTable[button.name].selected = filterValues[button.name];
 				});
 				applyLibraryFilters()
 			}
@@ -648,10 +667,10 @@
 				div.infilter = true;
 			});
 
-			const isFiltered = Object.values(filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
+			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 			libraryMenuIcon.className = isFiltered == 0 ? 'fa-solid fa-sliders glyph-dark' : 'fa-solid fa-sliders mb-accent glyph-dark'
 
-			filterButtons.forEach(button => {
+			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
 				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
 
@@ -675,7 +694,7 @@
 
 		// Build filter buttons items
 
-		filterButtons.forEach(button => {
+		mb.filterButtons.forEach(button => {
 			button.item = addItem('li', {
 				className: `filter-item`,
 				title: button.title,
@@ -708,7 +727,7 @@
 							</div>`,
 			onclick: async () => {
 				await executeFade(1);
-				filterButtons.forEach(button => {
+				mb.filterButtons.forEach(button => {
 					button.selected = 0;
 				});
 				applyLibraryFilters();
@@ -721,15 +740,15 @@
 			let newScreenAR = getScreenAR();
 
 			if (isSectionHidden(readerContainer)) {
-				screenAR = newScreenAR;
-				readerHorizontal = newScreenAR / readerMaxRatio > rd.thresholdRatio;
+				mb.screenAR = newScreenAR;
+				mb.readerHorizontal = newScreenAR / mb.readerMaxRatio > rd.thresholdRatio;
 			} else {
-				let newReaderHorizontal = (newScreenAR / readerMaxRatio > rd.thresholdRatio);
-				if (newReaderHorizontal != readerHorizontal) {
+				let newReaderHorizontal = (newScreenAR / mb.readerMaxRatio > rd.thresholdRatio);
+				if (newReaderHorizontal != mb.readerHorizontal) {
 
-					screenAR = newScreenAR;
+					mb.screenAR = newScreenAR;
 
-					readerHorizontal = newReaderHorizontal;
+					mb.readerHorizontal = newReaderHorizontal;
 					spreadSetFocus(getCenterClass(rd.currentSpreadIndex), true, false);
 
 				}
@@ -762,14 +781,12 @@
 		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
 		stripNextPage.addEventListener('click', () => stepPageChange(1));
 
-		let resizeTimeout;
-
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
-			if (containerWidth - libSizer.rightmin - libSizer.large >= 0) {
+			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 0) {
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
-			} else if (containerWidth - libSizer.rightmin - libSizer.medium >= 0) {
+			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 0) {
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-medium');
@@ -782,8 +799,8 @@
 
 
 		window.addEventListener('resize', () => {
-			clearTimeout(resizeTimeout);
-			resizeTimeout = setTimeout(() => {
+			clearTimeout(mb.resizeTimeout);
+			mb.resizeTimeout = setTimeout(() => {
 				updateStickyMenu();
 				updateSliderMax();
 				updateReaderOrientation();
@@ -821,10 +838,10 @@
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 			try {
-				const response = await fetch(`${mbBaseUrl}${API_url}`, {
+				const response = await fetch(`${mb.baseUrl}${API_url}`, {
 					method: method,
 					headers: {
-						'Authorization': mbAuthHeader,
+						'Authorization': mb.authHeader,
 						'Content-Type': 'application/json',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					},
@@ -844,15 +861,13 @@
 
 
 		//MB Media Cache 
-		const mediaCache = new Map();
-		const CACHE_LIMIT = 250; // Maximum number of cached items
 
 		async function fetchMedia(url) {
-			if (mediaCache.has(url)) {
+			if (mb.mediaCache.has(url)) {
 				// Move the accessed item to the end to mark it as recently used
-				const value = mediaCache.get(url);
-				mediaCache.delete(url);
-				mediaCache.set(url, value);
+				const value = mb.mediaCache.get(url);
+				mb.mediaCache.delete(url);
+				mb.mediaCache.set(url, value);
 				return value;
 			}
 
@@ -860,7 +875,7 @@
 				const response = await fetch(url, {
 					method: 'GET',
 					headers: {
-						'Authorization': mbAuthHeader,
+						'Authorization': mb.authHeader,
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					}
 				});
@@ -870,12 +885,12 @@
 					const objectURL = URL.createObjectURL(blob);
 
 					// Add to cache and enforce size limit
-					mediaCache.set(url, objectURL);
-					if (mediaCache.size > CACHE_LIMIT) {
+					mb.mediaCache.set(url, objectURL);
+					if (mb.mediaCache.size > mb.cacheLimit) {
 						// Remove the oldest entry
-						const oldestKey = mediaCache.keys().next().value;
-						URL.revokeObjectURL(mediaCache.get(oldestKey)); // Revoke object URL
-						mediaCache.delete(oldestKey);
+						const oldestKey = mb.mediaCache.keys().next().value;
+						URL.revokeObjectURL(mb.mediaCache.get(oldestKey)); // Revoke object URL
+						mb.mediaCache.delete(oldestKey);
 					}
 
 					return objectURL;
@@ -892,10 +907,10 @@
 
 		// Function to clear the cache entirely
 		function clearMediaCache() {
-			for (const objectURL of mediaCache.values()) {
+			for (const objectURL of mb.mediaCache.values()) {
 				URL.revokeObjectURL(objectURL);
 			}
-			mediaCache.clear();
+			mb.mediaCache.clear();
 		}
 
 		async function setReadStatus(seriesId, bookId, read, item, format = null) {
@@ -924,8 +939,6 @@
 			}
 		}
 
-		let libSizer = {};
-
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
 			const libGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
@@ -946,9 +959,9 @@
 			}
 
 			const libNum = libraries.length;
-			libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
-			libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
-			libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
+			mb.libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
+			mb.libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
+			mb.libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
 			updateStickyMenu();
 		}
 
@@ -978,7 +991,6 @@
 		}
 
 		//MB Touch And Hover Scaler 
-		let currentlyScaled = null;
 
 		function noPointerDown(item) {
 			item.addEventListener('pointerup', (event) => {
@@ -990,26 +1002,26 @@
 			item.addEventListener('pointerup', async (event) => {
 				if (event.pointerType === 'touch') {
 					// TOUCH DEVICE
-					if (currentlyScaled !== item) {
-						if (currentlyScaled) {
-							currentlyScaled.classList.remove('scaled');
+					if (mb.currentlyScaled !== item) {
+						if (mb.currentlyScaled) {
+							mb.currentlyScaled.classList.remove('scaled');
 						}
 						item.classList.add('scaled');
-						currentlyScaled = item;
+						mb.currentlyScaled = item;
 						event.preventDefault();
 					} else {
 						item.classList.remove('scaled');
-						currentlyScaled = null;
+						mb.currentlyScaled = null;
 						execute();
 					}
 				} else if (event.button == 0) {
 					// MOUSE DEVICE
 					if (!item.classList.contains('scaled')) {
 						item.classList.add('scaled');
-						currentlyScaled = item;
+						mb.currentlyScaled = item;
 					} else {
 						item.classList.remove('scaled');
-						currentlyScaled = null;
+						mb.currentlyScaled = null;
 						execute();
 					}
 				}
@@ -1018,9 +1030,9 @@
 			item.addEventListener('mouseenter', () => {
 				// Added this to unselect pre-scaled book
 
-				if (currentlyScaled != null) {
-					currentlyScaled.classList.remove('scaled');
-					//currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
+				if (mb.currentlyScaled != null) {
+					mb.currentlyScaled.classList.remove('scaled');
+					//mb.currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
 				}
 
 				item.classList.add('scaled');
@@ -1064,7 +1076,7 @@
 			const seriesThumbnail = addItem('img', {
 				className: 'series-thumbnail hidden',
 				src: 'transparent.png',
-				lazySrc: `${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail`,
+				lazySrc: `${mb.baseUrl}/api/v1/series/${serie.id}/thumbnail`,
 				alt: serie.metadata.title
 			});
 
@@ -1124,13 +1136,13 @@
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: `<span class='${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				title: `Filter time: ${altTitle.time}`
 			});
 			timeLabel.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				if (target.binName) dashboardBin = target.binName;
+				if (target.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
 			noPointerDown(timeLabel);
@@ -1161,12 +1173,12 @@
 				artistRow.appendChild(artLabel);
 				storyLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) dashboardBin = target.binName;
+					if (target.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				artLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) dashboardBin = target.binName;
+					if (target.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
 				noPointerDown(artLabel);
@@ -1180,7 +1192,7 @@
 				artistRow.appendChild(artistLabel);
 				artistLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) dashboardBin = target.binName;
+					if (target.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 					//getFilteredSeries(altTitle.story, serie.id);
 				});
@@ -1218,7 +1230,7 @@
 			);
 
 			addTouchScaler(seriesItem, () => {
-				if (target.binName) dashboardBin = target.binName;
+				if (target.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
@@ -1270,7 +1282,7 @@
 
 				mainContainer.scrollTo({ top: y });
 
-				currentlyScaled = item.firstChild;
+				mb.currentlyScaled = item.firstChild;
 				item.firstChild.classList.add('scaled');
 			}
 		}
@@ -1374,7 +1386,7 @@
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
-					<img id="seriesHeaderThumbnail" src="${mbBaseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
+					<img id="seriesHeaderThumbnail" src="${mb.baseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
 				</div>
 			</div>
 			<div class="header-title">
@@ -1394,10 +1406,6 @@
 
 		//MB Book Details Panel 
 
-		let currentbook = null;
-		let prevbook = null;
-		let nextbook = null;
-
 		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
 			setTimeout(() => {
@@ -1406,10 +1414,10 @@
 		}
 
 		function jumpBookDetailsPrev() {
-			if (prevbook != null) showBookDetails(prevbook);
+			if (mb.prevBook != null) showBookDetails(mb.prevBook);
 		}
 		function jumpBookDetailsNext() {
-			if (nextbook != null) showBookDetails(nextbook);
+			if (mb.nextBook != null) showBookDetails(mb.nextBook);
 		}
 
 		async function showBookDetails(book) {
@@ -1421,15 +1429,15 @@
 			);
 			const readingDirection = seriesData.metadata.readingDirection;
 
-			currentbook = book;
-			prevbook = null;
-			nextbook = null;
+			mb.currentBook = book;
+			mb.prevBook = null;
+			mb.nextBook = null;
 
 			if (book.number > 1) {
-				prevbook = seriesBooks.content[book.number - 2];
+				mb.prevBook = seriesBooks.content[book.number - 2];
 			}
 			if (book.number < seriesData.booksCount) {
-				nextbook = seriesBooks.content[book.number];
+				mb.nextBook = seriesBooks.content[book.number];
 			}
 			sectionShow(bookDetailsContainer);
 			let summaryArray = book.metadata.summary.split(/\r?\n/);
@@ -1447,7 +1455,7 @@
 						<span class="fa-solid fa-chevron-right"></span>
 					</div>			
 				</div>
-				<div id="bookDetailsContainerThumbnailWrapper" title="Open Book" onclick="navigateToReadBook(currentbook, '${readingDirection}')">
+				<div id="bookDetailsContainerThumbnailWrapper" title="Open Book" onclick="navigateToReadBook(mb.currentBook, '${readingDirection}')">
 					<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
 				</div>
 			</div>
@@ -1464,7 +1472,7 @@
 			</div>
 			`;
 			bookDetailsContainer.innerHTML = text;
-			bookDetailCover.lazySrc = `${mbBaseUrl}/api/v1/books/${book.id}/thumbnail`;
+			bookDetailCover.lazySrc = `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`;
 			addLazyLoading(bookDetailCover);
 
 		}
@@ -1490,7 +1498,7 @@
 				const volumeNumberLabel = document.createElement('span');
 				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
 				const pagesLabel = document.createElement('span');
-				pagesLabel.innerHTML = `<span class="${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
+				pagesLabel.innerHTML = `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
 				mainRow.appendChild(volumeNumberLabel);
 				mainRow.appendChild(pagesLabel);
 			} else {
@@ -1499,7 +1507,7 @@
 				mainRow.textContent = book.seriesTitle;
 				mainRow.addEventListener('click', (event) => {
 					event.stopPropagation();
-					if (target.binName) dashboardBin = target.binName;
+					if (target.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
 				noPointerDown(mainRow);
@@ -1515,7 +1523,7 @@
 				const volumeNumberLabel = document.createElement('span');
 				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
 				const pagesLabel = document.createElement('span');
-				pagesLabel.innerHTML = `<span class="${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
+				pagesLabel.innerHTML = `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
 				secondRow.appendChild(volumeNumberLabel);
 				secondRow.appendChild(pagesLabel);
 			} else if (format == 'timeline') {
@@ -1531,7 +1539,7 @@
 					}).format(new Date(book.readProgress.readDate))
 					: '';
 
-				timeLabel.innerHTML = `<span class='${mbDarkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`;
+				timeLabel.innerHTML = `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`;
 				secondRow.appendChild(volumeNumberLabelShort);
 				secondRow.appendChild(timeLabel);
 			}
@@ -1542,7 +1550,7 @@
 			const bookThumbnail = document.createElement('img');
 			bookThumbnail.classList.add('book-thumbnail', 'hidden');
 			bookThumbnail.src = 'transparent.png';
-			bookThumbnail.lazySrc = `${mbBaseUrl}/api/v1/books/${book.id}/thumbnail`;
+			bookThumbnail.lazySrc = `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`;
 			bookThumbnail.alt = book.metadata.title;
 			//bookThumbnail.loading = 'lazy';
 
@@ -1645,7 +1653,7 @@
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
-				if (target.binName) dashboardBin = target.binName;
+				if (target.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
@@ -1706,7 +1714,7 @@
 
 					mainContainer.scrollTo({ top: y });
 
-					currentlyScaled = item.firstChild;
+					mb.currentlyScaled = item.firstChild;
 					item.firstChild.classList.add('scaled');
 
 				} else {
@@ -1876,7 +1884,7 @@
 				binName: name,
 			})
 			item.gridButton.addEventListener('click', async () => {
-				dashboardBin = name;
+				mb.dashboardBin = name;
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
 			item.scrollInput.addEventListener('input', () => {
@@ -1918,7 +1926,7 @@
 		}
 
 		async function bootSequence() {
-			changeAccent(mbAccentColor);
+			changeAccent(mb.accentColor);
 			// Apply first theme change
 			changeTheme();
 			setIncognito(false);
@@ -1996,6 +2004,13 @@
 			speedScroll: 500,			// Speed of spread page scrolling
 			speedScrollDelay: 300,	// Delay of spread page scrolling during page turn
 			speedScrollTurn: 500,	// Speed of spread page scrolling during page turn
+
+			frames: {
+				'focus-right-page': 'translate(-75%, -50%)',
+				'focus-left-page': 'translate(-25%, -50%)',
+				'focus-center': 'translate(-50%, -50%)',
+				'none': 'translate(-50%, -50%)',
+			}
 
 		};
 
@@ -2102,23 +2117,15 @@
 			}
 		}
 
-		const frames = {
-			'focus-right-page': 'translate(-75%, -50%)',
-			'focus-left-page': 'translate(-25%, -50%)',
-			'focus-center': 'translate(-50%, -50%)',
-			'none': 'translate(-50%, -50%)',
-		}
-
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
 			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0]);
 
 			readerViewer.animate(
-				[{ transform: frames[focusString] }],
+				[{ transform: rd.frames[focusString] }],
 				{ duration: duration, easing: 'ease', fill: 'forwards', delay: delay }
 			);
 			rd.spreadFocus = focusString;
 		}
-
 
 		// Setup close button
 		function handleCloseReader() {
@@ -2306,8 +2313,8 @@
 
 			// Create dataOut structure with the fields from fetched data
 			const dataOut = data.map(page => ({
-				url: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
-				thumb: `${mbBaseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
+				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				thumb: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
 				height: page.height,
@@ -2318,14 +2325,14 @@
 				size: page.sizeBytes
 			}));
 
-			//readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
-			readerMaxRatio = dataOut.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
+			//mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
+			mb.readerMaxRatio = dataOut.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / dataOut.length;
 
 			// readerViewer.style.height='100vh';
-			readerViewer.style.height = `calc(min(${100 / (0.5 * readerMaxRatio)}vw, 100vh))`;
-			//readerViewer.style.width=`calc(${readerMaxRatio} * 100vh)`;
-			readerViewer.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
+			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, 100vh))`;
+			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
+			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
 			rd.leftFlock = addItem('div', {
 				id: 'leftFlock',
@@ -2354,14 +2361,14 @@
 
 			//Position and shape the flock 
 			// TODO check the height vs clipped modes 
-			//rd.rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			//rd.leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			//rd.rightFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
-			//rd.leftFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * readerMaxRatio}vh)))`;
-			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * readerMaxRatio}vh)), -50%)`;
-			//rd.rightDrop.style.transform = `translate(calc(0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
-			//rd.leftDrop.style.transform = `translate(calc(-0.5 * min(200vw, ${100 * readerMaxRatio}vh)), 0)`;
+			//rd.rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rd.leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rd.rightFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * mb.readerMaxRatio}vh)))`;
+			//rd.leftFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * mb.readerMaxRatio}vh)))`;
+			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rd.rightDrop.style.transform = `translate(calc(0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), 0)`;
+			//rd.leftDrop.style.transform = `translate(calc(-0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), 0)`;
 			let leftPos = 0;
 
 			// Create html structure for every page and related page thumbnails
@@ -2517,7 +2524,7 @@
 			}
 
 			// Prepare 'spreads' structure based on the layout chosen in the UI
-			readerHorizontal = ((screenAR / readerMaxRatio > rd.thresholdRatio));
+			mb.readerHorizontal = ((mb.screenAR / mb.readerMaxRatio > rd.thresholdRatio));
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
 			// Populate and create spread structure
@@ -2538,11 +2545,11 @@
 					spreadItem.appendChild(rd.uiPagesContainer[imageIndex]);
 					spreadItem.classList.add('cover-page')
 
-					buildSize2P(spreadItem, readerMaxRatio);
-					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
+					buildSize2P(spreadItem, mb.readerMaxRatio);
+					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
 
-					buildSizePic(rd.uiPagesContainer[imageIndex], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[imageIndex], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
 					rd.uiPagesContainer[imageIndex].classList.add(rd.ltr ? 'cover-page-LTR' : 'cover-page-RTL');
 					if (rd.ltr) {
@@ -2579,11 +2586,11 @@
 					spreadItem.appendChild(rd.uiPagesContainer[imageIndex]);
 					spreadItem.classList.add('cover-page')
 
-					buildSize2P(spreadItem, readerMaxRatio);
-					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
+					buildSize2P(spreadItem, mb.readerMaxRatio);
+					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
 
-					buildSizePic(rd.uiPagesContainer[imageIndex], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[imageIndex], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
 					rd.uiPagesContainer[imageIndex].classList.add(rd.ltr ? 'cover-page-RTL' : 'cover-page-LTR');
 					if (rd.ltr) {
@@ -2632,12 +2639,12 @@
 
 					spreadItem.classList.add('two-pages');
 
-					buildSize2P(spreadItem, readerMaxRatio);
+					buildSize2P(spreadItem, mb.readerMaxRatio);
 					//TODO Ma questo serve???? Farlo uguale a readerViewer?
-					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
+					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPagesContainer[imageIndex1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
-					buildSizePic(rd.uiPagesContainer[imageIndex2], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[imageIndex1], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[imageIndex2], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
 					rd.uiPages[imageIndex1].style.height = rd.uiPagesContainer[imageIndex1].style.height;
 					rd.uiPages[imageIndex2].style.height = rd.uiPagesContainer[imageIndex2].style.height;
@@ -2675,11 +2682,11 @@
 
 					spreadItem.classList.add('two-pages');
 
-					buildSize2P(spreadItem, readerMaxRatio);
-					spreadItem.style.width = `calc(min(200vw, ${100 * readerMaxRatio}vh))`;
+					buildSize2P(spreadItem, mb.readerMaxRatio);
+					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPagesContainer[imageIndex1], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
-					buildSizePic(rd.uiPagesContainer[imageIndex2], readerMaxRatio * 0.5, readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[imageIndex1], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(rd.uiPagesContainer[imageIndex2], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
 					buildSizePic(rd.uiPages[imageIndex1], dataOut[pageRef].AR * 0.5, dataOut[pageRef].AR * 0.5);
 					buildSizePic(rd.uiPages[imageIndex2], dataOut[pageRef].AR * 0.5, dataOut[pageRef].AR * 0.5);
@@ -2835,7 +2842,7 @@
 
 			if (rd.pageTurning == "left") return;
 
-			if ((newSpread == rd.uiSpreads.length) && (!readerHorizontal) && (rd.spreadFocus == 'focus-right-page')) {
+			if ((newSpread == rd.uiSpreads.length) && (!mb.readerHorizontal) && (rd.spreadFocus == 'focus-right-page')) {
 				spreadSetFocus('focus-left-page', true, false);
 				return;
 			}
@@ -2846,7 +2853,7 @@
 			if ((rd.currentSpreadIndex == 1) && !rd.ltr && (rd.pageTurning != null)) return;
 			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && rd.ltr && (rd.pageTurning != null)) return;
 
-			if (readerHorizontal) {
+			if (mb.readerHorizontal) {
 				jumpToSpread(newSpread);
 			}
 			else {
@@ -2864,7 +2871,7 @@
 
 			if (rd.pageTurning == "right") return;
 
-			if ((newSpread == rd.uiSpreads.length) && (!readerHorizontal) && (rd.spreadFocus == 'focus-left-page')) {
+			if ((newSpread == rd.uiSpreads.length) && (!mb.readerHorizontal) && (rd.spreadFocus == 'focus-left-page')) {
 				spreadSetFocus('focus-right-page', true, false);
 				return;
 			}
@@ -2875,7 +2882,7 @@
 			if ((rd.currentSpreadIndex == 1) && rd.ltr && (rd.pageTurning != null)) return;
 			if ((rd.currentSpreadIndex == rd.uiSpreads.length - 2) && !rd.ltr && (rd.pageTurning != null)) return;
 
-			if (readerHorizontal) {
+			if (mb.readerHorizontal) {
 				jumpToSpread(newSpread);
 			} else {
 				if (rd.spreadFocus == 'focus-left-page') {
@@ -2922,7 +2929,7 @@
 		}
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-			const stringOut = `${basePath}#bookread
+			const stringOut = `${mb.basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
 			&book_id=${rd.bookId}
@@ -3073,9 +3080,9 @@
 			clipFlock = buildFlock(index, rd.uiSpreads.length)
 
 			// Margins are defined as percentage of total width, so to have the correct size we divide
-			// by readerMaxRatio, then multiply by the drop aspect ratio (0.1) and apply the dropL and dropR proportion
-			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100 * 1 / readerMaxRatio) + '%';
-			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100 * 1 / readerMaxRatio) + '%';
+			// by mb.readerMaxRatio, then multiply by the drop aspect ratio (0.1) and apply the dropL and dropR proportion
+			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
 
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
@@ -3198,7 +3205,7 @@
 				spreadClassX = (rd.ltr ? 'focus-right-page' : 'focus-left-page')
 			} else if (rd.uiSpreadsKind[spreadIndex] == 'back-cover') {
 				spreadClassX = (rd.ltr ? 'focus-left-page' : 'focus-right-page')
-			} else if (readerHorizontal) {
+			} else if (mb.readerHorizontal) {
 				spreadClassX = 'focus-center'
 			} else {
 				spreadClassX = (rd.ltr ? 'focus-left-page' : 'focus-right-page')
@@ -3351,9 +3358,9 @@
 		});
 
 		document.addEventListener('pointerup', (event) => {
-			if (currentlyScaled && !currentlyScaled.contains(event.target)) {
-				currentlyScaled.classList.remove('scaled');
-				currentlyScaled = null;
+			if (mb.currentlyScaled && !mb.currentlyScaled.contains(event.target)) {
+				mb.currentlyScaled.classList.remove('scaled');
+				mb.currentlyScaled = null;
 			}
 		});
 
@@ -3373,7 +3380,7 @@
 			libraryMenu.classList.add('disabled');
 			sectionHide(extraMenuBar);
 			closeBookDetails();
-			screenAR = getScreenAR();
+			mb.screenAR = getScreenAR();
 
 			switch (path) {
 				case '':
@@ -3382,18 +3389,18 @@
 					setIncognito(false);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
-						if (dashboardBin) {
-							const y = dashboardElements[dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop - 10;
+						if (mb.dashboardBin) {
+							const y = dashboardElements[mb.dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop - 10;
 
 							mainContainer.scrollTo({ top: y });
-							dashboardBin = '';
+							mb.dashboardBin = '';
 						}
 					} else {
 						dashboardAll(params.get('all'), params.get('page'));
 					}
 					break;
 				case 'library':
-					dashboardBin = '';;
+					mb.dashboardBin = '';;
 					searchInput.value = '';
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
@@ -3418,7 +3425,7 @@
 		}
 
 		function navigateTo(path) {
-			history.pushState(null, '', basePath + path);
+			history.pushState(null, '', mb.basePath + path);
 			loadContent();
 		}
 
