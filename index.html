@@ -2938,7 +2938,6 @@
 
 			if (!rd.incognito) {
 				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
-					.then(data => console.log('Read progress updated:', data))
 					.catch(error => console.error('Error:', error));
 			}
 
