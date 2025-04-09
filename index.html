@@ -2005,7 +2005,7 @@
 			speedScrollDelay: 300,	// Delay of spread page scrolling during page turn
 			speedScrollTurn: 500,	// Speed of spread page scrolling during page turn
 
-			frames: {
+			focusFrames: {
 				'focus-right-page': 'translate(-75%, -50%)',
 				'focus-left-page': 'translate(-25%, -50%)',
 				'focus-center': 'translate(-50%, -50%)',
@@ -2121,7 +2121,7 @@
 			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0]);
 
 			readerViewer.animate(
-				[{ transform: rd.frames[focusString] }],
+				[{ transform: rd.focusFrames[focusString] }],
 				{ duration: duration, easing: 'ease', fill: 'forwards', delay: delay }
 			);
 			rd.spreadFocus = focusString;
