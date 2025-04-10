@@ -1356,7 +1356,7 @@
 				return out;
 			}, {});
 
-			if (altTitle.time == 'N/A') {
+			if ((altTitle.time == 'N/A') && (serie.booksMetadata.releaseDate != null)) {
 				altTitle.time = serie.booksMetadata.releaseDate.split('-')[0];
 			};
 
