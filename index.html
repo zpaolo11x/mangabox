@@ -1032,7 +1032,7 @@
 
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
-					//mb.currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
+					// mb.currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
 				}
 
 				item.classList.add('scaled');
@@ -2325,7 +2325,7 @@
 				size: page.sizeBytes
 			}));
 
-			//mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
+			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = dataOut.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / dataOut.length;
 
