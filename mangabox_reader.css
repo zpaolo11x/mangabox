@@ -255,7 +255,7 @@ div.two-pages {
 
 }
 
-#leftFlock {
+#leftForeEdge {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -271,7 +271,7 @@ div.two-pages {
 	/*image-rendering:pixelated;*/
 }
 
-#rightFlock {
+#rightForeEdge {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;

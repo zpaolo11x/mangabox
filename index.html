@@ -119,8 +119,8 @@
 
 		<div id="readerViewer"></div>
 		<!--
-		<img id="leftFlock" src="pagesZ3.png">
-		<img id="rightFlock" src="pagesZ3.png">
+		<img id="leftForeEdge" src="pagesZ3.png">
+		<img id="rightForeEdge" src="pagesZ3.png">
 		-->
 
 		<div id="readerOverlay">
@@ -1986,11 +1986,11 @@
 
 			spreadFocus: 'focus-center',
 
-			// These two parameters shape the page width and flock width for a full book
-			//flockPicRate: 0.2,		// Full book flock size in ratio of the height, the image is stretched to fill
-			//flockPicCut: 0.7,			// Portion of the full book image that's acutally used on a full book
-			leftFlock: null,
-			rightFlock: null,
+			// These two parameters shape the page width and ForeEdge width for a full book
+			//ForeEdgePicRate: 0.2,		// Full book ForeEdge size in ratio of the height, the image is stretched to fill
+			//ForeEdgePicCut: 0.7,			// Portion of the full book image that's acutally used on a full book
+			leftForeEdge: null,
+			rightForeEdge: null,
 			leftDrop: null,
 			rightDrop: null,
 
@@ -2036,9 +2036,12 @@
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
 			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
+			
+			/* CLEARED IN THE CLEAR ROUTINE
 			rd.uiPages = [];				// array of page images with alt = page number
 			rd.uiPagesContainer = [];				// array of page images with alt = page number
 			rd.uiSpreads = [];				// array of divs with the correct paged uiPages inside
+			*/
 			rd.uiSpreadsPagenums = [];		// array of arrays that associates each uiSpreads div index to its uiPages index.
 			rd.uiSpreadsImageRefs = [];		// array of arrays that associates each uiSpreads div index to its uiPages index.
 			rd.uiSpreadsKind = [];
@@ -2048,8 +2051,10 @@
 			rd.oldSpreadIndex = 0;
 			rd.isDraggingProgressBar = false;
 
+			/* CLEARED IN THE CLEAR ROUTINE
 			rd.uiSpreadsThumbs = [];
 			rd.uiPagesThumbs = [];
+			*/
 
 			rd.libraryId = libraryId;
 			rd.seriesId = seriesId;
@@ -2068,50 +2073,19 @@
 
 		// Reader cleanup functions to remove all dangling spreads and pages
 		function clearReader() {
-			rd.uiPages.forEach(item => {
-				item.remove();
-				item = null;
+			// Cleanup all DOM objects and array of objects 
+			["uiPages", "uiPagesContainer", "uiSpreads", "uiPagesThumbs", "uiSpreadsThumbs"].forEach(key => {
+				rd[key].forEach(item => item.remove());
+				rd[key].length = 0;
 			});
 
-			rd.uiPagesContainer.forEach(item => {
-				item.remove();
-				item = null;
+			// Cleanup ForeEdge and drop shadows
+			["leftForeEdge", "rightForeEdge", "leftDrop", "rightDrop"].forEach(key => {
+				if (rd[key]) {
+					rd[key].remove();
+					rd[key] = null;
+				}
 			});
-
-			rd.uiSpreads.forEach(item => {
-				item.remove();
-				item = null;
-			});
-
-			rd.uiPagesThumbs.forEach(item => {
-				item.remove();
-				item = null;
-			});
-
-			rd.uiSpreadsThumbs.forEach(item => {
-				item.remove();
-				item = null;
-			});
-
-			if (rd.leftFlock) {
-				rd.leftFlock.remove();
-				rd.leftFlock = null;
-			};
-
-			if (rd.rightFlock) {
-				rd.rightFlock.remove();
-				rd.rightFlock = null;
-			}
-
-			if (rd.leftDrop) {
-				rd.leftDrop.remove();
-				rd.leftDrop = null;
-			};
-
-			if (rd.rightDrop) {
-				rd.rightDrop.remove();
-				rd.rightDrop = null;
-			}
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -2202,7 +2176,6 @@
 		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
 
 		thumbStripInner.addEventListener('transitionrun', () => {
-
 			testpr('Transition started')
 		});
 		thumbStripInner.addEventListener('transitionstart', () => testpr('Transition actually started'));
@@ -2210,7 +2183,6 @@
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStrip.style.overflow = 'auto';
 			testpr('Transition ended')
-
 		});
 
 		function updateProgressBar() {
@@ -2289,7 +2261,7 @@
 		// Add this once when initializing the viewer
 		//readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease";
 
-		function buildFlock(index, total) {
+		function buildForeEdge(index, total) {
 			// book size is a parabola based on number of spreads capped at 400 spreads
 			const fullBook = (total / 400 > 1 ? 1 : ((1 - (total / 400 - 1) * (total / 400 - 1))));
 			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
@@ -2331,14 +2303,14 @@
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-			rd.leftFlock = addItem('div', {
-				id: 'leftFlock',
+			rd.leftForeEdge = addItem('div', {
+				id: 'leftForeEdge',
 				src: 'pagesLeft.png',
 				style: 'clip-path: inset(0 0 0 100%)'
 			});
 
-			rd.rightFlock = addItem('div', {
-				id: 'rightFlock',
+			rd.rightForeEdge = addItem('div', {
+				id: 'rightForeEdge',
 				src: 'pagesRight.png',
 				style: 'clip-path: inset(0 100% 0 0)'
 			});
@@ -2351,19 +2323,19 @@
 				id: 'rightDrop',
 			});
 
-			readerViewer.appendChild(rd.leftFlock);
-			readerViewer.appendChild(rd.rightFlock);
+			readerViewer.appendChild(rd.leftForeEdge);
+			readerViewer.appendChild(rd.rightForeEdge);
 			readerViewer.appendChild(rd.leftDrop);
 			readerViewer.appendChild(rd.rightDrop);
 
-			//Position and shape the flock 
+			//Position and shape the ForeEdge 
 			// TODO check the height vs clipped modes 
-			//rd.rightFlock.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
-			//rd.leftFlock.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
-			//rd.rightFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * mb.readerMaxRatio}vh)))`;
-			//rd.leftFlock.style.width = `calc(${rd.flockPicRate} * (min(200vw, ${100 * mb.readerMaxRatio}vh)))`;
-			//leftFlock.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
-			//rightFlock.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rd.rightForeEdge.style.transform = `translate(calc(-50% + 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rd.leftForeEdge.style.transform = `translate(calc(-50% - 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rd.rightForeEdge.style.width = `calc(${rd.ForeEdgePicRate} * (min(200vw, ${100 * mb.readerMaxRatio}vh)))`;
+			//rd.leftForeEdge.style.width = `calc(${rd.ForeEdgePicRate} * (min(200vw, ${100 * mb.readerMaxRatio}vh)))`;
+			//leftForeEdge.style.transform=`translate(calc(-50% - 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
+			//rightForeEdge.style.transform=`translate(calc(-50% + 0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), -50%)`;
 			//rd.rightDrop.style.transform = `translate(calc(0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), 0)`;
 			//rd.leftDrop.style.transform = `translate(calc(-0.5 * min(200vw, ${100 * mb.readerMaxRatio}vh)), 0)`;
 			let leftPos = 0;
@@ -3068,17 +3040,17 @@
 			const stopCover = rd.uiSpreadsImageRefs[index].length == 1
 
 			//turnDirection can be 'turn-right' or 'turn-left'
-			rd.leftFlock.style.transition = 'clip-path 0.3s';
-			rd.rightFlock.style.transition = 'clip-path 0.3s';
+			rd.leftForeEdge.style.transition = 'clip-path 0.3s';
+			rd.rightForeEdge.style.transition = 'clip-path 0.3s';
 			rd.leftDrop.style.transition = 'margin 0.3s';
 			rd.rightDrop.style.transition = 'margin 0.3s';
 
-			clipFlock = buildFlock(index, rd.uiSpreads.length)
+			clipForeEdge = buildForeEdge(index, rd.uiSpreads.length)
 
 			// Margins are defined as percentage of total width, so to have the correct size we divide
 			// by mb.readerMaxRatio, then multiply by the drop aspect ratio (0.1) and apply the dropL and dropR proportion
-			rd.leftDrop.style.marginRight = (0.1 * clipFlock.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
-			rd.rightDrop.style.marginLeft = (0.1 * clipFlock.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.leftDrop.style.marginRight = (0.1 * clipForeEdge.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.rightDrop.style.marginLeft = (0.1 * clipForeEdge.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
 
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
@@ -3103,17 +3075,17 @@
 
 
 
-				rd.leftFlock.style.clipPath = clipFlock.left;
-				rd.rightFlock.style.clipPath = clipFlock.right;
+				rd.leftForeEdge.style.clipPath = clipForeEdge.left;
+				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
 
 			} else if (startCover && stopCover) {
 				let startCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][0]]
 				let stopCoverPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][0]]
 
-				rd.leftFlock.style.transition = 'clip-path 0s';
-				rd.rightFlock.style.transition = 'clip-path 0s';
-				rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
-				rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
+				rd.leftForeEdge.style.transition = 'clip-path 0s';
+				rd.rightForeEdge.style.transition = 'clip-path 0s';
+				rd.leftForeEdge.style.clipPath = `inset(0 0 0 100%)`;
+				rd.rightForeEdge.style.clipPath = `inset(0 100% 0 0)`;
 				rd.leftDrop.style.transition = 'margin 0s';
 				rd.rightDrop.style.transition = 'margin 0s';
 				rd.leftDrop.style.marginRight = 0;
@@ -3137,7 +3109,7 @@
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
-					rd.rightFlock.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
+					rd.rightForeEdge.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
 					rd.rightDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
@@ -3146,7 +3118,7 @@
 						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				} else {
-					rd.leftFlock.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
+					rd.leftForeEdge.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
 					rd.leftDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
@@ -3155,8 +3127,8 @@
 						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				}
-				rd.leftFlock.style.clipPath = clipFlock.left;
-				rd.rightFlock.style.clipPath = clipFlock.right;
+				rd.leftForeEdge.style.clipPath = clipForeEdge.left;
+				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
 			} else if (stopCover) {
 				// Start Page (mid spread)
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
@@ -3166,11 +3138,11 @@
 
 				rd.leftDrop.style.marginRight = 0;
 				rd.rightDrop.style.marginLeft = 0;
-				rd.leftFlock.style.clipPath = `inset(0 0 0 100%)`;
-				rd.rightFlock.style.clipPath = `inset(0 100% 0 0)`;
+				rd.leftForeEdge.style.clipPath = `inset(0 0 0 100%)`;
+				rd.rightForeEdge.style.clipPath = `inset(0 100% 0 0)`;
 
 				if (turnDirection == 'turn-right') {
-					rd.leftFlock.style.transition = 'clip-path 0s';
+					rd.leftForeEdge.style.transition = 'clip-path 0s';
 					leftPage.animate(clipL2R, animData);
 					coverPage.animate(appearR2L_slideinL2R, animData);
 					rd.leftDrop.animate(
@@ -3178,7 +3150,7 @@
 						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
 					);
 				} else {
-					rd.rightFlock.style.transition = 'clip-path 0s';
+					rd.rightForeEdge.style.transition = 'clip-path 0s';
 					rightPage.animate(clipR2L, animData);
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 					rd.rightDrop.animate(
@@ -3216,7 +3188,7 @@
 
 			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (!force && (localOldSpreadIndex == localNewSpreadIndex))) return;
 
-			//buildFlock(newSpreadTarget, localOldSpreadIndex, rd.uiSpreads.length)
+			//buildForeEdge(newSpreadTarget, localOldSpreadIndex, rd.uiSpreads.length)
 
 			let spreadClassX = getCenterClass(localNewSpreadIndex);
 			if (spreadClass != null) spreadClassX = spreadClass;
@@ -3477,7 +3449,7 @@
 		function getDerivedScale() {
 			return document.documentElement.clientWidth / window.visualViewport.width;
 		}
-		
+
 		function enableTouchResponse(item, threshold, onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown) {
 			item.SingleTouch = true;
 			item.TouchStartX = 0;
