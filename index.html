@@ -3471,14 +3471,21 @@
 
 
 		//MB Reader touch response fucntions
-
+		function getTrueScale() {
+			return window.innerWidth / window.visualViewport.width;
+		}
+		function getDerivedScale() {
+			return document.documentElement.clientWidth / window.visualViewport.width;
+		}
+		
 		function enableTouchResponse(item, threshold, onSwipeLeft, onSwipeRight, onSwipeUp, onSwipeDown) {
 			item.SingleTouch = true;
 			item.TouchStartX = 0;
 			item.TouchStartY = 0;
 
 			function handleTouchStart(event) {
-				if (window.visualViewport.scale > 1.01) return;
+				if (getDerivedScale() > 1.01) return;
+
 				if (event.touches.length > 1) {
 					item.SingleTouch = false; // Multiple touches: ignore for swipe
 					return;
@@ -3489,7 +3496,7 @@
 			}
 
 			function handleTouchMove(event) {
-				if (window.visualViewport.scale > 1.01 || !item.SingleTouch) return;
+				if (getDerivedScale() > 1.01 || !item.SingleTouch) return;
 
 				const touchEndX = event.touches[0].clientX;
 				const touchEndY = event.touches[0].clientY;
