@@ -745,12 +745,9 @@
 			} else {
 				let newReaderHorizontal = (newScreenAR / mb.readerMaxRatio > rd.thresholdRatio);
 				if (newReaderHorizontal != mb.readerHorizontal) {
-
 					mb.screenAR = newScreenAR;
-
 					mb.readerHorizontal = newReaderHorizontal;
 					spreadSetFocus(getCenterClass(rd.currentSpreadIndex), true, false);
-
 				}
 			}
 		}
