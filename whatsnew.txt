@@ -1,2 +1,1 @@
-- Fixed login screen issue
-- Fixed swipe not responsive after zoom
+- 
