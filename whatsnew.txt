@@ -1,4 +1,2 @@
-- Added page turn animation
-- New vertical and horizontal modes
-- Vertical mode follow page focus for spreads
-- Added system switch for theme
+- Fixed login screen issue
+- Fixed swipe not responsive after zoom
