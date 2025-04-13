@@ -144,7 +144,7 @@
 				</div>
 
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
-						<div class="scrollbox-content">
+						<div id="thumbStripScrollContent" class="scrollbox-content">
 							<div id="thumbStripInner"></div>
 						</div>
 						<div class="scrollbox-scrollbar">
@@ -2264,7 +2264,7 @@
 			const newWidth = thumbStripInner.clientWidth;
 
 			const scrollScaler = newWidth / oldWidth;
-			thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+			thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
 			//centerThumb(true);
 		}
 
@@ -2277,16 +2277,16 @@
 				const oldWidth = rd.thumbsWidth;
 				const newWidth = thumbStripInner.clientWidth;
 				const scrollScaler = newWidth / oldWidth;
-				thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+				thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
 				rd.thumbsWidth = newWidth;
-				testpr('Size changed:', entry.contentRect.width, entry.contentRect.height);
+				//testpr('Size changed:', entry.contentRect.width, entry.contentRect.height);
 			}
 		});
 
 		resizeObserver.observe(thumbStripInner);
 
 		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
-
+		/*
 		thumbStripInner.addEventListener('transitionrun', () => {
 			testpr('Transition started')
 		});
@@ -2296,7 +2296,7 @@
 			thumbStrip.style.overflow = 'auto';
 			testpr('Transition ended')
 		});
-
+*/
 		function updateProgressBar() {
 			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
@@ -3074,13 +3074,13 @@
 
 			if (targetElement) {
 
-				const targetScrollLeft = -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+				const targetScrollLeft = -thumbStripScrollContent.clientWidth / 2 + targetElement.offsetLeft - thumbStripScrollContent.offsetLeft + targetElement.clientWidth / 2;
 
 				if (!fast) {
-					smoothScroll(thumbStrip, targetScrollLeft, 300);
+					smoothScroll(thumbStripScrollContent, targetScrollLeft, 300);
 				} else {
 					//smoothScroll(thumbStrip, targetScrollLeft, 150);
-					thumbStrip.scrollLeft = targetScrollLeft;
+					thumbStripScrollContent.scrollLeft = targetScrollLeft;
 				};
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
