@@ -1306,3 +1306,51 @@ body.sticky-small .libraries-list.right-block {
 body.sticky-small #seriesMiniHeader {
 	top: 114px;
 }
+
+.scrollbox {
+	position: relative;
+	width: 100%;
+	/*height: 300px;*/ /* or whatever */
+	overflow: hidden;
+ }
+ 
+ .scrollbox-content {
+	height: 100%;
+	overflow-y: scroll;
+	/*padding-right: 16px;*/
+	box-sizing: content-box;
+ }
+ 
+ /* Hide native scrollbar */
+ .scrollbox-content::-webkit-scrollbar {
+	display: none;
+ }
+ .scrollbox-content {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+ }
+ 
+ .scrollbox-scrollbar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 8px;
+	height: 100%;
+	background: transparent;
+ }
+ 
+ .scrollbox-thumb {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 8px;
+	background: blue;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background 0.2s;
+ }
+ 
+ .scrollbox-thumb:hover {
+	background: red;
+ }
+ 

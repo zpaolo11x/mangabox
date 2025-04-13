@@ -70,46 +70,52 @@
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
 		</div>
-		<div id="mainContainer">
-			<div id="seriesHeader" class="section hidden"></div>
+		<div class="scrollbox">
+			<div id="mainContainer" class="scrollbox-content">
+				<div id="seriesHeader" class="section hidden"></div>
 
-			<div id="seriesGrid" class="section hidden"></div>
+				<div id="seriesGrid" class="section hidden"></div>
 
-			<div id="booksGrid" class="section hidden"></div>
+				<div id="booksGrid" class="section hidden"></div>
 
-			<div id="stripGridContainer" class="section hidden">
-				<div id="stripGrid" class="strip-grid"></div>
-				<div id="stripGridHeaderContainer" class="stripgrid-header-container">
-					<div id="stripGridHeader" class="strip-header">
-						<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+				<div id="stripGridContainer" class="section hidden">
+					<div id="stripGrid" class="strip-grid"></div>
+					<div id="stripGridHeaderContainer" class="stripgrid-header-container">
+						<div id="stripGridHeader" class="strip-header">
+							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+						</div>
+						<div id="stripGridRight" class="stripgrid-all">
+							<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
+							</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+						</div>
 					</div>
-					<div id="stripGridRight" class="stripgrid-all">
-						<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
-						</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+				</div>
+
+				<div id="seriesMiniHeader" class="section hidden collapse"></div>
+
+				<div id="homeStripsContainer" class="section hidden"></div>
+
+				<div id="searchStripsContainer" class="section hidden">
+					<div class="strip-header-container">
+						<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
 					</div>
+					<div id="homeStripSeriesResults" class="series-results search-results"></div>
+
+					<div class="strip-header-container">
+						<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+					</div>
+					<div id="homeStripBooksResults" class="books-results search-results"></div>
 				</div>
+
+				<div id="bookDetailsContainer" class="section hidden"></div>
+
+
+
+				<div id="blanker"></div>
 			</div>
-
-			<div id="seriesMiniHeader" class="section hidden collapse"></div>
-
-			<div id="homeStripsContainer" class="section hidden"></div>
-
-			<div id="searchStripsContainer" class="section hidden">
-				<div class="strip-header-container">
-					<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
-				</div>
-				<div id="homeStripSeriesResults" class="series-results search-results"></div>
-
-				<div class="strip-header-container">
-					<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
-				</div>
-				<div id="homeStripBooksResults" class="books-results search-results"></div>
+			<div class="scrollbox-scrollbar">
+				<div class="scrollbox-thumb"></div>
 			</div>
-
-			<div id="bookDetailsContainer" class="section hidden"></div>
-
-			<div id="blanker"></div>
-
 		</div>
 
 	</div>
@@ -414,6 +420,72 @@
 		searchIcon.addEventListener('click', () => {
 			if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 		})
+
+		//MB Scroll Bars
+
+		function createCustomScrollbar(scrollbox) {
+			const content = scrollbox.querySelector('.scrollbox-content');
+			const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
+			const thumb = scrollbar.querySelector('.scrollbox-thumb');
+
+			function updateThumb() {
+				const contentHeight = content.scrollHeight;
+				const containerHeight = content.clientHeight;
+				const scrollTop = content.scrollTop;
+
+				const thumbHeight = Math.max((containerHeight / contentHeight) * containerHeight, 20);
+				const thumbTop = (scrollTop / contentHeight) * containerHeight;
+
+				thumb.style.height = thumbHeight + 'px';
+				thumb.style.top = thumbTop + 'px';
+			}
+
+			content.addEventListener('scroll', updateThumb);
+			window.addEventListener('resize', updateThumb);
+
+			let isDragging = false;
+			let startY, startTop;
+
+			thumb.addEventListener('mousedown', (e) => {
+				isDragging = true;
+				startY = e.clientY;
+				startTop = parseInt(thumb.style.top) || 0;
+				document.body.style.userSelect = 'none';
+			});
+
+			document.addEventListener('mousemove', (e) => {
+				if (!isDragging) return;
+				const dy = e.clientY - startY;
+				const newTop = Math.min(content.clientHeight - thumb.offsetHeight, Math.max(0, startTop + dy));
+				const scrollRatio = newTop / content.clientHeight;
+				content.scrollTop = scrollRatio * content.scrollHeight;
+			});
+
+			document.addEventListener('mouseup', () => {
+				isDragging = false;
+				document.body.style.userSelect = '';
+			});
+
+			// 🔍 Watch for DOM changes inside scrollable content
+			const observer = new MutationObserver(() => {
+				updateThumb();
+			});
+
+			observer.observe(content, {
+				childList: true,
+				subtree: true,
+				attributes: true,
+				characterData: true,
+			});
+
+			// Optional: expose a method to manually refresh
+			scrollbox.refreshScrollbar = updateThumb;
+
+			updateThumb();
+		}
+
+
+		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
 		//MB Search Functions 
 
@@ -2036,7 +2108,7 @@
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
 			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
-			
+
 			/* CLEARED IN THE CLEAR ROUTINE
 			rd.uiPages = [];				// array of page images with alt = page number
 			rd.uiPagesContainer = [];				// array of page images with alt = page number
