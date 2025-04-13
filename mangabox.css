@@ -1379,11 +1379,12 @@ body.sticky-small #seriesMiniHeader {
 	background: var(--mb-accent);
 	border-radius: 4px;
 	cursor: pointer;
-	transition: background-color 0.2s, opacity 0.2s;
+	transition: background-color 0.2s;
 	margin-right:2px;
  }
  
+ /*
  .scrollbox-thumb:hover {
 	background: var(--mb-accent);
  }
- 
+ */
