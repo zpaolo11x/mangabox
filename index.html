@@ -2263,7 +2263,7 @@
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
 			rd.thumbsWidth = thumbStripInner.clientWidth;
-			thumbStrip.style.overflow = 'hidden';
+			thumbStripScrollContent.style.overflow = 'hidden';
 			const oldWidth = thumbStripInner.clientWidth;
 
 			let thumbHeight = status ? 300 : 150;
@@ -2302,12 +2302,12 @@
 			testpr('Transition started')
 		});
 		thumbStripInner.addEventListener('transitionstart', () => testpr('Transition actually started'));
-
+*/
 		thumbStripInner.addEventListener('transitionend', () => {
-			thumbStrip.style.overflow = 'auto';
+			thumbStripScrollContent.style.overflow = 'auto';
 			testpr('Transition ended')
 		});
-*/
+
 		function updateProgressBar() {
 			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
