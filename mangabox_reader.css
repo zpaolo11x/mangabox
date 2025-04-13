@@ -488,6 +488,8 @@ div.single-page {
 	height: calc(var(--mb-thumb-height-px) + 10px);
 	margin-left: 50%;
 	margin-right: 50%;
+	width: max-content; /* Important! lets it grow as needed */
+
 	/*flex-direction: row-reverse;*/
 }
 

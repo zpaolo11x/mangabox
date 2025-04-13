@@ -70,7 +70,7 @@
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
 		</div>
-		<div class="scrollbox">
+		<div class="scrollbox" data-scroll-direction="vertical">
 			<div id="mainContainer" class="scrollbox-content">
 				<div id="seriesHeader" class="section hidden"></div>
 
@@ -143,8 +143,13 @@
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
-				<div id="thumbStrip">
-					<div id="thumbStripInner"></div>
+				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
+						<div class="scrollbox-content">
+							<div id="thumbStripInner"></div>
+						</div>
+						<div class="scrollbox-scrollbar">
+							<div class="scrollbox-thumb"></div>
+						</div>
 				</div>
 				<div id="thumbStripButton">
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
@@ -422,84 +427,96 @@
 		//MB Scroll Bars
 
 		function createCustomScrollbar(scrollbox) {
-  if (scrollbox.dataset.scrollbarInitialized) return;
-  scrollbox.dataset.scrollbarInitialized = 'true';
+			if (scrollbox.dataset.scrollbarInitialized) return;
+			scrollbox.dataset.scrollbarInitialized = 'true';
 
-  const content = scrollbox.querySelector('.scrollbox-content');
-  const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
-  const thumb = scrollbar.querySelector('.scrollbox-thumb');
+			const direction = scrollbox.dataset.scrollDirection || 'vertical';
+			const isHorizontal = direction === 'horizontal';
 
-  let fadeTimeout;
+			const content = scrollbox.querySelector('.scrollbox-content');
+			const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
+			const thumb = scrollbar.querySelector('.scrollbox-thumb');
 
-  function updateThumb() {
-    const contentHeight = content.scrollHeight;
-    const containerHeight = content.clientHeight;
-    const scrollTop = content.scrollTop;
+			let fadeTimeout;
 
-    const thumbHeight = Math.max((containerHeight / contentHeight) * containerHeight, 20);
-    const thumbTop = (scrollTop / contentHeight) * containerHeight;
+			function showScrollbarTemporarily() {
+				scrollbar.classList.add('visible');
+				clearTimeout(fadeTimeout);
+				fadeTimeout = setTimeout(() => {
+					scrollbar.classList.remove('visible');
+				}, 1000);
+			}
 
-    thumb.style.height = thumbHeight + 'px';
-    thumb.style.top = thumbTop + 'px';
-  }
+			function updateThumb() {
+				const total = isHorizontal ? content.scrollWidth : content.scrollHeight;
+				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
+				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
 
-  function showScrollbarTemporarily() {
-    scrollbar.classList.add('visible');
-    clearTimeout(fadeTimeout);
-    fadeTimeout = setTimeout(() => {
-      scrollbar.classList.remove('visible');
-    }, 1000); // adjust timing here if needed
-  }
+				const thumbSize = Math.max((visible / total) * visible, 20);
+				const thumbPos = (scroll / total) * visible;
 
-  content.addEventListener('scroll', () => {
-    updateThumb();
-    showScrollbarTemporarily();
-  });
+				if (isHorizontal) {
+					thumb.style.width = thumbSize + 'px';
+					thumb.style.left = thumbPos + 'px';
+				} else {
+					thumb.style.height = thumbSize + 'px';
+					thumb.style.top = thumbPos + 'px';
+				}
+			}
 
-  scrollbox.addEventListener('mouseenter', () => {
-    showScrollbarTemporarily();
-  });
+			content.addEventListener('scroll', () => {
+				updateThumb();
+				showScrollbarTemporarily();
+			});
 
-  // Drag support
-  let isDragging = false;
-  let startY, startTop;
+			scrollbox.addEventListener('mouseenter', showScrollbarTemporarily);
 
-  thumb.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startY = e.clientY;
-    startTop = parseInt(thumb.style.top) || 0;
-    document.body.style.userSelect = 'none';
-    scrollbar.classList.add('visible');
-    clearTimeout(fadeTimeout);
-  });
+			// Drag support
+			let isDragging = false;
+			let startPos, startThumbPos;
 
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const dy = e.clientY - startY;
-    const newTop = Math.min(content.clientHeight - thumb.offsetHeight, Math.max(0, startTop + dy));
-    const scrollRatio = newTop / content.clientHeight;
-    content.scrollTop = scrollRatio * content.scrollHeight;
-  });
+			thumb.addEventListener('mousedown', (e) => {
+				isDragging = true;
+				startPos = isHorizontal ? e.clientX : e.clientY;
+				startThumbPos = parseInt(thumb.style[isHorizontal ? 'left' : 'top']) || 0;
+				document.body.style.userSelect = 'none';
+				scrollbar.classList.add('visible');
+				clearTimeout(fadeTimeout);
+			});
 
-  document.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      document.body.style.userSelect = '';
-      showScrollbarTemporarily();
-    }
-  });
+			document.addEventListener('mousemove', (e) => {
+				if (!isDragging) return;
+				const delta = (isHorizontal ? e.clientX : e.clientY) - startPos;
+				const trackSize = isHorizontal ? content.clientWidth : content.clientHeight;
+				const newThumbPos = Math.min(trackSize - (isHorizontal ? thumb.offsetWidth : thumb.offsetHeight), Math.max(0, startThumbPos + delta));
+				const scrollRatio = newThumbPos / trackSize;
+				if (isHorizontal) {
+					content.scrollLeft = scrollRatio * content.scrollWidth;
+				} else {
+					content.scrollTop = scrollRatio * content.scrollHeight;
+				}
+			});
 
-  const observer = new MutationObserver(updateThumb);
-  observer.observe(content, {
-    childList: true,
-    subtree: true,
-    characterData: true,
-    attributes: true,
-  });
+			document.addEventListener('mouseup', () => {
+				if (isDragging) {
+					isDragging = false;
+					document.body.style.userSelect = '';
+					showScrollbarTemporarily();
+				}
+			});
 
-  scrollbox.refreshScrollbar = updateThumb;
-  updateThumb();
-}
+			const observer = new MutationObserver(updateThumb);
+			observer.observe(content, {
+				childList: true,
+				subtree: true,
+				characterData: true,
+				attributes: true,
+			});
+
+			scrollbox.refreshScrollbar = updateThumb;
+			updateThumb();
+		}
+
 
 
 
@@ -1481,7 +1498,7 @@
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
-			<div id="bookScrollBox" class="scrollbox">
+			<div id="bookScrollBox" class="scrollbox" data-scroll-direction="vertical">
 				<div class="header-summary scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
 				<div class="scrollbox-scrollbar">
 					<div class="scrollbox-thumb"></div>
