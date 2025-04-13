@@ -109,8 +109,6 @@
 
 				<div id="bookDetailsContainer" class="section hidden"></div>
 
-
-
 				<div id="blanker"></div>
 			</div>
 			<div class="scrollbox-scrollbar">
@@ -424,65 +422,85 @@
 		//MB Scroll Bars
 
 		function createCustomScrollbar(scrollbox) {
-			const content = scrollbox.querySelector('.scrollbox-content');
-			const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
-			const thumb = scrollbar.querySelector('.scrollbox-thumb');
+  if (scrollbox.dataset.scrollbarInitialized) return;
+  scrollbox.dataset.scrollbarInitialized = 'true';
 
-			function updateThumb() {
-				const contentHeight = content.scrollHeight;
-				const containerHeight = content.clientHeight;
-				const scrollTop = content.scrollTop;
+  const content = scrollbox.querySelector('.scrollbox-content');
+  const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
+  const thumb = scrollbar.querySelector('.scrollbox-thumb');
 
-				const thumbHeight = Math.max((containerHeight / contentHeight) * containerHeight, 20);
-				const thumbTop = (scrollTop / contentHeight) * containerHeight;
+  let fadeTimeout;
 
-				thumb.style.height = thumbHeight + 'px';
-				thumb.style.top = thumbTop + 'px';
-			}
+  function updateThumb() {
+    const contentHeight = content.scrollHeight;
+    const containerHeight = content.clientHeight;
+    const scrollTop = content.scrollTop;
 
-			content.addEventListener('scroll', updateThumb);
-			window.addEventListener('resize', updateThumb);
+    const thumbHeight = Math.max((containerHeight / contentHeight) * containerHeight, 20);
+    const thumbTop = (scrollTop / contentHeight) * containerHeight;
 
-			let isDragging = false;
-			let startY, startTop;
+    thumb.style.height = thumbHeight + 'px';
+    thumb.style.top = thumbTop + 'px';
+  }
 
-			thumb.addEventListener('mousedown', (e) => {
-				isDragging = true;
-				startY = e.clientY;
-				startTop = parseInt(thumb.style.top) || 0;
-				document.body.style.userSelect = 'none';
-			});
+  function showScrollbarTemporarily() {
+    scrollbar.classList.add('visible');
+    clearTimeout(fadeTimeout);
+    fadeTimeout = setTimeout(() => {
+      scrollbar.classList.remove('visible');
+    }, 1000); // adjust timing here if needed
+  }
 
-			document.addEventListener('mousemove', (e) => {
-				if (!isDragging) return;
-				const dy = e.clientY - startY;
-				const newTop = Math.min(content.clientHeight - thumb.offsetHeight, Math.max(0, startTop + dy));
-				const scrollRatio = newTop / content.clientHeight;
-				content.scrollTop = scrollRatio * content.scrollHeight;
-			});
+  content.addEventListener('scroll', () => {
+    updateThumb();
+    showScrollbarTemporarily();
+  });
 
-			document.addEventListener('mouseup', () => {
-				isDragging = false;
-				document.body.style.userSelect = '';
-			});
+  scrollbox.addEventListener('mouseenter', () => {
+    showScrollbarTemporarily();
+  });
 
-			// 🔍 Watch for DOM changes inside scrollable content
-			const observer = new MutationObserver(() => {
-				updateThumb();
-			});
+  // Drag support
+  let isDragging = false;
+  let startY, startTop;
 
-			observer.observe(content, {
-				childList: true,
-				subtree: true,
-				attributes: true,
-				characterData: true,
-			});
+  thumb.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startY = e.clientY;
+    startTop = parseInt(thumb.style.top) || 0;
+    document.body.style.userSelect = 'none';
+    scrollbar.classList.add('visible');
+    clearTimeout(fadeTimeout);
+  });
 
-			// Optional: expose a method to manually refresh
-			scrollbox.refreshScrollbar = updateThumb;
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const dy = e.clientY - startY;
+    const newTop = Math.min(content.clientHeight - thumb.offsetHeight, Math.max(0, startTop + dy));
+    const scrollRatio = newTop / content.clientHeight;
+    content.scrollTop = scrollRatio * content.scrollHeight;
+  });
 
-			updateThumb();
-		}
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      document.body.style.userSelect = '';
+      showScrollbarTemporarily();
+    }
+  });
+
+  const observer = new MutationObserver(updateThumb);
+  observer.observe(content, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+    attributes: true,
+  });
+
+  scrollbox.refreshScrollbar = updateThumb;
+  updateThumb();
+}
+
 
 
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
@@ -1463,11 +1481,16 @@
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
-			<div class="header-summary">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+			<div id="bookScrollBox" class="scrollbox">
+				<div class="header-summary scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+				<div class="scrollbox-scrollbar">
+					<div class="scrollbox-thumb"></div>
+				</div>
+			</div>
 			`;
 
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
-
+			createCustomScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${serie.metadata.title}</span>
 			`

@@ -1337,20 +1337,27 @@ body.sticky-small #seriesMiniHeader {
 	width: 8px;
 	height: 100%;
 	background: transparent;
+	opacity:0;
+	transition: opacity 0.3s ease;
  }
  
+ .scrollbox-scrollbar.visible {
+	opacity: 1;
+ }
+
  .scrollbox-thumb {
 	position: absolute;
 	top: 0;
 	right: 0;
 	width: 8px;
-	background: blue;
+	background: var(--mb-accent);
 	border-radius: 4px;
 	cursor: pointer;
-	transition: background 0.2s;
+	transition: background-color 0.2s, opacity 0.2s;
+	margin-right:2px;
  }
  
  .scrollbox-thumb:hover {
-	background: red;
+	background: var(--mb-accent);
  }
  
