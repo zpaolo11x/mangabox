@@ -144,12 +144,12 @@
 				</div>
 
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
-						<div id="thumbStripScrollContent" class="scrollbox-content">
-							<div id="thumbStripInner"></div>
-						</div>
-						<div class="scrollbox-scrollbar">
-							<div class="scrollbox-thumb"></div>
-						</div>
+					<div id="thumbStripScrollContent" class="scrollbox-content">
+						<div id="thumbStripInner"></div>
+					</div>
+					<div class="scrollbox-scrollbar">
+						<div class="scrollbox-thumb"></div>
+					</div>
 				</div>
 				<div id="thumbStripButton">
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
@@ -452,6 +452,16 @@
 				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
 				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
 
+				const scrollable = total > visible;
+
+				if (!scrollable) {
+					scrollbar.classList.remove('visible');
+					thumb.style.display = 'none';
+					return;
+				}
+
+				thumb.style.display = 'block';
+
 				const thumbSize = Math.max((visible / total) * visible, 20);
 				const thumbPos = (scroll / total) * visible;
 
@@ -463,6 +473,7 @@
 					thumb.style.top = thumbPos + 'px';
 				}
 			}
+
 
 			content.addEventListener('scroll', () => {
 				updateThumb();
