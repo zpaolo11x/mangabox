@@ -1387,8 +1387,10 @@ body.sticky-small #seriesMiniHeader {
 	left: 0;
 	bottom: 0;
 	margin-bottom:2px;
+	/*
 	margin-left:4px;
 	margin-right:4px;
+	*/
 	pointer-events: auto;
  }
 
