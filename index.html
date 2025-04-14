@@ -421,89 +421,89 @@
 
 		//MB Scroll Bars
 
-		function createCustomScrollbar(scrollbox) {
-  if (scrollbox.dataset.scrollbarInitialized) return;
-  scrollbox.dataset.scrollbarInitialized = 'true';
+		function createVerticalScrollbar(scrollbox) {
+			if (scrollbox.dataset.scrollbarInitialized) return;
+			scrollbox.dataset.scrollbarInitialized = 'true';
 
-  const content = scrollbox.querySelector('.scrollbox-content');
-  const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
-  const thumb = scrollbar.querySelector('.scrollbox-thumb');
+			const content = scrollbox.querySelector('.scrollbox-content');
+			const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
+			const thumb = scrollbar.querySelector('.scrollbox-thumb');
 
-  let fadeTimeout;
+			let fadeTimeout;
 
-  function updateThumb() {
-    const contentHeight = content.scrollHeight;
-    const containerHeight = content.clientHeight;
-    const scrollTop = content.scrollTop;
+			function updateThumb() {
+				const contentHeight = content.scrollHeight;
+				const containerHeight = content.clientHeight;
+				const scrollTop = content.scrollTop;
 
-    const thumbHeight = Math.max((containerHeight / contentHeight) * containerHeight, 20);
-    const thumbTop = (scrollTop / contentHeight) * containerHeight;
+				const thumbHeight = Math.max((containerHeight / contentHeight) * containerHeight, 20);
+				const thumbTop = (scrollTop / contentHeight) * containerHeight;
 
-    thumb.style.height = thumbHeight + 'px';
-    thumb.style.top = thumbTop + 'px';
-  }
+				thumb.style.height = thumbHeight + 'px';
+				thumb.style.top = thumbTop + 'px';
+			}
 
-  function showScrollbarTemporarily() {
-    scrollbar.classList.add('visible');
-    clearTimeout(fadeTimeout);
-    fadeTimeout = setTimeout(() => {
-      scrollbar.classList.remove('visible');
-    }, 1000); // adjust timing here if needed
-  }
+			function showScrollbarTemporarily() {
+				scrollbar.classList.add('visible');
+				clearTimeout(fadeTimeout);
+				fadeTimeout = setTimeout(() => {
+					scrollbar.classList.remove('visible');
+				}, 1000); // adjust timing here if needed
+			}
 
-  content.addEventListener('scroll', () => {
-    updateThumb();
-    showScrollbarTemporarily();
-  });
+			content.addEventListener('scroll', () => {
+				updateThumb();
+				showScrollbarTemporarily();
+			});
 
-  scrollbox.addEventListener('mouseenter', () => {
-    showScrollbarTemporarily();
-  });
+			scrollbox.addEventListener('mouseenter', () => {
+				showScrollbarTemporarily();
+			});
 
-  // Drag support
-  let isDragging = false;
-  let startY, startTop;
+			// Drag support
+			let isDragging = false;
+			let startY, startTop;
 
-  thumb.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startY = e.clientY;
-    startTop = parseInt(thumb.style.top) || 0;
-    document.body.style.userSelect = 'none';
-    scrollbar.classList.add('visible');
-    clearTimeout(fadeTimeout);
-  });
+			thumb.addEventListener('mousedown', (e) => {
+				isDragging = true;
+				startY = e.clientY;
+				startTop = parseInt(thumb.style.top) || 0;
+				document.body.style.userSelect = 'none';
+				scrollbar.classList.add('visible');
+				clearTimeout(fadeTimeout);
+			});
 
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const dy = e.clientY - startY;
-    const newTop = Math.min(content.clientHeight - thumb.offsetHeight, Math.max(0, startTop + dy));
-    const scrollRatio = newTop / content.clientHeight;
-    content.scrollTop = scrollRatio * content.scrollHeight;
-  });
+			document.addEventListener('mousemove', (e) => {
+				if (!isDragging) return;
+				const dy = e.clientY - startY;
+				const newTop = Math.min(content.clientHeight - thumb.offsetHeight, Math.max(0, startTop + dy));
+				const scrollRatio = newTop / content.clientHeight;
+				content.scrollTop = scrollRatio * content.scrollHeight;
+			});
 
-  document.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      document.body.style.userSelect = '';
-      showScrollbarTemporarily();
-    }
-  });
+			document.addEventListener('mouseup', () => {
+				if (isDragging) {
+					isDragging = false;
+					document.body.style.userSelect = '';
+					showScrollbarTemporarily();
+				}
+			});
 
-  const observer = new MutationObserver(updateThumb);
-  observer.observe(content, {
-    childList: true,
-    subtree: true,
-    characterData: true,
-    attributes: true,
-  });
+			const observer = new MutationObserver(updateThumb);
+			observer.observe(content, {
+				childList: true,
+				subtree: true,
+				characterData: true,
+				attributes: true,
+			});
 
-  scrollbox.refreshScrollbar = updateThumb;
-  updateThumb();
-}
+			scrollbox.refreshScrollbar = updateThumb;
+			updateThumb();
+		}
 
 
 
-		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
+		document.querySelectorAll('.scrollbox').forEach(createVerticalScrollbar);
 
 		//MB Search Functions 
 
@@ -1490,7 +1490,7 @@
 			`;
 
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
-			createCustomScrollbar(bookScrollBox);
+			createVerticalScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${serie.metadata.title}</span>
 			`
