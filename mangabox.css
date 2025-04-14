@@ -19,6 +19,7 @@
 
 	--mb-panel-full-height: calc(var(--mb-button-size)+var(--mb-filter-button-size)+2*var(--mb-library-gap)); 
 
+	--mb-scrollbar-width: 10px;
 
 	--mb-swatches:
 		hsl(348, 92%, 38%),
@@ -1353,13 +1354,13 @@ body.sticky-small #seriesMiniHeader {
 .scrollbox[data-scroll-direction="vertical"] .scrollbox-scrollbar {
 	top: 0;
 	right: 0;
-	width: 8px;
+	width: var(--mb-scrollbar-width);
 	height: 100%;
 	pointer-events: auto;
  }
  
  .scrollbox[data-scroll-direction="vertical"] .scrollbox-thumb {
-	width: 8px;
+	width: var(--mb-scrollbar-width);
 	height: 20px;
 	top: 0;
 	right: 0;
@@ -1374,12 +1375,12 @@ body.sticky-small #seriesMiniHeader {
 	left: 0;
 	bottom: 0;
 	width: 100%;
-	height: 8px;
+	height: var(--mb-scrollbar-width);
 	pointer-events: auto;
  }
  
  .scrollbox[data-scroll-direction="horizontal"] .scrollbox-thumb {
-	height: 8px;
+	height: var(--mb-scrollbar-width);
 	width: 20px;
 	left: 0;
 	bottom: 0;
@@ -1393,7 +1394,7 @@ body.sticky-small #seriesMiniHeader {
  .scrollbox-thumb {
 	position: absolute;
 	background: var(--mb-accent);
-	border-radius: 4px;
+	border-radius: calc(0.5 * var(--mb-scrollbar-width));
 	cursor: pointer;
 	transition: background-color 0.2s;
 	opacity:0.75;
