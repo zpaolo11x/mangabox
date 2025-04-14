@@ -462,8 +462,8 @@
 
 				thumb.style.display = 'block';
 
-				const thumbSize = Math.max((visible / total) * visible, 20);
-				const thumbPos = (scroll / total) * visible;
+				const thumbSize = Math.max((visible / total) * visible, 20) - 10;
+				const thumbPos = (scroll / total) * visible + 5;
 
 				if (isHorizontal) {
 					thumb.style.width = thumbSize + 'px';
