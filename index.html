@@ -2877,6 +2877,7 @@
 							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
 
 							// These lines reduce stuttering
+							//TODO Verify if this creates some errors when going back from reader and pages are still loading
 							const img = new Image();
 							img.src = blobUrl;
 							await img.decode();
