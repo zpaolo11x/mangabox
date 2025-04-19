@@ -70,46 +70,50 @@
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
 		</div>
-		<div id="mainContainer">
-			<div id="seriesHeader" class="section hidden"></div>
+		<div class="scrollbox" data-scroll-direction="vertical">
+			<div id="mainContainer" class="scrollbox-content">
+				<div id="seriesHeader" class="section hidden"></div>
 
-			<div id="seriesGrid" class="section hidden"></div>
+				<div id="seriesGrid" class="section hidden"></div>
 
-			<div id="booksGrid" class="section hidden"></div>
+				<div id="booksGrid" class="section hidden"></div>
 
-			<div id="stripGridContainer" class="section hidden">
-				<div id="stripGrid" class="strip-grid"></div>
-				<div id="stripGridHeaderContainer" class="stripgrid-header-container">
-					<div id="stripGridHeader" class="strip-header">
-						<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+				<div id="stripGridContainer" class="section hidden">
+					<div id="stripGrid" class="strip-grid"></div>
+					<div id="stripGridHeaderContainer" class="stripgrid-header-container">
+						<div id="stripGridHeader" class="strip-header">
+							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+						</div>
+						<div id="stripGridRight" class="stripgrid-all">
+							<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
+							</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+						</div>
 					</div>
-					<div id="stripGridRight" class="stripgrid-all">
-						<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
-						</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+				</div>
+
+				<div id="seriesMiniHeader" class="section hidden collapse"></div>
+
+				<div id="homeStripsContainer" class="section hidden"></div>
+
+				<div id="searchStripsContainer" class="section hidden">
+					<div class="strip-header-container">
+						<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
 					</div>
+					<div id="homeStripSeriesResults" class="series-results search-results"></div>
+
+					<div class="strip-header-container">
+						<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+					</div>
+					<div id="homeStripBooksResults" class="books-results search-results"></div>
 				</div>
+
+				<div id="bookDetailsContainer" class="section hidden"></div>
+
+				<div id="blanker"></div>
 			</div>
-
-			<div id="seriesMiniHeader" class="section hidden collapse"></div>
-
-			<div id="homeStripsContainer" class="section hidden"></div>
-
-			<div id="searchStripsContainer" class="section hidden">
-				<div class="strip-header-container">
-					<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
-				</div>
-				<div id="homeStripSeriesResults" class="series-results search-results"></div>
-
-				<div class="strip-header-container">
-					<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
-				</div>
-				<div id="homeStripBooksResults" class="books-results search-results"></div>
+			<div class="scrollbox-scrollbar">
+				<div class="scrollbox-thumb"></div>
 			</div>
-
-			<div id="bookDetailsContainer" class="section hidden"></div>
-
-			<div id="blanker"></div>
-
 		</div>
 
 	</div>
@@ -139,8 +143,13 @@
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
-				<div id="thumbStrip">
-					<div id="thumbStripInner"></div>
+				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
+					<div id="thumbStripScrollContent" class="scrollbox-content">
+						<div id="thumbStripInner"></div>
+					</div>
+					<div class="scrollbox-scrollbar">
+						<div class="scrollbox-thumb"></div>
+					</div>
 				</div>
 				<div id="thumbStripButton">
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
@@ -315,6 +324,12 @@
 			});
 		}
 
+
+		function updatePWABar(color = null){
+			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+			metaThemeColor.setAttribute('content', (color == 'black') ? color : (mb.darkTheme ? '#353535' : '#ffffff'));
+		}
+
 		function changeTheme() {
 			let toDark = false;
 
@@ -325,7 +340,7 @@
 			}
 
 			// Set css theme to dark or light
-			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');		
 
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
@@ -341,6 +356,10 @@
 			localStorage.setItem('mbThemePrefs', mb.themePrefs);
 
 			mb.darkTheme = toDark;
+
+			//Ttheme based top bar
+			updatePWABar();
+				
 		}
 
 		mb.prefersDarkMode.addEventListener('change', changeTheme);
@@ -414,6 +433,116 @@
 		searchIcon.addEventListener('click', () => {
 			if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
 		})
+
+		//MB Scroll Bars
+
+		function createCustomScrollbar(scrollbox) {
+			if (scrollbox.dataset.scrollbarInitialized) return;
+			scrollbox.dataset.scrollbarInitialized = 'true';
+
+			const direction = scrollbox.dataset.scrollDirection || 'vertical';
+			const isHorizontal = direction === 'horizontal';
+
+			const content = scrollbox.querySelector('.scrollbox-content');
+			const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
+			const thumb = scrollbar.querySelector('.scrollbox-thumb');
+
+			let fadeTimeout;
+
+			function showScrollbarTemporarily() {
+				scrollbar.classList.add('visible');
+				clearTimeout(fadeTimeout);
+				fadeTimeout = setTimeout(() => {
+					scrollbar.classList.remove('visible');
+				}, 1000);
+			}
+
+			function updateThumb() {
+				const total = isHorizontal ? content.scrollWidth : content.scrollHeight;
+				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
+				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
+//console.log("T:"+total+" V:"+visible+" S:"+scroll);
+				const scrollable = total > visible;
+
+				if (!scrollable) {
+					scrollbar.classList.remove('visible');
+					thumb.style.display = 'none';
+					return;
+				}
+
+				thumb.style.display = 'block';
+
+				const margin = 10;
+
+				let thumbSize = Math.max((visible / total) * visible, 30);
+				let midBoxRate = (scroll / (total - visible)) ;
+//console.log(midBoxRate);
+				let thumbPos = margin + midBoxRate * (visible - 2 * margin - thumbSize);
+
+				if (isHorizontal) {
+					thumb.style.width = thumbSize + 'px';
+					thumb.style.left = thumbPos + 'px';
+				} else {
+					thumb.style.height = thumbSize + 'px';
+					thumb.style.top = thumbPos + 'px';
+				}
+			}
+
+
+			content.addEventListener('scroll', () => {
+				updateThumb();
+				showScrollbarTemporarily();
+			});
+
+			scrollbox.addEventListener('mouseenter', showScrollbarTemporarily);
+
+			// Drag support
+			let isDragging = false;
+			let startPos, startThumbPos;
+
+			thumb.addEventListener('mousedown', (e) => {
+				isDragging = true;
+				startPos = isHorizontal ? e.clientX : e.clientY;
+				startThumbPos = parseInt(thumb.style[isHorizontal ? 'left' : 'top']) || 0;
+				document.body.style.userSelect = 'none';
+				scrollbar.classList.add('visible');
+				clearTimeout(fadeTimeout);
+			});
+
+			document.addEventListener('mousemove', (e) => {
+				if (!isDragging) return;
+				const delta = (isHorizontal ? e.clientX : e.clientY) - startPos;
+				const trackSize = isHorizontal ? content.clientWidth : content.clientHeight;
+				const newThumbPos = Math.min(trackSize - (isHorizontal ? thumb.offsetWidth : thumb.offsetHeight), Math.max(0, startThumbPos + delta));
+				const scrollRatio = newThumbPos / trackSize;
+				if (isHorizontal) {
+					content.scrollLeft = scrollRatio * content.scrollWidth;
+				} else {
+					content.scrollTop = scrollRatio * content.scrollHeight;
+				}
+			});
+
+			document.addEventListener('mouseup', () => {
+				if (isDragging) {
+					isDragging = false;
+					document.body.style.userSelect = '';
+					showScrollbarTemporarily();
+				}
+			});
+
+			const observer = new MutationObserver(updateThumb);
+			observer.observe(content, {
+				childList: true,
+				subtree: true,
+				characterData: true,
+				attributes: true,
+			});
+
+			scrollbox.refreshScrollbar = updateThumb;
+			updateThumb();
+		}
+
+		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
 		//MB Search Functions 
 
@@ -1391,11 +1520,16 @@
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
-			<div class="header-summary">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+			<div id="bookScrollBox" class="scrollbox" data-scroll-direction="vertical">
+				<div class="header-summary scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+				<div class="scrollbox-scrollbar">
+					<div class="scrollbox-thumb"></div>
+				</div>
+			</div>
 			`;
 
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
-
+			createCustomScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${serie.metadata.title}</span>
 			`
@@ -2036,7 +2170,7 @@
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
 			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
-			
+
 			/* CLEARED IN THE CLEAR ROUTINE
 			rd.uiPages = [];				// array of page images with alt = page number
 			rd.uiPagesContainer = [];				// array of page images with alt = page number
@@ -2113,6 +2247,8 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
+
+			updatePWABar();
 		}
 
 		readerClose.addEventListener('click', () => {
@@ -2140,7 +2276,7 @@
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
 			rd.thumbsWidth = thumbStripInner.clientWidth;
-			thumbStrip.style.overflow = 'hidden';
+			thumbStripScrollContent.style.overflow = 'hidden';
 			const oldWidth = thumbStripInner.clientWidth;
 
 			let thumbHeight = status ? 300 : 150;
@@ -2152,7 +2288,7 @@
 			const newWidth = thumbStripInner.clientWidth;
 
 			const scrollScaler = newWidth / oldWidth;
-			thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+			thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
 			//centerThumb(true);
 		}
 
@@ -2165,23 +2301,23 @@
 				const oldWidth = rd.thumbsWidth;
 				const newWidth = thumbStripInner.clientWidth;
 				const scrollScaler = newWidth / oldWidth;
-				thumbStrip.scrollLeft = thumbStrip.scrollLeft * scrollScaler;
+				thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
 				rd.thumbsWidth = newWidth;
-				testpr('Size changed:', entry.contentRect.width, entry.contentRect.height);
+				//testpr('Size changed:', entry.contentRect.width, entry.contentRect.height);
 			}
 		});
 
 		resizeObserver.observe(thumbStripInner);
 
 		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
-
+		/*
 		thumbStripInner.addEventListener('transitionrun', () => {
 			testpr('Transition started')
 		});
 		thumbStripInner.addEventListener('transitionstart', () => testpr('Transition actually started'));
-
+*/
 		thumbStripInner.addEventListener('transitionend', () => {
-			thumbStrip.style.overflow = 'auto';
+			thumbStripScrollContent.style.overflow = 'auto';
 			testpr('Transition ended')
 		});
 
@@ -2227,6 +2363,8 @@
 
 		// Initialize viewer with page data
 		async function initViewer() {
+			updatePWABar('black');
+
 			rd.pages = await fetchPages(rd.bookId);
 
 			let bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
@@ -2753,6 +2891,7 @@
 							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
 
 							// These lines reduce stuttering
+							//TODO Verify if this creates some errors when going back from reader and pages are still loading
 							const img = new Image();
 							img.src = blobUrl;
 							await img.decode();
@@ -2962,13 +3101,13 @@
 
 			if (targetElement) {
 
-				const targetScrollLeft = -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2;
+				const targetScrollLeft = -thumbStripScrollContent.clientWidth / 2 + targetElement.offsetLeft - thumbStripScrollContent.offsetLeft + targetElement.clientWidth / 2;
 
 				if (!fast) {
-					smoothScroll(thumbStrip, targetScrollLeft, 300);
+					smoothScroll(thumbStripScrollContent, targetScrollLeft, 300);
 				} else {
 					//smoothScroll(thumbStrip, targetScrollLeft, 150);
-					thumbStrip.scrollLeft = targetScrollLeft;
+					thumbStripScrollContent.scrollLeft = targetScrollLeft;
 				};
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');

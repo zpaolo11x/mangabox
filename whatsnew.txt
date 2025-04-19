@@ -1,2 +1,2 @@
-- Fixed login screen issue
-- Fixed swipe not responsive after zoom
+- Custom scrollbars based on accent color
+- PWA title bar styled based on theme
