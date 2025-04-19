@@ -324,6 +324,12 @@
 			});
 		}
 
+
+		function updatePWABar(color = null){
+			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+			metaThemeColor.setAttribute('content', (color == 'black') ? color : (mb.darkTheme ? '#353535' : '#ffffff'));
+		}
+
 		function changeTheme() {
 			let toDark = false;
 
@@ -334,7 +340,7 @@
 			}
 
 			// Set css theme to dark or light
-			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');		
 
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
@@ -350,6 +356,10 @@
 			localStorage.setItem('mbThemePrefs', mb.themePrefs);
 
 			mb.darkTheme = toDark;
+
+			//Ttheme based top bar
+			updatePWABar();
+				
 		}
 
 		mb.prefersDarkMode.addEventListener('change', changeTheme);
@@ -2237,6 +2247,8 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
+
+			updatePWABar();
 		}
 
 		readerClose.addEventListener('click', () => {
@@ -2351,6 +2363,8 @@
 
 		// Initialize viewer with page data
 		async function initViewer() {
+			updatePWABar('black');
+
 			rd.pages = await fetchPages(rd.bookId);
 
 			let bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
