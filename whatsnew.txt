@@ -1,1 +1,2 @@
-- 
+- Custom scrollbars based on accent color
+- PWA title bar styled based on theme
