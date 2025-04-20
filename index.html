@@ -324,10 +324,9 @@
 			});
 		}
 
-
-		function updatePWABar(color = null){
-			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-			metaThemeColor.setAttribute('content', (color == 'black') ? color : (mb.darkTheme ? '#353535' : '#ffffff'));
+		function updatePWABar(color = null) {
+			document.querySelector('meta[name="theme-color"]')
+				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
 		}
 
 		function changeTheme() {
@@ -340,7 +339,7 @@
 			}
 
 			// Set css theme to dark or light
-			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');		
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
@@ -359,7 +358,7 @@
 
 			//Ttheme based top bar
 			updatePWABar();
-				
+
 		}
 
 		mb.prefersDarkMode.addEventListener('change', changeTheme);
@@ -461,7 +460,7 @@
 				const total = isHorizontal ? content.scrollWidth : content.scrollHeight;
 				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
 				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
-//console.log("T:"+total+" V:"+visible+" S:"+scroll);
+				//console.log("T:"+total+" V:"+visible+" S:"+scroll);
 				const scrollable = total > visible;
 
 				if (!scrollable) {
@@ -475,8 +474,8 @@
 				const margin = 10;
 
 				let thumbSize = Math.max((visible / total) * visible, 30);
-				let midBoxRate = (scroll / (total - visible)) ;
-//console.log(midBoxRate);
+				let midBoxRate = (scroll / (total - visible));
+				//console.log(midBoxRate);
 				let thumbPos = margin + midBoxRate * (visible - 2 * margin - thumbSize);
 
 				if (isHorizontal) {
