@@ -2894,7 +2894,7 @@
 						try {
 							// Fetch the image
 							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
-
+							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
 							const img = new Image();
@@ -3346,6 +3346,7 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+
 			populateSpread(localNewSpreadIndex);
 			spreadSetFocus(spreadClassX, true, true);
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
