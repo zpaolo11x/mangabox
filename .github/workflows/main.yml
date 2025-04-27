@@ -54,12 +54,6 @@ jobs:
         run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
-      - name: Remove quarantine attribute (macOS only)
-        if: matrix.sys == 'mac'
-        run: |
-          find dist -name "*.app" -exec xattr -dr com.apple.quarantine {} \;
-        shell: bash
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
