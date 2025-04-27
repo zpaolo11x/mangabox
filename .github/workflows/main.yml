@@ -48,19 +48,6 @@ jobs:
           echo "version=$version" >> $GITHUB_ENV
         shell: bash
 
-      - name: Add FixQuarantine script
-        if: matrix.sys == 'mac'
-        run: |
-          echo '#!/bin/bash' > FixQuarantine.command
-          echo 'APP_NAME="MangaBox.app"' >> FixQuarantine.command
-          echo 'VOLUME_PATH="$(dirname "$0")"' >> FixQuarantine.command
-          echo 'xattr -dr com.apple.quarantine "$VOLUME_PATH/$APP_NAME"' >> FixQuarantine.command
-          echo 'echo "✅ Quarantine attribute removed!"' >> FixQuarantine.command
-          echo 'echo "You can now open $APP_NAME without errors."' >> FixQuarantine.command
-          chmod +x FixQuarantine.command
-          mkdir -p extra_files
-          mv FixQuarantine.command extra_files/
-
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}

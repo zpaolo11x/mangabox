@@ -30,11 +30,7 @@
 			"category": "public.app-category.utilities"
 		},
 		"dmg": {
-			"icon": "assets/icons/dmg_icon.icns",
-			"contents": [
-				{ "x": 410, "y": 220, "type": "link", "path": "/Applications" },
-				{ "x": 130, "y": 400, "type": "file", "path": "extra_files/FixQuarantine.command" }
-			]
+			"icon": "assets/icons/dmg_icon.icns"
 		},
 		"win": {
 			"target": "portable",
