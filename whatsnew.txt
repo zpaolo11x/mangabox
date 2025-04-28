@@ -1,1 +1,2 @@
 - Fixed variable font
+- Fixed series header
