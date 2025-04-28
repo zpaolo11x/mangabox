@@ -1525,14 +1525,14 @@
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
-			<div id="bookScrollBox" class="scrollbox" data-scroll-direction="vertical">
-				<div class="header-summary scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
+				<div class="scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
 				<div class="scrollbox-scrollbar">
 					<div class="scrollbox-thumb"></div>
 				</div>
 			</div>
 			`;
-
+			
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
 			createCustomScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
