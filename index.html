@@ -33,7 +33,7 @@
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList" class="libraries-list"></ul>
-<!--				<ul class="libraries-list buttons options-block">
+				<!--				<ul class="libraries-list buttons options-block">
 					<li id="libraryMenu" title="Library Menu" class="library-item disabled">
 						<div class="thumbnail-wrapper">
 							<span id="libraryMenuIcon" class="fa-solid fa-sliders glyph-dark"></span>
@@ -388,11 +388,11 @@
 		}
 
 		// Event listeners for main menu buttons
-/*
-		libraryMenu.addEventListener('click', () => {
-			sectionToggle(extraMenuBar);
-		});
-*/
+		/*
+				libraryMenu.addEventListener('click', () => {
+					sectionToggle(extraMenuBar);
+				});
+		*/
 		colorChanger.addEventListener('click', () => {
 			mb.accentColor = (mb.accentColor + 1) % mb.swatches.length;
 			changeAccent(mb.accentColor);
@@ -1436,8 +1436,8 @@
 
 			const libraryThumbnail = addItem('img', {
 				className: 'library-thumbnail',
-				src: isLib ? `library-thumbnails/${libraryName}.png` : imagePath ,
-				alt: isLib ? `${libraryName} Cover` : libraryName, 
+				src: isLib ? `library-thumbnails/${libraryName}.png` : imagePath,
+				alt: isLib ? `${libraryName} Cover` : libraryName,
 			})
 
 			if (isLib) {
@@ -1498,8 +1498,11 @@
 						</div>
 					`
 			});
-			librariesList.appendChild(libraryOptionsButton);
 
+			librariesList.appendChild(libraryOptionsButton);
+			libraryMenu.addEventListener('click', () => {
+				sectionToggle(extraMenuBar);
+			});
 		}
 
 		function getAltTitles(serie) {
