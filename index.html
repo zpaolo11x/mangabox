@@ -1420,12 +1420,12 @@
 			libraryMenu.classList.remove('disabled');
 		}
 
-		function buildLibraryItem(itemId, libraryName) {
-			const isHome = (libraryName == 'Home');
+		function buildLibraryItem(itemId, libraryName, imagePath = null) {
+			const isLib = (imagePath == null);
 
 			const listItem = addItem('li', {
+				id: itemId,
 				className: 'library-item',
-				id: itemId
 			});
 
 			const thumbnailWrapper = addItem('div', {
@@ -1434,11 +1434,11 @@
 
 			const libraryThumbnail = addItem('img', {
 				className: 'library-thumbnail',
-				src: isHome ? 'mangabox-logo-new.svg' : `library-thumbnails/${libraryName}.png`,
-				alt: isHome ? 'MangaBox Home' : `${libraryName} Cover`
+				src: isLib ? `library-thumbnails/${libraryName}.png` : imagePath ,
+				alt: isLib ? `${libraryName} Cover` : libraryName, 
 			})
 
-			if (!isHome) {
+			if (isLib) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
 					libraryThumbnail.src = `library-thumbnails/${libraryName}.jpg`;
@@ -1450,14 +1450,13 @@
 				};
 			}
 
-			thumbnailWrapper.appendChild(libraryThumbnail);
-			listItem.appendChild(thumbnailWrapper);
-
 			const libraryNameDiv = addItem('div', {
 				className: 'library-name',
 				textContent: libraryName
 			});
 
+			thumbnailWrapper.appendChild(libraryThumbnail);
+			listItem.appendChild(thumbnailWrapper);
 			listItem.appendChild(libraryNameDiv);
 
 			return listItem;
@@ -1466,7 +1465,7 @@
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			librariesList.appendChild(buildLibraryItem('homeButton', 'Home'));
+			librariesList.appendChild(buildLibraryItem('homeButton', 'Home', 'mangabox-logo-new.svg'));
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
