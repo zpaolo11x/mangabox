@@ -32,14 +32,6 @@
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
-				<ul class="libraries-list buttons left-block">
-					<li id="homeButton" title="MangaBox Home" class="library-item">
-						<div class="thumbnail-wrapper">
-							<img class="library-thumbnail" src="mangabox-logo-new.svg">
-						</div>
-						<div class="library-name">Home</div>
-					</li>
-				</ul>
 				<ul id="librariesList" class="libraries-list"></ul>
 				<ul class="libraries-list buttons options-block">
 					<li id="libraryMenu" title="Library Menu" class="library-item disabled">
@@ -1428,39 +1420,59 @@
 			libraryMenu.classList.remove('disabled');
 		}
 
-		function displayLibraries(libraries) {
-			librariesList.innerHTML = '';
+		function buildLibraryItem(itemId, libraryName) {
+			const isHome = (libraryName == 'Home');
 
-			Array.from(libraries).forEach((library, index) => {
-				const listItem = document.createElement('li');
-				listItem.classList.add('library-item');
-				listItem.id = library.id;
+			const listItem = addItem('li', {
+				className: 'library-item',
+				id: itemId
+			});
 
-				const thumbnailWrapper = document.createElement('div');
-				thumbnailWrapper.classList.add('thumbnail-wrapper');
+			const thumbnailWrapper = addItem('div', {
+				className: 'thumbnail-wrapper',
+			})
 
-				const libraryThumbnail = document.createElement('img');
-				libraryThumbnail.classList.add('library-thumbnail');
-				libraryThumbnail.src = `library-thumbnails/${library.name}.png`;
+			const libraryThumbnail = addItem('img', {
+				className: 'library-thumbnail',
+				src: isHome ? 'mangabox-logo-new.svg' : `library-thumbnails/${libraryName}.png`,
+				alt: isHome ? 'MangaBox Home' : `${libraryName} Cover`
+			})
 
+			if (!isHome) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
-					libraryThumbnail.src = `library-thumbnails/${library.name}.jpg`;
+					libraryThumbnail.src = `library-thumbnails/${libraryName}.jpg`;
 					libraryThumbnail.onerror = () => {
 						libraryThumbnail.onerror = null;
 						console.log('Both PNG and JPG images failed to load');
 						libraryThumbnail.src = 'library-thumbnails/blank.png';
 					};
 				};
+			}
 
-				libraryThumbnail.alt = `${library.name} Cover`;
-				thumbnailWrapper.appendChild(libraryThumbnail);
-				listItem.appendChild(thumbnailWrapper);
+			thumbnailWrapper.appendChild(libraryThumbnail);
+			listItem.appendChild(thumbnailWrapper);
 
-				const libraryName = document.createElement('div');
-				libraryName.classList.add('library-name');
-				libraryName.textContent = library.name;
-				listItem.appendChild(libraryName);
+			const libraryNameDiv = addItem('div', {
+				className: 'library-name',
+				textContent: libraryName
+			});
+
+			listItem.appendChild(libraryNameDiv);
+
+			return listItem;
+		}
+
+		function displayLibraries(libraries) {
+			librariesList.innerHTML = '';
+
+			librariesList.appendChild(buildLibraryItem('homeButton', 'Home'));
+			homeButton.addEventListener('click', () => {
+				navigateTo('#dashboard');
+			});
+
+			Array.from(libraries).forEach((library, index) => {
+				const listItem = buildLibraryItem(library.id, library.name);
 
 				listItem.addEventListener('click', () => {
 					currentPath = parseHashAndParams();
@@ -1470,8 +1482,8 @@
 					else {
 						navigateTo(`#library?library_id=${library.id}`);
 					}
-
 				});
+
 				librariesList.appendChild(listItem);
 			});
 		}
@@ -1532,7 +1544,7 @@
 				</div>
 			</div>
 			`;
-			
+
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
 			createCustomScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
@@ -1883,10 +1895,6 @@
 			setTimeout(updateSliderMax, 10);
 
 		}
-
-		homeButton.addEventListener('click', () => {
-			navigateTo('#dashboard');
-		});
 
 		dashboardElements = {
 			keepReading: {
