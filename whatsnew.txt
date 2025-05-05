@@ -1,2 +1,3 @@
-- Custom scrollbars based on accent color
-- PWA title bar styled based on theme
+- Fixed variable font
+- Fixed series header
+- Refactored libraries strip

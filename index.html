@@ -11,6 +11,12 @@
 	<link rel="icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3C!-- Generator: Gravit.io --%3E%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' style='isolation:isolate' viewBox='0 0 160 160' width='160pt' height='160pt'%3E%3Cdefs%3E%3CclipPath id='_clipPath_YN17YSJ5FM1sjm2TADxOwkUODDUQiVcY'%3E%3Crect width='160' height='160'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg clip-path='url(%23_clipPath_YN17YSJ5FM1sjm2TADxOwkUODDUQiVcY)'%3E%3Crect width='160' height='160' style='fill:rgb(0,0,0)' fill-opacity='0'/%3E%3Cpath d=' M 145 42 L 145 117 L 75 155 L 6 116 L 6 42 L 75 5 L 145 42 Z ' fill='rgb(255,255,255)'/%3E%3Cpath d='' fill-rule='evenodd' fill='rgb(235,235,235)'/%3E%3Cpath d=' M 38.542 24.55 L 61.749 56.429 L 20.291 34.337 L 10.67 39.496 L 10.236 40.31 L 64.368 69.155 L 60.578 71.175 L 65.281 80 L 70 77.485 L 70 79 L 80 79 L 80 77.485 L 84.719 80 L 89.422 71.175 L 85.632 69.155 L 139.764 40.31 L 138.964 38.81 L 130.104 34.127 L 88.251 56.429 L 111.605 24.349 L 102.673 19.627 L 80 50.772 L 80 7.643 L 75 5 L 70 7.681 L 70 50.772 L 47.438 19.78 L 38.542 24.55 Z ' fill-rule='evenodd' fill='rgb(188,8,43)'/%3E%3Ccircle vector-effect='non-scaling-stroke' cx='75.5' cy='77' r='50' fill='rgb(255,255,255)'/%3E%3Ccircle vector-effect='non-scaling-stroke' cx='75.5' cy='77' r='40' fill='rgb(188,8,43)'/%3E%3Cpath d=' M 145 42 L 145 117 L 75 155 L 6 116 L 6 42 L 75 79 L 145 42 Z ' fill='rgb(255,255,255)'/%3E%3Cpath d=' M 134.066 42.835 L 75 11.33 L 15.934 42.835 L 75 74.337 L 134.066 42.835 Z M 140 50.997 L 140 114 L 80 146.003 L 80 82.997 L 140 50.997 Z M 70 146.003 L 10 114 L 10 50.997 L 70 82.997 L 70 146.003 Z M 150 40 L 150 120 L 75 160 L 0 120 L 0 40 L 75 0 L 150 40 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3Cpath d=' M 90 127.669 L 130 106.334 L 130 106.334 L 130 96.33 L 90 117.663 L 90 127.669 Z M 90 103.669 L 130 82.334 L 130 82.334 L 130 72.33 L 90 93.663 L 90 103.669 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3Cpath d=' M 33 79.263 L 33 130.669 L 23 130.669 L 23 73.93 L 33 79.263 Z M 57 92.063 L 57 142.669 L 47 142.669 L 47 86.73 L 57 92.063 Z ' fill-rule='evenodd' fill='rgb(0,0,0)'/%3E%3C/g%3E%3C/svg%3E" type="image/svg+xml">
 	<link rel="apple-touch-icon" href="mangabox-logo-new-red.png">
 
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
+
+
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="manifest" href="manifest.json">
 	<link rel="stylesheet" type="text/css" href="auth.css">
@@ -26,22 +32,15 @@
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
-				<ul class="libraries-list buttons left-block">
-					<li id="homeButton" title="MangaBox Home" class="library-item">
-						<div class="thumbnail-wrapper">
-							<img class="library-thumbnail" src="mangabox-logo-new.svg">
-						</div>
-						<div class="library-name">Home</div>
-					</li>
-				</ul>
 				<ul id="librariesList" class="libraries-list"></ul>
-				<ul class="libraries-list buttons options-block">
+				<!--				<ul class="libraries-list buttons options-block">
 					<li id="libraryMenu" title="Library Menu" class="library-item disabled">
 						<div class="thumbnail-wrapper">
 							<span id="libraryMenuIcon" class="fa-solid fa-sliders glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
+			-->
 				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
 					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
 						<div class="thumbnail-wrapper">
@@ -324,10 +323,9 @@
 			});
 		}
 
-
-		function updatePWABar(color = null){
-			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-			metaThemeColor.setAttribute('content', (color == 'black') ? color : (mb.darkTheme ? '#353535' : '#ffffff'));
+		function updatePWABar(color = null) {
+			document.querySelector('meta[name="theme-color"]')
+				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
 		}
 
 		function changeTheme() {
@@ -340,7 +338,7 @@
 			}
 
 			// Set css theme to dark or light
-			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');		
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
@@ -359,7 +357,7 @@
 
 			//Ttheme based top bar
 			updatePWABar();
-				
+
 		}
 
 		mb.prefersDarkMode.addEventListener('change', changeTheme);
@@ -390,10 +388,11 @@
 		}
 
 		// Event listeners for main menu buttons
-		libraryMenu.addEventListener('click', () => {
-			sectionToggle(extraMenuBar);
-		});
-
+		/*
+				libraryMenu.addEventListener('click', () => {
+					sectionToggle(extraMenuBar);
+				});
+		*/
 		colorChanger.addEventListener('click', () => {
 			mb.accentColor = (mb.accentColor + 1) % mb.swatches.length;
 			changeAccent(mb.accentColor);
@@ -461,7 +460,7 @@
 				const total = isHorizontal ? content.scrollWidth : content.scrollHeight;
 				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
 				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
-//console.log("T:"+total+" V:"+visible+" S:"+scroll);
+				//console.log("T:"+total+" V:"+visible+" S:"+scroll);
 				const scrollable = total > visible;
 
 				if (!scrollable) {
@@ -475,8 +474,8 @@
 				const margin = 10;
 
 				let thumbSize = Math.max((visible / total) * visible, 30);
-				let midBoxRate = (scroll / (total - visible)) ;
-//console.log(midBoxRate);
+				let midBoxRate = (scroll / (total - visible));
+				//console.log(midBoxRate);
 				let thumbPos = margin + midBoxRate * (visible - 2 * margin - thumbSize);
 
 				if (isHorizontal) {
@@ -1423,39 +1422,58 @@
 			libraryMenu.classList.remove('disabled');
 		}
 
-		function displayLibraries(libraries) {
-			librariesList.innerHTML = '';
+		function buildLibraryItem(itemId, libraryName, imagePath = null) {
+			const isLib = (imagePath == null);
 
-			Array.from(libraries).forEach((library, index) => {
-				const listItem = document.createElement('li');
-				listItem.classList.add('library-item');
-				listItem.id = library.id;
+			const listItem = addItem('li', {
+				id: itemId,
+				className: 'library-item',
+			});
 
-				const thumbnailWrapper = document.createElement('div');
-				thumbnailWrapper.classList.add('thumbnail-wrapper');
+			const thumbnailWrapper = addItem('div', {
+				className: 'thumbnail-wrapper',
+			})
 
-				const libraryThumbnail = document.createElement('img');
-				libraryThumbnail.classList.add('library-thumbnail');
-				libraryThumbnail.src = `library-thumbnails/${library.name}.png`;
+			const libraryThumbnail = addItem('img', {
+				className: 'library-thumbnail',
+				src: isLib ? `library-thumbnails/${libraryName}.png` : imagePath,
+				alt: isLib ? `${libraryName} Cover` : libraryName,
+			})
 
+			if (isLib) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
-					libraryThumbnail.src = `library-thumbnails/${library.name}.jpg`;
+					libraryThumbnail.src = `library-thumbnails/${libraryName}.jpg`;
 					libraryThumbnail.onerror = () => {
 						libraryThumbnail.onerror = null;
 						console.log('Both PNG and JPG images failed to load');
 						libraryThumbnail.src = 'library-thumbnails/blank.png';
 					};
 				};
+			}
 
-				libraryThumbnail.alt = `${library.name} Cover`;
-				thumbnailWrapper.appendChild(libraryThumbnail);
-				listItem.appendChild(thumbnailWrapper);
+			const libraryNameDiv = addItem('div', {
+				className: 'library-name',
+				textContent: libraryName
+			});
 
-				const libraryName = document.createElement('div');
-				libraryName.classList.add('library-name');
-				libraryName.textContent = library.name;
-				listItem.appendChild(libraryName);
+			thumbnailWrapper.appendChild(libraryThumbnail);
+			listItem.appendChild(thumbnailWrapper);
+			listItem.appendChild(libraryNameDiv);
+
+			return listItem;
+		}
+
+		function displayLibraries(libraries) {
+			librariesList.innerHTML = '';
+
+			librariesList.appendChild(buildLibraryItem('homeButton', 'Home', 'mangabox-logo-new.svg'));
+			homeButton.addEventListener('click', () => {
+				navigateTo('#dashboard');
+			});
+
+			Array.from(libraries).forEach((library, index) => {
+				const listItem = buildLibraryItem(library.id, library.name);
 
 				listItem.addEventListener('click', () => {
 					currentPath = parseHashAndParams();
@@ -1465,9 +1483,25 @@
 					else {
 						navigateTo(`#library?library_id=${library.id}`);
 					}
-
 				});
+
 				librariesList.appendChild(listItem);
+			});
+
+			const libraryOptionsButton = addItem('li', {
+				id: 'libraryMenu',
+				title: 'Library Menu',
+				className: 'library-item disabled',
+				innerHTML: `
+						<div class="thumbnail-wrapper">
+							<span id="libraryMenuIcon" class="fa-solid fa-sliders glyph-dark"></span>
+						</div>
+					`
+			});
+
+			librariesList.appendChild(libraryOptionsButton);
+			libraryMenu.addEventListener('click', () => {
+				sectionToggle(extraMenuBar);
 			});
 		}
 
@@ -1520,8 +1554,8 @@
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
-			<div id="bookScrollBox" class="scrollbox" data-scroll-direction="vertical">
-				<div class="header-summary scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
+				<div class="scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
 				<div class="scrollbox-scrollbar">
 					<div class="scrollbox-thumb"></div>
 				</div>
@@ -1878,10 +1912,6 @@
 			setTimeout(updateSliderMax, 10);
 
 		}
-
-		homeButton.addEventListener('click', () => {
-			navigateTo('#dashboard');
-		});
 
 		dashboardElements = {
 			keepReading: {
@@ -2889,7 +2919,7 @@
 						try {
 							// Fetch the image
 							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
-
+							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
 							const img = new Image();
@@ -3341,6 +3371,7 @@
 
 
 			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+
 			populateSpread(localNewSpreadIndex);
 			spreadSetFocus(spreadClassX, true, true);
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
