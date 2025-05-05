@@ -1,2 +1,3 @@
 - Fixed variable font
 - Fixed series header
+- Refactored libraries strip
