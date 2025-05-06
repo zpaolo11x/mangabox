@@ -28,7 +28,11 @@ jobs:
           - os: windows-latest
             sys: win
             arch: x64
-            name: Windows
+            name: Windows-x86
+          - os: windows-latest
+            sys: win
+            arch: arm64
+            name: Windows-arm64
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
