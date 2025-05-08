@@ -1,1 +1,2 @@
+- Added shadows to animated page turns
 - Added Windows for ARM build
