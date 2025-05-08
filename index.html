@@ -3253,7 +3253,7 @@
 
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					leftPage.animate(appearL2R, animData);
 					leftPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
@@ -3272,7 +3272,7 @@
 				} else {
 					//TODO This is the playground for shadow
 					rightPage.animate(appearR2L, animData).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
@@ -3310,14 +3310,14 @@
 
 				if (turnDirection == 'turn-right') {
 					startCoverPage.animate(clipL2R, animInstant).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					stopCoverPage.animate(appearR2L, animInstant);
 					rd.rightDrop.animate([{ left: '100%' }], animInstant);
 					rd.leftDrop.animate([{ right: '50%' }], animInstant);
 				} else {
 					startCoverPage.animate(clipR2L, animInstant).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					stopCoverPage.animate(appearL2R, animInstant);
 					rd.leftDrop.animate([{ right: '100%' }], animInstant);
@@ -3333,7 +3333,7 @@
 					rd.rightForeEdge.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
 					rd.rightDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					leftPage.animate(appearL2R, animData);
 					rd.rightDrop.animate(
@@ -3345,7 +3345,7 @@
 					rd.leftDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					rd.leftDrop.animate(
 						[{ right: '100%' }],
@@ -3369,7 +3369,7 @@
 				if (turnDirection == 'turn-right') {
 					rd.leftForeEdge.style.transition = 'clip-path 0s';
 					leftPage.animate(clipL2R, animData).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					coverPage.animate(appearR2L_slideinL2R, animData);
 					rd.leftDrop.animate(
@@ -3379,7 +3379,7 @@
 				} else {
 					rd.rightForeEdge.style.transition = 'clip-path 0s';
 					rightPage.animate(clipR2L, animData).finished.then(() => {
-						spreadHide(rd.uiSpreads[oldindex]);
+						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 					rd.rightDrop.animate(
@@ -3434,6 +3434,7 @@
 
 			populateSpread(localNewSpreadIndex);
 			spreadSetFocus(spreadClassX, true, true);
+
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
 			/*
