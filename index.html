@@ -3166,8 +3166,10 @@
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
 
+			
 			rd.uiSpreads[index].classList.remove('darkened') //TODO maybe change this to use animate instead?
 			if (oldindex != index) rd.uiSpreads[oldindex].classList.add('darkened')
+			
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 
@@ -3214,7 +3216,7 @@
 				{ clipPath: 'inset(0 100% 0 0)' } // Fully clipped
 			];
 			const unFade = [
-				{ filter: 'brightness(80%) sepia(30%)' },
+				{ filter: 'brightness(85%) sepia(30%)' },
 				{ filter: 'brightness(100%) sepia(0%)' }
 			];
 
@@ -3259,7 +3261,7 @@
 						{ duration: turnSpeed, easing: easeFull });
 					newSpreadShadowL.animate(
 						[{ right: '100%', width: '0', opacity: '0' },
-						{ right: '75%', width: '10%', opacity: '1' },
+						{ right: '75%', width: '20%', opacity: '1' },
 						{ right: '50%', width: '0', opacity: '0' }],
 						{ duration: turnSpeed, easing: easeFull });
 					//Removed to avoid slip below page
@@ -3276,7 +3278,7 @@
 						{ duration: turnSpeed, easing: easeFull });
 					newSpreadShadowR.animate(
 						[{ left: '100%', width: '0', opacity: '0' },
-						{ left: '75%', width: '10%', opacity: '1' },
+						{ left: '75%', width: '20%', opacity: '1' },
 						{ left: '50%', width: '0', opacity: '0' }],
 						{ duration: turnSpeed, easing: easeFull });
 					//Removed to avoid slip below page

@@ -142,7 +142,7 @@ img.page:not(.hidden) {
 	height:100%;
 	opacity:0;
 	transition:opacity 0.15s;
-	background: linear-gradient(to Left, rgba(99, 76, 68, 0.2), transparent);
+	background: linear-gradient(to Left, rgba(99, 76, 68, 0.3), transparent);
 }
 
 .page-shadow-right{
@@ -153,7 +153,7 @@ img.page:not(.hidden) {
 	height:100%;
 	opacity:0;
 	transition:opacity 0.15s;
-	background: linear-gradient(to Right, rgba(99, 76, 68, 0.2), transparent);
+	background: linear-gradient(to Right, rgba(99, 76, 68, 0.3), transparent);
 }
 
 .page-container {
@@ -315,7 +315,7 @@ div.two-pages {
 	}
 
 	to {
-		filter: brightness(70%) sepia(30%);
+		filter: brightness(85%) sepia(30%);
 	}
 }
 
