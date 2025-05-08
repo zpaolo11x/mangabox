@@ -309,20 +309,6 @@ div.two-pages {
 	/*image-rendering: pixelated;*/
 }
 
-@keyframes pagedarken {
-	from {
-		filter: brightness(100%) sepia(0%);
-	}
-
-	to {
-		filter: brightness(85%) sepia(30%);
-	}
-}
-
-.darkened {
-	animation: pagedarken 0.25s ease-in 0.25s forwards;
-}
-
 #leftDrop {
 	position: fixed;
 	aspect-ratio: 1 / 10;
@@ -736,7 +722,7 @@ div.single-page {
 .hidden-spread {
 	opacity: 0;
 	/*z-index: 10!important;*/
-	transition: opacity 0.2s ease 0.5s;
+	/*transition: opacity 0.2s ease 2.5s;*/
 	/* 0.5s delay before opacity transition */
 	/*display: none;*/
 }

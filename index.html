@@ -3166,10 +3166,6 @@
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
 
-			
-			rd.uiSpreads[index].classList.remove('darkened') //TODO maybe change this to use animate instead?
-			if (oldindex != index) rd.uiSpreads[oldindex].classList.add('darkened')
-			
 			//Z-index control
 			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
 
@@ -3219,7 +3215,12 @@
 				{ filter: 'brightness(85%) sepia(30%)' },
 				{ filter: 'brightness(100%) sepia(0%)' }
 			];
+			const fade = [
+				{ filter: 'brightness(100%) sepia(0%)' },
+				{ filter: 'brightness(85%) sepia(30%)' }
+			];
 
+			if (oldindex != index) rd.uiSpreads[oldindex].animate(fade, { duration: rd.speedTurn, easing: 'ease-in' });
 
 			const startCover = rd.uiSpreadsImageRefs[oldindex].length == 1
 			const stopCover = rd.uiSpreadsImageRefs[index].length == 1
@@ -3251,7 +3252,9 @@
 				//let leftPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
 
 				if (turnDirection == 'turn-right') {
-					rightPage.animate(appearR2L_slideinL2R, animData);
+					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					leftPage.animate(appearL2R, animData);
 					leftPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
 					newSpreadShadowR.animate(
@@ -3268,7 +3271,9 @@
 					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
 					//TODO This is the playground for shadow
-					rightPage.animate(appearR2L, animData);
+					rightPage.animate(appearR2L, animData).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
 					newSpreadShadowL.animate(
@@ -3304,12 +3309,16 @@
 				rd.rightDrop.style.marginLeft = 0;
 
 				if (turnDirection == 'turn-right') {
-					startCoverPage.animate(clipL2R, animInstant);
+					startCoverPage.animate(clipL2R, animInstant).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					stopCoverPage.animate(appearR2L, animInstant);
 					rd.rightDrop.animate([{ left: '100%' }], animInstant);
 					rd.leftDrop.animate([{ right: '50%' }], animInstant);
 				} else {
-					startCoverPage.animate(clipR2L, animInstant);
+					startCoverPage.animate(clipR2L, animInstant).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					stopCoverPage.animate(appearL2R, animInstant);
 					rd.leftDrop.animate([{ right: '100%' }], animInstant);
 					rd.rightDrop.animate([{ left: '50%' }], animInstant);
@@ -3323,7 +3332,9 @@
 				if (turnDirection == 'turn-right') {
 					rd.rightForeEdge.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
 					rd.rightDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
-					rightPage.animate(appearR2L_slideinL2R, animData);
+					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					leftPage.animate(appearL2R, animData);
 					rd.rightDrop.animate(
 						[{ left: '100%' }],
@@ -3333,7 +3344,9 @@
 					rd.leftForeEdge.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
 					rd.leftDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
 					rightPage.animate(appearR2L, animData);
-					leftPage.animate(appearL2R_sildeinR2L, animData);
+					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					rd.leftDrop.animate(
 						[{ right: '100%' }],
 						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
@@ -3355,7 +3368,9 @@
 
 				if (turnDirection == 'turn-right') {
 					rd.leftForeEdge.style.transition = 'clip-path 0s';
-					leftPage.animate(clipL2R, animData);
+					leftPage.animate(clipL2R, animData).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					coverPage.animate(appearR2L_slideinL2R, animData);
 					rd.leftDrop.animate(
 						[{ right: '50%' }],
@@ -3363,7 +3378,9 @@
 					);
 				} else {
 					rd.rightForeEdge.style.transition = 'clip-path 0s';
-					rightPage.animate(clipR2L, animData);
+					rightPage.animate(clipR2L, animData).finished.then(() => {
+						spreadHide(rd.uiSpreads[oldindex]);
+					});
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 					rd.rightDrop.animate(
 						[{ left: '50%' }],
@@ -3413,7 +3430,7 @@
 			if (isSectionHidden(readerContainer)) return;
 
 
-			spreadHide(rd.uiSpreads[localOldSpreadIndex]);
+			//spreadHide(rd.uiSpreads[localOldSpreadIndex]);
 
 			populateSpread(localNewSpreadIndex);
 			spreadSetFocus(spreadClassX, true, true);
