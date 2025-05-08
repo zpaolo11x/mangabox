@@ -2127,7 +2127,8 @@
 			uiSpreadsPagenums: [],	// array of arrays that associates each uiSpread div index to page index.
 			uiSpreadsImageRefs: [],	// array of arrays that associates each uiSpread div index to IMAGE index (for double spreads).
 			uiSpreadsKind: [],
-			uiSpreadsPageShadow: [],
+			uiSpreadsPageShadowL: [],
+			uiSpreadsPageShadowR: [],
 
 			currentPageIndex: 0,
 			currentSpreadIndex: 0,
@@ -2239,7 +2240,7 @@
 		// Reader cleanup functions to remove all dangling spreads and pages
 		function clearReader() {
 			// Cleanup all DOM objects and array of objects 
-			["uiPages", "uiPagesContainer", "uiSpreads", "uiPagesThumbs", "uiSpreadsThumbs", "uiSpreadsPageShadow"].forEach(key => {
+			["uiPages", "uiPagesContainer", "uiSpreads", "uiPagesThumbs", "uiSpreadsThumbs", "uiSpreadsPageShadowL", "uiSpreadsPageShadowR"].forEach(key => {
 				rd[key].forEach(item => item.remove());
 				rd[key].length = 0;
 			});
@@ -2670,8 +2671,11 @@
 				const spreadItem = document.createElement('div');
 				const spreadItemThumb = document.createElement('div');
 
-				const spreadPageShadow = addItem('div', {
-					className: 'page-shadow'
+				const spreadPageShadowL = addItem('div', {
+					className: 'page-shadow-left'
+				})
+				const spreadPageShadowR = addItem('div', {
+					className: 'page-shadow-right'
 				})
 
 				spreadItem.classList.add('spread-layout');
@@ -2846,8 +2850,10 @@
 
 
 				}
-				spreadItem.appendChild(spreadPageShadow);
-				rd.uiSpreadsPageShadow.push(spreadPageShadow);
+				spreadItem.appendChild(spreadPageShadowL);
+				spreadItem.appendChild(spreadPageShadowR);
+				rd.uiSpreadsPageShadowL.push(spreadPageShadowL);
+				rd.uiSpreadsPageShadowR.push(spreadPageShadowR);
 
 				rd.uiSpreads.push(spreadItem);
 				readerViewer.appendChild(spreadItem);
@@ -3234,27 +3240,28 @@
 			if (!startCover && !stopCover) {
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
-				let newSpreadShadow = rd.uiSpreadsPageShadow[index];
-				let oldSpreadShadow = rd.uiSpreadsPageShadow[oldindex];
+				let oldSpreadShadowL = rd.uiSpreadsPageShadowL[oldindex];
+				let oldSpreadShadowR = rd.uiSpreadsPageShadowR[oldindex];
+				let newSpreadShadowL = rd.uiSpreadsPageShadowL[index];
+				let newSpreadShadowR = rd.uiSpreadsPageShadowR[index];
 
 				//let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
 				//let leftPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
-				console.log(oldSpreadShadow);
-				oldSpreadShadow.classList.remove('turn-left');
-				oldSpreadShadow.classList.remove('turn-right');
-				oldSpreadShadow.classList.add(turnDirection);
-				newSpreadShadow.style.opacity = 0;
-				oldSpreadShadow.style.opacity = 1;
 
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData);
 					leftPage.animate(appearL2R, animData);
 					leftPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
-					oldSpreadShadow.animate(
-						[{ left: '100%', width: '0' }],
-						{ duration: turnSpeed, easing: easeFull }).finished.then(() => {
-							oldSpreadShadow.style.opacity = '0';
-						});
+					oldSpreadShadowR.animate(
+						[{ left: '0%', width: '0', opacity: '0' },
+						{ left: '50%', width: '20%', opacity: '1' },
+						{ left: '100%', width: '0', opacity: '0' }],
+						{ duration: turnSpeed, easing: easeFull });
+					newSpreadShadowL.animate(
+						[{ right: '100%', width: '0', opacity: '0' },
+						{ right: '75%', width: '20%', opacity: '1' },
+						{ right: '50%', width: '0', opacity: '0' }],
+						{ duration: turnSpeed, easing: easeFull });
 					//Removed to avoid slip below page
 					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
@@ -3262,10 +3269,16 @@
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
-					oldSpreadShadow.animate([{ right: '100%', width: '0' }],
-						{ duration: turnSpeed, easing: easeFull }).finished.then(() => {
-							oldSpreadShadow.style.opacity = '0';
-						});
+					oldSpreadShadowL.animate(
+						[{ right: '0%', width: '0', opacity: '0' },
+						{ right: '50%', width: '20%', opacity: '1' },
+						{ right: '100%', width: '0', opacity: '0' }],
+						{ duration: turnSpeed, easing: easeFull });
+					newSpreadShadowR.animate(
+						[{ left: '100%', width: '0', opacity: '0' },
+						{ left: '75%', width: '20%', opacity: '1' },
+						{ left: '50%', width: '0', opacity: '0' }],
+						{ duration: turnSpeed, easing: easeFull });
 					//Removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}

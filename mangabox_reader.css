@@ -134,23 +134,28 @@ img.page:not(.hidden) {
 	}
 }
 
-.page-shadow {
+.page-shadow-left{
 	position:absolute;
 	top:0;
+	right:0;
 	width:20%;
 	height:100%;
 	opacity:0;
 	transition:opacity 0.15s;
+	background: linear-gradient(to Left, rgba(99, 76, 68, 0.2), transparent); */
 }
 
-.page-shadow.turn-left{
-	right:0;
-	background: linear-gradient(to Left, red,transparent);/*rgba(99, 76, 68, 0.2), transparent); */
-}
-.page-shadow.turn-right{
+.page-shadow-right{
+	position:absolute;
+	top:0;
 	left:0;
-	background: linear-gradient(to Right, blue,transparent);/* rgba(99, 76, 68, 0.2), transparent);*/ 
+	width:20%;
+	height:100%;
+	opacity:0;
+	transition:opacity 0.15s;
+	background: linear-gradient(to Right, rgba(99, 76, 68, 0.2), transparent);*/
 }
+
 .page-container {
 	position: relative;
 	overflow: hidden;
