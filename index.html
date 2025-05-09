@@ -3330,8 +3330,8 @@
 				let rightPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.uiSpreadsImageRefs[index][rd.ltr ? 0 : 1]]
 				if (turnDirection == 'turn-right') {
-					rd.rightForeEdge.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
-					rd.rightDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
+					rd.rightForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.rightDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
 					});
@@ -3341,8 +3341,8 @@
 						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				} else {
-					rd.leftForeEdge.style.transition = 'clip-path 0.15s ease-in-out 0.5s';
-					rd.leftDrop.style.transition = 'margin 0.15s ease-in-out 0.5s';
+					rd.leftForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.leftDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
