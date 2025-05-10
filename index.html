@@ -2163,7 +2163,12 @@
 			turnTimeout: null,
 			pageTurning: null,
 
-			speedTurn: 500,			// Speed of turning page animation
+			speedTurn: 2500,			// Speed of turning page animation
+			shadowOpacityForward: '0.3',
+			shadowOpacityBackward: '0.3',
+			shadowWidthForward: '20%',
+			shadowWidthBackward: '15%',
+
 			speedScroll: 500,			// Speed of spread page scrolling
 			speedScrollDelay: 300,	// Delay of spread page scrolling during page turn
 			speedScrollTurn: 500,	// Speed of spread page scrolling during page turn
@@ -3258,13 +3263,13 @@
 					leftPage.animate(appearL2R, animData);
 					leftPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
 					newSpreadShadowR.animate(
-						[{ left: '0%', width: '0', opacity: '0' },
-						{ left: '50%', width: '20%', opacity: '1' },
+						[{ left: '0%', width: '0', opacity: '0.1' },
+						{ left: '50%', width: rd.shadowWidthForward, opacity: rd.shadowOpacityForward },
 						{ left: '100%', width: '0', opacity: '0' }],
 						{ duration: turnSpeed, easing: easeFull });
 					newSpreadShadowL.animate(
 						[{ right: '100%', width: '0', opacity: '0' },
-						{ right: '75%', width: '15%', opacity: '1' },
+						{ right: '75%', width: rd.shadowWidthBackward, opacity: rd.shadowOpacityBackward },
 						{ right: '50%', width: '0', opacity: '0' }],
 						{ duration: turnSpeed, easing: easeFull });
 					//Removed to avoid slip below page
@@ -3277,13 +3282,13 @@
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
 					newSpreadShadowL.animate(
-						[{ right: '0%', width: '0', opacity: '0' },
-						{ right: '50%', width: '20%', opacity: '1' },
+						[{ right: '0%', width: '0', opacity: '0.1' },
+						{ right: '50%', width: rd.shadowWidthForward, opacity: rd.shadowOpacityForward },
 						{ right: '100%', width: '0', opacity: '0' }],
 						{ duration: turnSpeed, easing: easeFull });
 					newSpreadShadowR.animate(
 						[{ left: '100%', width: '0', opacity: '0' },
-						{ left: '75%', width: '15%', opacity: '1' },
+						{ left: '75%', width: rd.shadowWidthBackward, opacity: rd.shadowOpacityBackward },
 						{ left: '50%', width: '0', opacity: '0' }],
 						{ duration: turnSpeed, easing: easeFull });
 					//Removed to avoid slip below page
