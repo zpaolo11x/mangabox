@@ -74,6 +74,13 @@
 	-ms-user-select: none;
 }
 
+.window-controls{
+	-webkit-app-region: no-drag;
+	position:absolute;
+	top:0px;
+	right:0px;
+}
+
 .draggable {
 	-webkit-app-region: drag;
  }
