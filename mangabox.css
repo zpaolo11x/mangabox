@@ -78,7 +78,7 @@
 	-webkit-app-region: drag;
 	cursor: grab;
  }
- 
+
 html,
 body {
 	overscroll-behavior: none;
@@ -291,6 +291,8 @@ a {
 }
 
 .library-item {
+	-webkit-app-region: no-drag;
+
 	user-select: none;
 	box-sizing: border-box;
 	padding: calc(0.5*(var(--mb-button-size) - var(--mb-span-size)));
