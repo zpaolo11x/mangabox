@@ -240,26 +240,22 @@
 				window.process.versions.electron;
 
 			if (!isElectron) {
-				// Set --mb-drag-bar-height to 0px
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-
-				// Hide the drag bar element
-				const dragBar = document.getElementById('dragBar');
-				if (dragBar) dragBar.style.display = 'none';
+				dragBar.style.display = 'none';
+			} else {
+				document.documentElement.style.setProperty('--mb-drag-bar-height', '20px');
+				dragBar.style.display = '';
 			}
 		})();
 
 		if (window.electronAPI?.onFullscreenChange) {
 			window.electronAPI.onFullscreenChange((isFullscreen) => {
-				const root = document.documentElement;
-				const dragBar = document.getElementById('dragBar');
-
 				if (isFullscreen) {
-					root.style.setProperty('--mb-drag-bar-height', '0px');
-					if (dragBar) dragBar.style.display = 'none';
+					document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
+					dragBar.style.display = 'none';
 				} else {
-					root.style.setProperty('--mb-drag-bar-height', '20px'); // or your default value
-					if (dragBar) dragBar.style.display = '';
+					document.documentElement.style.setProperty('--mb-drag-bar-height', '20px');
+					dragBar.style.display = '';
 				}
 			});
 		}
