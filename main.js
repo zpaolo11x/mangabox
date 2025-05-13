@@ -9,6 +9,8 @@ app.on('ready', () => {
     width: 1200,
     height: 800,
 	 autoHideMenuBar: true,
+	 frame: false,         // Disable the default window frame
+	 titleBarStyle: 'hidden', // Optional: macOS specific
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,

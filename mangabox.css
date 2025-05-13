@@ -74,6 +74,11 @@
 	-ms-user-select: none;
 }
 
+.draggable {
+	-webkit-app-region: drag;
+	cursor: grab;
+ }
+ 
 html,
 body {
 	overscroll-behavior: none;
