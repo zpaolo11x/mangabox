@@ -176,6 +176,7 @@ a {
 	display: flex; 
 	flex-direction: column; 
 	justify-content: flex-end;
+	transition: all 0.3s;
 	/*border-bottom:1px red solid;*/
 }
 
