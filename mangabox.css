@@ -170,7 +170,7 @@ a {
 	z-index:3000;
 	background: var(--mb-card-color);
 	transition: background-color 0.1s ease, color 0.3s ease;
-
+	border-bottom:1px solid red;
 	display: flex; 
 	flex-direction: column; 
 	justify-content: flex-end;
