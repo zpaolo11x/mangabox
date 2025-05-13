@@ -76,7 +76,6 @@
 
 .draggable {
 	-webkit-app-region: drag;
-	cursor: grab;
  }
 
 html,
