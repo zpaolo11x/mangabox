@@ -42,6 +42,14 @@ app.on('ready', () => {
 		mainWindow.close();
 	});
 
+	mainWindow.on('enter-full-screen', () => {
+		mainWindow.webContents.send('fullscreen-changed', true);
+	 });
+	 
+	 mainWindow.on('leave-full-screen', () => {
+		mainWindow.webContents.send('fullscreen-changed', false);
+	 });
+	 
 	// Check URL changes and enable zoom conditionally
 	/* 
 	 mainWindow.webContents.on('did-navigate', (_, url) => {

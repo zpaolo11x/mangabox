@@ -249,6 +249,21 @@
 			}
 		});
 
+		if (window.electronAPI?.onFullscreenChange) {
+			window.electronAPI.onFullscreenChange((isFullscreen) => {
+				const root = document.documentElement;
+				const dragBar = document.getElementById('dragBar');
+
+				if (isFullscreen) {
+					root.style.setProperty('--mb-drag-bar-height', '0px');
+					if (dragBar) dragBar.style.display = 'none';
+				} else {
+					root.style.setProperty('--mb-drag-bar-height', '20px'); // or your default value
+					if (dragBar) dragBar.style.display = '';
+				}
+			});
+		}
+
 
 		//MB General Functions 
 		function testpr(text) {
