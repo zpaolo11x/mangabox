@@ -195,10 +195,12 @@ a {
 	/*border:1px orange solid;*/
 	margin: 0px;
 	padding:0px;
+	transition: 0.3s;
 }
 
 .window-controls span:hover{
-	color: var(--mb-text-color-hi)
+	color: var(--mb-accent);
+	text-shadow: 0px 0px 15px var(--mb-accent-a50);
 }
 
 #barLogo{
