@@ -216,32 +216,20 @@
 
 	<script>
 
-// Detect if we're in Electron to prevent errors in the browser/PWA
-const isElectron = navigator.userAgent.toLowerCase().includes('electron');
-
-if (isElectron) {
-  const { remote } = require('electron');
-  const win = remote.getCurrentWindow();
-
-  // Minimize
+if (window.electronAPI) {
   document.getElementById('min-btn').addEventListener('click', () => {
-    win.minimize();
+    window.electronAPI.minimize();
   });
 
-  // Maximize / Restore toggle
   document.getElementById('max-btn').addEventListener('click', () => {
-    if (win.isMaximized()) {
-      win.unmaximize();
-    } else {
-      win.maximize();
-    }
+    window.electronAPI.maximize();
   });
 
-  // Close
   document.getElementById('close-btn').addEventListener('click', () => {
-    win.close();
+    window.electronAPI.close();
   });
 }
+
 
 
 		//MB General Functions 
