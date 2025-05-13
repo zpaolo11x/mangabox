@@ -12,6 +12,9 @@ app.on('ready', () => {
 		autoHideMenuBar: true,
 		frame: false,         // Disable the default window frame
 		titleBarStyle: 'hidden', // Optional: macOS specific
+  		trafficLightPosition: { x: -1000, y: 0 }, // ✅ hide traffic lights (move them offscreen)
+  		titleBarOverlay: false,    
+
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nodeIntegration: false,
