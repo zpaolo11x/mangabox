@@ -42,6 +42,7 @@
 	--mb-active-color: #f0f0f0;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
+	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
 	--mb-bar-color: #dddddd;
 }
@@ -54,6 +55,7 @@
 	--mb-active-color: #656565;
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
+	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
 	--mb-glyph-color: rgba(255, 255, 255, 0.75);
 	--mb-bar-color: #606060;
 }
@@ -185,6 +187,10 @@ a {
 
 .window-controls span{
 	width: 25px;
+}
+
+.window-controls span:hover{
+	color: var(--mb-text-color-hi)
 }
 
 #mainUI:not(:has(#extraMenuBar.hidden)) {
