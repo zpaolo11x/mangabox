@@ -21,6 +21,8 @@
 
 	--mb-scrollbar-width: 10px;
 
+	--mb-drag-bar-height: 20px;
+
 	--mb-swatches:
 		hsl(348, 92%, 38%),
 		hsl(39, 100%, 50%),
@@ -72,13 +74,6 @@
 	user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
-}
-
-.window-controls{
-	-webkit-app-region: no-drag;
-	position:absolute;
-	top:0px;
-	right:0px;
 }
 
 .draggable {
@@ -153,7 +148,7 @@ a {
 
 #mainUI {
 	position: fixed;
-	top: 0;
+	top: var(--mb-drag-bar-height);
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -161,6 +156,32 @@ a {
 	grid-template-columns: auto;
 	grid-template-rows: 60px auto;
 	transition: grid-template-rows 0.2s;
+}
+
+#dragBar {
+	text-align: center;
+	font-size: 14px;
+	line-height: 16px;
+	position:fixed;
+	top:0;
+	left:0;
+	right:0;
+	height:var(--mb-drag-bar-height);
+	z-index:3000;
+	background: var(--mb-card-color);
+	transition: background-color 0.1s ease, color 0.3s ease
+}
+
+.window-controls{
+	-webkit-app-region: no-drag;
+	position:absolute;
+	top: 2px;
+	right: 8px;
+	font-size: 14px;
+}
+
+.window-controls span{
+	width: 25px;
 }
 
 #mainUI:not(:has(#extraMenuBar.hidden)) {
