@@ -167,7 +167,7 @@ a {
 	left:0;
 	right:0;
 	height:var(--mb-drag-bar-height);
-	z-index:3000;
+	/*z-index:3000;*/
 	background: var(--mb-card-color);
 	transition: background-color 0.1s ease, color 0.3s ease;
 	display: flex; 
