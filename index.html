@@ -240,10 +240,10 @@
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
 				document.getElementById('dragBar').style.display = 'none';
 			} else {
-				document.documentElement.style.setProperty('--mb-drag-bar-height', '20px');
+				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
 				document.getElementById('dragBar').style.display = '';
 			}
-		})();
+		});
 
 
 		if (window.electronAPI?.onFullscreenChange) {
@@ -252,7 +252,7 @@
 					document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
 					dragBar.style.display = 'none';
 				} else {
-					document.documentElement.style.setProperty('--mb-drag-bar-height', '20px');
+					document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
 					dragBar.style.display = '';
 				}
 			});
