@@ -8,7 +8,7 @@ app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
 app.on('ready', () => {
 	mainWindow = new BrowserWindow({
 		width: 1200,
-		height: 800,
+		height: 760,
 		autoHideMenuBar: true,
 		frame: false,         // Disable the default window frame
 		titleBarStyle: 'hidden', // Optional: macOS specific
