@@ -234,19 +234,17 @@
 		}
 
 		(function () {
-			const isElectron = typeof window !== 'undefined' &&
-				window.process &&
-				window.process.versions &&
-				window.process.versions.electron;
+			const isElectron = !!window.electronAPI;
 
 			if (!isElectron) {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-				dragBar.style.display = 'none';
+				document.getElementById('dragBar').style.display = 'none';
 			} else {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '20px');
-				dragBar.style.display = '';
+				document.getElementById('dragBar').style.display = '';
 			}
 		})();
+
 
 		if (window.electronAPI?.onFullscreenChange) {
 			window.electronAPI.onFullscreenChange((isFullscreen) => {
