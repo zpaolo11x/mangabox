@@ -162,7 +162,7 @@ a {
 
 #dragBar {
 	text-align: left;
-	padding-left:36px;
+	padding-left:32px;
 	font-size: 14px;
 	line-height: 16px;
 	position:fixed;
@@ -180,6 +180,8 @@ a {
 }
 
 .window-controls{
+	display:flex;
+	gap:5px;
 	-webkit-app-region: no-drag;
 	position:absolute;
 	top: 6px;
@@ -189,6 +191,10 @@ a {
 
 .window-controls span{
 	width: 25px;
+	text-align:center;
+	/*border:1px orange solid;*/
+	margin: 0px;
+	padding:0px;
 }
 
 .window-controls span:hover{
@@ -196,10 +202,10 @@ a {
 }
 
 #barLogo{
-	width:var(--mb-drag-bar-height);
-	height:var(--mb-drag-bar-height);
+	width:16px;
+	height:16px;
 	position:absolute;
-	top:2px;
+	top:4px;
 	left:8px;
 }
 
