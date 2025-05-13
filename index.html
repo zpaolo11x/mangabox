@@ -215,6 +215,7 @@
 
 	<script>
 
+		//MB Manage Electron titlebar
 		if (window.electronAPI) {
 			document.getElementById('min-btn').addEventListener('click', () => {
 				window.electronAPI.minimize();
@@ -229,6 +230,21 @@
 			});
 		}
 
+		(function () {
+			const isElectron = typeof window !== 'undefined' &&
+				window.process &&
+				window.process.versions &&
+				window.process.versions.electron;
+
+			if (!isElectron) {
+				// Set --mb-drag-bar-height to 0px
+				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
+
+				// Hide the drag bar element
+				const dragBar = document.getElementById('dragBar');
+				if (dragBar) dragBar.style.display = 'none';
+			}
+		})();
 
 
 		//MB General Functions 
