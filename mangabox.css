@@ -21,7 +21,7 @@
 
 	--mb-scrollbar-width: 10px;
 
-	--mb-drag-bar-height: 20px;
+	--mb-drag-bar-height: 22px;
 
 	--mb-swatches:
 		hsl(348, 92%, 38%),
@@ -184,7 +184,7 @@ a {
 	gap:5px;
 	-webkit-app-region: no-drag;
 	position:absolute;
-	top: 6px;
+	top: 8px;
 	right: 8px;
 	font-size: 14px;
 }
@@ -205,7 +205,7 @@ a {
 	width:16px;
 	height:16px;
 	position:absolute;
-	top:4px;
+	top:6px;
 	left:8px;
 }
 
