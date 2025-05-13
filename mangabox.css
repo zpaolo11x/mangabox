@@ -161,7 +161,8 @@ a {
 }
 
 #dragBar {
-	text-align: center;
+	text-align: left;
+	padding-left:36px;
 	font-size: 14px;
 	line-height: 16px;
 	position:fixed;
@@ -175,6 +176,7 @@ a {
 	display: flex; 
 	flex-direction: column; 
 	justify-content: flex-end;
+	/*border-bottom:1px red solid;*/
 }
 
 .window-controls{
@@ -191,6 +193,14 @@ a {
 
 .window-controls span:hover{
 	color: var(--mb-text-color-hi)
+}
+
+#barLogo{
+	width:var(--mb-drag-bar-height);
+	height:var(--mb-drag-bar-height);
+	position:absolute;
+	top:2px;
+	left:8px;
 }
 
 #mainUI:not(:has(#extraMenuBar.hidden)) {

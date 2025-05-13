@@ -117,7 +117,8 @@
 
 	</div>
 	<div id="dragBar" class="draggable">
-		MangaBox
+		<img id="barLogo" src="mangabox-logo-new.svg">
+		<span>MangaBox</span>
 		<div class="window-controls no-drag">
 			<span class="fa-solid fa-window-minimize glyph-dark" id="min-btn"></span>
 			<span class="fa-regular fa-window-maximize glyph-dark" id="max-btn"></span>
@@ -244,7 +245,7 @@
 				const dragBar = document.getElementById('dragBar');
 				if (dragBar) dragBar.style.display = 'none';
 			}
-		})();
+		});
 
 
 		//MB General Functions 
