@@ -14,8 +14,8 @@ app.on('ready', () => {
 		titleBarStyle: 'hidden', // Optional: macOS specific
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
-			nodeIntegration: true,
-			contextIsolation: false,
+			nodeIntegration: false,
+			contextIsolation: true,
 			allowRunningInsecureContent: true
 		},
 	});
