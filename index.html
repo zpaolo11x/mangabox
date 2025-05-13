@@ -247,7 +247,7 @@
 				const dragBar = document.getElementById('dragBar');
 				if (dragBar) dragBar.style.display = 'none';
 			}
-		});
+		})();
 
 		if (window.electronAPI?.onFullscreenChange) {
 			window.electronAPI.onFullscreenChange((isFullscreen) => {
