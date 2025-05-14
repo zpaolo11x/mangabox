@@ -272,8 +272,11 @@
 		}
 
 		if (window.electronAPI?.getAppVersion) {
-			appName.textContent = 'MangaBox v' + window.electronAPI.getAppVersion();
+			window.electronAPI.getAppVersion().then(version => {
+				appName.textContent = 'MangaBox v' + version;
+			});
 		}
+
 
 		//MB General Functions 
 		function testpr(text) {
