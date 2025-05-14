@@ -14,7 +14,7 @@
 	},
 	"build": {
 		"appId": "com.mangabox.app",
-		"productName": "MangaBox ${version}",
+		"productName": "MangaBox",
 		"directories": {
 			"output": "dist"
 		},
