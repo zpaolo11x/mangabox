@@ -122,9 +122,9 @@
 		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
 		<span>MangaBox</span>
 		<div class="window-controls no-drag">
-			<span class="fa-solid fa-window-minimize glyph-dark" id="min-btn"></span>
-			<span class="fa-regular fa-window-maximize glyph-dark" id="max-btn"></span>
-			<span class="fa-solid fa-xmark glyph-dark" id="close-btn"></span>
+			<span class="fa-solid fa-window-minimize glyph-dark" id="minBtn"></span>
+			<span class="fa-regular fa-window-maximize glyph-dark" id="maxBtn"></span>
+			<span class="fa-solid fa-xmark glyph-dark" id="closeBtn"></span>
 		</div>
 	</div>
 	<div id="readerContainer" class="section hidden">
@@ -220,22 +220,21 @@
 
 		//MB Manage Electron titlebar
 		if (window.electronAPI) {
-			document.getElementById('min-btn').addEventListener('click', () => {
+			minBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
 			});
 
-			document.getElementById('max-btn').addEventListener('click', () => {
+			maxBtn.addEventListener('click', () => {
 				window.electronAPI.maximize();
 			});
 
-			document.getElementById('close-btn').addEventListener('click', () => {
+			closeBtn.addEventListener('click', () => {
 				window.electronAPI.close();
 			});
 		}
 
 		(function () {
 			const isElectron = !!window.electronAPI;
-
 			if (!isElectron) {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
 				document.getElementById('dragBar').style.display = 'none';
@@ -257,21 +256,21 @@
 				}
 			});
 		}
-		const maxBtn = document.getElementById('max-btn');
 
-maxBtn.addEventListener('click', () => {
-  window.electronAPI.toggleMaximize();
-});
+		if (window.electronAPI?.onMaximize) {
+			window.electronAPI.onMaximize(() => {
+				maxBtn.classList.remove('fa-window-maximize');
+				maxBtn.classList.add('fa-window-restore');
+			});
+		}
 
-window.electronAPI.onMaximize(() => {
-  maxBtn.classList.remove('fa-window-maximize');
-  maxBtn.classList.add('fa-window-restore');
-});
+		if (window.electronAPI?.onUnmaximize) {
+			window.electronAPI.onUnmaximize(() => {
+				maxBtn.classList.remove('fa-window-restore');
+				maxBtn.classList.add('fa-window-maximize');
+			});
+		}
 
-window.electronAPI.onUnmaximize(() => {
-  maxBtn.classList.remove('fa-window-restore');
-  maxBtn.classList.add('fa-window-maximize');
-});
 
 
 		//MB General Functions 
