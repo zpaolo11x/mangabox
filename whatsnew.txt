@@ -1,2 +1,3 @@
 - Added shadows to animated page turns
 - Added Windows for ARM build
+- Electron app now has custom drag bar and window controls
