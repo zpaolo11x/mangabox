@@ -59,6 +59,10 @@ mainWindow.on('maximize', () => {
  mainWindow.on('unmaximize', () => {
 	mainWindow.webContents.send('window-unmaximized');
  });
+
+ ipcMain.handle('get-app-version', () => {
+	return app.getVersion(); // This uses the version from package.json
+ });
 	// Check URL changes and enable zoom conditionally
 	/* 
 	 mainWindow.webContents.on('did-navigate', (_, url) => {
