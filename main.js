@@ -9,6 +9,7 @@ app.on('ready', () => {
 	mainWindow = new BrowserWindow({
 		width: 1200,
 		height: 760,
+		center: true,
 		autoHideMenuBar: true,
 		frame: false,         // Disable the default window frame
 		titleBarStyle: 'hidden', // Optional: macOS specific
