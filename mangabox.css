@@ -204,6 +204,10 @@ a {
 	text-shadow: 0px 0px 15px var(--mb-accent-a50);
 }
 
+.window-controls span:active{
+	color: var(--mb-accent-a50);
+}
+
 #barLogo{
 	width:16px;
 	height:16px;
