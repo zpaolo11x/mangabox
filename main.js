@@ -51,6 +51,14 @@ app.on('ready', () => {
 		mainWindow.webContents.send('fullscreen-changed', false);
 	 });
 	 
+
+mainWindow.on('maximize', () => {
+	mainWindow.webContents.send('window-maximized');
+ });
+ 
+ mainWindow.on('unmaximize', () => {
+	mainWindow.webContents.send('window-unmaximized');
+ });
 	// Check URL changes and enable zoom conditionally
 	/* 
 	 mainWindow.webContents.on('did-navigate', (_, url) => {

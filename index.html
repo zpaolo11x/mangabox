@@ -257,6 +257,21 @@
 				}
 			});
 		}
+		const maxBtn = document.getElementById('max-btn');
+
+maxBtn.addEventListener('click', () => {
+  window.electronAPI.toggleMaximize();
+});
+
+window.electronAPI.onMaximize(() => {
+  maxBtn.classList.remove('fa-window-maximize');
+  maxBtn.classList.add('fa-window-restore');
+});
+
+window.electronAPI.onUnmaximize(() => {
+  maxBtn.classList.remove('fa-window-restore');
+  maxBtn.classList.add('fa-window-maximize');
+});
 
 
 		//MB General Functions 
