@@ -1,6 +1,6 @@
 // preload.js
 const { contextBridge, ipcRenderer } = require('electron');
-const { version } = require('package.json');
+const { version } = require('./package.json');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   minimize: () => ipcRenderer.send('window-minimize'),
