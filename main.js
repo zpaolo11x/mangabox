@@ -13,8 +13,8 @@ app.on('ready', () => {
 		autoHideMenuBar: true,
 		frame: false,         // Disable the default window frame
 		titleBarStyle: 'hidden', // Optional: macOS specific
-  		trafficLightPosition: { x: -1000, y: 0 }, // ✅ hide traffic lights (move them offscreen)
-  		titleBarOverlay: false,    
+		trafficLightPosition: { x: -1000, y: 0 }, // ✅ hide traffic lights (move them offscreen)
+		titleBarOverlay: false,
 
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
@@ -45,24 +45,24 @@ app.on('ready', () => {
 
 	mainWindow.on('enter-full-screen', () => {
 		mainWindow.webContents.send('fullscreen-changed', true);
-	 });
-	 
-	 mainWindow.on('leave-full-screen', () => {
+	});
+
+	mainWindow.on('leave-full-screen', () => {
 		mainWindow.webContents.send('fullscreen-changed', false);
-	 });
-	 
+	});
 
-mainWindow.on('maximize', () => {
-	mainWindow.webContents.send('window-maximized');
- });
- 
- mainWindow.on('unmaximize', () => {
-	mainWindow.webContents.send('window-unmaximized');
- });
 
- ipcMain.handle('get-app-version', () => {
-	return app.getVersion(); // This uses the version from package.json
- });
+	mainWindow.on('maximize', () => {
+		mainWindow.webContents.send('window-maximized');
+	});
+
+	mainWindow.on('unmaximize', () => {
+		mainWindow.webContents.send('window-unmaximized');
+	});
+
+	ipcMain.handle('get-app-version', () => {
+		return app.getVersion(); // This uses the version from package.json
+	});
 	// Check URL changes and enable zoom conditionally
 	/* 
 	 mainWindow.webContents.on('did-navigate', (_, url) => {
