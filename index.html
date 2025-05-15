@@ -219,7 +219,10 @@
 	<script>
 
 		//MB Manage Electron titlebar
-		if (window.electronAPI) {
+
+		const isElectron = !!window.electronAPI;
+
+		if (isElectron) {
 			minBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
 			});
@@ -231,21 +234,7 @@
 			closeBtn.addEventListener('click', () => {
 				window.electronAPI.close();
 			});
-		}
 
-		(function () {
-			const isElectron = !!window.electronAPI;
-			if (!isElectron) {
-				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-				document.getElementById('dragBar').style.display = 'none';
-			} else {
-				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
-				document.getElementById('dragBar').style.display = '';
-			}
-		})();
-
-
-		if (window.electronAPI?.onFullscreenChange) {
 			window.electronAPI.onFullscreenChange((isFullscreen) => {
 				if (isFullscreen) {
 					document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
@@ -255,27 +244,32 @@
 					dragBar.style.display = '';
 				}
 			});
-		}
 
-		if (window.electronAPI?.onMaximize) {
 			window.electronAPI.onMaximize(() => {
 				maxBtn.classList.remove('fa-window-maximize');
 				maxBtn.classList.add('fa-window-restore');
 			});
-		}
 
-		if (window.electronAPI?.onUnmaximize) {
 			window.electronAPI.onUnmaximize(() => {
 				maxBtn.classList.remove('fa-window-restore');
 				maxBtn.classList.add('fa-window-maximize');
 			});
-		}
 
-		if (window.electronAPI?.getAppVersion) {
 			window.electronAPI.getAppVersion().then(version => {
 				appName.textContent = 'MangaBox v' + version;
 			});
 		}
+
+		// Hide dragbar in PWA mode
+		(function () {
+			if (!isElectron) {
+				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
+				document.getElementById('dragBar').style.display = 'none';
+			} else {
+				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
+				document.getElementById('dragBar').style.display = '';
+			}
+		})();
 
 
 		//MB General Functions 
