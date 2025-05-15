@@ -273,7 +273,7 @@
 
 
 		//MB General Functions 
-		function testpr(text) {
+		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
 
@@ -899,9 +899,11 @@
 				className: `library-name`,
 				innerHTML: `${button.switches[0].caption}`
 			});
-			button.item.appendChild(button.icon);
-			button.item.appendChild(button.caption);
-			extraButtons.appendChild(button.item);
+			button.item.append(
+				button.icon,
+				button.caption
+			);
+			extraButtons.append(button.item);
 			button.item.addEventListener('click', async () => {
 				button.selected = ((button.selected + 1) % button.switches.length);
 				await executeFade(1);
@@ -911,7 +913,7 @@
 			})
 		});
 
-		extraButtons.appendChild(addItem('li', {
+		extraButtons.append(addItem('li', {
 			title: 'Reset filters and sorting',
 			className: `filter-item`,
 			innerHTML: `<div class="thumbnail-wrapper">
@@ -1218,12 +1220,10 @@
 
 			item.addEventListener('mouseenter', () => {
 				// Added this to unselect pre-scaled book
-
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
 					// mb.currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
 				}
-
 				item.classList.add('scaled');
 			});
 
@@ -1234,10 +1234,7 @@
 
 		//MB Series Items Creation
 		async function buildSeriesItem(item, serie, target) {
-			//item.firstChild.remove();
-			if (item.childNodes[0]) {
-				item.childNodes[0].remove();
-			}
+			item.childNodes[0]?.remove();
 
 			item.title = 'Open series';
 
@@ -1290,7 +1287,7 @@
 					className: 'unread-count',
 					innerHTML: `<span>${unreadCount}</span>`
 				});
-				seriesStatus.appendChild(unreadCountBadge);
+				seriesStatus.append(unreadCountBadge);
 			}
 
 			const markAsRead = addItem('div', {
@@ -1358,8 +1355,7 @@
 					title: `Filter artist: ${altTitle.art}`
 				});
 
-				artistRow.appendChild(storyLabel);
-				artistRow.appendChild(artLabel);
+				artistRow.append(storyLabel, artLabel);
 				storyLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
 					if (target.binName) mb.dashboardBin = target.binName;
@@ -1378,7 +1374,7 @@
 					title: `Filter artist: ${altTitle.story}`,
 					className: 'red data-label search-trigger'
 				});
-				artistRow.appendChild(artistLabel);
+				artistRow.append(artistLabel);
 				artistLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
 					if (target.binName) mb.dashboardBin = target.binName;
@@ -1423,7 +1419,7 @@
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
-			item.appendChild(seriesItem);
+			item.append(seriesItem);
 		}
 
 		// Creates and populates the series grid with the data from the series array.
@@ -1435,13 +1431,14 @@
 
 			series.forEach(async (serie) => {
 
-				const seriesContainer = document.createElement('div');
-				seriesContainer.classList.add('series-container'); //XXX was ending with , 'fade-in');
-				seriesContainer.id = serie.id;
+				const seriesContainer = addItem('div', {
+					className: 'series-container', //XXX was ending with , 'fade-in');
+					id: serie.id,
+				});
 
 				buildSeriesItem(seriesContainer, serie, target);
 
-				target.appendChild(seriesContainer);
+				target.append(seriesContainer);
 			});
 
 			sectionShow(target); //XXX serve un fade qui???
@@ -1521,9 +1518,8 @@
 				textContent: libraryName
 			});
 
-			thumbnailWrapper.appendChild(libraryThumbnail);
-			listItem.appendChild(thumbnailWrapper);
-			listItem.appendChild(libraryNameDiv);
+			thumbnailWrapper.append(libraryThumbnail);
+			listItem.append(thumbnailWrapper, libraryNameDiv);
 
 			return listItem;
 		}
@@ -1531,7 +1527,7 @@
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			librariesList.appendChild(buildLibraryItem('homeButton', 'Home', 'mangabox-logo-new.svg'));
+			librariesList.append(buildLibraryItem('homeButton', 'Home', 'mangabox-logo-new.svg'));
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
@@ -1549,7 +1545,7 @@
 					}
 				});
 
-				librariesList.appendChild(listItem);
+				librariesList.append(listItem);
 			});
 
 			const libraryOptionsButton = addItem('li', {
@@ -1563,7 +1559,7 @@
 					`
 			});
 
-			librariesList.appendChild(libraryOptionsButton);
+			librariesList.append(libraryOptionsButton);
 			libraryMenu.addEventListener('click', () => {
 				sectionToggle(extraMenuBar);
 			});
@@ -1709,9 +1705,8 @@
 		//MB Book Item Creation
 
 		async function buildBookItem(item, book, format, target) {
-			if (item.childNodes[0]) {
-				item.childNodes[0].remove();
-			}
+			item.childNodes[0]?.remove();
+
 			item.title = 'Read book';
 
 			const booksItem = addItem('div', {
@@ -1724,12 +1719,13 @@
 
 			if (format == 'longname') {
 				mainRow.classList.add('book-row');
-				const volumeNumberLabel = document.createElement('span');
-				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
-				const pagesLabel = document.createElement('span');
-				pagesLabel.innerHTML = `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
-				mainRow.appendChild(volumeNumberLabel);
-				mainRow.appendChild(pagesLabel);
+				const volumeNumberLabel = addItem('span', {
+					innerHTML: `Volume ${book.metadata.number}`,
+				});
+				const pagesLabel = addItem('span', {
+					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+				});
+				mainRow.append(volumeNumberLabel, pagesLabel);
 			} else {
 				mainRow.classList.add('book-series-row', 'red');
 				mainRow.title = `Open series: ${book.seriesTitle}`;
@@ -1742,24 +1738,22 @@
 				noPointerDown(mainRow);
 			}
 
-			const secondRow = document.createElement('div');
-			secondRow.classList.add('data-row');
+			const secondRow = addItem('div', {
+				className: 'data-row',
+			});
 
 			if (format == 'longname') {
 				secondRow.classList.add('info-row');
 				secondRow.textContent = book.metadata.title;
 			} else if (format == 'compact') {
-				const volumeNumberLabel = document.createElement('span');
-				volumeNumberLabel.innerHTML = `Volume ${book.metadata.number}`;
-				const pagesLabel = document.createElement('span');
-				pagesLabel.innerHTML = `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`;
-				secondRow.appendChild(volumeNumberLabel);
-				secondRow.appendChild(pagesLabel);
+				const volumeNumberLabel = addItem('span', {
+					innerHTML: `Volume ${book.metadata.number}`
+				});
+				const pagesLabel = addItem('span', {
+					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+				});
+				secondRow.append(volumeNumberLabel, pagesLabel);
 			} else if (format == 'timeline') {
-				const volumeNumberLabelShort = document.createElement('span');
-				volumeNumberLabelShort.innerHTML = `Vol.${book.metadata.number}`;
-				const timeLabel = document.createElement('span');
-
 				const dateString = book.readProgress ?
 					new Intl.DateTimeFormat('en-GB', {
 						day: '2-digit',
@@ -1768,20 +1762,26 @@
 					}).format(new Date(book.readProgress.readDate))
 					: '';
 
-				timeLabel.innerHTML = `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`;
-				secondRow.appendChild(volumeNumberLabelShort);
-				secondRow.appendChild(timeLabel);
+				const volumeNumberLabelShort = addItem('span', {
+					innerHTML: `Vol.${book.metadata.number}`
+				});
+				const timeLabel = addItem('span', {
+					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
+				});
+
+				secondRow.append(volumeNumberLabelShort, timeLabel);
 			}
 
-			const thumbnailWrapper = document.createElement('div');
-			thumbnailWrapper.classList.add('thumbnail-wrapper');
+			const thumbnailWrapper = addItem('div', {
+				className: 'thumbnail-wrapper',
+			});
 
-			const bookThumbnail = document.createElement('img');
-			bookThumbnail.classList.add('book-thumbnail', 'hidden');
-			bookThumbnail.src = 'transparent.png';
-			bookThumbnail.lazySrc = `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`;
-			bookThumbnail.alt = book.metadata.title;
-			//bookThumbnail.loading = 'lazy';
+			const bookThumbnail = addItem('img', {
+				className: 'book-thumbnail hidden',
+				src: 'transparent.png',
+				lazySrc: `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`,
+				alt: book.metadata.title
+			});
 
 			addLazyLoading(bookThumbnail);
 
@@ -1803,7 +1803,7 @@
 				const unreadBookBadge = addItem('div', {
 					className: 'unread-book'
 				});
-				bookStatus.appendChild(unreadBookBadge);
+				bookStatus.append(unreadBookBadge);
 			}
 
 			const markAsRead = addItem('div', {
@@ -1828,8 +1828,7 @@
 			})
 			noPointerDown(markAsUnread);
 
-			bookOverlay.appendChild(markAsRead);
-			bookOverlay.appendChild(markAsUnread);
+			bookOverlay.append(markAsRead, markAsUnread);
 
 
 			if (book.metadata.summary != '') {
@@ -1844,16 +1843,14 @@
 				})
 				noPointerDown(bookDetails);
 
-				bookOverlay.appendChild(bookDetails);
-
+				bookOverlay.append(bookDetails);
 			}
 
 
 			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
-			const progressBar = document.createElement('div');
-			progressBar.classList.add('progress-bar');
-			const progressGauge = document.createElement('div');
-			progressGauge.classList.add('progress-gauge');
+			const progressBar = addItem('div', { className: 'progress-bar' });
+			const progressGauge = addItem('div', { className: 'progress-gauge' });
+
 			if (progress == 0) {
 				progressBar.classList.add('no-show');
 			} else {
@@ -1874,7 +1871,7 @@
 				bookStatus
 			);
 
-			progressBar.appendChild(progressGauge);
+			progressBar.append(progressGauge);
 
 			addTouchScaler(booksItem, async () => {
 				const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
@@ -1891,7 +1888,7 @@
 						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
 			});
 
-			item.appendChild(booksItem);
+			item.append(booksItem);
 
 		}
 
@@ -1913,7 +1910,7 @@
 			if (books.length === 0) {
 				const noBooksMsg = document.createElement('p');
 				noBooksMsg.textContent = 'No books available';
-				booksGrid.appendChild(noBooksMsg);
+				booksGrid.append(noBooksMsg);
 				return;
 			}
 
@@ -1925,7 +1922,7 @@
 
 				buildBookItem(bookContainer, book, format, target);
 
-				target.appendChild(bookContainer);
+				target.append(bookContainer);
 			});
 
 			if (target == booksGrid) {
@@ -2119,16 +2116,10 @@
 				item.scrollInput.value = item.homeStrip.scrollLeft;
 			});
 
-			item.scrollBar.appendChild(item.scrollInput);
-
-			headerContainer.appendChild(stripHeader);
-			headerContainer.appendChild(item.scrollBar);
-			headerContainer.appendChild(item.gridButton);
-
-			item.element.appendChild(headerContainer);
-			item.element.appendChild(item.homeStrip);
-
-			homeStripsContainer.appendChild(item.element);
+			item.scrollBar.append(item.scrollInput);
+			headerContainer.append(stripHeader, item.scrollBar, item.gridButton);
+			item.element.append(headerContainer, item.homeStrip);
+			homeStripsContainer.append(item.element);
 		});
 
 		// Open a whole series fetching all its books and showing them with the correct header
@@ -2404,7 +2395,7 @@
 				const scrollScaler = newWidth / oldWidth;
 				thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
 				rd.thumbsWidth = newWidth;
-				//testpr('Size changed:', entry.contentRect.width, entry.contentRect.height);
+				//debugPrint('Size changed:', entry.contentRect.width, entry.contentRect.height);
 			}
 		});
 
@@ -2413,13 +2404,13 @@
 		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
 		/*
 		thumbStripInner.addEventListener('transitionrun', () => {
-			testpr('Transition started')
+			debugPrint('Transition started')
 		});
-		thumbStripInner.addEventListener('transitionstart', () => testpr('Transition actually started'));
+		thumbStripInner.addEventListener('transitionstart', () => debugPrint('Transition actually started'));
 */
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStripScrollContent.style.overflow = 'auto';
-			testpr('Transition ended')
+			debugPrint('Transition ended')
 		});
 
 		function updateProgressBar() {
@@ -2562,10 +2553,7 @@
 				id: 'rightDrop',
 			});
 
-			readerViewer.appendChild(rd.leftForeEdge);
-			readerViewer.appendChild(rd.rightForeEdge);
-			readerViewer.appendChild(rd.leftDrop);
-			readerViewer.appendChild(rd.rightDrop);
+			readerViewer.append(rd.leftForeEdge, rd.rightForeEdge, rd.leftDrop, rd.rightDrop);
 
 			//Position and shape the ForeEdge 
 			// TODO check the height vs clipped modes 
@@ -2612,7 +2600,7 @@
 					lazySrc: dataOut[i_image].url,
 					size: dataOut[i_image].size
 				});
-				imgDiv.appendChild(imgPage);
+				imgDiv.append(imgPage);
 
 				rd.uiPages.push(imgPage);
 				rd.uiPagesContainer.push(imgDiv);
@@ -2686,7 +2674,7 @@
 							hasSrc: true,
 							size: 0
 						});
-						imgDivBlank.appendChild(imgPageBlank);
+						imgDivBlank.append(imgPageBlank);
 
 						rd.uiPages.push(imgPageBlank);
 						rd.uiPagesContainer.push(imgDivBlank);
@@ -2755,9 +2743,9 @@
 					let pageRef = rd.uiSpreadsPagenums[index][0];
 
 					spreadItem.singlePage = true; //TODO forse non servirà in futuro
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[imageIndex]);
+					spreadItemThumb.append(rd.uiPagesThumbs[imageIndex]);
 
-					spreadItem.appendChild(rd.uiPagesContainer[imageIndex]);
+					spreadItem.append(rd.uiPagesContainer[imageIndex]);
 					spreadItem.classList.add('cover-page')
 
 					buildSize2P(spreadItem, mb.readerMaxRatio);
@@ -2789,16 +2777,16 @@
 					coverlay.classList.add(rd.ltr ? 'LTR' : 'RTL')
 					coverlay.style.width = rd.uiPagesContainer[imageIndex].style.width;
 					coverlay.style.height = rd.uiPagesContainer[imageIndex].style.height;
-					rd.uiPagesContainer[imageIndex].appendChild(coverlay);
+					rd.uiPagesContainer[imageIndex].append(coverlay);
 				}
 				else if ((spreadKind == 'back-cover')) {
 					let imageIndex = rd.uiSpreadsImageRefs[index][0];
 					let pageRef = rd.uiSpreadsPagenums[index][0];
 
 					spreadItem.singlePage = true; //TODO forse non servirà in futuro
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[imageIndex]);
+					spreadItemThumb.append(rd.uiPagesThumbs[imageIndex]);
 
-					spreadItem.appendChild(rd.uiPagesContainer[imageIndex]);
+					spreadItem.append(rd.uiPagesContainer[imageIndex]);
 					spreadItem.classList.add('cover-page')
 
 					buildSize2P(spreadItem, mb.readerMaxRatio);
@@ -2830,7 +2818,7 @@
 					coverlay.classList.add(rd.ltr ? 'RTL' : 'LTR')
 					coverlay.style.width = rd.uiPagesContainer[imageIndex].style.width;
 					coverlay.style.height = rd.uiPagesContainer[imageIndex].style.height;
-					rd.uiPagesContainer[imageIndex].appendChild(coverlay);
+					rd.uiPagesContainer[imageIndex].append(coverlay);
 
 				}
 				else if (spreadKind == 'two-pages') {
@@ -2840,11 +2828,15 @@
 					let pageRef2 = rd.uiSpreadsPagenums[index][1];
 
 					spreadItem.singlePage = false;
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2]);
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1]);
+					spreadItemThumb.append(
+						rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2],
+						rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1],
+					);
 
-					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2]);
-					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1]);
+					spreadItem.append(
+						rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2],
+						rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1],
+					);
 
 					rd.uiPages[imageIndex1].style.float = rd.ltr ? 'right' : 'left';
 					rd.uiPages[imageIndex2].style.float = rd.ltr ? 'left' : 'right';
@@ -2882,12 +2874,16 @@
 					rd.uiPagesThumbs[imageIndex1].style.objectPosition = rd.ltr ? 'left' : 'right';
 					rd.uiPagesThumbs[imageIndex2].style.objectPosition = rd.ltr ? 'right' : 'left';
 
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2]);
-					spreadItemThumb.appendChild(rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1]);
+					spreadItemThumb.append(
+						rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2],
+						rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1],
+					);
 
 					// Add page containers
-					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2]);
-					spreadItem.appendChild(rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1]);
+					spreadItem.append(
+						rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2],
+						rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1],
+					);
 
 					rd.uiPages[imageIndex1].style.float = rd.ltr ? 'right' : 'left';
 					rd.uiPages[imageIndex2].style.float = rd.ltr ? 'left' : 'right';
@@ -2919,13 +2915,12 @@
 
 
 				}
-				spreadItem.appendChild(spreadPageShadowL);
-				spreadItem.appendChild(spreadPageShadowR);
+				spreadItem.append(spreadPageShadowL, spreadPageShadowR);
 				rd.uiSpreadsPageShadowL.push(spreadPageShadowL);
 				rd.uiSpreadsPageShadowR.push(spreadPageShadowR);
 
 				rd.uiSpreads.push(spreadItem);
-				readerViewer.appendChild(spreadItem);
+				readerViewer.append(spreadItem);
 				spreadHide(spreadItem);
 
 				const localSpread = index;
@@ -2934,7 +2929,7 @@
 					jumpToSpread(localSpread);
 				});
 				rd.uiSpreadsThumbs.push(spreadItemThumb);
-				thumbStripInner.appendChild(spreadItemThumb);
+				thumbStripInner.append(spreadItemThumb);
 
 			});
 
