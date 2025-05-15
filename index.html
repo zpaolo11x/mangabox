@@ -2219,9 +2219,9 @@
 			pageTurning: null,
 
 			speedTurn: 500,			// Speed of turning page animation
-			shadowOpacityForward: '0.3',
+			shadowOpacityForward: '0.4',
 			shadowOpacityBackward: '0.3',
-			shadowWidthForward: '20%',
+			shadowWidthForward: '10%',
 			shadowWidthBackward: '15%',
 
 			speedScroll: 500,			// Speed of spread page scrolling
@@ -3276,12 +3276,12 @@
 				{ clipPath: 'inset(0 100% 0 0)' } // Fully clipped
 			];
 			const unFade = [
-				{ filter: 'brightness(85%) sepia(30%)' },
+				{ filter: 'brightness(90%) sepia(10%)' },
 				{ filter: 'brightness(100%) sepia(0%)' }
 			];
 			const fade = [
 				{ filter: 'brightness(100%) sepia(0%)' },
-				{ filter: 'brightness(85%) sepia(30%)' }
+				{ filter: 'brightness(90%) sepia(10%)' }
 			];
 
 			if (oldindex != index) rd.uiSpreads[oldindex].animate(fade, { duration: rd.speedTurn, easing: 'ease-in' });
