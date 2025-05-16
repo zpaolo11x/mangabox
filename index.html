@@ -468,17 +468,6 @@
 		})
 
 		logOut.addEventListener('click', async () => {
-
-			//await callAPI('/api/logout','POST');
-			/*fetch(`${mb.baseUrl}/api/logout`, {
-				method: 'POST',
-				credentials: "include", // Required to send cookies!
-				headers: {
-					'Authorization': mb.authHeader,
-					'skip_zrok_interstitial': '1',
-				}
-			});
-			*/
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 			localStorage.removeItem('mbAuthHeader');
@@ -524,7 +513,7 @@
 				const total = isHorizontal ? content.scrollWidth : content.scrollHeight;
 				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
 				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
-				//console.log("T:"+total+" V:"+visible+" S:"+scroll);
+
 				const scrollable = total > visible;
 
 				if (!scrollable) {
@@ -539,7 +528,6 @@
 
 				let thumbSize = Math.max((visible / total) * visible, 30);
 				let midBoxRate = (scroll / (total - visible));
-				//console.log(midBoxRate);
 				let thumbPos = margin + midBoxRate * (visible - 2 * margin - thumbSize);
 
 				if (isHorizontal) {
@@ -621,7 +609,8 @@
 
 			if (searchString.includes('y:')) {
 
-				//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+				//TODO there was a sort entry here, not needed anymore?
+				// const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
@@ -653,6 +642,7 @@
 				return
 			}
 
+			//TODO there was a sort entry here, not needed anymore?
 			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
@@ -669,6 +659,7 @@
 			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
+			//TODO there was a sort entry here, not needed anymore?
 			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
@@ -821,8 +812,6 @@
 				})
 			});
 		};
-
-		//buildLanguageList();
 
 		mb.filterButtons = [
 			mb.filterTable.sorting,
@@ -1117,7 +1106,6 @@
 					await Promise.all(
 						Object.entries(dashboardElements).map(async ([name, item]) => {
 							const resultsObject = await item.getItems(0, 20);
-							//item.element.style.display = resultsObject.empty ? 'none' : 'block';
 							item.showItems(resultsObject.content, item.homeStrip);
 						})
 					);
@@ -1164,6 +1152,7 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
+			//TODO there was a sort entry here, not needed anymore?
 			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
@@ -1379,7 +1368,6 @@
 					event.stopPropagation();
 					if (target.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
-					//getFilteredSeries(altTitle.story, serie.id);
 				});
 				noPointerDown(artistLabel);
 			}
@@ -1447,6 +1435,7 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
+			//TODO there was a sort entry here, not needed anymore?
 			//const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const allSeriesPage = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
@@ -1454,7 +1443,7 @@
 			);
 			allSeries = allSeriesPage.content;
 			// now it gets the series sorted by name so no need to elaborate the sorting, but for custom sorting based for example on title time?
-			//allSeries.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
+			// allSeries.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
 			return (allSeries);
 		}
 
@@ -1647,7 +1636,6 @@
 
 		async function showBookDetails(book) {
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
-			//const seriesBooks = await callAPI(`/api/v1/series/${book.seriesId}/books?unpaged=true`);
 			const seriesBooks = await callAPI(
 				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
@@ -1982,6 +1970,7 @@
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
+					//TODO there was a sort entry here, not needed anymore?
 					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
@@ -2257,7 +2246,7 @@
 
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
-			rd.pages = [];					// this is the array of pages data in the form url; iscover etc
+			rd.pages = [];					// this is the array of pages data in the form url, iscover etc
 
 			/* CLEARED IN THE CLEAR ROUTINE
 			rd.uiPages = [];				// array of page images with alt = page number
@@ -2375,7 +2364,6 @@
 
 			const scrollScaler = newWidth / oldWidth;
 			thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
-			//centerThumb(true);
 		}
 
 		thumbStripButton.addEventListener('click', () => {
@@ -2389,7 +2377,6 @@
 				const scrollScaler = newWidth / oldWidth;
 				thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
 				rd.thumbsWidth = newWidth;
-				//debugPrint('Size changed:', entry.contentRect.width, entry.contentRect.height);
 			}
 		});
 
@@ -2962,7 +2949,6 @@
 
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!rd.uiPages[element].hasSrc) {
-						//rd.uiPages[element].src = 'anim5.gif';
 						rd.picLoadStack.push(element); // Add to the stack
 						printStack('S');
 						rd.uiPages[element].classList.add('loading');
@@ -3168,7 +3154,6 @@
 				if (!fast) {
 					smoothScroll(thumbStripScrollContent, targetScrollLeft, 300);
 				} else {
-					//smoothScroll(thumbStrip, targetScrollLeft, 150);
 					thumbStripScrollContent.scrollLeft = targetScrollLeft;
 				};
 
@@ -3202,7 +3187,6 @@
 			// Animation preparation
 			const turnSpeed = force ? 0 : rd.speedTurn;
 			const animData = { duration: turnSpeed, easing: easeFull, fill: 'forwards' };
-			//const animDataHalf = { duration: turnSpeed * 0.5, easing: 'ease-in-out', fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
@@ -3261,13 +3245,9 @@
 			if (!startCover && !stopCover) {
 				let rightPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[rd.ltr ? 1 : 0]]
 				let leftPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[rd.ltr ? 0 : 1]]
-				//let oldSpreadShadowL = rd.uiSpreadsPageShadowL[oldindex];
-				//let oldSpreadShadowR = rd.uiSpreadsPageShadowR[oldindex];
+
 				let newSpreadShadowL = rd.uiSpreadsPageShadowL[index];
 				let newSpreadShadowR = rd.uiSpreadsPageShadowR[index];
-
-				//let rightPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 1 : 0]]
-				//let leftPage_old = rd.uiPagesContainer[rd.uiSpreadsImageRefs[oldindex][rd.ltr ? 0 : 1]]
 
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
@@ -3447,9 +3427,6 @@
 			rd.currentSpreadIndex = localNewSpreadIndex;
 
 			if (isSectionHidden(readerContainer)) return;
-
-
-			//spreadHide(rd.uiSpreads[localOldSpreadIndex]);
 
 			populateSpread(localNewSpreadIndex);
 			spreadSetFocus(spreadClassX, true, true);
