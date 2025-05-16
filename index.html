@@ -443,12 +443,6 @@
 			return (item.classList.contains('hidden-spread'));
 		}
 
-		// Event listeners for main menu buttons
-		/*
-				libraryMenu.addEventListener('click', () => {
-					sectionToggle(extraMenuBar);
-				});
-		*/
 		colorChanger.addEventListener('click', () => {
 			mb.accentColor = (mb.accentColor + 1) % mb.swatches.length;
 			changeAccent(mb.accentColor);
@@ -1912,21 +1906,7 @@
 				seriesMiniHeader.classList.add('collapse');
 
 				focusItem(focus);
-				/*
-				if (focus) {
-					var item = document.getElementById(focus);
-					const yOffset = -150;
-					const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
 
-					mainContainer.scrollTo({ top: y });
-
-					mb.currentlyScaled = item.firstChild;
-					item.firstChild.classList.add('scaled');
-
-				} else {
-					mainContainer.scrollTo({ top: 0 });
-				}
-				*/
 			}
 		}
 
@@ -3151,11 +3131,6 @@
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
 
-				/*	thumbStrip.scrollTo({
-						left: -thumbStrip.clientWidth / 2 + targetElement.offsetLeft - thumbStrip.offsetLeft + targetElement.clientWidth / 2,
-						behavior: 'smooth' // Enable smooth scrolling
-					});
-				*/
 			}
 		}
 
@@ -3425,12 +3400,6 @@
 
 			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
 
-			/*
-			rd.uiSpreads[localNewSpreadIndex].animate(
-				[{transform: 'translate(-100%, -50%)'},{transform: 'translate(-50%, -50%)'}],
-				{ duration: 550, easing: 'linear', fill: 'forwards' }
-			)
-			*/
 			let turnDirectionCalc = null;
 
 			if (turnDirection != null) {
