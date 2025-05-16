@@ -832,7 +832,7 @@
 		];
 
 		function saveLibraryFilters() {
-			const { path, params } = parseHashAndParams();
+			const { path, params } = getHashAndParams();
 			const libraryId = params.get('library_id');
 			let filterOut = {};
 			mb.filterButtons.forEach(button => {
@@ -965,7 +965,7 @@
 		};
 
 		function stepPageChange(increment) {
-			const { path, params } = parseHashAndParams();
+			const { path, params } = getHashAndParams();
 			navigateTo('#dashboard?all=' + params.get('all') + '&page=' + (parseInt(params.get('page')) + increment));
 		}
 
@@ -1111,7 +1111,7 @@
 				buildSeriesItem(item, seriesData, null);
 			} else {
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
-				const { path, params } = parseHashAndParams();
+				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
 					const oldTop = mainContainer.scrollTop;
 					await Promise.all(
@@ -1536,9 +1536,9 @@
 				const listItem = buildLibraryItem(library.id, library.name);
 
 				listItem.addEventListener('click', () => {
-					currentPath = parseHashAndParams();
-					if ((currentPath.path == 'series') && (currentPath.params.get('library_id') == library.id)) {
-						navigateTo(`#library?library_id=${library.id}&series_id=${currentPath.params.get('series_id')}`);
+					const{path, params} = getHashAndParams();
+					if ((path == 'series') && (params.get('library_id') == library.id)) {
+						navigateTo(`#library?library_id=${library.id}&series_id=${params.get('series_id')}`);
 					}
 					else {
 						navigateTo(`#library?library_id=${library.id}`);
@@ -1978,12 +1978,10 @@
 			keepReading: {
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
 				getItems: async (page, size) => {
-					//	const out = await callAPI(`/api/v1/books?read_status=IN_PROGRESS&page=0&unpaged=true`);
 					const out = await callAPI(
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
-
 					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
@@ -2010,7 +2008,6 @@
 			recentBooks: {
 				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
 				getItems: async (page, size) => {
-					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&sort=created,desc`));
 					return (await callAPI(
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
 						'POST', `{"condition":{"allOf":[]}}`
@@ -2044,7 +2041,6 @@
 			readBooks: {
 				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
 				getItems: async (page, size) => {
-					//return (await callAPI(`/api/v1/books?page=${page}&size=${size}&read_status=READ&sort=readProgress.readDate,desc`));
 					return (await callAPI(
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"READ"}}}`
@@ -2127,8 +2123,7 @@
 		async function openSeries(libraryId, seriesId, bookId) {
 
 			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
-			//const books = await fetchBooks(seriesId);
-			//let books = await callAPI(`/api/v1/series/${seriesId}/books?page=0&unpaged=true`);			
+
 			let books = await callAPI(
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
@@ -2238,7 +2233,7 @@
 
 		};
 
-		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers readBook function
+		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
 		function navigateToReadBook(book, readingDirection) {
 			setIncognito(false);
 			navigateTo(`#bookread
@@ -2250,7 +2245,7 @@
 		}
 
 		// Function that setups the reader for a specific book, this is not run directly
-		function readBook(libraryId, seriesId, bookId, dir, pag) {
+		function openBookReader(libraryId, seriesId, bookId, dir, pag) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
 			Object.entries(dashboardElements).forEach(([name, item]) => {
 				item.homeStrip.innerHTML = '';
@@ -2326,7 +2321,8 @@
 		// Setup close button
 		function handleCloseReader() {
 			hideMenu();
-			incognitoMark.classList.remove('incognito');
+			setIncognito(false);
+			//XXX WAS incognitoMark.classList.remove('incognito'); but why didn't I just sue setIncognito(false)?
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
@@ -2348,7 +2344,6 @@
 
 		// Setup incognito button
 		function setIncognito(status) {
-
 			readerIncognito.classList.remove('incognito');
 			incognitoMark.classList.remove('incognito');
 
@@ -3588,7 +3583,7 @@
 		});
 
 		//MB URL Parsing and LoadContent Function 
-		function parseHashAndParams() {
+		function getHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
 			const params = paramString == undefined ? null : new URLSearchParams(paramString ?? '');
@@ -3596,7 +3591,7 @@
 		}
 
 		async function loadContent() {
-			const { path, params } = parseHashAndParams();
+			const { path, params } = getHashAndParams();
 
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
@@ -3623,7 +3618,7 @@
 					}
 					break;
 				case 'library':
-					mb.dashboardBin = '';;
+					mb.dashboardBin = '';
 					searchInput.value = '';
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
@@ -3639,7 +3634,7 @@
 					await performSearch(params.get('search_string'));
 					break;
 				case 'bookread':
-					await readBook(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
+					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
 					break;
 				default:
 					console.log('no selection');
@@ -3647,13 +3642,15 @@
 			await executeFade(0);
 		}
 
+		// This is the most important function, it updates the history and then passes the path to the loadContent function that does all the work
+		// In MB the navigateTo function with a proper path form will open the different sections and activate various states.
 		function navigateTo(path) {
 			history.pushState(null, '', mb.basePath + path);
 			loadContent();
 		}
 
 		// Lazy-loading setup with Intersection Observer
-		const observer = new IntersectionObserver(async (entries, observer) => {
+		const lazyLoadingObserver = new IntersectionObserver(async (entries, observer) => {
 			entries.forEach(async (entry) => {
 				if (entry.isIntersecting) {
 					const img = entry.target;
@@ -3688,7 +3685,7 @@
 
 		// Function to add lazy loading to an image
 		function addLazyLoading(img) {
-			observer.observe(img);
+			lazyLoadingObserver.observe(img);
 		}
 
 		window.addEventListener('hashchange', loadContent);
