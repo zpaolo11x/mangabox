@@ -2742,7 +2742,6 @@
 					let imageIndex = rd.uiSpreadsImageRefs[index][0];
 					let pageRef = rd.uiSpreadsPagenums[index][0];
 
-					spreadItem.singlePage = true; //TODO forse non servirà in futuro
 					spreadItemThumb.append(rd.uiPagesThumbs[imageIndex]);
 
 					spreadItem.append(rd.uiPagesContainer[imageIndex]);
@@ -2783,7 +2782,6 @@
 					let imageIndex = rd.uiSpreadsImageRefs[index][0];
 					let pageRef = rd.uiSpreadsPagenums[index][0];
 
-					spreadItem.singlePage = true; //TODO forse non servirà in futuro
 					spreadItemThumb.append(rd.uiPagesThumbs[imageIndex]);
 
 					spreadItem.append(rd.uiPagesContainer[imageIndex]);
@@ -2827,7 +2825,6 @@
 					let pageRef1 = rd.uiSpreadsPagenums[index][0];
 					let pageRef2 = rd.uiSpreadsPagenums[index][1];
 
-					spreadItem.singlePage = false;
 					spreadItemThumb.append(
 						rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2],
 						rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1],
@@ -2861,8 +2858,6 @@
 
 				}
 				else if (spreadKind == 'double-spread') {
-					spreadItem.singlePage = false;
-
 					let imageIndex1 = rd.uiSpreadsImageRefs[index][0];
 					let imageIndex2 = rd.uiSpreadsImageRefs[index][1];
 					let pageRef = rd.uiSpreadsPagenums[index][0];
