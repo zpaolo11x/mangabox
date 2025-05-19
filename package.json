@@ -42,9 +42,11 @@
 			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",
 			"icon": "assets/icons/mangabox",
 			"desktop": {
-    			"Name": "MangaBox",
-    			"Icon": "mangabox"
-  			}
+				"entry": {
+					"Name": "MangaBox",
+					"Icon": "mangabox"
+				}
+			}
 		}
 	}
 }
