@@ -278,7 +278,7 @@ a {
 }
 
 #libraryMenu {
-	transition: opacity 0.3s;
+	transition: opacity 0.3s, background-color 0.3s;
 }
 
 #libraryMenu.disabled {
