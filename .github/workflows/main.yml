@@ -42,6 +42,12 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install Flatpak dependencies
+        if: matrix.sys == 'linux'
+        run: |
+          sudo apt update
+          sudo apt install -y flatpak flatpak-builder libarchive-tools gnome-desktop-testing
+
       - name: Install dependencies
         run: npm install
 
@@ -66,6 +72,8 @@ jobs:
             dist/*.dmg
             dist/*.AppImage
             dist/*.exe
+            dist/*.flatpak
+
 
   release:
     needs: build
