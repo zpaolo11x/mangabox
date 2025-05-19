@@ -1,107 +1,117 @@
 #loginScreen {
-	position:fixed;
-	left:0;
-	right:0;
-	top:0;
-	bottom:0;
-	background-color: #f5f5f5;
-	z-index:5000;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: var(--mb-drag-bar-height);
+	bottom: 0;
+	background: linear-gradient(to bottom, white, #f5f5f5);
+	z-index: 5000;
 }
 
 .dialog {
 	padding: 0px;
-	margin:0px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	margin: 0px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+	background-color: #fff;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 
-.login-input{
+.login-input {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	border: none;             /* Removes default border */
-	outline: none;            /* Removes focus outline */
-	background: none;         /* Removes default background */
-	padding: 0;               /* Removes any internal padding */
-	margin: 0;                /* Removes any external margin */
-	box-shadow: none;         /* Removes any shadow */
-	font: inherit;            /* Inherits font properties from parent */
-	color: inherit;           /* Inherits text color */
+	border: none;
+	/* Removes default border */
+	outline: none;
+	/* Removes focus outline */
+	background: none;
+	/* Removes default background */
+	padding: 0;
+	/* Removes any internal padding */
+	margin: 0;
+	/* Removes any external margin */
+	box-shadow: none;
+	/* Removes any shadow */
+	font: inherit;
+	/* Inherits font properties from parent */
+	color: inherit;
+	/* Inherits text color */
 
 	box-sizing: border-box;
-	height:30px;
-	width:280px;
-	border-radius:4px;
-	border:1px #c0c0c0 solid;
-	padding-left:35px/*WAS 10px*/;
-	padding-right:10px;
-	font-size:16px;
+	height: 30px;
+	width: 280px;
+	border-radius: 4px;
+	border: 1px #c0c0c0 solid;
+	padding-left: 35px
+		/*WAS 10px*/
+	;
+	padding-right: 10px;
+	font-size: 16px;
 
 	transition: all 0.3s, box-shadow 0.1s;
 }
 
-.login-input:hover{
-	border:1px solid var(--mb-accent);
+.login-input:hover {
+	border: 1px solid var(--mb-accent);
 }
 
-.login-input:focus{
-	border:1px solid var(--mb-accent);
+.login-input:focus {
+	border: 1px solid var(--mb-accent);
 	box-shadow: 0px 0px 5px var(--mb-accent-a50);
 }
 
-.login-buttons{
-	margin:0px;
-	padding:0px;
+.login-buttons {
+	margin: 0px;
+	padding: 0px;
 	display: grid;
-	grid-template-columns: auto 120px; 
+	grid-template-columns: auto 120px;
 	width: 280px;
-	gap:15px;
+	gap: 15px;
 
 }
 
-.login-button{
-	margin:0px;
+.login-button {
+	margin: 0px;
 	appearance: none;
-	background:#ddd;
-	border:1px solid #aaa;
-	border-radius:4px;
-	height:30px;
-	width:100%;
-	margin-top:15px;
-	transition:0.3s all;
-	color:black;
+	background: #ddd;
+	border: 1px solid #aaa;
+	border-radius: 4px;
+	height: 30px;
+	width: 100%;
+	margin-top: 15px;
+	transition: 0.3s all;
+	color: black;
 }
 
-.login-button:hover{
-	border:1px solid var(--mb-accent);
+.login-button:hover {
+	border: 1px solid var(--mb-accent);
 	/*background-color:#eee;*/
 }
 
-.login-button:active{
-	border:1px solid var(--mb-accent);
+.login-button:active {
+	border: 1px solid var(--mb-accent);
 	background-color: var(--mb-accent);
-	color:white;
+	color: white;
 }
 
 .auth-hidden {
-    display: none;
+	display: none;
 }
 
 .error-message {
-    color: red;
-    font-size: 0.9em;
-    margin-top: 10px;
+	color: red;
+	font-size: 0.9em;
+	margin-top: 10px;
 }
 
 
@@ -109,19 +119,23 @@
 	display: flex;
 	align-items: center;
 	margin-top: 15px;
-	width: 100%; /* Match the width of input boxes */
+	width: 100%;
+	/* Match the width of input boxes */
 }
 
 .remember-me-checkbox {
-	appearance: none; /* Remove the default checkbox appearance */
+	appearance: none;
+	/* Remove the default checkbox appearance */
 	width: 20px;
 	height: 20px;
 	border: 1px solid #c0c0c0;
 	border-radius: 4px;
-	background: #fff; /* Default white background */
+	background: #fff;
+	/* Default white background */
 	margin: 0px 10px 0px 0px;
 	position: relative;
-	cursor: pointer; /* Indicate it's clickable */
+	cursor: pointer;
+	/* Indicate it's clickable */
 	transition: all 0.3s, box-shadow 0.1s;
 }
 
@@ -135,15 +149,21 @@
 }
 
 .remember-me-checkbox:checked {
-	border-color: var(--mb-accent); /* Change border to accent color */
-	background-color: var(--mb-accent); /* Accent color background */
+	border-color: var(--mb-accent);
+	/* Change border to accent color */
+	background-color: var(--mb-accent);
+	/* Accent color background */
 }
 
 .remember-me-checkbox:checked::after {
-	content: '\f00c'; /* FontAwesome checkmark */
-	font-family: 'Font Awesome 6 Free'; /* Ensure proper font */
-	font-weight: 900; /* Bold weight for FontAwesome icons */
-	color: #fff; /* White checkmark */
+	content: '\f00c';
+	/* FontAwesome checkmark */
+	font-family: 'Font Awesome 6 Free';
+	/* Ensure proper font */
+	font-weight: 900;
+	/* Bold weight for FontAwesome icons */
+	color: #fff;
+	/* White checkmark */
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -154,43 +174,47 @@
 .remember-me-label {
 	font-size: 14px;
 	color: #555;
-	cursor: pointer; /* Matches cursor with checkbox */
+	cursor: pointer;
+	/* Matches cursor with checkbox */
 }
 
 .input-wrapper {
 	position: relative;
 	width: 100%;
-	margin-top:15px;
+	margin-top: 15px;
 
 }
 
 .input-wrapper i {
-	box-sizing: border-box; 
+	box-sizing: border-box;
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	color: #555; /* White icon color */
-	background-color: #ddd; /* Accent color */
+	color: #555;
+	/* White icon color */
+	background-color: #ddd;
+	/* Accent color */
 	width: 30px;
 	height: 30px;
 	border-radius: 4px 0px 0px 4px;
-	border:1px solid #aaa;
+	border: 1px solid #aaa;
 	border-right: transparent;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 16px;
-	pointer-events: none; /* Make the icon not respond to hover directly */
-	transition: all 0.3s; 
+	pointer-events: none;
+	/* Make the icon not respond to hover directly */
+	transition: all 0.3s;
 }
 
-.input-wrapper:hover i{
-	border-color:var(--mb-accent);
-	background-color:#ddd;
+.input-wrapper:hover i {
+	border-color: var(--mb-accent);
+	background-color: #ddd;
 }
 
-.input-wrapper:focus-within i{
-	background-color:var(--mb-accent);
-	border-color:var(--mb-accent);
-	color:#fff;
+.input-wrapper:focus-within i {
+	background-color: var(--mb-accent);
+	border-color: var(--mb-accent);
+	color: #fff;
 }

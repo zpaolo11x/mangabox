@@ -134,6 +134,28 @@ img.page:not(.hidden) {
 	}
 }
 
+.page-shadow-left{
+	position:absolute;
+	top:0;
+	right:0;
+	width:20%;
+	height:100%;
+	opacity:0;
+	transition:opacity 0.15s;
+	background: linear-gradient(to Left, rgba(99, 76, 68, 1.0), transparent);
+}
+
+.page-shadow-right{
+	position:absolute;
+	top:0;
+	left:0;
+	width:20%;
+	height:100%;
+	opacity:0;
+	transition:opacity 0.15s;
+	background: linear-gradient(to Right, rgba(99, 76, 68, 1.0), transparent);
+}
+
 .page-container {
 	position: relative;
 	overflow: hidden;
@@ -285,20 +307,6 @@ div.two-pages {
 	background-position: left top;
 
 	/*image-rendering: pixelated;*/
-}
-
-@keyframes pagedarken {
-	from {
-		filter: brightness(100%) sepia(0%);
-	}
-
-	to {
-		filter: brightness(70%) sepia(30%);
-	}
-}
-
-.darkened {
-	animation: pagedarken 0.25s ease-in 0.25s forwards;
 }
 
 #leftDrop {
@@ -665,6 +673,8 @@ div.single-page {
 
 
 .reader-buttons {
+	-webkit-app-region: no-drag;
+
 	width: 40px;
 	height: 40px;
 	padding: 0px;
@@ -713,8 +723,9 @@ div.single-page {
 
 .hidden-spread {
 	opacity: 0;
+	transition: opacity 0.2s ease;
 	/*z-index: 10!important;*/
-	transition: opacity 0.2s ease 0.5s;
+	/*transition: opacity 0.2s ease 2.5s;*/
 	/* 0.5s delay before opacity transition */
 	/*display: none;*/
 }
