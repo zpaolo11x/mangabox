@@ -44,6 +44,16 @@
 			],
 			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",
 			"icon": "assets/icons/appimage_icons"
+		},
+		"flatpak": {
+			"branch": "stable",
+			"runtime": "org.freedesktop.Platform",
+			"runtimeVersion": "23.08",
+			"sdk": "org.freedesktop.Sdk",
+			"finishArgs": [
+				"--share=network",
+				"--filesystem=home"
+			]
 		}
 	}
 }
