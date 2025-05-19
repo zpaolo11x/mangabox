@@ -38,12 +38,9 @@
 			"icon": "assets/icons/mangabox.ico"
 		},
 		"linux": {
-			"target": [
-				"AppImage",
-				"flatpak"
-			],
+			"target": "flatpak",
 			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",
-			"icon": "assets/icons/appimage_icons"
+			"icon": "assets/icons/mangabox.png"
 		},
 		"flatpak": {
 			"branch": "stable",

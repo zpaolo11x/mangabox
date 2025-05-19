@@ -70,7 +70,6 @@ jobs:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
             dist/*.dmg
-            dist/*.AppImage
             dist/*.exe
             dist/*.flatpak
 
