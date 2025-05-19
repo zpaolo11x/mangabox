@@ -40,7 +40,7 @@
 		"linux": {
 			"target": "AppImage",
 			"artifactName": "MangaBox-${version}-Linux-${arch}.AppImage",
-			"icon": "assets/icons/mangabox.png"
+			"icon": "assets/icons/mangabox"
 		}
 	}
 }
