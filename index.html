@@ -1760,8 +1760,8 @@
 			addLazyLoading(bookThumbnail);
 
 			const bookFader = addItem('div', { className: 'book-fader' });
-			const bookOverlay = addItem('div', {className: 'book-overlay'});
-			const bookStatus = addItem('div', {className: 'book-status'});
+			const bookOverlay = addItem('div', { className: 'book-overlay' });
+			const bookStatus = addItem('div', { className: 'book-status' });
 
 			const unread = (book.readProgress == null);
 
@@ -2449,7 +2449,7 @@
 				uiShadowL: null,	// uiShadowL: shadow for page effect, children of uiItem in the dom
 				uiShadowR: null,
 				spreadKind: null,	// what kind of page is this (cover, double spread, two pages etc)
-				pageNums: null,	// array of the page indexes that are into the spread index
+				pageNums: null,	// array of the komga page indexes that are into the spread index
 				imageRefs: null,	// array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
 			});
 		}
@@ -2463,6 +2463,40 @@
 			rd.spreadsObj.at(-1).pageNums = pageNums;
 			rd.spreadsObj.at(-1).imageRefs = imageRefs;
 		}
+
+
+		function buildUiPage(pageData) {
+			const imgDiv = addItem('div', {
+				className: 'page-container'
+			});
+			const imgPage = addItem('img', {
+				alt: (pageData == 'blank') ? '' : pageData.pageNum,
+				className: 'page multiply hidden',
+				src: 'transparent.png',
+				hasSrc: (pageData == 'blank') ? true : false,
+				lazySrc: (pageData == 'blank') ? '' : pageData.url,
+				size:  (pageData == 'blank') ? 0 : pageData.size
+			});
+			imgDiv.append(imgPage);
+
+			rd.uiPages.push(imgPage);
+			rd.uiPagesContainer.push(imgDiv);
+		};
+
+		function buildUiThumb(pageData) {
+			const imgThumb = addItem('img', {
+				className: 'page-thumb multiply hidden',
+				alt: (pageData == 'blank') ? '' : pageData.pageNum,
+				src: 'transparent.png',
+				lazySrc: (pageData == 'blank') ? '' : pageData.thumb,
+			});
+			imgThumb.style.height = 'var(--mb-thumb-height-px)';
+			imgThumb.style.aspectRatio = pageData.AR;
+
+			if (pageData != 'blank') addLazyLoading(imgThumb);
+			rd.uiPagesThumbs.push(imgThumb);
+		};
+
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId) {
@@ -2517,9 +2551,11 @@
 			// Create html structure for every page and related page thumbnails
 			// and organize data structur for spread formation
 
-			let i_image = 0;
-			let i_counter = 0;
-			let i_spread = 0;
+			let i_page = 0; 		// Index of komga page data
+			let i_counter = 0; 	// Progressive counter, for images used in each page
+			// double spread with single page are treated as this:
+			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
+			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
 			let arrayPagenums = null;
 			let arrayImageRefs = null;
@@ -2530,134 +2566,60 @@
 			let doubleSpread = false;
 			let secondPage = false;
 
-			while (i_image < pageData.length) {
-				// Create an image entry for page image
-				const imgDiv = addItem('div', {
-					className: 'page-container'
-				});
-				const imgPage = addItem('img', {
-					alt: pageData[i_image].pageNum,
-					className: 'page multiply hidden',
-					src: 'transparent.png',
-					hasSrc: false,
-					lazySrc: pageData[i_image].url,
-					size: pageData[i_image].size
-				});
-				imgDiv.append(imgPage);
+			while (i_page < pageData.length) {
 
-				rd.uiPages.push(imgPage);
-				rd.uiPagesContainer.push(imgDiv);
-
-				// Create a thumb entry for page image
-				const imgThumb = addItem('img', {
-					className: 'page-thumb multiply hidden',
-					alt: pageData[i_image].pageNum,
-					src: 'transparent.png',
-					lazySrc: pageData[i_image].thumb,
-				});
-				imgThumb.style.height = 'var(--mb-thumb-height-px)';
-				imgThumb.style.aspectRatio = pageData[i_image].AR;
-
-				addLazyLoading(imgThumb);
-				rd.uiPagesThumbs.push(imgThumb);
-
-				if (pageData[i_image].isCover) {
+				if (pageData[i_page].isCover) {
 					// Element is a cover
+					buildUiPage(pageData[i_page]);
+					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData('cover-page', [i_image], [i_counter]);
-
+					setSpreadData('cover-page', [i_page], [i_counter]);
 					i_counter++;
-					i_image++;
-					i_spread++;
+					i_page++;
 				}
-				else if ((pageData[i_image].isDoubleSpread && !doubleSpread)) {
-					// Element is a double spread and we ar not running second spread pass
-					doubleSpread = true;
-					arrayPagenums = [i_image];
-					arrayImageRefs = [i_counter];
-					spreadKind = 'double-spread';
-					i_counter++;
-				}
-				else if (pageData[i_image].isDoubleSpread && doubleSpread) {
-					// Element is a double spread, this is the second picture
-					doubleSpread = false;
-					arrayPagenums.push(i_image);
-					arrayImageRefs.push(i_counter);
-					i_counter++;
-					i_image++;
-					i_spread++;
+				else if (pageData[i_page].isDoubleSpread) {
+					// Element is a double spread, generate second set of images
+					buildUiPage(pageData[i_page]);
+					buildUiThumb(pageData[i_page]);
+					buildUiPage(pageData[i_page]);
+					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(spreadKind, arrayPagenums, arrayImageRefs);
-				}
-				else if (!secondPage) {
-					arrayPagenums = [i_image];
-					arrayImageRefs = [i_counter];
-					spreadKind = 'two-pages';
-
-					if (i_image == pageData.length - 1) {
-						pushSpreadObject();
-						setSpreadData('back-cover', [i_image], [i_counter]);
-						i_counter++;
-						i_image++;
-						i_spread++;
-					}
-					else if ((i_image + 1 < pageData.length) && (pageData[i_image + 1].isDoubleSpread)) {
-						// This is an orphan page!
-
-						// Create blank page
-						const imgDivBlank = addItem('div', {
-							className: 'page-container'
-						});
-						const imgPageBlank = addItem('img', {
-							alt: '',
-							className: 'page multiply hidden',
-							src: 'transparent.png',
-							hasSrc: true,
-							size: 0
-						});
-						imgDivBlank.append(imgPageBlank);
-
-						rd.uiPages.push(imgPageBlank);
-						rd.uiPagesContainer.push(imgDivBlank);
-
-						// Create a thumb entry for blank page
-						const imgThumbBlank = addItem('img', {
-							className: 'page-thumb multiply hidden',
-							alt: '',
-							src: 'transparent.png',
-						});
-						imgThumbBlank.style.height = 'var(--mb-thumb-height-px)';
-						imgThumbBlank.style.aspectRatio = pageData[i_image].AR;
-
-						rd.uiPagesThumbs.push(imgThumbBlank);
-
-						arrayPagenums.push(i_image);
-						i_counter++;
-						arrayImageRefs.push(i_counter);
-						i_counter++;
-
-						i_spread++;
-						i_image++;
-						pushSpreadObject();
-						setSpreadData(spreadKind, arrayPagenums.reverse(), arrayImageRefs.reverse());
-					} else {
-						secondPage = true;
-						i_counter++;
-						i_image++;
-					}
-				}
-				else if (secondPage) {
-					secondPage = false;
-					arrayPagenums.push(i_image);
-					arrayImageRefs.push(i_counter);
+					setSpreadData('double-spread', [i_page, i_page], [i_counter, ++i_counter]);
 					i_counter++;
-					i_image++;
-					i_spread++;
+					i_page++;
+				}
+				else if (i_page == pageData.length - 1) {
+					// Element is last single page, so back cover
+					buildUiPage(pageData[i_page]);
+					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(spreadKind, arrayPagenums, arrayImageRefs);
+					setSpreadData('back-cover', [i_page], [i_counter]);
+					i_counter++;
+					i_page++;
+				}
+				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
+					// This is an orphan page!
+					buildUiPage(pageData[i_page]);
+					buildUiThumb(pageData[i_page]);
+					buildUiPage('blank');
+					buildUiThumb('blank');
+					pushSpreadObject();
+					setSpreadData('two-pages', [i_page, i_page], [++i_counter, i_counter]);
+					i_counter++;
+					i_page++;
+				} else {
+					// these are two normal pages
+					buildUiPage(pageData[i_page]);
+					buildUiThumb(pageData[i_page]);
+					buildUiPage(pageData[i_page + 1]);
+					buildUiThumb(pageData[i_page + 1]);
+					pushSpreadObject();
+					setSpreadData('two-pages', [i_page, ++i_page], [i_counter, ++i_counter]);
+					i_counter++;
+					i_page++;
 				}
 			}
-			// Prepare 'spreads' structure based on the layout chosen in the UI
+
 			mb.readerHorizontal = ((mb.screenAR / mb.readerMaxRatio > rd.thresholdRatio));
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
@@ -2681,7 +2643,6 @@
 					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-
 					buildSizePic(rd.uiPagesContainer[imageIndex], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
 					rd.uiPagesContainer[imageIndex].classList.add(rd.ltr ? 'cover-page-LTR' : 'cover-page-RTL');
@@ -2690,7 +2651,6 @@
 					} else {
 						rd.uiPagesContainer[imageIndex].style.marginRight = 'auto';
 					}
-
 
 					buildSizePic(rd.uiPages[imageIndex], pageData[pageRef].AR, pageData[pageRef].AR);
 
@@ -2729,7 +2689,6 @@
 					} else {
 						rd.uiPagesContainer[imageIndex].style.marginLeft = 'auto';
 					}
-
 
 					buildSizePic(rd.uiPages[imageIndex], pageData[pageRef].AR, pageData[pageRef].AR);
 
@@ -2837,7 +2796,6 @@
 					rd.uiPages[imageIndex2].style.height = rd.uiPagesContainer[imageIndex2].style.height;
 
 					if (pageData[pageRef].isCurrent) rd.currentSpreadIndex = index;
-
 
 				}
 				spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
