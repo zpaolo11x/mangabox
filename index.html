@@ -269,8 +269,15 @@
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
 
-		function addItem(itemkind, properties) {
+		function addItem_OLD(itemkind, properties) {
 			return Object.assign(document.createElement(itemkind), properties);
+		}
+
+		function addItem(itemkind, properties) {
+			const { style, ...rest } = properties;
+			const element = Object.assign(document.createElement(itemkind), rest);
+			if (style) Object.assign(element.style, style);
+			return element;
 		}
 
 		function getScreenAR() {
@@ -2475,7 +2482,7 @@
 				src: 'transparent.png',
 				hasSrc: (pageData == 'blank') ? true : false,
 				lazySrc: (pageData == 'blank') ? '' : pageData.url,
-				size:  (pageData == 'blank') ? 0 : pageData.size
+				size: (pageData == 'blank') ? 0 : pageData.size
 			});
 			imgDiv.append(imgPage);
 
@@ -2489,9 +2496,11 @@
 				alt: (pageData == 'blank') ? '' : pageData.pageNum,
 				src: 'transparent.png',
 				lazySrc: (pageData == 'blank') ? '' : pageData.thumb,
+				style: {
+					height: 'var(--mb-thumb-height-px)',
+					aspectRatio: pageData.AR,
+				}
 			});
-			imgThumb.style.height = 'var(--mb-thumb-height-px)';
-			imgThumb.style.aspectRatio = pageData.AR;
 
 			if (pageData != 'blank') addLazyLoading(imgThumb);
 			rd.uiPagesThumbs.push(imgThumb);
@@ -2529,22 +2538,22 @@
 			rd.leftForeEdge = addItem('div', {
 				id: 'leftForeEdge',
 				src: 'pagesLeft.png',
-				style: 'clip-path: inset(0 0 0 100%)'
+				style: {
+					clipPath: 'inset(0 0 0 100%)'
+				},
 			});
 
 			rd.rightForeEdge = addItem('div', {
 				id: 'rightForeEdge',
 				src: 'pagesRight.png',
-				style: 'clip-path: inset(0 100% 0 0)'
+				style: {
+					clipPath: 'inset(0 100% 0 0)'
+				}
 			});
 
-			rd.leftDrop = addItem('div', {
-				id: 'leftDrop',
-			});
+			rd.leftDrop = addItem('div', { id: 'leftDrop', });
 
-			rd.rightDrop = addItem('div', {
-				id: 'rightDrop',
-			});
+			rd.rightDrop = addItem('div', { id: 'rightDrop', });
 
 			readerViewer.append(rd.leftForeEdge, rd.rightForeEdge, rd.leftDrop, rd.rightDrop);
 
@@ -2553,18 +2562,10 @@
 
 			let i_page = 0; 		// Index of komga page data
 			let i_counter = 0; 	// Progressive counter, for images used in each page
+
 			// double spread with single page are treated as this:
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
-
-			let arrayPagenums = null;
-			let arrayImageRefs = null;
-			let spreadKind = null;
-
-			let element = null;
-
-			let doubleSpread = false;
-			let secondPage = false;
 
 			while (i_page < pageData.length) {
 
@@ -2607,7 +2608,8 @@
 					setSpreadData('two-pages', [i_page, i_page], [++i_counter, i_counter]);
 					i_counter++;
 					i_page++;
-				} else {
+				}
+				else {
 					// these are two normal pages
 					buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
@@ -2662,11 +2664,14 @@
 						rd.currentSpreadIndex = index;
 					}
 
-					const coverlay = document.createElement('div');
-					coverlay.id = 'coverlayer';
-					coverlay.classList.add(rd.ltr ? 'LTR' : 'RTL')
-					coverlay.style.width = rd.uiPagesContainer[imageIndex].style.width;
-					coverlay.style.height = rd.uiPagesContainer[imageIndex].style.height;
+					const coverlay = addItem('div', {
+						id: 'coverlayer',
+						className: rd.ltr ? 'LTR' : 'RTL',
+						style: {
+							width: rd.uiPagesContainer[imageIndex].style.width,
+							height: rd.uiPagesContainer[imageIndex].style.height,
+						}
+					});
 					rd.uiPagesContainer[imageIndex].append(coverlay);
 				}
 				else if ((spreadObject.spreadKind == 'back-cover')) {
@@ -2700,13 +2705,15 @@
 						rd.currentSpreadIndex = index;
 					}
 
-					const coverlay = document.createElement('div');
-					coverlay.id = 'coverlayer';
-					coverlay.classList.add(rd.ltr ? 'RTL' : 'LTR')
-					coverlay.style.width = rd.uiPagesContainer[imageIndex].style.width;
-					coverlay.style.height = rd.uiPagesContainer[imageIndex].style.height;
+					const coverlay = addItem('div', {
+						id: 'coverlayer',
+						className: rd.ltr ? 'RTL' : 'LTR',
+						style: {
+							width: rd.uiPagesContainer[imageIndex].style.width,
+							height: rd.uiPagesContainer[imageIndex].style.height,
+						}
+					});
 					rd.uiPagesContainer[imageIndex].append(coverlay);
-
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
 					let imageIndex1 = spreadObject.imageRefs[0];
