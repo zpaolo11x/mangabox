@@ -269,10 +269,6 @@
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
 
-		function addItem_OLD(itemkind, properties) {
-			return Object.assign(document.createElement(itemkind), properties);
-		}
-
 		function addItem(itemkind, properties) {
 			const { style, ...rest } = properties;
 			const element = Object.assign(document.createElement(itemkind), rest);
