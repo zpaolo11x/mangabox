@@ -2679,18 +2679,10 @@
 			// Populate and create spread structure
 			rd.spreadsObj.forEach((spreadObject, index) => {
 
-				spreadObject.uiItem = addItem('div', {
-					className: 'spread-layout'
-				});
-				spreadObject.uiShadowL = addItem('div', {
-					className: 'page-shadow-left'
-				})
-				spreadObject.uiShadowR = addItem('div', {
-					className: 'page-shadow-right'
-				})
-				const spreadItemThumb = addItem('div', {
-					className: 'spread-thumb'
-				});
+				spreadObject.uiItem = addItem('div', {className: 'spread-layout'});
+				spreadObject.uiShadowL = addItem('div', {className: 'page-shadow-left'});
+				spreadObject.uiShadowR = addItem('div', {className: 'page-shadow-right'})
+				const spreadItemThumb = addItem('div', {className: 'spread-thumb'});
 
 				if ((spreadObject.spreadKind == 'cover-page')) {
 					let imageIndex = spreadObject.imageRefs[0];
