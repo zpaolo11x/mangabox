@@ -2227,7 +2227,6 @@
 			rd.oldSpreadIndex = 0;
 			rd.isDraggingProgressBar = false;
 
-
 			rd.libraryId = libraryId;
 			rd.seriesId = seriesId;
 			rd.bookId = bookId;
@@ -2261,16 +2260,13 @@
 
 			// Cleanup all the spreads: remove each uiItem (and their descendants) from dom, then null all the graphics item
 			// like uiShadowL and uiShadowR, then cleanup the array
-			console.log(rd.spreadsObj);
 			rd.spreadsObj.forEach(item => {
 				item.uiItem.remove();
 				item.uiItem = null;
 				item.uiShadowL = null;
 				item.uiShadowR = null;
 			});
-			console.log(rd.spreadsObj);
 			rd.spreadsObj = [];
-			console.log(rd.spreadsObj);
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
