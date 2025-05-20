@@ -1759,17 +1759,9 @@
 
 			addLazyLoading(bookThumbnail);
 
-			const bookFader = addItem('div', {
-				className: 'book-fader'
-			});
-
-			const bookOverlay = addItem('div', {
-				className: 'book-overlay'
-			});
-
-			const bookStatus = addItem('div', {
-				className: 'book-status'
-			});
+			const bookFader = addItem('div', { className: 'book-fader' });
+			const bookOverlay = addItem('div', {className: 'book-overlay'});
+			const bookStatus = addItem('div', {className: 'book-status'});
 
 			const unread = (book.readProgress == null);
 
@@ -2135,12 +2127,12 @@
 			uiPagesContainer: [],
 
 			spreadsObj: [],			// Array of spreads objects, containing:
-											//    uiItem: the actual dom object
-											//		uiShadowL: shadow for page effect, children of uiItem in the dom
-											//		uiShadowR
-											// 	spreadKind: what kind of page is this (cover, double spread, two pages etc)
-											// 	pageNums: array of the page indexes that are into the spread index
-											// 	imageRefs: array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
+			//    uiItem: the actual dom object
+			//		uiShadowL: shadow for page effect, children of uiItem in the dom
+			//		uiShadowR
+			// 	spreadKind: what kind of page is this (cover, double spread, two pages etc)
+			// 	pageNums: array of the page indexes that are into the spread index
+			// 	imageRefs: array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
 
 			currentPageIndex: 0,
 			currentSpreadIndex: 0,
@@ -2354,13 +2346,6 @@
 
 		resizeObserver.observe(thumbStripInner);
 
-		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
-		/*
-		thumbStripInner.addEventListener('transitionrun', () => {
-			debugPrint('Transition started')
-		});
-		thumbStripInner.addEventListener('transitionstart', () => debugPrint('Transition actually started'));
-*/
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStripScrollContent.style.overflow = 'auto';
 			debugPrint('Transition ended')
@@ -2458,7 +2443,7 @@
 
 		//MB Reader Fetch Page Function
 
-		function createSpreadObject() {
+		function pushSpreadObject() {
 			rd.spreadsObj.push({
 				uiItem: null, 		// the actual dom object
 				uiShadowL: null,	// uiShadowL: shadow for page effect, children of uiItem in the dom
@@ -2469,7 +2454,7 @@
 			});
 		}
 
-		function spreadsNumber(){
+		function spreadsNumber() {
 			return rd.spreadsObj.length
 		}
 
@@ -2578,7 +2563,7 @@
 
 				if (pageData[i_image].isCover) {
 					// Element is a cover
-					createSpreadObject();
+					pushSpreadObject();
 					setSpreadData('cover-page', [i_image], [i_counter]);
 
 					i_counter++;
@@ -2601,7 +2586,7 @@
 					i_counter++;
 					i_image++;
 					i_spread++;
-					createSpreadObject();
+					pushSpreadObject();
 					setSpreadData(spreadKind, arrayPagenums, arrayImageRefs);
 				}
 				else if (!secondPage) {
@@ -2610,7 +2595,7 @@
 					spreadKind = 'two-pages';
 
 					if (i_image == pageData.length - 1) {
-						createSpreadObject();
+						pushSpreadObject();
 						setSpreadData('back-cover', [i_image], [i_counter]);
 						i_counter++;
 						i_image++;
@@ -2653,7 +2638,7 @@
 
 						i_spread++;
 						i_image++;
-						createSpreadObject();
+						pushSpreadObject();
 						setSpreadData(spreadKind, arrayPagenums.reverse(), arrayImageRefs.reverse());
 					} else {
 						secondPage = true;
@@ -2668,7 +2653,7 @@
 					i_counter++;
 					i_image++;
 					i_spread++;
-					createSpreadObject();
+					pushSpreadObject();
 					setSpreadData(spreadKind, arrayPagenums, arrayImageRefs);
 				}
 			}
@@ -2679,10 +2664,10 @@
 			// Populate and create spread structure
 			rd.spreadsObj.forEach((spreadObject, index) => {
 
-				spreadObject.uiItem = addItem('div', {className: 'spread-layout'});
-				spreadObject.uiShadowL = addItem('div', {className: 'page-shadow-left'});
-				spreadObject.uiShadowR = addItem('div', {className: 'page-shadow-right'})
-				const spreadItemThumb = addItem('div', {className: 'spread-thumb'});
+				spreadObject.uiItem = addItem('div', { className: 'spread-layout' });
+				spreadObject.uiShadowL = addItem('div', { className: 'page-shadow-left' });
+				spreadObject.uiShadowR = addItem('div', { className: 'page-shadow-right' })
+				const spreadItemThumb = addItem('div', { className: 'spread-thumb' });
 
 				if ((spreadObject.spreadKind == 'cover-page')) {
 					let imageIndex = spreadObject.imageRefs[0];
