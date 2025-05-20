@@ -2521,7 +2521,6 @@
 				height: page.height,
 				AR: page.width / page.height,
 				isCover: page.number == 1,
-				isLastPage: page.number == komgaPageData.length - 1,
 				isCurrent: page.number == rd.currentPage,
 				isDoubleSpread: page.width > page.height,
 				size: page.sizeBytes
@@ -2589,7 +2588,7 @@
 					i_counter++;
 					i_page++;
 				}
-				else if (pageData[i_page].isLastPage) {
+				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
