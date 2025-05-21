@@ -2130,12 +2130,12 @@
 			uiPagesContainer: [],
 
 			spreadsObj: [],			// Array of spreads objects, containing:
-											//    uiItem: the actual dom object
-											//		uiShadowL: shadow for page effect, children of uiItem in the dom
-											//		uiShadowR
-											// 	spreadKind: what kind of page is this (cover, double spread, two pages etc)
-											// 	pageNums: array of the page indexes that are into the spread index
-											// 	imageRefs: array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
+			//    uiItem: the actual dom object
+			//		uiShadowL: shadow for page effect, children of uiItem in the dom
+			//		uiShadowR
+			// 	spreadKind: what kind of page is this (cover, double spread, two pages etc)
+			// 	pageNums: array of the page indexes that are into the spread index
+			// 	imageRefs: array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
 
 			currentPageIndex: 0,
 			currentSpreadIndex: 0,
@@ -2448,15 +2448,21 @@
 		//MB Reader Fetch Page Function
 
 		function pushSpreadObject() {
+			//TODO in refactor_2 branch I try to link the pages items DIRECTLY in spreadsObj instead of usign uiPages
+			// I put the image item and container item in the array so I can target them for changes
+			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
 			rd.spreadsObj.push({
 				uiItem: null, 		// dom object, spread div and its content
 				uiShadowL: null,	// dom object, shadow for page effect, children of uiItem in the dom
 				uiShadowR: null,	//  "
 				uiThumb: null,		// dom object, thumbnail of the spread for the strip view
 
+				uiPageArray: null,
+
 				spreadKind: null,	// what kind of page is this (cover, double spread, two pages etc)
 				pageNums: null,	// array of the komga page indexes that are into the spread index
-				imageRefs: null,	// array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
+				imageRefs: null,	// array of the image index for each page 
+				// (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
 			});
 		}
 
@@ -2464,29 +2470,33 @@
 			return rd.spreadsObj.length
 		}
 
-		function setSpreadData(index, spreadKind, pageNums, imageRefs) {
+		function setSpreadData(index, spreadKind, spreadPages, pageNums, imageRefs) {
 			rd.spreadsObj.at(index).spreadKind = spreadKind;
+			rd.spreadsObj.at(index).uiPageArray = spreadPages;
 			rd.spreadsObj.at(index).pageNums = pageNums;
 			rd.spreadsObj.at(index).imageRefs = imageRefs;
 		}
 
 
 		function buildUiPage(pageData) {
-			const imgDiv = addItem('div', {
-				className: 'page-container'
-			});
-			const imgPage = addItem('img', {
-				alt: (pageData == 'blank') ? '' : pageData.pageNum,
-				className: 'page multiply hidden',
-				src: 'transparent.png',
+			const pageItem = {
+				uiPage: addItem('img', {
+					alt: (pageData == 'blank') ? '' : pageData.pageNum,
+					className: 'page multiply hidden',
+					src: 'transparent.png',
+				}),
+				uiContainer: addItem('div', {
+					className: 'page-container'
+				}),
 				hasSrc: (pageData == 'blank') ? true : false,
 				lazySrc: (pageData == 'blank') ? '' : pageData.url,
-				size: (pageData == 'blank') ? 0 : pageData.size
-			});
-			imgDiv.append(imgPage);
+				size: (pageData == 'blank') ? 0 : pageData.size,
+				pageNum: (pageData == 'blank') ? 0 : pageData.pageNum,
+			}
 
-			rd.uiPages.push(imgPage);
-			rd.uiPagesContainer.push(imgDiv);
+			pageItem.uiContainer.append(pageItem.uiPage);
+
+			return pageItem;
 		};
 
 		function buildUiThumb(pageData) {
@@ -2570,52 +2580,52 @@
 
 				if (pageData[i_page].isCover) {
 					// Element is a cover
-					buildUiPage(pageData[i_page]);
+					const page1 = buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'cover-page', [i_page], [i_counter]);
+					setSpreadData(-1, 'cover-page', [page1], [i_page], [i_counter]);
 					i_counter++;
 					i_page++;
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
-					buildUiPage(pageData[i_page]);
+					const page1 = buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
-					buildUiPage(pageData[i_page]);
+					const page2 = buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'double-spread', [i_page, i_page], [i_counter, ++i_counter]);
+					setSpreadData(-1, 'double-spread', [page1, page2], [i_page, i_page], [i_counter, ++i_counter]);
 					i_counter++;
 					i_page++;
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
-					buildUiPage(pageData[i_page]);
+					const page1 = buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'back-cover', [i_page], [i_counter]);
+					setSpreadData(-1, 'back-cover',[page1], [i_page], [i_counter]);
 					i_counter++;
 					i_page++;
 				}
 				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
 					// This is an orphan page!
-					buildUiPage(pageData[i_page]);
+					const page1 = buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
-					buildUiPage('blank');
+					const page2 = buildUiPage('blank');
 					buildUiThumb('blank');
 					pushSpreadObject();
-					setSpreadData(-1, 'two-pages', [i_page, i_page], [++i_counter, i_counter]);
+					setSpreadData(-1, 'two-pages', [page1, page2], [i_page, i_page], [++i_counter, i_counter]);
 					i_counter++;
 					i_page++;
 				}
 				else {
 					// these are two normal pages
-					buildUiPage(pageData[i_page]);
+					const page1 = buildUiPage(pageData[i_page]);
 					buildUiThumb(pageData[i_page]);
-					buildUiPage(pageData[i_page + 1]);
+					const page2 = buildUiPage(pageData[i_page + 1]);
 					buildUiThumb(pageData[i_page + 1]);
 					pushSpreadObject();
-					setSpreadData(-1, 'two-pages', [i_page, ++i_page], [i_counter, ++i_counter]);
+					setSpreadData(-1, 'two-pages', [page1, page2],[i_page, ++i_page], [i_counter, ++i_counter]);
 					i_counter++;
 					i_page++;
 				}
@@ -2636,28 +2646,30 @@
 					let imageIndex = spreadObject.imageRefs[0];
 					let pageRef = spreadObject.pageNums[0];
 
+					console.log(spreadObject.uiPageArray[0]);
+
 					spreadObject.uiThumb.append(rd.uiPagesThumbs[imageIndex]);
 
-					spreadObject.uiItem.append(rd.uiPagesContainer[imageIndex]);
+					spreadObject.uiItem.append(spreadObject.uiPageArray[0].uiContainer); //TODO Magari si può semplificare?
 					spreadObject.uiItem.classList.add('cover-page')
 
 					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPagesContainer[imageIndex], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(spreadObject.uiPageArray[0].uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
-					rd.uiPagesContainer[imageIndex].classList.add(rd.ltr ? 'cover-page-LTR' : 'cover-page-RTL');
+					spreadObject.uiPageArray[0].uiContainer.classList.add(rd.ltr ? 'cover-page-LTR' : 'cover-page-RTL');
 					if (rd.ltr) {
-						rd.uiPagesContainer[imageIndex].style.marginLeft = 'auto';
+						spreadObject.uiPageArray[0].uiContainer.style.marginLeft = 'auto';
 					} else {
-						rd.uiPagesContainer[imageIndex].style.marginRight = 'auto';
+						spreadObject.uiPageArray[0].uiContainer.style.marginRight = 'auto';
 					}
 
-					buildSizePic(rd.uiPages[imageIndex], pageData[pageRef].AR, pageData[pageRef].AR);
+					buildSizePic(spreadObject.uiPageArray[0].uiPage, pageData[pageRef].AR, pageData[pageRef].AR);
 
-					rd.uiPages[imageIndex].style.objectFit = 'cover';
-					rd.uiPages[imageIndex].style.objectPosition = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex].style.height = rd.uiPagesContainer[imageIndex].style.height;
+					spreadObject.uiPageArray[0].uiPage.style.objectFit = 'cover';
+					spreadObject.uiPageArray[0].uiPage.style.objectPosition = rd.ltr ? 'right' : 'left';
+					spreadObject.uiPageArray[0].uiPage.style.height = spreadObject.uiPageArray[0].uiContainer.style.height;
 
 					if (pageData[pageRef].isCurrent) {
 						rd.currentSpreadIndex = index;
@@ -2667,11 +2679,11 @@
 						id: 'coverlayer',
 						className: rd.ltr ? 'LTR' : 'RTL',
 						style: {
-							width: rd.uiPagesContainer[imageIndex].style.width,
-							height: rd.uiPagesContainer[imageIndex].style.height,
+							width: spreadObject.uiPageArray[0].uiContainer.style.width,
+							height: spreadObject.uiPageArray[0].uiContainer.style.height,
 						}
 					});
-					rd.uiPagesContainer[imageIndex].append(coverlay);
+					spreadObject.uiPageArray[0].uiContainer.append(coverlay);
 				}
 				else if ((spreadObject.spreadKind == 'back-cover')) {
 					let imageIndex = spreadObject.imageRefs[0];
@@ -2679,26 +2691,26 @@
 
 					spreadObject.uiThumb.append(rd.uiPagesThumbs[imageIndex]);
 
-					spreadObject.uiItem.append(rd.uiPagesContainer[imageIndex]);
+					spreadObject.uiItem.append(spreadObject.uiPageArray[0].uiContainer);
 					spreadObject.uiItem.classList.add('cover-page')
 
 					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPagesContainer[imageIndex], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(spreadObject.uiPageArray[0].uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
-					rd.uiPagesContainer[imageIndex].classList.add(rd.ltr ? 'cover-page-RTL' : 'cover-page-LTR');
+					spreadObject.uiPageArray[0].uiContainer.classList.add(rd.ltr ? 'cover-page-RTL' : 'cover-page-LTR');
 					if (rd.ltr) {
-						rd.uiPagesContainer[imageIndex].style.marginRight = 'auto';
+						spreadObject.uiPageArray[0].uiContainer.style.marginRight = 'auto';
 					} else {
-						rd.uiPagesContainer[imageIndex].style.marginLeft = 'auto';
+						spreadObject.uiPageArray[0].uiContainer.style.marginLeft = 'auto';
 					}
 
-					buildSizePic(rd.uiPages[imageIndex], pageData[pageRef].AR, pageData[pageRef].AR);
+					buildSizePic(spreadObject.uiPageArray[0].uiPage, pageData[pageRef].AR, pageData[pageRef].AR);
 
-					rd.uiPages[imageIndex].style.objectFit = 'cover';
-					rd.uiPages[imageIndex].style.objectPosition = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex].style.height = rd.uiPagesContainer[imageIndex].style.height;
+					spreadObject.uiPageArray[0].uiPage.style.objectFit = 'cover';
+					spreadObject.uiPageArray[0].uiPage.style.objectPosition = rd.ltr ? 'right' : 'left';
+					spreadObject.uiPageArray[0].uiPage.style.height = spreadObject.uiPageArray[0].uiContainer.style.height;
 
 					if (pageData[pageRef].isCurrent) {
 						rd.currentSpreadIndex = index;
@@ -2708,11 +2720,11 @@
 						id: 'coverlayer',
 						className: rd.ltr ? 'RTL' : 'LTR',
 						style: {
-							width: rd.uiPagesContainer[imageIndex].style.width,
-							height: rd.uiPagesContainer[imageIndex].style.height,
+							width: spreadObject.uiPageArray[0].uiContainer.style.width,
+							height: spreadObject.uiPageArray[0].uiContainer.style.height,
 						}
 					});
-					rd.uiPagesContainer[imageIndex].append(coverlay);
+					spreadObject.uiPageArray[0].uiContainer.append(coverlay);
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
 					let imageIndex1 = spreadObject.imageRefs[0];
@@ -2726,15 +2738,15 @@
 					);
 
 					spreadObject.uiItem.append(
-						rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1],
+						spreadObject.uiPageArray[rd.ltr ? 0 : 1].uiContainer,
+						spreadObject.uiPageArray[rd.ltr ? 1 : 0].uiContainer,
 					);
 
-					rd.uiPages[imageIndex1].style.float = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex2].style.float = rd.ltr ? 'left' : 'right';
+					spreadObject.uiPageArray[0].uiPage.style.float = rd.ltr ? 'right' : 'left';
+					spreadObject.uiPageArray[1].uiPage.style.float = rd.ltr ? 'left' : 'right';
 
-					rd.uiPagesContainer[imageIndex1].classList.add(rd.ltr ? 'left-page' : 'right-page');
-					rd.uiPagesContainer[imageIndex2].classList.add(rd.ltr ? 'right-page' : 'left-page');
+					spreadObject.uiPageArray[0].uiContainer.classList.add(rd.ltr ? 'left-page' : 'right-page');
+					spreadObject.uiPageArray[1].uiContainer.classList.add(rd.ltr ? 'right-page' : 'left-page');
 
 					spreadObject.uiItem.classList.add('two-pages');
 
@@ -2742,11 +2754,11 @@
 					//TODO Ma questo serve???? Farlo uguale a readerViewer?
 					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPagesContainer[imageIndex1], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(rd.uiPagesContainer[imageIndex2], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(spreadObject.uiPageArray[0].uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(spreadObject.uiPageArray[1].uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
-					rd.uiPages[imageIndex1].style.height = rd.uiPagesContainer[imageIndex1].style.height;
-					rd.uiPages[imageIndex2].style.height = rd.uiPagesContainer[imageIndex2].style.height;
+					spreadObject.uiPageArray[0].uiPage.style.height = spreadObject.uiPageArray[0].uiContainer.style.height;
+					spreadObject.uiPageArray[1].uiPage.style.height = spreadObject.uiPageArray[1].uiContainer.style.height;
 
 					if (pageData[pageRef1].isCurrent) rd.currentSpreadIndex = index;
 					if (pageData[pageRef2].isCurrent) rd.currentSpreadIndex = index;
@@ -2771,35 +2783,35 @@
 
 					// Add page containers
 					spreadObject.uiItem.append(
-						rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1],
+						spreadObject.uiPageArray[rd.ltr ? 0 : 1].uiContainer,
+						spreadObject.uiPageArray[rd.ltr ? 1 : 0].uiContainer,
 					);
 
-					rd.uiPages[imageIndex1].style.float = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex2].style.float = rd.ltr ? 'left' : 'right';
+					spreadObject.uiPageArray[0].uiPage.style.float = rd.ltr ? 'right' : 'left';
+					spreadObject.uiPageArray[1].uiPage.style.float = rd.ltr ? 'left' : 'right';
 
-					rd.uiPagesContainer[imageIndex1].classList.add(rd.ltr ? 'left-page' : 'right-page');
-					rd.uiPagesContainer[imageIndex2].classList.add(rd.ltr ? 'right-page' : 'left-page');
+					spreadObject.uiPageArray[0].uiContainer.classList.add(rd.ltr ? 'left-page' : 'right-page');
+					spreadObject.uiPageArray[1].uiContainer.classList.add(rd.ltr ? 'right-page' : 'left-page');
 
 					spreadObject.uiItem.classList.add('two-pages');
 
 					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(rd.uiPagesContainer[imageIndex1], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(rd.uiPagesContainer[imageIndex2], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(spreadObject.uiPageArray[0].uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(spreadObject.uiPageArray[1].uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
-					buildSizePic(rd.uiPages[imageIndex1], pageData[pageRef].AR * 0.5, pageData[pageRef].AR * 0.5);
-					buildSizePic(rd.uiPages[imageIndex2], pageData[pageRef].AR * 0.5, pageData[pageRef].AR * 0.5);
+					buildSizePic(spreadObject.uiPageArray[0].uiPage, pageData[pageRef].AR * 0.5, pageData[pageRef].AR * 0.5);
+					buildSizePic(spreadObject.uiPageArray[1].uiPage, pageData[pageRef].AR * 0.5, pageData[pageRef].AR * 0.5);
 
-					rd.uiPages[imageIndex1].style.objectFit = 'cover';
-					rd.uiPages[imageIndex2].style.objectFit = 'cover';
+					spreadObject.uiPageArray[0].uiPage.style.objectFit = 'cover';
+					spreadObject.uiPageArray[1].uiPage.style.objectFit = 'cover';
 
-					rd.uiPages[imageIndex1].style.objectPosition = rd.ltr ? 'left' : 'right';
-					rd.uiPages[imageIndex2].style.objectPosition = rd.ltr ? 'right' : 'left';
+					spreadObject.uiPageArray[0].uiPage.style.objectPosition = rd.ltr ? 'left' : 'right';
+					spreadObject.uiPageArray[1].uiPage.style.objectPosition = rd.ltr ? 'right' : 'left';
 
-					rd.uiPages[imageIndex1].style.height = rd.uiPagesContainer[imageIndex1].style.height;
-					rd.uiPages[imageIndex2].style.height = rd.uiPagesContainer[imageIndex2].style.height;
+					spreadObject.uiPageArray[0].uiPage.style.height = spreadObject.uiPageArray[0].uiContainer.style.height;
+					spreadObject.uiPageArray[1].uiPage.style.height = spreadObject.uiPageArray[1].uiContainer.style.height;
 
 					if (pageData[pageRef].isCurrent) rd.currentSpreadIndex = index;
 
@@ -3162,8 +3174,8 @@
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
 			if (!startCover && !stopCover) {
-				let rightPage = rd.uiPagesContainer[rd.spreadsObj[index].imageRefs[rd.ltr ? 1 : 0]]
-				let leftPage = rd.uiPagesContainer[rd.spreadsObj[index].imageRefs[rd.ltr ? 0 : 1]]
+				let rightPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer;
+				let leftPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer;
 
 				let newSpreadShadowL = rd.spreadsObj[index].uiShadowL;
 				let newSpreadShadowR = rd.spreadsObj[index].uiShadowR;
@@ -3213,8 +3225,8 @@
 				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
 
 			} else if (startCover && stopCover) {
-				let startCoverPage = rd.uiPagesContainer[rd.spreadsObj[oldindex].imageRefs[0]]
-				let stopCoverPage = rd.uiPagesContainer[rd.spreadsObj[index].imageRefs[0]]
+				let startCoverPage = rd.spreadsObj[oldindex].uiPageArray[0].uiContainer
+				let stopCoverPage = rd.spreadsObj[index].uiPageArray[0].uiContainer
 
 				rd.leftForeEdge.style.transition = 'clip-path 0s';
 				rd.rightForeEdge.style.transition = 'clip-path 0s';
@@ -3242,10 +3254,10 @@
 				}
 			} else if (startCover) {
 				// Start Page (cover or back cover)
-				let coverPage = rd.uiPagesContainer[rd.spreadsObj[oldindex].imageRefs[0]]
+				let coverPage = rd.spreadsObj[oldindex].uiPageArray[0].uiContainer
 				// Stop Page (mid spread)
-				let rightPage = rd.uiPagesContainer[rd.spreadsObj[index].imageRefs[rd.ltr ? 1 : 0]]
-				let leftPage = rd.uiPagesContainer[rd.spreadsObj[index].imageRefs[rd.ltr ? 0 : 1]]
+				let rightPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer
+				let leftPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer
 				if (turnDirection == 'turn-right') {
 					rd.rightForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
 					rd.rightDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
@@ -3273,10 +3285,10 @@
 				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
 			} else if (stopCover) {
 				// Start Page (mid spread)
-				let rightPage = rd.uiPagesContainer[rd.spreadsObj[oldindex].imageRefs[rd.ltr ? 1 : 0]]
-				let leftPage = rd.uiPagesContainer[rd.spreadsObj[oldindex].imageRefs[rd.ltr ? 0 : 1]]
+				let rightPage = rd.spreadsObj[oldindex].uiPageArray[rd.ltr ? 1 : 0].uiContainer
+				let leftPage = rd.spreadsObj[oldindex].uiPageArray[rd.ltr ? 0 : 1].uiContainer
 				// Stop Page (cover or back cover)
-				let coverPage = rd.uiPagesContainer[rd.spreadsObj[index].imageRefs[0]]
+				let coverPage = rd.spreadsObj[index].uiPageArray[0].uiContainer
 
 				rd.leftDrop.style.marginRight = 0;
 				rd.rightDrop.style.marginLeft = 0;
