@@ -2646,8 +2646,6 @@
 					let imageIndex = spreadObject.imageRefs[0];
 					let pageRef = spreadObject.pageNums[0];
 
-					console.log(spreadObject.uiPageArray[0]);
-
 					spreadObject.uiThumb.append(rd.uiPagesThumbs[imageIndex]);
 
 					spreadObject.uiItem.append(spreadObject.uiPageArray[0].uiContainer); //TODO Magari si può semplificare?
@@ -2860,7 +2858,7 @@
 		function picLoadStackSize() {
 			let out = 0;
 			rd.picLoadStack.forEach(element => {
-				out += rd.uiPages[element].size;
+				out += element.size;
 			});
 			return (out);
 		}
@@ -2881,16 +2879,16 @@
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
 
-			const promises = rd.spreadsObj[spreadIndex].imageRefs.map(async (element, index) => {
+			const promises = rd.spreadsObj[spreadIndex].uiPageArray.map(async (element, index) => {
 
 				if (rd.picLoadStack.indexOf(element) == -1) {
-					if (!rd.uiPages[element].hasSrc) {
+					if (!element.hasSrc) {
 						rd.picLoadStack.push(element); // Add to the stack
 						printStack('S');
-						rd.uiPages[element].classList.add('loading');
+						element.uiPage.classList.add('loading');
 						try {
 							// Fetch the image
-							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
+							const blobUrl = await fetchMedia(element.lazySrc);
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
@@ -2898,14 +2896,14 @@
 							img.src = blobUrl;
 							await img.decode();
 
-							rd.uiPages[element].src = blobUrl;
-							rd.uiPages[element].hasSrc = true;
+							element.uiPage.src = blobUrl;
+							element.hasSrc = true;
 							//rd.uiPages[element].src = rd.pages[element].url;
 							// Handle successful load
-							rd.uiPages[element].addEventListener('load', () => {
-								rd.uiPages[element].classList.add('loaded');
-								rd.uiPages[element].classList.remove('hidden');
-								rd.uiPages[element].classList.remove('loading');
+							element.uiPage.addEventListener('load', () => {
+								element.uiPage.classList.add('loaded');
+								element.uiPage.classList.remove('hidden');
+								element.uiPage.classList.remove('loading');
 								if (isSectionHidden(readerContainer)) {
 									printStack('LX ');
 									return;
@@ -2926,10 +2924,10 @@
 					}
 
 					// Immediately handle cached images
-					else if (rd.uiPages[element].complete) {
-						rd.uiPages[element].classList.add('loaded');
-						rd.uiPages[element].classList.remove('hidden');
-						rd.uiPages[element].classList.remove('loading');
+					else if (element.uiPage.complete) {
+						element.uiPage.classList.add('loaded');
+						element.uiPage.classList.remove('hidden');
+						element.uiPage.classList.remove('loading');
 						const index = rd.picLoadStack.indexOf(element);
 						if (index !== -1) {
 							rd.picLoadStack.splice(index, 1);
@@ -3039,8 +3037,8 @@
 		function purgeLoading() {
 			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
 				const item = rd.picLoadStack[i];
-				rd.uiPages[item].hasSrc = false;
-				rd.uiPages[item].src = 'transparent.png';
+				item.hasSrc = false;
+				item.uiPage.src = 'transparent.png';
 				rd.picLoadStack.splice(i, 1); // Remove the element at index i
 				printStack('P');
 			}
@@ -3155,8 +3153,8 @@
 
 			if (oldindex != index) rd.spreadsObj[oldindex].uiItem.animate(fade, { duration: rd.speedTurn, easing: 'ease-in' });
 
-			const startCover = rd.spreadsObj[oldindex].imageRefs.length == 1
-			const stopCover = rd.spreadsObj[index].imageRefs.length == 1
+			const startCover = rd.spreadsObj[oldindex].uiPageArray.length == 1
+			const stopCover = rd.spreadsObj[index].uiPageArray.length == 1
 
 			//turnDirection can be 'turn-right' or 'turn-left'
 			rd.leftForeEdge.style.transition = 'clip-path 0.3s';
