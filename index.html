@@ -2685,7 +2685,7 @@
 					spreadObject.uiPageArray[0].uiContainer.append(coverlay);
 				}
 				else if ((spreadObject.spreadKind == 'back-cover')) {
-					let pageRef = spreadObject.uiPageArray[0].pageNum -1;
+					let pageRef = spreadObject.uiPageArray[0].pageNum - 1;
 
 					spreadObject.uiThumb.append(spreadObject.uiPageArray[0].uiThumb)
 					spreadObject.uiItem.append(spreadObject.uiPageArray[0].uiContainer);
@@ -2725,10 +2725,8 @@
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
 					let pageRef1 = spreadObject.uiPageArray[0].pageNum - 1;
-					let pageRef2 = spreadObject.uiPageArray[1].pageNum- 1;
-console.log(pageRef1);
-console.log(pageRef2);
-console.log(pageData);
+					let pageRef2 = spreadObject.uiPageArray[1].pageNum - 1;
+
 					spreadObject.uiThumb.append(
 						spreadObject.uiPageArray[rd.ltr ? 0 : 1].uiThumb,
 						spreadObject.uiPageArray[rd.ltr ? 1 : 0].uiThumb,
@@ -2762,6 +2760,7 @@ console.log(pageData);
 
 				}
 				else if (spreadObject.spreadKind == 'double-spread') {
+					console.log(spreadObject);
 					let pageRef = spreadObject.uiPageArray[0].pageNum - 1;
 					// Crop double spreads thumbnails
 					spreadObject.uiPageArray[0].uiThumb.style.aspectRatio = pageData[pageRef].AR * 0.5;
@@ -2772,8 +2771,8 @@ console.log(pageData);
 					spreadObject.uiPageArray[1].uiThumb.style.objectPosition = rd.ltr ? 'right' : 'left';
 
 					spreadObject.uiThumb.append(
-						spreadObject.uiPageArray[rd.ltr ? 0 : 1].uiThumbs,
-						spreadObject.uiPageArray[rd.ltr ? 1 : 0].uiThumbs,
+						spreadObject.uiPageArray[rd.ltr ? 0 : 1].uiThumb,
+						spreadObject.uiPageArray[rd.ltr ? 1 : 0].uiThumb,
 					);
 
 					// Add page containers
