@@ -2460,13 +2460,28 @@
 			});
 		}
 
+		function buildSpreadObject(spreadKind, spreadPages) {
+			return({
+				// dom object, spread div and its content
+				// dom object, shadow for page effect, children of uiItem in the dom
+				//  "
+				// dom object, thumbnail of the spread for the strip view
+				uiItem: addItem('div', { className: 'spread-layout' }),
+				uiShadowL: addItem('div', { className: 'page-shadow-left' }),
+				uiShadowR: addItem('div', { className: 'page-shadow-right' }),
+				uiThumb: addItem('div', { className: 'spread-thumb' }),
+				uiPageArray: spreadPages,
+				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)				
+			})
+		}
+
 		function spreadsNumber() {
 			return rd.spreadsObj.length
 		}
 
-		function setSpreadData(index, spreadKind, spreadPages) {
-			rd.spreadsObj.at(index).spreadKind = spreadKind;
-			rd.spreadsObj.at(index).uiPageArray = spreadPages;
+		function setSpreadData(object, spreadKind, spreadPages) {
+			object.spreadKind = spreadKind;
+			object.uiPageArray = spreadPages;
 		}
 
 
@@ -2533,6 +2548,9 @@
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
+			mb.readerHorizontal = ((mb.screenAR / mb.readerMaxRatio > rd.thresholdRatio));
+			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
+
 			// Create pageData structure with the fields from fetched data
 			const pageData = komgaPageData.map(page => ({
 				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
@@ -2564,7 +2582,6 @@
 			});
 
 			rd.leftDrop = addItem('div', { id: 'leftDrop', });
-
 			rd.rightDrop = addItem('div', { id: 'rightDrop', });
 
 			readerViewer.append(rd.leftForeEdge, rd.rightForeEdge, rd.leftDrop, rd.rightDrop);
@@ -2578,51 +2595,45 @@
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
+			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {
-				pushSpreadObject();
+				//pushSpreadObject();
+				let spreadObject = null;
 				if (pageData[i_page].isCover) {
 					// Element is a cover
 					const page1 = buildUiPage(pageData[i_page]);
-					setSpreadData(-1, 'cover-page', [page1]);
+					spreadObject = buildSpreadObject('cover-page', [page1]);
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page]);
-					setSpreadData(-1, 'double-spread', [page1, page2]);
+					spreadObject = buildSpreadObject('double-spread', [page1, page2]);
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const page1 = buildUiPage(pageData[i_page]);
-					setSpreadData(-1, 'back-cover', [page1]);
+					spreadObject = buildSpreadObject('back-cover', [page1]);
 				}
 				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
 					// This is an orphan page!
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage('blank');
-					setSpreadData(-1, 'two-pages', [page1, page2]);
+					spreadObject = buildSpreadObject('two-pages', [page1, page2]);
 				}
 				else {
 					// these are two normal pages
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page + 1]);
-					setSpreadData(-1, 'two-pages', [page1, page2]);
+					spreadObject = buildSpreadObject('two-pages', [page1, page2]);
 					i_page++;
 				}
+				rd.spreadsObj.push(spreadObject);
 				i_page++;
 			}
 
-			mb.readerHorizontal = ((mb.screenAR / mb.readerMaxRatio > rd.thresholdRatio));
-			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
-
-			// Populate and create spread structure
+			// Style and structure the spread objects and pages
 			rd.spreadsObj.forEach((spreadObject, index) => {
-
-				spreadObject.uiItem = addItem('div', { className: 'spread-layout' });
-				spreadObject.uiShadowL = addItem('div', { className: 'page-shadow-left' });
-				spreadObject.uiShadowR = addItem('div', { className: 'page-shadow-right' });
-				spreadObject.uiThumb = addItem('div', { className: 'spread-thumb' });
-
 				if ((spreadObject.spreadKind == 'cover-page')) {
 					let pageRef = spreadObject.uiPageArray[0].pageNum - 1;
 
