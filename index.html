@@ -2130,13 +2130,7 @@
 			uiPagesContainer: [],
 
 			spreadsObj: [],			// Array of spreads objects, containing:
-			//    uiItem: the actual dom object
-			//		uiShadowL: shadow for page effect, children of uiItem in the dom
-			//		uiShadowR
-			// 	spreadKind: what kind of page is this (cover, double spread, two pages etc)
-			// 	pageNums: array of the page indexes that are into the spread index
-			// 	imageRefs: array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
-
+	
 			currentPageIndex: 0,
 			currentSpreadIndex: 0,
 			oldSpreadIndex: 0,
@@ -2462,7 +2456,6 @@
 				uiPageArray: null,
 
 				spreadKind: null,	// what kind of page is this (cover, double spread, two pages etc)
-				pageNums: null,	// array of the komga page indexes that are into the spread index
 
 			});
 		}
@@ -2471,10 +2464,9 @@
 			return rd.spreadsObj.length
 		}
 
-		function setSpreadData(index, spreadKind, spreadPages, pageNums) {
+		function setSpreadData(index, spreadKind, spreadPages) {
 			rd.spreadsObj.at(index).spreadKind = spreadKind;
 			rd.spreadsObj.at(index).uiPageArray = spreadPages;
-			rd.spreadsObj.at(index).pageNums = pageNums;
 		}
 
 
@@ -2593,7 +2585,7 @@
 					// Element is a cover
 					const page1 = buildUiPage(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'cover-page', [page1], [i_page]);
+					setSpreadData(-1, 'cover-page', [page1]);
 					i_counter++;
 					i_page++;
 				}
@@ -2602,7 +2594,7 @@
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'double-spread', [page1, page2], [i_page, i_page]);
+					setSpreadData(-1, 'double-spread', [page1, page2]);
 					i_counter++;
 					i_page++;
 				}
@@ -2610,7 +2602,7 @@
 					// Element is last single page, so back cover
 					const page1 = buildUiPage(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'back-cover', [page1], [i_page], [i_counter]);
+					setSpreadData(-1, 'back-cover', [page1]);
 					i_counter++;
 					i_page++;
 				}
@@ -2619,7 +2611,7 @@
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage('blank');
 					pushSpreadObject();
-					setSpreadData(-1, 'two-pages', [page1, page2], [i_page, i_page]);
+					setSpreadData(-1, 'two-pages', [page1, page2]);
 					i_counter++;
 					i_page++;
 				}
@@ -2628,9 +2620,9 @@
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page + 1]);
 					pushSpreadObject();
-					setSpreadData(-1, 'two-pages', [page1, page2], [i_page, ++i_page]);
+					setSpreadData(-1, 'two-pages', [page1, page2]);
 					i_counter++;
-					i_page++;
+					i_page+=2;
 				}
 			}
 
