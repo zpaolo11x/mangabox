@@ -2130,7 +2130,7 @@
 			uiPagesContainer: [],
 
 			spreadsObj: [],			// Array of spreads objects, containing:
-	
+
 			currentPageIndex: 0,
 			currentSpreadIndex: 0,
 			oldSpreadIndex: 0,
@@ -2976,9 +2976,12 @@
 
 
 		function getPage(index) {
-			let pageNumber = (Number((rd.ltr
-				? rd.spreadsObj[index].uiPageArray[0].pageNum
-				: rd.spreadsObj[index].uiPageArray[1].pageNum ?? rd.spreadObj[index].uiPageArray[0].pageNum))
+			console.log(rd.spreadsObj);
+			const { uiPageArray } = rd.spreadsObj[index];
+			const pageNumber = Number(
+				rd.ltr
+					? uiPageArray[0]?.pageNum
+					: uiPageArray[1]?.pageNum ?? uiPageArray[0]?.pageNum
 			);
 
 			const twoPages = rd.spreadsObj[index].uiItem.classList.contains('two-pages');
