@@ -2145,8 +2145,6 @@
 			thumbZoom: false,
 			thumbsWidth: 0,
 
-			uiPagesThumbs: [],
-
 			libraryId: 0,
 			seriesId: 0,
 			bookId: 0,
@@ -2238,11 +2236,6 @@
 
 		// Reader cleanup functions to remove all dangling spreads and pages
 		function clearReader() {
-			// Cleanup all DOM objects and array of objects 
-			["uiPages", "uiPagesContainer", "uiPagesThumbs"].forEach(key => {
-				rd[key].forEach(item => item.remove());
-				rd[key].length = 0;
-			});
 
 			// Cleanup ForeEdge and drop shadows
 			["leftForeEdge", "rightForeEdge", "leftDrop", "rightDrop"].forEach(key => {
@@ -2261,6 +2254,15 @@
 				item.uiThumb = null;
 				item.uiShadowL = null;
 				item.uiShadowR = null;
+				item.uiPageArray.forEach(pageItem => {
+					pageItem.uiPage.remove();
+					pageItem.uiContainer.remove();
+					pageItem.uiThumb.remove();
+					pageItem.uiPage = null;
+					pageItem.uiContainer = null;
+					pageItem.uiThumb = null;
+				});
+				item.uiPageArray = null
 			});
 			rd.spreadsObj = [];
 		}
@@ -2461,8 +2463,7 @@
 
 				spreadKind: null,	// what kind of page is this (cover, double spread, two pages etc)
 				pageNums: null,	// array of the komga page indexes that are into the spread index
-				imageRefs: null,	// array of the image index for each page 
-				// (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
+
 			});
 		}
 
@@ -2470,11 +2471,10 @@
 			return rd.spreadsObj.length
 		}
 
-		function setSpreadData(index, spreadKind, spreadPages, pageNums, imageRefs) {
+		function setSpreadData(index, spreadKind, spreadPages, pageNums) {
 			rd.spreadsObj.at(index).spreadKind = spreadKind;
 			rd.spreadsObj.at(index).uiPageArray = spreadPages;
 			rd.spreadsObj.at(index).pageNums = pageNums;
-			rd.spreadsObj.at(index).imageRefs = imageRefs;
 		}
 
 
@@ -2488,12 +2488,23 @@
 				uiContainer: addItem('div', {
 					className: 'page-container'
 				}),
+				uiThumb: addItem('img', {
+					className: 'page-thumb multiply hidden',
+					alt: (pageData == 'blank') ? '' : pageData.pageNum,
+					src: 'transparent.png',
+					lazySrc: (pageData == 'blank') ? '' : pageData.thumb,
+					style: {
+						height: 'var(--mb-thumb-height-px)',
+						aspectRatio: pageData.AR,
+					}
+				}),
 				hasSrc: (pageData == 'blank') ? true : false,
 				lazySrc: (pageData == 'blank') ? '' : pageData.url,
 				size: (pageData == 'blank') ? 0 : pageData.size,
 				pageNum: (pageData == 'blank') ? 0 : pageData.pageNum,
 			}
 
+			if (pageData != 'blank') addLazyLoading(pageItem.uiThumb);
 			pageItem.uiContainer.append(pageItem.uiPage);
 
 			return pageItem;
@@ -2581,51 +2592,43 @@
 				if (pageData[i_page].isCover) {
 					// Element is a cover
 					const page1 = buildUiPage(pageData[i_page]);
-					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'cover-page', [page1], [i_page], [i_counter]);
+					setSpreadData(-1, 'cover-page', [page1], [i_page]);
 					i_counter++;
 					i_page++;
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
 					const page1 = buildUiPage(pageData[i_page]);
-					buildUiThumb(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page]);
-					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'double-spread', [page1, page2], [i_page, i_page], [i_counter, ++i_counter]);
+					setSpreadData(-1, 'double-spread', [page1, page2], [i_page, i_page]);
 					i_counter++;
 					i_page++;
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const page1 = buildUiPage(pageData[i_page]);
-					buildUiThumb(pageData[i_page]);
 					pushSpreadObject();
-					setSpreadData(-1, 'back-cover',[page1], [i_page], [i_counter]);
+					setSpreadData(-1, 'back-cover', [page1], [i_page], [i_counter]);
 					i_counter++;
 					i_page++;
 				}
 				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
 					// This is an orphan page!
 					const page1 = buildUiPage(pageData[i_page]);
-					buildUiThumb(pageData[i_page]);
 					const page2 = buildUiPage('blank');
-					buildUiThumb('blank');
 					pushSpreadObject();
-					setSpreadData(-1, 'two-pages', [page1, page2], [i_page, i_page], [++i_counter, i_counter]);
+					setSpreadData(-1, 'two-pages', [page1, page2], [i_page, i_page]);
 					i_counter++;
 					i_page++;
 				}
 				else {
 					// these are two normal pages
 					const page1 = buildUiPage(pageData[i_page]);
-					buildUiThumb(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page + 1]);
-					buildUiThumb(pageData[i_page + 1]);
 					pushSpreadObject();
-					setSpreadData(-1, 'two-pages', [page1, page2],[i_page, ++i_page], [i_counter, ++i_counter]);
+					setSpreadData(-1, 'two-pages', [page1, page2], [i_page, ++i_page]);
 					i_counter++;
 					i_page++;
 				}
@@ -2643,11 +2646,9 @@
 				spreadObject.uiThumb = addItem('div', { className: 'spread-thumb' });
 
 				if ((spreadObject.spreadKind == 'cover-page')) {
-					let imageIndex = spreadObject.imageRefs[0];
-					let pageRef = spreadObject.pageNums[0];
+					let pageRef = spreadObject.uiPageArray[0].pageNum - 1;
 
-					spreadObject.uiThumb.append(rd.uiPagesThumbs[imageIndex]);
-
+					spreadObject.uiThumb.append(spreadObject.uiPageArray[0].uiThumb);
 					spreadObject.uiItem.append(spreadObject.uiPageArray[0].uiContainer); //TODO Magari si può semplificare?
 					spreadObject.uiItem.classList.add('cover-page')
 
@@ -2684,11 +2685,9 @@
 					spreadObject.uiPageArray[0].uiContainer.append(coverlay);
 				}
 				else if ((spreadObject.spreadKind == 'back-cover')) {
-					let imageIndex = spreadObject.imageRefs[0];
-					let pageRef = spreadObject.pageNums[0];
+					let pageRef = spreadObject.uiPageArray[0].pageNum -1;
 
-					spreadObject.uiThumb.append(rd.uiPagesThumbs[imageIndex]);
-
+					spreadObject.uiThumb.append(spreadObject.uiPageArray[0].uiThumb)
 					spreadObject.uiItem.append(spreadObject.uiPageArray[0].uiContainer);
 					spreadObject.uiItem.classList.add('cover-page')
 
@@ -2725,14 +2724,14 @@
 					spreadObject.uiPageArray[0].uiContainer.append(coverlay);
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
-					let imageIndex1 = spreadObject.imageRefs[0];
-					let imageIndex2 = spreadObject.imageRefs[1];
-					let pageRef1 = spreadObject.pageNums[0];
-					let pageRef2 = spreadObject.pageNums[1];
-
+					let pageRef1 = spreadObject.uiPageArray[0].pageNum - 1;
+					let pageRef2 = spreadObject.uiPageArray[1].pageNum- 1;
+console.log(pageRef1);
+console.log(pageRef2);
+console.log(pageData);
 					spreadObject.uiThumb.append(
-						rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1],
+						spreadObject.uiPageArray[rd.ltr ? 0 : 1].uiThumb,
+						spreadObject.uiPageArray[rd.ltr ? 1 : 0].uiThumb,
 					);
 
 					spreadObject.uiItem.append(
@@ -2763,20 +2762,18 @@
 
 				}
 				else if (spreadObject.spreadKind == 'double-spread') {
-					let imageIndex1 = spreadObject.imageRefs[0];
-					let imageIndex2 = spreadObject.imageRefs[1];
-					let pageRef = spreadObject.pageNums[0];
+					let pageRef = spreadObject.uiPageArray[0].pageNum - 1;
 					// Crop double spreads thumbnails
-					rd.uiPagesThumbs[imageIndex1].style.aspectRatio = pageData[pageRef].AR * 0.5;
-					rd.uiPagesThumbs[imageIndex2].style.aspectRatio = pageData[pageRef].AR * 0.5;
-					rd.uiPagesThumbs[imageIndex1].style.objectFit = 'cover';
-					rd.uiPagesThumbs[imageIndex2].style.objectFit = 'cover';
-					rd.uiPagesThumbs[imageIndex1].style.objectPosition = rd.ltr ? 'left' : 'right';
-					rd.uiPagesThumbs[imageIndex2].style.objectPosition = rd.ltr ? 'right' : 'left';
+					spreadObject.uiPageArray[0].uiThumb.style.aspectRatio = pageData[pageRef].AR * 0.5;
+					spreadObject.uiPageArray[1].uiThumb.style.aspectRatio = pageData[pageRef].AR * 0.5;
+					spreadObject.uiPageArray[0].uiThumb.style.objectFit = 'cover';
+					spreadObject.uiPageArray[1].uiThumb.style.objectFit = 'cover';
+					spreadObject.uiPageArray[0].uiThumb.style.objectPosition = rd.ltr ? 'left' : 'right';
+					spreadObject.uiPageArray[1].uiThumb.style.objectPosition = rd.ltr ? 'right' : 'left';
 
 					spreadObject.uiThumb.append(
-						rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1],
+						spreadObject.uiPageArray[rd.ltr ? 0 : 1].uiThumbs,
+						spreadObject.uiPageArray[rd.ltr ? 1 : 0].uiThumbs,
 					);
 
 					// Add page containers
@@ -3002,9 +2999,9 @@
 
 
 		function getPage(index) {
-			let pageNumber = (1 + Number((rd.ltr
-				? rd.spreadsObj[index].pageNums[0]
-				: rd.spreadsObj[index].pageNums[1] ?? rd.spreadObj[index].pageNums[0]))
+			let pageNumber = (Number((rd.ltr
+				? rd.spreadsObj[index].uiPageArray[0].pageNum
+				: rd.spreadsObj[index].uiPageArray[1].pageNum ?? rd.spreadObj[index].uiPageArray[0].pageNum))
 			);
 
 			const twoPages = rd.spreadsObj[index].uiItem.classList.contains('two-pages');
