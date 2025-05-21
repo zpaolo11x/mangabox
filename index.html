@@ -2573,57 +2573,43 @@
 			// and organize data structur for spread formation
 
 			let i_page = 0; 		// Index of komga page data
-			let i_counter = 0; 	// Progressive counter, for images used in each page
 
 			// double spread with single page are treated as this:
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
 			while (i_page < pageData.length) {
-
+				pushSpreadObject();
 				if (pageData[i_page].isCover) {
 					// Element is a cover
 					const page1 = buildUiPage(pageData[i_page]);
-					pushSpreadObject();
 					setSpreadData(-1, 'cover-page', [page1]);
-					i_counter++;
-					i_page++;
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page]);
-					pushSpreadObject();
 					setSpreadData(-1, 'double-spread', [page1, page2]);
-					i_counter++;
-					i_page++;
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const page1 = buildUiPage(pageData[i_page]);
-					pushSpreadObject();
 					setSpreadData(-1, 'back-cover', [page1]);
-					i_counter++;
-					i_page++;
 				}
 				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
 					// This is an orphan page!
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage('blank');
-					pushSpreadObject();
 					setSpreadData(-1, 'two-pages', [page1, page2]);
-					i_counter++;
-					i_page++;
 				}
 				else {
 					// these are two normal pages
 					const page1 = buildUiPage(pageData[i_page]);
 					const page2 = buildUiPage(pageData[i_page + 1]);
-					pushSpreadObject();
 					setSpreadData(-1, 'two-pages', [page1, page2]);
-					i_counter++;
-					i_page+=2;
+					i_page++;
 				}
+				i_page++;
 			}
 
 			mb.readerHorizontal = ((mb.screenAR / mb.readerMaxRatio > rd.thresholdRatio));
