@@ -2126,8 +2126,6 @@
 			ltr: null,
 			currentPage: 0,
 			pages: [],					// this is the array of pages data in the form url, iscover etc
-			uiPages: [],				// array of page images with alt = page number
-			uiPagesContainer: [],
 
 			spreadsObj: [],			// Array of spreads objects, containing:
 
@@ -2356,7 +2354,7 @@
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
 
-			[rd.currentPage, readerPage.innerText] = getPage(rd.currentSpreadIndex);
+			[rd.currentPage, readerPage.innerText] = getPageFromSpread(rd.currentSpreadIndex);
 
 			readerPage.style.left = rd.ltr
 				? `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
@@ -2486,9 +2484,11 @@
 
 
 		function buildUiPage(pageData) {
+			const isBlank = (pageData == 'blank');
+
 			const pageItem = {
 				uiPage: addItem('img', {
-					alt: (pageData == 'blank') ? '' : pageData.pageNum,
+					alt: isBlank ? '' : pageData.pageNum,
 					className: 'page multiply hidden',
 					src: 'transparent.png',
 				}),
@@ -2497,42 +2497,26 @@
 				}),
 				uiThumb: addItem('img', {
 					className: 'page-thumb multiply hidden',
-					alt: (pageData == 'blank') ? '' : pageData.pageNum,
+					alt: isBlank ? '' : pageData.pageNum,
 					src: 'transparent.png',
-					lazySrc: (pageData == 'blank') ? '' : pageData.thumb,
+					lazySrc: isBlank ? '' : pageData.thumb,
 					style: {
 						height: 'var(--mb-thumb-height-px)',
 						aspectRatio: pageData.AR,
 					}
 				}),
-				hasSrc: (pageData == 'blank') ? true : false,
-				lazySrc: (pageData == 'blank') ? '' : pageData.url,
-				size: (pageData == 'blank') ? 0 : pageData.size,
-				pageNum: (pageData == 'blank') ? 0 : pageData.pageNum,
-				isCurrent: (pageData == 'blank') ? false : pageData.isCurrent,
-				AR: (pageData == 'blank') ? 1 : pageData.AR,
+				hasSrc: isBlank ? true : false,
+				lazySrc: isBlank ? '' : pageData.url,
+				size: isBlank ? 0 : pageData.size,
+				pageNum: isBlank ? 0 : pageData.pageNum,
+				isCurrent: isBlank ? false : pageData.isCurrent,
+				AR: isBlank ? 1 : pageData.AR,
 			}
 
 			if (pageData != 'blank') addLazyLoading(pageItem.uiThumb);
 			pageItem.uiContainer.append(pageItem.uiPage);
 
 			return pageItem;
-		};
-
-		function buildUiThumb(pageData) {
-			const imgThumb = addItem('img', {
-				className: 'page-thumb multiply hidden',
-				alt: (pageData == 'blank') ? '' : pageData.pageNum,
-				src: 'transparent.png',
-				lazySrc: (pageData == 'blank') ? '' : pageData.thumb,
-				style: {
-					height: 'var(--mb-thumb-height-px)',
-					aspectRatio: pageData.AR,
-				}
-			});
-
-			if (pageData != 'blank') addLazyLoading(imgThumb);
-			rd.uiPagesThumbs.push(imgThumb);
 		};
 
 
@@ -2981,24 +2965,27 @@
 		};
 
 
-		function getPage(index) {
+		function getPageFromSpread(index) {
 			const { uiPageArray } = rd.spreadsObj[index];
+
 			const pageNumber = Number(
 				rd.ltr
 					? uiPageArray[0]?.pageNum
 					: uiPageArray[1]?.pageNum ?? uiPageArray[0]?.pageNum
 			);
-
-			const twoPages = rd.spreadsObj[index].uiItem.classList.contains('two-pages');
+			
+			//TODO Cosa succede se finisce con uno spread? E con un orfano?
+			const twoPages = (rd.spreadsObj[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsNumber() - 1)));
 
-			const out = [
-				(lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber,
-				pageNumber + (twoPages ? ' ' + (pageNumber + (rd.ltr ? 1 : -1)) : '')
-			];
+			const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
+			const pageNumText = pageNumber + (twoPages ? ' ' + (pageNumber + (rd.ltr ? 1 : -1)) : '');
+			
+			const out = [currentPage, pageNumText];
 
 			return out;
 		}
+
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
 			const stringOut = `${mb.basePath}#bookread
@@ -3048,7 +3035,6 @@
 					requestAnimationFrame(animateScroll);
 				}
 			}
-
 			requestAnimationFrame(animateScroll);
 		}
 
