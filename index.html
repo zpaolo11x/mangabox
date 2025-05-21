@@ -2918,7 +2918,7 @@
 							preloadPages(spreadIndex, rd.preloadCount)
 						}
 					}
-				} else console.log("skip!")
+				}
 			});
 
 			// Wait for all fetches to complete
@@ -2982,7 +2982,6 @@
 
 
 		function getPage(index) {
-			console.log(rd.spreadsObj);
 			const { uiPageArray } = rd.spreadsObj[index];
 			const pageNumber = Number(
 				rd.ltr
