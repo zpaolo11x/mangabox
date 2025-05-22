@@ -2447,7 +2447,7 @@
 		//MB Reader Fetch Page Function
 
 		function pushSpreadObject() {
-			//TODO in refactor_2 branch I try to link the pages items DIRECTLY in spreadsObj instead of usign uiPages
+
 			// I put the image item and container item in the array so I can target them for changes
 			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
 			rd.spreadsObj.push({
@@ -2623,7 +2623,7 @@
 					let pageObject = spreadObject.uiPageArray[0];
 
 					spreadObject.uiThumb.append(pageObject.uiThumb);
-					spreadObject.uiItem.append(pageObject.uiContainer); //TODO Magari si può semplificare?
+					spreadObject.uiItem.append(pageObject.uiContainer);
 					spreadObject.uiItem.classList.add('cover-page')
 
 					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
@@ -2791,7 +2791,7 @@
 
 			});
 
-			//TODO Qui non funziona bene, spostato  dopo initviewer, si può togliere?
+			//TODO Qui non funziona bene, spostato dopo initviewer, si può togliere?
 			spreadSetFocus(getCenterClass(rd.currentSpreadIndex), false, false);
 
 			return pageData;
@@ -3161,7 +3161,6 @@
 					//Removed to avoid slip below page
 					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
-					//TODO This is the playground for shadow
 					rightPage.animate(appearR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
