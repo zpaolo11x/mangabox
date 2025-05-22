@@ -14,7 +14,7 @@
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
 	--mb-library-large: 150px;
-	--mb-library-max: 200px;
+	--mb-library-name: calc(var(--mb-library-large) - var(--mb-button-size) - 10px);
 	--mb-filter-button-size: 34px;
 	--mb-filter-span-size: 30px;
 
@@ -691,14 +691,15 @@ a {
 }
 
 .library-name {
+	width:var(--mb-library-name);
+	min-width:var(--mb-library-name);
 	text-align: left;
 	padding: 5px;
 	overflow: hidden;
 	text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow-wrap: anywhere;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 }
 
 #stripPrevPage,
