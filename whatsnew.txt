@@ -1,1 +1,2 @@
+- Redesigned library buttons layout
 - Code refactoring
