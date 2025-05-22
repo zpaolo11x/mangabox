@@ -2460,7 +2460,7 @@
 		}
 
 		function buildSpreadObject(spreadKind, spreadPages) {
-			return({
+			return ({
 				// dom object, spread div and its content
 				// dom object, shadow for page effect, children of uiItem in the dom
 				//  "
@@ -2974,14 +2974,14 @@
 					? uiPageArray[0]?.pageNum
 					: uiPageArray[1]?.pageNum ?? uiPageArray[0]?.pageNum
 			);
-			
+
 			//TODO Cosa succede se finisce con uno spread? E con un orfano?
 			const twoPages = (rd.spreadsObj[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsNumber() - 1)));
 
 			const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const pageNumText = pageNumber + (twoPages ? ' ' + (pageNumber + (rd.ltr ? 1 : -1)) : '');
-			
+
 			const out = [currentPage, pageNumText];
 
 			return out;
@@ -3051,7 +3051,6 @@
 			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 
 			if (targetElement) {
-
 				const targetScrollLeft = -thumbStripScrollContent.clientWidth / 2 + targetElement.offsetLeft - thumbStripScrollContent.offsetLeft + targetElement.clientWidth / 2;
 
 				if (!fast) {
@@ -3061,12 +3060,10 @@
 				};
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
-
 			}
 		}
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
-
 			//Z-index control
 			rd.spreadsObj[index].uiItem.style.zIndex = spreadsNumber() + 1;
 
@@ -3185,8 +3182,6 @@
 					//Removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}
-
-
 
 				rd.leftForeEdge.style.clipPath = clipForeEdge.left;
 				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
@@ -3329,18 +3324,12 @@
 
 			spreadShow(localNewSpreadIndex);
 
-			let turnDirectionCalc = null;
-
-			if (turnDirection != null) {
-				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection, force)
-			} else {
-				if (rd.ltr) {
-					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-left' : 'turn-right';
-				} else {
-					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-right' : 'turn-left';
-				}
-				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, force)
-			}
+			const turnDirectionCalc = turnDirection ?? (
+				rd.ltr
+					? (localNewSpreadIndex > localOldSpreadIndex ? 'turn-left' : 'turn-right')
+					: (localNewSpreadIndex > localOldSpreadIndex ? 'turn-right' : 'turn-left')
+			);
+			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, force)
 
 			centerThumb();
 			updateProgressBar();
@@ -3380,9 +3369,9 @@
 		readerProgressBar.addEventListener('mousedown', (event) => {
 			rd.isDraggingProgressBar = true;
 			event.preventDefault();
-
 			seek(event);
 		});
+
 		readerProgressBar.addEventListener('touchstart', (event) => {
 			rd.isDraggingProgressBar = true;
 			seek(event.touches[0]); // Use the first touch point
@@ -3431,14 +3420,24 @@
 		});
 
 		document.addEventListener('keydown', (event) => {
-			if (event.key === 'ArrowLeft') {
-				if (!isSectionHidden(readerContainer)) handleLeftArrow();
-			} else if (event.key === 'ArrowRight') {
-				if (!isSectionHidden(readerContainer)) handleRightArrow();
-			} else if (event.key === 'Escape' || event.key === 'ArrowDown') {
-				if (!isSectionHidden(readerContainer)) handleCloseReader();
-			} else if (event.code === 'Space' || event.key === ' ') {
-				if (!isSectionHidden(readerContainer)) toggleMenu();
+			const readerVisible = !isSectionHidden(readerContainer);
+
+			switch (event.key) {
+				case 'ArrowLeft':
+					if (readerVisible) handleLeftArrow();
+					break;
+				case 'ArrowRight':
+					if (readerVisible) handleRightArrow();
+					break;
+				case 'Escape':
+				case 'ArrowDown':
+					if (readerVisible) handleCloseReader();
+					break;
+				case ' ':
+					if (readerVisible) toggleMenu();
+					break;
+				default:
+					break;
 			}
 		});
 
