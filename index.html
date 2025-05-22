@@ -625,7 +625,7 @@
 				);
 				displaySeries(filteredSeries, homeStripSeriesResults);
 				focusItem('top');
-				setTimeout(updateSliderMax, 10);
+				setTimeout(updateSliderProperties, 10);
 				sectionShow(searchStripsContainer);
 
 				return
@@ -665,7 +665,7 @@
 			);
 			displayBooks(filteredBooks, homeStripBooksResults, 'compact', 'top');
 
-			setTimeout(updateSliderMax, 10);
+			setTimeout(updateSliderProperties, 10);
 			sectionShow(searchStripsContainer);
 		}
 
@@ -928,8 +928,8 @@
 			}
 		}
 
-		// Set the slider max value based on the scroll width
-		function updateSliderMax() {
+		// Set the slider max value and grpahics properties based on the scroll width
+		function updateSliderProperties() {
 			if (isSectionHidden(homeStripsContainer)) return;
 
 			Object.entries(dashboardElements).forEach(([name, item]) => {
@@ -975,7 +975,7 @@
 			clearTimeout(mb.resizeTimeout);
 			mb.resizeTimeout = setTimeout(() => {
 				updateStickyMenu();
-				updateSliderMax();
+				updateSliderProperties();
 				updateReaderOrientation();
 			}, 250);
 		});
@@ -1102,7 +1102,7 @@
 							item.showItems(resultsObject.content, item.homeStrip);
 						})
 					);
-					setTimeout(updateSliderMax, 10);
+					setTimeout(updateSliderProperties, 10);
 					mainContainer.scrollTop = oldTop;
 				} else {
 					const bookData = await callAPI(`/api/v1/books/${bookId}`);
@@ -1117,9 +1117,13 @@
 			const libSmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
 			let libLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 
+console.log(libGap+" "+libSmall+" "+libLarge);
+			
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
+
+console.log(librariesList);
 
 			const maxWidth = Array.from(librariesList.childNodes)
 				.map(item => item.childNodes[1].getBoundingClientRect().width + libSmall)
@@ -1928,7 +1932,7 @@
 					item.showItems(resultsObject.content, item.homeStrip);
 				})
 			);
-			setTimeout(updateSliderMax, 10);
+			setTimeout(updateSliderProperties, 10);
 
 		}
 
