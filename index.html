@@ -908,14 +908,18 @@
 			}
 		}));
 
+		function isReaderHorizontal(screenAR){
+			return(screenAR / mb.readerMaxRatio > rd.thresholdRatio);
+		}
+		
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 
 			if (isSectionHidden(readerContainer)) {
 				mb.screenAR = newScreenAR;
-				mb.readerHorizontal = newScreenAR / mb.readerMaxRatio > rd.thresholdRatio;
+				mb.readerHorizontal = isReaderHorizontal(newScreenAR);
 			} else {
-				let newReaderHorizontal = (newScreenAR / mb.readerMaxRatio > rd.thresholdRatio);
+				let newReaderHorizontal = isReaderHorizontal(newScreenAR);
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
 					mb.readerHorizontal = newReaderHorizontal;
@@ -1871,11 +1875,9 @@
 			*/
 			// focus is the book id to focus on
 
-
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
-
 
 			if (books.length === 0) {
 				const noBooksMsg = document.createElement('p');
@@ -2081,12 +2083,10 @@
 
 			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 
-			let books = await callAPI(
+			const books = (await callAPI(
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
-			);
-
-			books = books.content;
+			)).content;
 
 			await libraryHighlight(libraryId);
 			displayHeader(seriesData);
@@ -2532,7 +2532,7 @@
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-			mb.readerHorizontal = ((mb.screenAR / mb.readerMaxRatio > rd.thresholdRatio));
+			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
 			// Create pageData structure with the fields from fetched data
