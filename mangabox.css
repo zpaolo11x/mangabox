@@ -13,7 +13,8 @@
 	--mb-library-gap: 8px;
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
-	--mb-library-large: 140px;
+	--mb-library-large: 150px;
+	--mb-library-max: 200px;
 	--mb-filter-button-size: 34px;
 	--mb-filter-span-size: 30px;
 
@@ -80,7 +81,7 @@
 
 .draggable {
 	-webkit-app-region: drag;
- }
+}
 
 html,
 body {
@@ -162,58 +163,58 @@ a {
 
 #dragBar {
 	text-align: left;
-	padding-left:32px;
+	padding-left: 32px;
 	font-size: 14px;
 	line-height: 16px;
-	position:fixed;
-	top:0;
-	left:0;
-	right:0;
-	height:var(--mb-drag-bar-height);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: var(--mb-drag-bar-height);
 	/*z-index:3000;*/
 	background: var(--mb-card-color);
 	transition: background-color 0.1s ease, color 0.3s ease;
-	display: flex; 
-	flex-direction: column; 
+	display: flex;
+	flex-direction: column;
 	justify-content: flex-end;
 	transition: all 0.3s;
 	/*border-bottom:1px red solid;*/
 }
 
-.window-controls{
-	display:flex;
-	gap:5px;
+.window-controls {
+	display: flex;
+	gap: 5px;
 	-webkit-app-region: no-drag;
-	position:absolute;
+	position: absolute;
 	top: 8px;
 	right: 8px;
 	font-size: 14px;
 }
 
-.window-controls span{
+.window-controls span {
 	width: 25px;
-	text-align:center;
+	text-align: center;
 	/*border:1px orange solid;*/
 	margin: 0px;
-	padding:0px;
+	padding: 0px;
 	transition: 0.3s;
 }
 
-.window-controls span:hover{
+.window-controls span:hover {
 	color: var(--mb-accent);
 	text-shadow: 0px 0px 15px var(--mb-accent-a50);
 }
 
-.window-controls span:active{
+.window-controls span:active {
 	color: var(--mb-accent-a50);
 }
 
-#barLogo{
-	width:16px;
-	height:16px;
-	position:absolute;
-	top:6px;
-	left:8px;
+#barLogo {
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: 6px;
+	left: 8px;
 }
 
 #mainUI:not(:has(#extraMenuBar.hidden)) {
@@ -377,6 +378,7 @@ a {
 }
 
 .library-item.search-field {
+	max-width: 100%;
 	width: auto;
 }
 
@@ -689,7 +691,14 @@ a {
 }
 
 .library-name {
+	text-align: left;
 	padding: 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
 }
 
 #stripPrevPage,

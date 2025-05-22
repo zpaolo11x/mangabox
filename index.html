@@ -908,10 +908,10 @@
 			}
 		}));
 
-		function isReaderHorizontal(screenAR){
-			return(screenAR / mb.readerMaxRatio > rd.thresholdRatio);
+		function isReaderHorizontal(screenAR) {
+			return (screenAR / mb.readerMaxRatio > rd.thresholdRatio);
 		}
-		
+
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 
@@ -1117,23 +1117,26 @@
 			const libSmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
 			let libLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 
-console.log(libGap+" "+libSmall+" "+libLarge);
-			
+			console.log(libGap + " " + libSmall + " " + libLarge);
+
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
 
-console.log(librariesList);
-
+			/*
+			console.log(librariesList);
+			Array.from(librariesList.childNodes).forEach(item => {
+				console.log(item.childNodes[1].getBoundingClientRect().width);
+			})
 			const maxWidth = Array.from(librariesList.childNodes)
 				.map(item => item.childNodes[1].getBoundingClientRect().width + libSmall)
 				.reduce((max, width) => Math.max(max, width), 0);
 
 			if (maxWidth > libLarge) {
-				libLarge = Math.ceil(maxWidth)
-				document.documentElement.style.setProperty('--mb-library-large', libLarge + 'px');
+				libLarge = Math.ceil(maxWidth);
+				//XXXdocument.documentElement.style.setProperty('--mb-library-large', libLarge + 'px');
 			}
-
+			*/
 			const libNum = libraries.length;
 			mb.libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
 			mb.libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
