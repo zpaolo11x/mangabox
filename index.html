@@ -923,7 +923,7 @@
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
 					mb.readerHorizontal = newReaderHorizontal;
-					spreadSetFocusSmooth(getCenterClass(rd.currentSpreadIndex));
+					spreadSetFocusSmooth(getSpreadFocus(rd.currentSpreadIndex));
 				}
 			}
 		}
@@ -2422,7 +2422,7 @@
 			rightLimit.innerText = rd.ltr ? rd.pagesDataArray.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
-			jumpToSpreadForce(rd.currentSpreadIndex);
+			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 		}
 
 		function buildSizePic(item, ratio, picratio) {
@@ -2804,7 +2804,7 @@
 			});
 
 			//TODO Qui non funziona bene, spostato dopo initviewer, si può togliere?
-			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
+			spreadSetFocus(getSpreadFocus(rd.currentSpreadIndex));
 
 			return pageData;
 		}
@@ -3030,7 +3030,7 @@
 		}
 
 		// Thumbnail scrolling functions
-		function smoothScroll(container, targetScrollLeft, duration = 500) {
+		function thumbSmoothScroll(container, targetScrollLeft, duration = 500) {
 			const start = container.scrollLeft;
 			const change = targetScrollLeft - start;
 			const startTime = performance.now();
@@ -3068,7 +3068,7 @@
 				const targetScrollLeft = -thumbStripScrollContent.clientWidth / 2 + targetElement.offsetLeft - thumbStripScrollContent.offsetLeft + targetElement.clientWidth / 2;
 
 				if (!fast) {
-					smoothScroll(thumbStripScrollContent, targetScrollLeft, 300);
+					thumbSmoothScroll(thumbStripScrollContent, targetScrollLeft, 300);
 				} else {
 					thumbStripScrollContent.scrollLeft = targetScrollLeft;
 				};
@@ -3300,7 +3300,7 @@
 		}
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
-		function getCenterClass(spreadIndex) {
+		function getSpreadFocus(spreadIndex) {
 			const spreadKind = rd.spreadsArray[spreadIndex].spreadKind;
 			if (spreadKind === 'cover-page') {
 				return rd.ltr ? 'focus-right-page' : 'focus-left-page';
@@ -3314,16 +3314,16 @@
 			return rd.ltr ? 'focus-left-page' : 'focus-right-page';
 		}
 
+		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
 
-		function jumpToSpread(newSpreadTarget, spreadClass = null, force = false) {
+			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
+			const localNewSpreadIndex = targetSpreadIndex;
 
-			const localOldSpreadIndex = force ? 0 : rd.currentSpreadIndex;
-			const localNewSpreadIndex = newSpreadTarget;
+			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsNumber()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
 
-			if ((newSpreadTarget < 0) || (newSpreadTarget >= spreadsNumber()) || (!force && (localOldSpreadIndex == localNewSpreadIndex))) return;
-
-			let spreadClassX = getCenterClass(localNewSpreadIndex);
-			if (spreadClass != null) spreadClassX = spreadClass;
+			if (targetSpreadFocus == null) {
+				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
+			}
 
 			purgeLoading();
 
@@ -3333,20 +3333,21 @@
 			if (isSectionHidden(readerContainer)) return;
 
 			populateSpread(localNewSpreadIndex);
-			spreadSetFocusSmoothDelay(spreadClassX);
+			spreadSetFocusSmoothDelay(targetSpreadFocus);
 
 			spreadShow(localNewSpreadIndex);
 
 			const turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) === rd.ltr ? 'turn-left' : 'turn-right';
-			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, force)
+			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
 			centerThumb();
 			updateProgressBar();
-			if (!force) history.replaceState(null, '', jumpString());
+
+			if (!skipHistory) history.replaceState(null, '', jumpString());
 		}
 
-		function jumpToSpreadForce(newSpreadTarget) {
-			jumpToSpread(newSpreadTarget, null, true)
+		function jumpToSpreadSkipHistory(targetSpreadIndex) {
+			jumpToSpread(targetSpreadIndex, null, true)
 		}
 
 		// Reader UI Control Buttons
