@@ -437,13 +437,13 @@
 
 		// Show/Hide reader pages/spreads
 		function spreadHide(index) {
-			rd.spreadsObj[index].uiItem.classList.add('hidden-spread');
+			rd.spreadsArray[index].uiItem.classList.add('hidden-spread');
 		}
 		function spreadShow(index) {
-			rd.spreadsObj[index].uiItem.classList.remove('hidden-spread');
+			rd.spreadsArray[index].uiItem.classList.remove('hidden-spread');
 		}
 		function isSpreadHidden(index) {
-			return (rd.spreadsObj[index].uiItem.classList.contains('hidden-spread'));
+			return (rd.spreadsArray[index].uiItem.classList.contains('hidden-spread'));
 		}
 
 		colorChanger.addEventListener('click', () => {
@@ -2133,9 +2133,8 @@
 
 			ltr: null,
 			currentPage: 0,
-			pages: [],					// this is the array of pages data in the form url, iscover etc
-
-			spreadsObj: [],			// Array of spreads objects, containing:
+			pagesDataArray: [],					// this is the array of pages data in the form url, iscover etc
+			spreadsArray: [],			// Array of spreads objects, containing:
 
 			currentPageIndex: 0,
 			currentSpreadIndex: 0,
@@ -2207,9 +2206,9 @@
 
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
-			rd.pages = [];					// this is the array of pages data in the form url, iscover etc
+			rd.pagesDataArray = [];					// this is the array of pages data in the form url, iscover etc
 
-			rd.spreadsObj = [];
+			rd.spreadsArray = [];
 
 			rd.currentPageIndex = 0;
 			rd.currentSpreadIndex = 0;
@@ -2244,7 +2243,7 @@
 
 			// Cleanup all the spreads: remove each uiItem (and their descendants) from dom, then null all the graphics item
 			// like uiShadowL and uiShadowR, then cleanup the array
-			rd.spreadsObj.forEach(item => {
+			rd.spreadsArray.forEach(item => {
 				item.uiItem.remove();
 				item.uiThumb.remove();
 				item.uiItem = null;
@@ -2261,7 +2260,7 @@
 				});
 				item.uiPageArray = null
 			});
-			rd.spreadsObj = [];
+			rd.spreadsArray = [];
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -2398,7 +2397,7 @@
 		async function initViewer() {
 			updatePWABar('black');
 
-			rd.pages = await fetchPages(rd.bookId);
+			rd.pagesDataArray = await fetchPages(rd.bookId);
 
 			let bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 
@@ -2406,8 +2405,8 @@
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
-			leftLimit.innerText = rd.ltr ? 1 : rd.pages.length;
-			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
+			leftLimit.innerText = rd.ltr ? 1 : rd.pagesDataArray.length;
+			rightLimit.innerText = rd.ltr ? rd.pagesDataArray.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
 			jumpToSpread(rd.currentSpreadIndex, null, null, true);
@@ -2450,7 +2449,7 @@
 
 			// I put the image item and container item in the array so I can target them for changes
 			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
-			rd.spreadsObj.push({
+			rd.spreadsArray.push({
 				uiItem: null, 		// dom object, spread div and its content
 				uiShadowL: null,	// dom object, shadow for page effect, children of uiItem in the dom
 				uiShadowR: null,	//  "
@@ -2479,7 +2478,7 @@
 		}
 
 		function spreadsNumber() {
-			return rd.spreadsObj.length
+			return rd.spreadsArray.length
 		}
 
 		function buildUiPage(pageData) {
@@ -2613,12 +2612,12 @@
 					spreadObject = buildSpreadObject('two-pages', [page1, page2]);
 					i_page++;
 				}
-				rd.spreadsObj.push(spreadObject);
+				rd.spreadsArray.push(spreadObject);
 				i_page++;
 			}
 
 			// Style and structure the spread objects and pages
-			rd.spreadsObj.forEach((spreadObject, index) => {
+			rd.spreadsArray.forEach((spreadObject, index) => {
 				if ((spreadObject.spreadKind == 'cover-page')) {
 					let pageObject = spreadObject.uiPageArray[0];
 
@@ -2842,7 +2841,7 @@
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
 
-			const promises = rd.spreadsObj[spreadIndex].uiPageArray.map(async (element, index) => {
+			const promises = rd.spreadsArray[spreadIndex].uiPageArray.map(async (element, index) => {
 
 				if (rd.picLoadStack.indexOf(element) == -1) {
 					if (!element.hasSrc) {
@@ -2861,7 +2860,7 @@
 
 							element.uiPage.src = blobUrl;
 							element.hasSrc = true;
-							//rd.uiPages[element].src = rd.pages[element].url;
+							//rd.uiPages[element].src = rd.pagesDataArray[element].url;
 							// Handle successful load
 							element.uiPage.addEventListener('load', () => {
 								element.uiPage.classList.add('loaded');
@@ -2965,7 +2964,7 @@
 
 
 		function getPageFromSpread(index) {
-			const { uiPageArray } = rd.spreadsObj[index];
+			const { uiPageArray } = rd.spreadsArray[index];
 
 			const pageNumber = Number(
 				rd.ltr
@@ -2974,7 +2973,7 @@
 			);
 
 			//TODO Cosa succede se finisce con uno spread? E con un orfano?
-			const twoPages = (rd.spreadsObj[index].spreadKind == 'two-pages');
+			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsNumber() - 1)));
 
 			const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
@@ -3063,12 +3062,12 @@
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
 			//Z-index control
-			rd.spreadsObj[index].uiItem.style.zIndex = spreadsNumber() + 1;
+			rd.spreadsArray[index].uiItem.style.zIndex = spreadsNumber() + 1;
 
 			if (turnDirection == 'turn-right') {
-				rd.spreadsObj[oldindex].uiItem.style.zIndex = rd.ltr ? spreadsNumber() - oldindex : oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? spreadsNumber() - oldindex : oldindex;
 			} else {
-				rd.spreadsObj[oldindex].uiItem.style.zIndex = rd.ltr ? oldindex : spreadsNumber() - oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? oldindex : spreadsNumber() - oldindex;
 			}
 
 			rd.leftDrop.style.zIndex = rd.rightDrop.style.zIndex = 0;
@@ -3115,10 +3114,10 @@
 				{ filter: 'brightness(90%) sepia(10%)' }
 			];
 
-			if (oldindex != index) rd.spreadsObj[oldindex].uiItem.animate(fade, { duration: rd.speedTurn, easing: 'ease-in' });
+			if (oldindex != index) rd.spreadsArray[oldindex].uiItem.animate(fade, { duration: rd.speedTurn, easing: 'ease-in' });
 
-			const startCover = rd.spreadsObj[oldindex].uiPageArray.length == 1
-			const stopCover = rd.spreadsObj[index].uiPageArray.length == 1
+			const startCover = rd.spreadsArray[oldindex].uiPageArray.length == 1
+			const stopCover = rd.spreadsArray[index].uiPageArray.length == 1
 
 			//turnDirection can be 'turn-right' or 'turn-left'
 			rd.leftForeEdge.style.transition = 'clip-path 0.3s';
@@ -3136,11 +3135,11 @@
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
 			if (!startCover && !stopCover) {
-				let rightPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer;
-				let leftPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer;
+				let rightPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer;
+				let leftPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer;
 
-				let newSpreadShadowL = rd.spreadsObj[index].uiShadowL;
-				let newSpreadShadowR = rd.spreadsObj[index].uiShadowR;
+				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
+				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
 
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
@@ -3184,8 +3183,8 @@
 				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
 
 			} else if (startCover && stopCover) {
-				let startCoverPage = rd.spreadsObj[oldindex].uiPageArray[0].uiContainer
-				let stopCoverPage = rd.spreadsObj[index].uiPageArray[0].uiContainer
+				let startCoverPage = rd.spreadsArray[oldindex].uiPageArray[0].uiContainer
+				let stopCoverPage = rd.spreadsArray[index].uiPageArray[0].uiContainer
 
 				rd.leftForeEdge.style.transition = 'clip-path 0s';
 				rd.rightForeEdge.style.transition = 'clip-path 0s';
@@ -3213,10 +3212,10 @@
 				}
 			} else if (startCover) {
 				// Start Page (cover or back cover)
-				let coverPage = rd.spreadsObj[oldindex].uiPageArray[0].uiContainer
+				let coverPage = rd.spreadsArray[oldindex].uiPageArray[0].uiContainer
 				// Stop Page (mid spread)
-				let rightPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer
-				let leftPage = rd.spreadsObj[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer
+				let rightPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer
+				let leftPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer
 				if (turnDirection == 'turn-right') {
 					rd.rightForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
 					rd.rightDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
@@ -3244,10 +3243,10 @@
 				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
 			} else if (stopCover) {
 				// Start Page (mid spread)
-				let rightPage = rd.spreadsObj[oldindex].uiPageArray[rd.ltr ? 1 : 0].uiContainer
-				let leftPage = rd.spreadsObj[oldindex].uiPageArray[rd.ltr ? 0 : 1].uiContainer
+				let rightPage = rd.spreadsArray[oldindex].uiPageArray[rd.ltr ? 1 : 0].uiContainer
+				let leftPage = rd.spreadsArray[oldindex].uiPageArray[rd.ltr ? 0 : 1].uiContainer
 				// Stop Page (cover or back cover)
-				let coverPage = rd.spreadsObj[index].uiPageArray[0].uiContainer
+				let coverPage = rd.spreadsArray[index].uiPageArray[0].uiContainer
 
 				rd.leftDrop.style.marginRight = 0;
 				rd.rightDrop.style.marginLeft = 0;
@@ -3285,7 +3284,7 @@
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
 		function getCenterClass(spreadIndex) {
-			const spreadKind = rd.spreadsObj[spreadIndex].spreadKind;
+			const spreadKind = rd.spreadsArray[spreadIndex].spreadKind;
 			if (spreadKind === 'cover-page') {
 				return rd.ltr ? 'focus-right-page' : 'focus-left-page';
 			}
