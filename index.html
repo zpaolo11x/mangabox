@@ -2153,8 +2153,6 @@
 
 			incognito: false,
 
-			spreadFocus: 'focus-center',
-
 			foreEdgeL: null,
 			foreEdgeR: null,
 			dropShadowL: null,
@@ -2163,17 +2161,19 @@
 			turnTimeout: null,
 			pageTurning: null,
 
-			speedTurn: 500,			// Speed of turning page animation
-			shadowOpacityForward: '0.4',
-			shadowOpacityBackward: '0.3',
-			shadowWidthForward: '10%',
-			shadowWidthBackward: '15%',
+			turnTime: 500,				// Duration of turning page animation
+			scrollSpeed: 500,			// Duration of spread page scrolling
+			turnScrollDelay: 300,	// Delay of spread page scrolling during page turn
+			turnScrollTime: 500,		// Duration of spread page scrolling during page turn
+			
+			pageShadowOpacityFWD: '0.4',
+			pageShadowOpacityBWD: '0.3',
+			pageShadowWidthFWD: '10%',
+			pageShadowWidthBWD: '15%',
 
-			speedScroll: 500,			// Speed of spread page scrolling
-			speedScrollDelay: 300,	// Delay of spread page scrolling during page turn
-			speedScrollTurn: 500,	// Speed of spread page scrolling during page turn
+			spreadFocus: 'focus-center',
 
-			focusFrames: {
+			focusTransition: {
 				'focus-right-page': 'translate(-75%, -50%)',
 				'focus-left-page': 'translate(-25%, -50%)',
 				'focus-center': 'translate(-50%, -50%)',
@@ -2264,10 +2264,10 @@
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
-			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0]);
+			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.turnScrollTime, rd.turnScrollDelay] : [rd.scrollSpeed, 0]);
 
 			readerViewer.animate(
-				[{ transform: rd.focusFrames[focusString] }],
+				[{ transform: rd.focusTransition[focusString] }],
 				{ duration: duration, easing: 'ease', fill: 'forwards', delay: delay }
 			);
 			rd.spreadFocus = focusString;
@@ -3074,8 +3074,8 @@
 			const easeOut = 'cubic-bezier(0.29, 0.5, 0.58, 1)'
 
 			// Animation preparation
-			const turnSpeed = force ? 0 : rd.speedTurn;
-			const animData = { duration: turnSpeed, easing: easeFull, fill: 'forwards' };
+			const turnTime = force ? 0 : rd.turnTime;
+			const animData = { duration: turnTime, easing: easeFull, fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
@@ -3111,7 +3111,7 @@
 				{ filter: 'brightness(90%) sepia(10%)' }
 			];
 
-			if (oldindex != index) rd.spreadsArray[oldindex].uiItem.animate(fade, { duration: rd.speedTurn, easing: 'ease-in' });
+			if (oldindex != index) rd.spreadsArray[oldindex].uiItem.animate(fade, { duration: rd.turnTime, easing: 'ease-in' });
 
 			const startCover = rd.spreadsArray[oldindex].uiPageArray.length == 1
 			const stopCover = rd.spreadsArray[index].uiPageArray.length == 1
@@ -3143,17 +3143,17 @@
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					leftPage.animate(appearL2R, animData);
-					leftPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
+					leftPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 					newSpreadShadowR.animate(
 						[{ left: '0%', width: '0', opacity: '0.1' },
-						{ left: '50%', width: rd.shadowWidthForward, opacity: rd.shadowOpacityForward },
+						{ left: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
 						{ left: '100%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
+						{ duration: turnTime, easing: easeFull });
 					newSpreadShadowL.animate(
 						[{ right: '100%', width: '0', opacity: '0' },
-						{ right: '75%', width: rd.shadowWidthBackward, opacity: rd.shadowOpacityBackward },
+						{ right: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
 						{ right: '50%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
+						{ duration: turnTime, easing: easeFull });
 					//Removed to avoid slip below page
 					//leftPage_old.animate(clipL2R, animDataHalf);
 				} else {
@@ -3161,17 +3161,17 @@
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					leftPage.animate(appearL2R_sildeinR2L, animData);
-					rightPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
+					rightPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 					newSpreadShadowL.animate(
 						[{ right: '0%', width: '0', opacity: '0.1' },
-						{ right: '50%', width: rd.shadowWidthForward, opacity: rd.shadowOpacityForward },
+						{ right: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
 						{ right: '100%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
+						{ duration: turnTime, easing: easeFull });
 					newSpreadShadowR.animate(
 						[{ left: '100%', width: '0', opacity: '0' },
-						{ left: '75%', width: rd.shadowWidthBackward, opacity: rd.shadowOpacityBackward },
+						{ left: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
 						{ left: '50%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
+						{ duration: turnTime, easing: easeFull });
 					//Removed to avoid slip below page
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}
@@ -3214,26 +3214,26 @@
 				let rightPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer
 				let leftPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer
 				if (turnDirection == 'turn-right') {
-					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
-					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
+					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					leftPage.animate(appearL2R, animData);
 					rd.dropShadowR.animate(
 						[{ left: '100%' }],
-						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
 					);
 				} else {
-					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
-					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
+					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					rd.dropShadowL.animate(
 						[{ right: '100%' }],
-						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
 					);
 				}
 				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
@@ -3258,7 +3258,7 @@
 					coverPage.animate(appearR2L_slideinL2R, animData);
 					rd.dropShadowL.animate(
 						[{ right: '50%' }],
-						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
+						{ duration: turnTime, easing: easeFull, fill: "forwards" }
 					);
 				} else {
 					rd.foreEdgeR.style.transition = 'clip-path 0s';
@@ -3268,7 +3268,7 @@
 					coverPage.animate(appearL2R_sildeinR2L, animData);
 					rd.dropShadowR.animate(
 						[{ left: '50%' }],
-						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
+						{ duration: turnTime, easing: easeFull, fill: "forwards" }
 					);
 				}
 			}
@@ -3276,7 +3276,7 @@
 			clearTimeout(rd.turnTimeout);
 			rd.turnTimeout = setTimeout(() => {
 				rd.pageTurning = null;
-			}, turnSpeed);
+			}, turnTime);
 		}
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
