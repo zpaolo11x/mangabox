@@ -277,7 +277,7 @@ div.two-pages {
 
 }
 
-#leftForeEdge {
+#foreEdgeL {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -293,7 +293,7 @@ div.two-pages {
 	/*image-rendering:pixelated;*/
 }
 
-#rightForeEdge {
+#foreEdgeR {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -309,7 +309,7 @@ div.two-pages {
 	/*image-rendering: pixelated;*/
 }
 
-#leftDrop {
+#dropShadowL {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -321,7 +321,7 @@ div.two-pages {
 	z-index: 100;
 }
 
-#rightDrop {
+#dropShadowR {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;

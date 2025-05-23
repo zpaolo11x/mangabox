@@ -124,8 +124,8 @@
 
 		<div id="readerViewer"></div>
 		<!--
-		<img id="leftForeEdge" src="pagesZ3.png">
-		<img id="rightForeEdge" src="pagesZ3.png">
+		<img id="foreEdgeL" src="pagesZ3.png">
+		<img id="foreEdgeR" src="pagesZ3.png">
 		-->
 
 		<div id="readerOverlay" class="draggable">
@@ -909,7 +909,7 @@
 		}));
 
 		function isReaderHorizontal(screenAR) {
-			return (screenAR / mb.readerMaxRatio > rd.thresholdRatio);
+			return (screenAR / mb.readerMaxRatio > rd.orientationThresholdRatio);
 		}
 
 		function updateReaderOrientation() {
@@ -2121,7 +2121,7 @@
 
 		// General reader data structure
 		let rd = {
-			thresholdRatio: 1.0,		//Orientation threshold
+			orientationThresholdRatio: 1.0,		//Orientation threshold
 
 			preloadCount: 15,			// Image preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
@@ -2133,7 +2133,7 @@
 
 			ltr: null,
 			currentPage: 0,
-			pagesDataArray: [],					// this is the array of pages data in the form url, iscover etc
+			pagesDataArray: [],		// this is the array of pages data in the form url, iscover etc
 			spreadsArray: [],			// Array of spreads objects, containing:
 
 			currentPageIndex: 0,
@@ -2142,7 +2142,7 @@
 			isDraggingProgressBar: false,
 
 			thumbZoom: false,
-			thumbsWidth: 0,
+			thumbWidth: 0,
 
 			libraryId: 0,
 			seriesId: 0,
@@ -2155,10 +2155,10 @@
 
 			spreadFocus: 'focus-center',
 
-			leftForeEdge: null,
-			rightForeEdge: null,
-			leftDrop: null,
-			rightDrop: null,
+			foreEdgeL: null,
+			foreEdgeR: null,
+			dropShadowL: null,
+			dropShadowR: null,
 
 			turnTimeout: null,
 			pageTurning: null,
@@ -2234,7 +2234,7 @@
 		function clearReader() {
 
 			// Cleanup ForeEdge and drop shadows
-			["leftForeEdge", "rightForeEdge", "leftDrop", "rightDrop"].forEach(key => {
+			["foreEdgeL", "foreEdgeR", "dropShadowL", "dropShadowR"].forEach(key => {
 				if (rd[key]) {
 					rd[key].remove();
 					rd[key] = null;
@@ -2316,7 +2316,7 @@
 
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
-			rd.thumbsWidth = thumbStripInner.clientWidth;
+			rd.thumbWidth = thumbStripInner.clientWidth;
 			thumbStripScrollContent.style.overflow = 'hidden';
 			const oldWidth = thumbStripInner.clientWidth;
 
@@ -2338,11 +2338,11 @@
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
-				const oldWidth = rd.thumbsWidth;
+				const oldWidth = rd.thumbWidth;
 				const newWidth = thumbStripInner.clientWidth;
 				const scrollScaler = newWidth / oldWidth;
 				thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
-				rd.thumbsWidth = newWidth;
+				rd.thumbWidth = newWidth;
 			}
 		});
 
@@ -2549,26 +2549,26 @@
 				size: page.sizeBytes
 			}));
 
-			rd.leftForeEdge = addItem('div', {
-				id: 'leftForeEdge',
+			rd.foreEdgeL = addItem('div', {
+				id: 'foreEdgeL',
 				src: 'pagesLeft.png',
 				style: {
 					clipPath: 'inset(0 0 0 100%)'
 				},
 			});
 
-			rd.rightForeEdge = addItem('div', {
-				id: 'rightForeEdge',
+			rd.foreEdgeR = addItem('div', {
+				id: 'foreEdgeR',
 				src: 'pagesRight.png',
 				style: {
 					clipPath: 'inset(0 100% 0 0)'
 				}
 			});
 
-			rd.leftDrop = addItem('div', { id: 'leftDrop', });
-			rd.rightDrop = addItem('div', { id: 'rightDrop', });
+			rd.dropShadowL = addItem('div', { id: 'dropShadowL', });
+			rd.dropShadowR = addItem('div', { id: 'dropShadowR', });
 
-			readerViewer.append(rd.leftForeEdge, rd.rightForeEdge, rd.leftDrop, rd.rightDrop);
+			readerViewer.append(rd.foreEdgeL, rd.foreEdgeR, rd.dropShadowL, rd.dropShadowR);
 
 			// Create html structure for every page and related page thumbnails
 			// and organize data structur for spread formation
@@ -3070,7 +3070,7 @@
 				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? oldindex : spreadsNumber() - oldindex;
 			}
 
-			rd.leftDrop.style.zIndex = rd.rightDrop.style.zIndex = 0;
+			rd.dropShadowL.style.zIndex = rd.dropShadowR.style.zIndex = 0;
 
 			const easeFull = 'cubic-bezier(0.42, 0, 0.58, 1)'
 			const easeIn = 'cubic-bezier(0.42, 0, 0.71, 1)'
@@ -3120,17 +3120,17 @@
 			const stopCover = rd.spreadsArray[index].uiPageArray.length == 1
 
 			//turnDirection can be 'turn-right' or 'turn-left'
-			rd.leftForeEdge.style.transition = 'clip-path 0.3s';
-			rd.rightForeEdge.style.transition = 'clip-path 0.3s';
-			rd.leftDrop.style.transition = 'margin 0.3s';
-			rd.rightDrop.style.transition = 'margin 0.3s';
+			rd.foreEdgeL.style.transition = 'clip-path 0.3s';
+			rd.foreEdgeR.style.transition = 'clip-path 0.3s';
+			rd.dropShadowL.style.transition = 'margin 0.3s';
+			rd.dropShadowR.style.transition = 'margin 0.3s';
 
 			clipForeEdge = buildForeEdge(index, spreadsNumber())
 
 			// Margins are defined as percentage of total width, so to have the correct size we divide
 			// by mb.readerMaxRatio, then multiply by the drop aspect ratio (0.1) and apply the dropL and dropR proportion
-			rd.leftDrop.style.marginRight = (0.1 * clipForeEdge.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
-			rd.rightDrop.style.marginLeft = (0.1 * clipForeEdge.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.dropShadowL.style.marginRight = (0.1 * clipForeEdge.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.dropShadowR.style.marginLeft = (0.1 * clipForeEdge.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
 
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
@@ -3179,36 +3179,36 @@
 					//rightPage_old.animate(clipR2L, animDataHalf);
 				}
 
-				rd.leftForeEdge.style.clipPath = clipForeEdge.left;
-				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
+				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
+				rd.foreEdgeR.style.clipPath = clipForeEdge.right;
 
 			} else if (startCover && stopCover) {
 				let startCoverPage = rd.spreadsArray[oldindex].uiPageArray[0].uiContainer
 				let stopCoverPage = rd.spreadsArray[index].uiPageArray[0].uiContainer
 
-				rd.leftForeEdge.style.transition = 'clip-path 0s';
-				rd.rightForeEdge.style.transition = 'clip-path 0s';
-				rd.leftForeEdge.style.clipPath = `inset(0 0 0 100%)`;
-				rd.rightForeEdge.style.clipPath = `inset(0 100% 0 0)`;
-				rd.leftDrop.style.transition = 'margin 0s';
-				rd.rightDrop.style.transition = 'margin 0s';
-				rd.leftDrop.style.marginRight = 0;
-				rd.rightDrop.style.marginLeft = 0;
+				rd.foreEdgeL.style.transition = 'clip-path 0s';
+				rd.foreEdgeR.style.transition = 'clip-path 0s';
+				rd.foreEdgeL.style.clipPath = `inset(0 0 0 100%)`;
+				rd.foreEdgeR.style.clipPath = `inset(0 100% 0 0)`;
+				rd.dropShadowL.style.transition = 'margin 0s';
+				rd.dropShadowR.style.transition = 'margin 0s';
+				rd.dropShadowL.style.marginRight = 0;
+				rd.dropShadowR.style.marginLeft = 0;
 
 				if (turnDirection == 'turn-right') {
 					startCoverPage.animate(clipL2R, animInstant).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					stopCoverPage.animate(appearR2L, animInstant);
-					rd.rightDrop.animate([{ left: '100%' }], animInstant);
-					rd.leftDrop.animate([{ right: '50%' }], animInstant);
+					rd.dropShadowR.animate([{ left: '100%' }], animInstant);
+					rd.dropShadowL.animate([{ right: '50%' }], animInstant);
 				} else {
 					startCoverPage.animate(clipR2L, animInstant).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					stopCoverPage.animate(appearL2R, animInstant);
-					rd.leftDrop.animate([{ right: '100%' }], animInstant);
-					rd.rightDrop.animate([{ left: '50%' }], animInstant);
+					rd.dropShadowL.animate([{ right: '100%' }], animInstant);
+					rd.dropShadowR.animate([{ left: '50%' }], animInstant);
 				}
 			} else if (startCover) {
 				// Start Page (cover or back cover)
@@ -3217,30 +3217,30 @@
 				let rightPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 1 : 0].uiContainer
 				let leftPage = rd.spreadsArray[index].uiPageArray[rd.ltr ? 0 : 1].uiContainer
 				if (turnDirection == 'turn-right') {
-					rd.rightForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
-					rd.rightDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					leftPage.animate(appearL2R, animData);
-					rd.rightDrop.animate(
+					rd.dropShadowR.animate(
 						[{ left: '100%' }],
 						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				} else {
-					rd.leftForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
-					rd.leftDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
-					rd.leftDrop.animate(
+					rd.dropShadowL.animate(
 						[{ right: '100%' }],
 						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
 					);
 				}
-				rd.leftForeEdge.style.clipPath = clipForeEdge.left;
-				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
+				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
+				rd.foreEdgeR.style.clipPath = clipForeEdge.right;
 			} else if (stopCover) {
 				// Start Page (mid spread)
 				let rightPage = rd.spreadsArray[oldindex].uiPageArray[rd.ltr ? 1 : 0].uiContainer
@@ -3248,28 +3248,28 @@
 				// Stop Page (cover or back cover)
 				let coverPage = rd.spreadsArray[index].uiPageArray[0].uiContainer
 
-				rd.leftDrop.style.marginRight = 0;
-				rd.rightDrop.style.marginLeft = 0;
-				rd.leftForeEdge.style.clipPath = `inset(0 0 0 100%)`;
-				rd.rightForeEdge.style.clipPath = `inset(0 100% 0 0)`;
+				rd.dropShadowL.style.marginRight = 0;
+				rd.dropShadowR.style.marginLeft = 0;
+				rd.foreEdgeL.style.clipPath = `inset(0 0 0 100%)`;
+				rd.foreEdgeR.style.clipPath = `inset(0 100% 0 0)`;
 
 				if (turnDirection == 'turn-right') {
-					rd.leftForeEdge.style.transition = 'clip-path 0s';
+					rd.foreEdgeL.style.transition = 'clip-path 0s';
 					leftPage.animate(clipL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					coverPage.animate(appearR2L_slideinL2R, animData);
-					rd.leftDrop.animate(
+					rd.dropShadowL.animate(
 						[{ right: '50%' }],
 						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
 					);
 				} else {
-					rd.rightForeEdge.style.transition = 'clip-path 0s';
+					rd.foreEdgeR.style.transition = 'clip-path 0s';
 					rightPage.animate(clipR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					coverPage.animate(appearL2R_sildeinR2L, animData);
-					rd.rightDrop.animate(
+					rd.dropShadowR.animate(
 						[{ left: '50%' }],
 						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
 					);
