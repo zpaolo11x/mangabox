@@ -2366,10 +2366,7 @@
 		}
 
 		function preloadPage(index) {
-			if (picLoadStackSize() >= 20000000) {
-				return;
-			}
-			populateSpread(index, true);
+			if (picLoadStackSize() < 20000000) populateSpread(index, true);
 		}
 
 		function calcDelay(i, delay, scale, power) {
