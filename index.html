@@ -1111,11 +1111,11 @@
 			}
 		}
 
-		async function setSeriesReadStatus(seriesId, read, item){
+		async function setSeriesReadStatus(seriesId, read, item) {
 			setReadStatus(seriesId, null, read, item, null);
 		}
 
-		async function setBookReadStatus(bookId, read, item, format){
+		async function setBookReadStatus(bookId, read, item, format) {
 			setReadStatus(null, bookId, read, item, format);
 		}
 
@@ -1325,7 +1325,7 @@
 			});
 			timeLabel.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				if (target.binName) mb.dashboardBin = target.binName;
+				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
 			noPointerDown(timeLabel);
@@ -1355,12 +1355,12 @@
 				artistRow.append(storyLabel, artLabel);
 				storyLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				artLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
 				noPointerDown(artLabel);
@@ -1374,7 +1374,7 @@
 				artistRow.append(artistLabel);
 				artistLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				noPointerDown(artistLabel);
@@ -1411,7 +1411,7 @@
 			);
 
 			addTouchScaler(seriesItem, () => {
-				if (target.binName) mb.dashboardBin = target.binName;
+				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
@@ -1729,7 +1729,7 @@
 				mainRow.textContent = book.seriesTitle;
 				mainRow.addEventListener('click', (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
 				noPointerDown(mainRow);
@@ -1868,7 +1868,7 @@
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
-				if (target.binName) mb.dashboardBin = target.binName;
+				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
@@ -2173,7 +2173,7 @@
 			scrollSpeed: 500,			// Duration of spread page scrolling
 			turnScrollDelay: 300,	// Delay of spread page scrolling during page turn
 			turnScrollTime: 500,		// Duration of spread page scrolling during page turn
-			
+
 			pageShadowOpacityFWD: '0.4',
 			pageShadowOpacityBWD: '0.3',
 			pageShadowWidthFWD: '10%',
@@ -2281,11 +2281,11 @@
 			rd.spreadFocus = focusString;
 		}
 
-		function spreadSetFocusSmooth(focusString){
+		function spreadSetFocusSmooth(focusString) {
 			spreadSetFocus(focusString, true, false)
 		};
 
-		function spreadSetFocusSmoothDelay(focusString){
+		function spreadSetFocusSmoothDelay(focusString) {
 			spreadSetFocus(focusString, true, true)
 		}
 
@@ -2422,7 +2422,7 @@
 			rightLimit.innerText = rd.ltr ? rd.pagesDataArray.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 
-			jumpToSpread(rd.currentSpreadIndex, null, null, true);
+			jumpToSpreadForce(rd.currentSpreadIndex);
 		}
 
 		function buildSizePic(item, ratio, picratio) {
@@ -2920,7 +2920,7 @@
 			await Promise.all(promises);
 		}
 
-		function populateSpreadPreload(spreadIndex){
+		function populateSpreadPreload(spreadIndex) {
 			populateSpread(spreadIndex, true)
 		}
 
@@ -3315,7 +3315,7 @@
 		}
 
 
-		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null, force = false) {
+		function jumpToSpread(newSpreadTarget, spreadClass = null, force = false) {
 
 			const localOldSpreadIndex = force ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = newSpreadTarget;
@@ -3337,16 +3337,16 @@
 
 			spreadShow(localNewSpreadIndex);
 
-			const turnDirectionCalc = turnDirection ?? (
-				rd.ltr
-					? (localNewSpreadIndex > localOldSpreadIndex ? 'turn-left' : 'turn-right')
-					: (localNewSpreadIndex > localOldSpreadIndex ? 'turn-right' : 'turn-left')
-			);
+			const turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) === rd.ltr ? 'turn-left' : 'turn-right';
 			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, force)
 
 			centerThumb();
 			updateProgressBar();
 			if (!force) history.replaceState(null, '', jumpString());
+		}
+
+		function jumpToSpreadForce(newSpreadTarget) {
+			jumpToSpread(newSpreadTarget, null, true)
 		}
 
 		// Reader UI Control Buttons

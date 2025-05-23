@@ -1,2 +1,3 @@
 - Redesigned library buttons layout
+- Fixed bug when opening a book after marking as read or unread
 - Code refactoring
