@@ -923,7 +923,7 @@
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
 					mb.readerHorizontal = newReaderHorizontal;
-					spreadSetFocus(getCenterClass(rd.currentSpreadIndex), true, false);
+					spreadSetFocusSmooth(getCenterClass(rd.currentSpreadIndex));
 				}
 			}
 		}
@@ -1086,7 +1086,7 @@
 			mb.mediaCache.clear();
 		}
 
-		async function setReadStatus(seriesId, bookId, read, item, format = null) {
+		async function setReadStatus(seriesId, bookId, read, item, format) {
 			if (bookId == null) {
 				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
@@ -1109,6 +1109,14 @@
 					buildBookItem(item, bookData, format, null);
 				}
 			}
+		}
+
+		async function setSeriesReadStatus(seriesId, read, item){
+			setReadStatus(seriesId, null, read, item, null);
+		}
+
+		async function setBookReadStatus(bookId, read, item, format){
+			setReadStatus(null, bookId, read, item, format);
 		}
 
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
@@ -1286,7 +1294,7 @@
 			});
 			markAsRead.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				await setReadStatus(serie.id, null, true, item);
+				await setSeriesReadStatus(serie.id, true, item);
 			})
 			noPointerDown(markAsRead);
 
@@ -1297,7 +1305,7 @@
 			});
 			markAsUnread.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				await setReadStatus(serie.id, null, false, item);
+				await setSeriesReadStatus(serie.id, false, item);
 			})
 			noPointerDown(markAsUnread);
 
@@ -1794,7 +1802,7 @@
 			});
 			markAsRead.addEventListener('click', () => {
 				event.stopPropagation();
-				setReadStatus(null, book.id, true, item, format);
+				setBookReadStatus(book.id, true, item, format);
 			})
 			noPointerDown(markAsRead);
 
@@ -1805,8 +1813,8 @@
 			});
 			markAsUnread.addEventListener('click', () => {
 				event.stopPropagation();
-				setReadStatus(null, book.id, false, item, format);
-			})
+				setBookReadStatus(book.id, false, item, format);
+			});
 			noPointerDown(markAsUnread);
 
 			bookOverlay.append(markAsRead, markAsUnread);
@@ -2273,6 +2281,14 @@
 			rd.spreadFocus = focusString;
 		}
 
+		function spreadSetFocusSmooth(focusString){
+			spreadSetFocus(focusString, true, false)
+		};
+
+		function spreadSetFocusSmoothDelay(focusString){
+			spreadSetFocus(focusString, true, true)
+		}
+
 		// Setup close button
 		function handleCloseReader() {
 			hideMenu();
@@ -2281,7 +2297,7 @@
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
-				spreadSetFocus('none', false, false);
+				spreadSetFocus('none');
 				clearReader();
 			}, 400); //300ms timeout so the reader can slide out
 
@@ -2366,7 +2382,7 @@
 		}
 
 		function preloadPage(index) {
-			if (picLoadStackSize() < 20000000) populateSpread(index, true);
+			if (picLoadStackSize() < 20000000) populateSpreadPreload(index);
 		}
 
 		function calcDelay(i, delay, scale, power) {
@@ -2788,7 +2804,7 @@
 			});
 
 			//TODO Qui non funziona bene, spostato dopo initviewer, si può togliere?
-			spreadSetFocus(getCenterClass(rd.currentSpreadIndex), false, false);
+			spreadSetFocus(getCenterClass(rd.currentSpreadIndex));
 
 			return pageData;
 		}
@@ -2904,6 +2920,10 @@
 			await Promise.all(promises);
 		}
 
+		function populateSpreadPreload(spreadIndex){
+			populateSpread(spreadIndex, true)
+		}
+
 		function handleArrow(direction) {
 			const isDirectionLeft = (direction === 'left');
 			const delta = (rd.ltr === isDirectionLeft) ? -1 : 1;
@@ -2916,7 +2936,7 @@
 			const targetFocus = isDirectionLeft ? 'focus-left-page' : 'focus-right-page';
 
 			if (!mb.readerHorizontal && newSpread === spreadsNumber() && rd.spreadFocus === edgeFocus) {
-				return spreadSetFocus(targetFocus, true, false);
+				return spreadSetFocusSmooth(targetFocus);
 			}
 
 			if ((newSpread === 0 || newSpread === spreadsNumber() - 1) && rd.pageTurning) return;
@@ -2929,7 +2949,7 @@
 			if (mb.readerHorizontal) {
 				jumpToSpread(newSpread);
 			} else if (rd.spreadFocus === edgeFocus) {
-				spreadSetFocus(targetFocus, true, false);
+				spreadSetFocusSmooth(targetFocus);
 			} else {
 				jumpToSpread(newSpread, edgeFocus);
 			}
@@ -3313,7 +3333,7 @@
 			if (isSectionHidden(readerContainer)) return;
 
 			populateSpread(localNewSpreadIndex);
-			spreadSetFocus(spreadClassX, true, true);
+			spreadSetFocusSmoothDelay(spreadClassX);
 
 			spreadShow(localNewSpreadIndex);
 
