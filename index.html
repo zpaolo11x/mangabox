@@ -2214,7 +2214,6 @@
 
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
-			rd.pagesDataArray = [];					// this is the array of pages data in the form url, iscover etc
 
 			rd.spreadsArray = [];
 
@@ -2370,7 +2369,7 @@
 		});
 
 		function updateProgressBar() {
-			const progressPercent = (rd.currentSpreadIndex / (spreadsNumber() - 1)) * 100;
+			const progressPercent = (rd.currentSpreadIndex / (spreadsTotal() - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
 
@@ -2397,7 +2396,7 @@
 				const forwardIndex = startSpreadIndex + i;
 				const backwardIndex = startSpreadIndex - i;
 
-				if (forwardIndex < spreadsNumber() && !(forwardIndex in rd.preloadStack)) {
+				if (forwardIndex < spreadsTotal() && !(forwardIndex in rd.preloadStack)) {
 					startTimeout(forwardIndex, calcDelay(i, 300, 0.25, 2), () => preloadPage(forwardIndex));
 				}
 				if (backwardIndex >= 0 && !(backwardIndex in rd.preloadStack)) {
@@ -2406,21 +2405,24 @@
 			}
 		}
 
+		function initReaderUI(pagesData, bookData){
+			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
+			rightLimit.innerText = rd.ltr ? pagesData.length : 1;
+			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
+		}
+
 		// Initialize viewer with page data
 		async function initViewer() {
 			updatePWABar('black');
 
-			rd.pagesDataArray = await fetchPages(rd.bookId);
-
-			let bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			const pagesData = await fetchPages(rd.bookId);
+			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
-			leftLimit.innerText = rd.ltr ? 1 : rd.pagesDataArray.length;
-			rightLimit.innerText = rd.ltr ? rd.pagesDataArray.length : 1;
-			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
+			initReaderUI(pagesData, bookData)
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 		}
@@ -2490,7 +2492,7 @@
 			})
 		}
 
-		function spreadsNumber() {
+		function spreadsTotal() {
 			return rd.spreadsArray.length
 		}
 
@@ -2930,18 +2932,18 @@
 			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.pageTurning === direction) return;
-			if (newSpread < 0 || newSpread > spreadsNumber()) return;
+			if (newSpread < 0 || newSpread >= spreadsTotal()) return;
 
 			const edgeFocus = isDirectionLeft ? 'focus-right-page' : 'focus-left-page';
 			const targetFocus = isDirectionLeft ? 'focus-left-page' : 'focus-right-page';
 
-			if (!mb.readerHorizontal && newSpread === spreadsNumber() && rd.spreadFocus === edgeFocus) {
+			if (!mb.readerHorizontal && newSpread === spreadsTotal() && rd.spreadFocus === edgeFocus) {
 				return spreadSetFocusSmooth(targetFocus);
 			}
 
-			if ((newSpread === 0 || newSpread === spreadsNumber() - 1) && rd.pageTurning) return;
+			if ((newSpread === 0 || newSpread === spreadsTotal() - 1) && rd.pageTurning) return;
 
-			const earlyTurnBlock = (isDirectionLeft === rd.ltr) && rd.currentSpreadIndex === spreadsNumber() - 2;
+			const earlyTurnBlock = (isDirectionLeft === rd.ltr) && rd.currentSpreadIndex === spreadsTotal() - 2;
 			const lateTurnBlock = (isDirectionLeft !== rd.ltr) && rd.currentSpreadIndex === 1;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
@@ -2964,11 +2966,11 @@
 		}
 
 		function handleLeftLimit() {
-			jumpToSpread(rd.ltr ? 0 : spreadsNumber() - 1);
+			jumpToSpread(rd.ltr ? 0 : spreadsTotal() - 1);
 		}
 
 		function handleRightLimit() {
-			jumpToSpread(rd.ltr ? spreadsNumber() - 1 : 0);
+			jumpToSpread(rd.ltr ? spreadsTotal() - 1 : 0);
 		}
 
 		function handleSmallThumbs() {
@@ -2991,7 +2993,7 @@
 
 			//TODO Cosa succede se finisce con uno spread? E con un orfano?
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
-			const lastSpread = (twoPages && (index == (spreadsNumber() - 1)));
+			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
 			const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const pageNumText = pageNumber + (twoPages ? ' ' + (pageNumber + (rd.ltr ? 1 : -1)) : '');
@@ -3079,12 +3081,12 @@
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
 			//Z-index control
-			rd.spreadsArray[index].uiItem.style.zIndex = spreadsNumber() + 1;
+			rd.spreadsArray[index].uiItem.style.zIndex = spreadsTotal() + 1;
 
 			if (turnDirection == 'turn-right') {
-				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? spreadsNumber() - oldindex : oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? spreadsTotal() - oldindex : oldindex;
 			} else {
-				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? oldindex : spreadsNumber() - oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? oldindex : spreadsTotal() - oldindex;
 			}
 
 			rd.dropShadowL.style.zIndex = rd.dropShadowR.style.zIndex = 0;
@@ -3142,7 +3144,7 @@
 			rd.dropShadowL.style.transition = 'margin 0.3s';
 			rd.dropShadowR.style.transition = 'margin 0.3s';
 
-			clipForeEdge = buildForeEdge(index, spreadsNumber())
+			clipForeEdge = buildForeEdge(index, spreadsTotal())
 
 			// Margins are defined as percentage of total width, so to have the correct size we divide
 			// by mb.readerMaxRatio, then multiply by the drop aspect ratio (0.1) and apply the dropL and dropR proportion
@@ -3319,7 +3321,7 @@
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
 
-			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsNumber()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
+			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
 
 			if (targetSpreadFocus == null) {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
@@ -3379,7 +3381,7 @@
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
 
-			jumpToSpread(Math.floor(newProgressPercent * (spreadsNumber() - 1)));
+			jumpToSpread(Math.floor(newProgressPercent * (spreadsTotal() - 1)));
 		}
 
 		// Dragging the progress bar
