@@ -2460,7 +2460,7 @@
 
 		//MB Reader Fetch Page Function
 
-		function buildSpreadObject(spreadKind, spreadPages) {
+		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage) {
 			// I put the image item and container item in the array so I can target them for changes
 			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
 			return ({
@@ -2475,7 +2475,8 @@
 				pageObj: spreadPages["cover"] ?? null,
 				pageObjL: spreadPages["left"] ?? null,
 				pageObjR: spreadPages["right"] ?? null,
-				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)				
+				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
+				spreadRefPage: spreadRefPage			
 			})
 		}
 
@@ -2591,37 +2592,36 @@
 
 			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {
-
 				let spreadObject = null;
 				if (pageData[i_page].isCover) {
 					// Element is a cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover));
+					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum);
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page]);
-					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2));
+					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden));
+					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum);
 				}
 				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
 					// This is an orphan page!
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject('blank');
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2));
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else {
 					// these are two normal pages
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page + 1]);
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2));
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 					i_page++;
 				}
 				rd.spreadsArray.push(spreadObject);
@@ -3029,8 +3029,11 @@
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
-			const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
+			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
+			const currentPage = spreadObject.spreadRefPage;
 			const pageNumText = (spreadObject.pageObj?.pageNum ?? spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum);
+
+
 
 			const out = [currentPage, pageNumText];
 console.log(out);
