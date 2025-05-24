@@ -156,6 +156,10 @@ img.page:not(.hidden) {
 	background: linear-gradient(to Right, rgba(99, 76, 68, 1.0), transparent);
 }
 
+.hidden-container {
+	opacity: 0!important;
+}
+
 .page-container {
 	position: relative;
 	overflow: hidden;
