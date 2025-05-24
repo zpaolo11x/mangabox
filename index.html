@@ -2494,16 +2494,16 @@
 					src: 'transparent.png',
 				}),
 				uiContainer: addItem('div', {
-					className: isHidden ? 'page-container hidden-container' : 'page-container'
+					className: isHidden ? 'page-container hidden-page' : 'page-container'
 				}),
 				uiThumb: addItem('img', {
-					className: 'page-thumb multiply hidden',
+					className: isHidden ? 'page-thumb multiply hidden hidden-page' : 'page-thumb multiply hidden',
 					alt: (isBlank || isHidden) ? '' : pageData.pageNum,
 					src: 'transparent.png',
 					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
 					style: {
 						height: 'var(--mb-thumb-height-px)',
-						aspectRatio: pageData.AR,
+						aspectRatio: isHidden ? '0.001' : pageData.AR,
 					}
 				}),
 				hasSrc: (isBlank || isHidden) ? true : false,
@@ -3033,7 +3033,7 @@
 			const pageNumText = (spreadObject.pageObj?.pageNum ?? spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum);
 
 			const out = [currentPage, pageNumText];
-
+console.log(out);
 			return out;
 		}
 

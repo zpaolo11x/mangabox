@@ -156,7 +156,7 @@ img.page:not(.hidden) {
 	background: linear-gradient(to Right, rgba(99, 76, 68, 1.0), transparent);
 }
 
-.hidden-container {
+.hidden-page {
 	opacity: 0!important;
 }
 
