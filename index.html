@@ -3039,6 +3039,22 @@
 			}
 		}
 
+		function animateShadowFWD(item, align, duration, ease) {
+			item.animate(
+				[{ [align]: '0%', width: '0', opacity: '0.1' },
+				{ [align]: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
+				{ [align]: '100%', width: '0', opacity: '0' }],
+				{ duration: duration, easing: ease });
+		}
+
+		function animateShadowBWD(item, align, duration, ease) {
+			item.animate(
+				[{ [align]: '100%', width: '0', opacity: '0' },
+				{ [align]: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
+				{ [align]: '50%', width: '0', opacity: '0' }],
+				{ duration: duration, easing: ease });
+		}
+
 		function pageTurn(index, oldindex, turnDirection, force = false) {
 			//Z-index control
 			rd.spreadsArray[index].uiItem.style.zIndex = spreadsTotal() + 1;
@@ -3126,36 +3142,20 @@
 					});
 					leftPage.animate(appearL2R, animData);
 					leftPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
-					newSpreadShadowR.animate(
-						[{ left: '0%', width: '0', opacity: '0.1' },
-						{ left: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-						{ left: '100%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-					newSpreadShadowL.animate(
-						[{ right: '100%', width: '0', opacity: '0' },
-						{ right: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
-						{ right: '50%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-					//Removed to avoid slip below page
-					//leftPage_old.animate(clipL2R, animDataHalf);
+
+					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull);
+					animateShadowBWD(newSpreadShadowL, 'right', turnTime, easeFull);
+
 				} else {
 					rightPage.animate(appearR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
-					newSpreadShadowL.animate(
-						[{ right: '0%', width: '0', opacity: '0.1' },
-						{ right: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-						{ right: '100%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-					newSpreadShadowR.animate(
-						[{ left: '100%', width: '0', opacity: '0' },
-						{ left: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
-						{ left: '50%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-					//Removed to avoid slip below page
-					//rightPage_old.animate(clipR2L, animDataHalf);
+
+					animateShadowFWD(newSpreadShadowL, 'right', turnTime, easeFull);
+					animateShadowBWD(newSpreadShadowR, 'left', turnTime, easeFull);
+
 				}
 
 				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
@@ -3206,18 +3206,11 @@
 				if (turnDirection == 'turn-right') {
 					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
-					newSpreadShadowR.animate(
-						[{ left: '0%', width: '0', opacity: '0.1' },
-						{ left: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-						{ left: '100%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-				newSpreadShadowL.animate(
-						[{ right: '100%', width: '0', opacity: '0' },
-						{ right: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
-						{ right: '50%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
 	
-						rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
+					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull)
+					animateShadowBWD(newSpreadShadowL, 'right', turnTime, easeFull)
+	
+					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					leftPage.animate(appearL2R, animData);
@@ -3229,17 +3222,8 @@
 					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
 
-					newSpreadShadowL.animate(
-						[{ right: '0%', width: '0', opacity: '0.1' },
-						{ right: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-						{ right: '100%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-					newSpreadShadowR.animate(
-						[{ left: '100%', width: '0', opacity: '0' },
-						{ left: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
-						{ left: '50%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-
+					animateShadowFWD(newSpreadShadowL, 'right', turnTime, easeFull)
+					animateShadowBWD(newSpreadShadowR, 'left', turnTime, easeFull)
 
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
@@ -3275,12 +3259,7 @@
 						if (oldindex != index) spreadHide(oldindex);
 					});
 
-					newSpreadShadowR.animate(
-						[{ left: '0%', width: '0', opacity: '0.1' },
-						{ left: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-						{ left: '100%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-					
+					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull);
 
 					coverPageR.animate(appearR2L_slideinL2R, animData);
 					coverPageL.animate(appearL2R, animData);
@@ -3294,12 +3273,7 @@
 						if (oldindex != index) spreadHide(oldindex);
 					});
 
-					newSpreadShadowL.animate(
-						[{ right: '0%', width: '0', opacity: '0.1' },
-						{ right: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-						{ right: '100%', width: '0', opacity: '0' }],
-						{ duration: turnTime, easing: easeFull });
-	
+					animateShadowFWD(newSpreadShadowL, 'right', turnTime, easeFull);
 
 					coverPageL.animate(appearL2R_sildeinR2L, animData);
 					coverPageR.animate(appearR2L, animData);
