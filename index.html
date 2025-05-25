@@ -2255,7 +2255,7 @@
 				item.uiThumb = null;
 				item.uiShadowL = null;
 				item.uiShadowR = null;
-				['pageObj', 'pageObjL', 'pageObjR'].forEach(key => {
+				['pageObjL', 'pageObjR'].forEach(key => {
 					if (item[key] != null) {
 						item[key].uiPage.remove();
 						item[key].uiContainer.remove();
@@ -2472,7 +2472,6 @@
 				uiShadowL: addItem('div', { className: 'page-shadow-left' }),
 				uiShadowR: addItem('div', { className: 'page-shadow-right' }),
 				uiThumb: addItem('div', { className: 'spread-thumb' }),
-				pageObj: spreadPages["cover"] ?? null,
 				pageObjL: spreadPages["left"] ?? null,
 				pageObjR: spreadPages["right"] ?? null,
 				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
@@ -2806,7 +2805,6 @@
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
 
 			let uiPageArray = [
-				rd.spreadsArray[spreadIndex].pageObj,
 				rd.spreadsArray[spreadIndex].pageObjL,
 				rd.spreadsArray[spreadIndex].pageObjR,
 			].filter(el => el != null);
