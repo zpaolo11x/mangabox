@@ -2476,7 +2476,7 @@
 				pageObjL: spreadPages["left"] ?? null,
 				pageObjR: spreadPages["right"] ?? null,
 				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
-				spreadRefPage: spreadRefPage			
+				spreadRefPage: spreadRefPage
 			})
 		}
 
@@ -2527,6 +2527,27 @@
 					{ left: page1, right: page2 } :
 					{ left: page2, right: page1 }
 			)
+		}
+
+		function addCoverSpine(pageObjectL, pageObjectR) {
+			const coverlayR = addItem('div', {
+				id: 'coverlayer',
+				className: 'LTR',
+				style: {
+					width: pageObjectR.uiContainer.style.width,
+					height: pageObjectR.uiContainer.style.height,
+				}
+			});
+			pageObjectR.uiContainer.append(coverlayR);
+			const coverlayL = addItem('div', {
+				id: 'coverlayer',
+				className: 'RTL',
+				style: {
+					width: pageObjectR.uiContainer.style.width,
+					height: pageObjectR.uiContainer.style.height,
+				}
+			});
+			pageObjectL.uiContainer.append(coverlayL);
 		}
 
 		// Master function that builds all the pages slots for the book spreads
@@ -2671,17 +2692,8 @@
 					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
 					if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
 
-					/*
-										const coverlay = addItem('div', {
-											id: 'coverlayer',
-											className: rd.ltr ? 'LTR' : 'RTL',
-											style: {
-												width: pageObject.uiContainer.style.width,
-												height: pageObject.uiContainer.style.height,
-											}
-										});
-										pageObject.uiContainer.append(coverlay);
-					*/
+					addCoverSpine(pageObjectL, pageObjectR);
+
 				}
 				else if ((spreadObject.spreadKind == 'back-cover')) {
 					let pageObjectL = spreadObject.pageObjL;
@@ -2722,17 +2734,9 @@
 
 					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
 					if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
-					/*
-										const coverlay = addItem('div', {
-											id: 'coverlayer',
-											className: rd.ltr ? 'RTL' : 'LTR',
-											style: {
-												width: pageObject.uiContainer.style.width,
-												height: pageObject.uiContainer.style.height,
-											}
-										});
-										pageObject.uiContainer.append(coverlay);
-					*/
+
+					addCoverSpine(pageObjectL, pageObjectR);
+
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
 
@@ -2965,7 +2969,8 @@
 			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.pageTurning === direction) return;
-			if (newSpread < 0 || newSpread >= spreadsTotal()) return;
+			if (newSpread < 0 || newSpread > spreadsTotal()) return;
+			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
 
 			const edgeFocus = isDirectionLeft ? 'focus-right-page' : 'focus-left-page';
 			const targetFocus = isDirectionLeft ? 'focus-left-page' : 'focus-right-page';
@@ -3017,26 +3022,26 @@
 
 		function getPageFromSpread(index) {
 			const spreadObject = rd.spreadsArray[index];
-
-			const pageNumber = Number(
-				spreadObject.pageObj?.pageNum ??
-					rd.ltr
-					? spreadObject.pageObjL?.pageNum
-					: spreadObject.pageObjR?.pageNum
-			);
-
+			/*
+						const pageNumber = Number(
+							spreadObject.pageObj?.pageNum ??
+								rd.ltr
+								? spreadObject.pageObjL?.pageNum
+								: spreadObject.pageObjR?.pageNum
+						);
+			*/
 			//TODO Cosa succede se finisce con uno spread? E con un orfano?
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
-
+			console.log(lastSpread)
 			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
-			const currentPage = spreadObject.spreadRefPage;
+			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 			const pageNumText = (spreadObject.pageObj?.pageNum ?? spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum);
 
 
 
 			const out = [currentPage, pageNumText];
-console.log(out);
+			console.log(out);
 			return out;
 		}
 
