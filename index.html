@@ -2680,24 +2680,9 @@
 				pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 				pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
-				if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
-				if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
+				if ((pageObjectL.isCurrent) || (pageObjectR.isCurrent)) rd.currentSpreadIndex = index;
 
-				if ((spreadObject.spreadKind == 'cover-page')) {
-					spreadObject.uiItem.classList.add('cover-page')
-
-					pageObjectL.uiContainer.classList.add('cover-page-RTL');
-					pageObjectR.uiContainer.classList.add('cover-page-LTR');
-					pageObjectL.uiContainer.style['marginLeft'] = 'auto';
-					pageObjectR.uiContainer.style['marginRight'] = 'auto';
-
-					buildSizePic(pageObjectL.uiPage, pageObjectL.AR, pageObjectL.AR);
-					buildSizePic(pageObjectR.uiPage, pageObjectR.AR, pageObjectR.AR);
-
-					addCoverSpine(pageObjectL, pageObjectR);
-
-				}
-				else if ((spreadObject.spreadKind == 'back-cover')) {
+				if ((spreadObject.spreadKind == 'cover-page') || (spreadObject.spreadKind == 'back-cover')) {
 					spreadObject.uiItem.classList.add('cover-page')
 
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
@@ -3143,7 +3128,6 @@
 
 					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull);
 					animateShadowBWD(newSpreadShadowL, 'right', turnTime, easeFull);
-
 				} else {
 					rightPage.animate(appearR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
@@ -3153,7 +3137,6 @@
 
 					animateShadowFWD(newSpreadShadowL, 'right', turnTime, easeFull);
 					animateShadowBWD(newSpreadShadowR, 'left', turnTime, easeFull);
-
 				}
 
 				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
@@ -3204,10 +3187,10 @@
 				if (turnDirection == 'turn-right') {
 					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
-	
+
 					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull)
 					animateShadowBWD(newSpreadShadowL, 'right', turnTime, easeFull)
-	
+
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
@@ -3249,7 +3232,6 @@
 
 				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
 				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
-
 
 				if (turnDirection == 'turn-right') {
 					rd.foreEdgeL.style.transition = 'clip-path 0s';
