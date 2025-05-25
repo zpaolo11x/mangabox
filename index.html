@@ -2674,12 +2674,17 @@
 
 				pageObjectL.uiPage.style.float = 'right';
 				pageObjectR.uiPage.style.float = 'left';
+				pageObjectL.uiPage.style.objectFit = 'cover';
+				pageObjectR.uiPage.style.objectFit = 'cover';
+				pageObjectL.uiPage.style.objectPosition = 'left';
+				pageObjectR.uiPage.style.objectPosition = 'right';
+				pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
+				pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 				if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
 				if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
 
 				if ((spreadObject.spreadKind == 'cover-page')) {
-
 					spreadObject.uiItem.classList.add('cover-page')
 
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
@@ -2689,19 +2694,11 @@
 
 					buildSizePic(pageObjectL.uiPage, pageObjectL.AR, pageObjectL.AR);
 					buildSizePic(pageObjectR.uiPage, pageObjectR.AR, pageObjectR.AR);
-
-					pageObjectL.uiPage.style.objectFit = 'cover';
-					pageObjectR.uiPage.style.objectFit = 'cover';
-					pageObjectL.uiPage.style.objectPosition = 'left';
-					pageObjectR.uiPage.style.objectPosition = 'right';
-					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
-					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 					addCoverSpine(pageObjectL, pageObjectR);
 
 				}
 				else if ((spreadObject.spreadKind == 'back-cover')) {
-
 					spreadObject.uiItem.classList.add('cover-page')
 
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
@@ -2712,28 +2709,21 @@
 					buildSizePic(pageObjectL.uiPage, pageObjectL.AR, pageObjectL.AR);
 					buildSizePic(pageObjectR.uiPage, pageObjectR.AR, pageObjectR.AR);
 
-					pageObjectL.uiPage.style.objectFit = 'cover';
-					pageObjectR.uiPage.style.objectFit = 'cover';
-					pageObjectL.uiPage.style.objectPosition = 'left';
-					pageObjectR.uiPage.style.objectPosition = 'right';
-					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
-					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
-
 					addCoverSpine(pageObjectL, pageObjectR);
 
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
+					spreadObject.uiItem.classList.add('two-pages');
 
 					pageObjectL.uiContainer.classList.add('left-page');
 					pageObjectR.uiContainer.classList.add('right-page');
-
-					spreadObject.uiItem.classList.add('two-pages');
 
 					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 				}
 				else if (spreadObject.spreadKind == 'double-spread') {
+					spreadObject.uiItem.classList.add('two-pages');
 
 					// Crop double spreads thumbnails
 					pageObjectL.uiThumb.style.aspectRatio = pageObjectL.AR * 0.5;
@@ -2746,17 +2736,8 @@
 					pageObjectL.uiContainer.classList.add('left-page');
 					pageObjectR.uiContainer.classList.add('right-page');
 
-					spreadObject.uiItem.classList.add('two-pages');
-
 					buildSizePic(pageObjectL.uiPage, pageObjectL.AR * 0.5, pageObjectL.AR * 0.5);
 					buildSizePic(pageObjectR.uiPage, pageObjectR.AR * 0.5, pageObjectR.AR * 0.5);
-
-					pageObjectL.uiPage.style.objectFit = 'cover';
-					pageObjectR.uiPage.style.objectFit = 'cover';
-					pageObjectL.uiPage.style.objectPosition = 'left';
-					pageObjectR.uiPage.style.objectPosition = 'right';
-					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
-					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 				}
 				spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
