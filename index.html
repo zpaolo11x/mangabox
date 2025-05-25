@@ -2651,20 +2651,21 @@
 
 			// Style and structure the spread objects and pages
 			rd.spreadsArray.forEach((spreadObject, index) => {
+				
+				let pageObjectL = spreadObject.pageObjL;
+				let pageObjectR = spreadObject.pageObjR;
+
+				spreadObject.uiThumb.append(
+					pageObjectL.uiThumb,
+					pageObjectR.uiThumb,
+				);
+
+				spreadObject.uiItem.append(
+					pageObjectL.uiContainer,
+					pageObjectR.uiContainer,
+				);
 
 				if ((spreadObject.spreadKind == 'cover-page')) {
-					let pageObjectL = spreadObject.pageObjL;
-					let pageObjectR = spreadObject.pageObjR;
-
-					spreadObject.uiThumb.append(
-						spreadObject.pageObjL.uiThumb,
-						spreadObject.pageObjR.uiThumb,
-					);
-
-					spreadObject.uiItem.append(
-						spreadObject.pageObjL.uiContainer,
-						spreadObject.pageObjR.uiContainer,
-					);
 
 					spreadObject.uiItem.classList.add('cover-page')
 
@@ -2696,18 +2697,6 @@
 
 				}
 				else if ((spreadObject.spreadKind == 'back-cover')) {
-					let pageObjectL = spreadObject.pageObjL;
-					let pageObjectR = spreadObject.pageObjR;
-
-					spreadObject.uiThumb.append(
-						spreadObject.pageObjL.uiThumb,
-						spreadObject.pageObjR.uiThumb,
-					);
-
-					spreadObject.uiItem.append(
-						spreadObject.pageObjL.uiContainer,
-						spreadObject.pageObjR.uiContainer,
-					);
 
 					spreadObject.uiItem.classList.add('cover-page')
 
@@ -2740,21 +2729,11 @@
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
 
-					spreadObject.uiThumb.append(
-						spreadObject.pageObjL.uiThumb,
-						spreadObject.pageObjR.uiThumb,
-					);
+					pageObjectL.uiPage.style.float = 'right';
+					pageObjectR.uiPage.style.float = 'left';
 
-					spreadObject.uiItem.append(
-						spreadObject.pageObjL.uiContainer,
-						spreadObject.pageObjR.uiContainer,
-					);
-
-					spreadObject.pageObjL.uiPage.style.float = 'right';
-					spreadObject.pageObjR.uiPage.style.float = 'left';
-
-					spreadObject.pageObjL.uiContainer.classList.add('left-page');
-					spreadObject.pageObjR.uiContainer.classList.add('right-page');
+					pageObjectL.uiContainer.classList.add('left-page');
+					pageObjectR.uiContainer.classList.add('right-page');
 
 					spreadObject.uiItem.classList.add('two-pages');
 
@@ -2762,64 +2741,54 @@
 					//TODO Ma questo serve???? Farlo uguale a readerViewer?
 					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(spreadObject.pageObjL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(spreadObject.pageObjR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
-					spreadObject.pageObjL.uiPage.style.height = spreadObject.pageObjL.uiContainer.style.height;
-					spreadObject.pageObjR.uiPage.style.height = spreadObject.pageObjR.uiContainer.style.height;
+					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
+					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
-					if (spreadObject.pageObjL.isCurrent) rd.currentSpreadIndex = index;
-					if (spreadObject.pageObjR.isCurrent) rd.currentSpreadIndex = index;
+					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
+					if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
 
 				}
 				else if (spreadObject.spreadKind == 'double-spread') {
 
 					// Crop double spreads thumbnails
-					spreadObject.pageObjL.uiThumb.style.aspectRatio = spreadObject.pageObjL.AR * 0.5;
-					spreadObject.pageObjR.uiThumb.style.aspectRatio = spreadObject.pageObjL.AR * 0.5;
-					spreadObject.pageObjL.uiThumb.style.objectFit = 'cover';
-					spreadObject.pageObjR.uiThumb.style.objectFit = 'cover';
-					spreadObject.pageObjL.uiThumb.style.objectPosition = 'left';
-					spreadObject.pageObjR.uiThumb.style.objectPosition = 'right';
+					pageObjectL.uiThumb.style.aspectRatio = pageObjectL.AR * 0.5;
+					pageObjectR.uiThumb.style.aspectRatio = pageObjectL.AR * 0.5;
+					pageObjectL.uiThumb.style.objectFit = 'cover';
+					pageObjectR.uiThumb.style.objectFit = 'cover';
+					pageObjectL.uiThumb.style.objectPosition = 'left';
+					pageObjectR.uiThumb.style.objectPosition = 'right';
 
-					spreadObject.uiThumb.append(
-						spreadObject.pageObjL.uiThumb,
-						spreadObject.pageObjR.uiThumb,
-					);
 
-					// Add page containers
-					spreadObject.uiItem.append(
-						spreadObject.pageObjL.uiContainer,
-						spreadObject.pageObjR.uiContainer,
-					);
+					pageObjectL.uiPage.style.float = 'right';
+					pageObjectR.uiPage.style.float = 'left';
 
-					spreadObject.pageObjL.uiPage.style.float = 'right';
-					spreadObject.pageObjR.uiPage.style.float = 'left';
-
-					spreadObject.pageObjL.uiContainer.classList.add('left-page');
-					spreadObject.pageObjL.uiContainer.classList.add('right-page');
+					pageObjectL.uiContainer.classList.add('left-page');
+					pageObjectR.uiContainer.classList.add('right-page');
 
 					spreadObject.uiItem.classList.add('two-pages');
 
 					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-					buildSizePic(spreadObject.pageObjL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(spreadObject.pageObjR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
-					buildSizePic(spreadObject.pageObjL.uiPage, spreadObject.pageObjL.AR * 0.5, spreadObject.pageObjL.AR * 0.5);
-					buildSizePic(spreadObject.pageObjR.uiPage, spreadObject.pageObjR.AR * 0.5, spreadObject.pageObjR.AR * 0.5);
+					buildSizePic(pageObjectL.uiPage, pageObjectL.AR * 0.5, pageObjectL.AR * 0.5);
+					buildSizePic(pageObjectR.uiPage, pageObjectR.AR * 0.5, pageObjectR.AR * 0.5);
 
-					spreadObject.pageObjL.uiPage.style.objectFit = 'cover';
-					spreadObject.pageObjR.uiPage.style.objectFit = 'cover';
+					pageObjectL.uiPage.style.objectFit = 'cover';
+					pageObjectR.uiPage.style.objectFit = 'cover';
 
-					spreadObject.pageObjL.uiPage.style.objectPosition = 'left';
-					spreadObject.pageObjR.uiPage.style.objectPosition = 'right';
+					pageObjectL.uiPage.style.objectPosition = 'left';
+					pageObjectR.uiPage.style.objectPosition = 'right';
 
-					spreadObject.pageObjL.uiPage.style.height = spreadObject.pageObjL.uiContainer.style.height;
-					spreadObject.pageObjR.uiPage.style.height = spreadObject.pageObjR.uiContainer.style.height;
+					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
+					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
-					if (spreadObject.pageObjL.isCurrent) rd.currentSpreadIndex = index;
+					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
 
 				}
 				spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
