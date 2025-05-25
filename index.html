@@ -2651,7 +2651,7 @@
 
 			// Style and structure the spread objects and pages
 			rd.spreadsArray.forEach((spreadObject, index) => {
-				
+
 				let pageObjectL = spreadObject.pageObjL;
 				let pageObjectR = spreadObject.pageObjR;
 
@@ -2665,15 +2665,19 @@
 					pageObjectR.uiContainer,
 				);
 
+				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
+				//TODO Ma questo serve???? Farlo uguale a readerViewer?
+				spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+
+				buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+				buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+
+				if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
+				if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
+
 				if ((spreadObject.spreadKind == 'cover-page')) {
 
 					spreadObject.uiItem.classList.add('cover-page')
-
-					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
-					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-					buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
 					pageObjectR.uiContainer.classList.add('cover-page-LTR');
@@ -2689,9 +2693,6 @@
 					pageObjectR.uiPage.style.objectPosition = 'left';
 					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
-
-					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
-					if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
 
 					addCoverSpine(pageObjectL, pageObjectR);
 
@@ -2700,12 +2701,6 @@
 
 					spreadObject.uiItem.classList.add('cover-page')
 
-					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
-					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-					buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
 					pageObjectR.uiContainer.classList.add('cover-page-LTR');
 					pageObjectL.uiContainer.style['marginLeft'] = 'auto';
@@ -2720,9 +2715,6 @@
 					pageObjectR.uiPage.style.objectPosition = 'left';
 					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
-
-					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
-					if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
 
 					addCoverSpine(pageObjectL, pageObjectR);
 
@@ -2737,18 +2729,8 @@
 
 					spreadObject.uiItem.classList.add('two-pages');
 
-					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
-					//TODO Ma questo serve???? Farlo uguale a readerViewer?
-					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-					buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-
 					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
-
-					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
-					if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
 
 				}
 				else if (spreadObject.spreadKind == 'double-spread') {
@@ -2770,25 +2752,15 @@
 
 					spreadObject.uiItem.classList.add('two-pages');
 
-					buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
-					spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-					buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-
 					buildSizePic(pageObjectL.uiPage, pageObjectL.AR * 0.5, pageObjectL.AR * 0.5);
 					buildSizePic(pageObjectR.uiPage, pageObjectR.AR * 0.5, pageObjectR.AR * 0.5);
 
 					pageObjectL.uiPage.style.objectFit = 'cover';
 					pageObjectR.uiPage.style.objectFit = 'cover';
-
 					pageObjectL.uiPage.style.objectPosition = 'left';
 					pageObjectR.uiPage.style.objectPosition = 'right';
-
 					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
-
-					if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
 
 				}
 				spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
