@@ -3305,8 +3305,10 @@
 
 			populateSpread(localNewSpreadIndex);
 
-			// Always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is center and there's
-			// no scrolling happening in that case, page turn is treated separately 
+			// TODO
+			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
+			// center and there's no scrolling happening in that case, page turn is treated separately 
+			// This adds a slight delay when jumping cover to cover
 			spreadSetFocusSmoothDelay(targetSpreadFocus);
 
 			spreadShow(localNewSpreadIndex);
