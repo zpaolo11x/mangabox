@@ -2672,15 +2672,15 @@
 				buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 				buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
 
+				pageObjectL.uiPage.style.float = 'right';
+				pageObjectR.uiPage.style.float = 'left';
+
 				if (pageObjectL.isCurrent) rd.currentSpreadIndex = index;
 				if (pageObjectR.isCurrent) rd.currentSpreadIndex = index;
 
 				if ((spreadObject.spreadKind == 'cover-page')) {
 
 					spreadObject.uiItem.classList.add('cover-page')
-
-					pageObjectL.uiPage.style.float = 'right';
-					pageObjectR.uiPage.style.float = 'left';
 
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
 					pageObjectR.uiContainer.classList.add('cover-page-LTR');
@@ -2703,9 +2703,6 @@
 				else if ((spreadObject.spreadKind == 'back-cover')) {
 
 					spreadObject.uiItem.classList.add('cover-page')
-					
-					pageObjectL.uiPage.style.float = 'right';
-					pageObjectR.uiPage.style.float = 'left';
 
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
 					pageObjectR.uiContainer.classList.add('cover-page-LTR');
@@ -2727,9 +2724,6 @@
 				}
 				else if (spreadObject.spreadKind == 'two-pages') {
 
-					pageObjectL.uiPage.style.float = 'right';
-					pageObjectR.uiPage.style.float = 'left';
-
 					pageObjectL.uiContainer.classList.add('left-page');
 					pageObjectR.uiContainer.classList.add('right-page');
 
@@ -2748,10 +2742,6 @@
 					pageObjectR.uiThumb.style.objectFit = 'cover';
 					pageObjectL.uiThumb.style.objectPosition = 'left';
 					pageObjectR.uiThumb.style.objectPosition = 'right';
-
-
-					pageObjectL.uiPage.style.float = 'right';
-					pageObjectR.uiPage.style.float = 'left';
 
 					pageObjectL.uiContainer.classList.add('left-page');
 					pageObjectR.uiContainer.classList.add('right-page');
