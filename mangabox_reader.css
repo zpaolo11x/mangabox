@@ -155,11 +155,11 @@ img.page:not(.hidden) {
 	transition:opacity 0.15s;
 	background: linear-gradient(to Right, rgba(99, 76, 68, 1.0), transparent);
 }
-
+/*
 .hidden-page {
 	opacity: 0!important;
 }
-
+*/
 .page-container {
 	position: relative;
 	overflow: hidden;

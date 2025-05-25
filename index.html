@@ -2679,6 +2679,9 @@
 
 					spreadObject.uiItem.classList.add('cover-page')
 
+					pageObjectL.uiPage.style.float = 'right';
+					pageObjectR.uiPage.style.float = 'left';
+
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
 					pageObjectR.uiContainer.classList.add('cover-page-LTR');
 					pageObjectL.uiContainer.style['marginLeft'] = 'auto';
@@ -2700,6 +2703,9 @@
 				else if ((spreadObject.spreadKind == 'back-cover')) {
 
 					spreadObject.uiItem.classList.add('cover-page')
+					
+					pageObjectL.uiPage.style.float = 'right';
+					pageObjectR.uiPage.style.float = 'left';
 
 					pageObjectL.uiContainer.classList.add('cover-page-RTL');
 					pageObjectR.uiContainer.classList.add('cover-page-LTR');
