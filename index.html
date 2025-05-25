@@ -3197,10 +3197,27 @@
 				// Stop Page (mid spread)
 				let rightPage = rd.spreadsArray[index].pageObjR.uiContainer
 				let leftPage = rd.spreadsArray[index].pageObjL.uiContainer
+
+
+				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
+				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
+
+
 				if (turnDirection == 'turn-right') {
 					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
-					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
+					newSpreadShadowR.animate(
+						[{ left: '0%', width: '0', opacity: '0.1' },
+						{ left: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
+						{ left: '100%', width: '0', opacity: '0' }],
+						{ duration: turnTime, easing: easeFull });
+				newSpreadShadowL.animate(
+						[{ right: '100%', width: '0', opacity: '0' },
+						{ right: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
+						{ right: '50%', width: '0', opacity: '0' }],
+						{ duration: turnTime, easing: easeFull });
+	
+						rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
 					leftPage.animate(appearL2R, animData);
@@ -3211,6 +3228,19 @@
 				} else {
 					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
+
+					newSpreadShadowL.animate(
+						[{ right: '0%', width: '0', opacity: '0.1' },
+						{ right: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
+						{ right: '100%', width: '0', opacity: '0' }],
+						{ duration: turnTime, easing: easeFull });
+					newSpreadShadowR.animate(
+						[{ left: '100%', width: '0', opacity: '0' },
+						{ left: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
+						{ left: '50%', width: '0', opacity: '0' }],
+						{ duration: turnTime, easing: easeFull });
+
+
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
@@ -3235,11 +3265,23 @@
 				rd.foreEdgeL.style.clipPath = `inset(0 0 0 100%)`;
 				rd.foreEdgeR.style.clipPath = `inset(0 100% 0 0)`;
 
+				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
+				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
+
+
 				if (turnDirection == 'turn-right') {
 					rd.foreEdgeL.style.transition = 'clip-path 0s';
 					leftPage.animate(clipL2R, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
+
+					newSpreadShadowR.animate(
+						[{ left: '0%', width: '0', opacity: '0.1' },
+						{ left: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
+						{ left: '100%', width: '0', opacity: '0' }],
+						{ duration: turnTime, easing: easeFull });
+					
+
 					coverPageR.animate(appearR2L_slideinL2R, animData);
 					coverPageL.animate(appearL2R, animData);
 					rd.dropShadowL.animate(
@@ -3251,6 +3293,14 @@
 					rightPage.animate(clipR2L, animData).finished.then(() => {
 						if (oldindex != index) spreadHide(oldindex);
 					});
+
+					newSpreadShadowL.animate(
+						[{ right: '0%', width: '0', opacity: '0.1' },
+						{ right: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
+						{ right: '100%', width: '0', opacity: '0' }],
+						{ duration: turnTime, easing: easeFull });
+	
+
 					coverPageL.animate(appearL2R_sildeinR2L, animData);
 					coverPageR.animate(appearR2L, animData);
 					rd.dropShadowR.animate(
