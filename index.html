@@ -818,7 +818,6 @@
 		}
 
 		function fetchLibraryFilters(libraryId) {
-			console.log("id:"+libraryId)
 			filterValues = mb.libraryFilters[libraryId];
 			if (filterValues) {
 				mb.filterButtons.forEach(button => {
@@ -830,14 +829,11 @@
 
 		async function applyLibraryFilters() {
 			const divs = Array.from(seriesGrid.children);
-console.log(divs);
 			divs.forEach(div => {
 				div.infilter = true;
 			});
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
-console.log(Object.values(mb.filterButtons));
-			console.log(isFiltered);
 
 			libraryMenuIcon.className = isFiltered == 0 ? 'fa-solid fa-sliders glyph-dark' : 'fa-solid fa-sliders mb-accent glyph-dark'
 
@@ -2928,13 +2924,13 @@ console.log(Object.values(mb.filterButtons));
 			//TODO Cosa succede se finisce con uno un orfano?
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
-			console.log(lastSpread)
+
 			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 			const pageNumText = spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum;
 
 			const out = [currentPage, pageNumText];
-			console.log(out);
+
 			return out;
 		}
 
