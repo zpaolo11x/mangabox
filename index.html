@@ -210,6 +210,7 @@
 
 	<script>
 
+
 		//MB Manage Electron titlebar
 
 		const isElectron = !!window.electronAPI;
@@ -3013,20 +3014,26 @@
 			}
 		}
 
-		function animateShadowFWD(item, align, duration, ease) {
-			item.animate(
+		function animateShadowFWD(align, duration, ease) {
+			return([
 				[{ [align]: '0%', width: '0', opacity: '0.1' },
 				{ [align]: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
 				{ [align]: '100%', width: '0', opacity: '0' }],
-				{ duration: duration, easing: ease });
+				{ duration: duration, easing: ease }
+			]);
 		}
 
-		function animateShadowBWD(item, align, duration, ease) {
-			item.animate(
+		function animateShadowBWD(align, duration, ease) {
+			return([
 				[{ [align]: '100%', width: '0', opacity: '0' },
 				{ [align]: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
 				{ [align]: '50%', width: '0', opacity: '0' }],
-				{ duration: duration, easing: ease });
+				{ duration: duration, easing: ease }
+			]);
+		}
+
+		function hideOldSpread(index, oldindex){
+			if (oldindex != index) spreadHide(oldindex);
 		}
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
@@ -3111,23 +3118,19 @@
 				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
 
 				if (turnDirection == 'turn-right') {
-					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R, animData);
 					leftPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 
-					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull);
-					animateShadowBWD(newSpreadShadowL, 'right', turnTime, easeFull);
+					newSpreadShadowR.animate(...animateShadowFWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animateShadowBWD('right', turnTime, easeFull));
 				} else {
-					rightPage.animate(appearR2L, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					rightPage.animate(appearR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 
-					animateShadowFWD(newSpreadShadowL, 'right', turnTime, easeFull);
-					animateShadowBWD(newSpreadShadowR, 'left', turnTime, easeFull);
+					newSpreadShadowL.animate(...animateShadowFWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animateShadowBWD('left', turnTime, easeFull));
 				}
 
 				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
@@ -3149,16 +3152,12 @@
 				rd.dropShadowR.style.marginLeft = 0;
 
 				if (turnDirection == 'turn-right') {
-					startCoverPageR.animate(clipL2R, animInstant).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					startCoverPageR.animate(clipL2R, animInstant).finished.then(() => hideOldSpread(index, oldindex));
 					stopCoverPageR.animate(appearR2L, animInstant);
 					rd.dropShadowR.animate([{ left: '100%' }], animInstant);
 					rd.dropShadowL.animate([{ right: '50%' }], animInstant);
 				} else {
-					startCoverPageL.animate(clipR2L, animInstant).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					startCoverPageL.animate(clipR2L, animInstant).finished.then(() => hideOldSpread(index, oldindex));
 					stopCoverPageL.animate(appearL2R, animInstant);
 					rd.dropShadowL.animate([{ right: '100%' }], animInstant);
 					rd.dropShadowR.animate([{ left: '50%' }], animInstant);
@@ -3170,21 +3169,17 @@
 				let rightPage = rd.spreadsArray[index].pageObjR.uiContainer
 				let leftPage = rd.spreadsArray[index].pageObjL.uiContainer
 
-
 				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
 				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
-
 
 				if (turnDirection == 'turn-right') {
 					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
 
-					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull)
-					animateShadowBWD(newSpreadShadowL, 'right', turnTime, easeFull)
+					newSpreadShadowR.animate(...animateShadowFWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animateShadowBWD('right', turnTime, easeFull));
 
-					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R, animData);
 					rd.dropShadowR.animate(
 						[{ left: '100%' }],
@@ -3194,13 +3189,11 @@
 					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
 
-					animateShadowFWD(newSpreadShadowL, 'right', turnTime, easeFull)
-					animateShadowBWD(newSpreadShadowR, 'left', turnTime, easeFull)
+					newSpreadShadowL.animate(...animateShadowFWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animateShadowBWD('left', turnTime, easeFull));
 
 					rightPage.animate(appearR2L, animData);
-					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 					rd.dropShadowL.animate(
 						[{ right: '100%' }],
 						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
@@ -3226,11 +3219,9 @@
 
 				if (turnDirection == 'turn-right') {
 					rd.foreEdgeL.style.transition = 'clip-path 0s';
-					leftPage.animate(clipL2R, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					leftPage.animate(clipL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 
-					animateShadowFWD(newSpreadShadowR, 'left', turnTime, easeFull);
+					newSpreadShadowR.animate(...animateShadowFWD('left', turnTime, easeFull));
 
 					coverPageR.animate(appearR2L_slideinL2R, animData);
 					coverPageL.animate(appearL2R, animData);
@@ -3240,11 +3231,9 @@
 					);
 				} else {
 					rd.foreEdgeR.style.transition = 'clip-path 0s';
-					rightPage.animate(clipR2L, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(oldindex);
-					});
+					rightPage.animate(clipR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 
-					animateShadowFWD(newSpreadShadowL, 'right', turnTime, easeFull);
+					newSpreadShadowL.animate(...animateShadowFWD('right', turnTime, easeFull));
 
 					coverPageL.animate(appearL2R_sildeinR2L, animData);
 					coverPageR.animate(appearR2L, animData);
