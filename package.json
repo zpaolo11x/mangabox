@@ -21,7 +21,8 @@
 		"files": [
 			"**/*",
 			"!z_*.*",
-			"main.js",
+			"package-main.js",
+			"package-preload.js",
 			"package.json"
 		],
 		"mac": {
