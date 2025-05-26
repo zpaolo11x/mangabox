@@ -818,6 +818,7 @@
 		}
 
 		function fetchLibraryFilters(libraryId) {
+			console.log("id:"+libraryId)
 			filterValues = mb.libraryFilters[libraryId];
 			if (filterValues) {
 				mb.filterButtons.forEach(button => {
@@ -829,12 +830,15 @@
 
 		async function applyLibraryFilters() {
 			const divs = Array.from(seriesGrid.children);
-
+console.log(divs);
 			divs.forEach(div => {
 				div.infilter = true;
 			});
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
+console.log(Object.values(mb.filterButtons));
+			console.log(isFiltered);
+
 			libraryMenuIcon.className = isFiltered == 0 ? 'fa-solid fa-sliders glyph-dark' : 'fa-solid fa-sliders mb-accent glyph-dark'
 
 			mb.filterButtons.forEach(button => {
