@@ -2923,23 +2923,14 @@
 
 		function getPageFromSpread(index) {
 			const spreadObject = rd.spreadsArray[index];
-			/*
-						const pageNumber = Number(
-							spreadObject.pageObj?.pageNum ??
-								rd.ltr
-								? spreadObject.pageObjL?.pageNum
-								: spreadObject.pageObjR?.pageNum
-						);
-			*/
-			//TODO Cosa succede se finisce con uno spread? E con un orfano?
+
+			//TODO Cosa succede se finisce con uno un orfano?
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 			console.log(lastSpread)
 			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			const pageNumText = (spreadObject.pageObj?.pageNum ?? spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum);
-
-
+			const pageNumText = spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum;
 
 			const out = [currentPage, pageNumText];
 			console.log(out);
