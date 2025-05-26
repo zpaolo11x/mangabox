@@ -11,7 +11,7 @@ It is available for Windows (x86 and ARM), macOS (Intel and Apple Silicon) and L
 
 <img alt="Reading mode" src=".localassets/pics/reader.png" width=450px><br>Reading mode supports two pages spreads, with "paper-like" effects and page animations.
 <br>
-
+<br>
 <img alt="Reading thumbnails" src=".localassets/pics/thumbnails.png" width=450px><br>Thumbnail view in reading mode for page preview.
 
 <img alt="Light/dark mode" src=".localassets/pics/lightdark.png" width=450px><br>Light and dark theme are supported, and different color highlights.
