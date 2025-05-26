@@ -2,18 +2,35 @@
 
 MangaBox is a simple Electron client for Komga.
 
-<img alt="MangaBox main UI" src=".localassets/dashboard.png" width=450px>
+<img alt="Dashboard view" src=".localassets/dashboard.png" width=450px>
 
-Clean design tailored for few libraries, it doesn't feature library management but only reading.
+Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
 
-It has a rich library view with metadata taken from "alternate title" fields like "Story", "Art" and "Time". 
+<img alt="Library view" src=".localassets/library.png" width=450px>
 
-<img alt="MangaBox main UI" src=".localassets/library.png" width=450px>
+Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
 
-There's no book view (yet) but a series view with all volumes.
+<img alt="Series view" src=".localassets/series.png" width=450px>
 
-<img alt="MangaBox main UI" src=".localassets/series.png" width=450px>
+Series view with all the volumes and series metadata. There's no book view (yet).
 
-Reading mode supports two pages and single page, with "paper like" effects
+<img alt="Reading mode" src=".localassets/reader.png" width=450px>
 
-<img alt="MangaBox main UI" src=".localassets/reader.png" width=450px>
+Reading mode supports two pages spreads, with "paper-like" effects and page animations.
+
+<img alt="Reading thumbnails" src=".localassets/thumbnails.png" width=450px>
+
+Thumbnail view in reading mode for page preview.
+
+<img alt="Light/dark mode" src=".localassets/lightdark.png" width=450px>
+
+Light and dark theme are supported, and different color highlights.
+
+<img alt="Library filter" src=".localassets/filter.png" width=450px>
+
+Sorting and filtering of libraries.
+
+<img alt="Series search" src=".localassets/search.png" width=450px>
+
+Global search for series and books looks into metadata, summary etc.
+	
