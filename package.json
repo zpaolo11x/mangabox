@@ -3,7 +3,7 @@
 	"version": "0.1.5",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Komga desktop client using Electron",
-	"main": "main.js",
+	"main": "package-main.js",
 	"scripts": {
 		"start": "electron .",
 		"build": "electron-builder"
