@@ -123,10 +123,6 @@
 		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
-		<!--
-		<img id="foreEdgeL" src="pagesZ3.png">
-		<img id="foreEdgeR" src="pagesZ3.png">
-		-->
 
 		<div id="readerOverlay" class="draggable">
 			<div id="incognitoMark"></div>
@@ -3015,7 +3011,7 @@
 		}
 
 		function animateShadowFWD(align, duration, ease) {
-			return([
+			return ([
 				[{ [align]: '0%', width: '0', opacity: '0.1' },
 				{ [align]: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
 				{ [align]: '100%', width: '0', opacity: '0' }],
@@ -3024,7 +3020,7 @@
 		}
 
 		function animateShadowBWD(align, duration, ease) {
-			return([
+			return ([
 				[{ [align]: '100%', width: '0', opacity: '0' },
 				{ [align]: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
 				{ [align]: '50%', width: '0', opacity: '0' }],
@@ -3032,7 +3028,7 @@
 			]);
 		}
 
-		function hideOldSpread(index, oldindex){
+		function hideOldSpread(index, oldindex) {
 			if (oldindex != index) spreadHide(oldindex);
 		}
 

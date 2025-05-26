@@ -1,3 +1,4 @@
 - Redesigned library buttons layout
+- Added shadows on cover animation
 - Fixed bug when opening a book after marking as read or unread
 - Code refactoring
