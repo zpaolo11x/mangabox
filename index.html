@@ -2630,8 +2630,8 @@
 				}
 				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
 					// This is an orphan page!
-					const page1 = buildPageObject(pageData[i_page]);
-					const page2 = buildPageObject('blank');
+					const page1 = buildPageObject('blank');
+					const page2 = buildPageObject(pageData[i_page]);
 					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else {
