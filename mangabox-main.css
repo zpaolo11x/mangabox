@@ -1322,7 +1322,6 @@ span.mini-title {
 	opacity: 0;
 	transition: opacity 0.1s linear, background-color 0.3s ease;
 	pointer-events: none;
-	background:red!important;
 }
 
 /* First reduction: only selected library is enlarged */
