@@ -781,7 +781,7 @@ a {
 
 #stripGridHeaderContainer {
 	position: fixed;
-	top: 60px;
+	top: calc(60px + var(--mb-drag-bar-height));
 	left: 0px;
 	right: 0px;
 	background: linear-gradient(180deg, var(--mb-page-color) 80%, transparent 81%);
@@ -883,7 +883,7 @@ a {
 	position: fixed;
 	/* Keeps the div centered and prevents scrolling */
 	left: 50%;
-	top: 100px;
+	top: calc(100px + var(--mb-drag-bar-height));
 	transform: translate(-50%, 0);
 	/* Centers the div */
 	width: min(550px, 100vw);
@@ -1123,7 +1123,7 @@ book-item {
 
 #seriesMiniHeader {
 	position: fixed;
-	top: 60px;
+	top: calc(60px + var(--mb-drag-bar-height));
 	left: 0px;
 	right: 0px;
 	background: var(--mb-page-color);
@@ -1315,13 +1315,14 @@ span.mini-title {
 #blanker {
 	background: var(--mb-page-color);
 	position: fixed;
-	top: 60px;
+	top: calc(60px + var(--mb-drag-bar-height));
 	left: 0px;
 	right: 0px;
 	bottom: 0px;
 	opacity: 0;
 	transition: opacity 0.1s linear, background-color 0.3s ease;
 	pointer-events: none;
+	background:red!important;
 }
 
 /* First reduction: only selected library is enlarged */
