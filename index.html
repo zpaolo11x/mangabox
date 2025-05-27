@@ -2576,8 +2576,8 @@
 			});
 
 			//Default shadow opacity is 0, it is overriden at the time of creation so it transitions in 0.5s
-			rd.dropShadowL = addItem('div', { id: 'dropShadowL', style: { opacity: '1' } });
-			rd.dropShadowR = addItem('div', { id: 'dropShadowR', style: { opacity: '1' } });
+			rd.dropShadowL = addItem('div', { id: 'dropShadowL' });
+			rd.dropShadowR = addItem('div', { id: 'dropShadowR' });
 
 			readerViewer.append(rd.foreEdgeL, rd.foreEdgeR, rd.dropShadowL, rd.dropShadowR);
 
@@ -3077,8 +3077,8 @@
 			//turnDirection can be 'turn-right' or 'turn-left'
 			rd.foreEdgeL.style.transition = 'clip-path 0.3s';
 			rd.foreEdgeR.style.transition = 'clip-path 0.3s';
-			rd.dropShadowL.style.transition = 'margin 0.3s';
-			rd.dropShadowR.style.transition = 'margin 0.3s';
+			rd.dropShadowL.style.transition = 'margin 0.3s, opacity 0.5s';
+			rd.dropShadowR.style.transition = 'margin 0.3s, opacity 0.5s';
 
 			clipForeEdge = buildForeEdge(index, spreadsTotal())
 
@@ -3086,6 +3086,8 @@
 			// by mb.readerMaxRatio, then multiply by the drop aspect ratio (0.1) and apply the dropL and dropR proportion
 			rd.dropShadowL.style.marginRight = (0.1 * clipForeEdge.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
 			rd.dropShadowR.style.marginLeft = (0.1 * clipForeEdge.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.dropShadowR.style.opacity = 1;
+			rd.dropShadowL.style.opacity = 1;
 
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
