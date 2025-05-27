@@ -19,7 +19,7 @@ It is available for Windows (x86 and ARM), macOS (Intel and Apple Silicon) and L
 <img alt="Reading thumbnails" src=".localassets/pics/thumbnails.png" width=450px><br>Thumbnail view in reading mode for page preview.
 <br>
 <br>
-<img alt="Light/dark mode" src=".localassets/pics/lightdark.png" width=450px><br>Light and dark theme are supported, and different color highlights.
+<img alt="Light/dark mode" src=".localassets/pics/darktheme.png" width=450px><br>Light and dark theme are supported, and different color highlights.
 <br>
 <br>
 <img alt="Library filter" src=".localassets/pics/filter.png" width=450px><br>Sorting and filtering of libraries.
