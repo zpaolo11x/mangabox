@@ -309,7 +309,6 @@ div.two-pages {
 	background-repeat: repeat-x;
 	background-size: calc(100% / 18) 100%;
 	background-position: left top;
-
 	/*image-rendering: pixelated;*/
 }
 
@@ -321,8 +320,9 @@ div.two-pages {
 	right: 100%;
 	background-image: linear-gradient(270deg, rgba(60, 40, 30, 0.15) 0%, rgba(0, 00, 0, 0) 30%);
 	/*background-image: linear-gradient(270deg, rgba(200, 0, 0, 1) 0%, rgba(200, 0, 0, 0) 100%);*/
-	transition: margin 0.3s;
+	transition: margin 0.3s, opacity 0.5s;
 	z-index: 100;
+	opacity:0;
 }
 
 #dropShadowR {
@@ -333,8 +333,10 @@ div.two-pages {
 	left: 100%;
 	background-image: linear-gradient(90deg, rgba(60, 40, 30, 0.15) 0%, rgba(0, 00, 0, 0) 30%);
 	/*background-image: linear-gradient(90deg, rgba(0, 0, 200, 1) 0%, rgba(0, 0, 200, 0) 100%);*/
-	transition: margin 0.3s;
+	transition: margin 0.3s, opacity 0.5s;
 	z-index: 100;
+	opacity:0;
+
 }
 
 #readerViewer {

@@ -2593,8 +2593,9 @@
 				}
 			});
 
-			rd.dropShadowL = addItem('div', { id: 'dropShadowL', });
-			rd.dropShadowR = addItem('div', { id: 'dropShadowR', });
+			//Default shadow opacity is 0, it is overriden at the time of creation so it transitions in 0.5s
+			rd.dropShadowL = addItem('div', {id: 'dropShadowL', style: {opacity: '1'}});
+			rd.dropShadowR = addItem('div', {id: 'dropShadowR', style: {opacity: '1'}});
 
 			readerViewer.append(rd.foreEdgeL, rd.foreEdgeR, rd.dropShadowL, rd.dropShadowR);
 
