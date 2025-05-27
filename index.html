@@ -112,11 +112,11 @@
 		<img id="barLogo" src="mangabox-logo-16.svg">
 
 		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
-		<span id="appName">MangaBox</span>
+		<span id="dragbarAppTitle">MangaBox</span>
 		<div class="window-controls no-drag">
-			<span class="fa-solid fa-window-minimize glyph-dark" id="minBtn"></span>
-			<span class="fa-regular fa-window-maximize glyph-dark" id="maxBtn"></span>
-			<span class="fa-solid fa-xmark glyph-dark" id="closeBtn"></span>
+			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
+			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
+			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
 		</div>
 	</div>
 	<div id="readerContainer" class="section hidden">
@@ -209,55 +209,53 @@
 
 		//MB Manage Electron titlebar
 
-		const isElectron = !!window.electronAPI;
+		const isElectronApp = !!window.electronAPI;
 
-		if (isElectron) {
-			minBtn.addEventListener('click', () => {
-				window.electronAPI.minimize();
-			});
-
-			maxBtn.addEventListener('click', () => {
-				window.electronAPI.maximize();
-			});
-
-			closeBtn.addEventListener('click', () => {
-				window.electronAPI.close();
-			});
-
-			window.electronAPI.onFullscreenChange((isFullscreen) => {
-				if (isFullscreen) {
-					document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-					dragBar.style.display = 'none';
-				} else {
-					document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
-					dragBar.style.display = '';
-				}
-			});
-
-			window.electronAPI.onMaximize(() => {
-				maxBtn.classList.remove('fa-window-maximize');
-				maxBtn.classList.add('fa-window-restore');
-			});
-
-			window.electronAPI.onUnmaximize(() => {
-				maxBtn.classList.remove('fa-window-restore');
-				maxBtn.classList.add('fa-window-maximize');
-			});
-
-			window.electronAPI.getAppVersion().then(version => {
-				appName.textContent = 'MangaBox v' + version;
-			});
-		}
-
-		// Hide dragbar in PWA mode
-		(function () {
-			if (!isElectron) {
+		function enableDragbar(enabled){
+			if (!enabled) {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
 				document.getElementById('dragBar').style.display = 'none';
 			} else {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
 				document.getElementById('dragBar').style.display = '';
 			}
+		}
+
+		if (isElectronApp) {
+			dragbarMinBtn.addEventListener('click', () => {
+				window.electronAPI.minimize();
+			});
+
+			dragbarMaxBtn.addEventListener('click', () => {
+				window.electronAPI.maximize();
+			});
+
+			dragbarCloseBtn.addEventListener('click', () => {
+				window.electronAPI.close();
+			});
+
+			window.electronAPI.onFullscreenChange((isFullscreen) => {
+				enableDragbar(!isFullscreen);
+			});
+
+			window.electronAPI.onMaximize(() => {
+				dragbarMaxBtn.classList.remove('fa-window-maximize');
+				dragbarMaxBtn.classList.add('fa-window-restore');
+			});
+
+			window.electronAPI.onUnmaximize(() => {
+				dragbarMaxBtn.classList.remove('fa-window-restore');
+				dragbarMaxBtn.classList.add('fa-window-maximize');
+			});
+
+			window.electronAPI.getAppVersion().then(version => {
+				dragbarAppTitle.textContent = 'MangaBox v' + version;
+			});
+		}
+
+		// Hide dragbar in PWA mode
+		(function () {
+			enableDragbar(isElectronApp);
 		})();
 
 
@@ -2992,7 +2990,7 @@
 			}
 		}
 
-		function animateShadowFWD(align, duration, ease) {
+		function animShadowFWD(align, duration, ease) {
 			return ([
 				[{ [align]: '0%', width: '0', opacity: '0.1' },
 				{ [align]: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
@@ -3001,7 +2999,7 @@
 			]);
 		}
 
-		function animateShadowBWD(align, duration, ease) {
+		function animShadowBWD(align, duration, ease) {
 			return ([
 				[{ [align]: '100%', width: '0', opacity: '0' },
 				{ [align]: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
@@ -3100,15 +3098,15 @@
 					leftPage.animate(appearL2R, animData);
 					leftPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 
-					newSpreadShadowR.animate(...animateShadowFWD('left', turnTime, easeFull));
-					newSpreadShadowL.animate(...animateShadowBWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animShadowBWD('right', turnTime, easeFull));
 				} else {
 					rightPage.animate(appearR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R_sildeinR2L, animData);
 					rightPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 
-					newSpreadShadowL.animate(...animateShadowFWD('right', turnTime, easeFull));
-					newSpreadShadowR.animate(...animateShadowBWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animShadowFWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animShadowBWD('left', turnTime, easeFull));
 				}
 
 				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
@@ -3154,8 +3152,8 @@
 					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
 
-					newSpreadShadowR.animate(...animateShadowFWD('left', turnTime, easeFull));
-					newSpreadShadowL.animate(...animateShadowBWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animShadowBWD('right', turnTime, easeFull));
 
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R, animData);
@@ -3167,8 +3165,8 @@
 					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
 					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
 
-					newSpreadShadowL.animate(...animateShadowFWD('right', turnTime, easeFull));
-					newSpreadShadowR.animate(...animateShadowBWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animShadowFWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animShadowBWD('left', turnTime, easeFull));
 
 					rightPage.animate(appearR2L, animData);
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
@@ -3199,7 +3197,7 @@
 					rd.foreEdgeL.style.transition = 'clip-path 0s';
 					leftPage.animate(clipL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 
-					newSpreadShadowR.animate(...animateShadowFWD('left', turnTime, easeFull));
+					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
 
 					coverPageR.animate(appearR2L_slideinL2R, animData);
 					coverPageL.animate(appearL2R, animData);
@@ -3211,7 +3209,7 @@
 					rd.foreEdgeR.style.transition = 'clip-path 0s';
 					rightPage.animate(clipR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 
-					newSpreadShadowL.animate(...animateShadowFWD('right', turnTime, easeFull));
+					newSpreadShadowL.animate(...animShadowFWD('right', turnTime, easeFull));
 
 					coverPageL.animate(appearL2R_sildeinR2L, animData);
 					coverPageR.animate(appearR2L, animData);
