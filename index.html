@@ -961,7 +961,6 @@
 			};
 		}
 
-
 		window.addEventListener('resize', () => {
 			clearTimeout(mb.resizeTimeout);
 			mb.resizeTimeout = setTimeout(() => {
@@ -1112,18 +1111,22 @@
 
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
-			const libGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
-			const libSmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
-			const libLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			const gapSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
+			const libSmallSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
+			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			const searchFieldSize = libLargeSize;
 
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
 
+			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
+
 			const libNum = libraries.length;
-			mb.libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
-			mb.libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
-			mb.libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
+			const mainLibAndMenu = gapSize + libLargeSize + gapSize + libSmallSize + gapSize;
+			mb.libSizer.large = mainLibAndMenu + libNum * (libLargeSize + gapSize);
+			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
+			mb.libSizer.rightmin = (libSmallSize + gapSize) * rightBlockButtons + searchFieldSize;
 			updateStickyMenu();
 		}
 
