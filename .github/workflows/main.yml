@@ -80,21 +80,13 @@ jobs:
             dist/*.AppImage
             dist/*.exe
   web:
+    needs: version
     runs-on: ubuntu-latest
+    env: 
+      version: ${{ needs.version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-
-      - name: Get version from package.json
-        id: version
-        run: |
-          version=$(node -p "require('./package.json').version")
-          echo "version=$version" >> $GITHUB_ENV
 
       - name: Prepare web artifact (rsync version)
         run: |
