@@ -109,7 +109,7 @@ jobs:
     needs: [build, web, version]
     env:
       version: ${{ needs.version.outputs.version }}
-    if: github.ref_name == 'main' # Run this job only for the 'main' branch
+   # if: github.ref_name == 'main' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -152,6 +152,11 @@ jobs:
       - name: List webdeploy directory contents
         run: ls -lR webdeploy/
 
+      - name: Zip web folder
+        run: |
+          cd webdeploy
+          zip -r web.zip web
+
       - name: Create GitHub Release
         id: create-release
         uses: softprops/action-gh-release@v1
@@ -162,7 +167,7 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
-            webdeploy/web/**
+            webdeploy/web.zip
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
