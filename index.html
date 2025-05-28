@@ -280,59 +280,19 @@
 			return (window.innerWidth / window.innerHeight);
 		}
 
-		function isFullscreen() {
-			return document.fullscreenElement ||
-				document.webkitFullscreenElement ||
-				document.mozFullScreenElement ||
-				document.msFullscreenElement;
-		}
-		function requestFullscreen(el) {
-			const request = el.requestFullscreen ||
-				el.webkitRequestFullscreen ||
-				el.mozRequestFullScreen ||
-				el.msRequestFullscreen;
-			if (request) {
-				request.call(el);
-			}
-		}
-		function exitFullscreen() {
-			const exit = document.exitFullscreen ||
-				document.webkitExitFullscreen ||
-				document.mozCancelFullScreen ||
-				document.msExitFullscreen;
-			if (exit) {
-				exit.call(document);
-			}
-		}
-
 		function toggleFullscreen() {
-			if (!isFullscreen()) {
-				requestFullscreen(document.documentElement);
+			if (!document.fullscreenElement) {
+				document.documentElement.requestFullscreen();
 			} else {
-				exitFullscreen();
-			}
-		}
-		function addFullscreenChangeListener(fn) {
-			const map = {
-				fullscreenchange: 'fullscreenElement',
-				webkitfullscreenchange: 'webkitFullscreenElement',
-				mozfullscreenchange: 'mozFullScreenElement',
-				MSFullscreenChange: 'msFullscreenElement'
-			};
-
-			for (const evt in map) {
-				if (map[evt] in document) {
-					document.addEventListener(evt, fn);
-					break;
-				}
+				document.exitFullscreen();
 			}
 		}
 
-		addFullscreenChangeListener(updateFullscreenLabel);
+		document.addEventListener('fullscreenchange', updateFullscreenLabel);
 
 		function updateFullscreenLabel() {
 			fullscreenLabel.classList.remove('fa-expand', 'fa-compress');
-			if (isFullscreen()) {
+			if (document.fullscreenElement) {
 				fullscreenLabel.classList.add('fa-compress');
 			} else {
 				fullscreenLabel.classList.add('fa-expand');
@@ -655,7 +615,7 @@
 		}
 
 		async function performSearch(searchString) {
-			libraryHighlight('searchField');
+			libraryHighlight('searchField', false);
 
 			if (searchString.includes('y:')) {
 
@@ -1202,9 +1162,11 @@
 
 
 		// This function is called when a library is selected, it manages the library menu and library naming in the URL
-		function libraryHighlight(libraryId) {
+		function libraryHighlight(libraryId, withMenu) {
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('highlighted'));
+			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('with-menu'));
 			document.getElementById(libraryId).classList.add('highlighted');
+			if (withMenu) document.getElementById(libraryId).classList.add('with-menu');
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
@@ -1520,7 +1482,7 @@
 
 		// Compose function that opens a specific library based on it ID
 		async function openLibrary(libraryId, seriesId) {
-			await libraryHighlight(libraryId);		// Triggers and manages the library menu
+			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 			await displaySeries(allSeries, seriesGrid);
 			fetchLibraryFilters(libraryId);
@@ -1567,13 +1529,29 @@
 			thumbnailWrapper.append(libraryThumbnail);
 			listItem.append(thumbnailWrapper, libraryNameDiv);
 
+			if (isLib) {
+				const thumbnailWrapperMenu = addItem('div', {
+					className: 'thumbnail-wrapper library-menu-button',
+					innerHTML: `<span class="fa-solid fa-sliders glyph-dark"></span>`
+				})
+
+				listItem.append(thumbnailWrapperMenu);
+
+				thumbnailWrapperMenu.addEventListener('click', (event) => {
+					event.stopPropagation();
+					event.preventDefault();
+					sectionToggle(extraMenuBar);
+				});
+			}
+
 			return listItem;
 		}
 
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			librariesList.append(buildLibraryItem('homeButton', 'Dashboard', 'mangabox-logo-new.svg'));
+			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'mangabox-logo-new.svg')
+			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
@@ -1976,7 +1954,7 @@
 		// Function to trigger the home page layout
 		async function selectHome() {
 
-			libraryHighlight('homeButton');
+			libraryHighlight('homeButton', false);
 
 			seriesGrid.innerHTML = '';
 			booksGrid.innerHTML = '';
@@ -2076,7 +2054,7 @@
 
 		async function dashboardAll(element, page) {
 
-			libraryHighlight('homeButton');
+			libraryHighlight('homeButton', false);
 
 			seriesGrid.innerHTML = ''; // Clear the series grid
 			booksGrid.innerHTML = ''; // Clear the series grid
@@ -2151,7 +2129,7 @@
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
 			)).content;
 
-			await libraryHighlight(libraryId);
+			await libraryHighlight(libraryId, false);
 			displayHeader(seriesData);
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
@@ -3482,8 +3460,10 @@
 
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+
 			libraryMenu.classList.add('disabled');
 			sectionHide(extraMenuBar);
+			
 			closeBookDetails();
 			mb.screenAR = getScreenAR();
 

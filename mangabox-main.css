@@ -278,6 +278,14 @@ a {
 	margin-left: var(--mb-library-gap);
 }
 
+.library-menu-button{
+	margin-left: var(--mb-library-gap);
+}
+
+.library-menu-button span {
+	color: white;
+}
+
 #libraryMenu {
 	transition: opacity 0.3s, background-color 0.3s;
 }
@@ -320,7 +328,7 @@ a {
 }
 
 .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 265px) var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 210px) var(--mb-button-size);
 	margin-left: auto;
 	margin-right: 0px;
 	padding-left: var(--mb-library-gap);
@@ -1100,6 +1108,10 @@ book-item {
 	color: white;
 }
 
+.highlighted.with-menu{
+		width: calc(150px + 44px + 8px);
+}
+
 .highlighted:hover {
 	background-color: var(--mb-accent-light);
 	color: white;
@@ -1326,7 +1338,7 @@ span.mini-title {
 
 /* First reduction: only selected library is enlarged */
 body.sticky-medium .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 205px) var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 200px) var(--mb-button-size);
 }
 
 body.sticky-medium #stickyContainer .library-item:not(.search-field) {
