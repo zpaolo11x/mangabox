@@ -77,9 +77,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Get version from package.json
         id: version
         run: |
