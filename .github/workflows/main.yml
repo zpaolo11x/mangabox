@@ -155,7 +155,7 @@ jobs:
       - name: Zip web folder
         run: |
           cd webdeploy
-          zip -r web.zip web
+          zip -r MangaBox-${{ env.version }}-Web.zip web
 
       - name: Create GitHub Release
         id: create-release
@@ -167,7 +167,7 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
-            webdeploy/web.zip
+            webdeploy/MangaBox-${{ env.version }}-Web.zip
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
