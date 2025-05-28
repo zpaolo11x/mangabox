@@ -36,7 +36,7 @@
 				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
 					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item">
 						<div class="thumbnail-wrapper">
-							<span id="fullscreenlabel" class="fa-expand fa-solid glyph-dark"></span>
+							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
 					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
@@ -280,32 +280,62 @@
 			return (window.innerWidth / window.innerHeight);
 		}
 
-		function toggleFullscreen() {
-			if (!document.fullscreenElement &&
-				!document.webkitFullscreenElement &&
-				!document.mozFullScreenElement &&
-				!document.msFullscreenElement) {
-				const el = document.documentElement;
+		function isFullscreen() {
+			return document.fullscreenElement ||
+				document.webkitFullscreenElement ||
+				document.mozFullScreenElement ||
+				document.msFullscreenElement;
+		}
+		function requestFullscreen(el) {
+			const request = el.requestFullscreen ||
+				el.webkitRequestFullscreen ||
+				el.mozRequestFullScreen ||
+				el.msRequestFullscreen;
+			if (request) {
+				request.call(el);
+			}
+		}
+		function exitFullscreen() {
+			const exit = document.exitFullscreen ||
+				document.webkitExitFullscreen ||
+				document.mozCancelFullScreen ||
+				document.msExitFullscreen;
+			if (exit) {
+				exit.call(document);
+			}
+		}
 
-				if (el.requestFullscreen) {
-					el.requestFullscreen();
-				} else if (el.webkitRequestFullscreen) { // Safari
-					el.webkitRequestFullscreen();
-				} else if (el.mozRequestFullScreen) {
-					el.mozRequestFullScreen();
-				} else if (el.msRequestFullscreen) {
-					el.msRequestFullscreen();
-				}
+		function toggleFullscreen() {
+			if (!isFullscreen()) {
+				requestFullscreen(document.documentElement);
 			} else {
-				if (document.exitFullscreen) {
-					document.exitFullscreen();
-				} else if (document.webkitExitFullscreen) { // Safari
-					document.webkitExitFullscreen();
-				} else if (document.mozCancelFullScreen) {
-					document.mozCancelFullScreen();
-				} else if (document.msExitFullscreen) {
-					document.msExitFullscreen();
+				exitFullscreen();
+			}
+		}
+		function addFullscreenChangeListener(fn) {
+			const map = {
+				fullscreenchange: 'fullscreenElement',
+				webkitfullscreenchange: 'webkitFullscreenElement',
+				mozfullscreenchange: 'mozFullScreenElement',
+				MSFullscreenChange: 'msFullscreenElement'
+			};
+
+			for (const evt in map) {
+				if (map[evt] in document) {
+					document.addEventListener(evt, fn);
+					break;
 				}
+			}
+		}
+
+		addFullscreenChangeListener(updateFullscreenLabel);
+
+		function updateFullscreenLabel() {
+			fullscreenLabel.classList.remove('fa-expand', 'fa-compress');
+			if (isFullscreen()) {
+				fullscreenLabel.classList.add('fa-compress');
+			} else {
+				fullscreenLabel.classList.add('fa-expand');
 			}
 		}
 
