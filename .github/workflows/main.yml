@@ -90,7 +90,7 @@ jobs:
 
       - name: Prepare web artifact (rsync version)
         run: |
-          mkdir webdeploy/web
+          mkdir -p webdeploy/web
           rsync -av --exclude='.*' \
                     --exclude='*.yml' \
                     --exclude='package*.*' \
