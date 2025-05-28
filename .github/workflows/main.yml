@@ -90,14 +90,14 @@ jobs:
 
       - name: Prepare web artifact (rsync version)
         run: |
-          mkdir -p webdeploy/web
+          mkdir -p webdeploy/mangabox
           rsync -av --exclude='.*' \
                     --exclude='*.yml' \
                     --exclude='package*.*' \
                     --exclude='electron/' \
                     --exclude='assets/' \
                     --exclude='z_*.*' \
-                    ./ webdeploy/web
+                    ./ webdeploy/mangabox
 
       - name: Upload web artifact
         uses: actions/upload-artifact@v4
@@ -155,7 +155,7 @@ jobs:
       - name: Zip web folder
         run: |
           cd webdeploy
-          zip -r MangaBox-${{ env.version }}-Web.zip web
+          zip -r MangaBox-${{ env.version }}-Web.zip mangabox
 
       - name: Create GitHub Release
         id: create-release
