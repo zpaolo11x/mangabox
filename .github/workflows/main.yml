@@ -67,6 +67,24 @@ jobs:
             dist/*.AppImage
             dist/*.exe
 
+      - name: Prepare web artifact (rsync version)
+        run: |
+          mkdir webdeploy
+          rsync -av --exclude='.git' \
+                    --exclude='node_modules' \
+                    --exclude='.github' \
+                    --exclude='*.yml' \
+                    --exclude='package.json' \
+                    --exclude='package-lock.json' \
+                    --exclude='electron/' \
+                    ./ webdeploy/
+
+      - name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: webdeploy/
+
   release:
     needs: build
     if: github.ref_name == 'main' # Run this job only for the 'main' branch
