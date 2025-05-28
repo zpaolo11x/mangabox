@@ -106,9 +106,10 @@ jobs:
           path: webdeploy/
 
   release:
-    needs: [build, web]
+    needs: [build, web, version]
     env:
       version: ${{ needs.version.outputs.version }}
+    if: github.ref_name == 'main' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
