@@ -26,7 +26,8 @@ jobs:
   build:
     needs: version
     runs-on: ${{ matrix.os }}
-    env: version: ${{ needs.version.outputs.version }}
+    env: 
+      version: ${{ needs.version.outputs.version }}
     strategy:
       matrix:
         include:
