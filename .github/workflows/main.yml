@@ -8,8 +8,25 @@ on:
       - devtest_*
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - id: get_version
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+
   build:
+    needs: version
     runs-on: ${{ matrix.os }}
+    env: version: ${{ needs.version.outputs.version }}
     strategy:
       matrix:
         include:
