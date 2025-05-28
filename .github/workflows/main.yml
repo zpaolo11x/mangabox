@@ -65,13 +65,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Get version from package.json
-        id: version
-        run: |
-          version=$(node -p "require('./package.json').version")
-          echo "version=$version" >> $GITHUB_ENV
-        shell: bash
-
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
