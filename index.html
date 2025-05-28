@@ -34,6 +34,11 @@
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList" class="libraries-list"></ul>
 				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item">
+						<div class="thumbnail-wrapper">
+							<span id="fullscreenlabel" class="fa-expand fa-solid glyph-dark"></span>
+						</div>
+					</li>
 					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
 						<div class="thumbnail-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
@@ -275,6 +280,35 @@
 			return (window.innerWidth / window.innerHeight);
 		}
 
+		function toggleFullscreen() {
+			if (!document.fullscreenElement &&
+				!document.webkitFullscreenElement &&
+				!document.mozFullScreenElement &&
+				!document.msFullscreenElement) {
+				const el = document.documentElement;
+
+				if (el.requestFullscreen) {
+					el.requestFullscreen();
+				} else if (el.webkitRequestFullscreen) { // Safari
+					el.webkitRequestFullscreen();
+				} else if (el.mozRequestFullScreen) {
+					el.mozRequestFullScreen();
+				} else if (el.msRequestFullscreen) {
+					el.msRequestFullscreen();
+				}
+			} else {
+				if (document.exitFullscreen) {
+					document.exitFullscreen();
+				} else if (document.webkitExitFullscreen) { // Safari
+					document.webkitExitFullscreen();
+				} else if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen();
+				} else if (document.msExitFullscreen) {
+					document.msExitFullscreen();
+				}
+			}
+		}
+
 		//MB Main Variable Setup 
 
 		// Main MangaBox data structure, for variables that are common to the whole app
@@ -445,6 +479,12 @@
 		themeChanger.addEventListener('click', () => {
 			mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
 			changeTheme();
+		})
+
+		fullscreenChanger.addEventListener('click', () => {
+			//mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
+			//changeTheme();
+			toggleFullscreen();
 		})
 
 		logOut.addEventListener('click', async () => {
