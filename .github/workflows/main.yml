@@ -68,7 +68,6 @@ jobs:
             dist/*.exe
   web:
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -90,12 +89,12 @@ jobs:
       - name: Prepare web artifact (rsync version)
         run: |
           mkdir webdeploy
-          rsync -av --exclude='.git' \
-                    --exclude='node_modules' \
-                    --exclude='.github' \
+          rsync -av --exclude='.*' \
                     --exclude='*.yml' \
-                    --exclude='package*.json' \
+                    --exclude='package*.*' \
                     --exclude='electron/' \
+                    --exclude='assets/' \
+                    --exclude='z_*.*' \
                     ./ webdeploy/
 
       - name: Upload web artifact
