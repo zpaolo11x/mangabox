@@ -90,14 +90,14 @@ jobs:
 
       - name: Prepare web artifact (rsync version)
         run: |
-          mkdir webdeploy
+          mkdir webdeploy/web
           rsync -av --exclude='.*' \
                     --exclude='*.yml' \
                     --exclude='package*.*' \
                     --exclude='electron/' \
                     --exclude='assets/' \
                     --exclude='z_*.*' \
-                    ./ webdeploy/
+                    ./ webdeploy//web
 
       - name: Upload web artifact
         uses: actions/upload-artifact@v4
@@ -162,7 +162,7 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
-            webdeploy/**
+            webdeploy/web/**
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
