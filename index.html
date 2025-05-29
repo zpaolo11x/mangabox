@@ -1160,12 +1160,12 @@
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
 
 			const libNum = libraries.length;
-			const mainLibAndMenu = gapSize + libLargeSize + gapSize + libSmallSize + gapSize;
+			const mainLibAndMenu = margin + libLargeSize + 40;
 			mb.libSizer.large = mainLibAndMenu + libNum * (libLargeSize + gapSize);
 			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
-			mb.libSizer.rightmin = (libSmallSize + gapSize) * rightBlockButtons + searchFieldSize;
+			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
 
-			console.log(mb.libSizer.large);
+			console.log(mb.libSizer.rightmin);
 
 
 			updateStickyMenu();

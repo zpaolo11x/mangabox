@@ -1355,6 +1355,10 @@ body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted
 	width: var(--mb-library-large);
 }
 
+body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+	width: var(--mb-library-large-with-menu);
+}
+
 body.sticky-medium #stickyContainer .library-name {
 	opacity: 0;
 }
@@ -1401,6 +1405,10 @@ body.sticky-small #extraMenuBar .library-item {
 
 body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
+}
+
+body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+	width: var(--mb-library-large-with-menu);
 }
 
 body.sticky-small #stickyContainer .library-name {
