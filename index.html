@@ -308,7 +308,10 @@
 			accentColor: Number(localStorage.getItem('mbAccentColor')) ?? 0,
 			themePrefs: Number(localStorage.getItem('mbThemePrefs')) ?? 0,
 			darkTheme: false,
+
 			libraryFilters: JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}'),
+			libraryMenuButtons: {},
+
 			authHeader: localStorage.getItem('mbAuthHeader'),
 			baseUrl: localStorage.getItem('mbBaseUrl'),
 			rememberMe: localStorage.getItem('mbRememberMe'),
@@ -852,6 +855,9 @@
 		}
 
 		async function applyLibraryFilters() {
+			const { path, params } = getHashAndParams();
+			const libraryId = params.get('library_id');
+
 			const divs = Array.from(seriesGrid.children);
 			divs.forEach(div => {
 				div.infilter = true;
@@ -859,7 +865,7 @@
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
-			libraryMenuIcon.className = isFiltered == 0 ? 'fa-solid fa-sliders glyph-dark' : 'fa-solid fa-sliders mb-accent glyph-dark'
+			mb.libraryMenuButtons[libraryId].className = isFiltered == 0 ? 'fa-solid fa-sliders' : 'fa-solid fa-sliders filtered'
 
 			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
@@ -1487,7 +1493,7 @@
 			await displaySeries(allSeries, seriesGrid);
 			fetchLibraryFilters(libraryId);
 			focusItem(seriesId || 'top');
-			libraryMenu.classList.remove('disabled');
+			//TODO Move here the logic that enables the library options buttons?
 		}
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
@@ -1530,11 +1536,15 @@
 			listItem.append(thumbnailWrapper, libraryNameDiv);
 
 			if (isLib) {
-				const thumbnailWrapperMenu = addItem('div', {
-					className: 'thumbnail-wrapper library-menu-button',
-					innerHTML: `<span class="fa-solid fa-sliders glyph-dark"></span>`
+				mb.libraryMenuButtons[itemId] = addItem('span', {
+					className: "fa-solid fa-sliders"
 				})
 
+				const thumbnailWrapperMenu = addItem('div', {
+					className: 'thumbnail-wrapper library-menu-button',
+				})
+
+				thumbnailWrapperMenu.append(mb.libraryMenuButtons[itemId]);
 				listItem.append(thumbnailWrapperMenu);
 
 				thumbnailWrapperMenu.addEventListener('click', (event) => {
@@ -1542,6 +1552,9 @@
 					event.preventDefault();
 					sectionToggle(extraMenuBar);
 				});
+	
+				
+
 			}
 
 			return listItem;
@@ -1572,21 +1585,6 @@
 				librariesList.append(listItem);
 			});
 
-			const libraryOptionsButton = addItem('li', {
-				id: 'libraryMenu',
-				title: 'Library Menu',
-				className: 'library-item disabled',
-				innerHTML: `
-						<div class="thumbnail-wrapper">
-							<span id="libraryMenuIcon" class="fa-solid fa-sliders glyph-dark"></span>
-						</div>
-					`
-			});
-
-			librariesList.append(libraryOptionsButton);
-			libraryMenu.addEventListener('click', () => {
-				sectionToggle(extraMenuBar);
-			});
 		}
 
 		function getAltTitles(serie) {
@@ -3460,8 +3458,6 @@
 
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
-
-			libraryMenu.classList.add('disabled');
 			sectionHide(extraMenuBar);
 			
 			closeBookDetails();
