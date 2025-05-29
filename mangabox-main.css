@@ -282,14 +282,17 @@ a {
 
 .library-menu-button span {
 	color: rgba(255,255,255,0.5);
-	transition: color 0.3s ease;
+	transition: text-shadow 0.3s ease, color 0.3s ease;
 
 }
 
 .library-menu-button span.filtered {
 	color: white;
 	text-shadow: 0px 0px 5px rgba(255,255,255,0.5);
-	transition: color 0.3s ease;
+}
+
+.library-menu-button:hover span {
+	text-shadow: 0px 0px 5px rgba(255,255,255,0.5);
 }
 
 #libraryMenu {
