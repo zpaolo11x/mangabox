@@ -335,6 +335,7 @@
 			// Filter table placeholders
 			filterTable: null,
 			filterButtons: null,
+			filterSizer: null,
 
 			libSizer: {}, // Used to calculate libraries button size
 			dashboardBin: "",
@@ -983,6 +984,7 @@
 
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
+
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 0) {
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-small');
@@ -995,6 +997,13 @@
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-small');
 			};
+
+			if (containerWidth - mb.filterSizer >= 0){
+				extraButtons.classList.remove('filter-small')
+			} else {
+				extraButtons.classList.add('filter-small')
+			}
+
 		}
 
 		window.addEventListener('resize', () => {
@@ -1150,6 +1159,7 @@
 			const gapSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
 			const libSmallSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
 			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			const filterButtonSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-filter-button-size'));
 			const searchFieldSize = libLargeSize;
 			const margin = 10;
 
@@ -1165,8 +1175,8 @@
 			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
 			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
 
-			console.log(mb.libSizer.rightmin);
-
+			mb.filterSizer = mb.filterButtons.length * (100 + gapSize) + filterButtonSize + 2 * margin;
+			console.log(mb.filterSizer)
 
 			updateStickyMenu();
 		}

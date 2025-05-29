@@ -1404,13 +1404,20 @@ body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
+#extraButtons.filter-small .filter-item {
+		width: var(--mb-filter-button-size);
+
+}
+/*
 body.sticky-small #extraMenuBar .filter-item {
 	width: var(--mb-filter-button-size);
 }
-
+*/
+/*
 body.sticky-small #extraMenuBar .library-item {
 	width: var(--mb-button-size);
 }
+*/
 
 body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
