@@ -865,7 +865,7 @@
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
-			mb.libraryMenuButtons[libraryId].className = isFiltered == 0 ? 'fa-solid fa-sliders' : 'fa-solid fa-sliders filtered'
+			mb.libraryMenuButtons[libraryId].className = isFiltered == 0 ? 'fa-solid fa-bars' : 'fa-solid fa-sliders filtered'
 
 			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
@@ -1537,7 +1537,7 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: "fa-solid fa-sliders"
+					className: "fa-solid fa-bars"
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {

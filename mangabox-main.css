@@ -278,10 +278,6 @@ a {
 	margin-left: var(--mb-library-gap);
 }
 
-.library-menu-button{
-	margin-left: var(--mb-library-gap);
-}
-
 .library-menu-button span {
 	color: rgba(255,255,255,0.5);
 	transition: color 0.3s ease;
@@ -1117,7 +1113,7 @@ book-item {
 }
 
 .highlighted.with-menu{
-		width: calc(150px + 44px + 8px);
+		width: calc(150px + 40px);
 }
 
 .highlighted:hover {
