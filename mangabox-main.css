@@ -15,6 +15,8 @@
 	--mb-span-size: 40px;
 	--mb-library-large: 150px;
 	--mb-library-name: calc(var(--mb-library-large) - var(--mb-button-size) - 10px);
+	--mb-library-large-with-menu: calc(var(--mb-library-large) + var(--mb-span-size));
+
 	--mb-filter-button-size: 34px;
 	--mb-filter-span-size: 30px;
 
@@ -1113,7 +1115,7 @@ book-item {
 }
 
 .highlighted.with-menu{
-		width: calc(150px + 40px);
+		width: var(--mb-library-large-with-menu);
 }
 
 .highlighted:hover {

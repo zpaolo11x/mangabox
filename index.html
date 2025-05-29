@@ -1151,6 +1151,7 @@
 			const libSmallSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
 			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 			const searchFieldSize = libLargeSize;
+			const margin = 10;
 
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
@@ -1163,6 +1164,10 @@
 			mb.libSizer.large = mainLibAndMenu + libNum * (libLargeSize + gapSize);
 			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
 			mb.libSizer.rightmin = (libSmallSize + gapSize) * rightBlockButtons + searchFieldSize;
+
+			console.log(mb.libSizer.large);
+
+
 			updateStickyMenu();
 		}
 
@@ -1553,8 +1558,6 @@
 					sectionToggle(extraMenuBar);
 				});
 	
-				
-
 			}
 
 			return listItem;
