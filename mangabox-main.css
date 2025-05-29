@@ -283,12 +283,15 @@ a {
 .library-menu-button span {
 	color: rgba(255,255,255,0.5);
 	transition: text-shadow 0.3s ease, color 0.3s ease;
-
 }
 
 .library-menu-button span.filtered {
 	color: white;
 	text-shadow: 0px 0px 5px rgba(255,255,255,0.5);
+}
+
+.library-menu-button span:active {
+	color: var(--mb-accent-active);
 }
 
 .library-menu-button:hover span {
@@ -1129,6 +1132,9 @@ book-item {
 .highlighted:active {
 	background-color: var(--mb-accent-active);
 	color: white;
+}
+.highlighted:has(.library-menu-button span:active){
+	background-color:var(--mb-accent-light);
 }
 
 #seriesHeader {
