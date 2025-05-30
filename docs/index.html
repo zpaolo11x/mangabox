@@ -78,8 +78,8 @@
 
 
 		/* Lightbox styling */
-		.lightbox {
-			display: none;
+		#lightBox {
+			display: flex;
 			position: fixed;
 			top: 0;
 			left: 0;
@@ -89,17 +89,21 @@
 			justify-content: center;
 			align-items: center;
 			z-index: 1000;
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			pointer-events: none;
 		}
 
-		.lightbox img {
+		#lightBoxImg {
 			max-width: 90%;
 			max-height: 90%;
 			border-radius: var(--border-percent) / calc(var(--border-percent) * var(--image-ar));
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 		}
 
-		.lightbox.active {
-			display: flex;
+		#lightBox.active {
+			opacity:1;
+			pointer-events: unset;
 		}
 
 		footer {
@@ -193,8 +197,8 @@
 		</div>
 
 		<!-- Lightbox -->
-		<div class="lightbox" id="lightbox">
-			<img id="lightbox-img" alt="">
+		<div id="lightBox">
+			<img id="lightBoxImg" alt="">
 		</div>
 
 		<footer>
@@ -203,19 +207,17 @@
 
 		<script>
 			// JavaScript for lightbox functionality
-			const lightbox = document.getElementById('lightbox');
-			const lightboxImg = document.getElementById('lightbox-img');
 			const clickableImages = document.querySelectorAll('.clickable');
 
 			clickableImages.forEach(img => {
 				img.addEventListener('click', () => {
-					lightboxImg.src = img.src;
-					lightbox.classList.add('active');
+					lightBoxImg.src = img.src;
+					lightBox.classList.add('active');
 				});
 			});
 
-			lightbox.addEventListener('click', () => {
-				lightbox.classList.remove('active');
+			lightBox.addEventListener('click', () => {
+				lightBox.classList.remove('active');
 			});
 		</script>
 	</div>
