@@ -19,6 +19,9 @@
 			--text-color-main: #333;
 			--text-color-caption: #555;
 			--text-color-footer: #666;
+
+			--border-percent: 1%;
+			--image-ar: calc(1200/760);
 		}
 
 		body {
@@ -91,7 +94,7 @@
 		.lightbox img {
 			max-width: 90%;
 			max-height: 90%;
-			border-radius: 10px;
+			border-radius: var(--border-percent) / calc(var(--border-percent) * var(--image-ar));
 			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 		}
 
