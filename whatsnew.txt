@@ -1,3 +1,11 @@
-- Added shadows to animated page turns
-- Added Windows for ARM build
-- Electron app now has custom drag bar and window controls
+Main UI
+- Redesigned library buttons layout
+- Library options button embedded in library button
+Reader
+- Added shadows on cover animation
+Build
+- Added web build for PWA deployment
+- Code refactoring
+Fixes
+- Fixed bug when opening a book after marking as read or unread
+- Fixed top alignment bugs with drag bar

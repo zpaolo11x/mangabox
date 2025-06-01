@@ -156,6 +156,10 @@ img.page:not(.hidden) {
 	background: linear-gradient(to Right, rgba(99, 76, 68, 1.0), transparent);
 }
 
+.hidden-page {
+	opacity: 0!important;
+}
+
 .page-container {
 	position: relative;
 	overflow: hidden;
@@ -277,7 +281,7 @@ div.two-pages {
 
 }
 
-#leftForeEdge {
+#foreEdgeL {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -293,7 +297,7 @@ div.two-pages {
 	/*image-rendering:pixelated;*/
 }
 
-#rightForeEdge {
+#foreEdgeR {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -305,11 +309,10 @@ div.two-pages {
 	background-repeat: repeat-x;
 	background-size: calc(100% / 18) 100%;
 	background-position: left top;
-
 	/*image-rendering: pixelated;*/
 }
 
-#leftDrop {
+#dropShadowL {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -319,9 +322,10 @@ div.two-pages {
 	/*background-image: linear-gradient(270deg, rgba(200, 0, 0, 1) 0%, rgba(200, 0, 0, 0) 100%);*/
 	transition: margin 0.3s;
 	z-index: 100;
+	opacity: 0;
 }
 
-#rightDrop {
+#dropShadowR {
 	position: fixed;
 	aspect-ratio: 1 / 10;
 	height: 100%;
@@ -331,6 +335,8 @@ div.two-pages {
 	/*background-image: linear-gradient(90deg, rgba(0, 0, 200, 1) 0%, rgba(0, 0, 200, 0) 100%);*/
 	transition: margin 0.3s;
 	z-index: 100;
+	opacity: 0;
+
 }
 
 #readerViewer {

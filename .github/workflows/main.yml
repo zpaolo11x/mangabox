@@ -8,8 +8,28 @@ on:
       - devtest_*
 
 jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - id: get_version
+        run: |
+          VERSION=$(node -p 'require("./package.json").version')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
   build:
+    needs: version
     runs-on: ${{ matrix.os }}
+    env: 
+      version: ${{ needs.version.outputs.version }}
     strategy:
       matrix:
         include:
@@ -45,13 +65,6 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Get version from package.json
-        id: version
-        run: |
-          version=$(node -p "require('./package.json').version")
-          echo "version=$version" >> $GITHUB_ENV
-        shell: bash
-
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -66,9 +79,36 @@ jobs:
             dist/*.dmg
             dist/*.AppImage
             dist/*.exe
+  web:
+    needs: version
+    runs-on: ubuntu-latest
+    env: 
+      version: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Prepare web artifact (rsync version)
+        run: |
+          mkdir -p webdeploy/mangabox
+          rsync -av --exclude='.*' \
+                    --exclude='*.yml' \
+                    --exclude='package*.*' \
+                    --exclude='electron/' \
+                    --exclude='assets/' \
+                    --exclude='z_*.*' \
+                    ./ webdeploy/mangabox
+
+      - name: Upload web artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: webdeploy/
 
   release:
-    needs: build
+    needs: [build, web, version]
+    env:
+      version: ${{ needs.version.outputs.version }}
     if: github.ref_name == 'main' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
@@ -88,13 +128,6 @@ jobs:
             exit 1
           fi
 
-      - name: Get version from package.json
-        id: version
-        run: |
-          version=$(node -p "require('./package.json').version")
-          echo "version=$version" >> $GITHUB_ENV
-        shell: bash
-
       - name: Create Git tag
         run: |
           git config user.name "GitHub Actions"
@@ -102,13 +135,27 @@ jobs:
           git tag -a v${{ env.version }} -m "Release v${{ env.version }}"
           git push origin v${{ env.version }}
 
-      - name: Download all artifacts
+      - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist
 
+      - name: Download web artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: webdeploy
+
       - name: List dist directory contents
         run: ls -lR dist/
+
+      - name: List webdeploy directory contents
+        run: ls -lR webdeploy/
+
+      - name: Zip web folder
+        run: |
+          cd webdeploy
+          zip -r MangaBox-${{ env.version }}-Web.zip mangabox
 
       - name: Create GitHub Release
         id: create-release
@@ -120,6 +167,7 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
+            webdeploy/MangaBox-${{ env.version }}-Web.zip
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 

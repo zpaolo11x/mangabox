@@ -1,9 +1,9 @@
 {
 	"name": "mangabox",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Komga desktop client using Electron",
-	"main": "main.js",
+	"main": "package-main.js",
 	"scripts": {
 		"start": "electron .",
 		"build": "electron-builder"
@@ -20,7 +20,9 @@
 		},
 		"files": [
 			"**/*",
-			"main.js",
+			"!z_*.*",
+			"package-main.js",
+			"package-preload.js",
 			"package.json"
 		],
 		"mac": {

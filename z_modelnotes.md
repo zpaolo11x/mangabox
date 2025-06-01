@@ -1,7 +1,6 @@
 *API NOTES*
 
 /series/list
-
 Body to filter and show all the series from a certain library
 {
   "condition": {

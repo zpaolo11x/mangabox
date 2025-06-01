@@ -13,7 +13,10 @@
 	--mb-library-gap: 8px;
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
-	--mb-library-large: 140px;
+	--mb-library-large: 150px;
+	--mb-library-name: calc(var(--mb-library-large) - var(--mb-button-size) - 10px);
+	--mb-library-large-with-menu: calc(var(--mb-library-large) + var(--mb-span-size));
+
 	--mb-filter-button-size: 34px;
 	--mb-filter-span-size: 30px;
 
@@ -80,7 +83,7 @@
 
 .draggable {
 	-webkit-app-region: drag;
- }
+}
 
 html,
 body {
@@ -162,58 +165,58 @@ a {
 
 #dragBar {
 	text-align: left;
-	padding-left:32px;
+	padding-left: 32px;
 	font-size: 14px;
 	line-height: 16px;
-	position:fixed;
-	top:0;
-	left:0;
-	right:0;
-	height:var(--mb-drag-bar-height);
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: var(--mb-drag-bar-height);
 	/*z-index:3000;*/
 	background: var(--mb-card-color);
 	transition: background-color 0.1s ease, color 0.3s ease;
-	display: flex; 
-	flex-direction: column; 
+	display: flex;
+	flex-direction: column;
 	justify-content: flex-end;
 	transition: all 0.3s;
 	/*border-bottom:1px red solid;*/
 }
 
-.window-controls{
-	display:flex;
-	gap:5px;
+.window-controls {
+	display: flex;
+	gap: 5px;
 	-webkit-app-region: no-drag;
-	position:absolute;
+	position: absolute;
 	top: 8px;
 	right: 8px;
 	font-size: 14px;
 }
 
-.window-controls span{
+.window-controls span {
 	width: 25px;
-	text-align:center;
+	text-align: center;
 	/*border:1px orange solid;*/
 	margin: 0px;
-	padding:0px;
+	padding: 0px;
 	transition: 0.3s;
 }
 
-.window-controls span:hover{
+.window-controls span:hover {
 	color: var(--mb-accent);
 	text-shadow: 0px 0px 15px var(--mb-accent-a50);
 }
 
-.window-controls span:active{
+.window-controls span:active {
 	color: var(--mb-accent-a50);
 }
 
-#barLogo{
-	width:16px;
-	height:16px;
-	position:absolute;
-	top:6px;
-	left:8px;
+#barLogo {
+	width: 16px;
+	height: 16px;
+	position: absolute;
+	top: 6px;
+	left: 8px;
 }
 
 #mainUI:not(:has(#extraMenuBar.hidden)) {
@@ -277,6 +280,24 @@ a {
 	margin-left: var(--mb-library-gap);
 }
 
+.library-menu-button span {
+	color: rgba(255,255,255,0.5);
+	transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+
+.library-menu-button span.filtered {
+	color: white;
+	text-shadow: 0px 0px 5px rgba(255,255,255,0.5);
+}
+
+.library-menu-button span:active {
+	color: var(--mb-accent-active);
+}
+
+.library-menu-button:hover span {
+	text-shadow: 0px 0px 5px rgba(255,255,255,0.5);
+}
+
 #libraryMenu {
 	transition: opacity 0.3s, background-color 0.3s;
 }
@@ -319,7 +340,7 @@ a {
 }
 
 .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 265px) var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 210px) var(--mb-button-size);
 	margin-left: auto;
 	margin-right: 0px;
 	padding-left: var(--mb-library-gap);
@@ -377,6 +398,7 @@ a {
 }
 
 .library-item.search-field {
+	max-width: 100%;
 	width: auto;
 }
 
@@ -689,7 +711,16 @@ a {
 }
 
 .library-name {
+	width:var(--mb-library-name);
+	min-width:var(--mb-library-name);
+	text-align: left;
 	padding: 5px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
 }
 
 #stripPrevPage,
@@ -770,7 +801,7 @@ a {
 
 #stripGridHeaderContainer {
 	position: fixed;
-	top: 60px;
+	top: calc(60px + var(--mb-drag-bar-height));
 	left: 0px;
 	right: 0px;
 	background: linear-gradient(180deg, var(--mb-page-color) 80%, transparent 81%);
@@ -872,7 +903,7 @@ a {
 	position: fixed;
 	/* Keeps the div centered and prevents scrolling */
 	left: 50%;
-	top: 100px;
+	top: calc(100px + var(--mb-drag-bar-height));
 	transform: translate(-50%, 0);
 	/* Centers the div */
 	width: min(550px, 100vw);
@@ -1089,6 +1120,10 @@ book-item {
 	color: white;
 }
 
+.highlighted.with-menu{
+		width: var(--mb-library-large-with-menu);
+}
+
 .highlighted:hover {
 	background-color: var(--mb-accent-light);
 	color: white;
@@ -1097,6 +1132,9 @@ book-item {
 .highlighted:active {
 	background-color: var(--mb-accent-active);
 	color: white;
+}
+.highlighted:has(.library-menu-button span:active){
+	background-color:var(--mb-accent-light);
 }
 
 #seriesHeader {
@@ -1112,7 +1150,7 @@ book-item {
 
 #seriesMiniHeader {
 	position: fixed;
-	top: 60px;
+	top: calc(60px + var(--mb-drag-bar-height));
 	left: 0px;
 	right: 0px;
 	background: var(--mb-page-color);
@@ -1304,7 +1342,7 @@ span.mini-title {
 #blanker {
 	background: var(--mb-page-color);
 	position: fixed;
-	top: 60px;
+	top: calc(60px + var(--mb-drag-bar-height));
 	left: 0px;
 	right: 0px;
 	bottom: 0px;
@@ -1315,7 +1353,7 @@ span.mini-title {
 
 /* First reduction: only selected library is enlarged */
 body.sticky-medium .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) minmax(auto, 205px) var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 200px) var(--mb-button-size);
 }
 
 body.sticky-medium #stickyContainer .library-item:not(.search-field) {
@@ -1324,6 +1362,10 @@ body.sticky-medium #stickyContainer .library-item:not(.search-field) {
 
 body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
+}
+
+body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+	width: var(--mb-library-large-with-menu);
 }
 
 body.sticky-medium #stickyContainer .library-name {
@@ -1362,16 +1404,27 @@ body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
+#extraButtons.filter-small .filter-item {
+		width: var(--mb-filter-button-size);
+
+}
+/*
 body.sticky-small #extraMenuBar .filter-item {
 	width: var(--mb-filter-button-size);
 }
-
+*/
+/*
 body.sticky-small #extraMenuBar .library-item {
 	width: var(--mb-button-size);
 }
+*/
 
 body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
+}
+
+body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+	width: var(--mb-library-large-with-menu);
 }
 
 body.sticky-small #stickyContainer .library-name {
@@ -1388,7 +1441,7 @@ body.sticky-small #bookDetailsContainer {
 }
 
 body.sticky-small .libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
 	width: 100%;
 	padding-left: 0px;
 }

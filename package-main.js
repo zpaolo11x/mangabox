@@ -17,7 +17,7 @@ app.on('ready', () => {
 		titleBarOverlay: false,
 
 		webPreferences: {
-			preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, 'package-preload.js'),
 			nodeIntegration: false,
 			contextIsolation: true,
 			allowRunningInsecureContent: true
