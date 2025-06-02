@@ -622,9 +622,6 @@
 			libraryHighlight('searchField', false);
 
 			if (searchString.includes('y:')) {
-
-				//TODO there was a sort entry here, not needed anymore?
-				// const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
@@ -656,8 +653,6 @@
 				return
 			}
 
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
@@ -673,8 +668,6 @@
 			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
 				'POST', `{"condition": {"allOf": []}}`
@@ -1190,8 +1183,6 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
@@ -1473,8 +1464,6 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
-			//TODO there was a sort entry here, not needed anymore?
-			//const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const allSeriesPage = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
@@ -1991,8 +1980,6 @@
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
-					//TODO there was a sort entry here, not needed anymore?
-					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
 				showItems: async (input, target) => {
