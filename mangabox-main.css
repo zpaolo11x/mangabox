@@ -462,8 +462,8 @@ a {
 	border-radius: 4px;
 }
 
-
-#stickyContainer .thumbnail-wrapper {
+.button-wrapper {
+	position: relative;
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	min-width: var(--mb-span-size);
@@ -471,7 +471,8 @@ a {
 	padding-top: 0;
 }
 
-#extraMenuBar .thumbnail-wrapper {
+.smallbutton-wrapper {
+	position: relative;
 	width: var(--mb-filter-span-size);
 	height: var(--mb-filter-span-size);
 	min-width: var(--mb-filter-span-size);

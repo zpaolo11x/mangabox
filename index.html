@@ -35,28 +35,28 @@
 				<ul id="librariesList" class="libraries-list"></ul>
 				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
 					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
 					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
 						</div>
 					</li>
 					<li id="colorChanger" title="Theme Color" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
 					<li id="searchField" title="Search" class="library-item search-field">
-						<div id="searchIcon" class="thumbnail-wrapper">
+						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
 						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
 					</li>
 					<li id="logOut" title="Logout" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
 						</div>
 					</li>
@@ -891,7 +891,7 @@
 				title: button.title,
 			});
 			button.icon = addItem('div', {
-				className: `thumbnail-wrapper`,
+				className: `smallbutton-wrapper`,
 				innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
 			});
 			button.caption = addItem('div', {
@@ -1509,7 +1509,7 @@
 			});
 
 			const thumbnailWrapper = addItem('div', {
-				className: 'thumbnail-wrapper',
+				className: 'button-wrapper',
 			})
 
 			const libraryThumbnail = addItem('img', {
@@ -1544,7 +1544,7 @@
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
-					className: 'thumbnail-wrapper library-menu-button',
+					className: 'button-wrapper library-menu-button',
 				})
 
 				thumbnailWrapperMenu.append(mb.libraryMenuButtons[itemId]);
