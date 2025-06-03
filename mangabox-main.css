@@ -256,35 +256,42 @@ a {
 	flex-wrap: nowrap;
 }
 
-.libraries-list {
+#librariesList {
 	display: grid;
 	grid-auto-flow: column;
-	grid-template-columns: repeat(auto-fill);
 	gap: var(--mb-library-gap);
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 	height: var(--mb-button-size);
+
+	background-color: lightblue;
+}
+
+#librariesRightBlock {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: auto;
+	gap: var(--mb-library-gap);
+	list-style-type: none;
+	padding: 0 0 0 var(--mb-library-gap);
+	margin: 0 0 0 auto;
+	height: var(--mb-button-size);
+
+	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 210px) var(--mb-button-size);
+
+	background-color: pink;
 }
 
 .filters-list {
 	display: grid;
 	grid-auto-flow: column;
-	grid-template-columns: repeat(auto-fill);
 	gap: var(--mb-library-gap);
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 	padding-bottom: var(--mb-library-gap);
 	height: var(--mb-filter-button-size);
-}
-
-.libraries-list.left-block {
-	margin-right: var(--mb-library-gap);
-}
-
-.libraries-list.options-block {
-	margin-left: var(--mb-library-gap);
 }
 
 .library-menu-button span {
@@ -344,13 +351,6 @@ a {
 
 #extraMenuBar:not(.hidden) {
 	opacity: 1;
-}
-
-.libraries-list.right-block {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 210px) var(--mb-button-size);
-	margin-left: auto;
-	margin-right: 0px;
-	padding-left: var(--mb-library-gap);
 }
 
 .filter-item {
@@ -1357,7 +1357,7 @@ span.mini-title {
 }
 
 /* First reduction: only selected library is enlarged */
-body.sticky-medium .libraries-list.right-block {
+body.sticky-medium #librariesRightBlock {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 200px) var(--mb-button-size);
 }
 
@@ -1446,7 +1446,7 @@ body.sticky-small #bookDetailsContainer {
 	max-height: calc(100vh - 150px - 60px);
 }
 
-body.sticky-small .libraries-list.right-block {
+body.sticky-small #librariesRightBlock {
 	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
 	width: 100%;
 	padding-left: 0px;
