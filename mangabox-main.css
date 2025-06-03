@@ -33,6 +33,8 @@
 	--mb-card-padding: 5px;
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
+	--mb-num-buttons: 1;
+
 	--mb-swatches:
 		hsl(348, 92%, 38%),
 		hsl(39, 100%, 50%),
@@ -265,22 +267,22 @@ a {
 	margin: 0;
 	height: var(--mb-button-size);
 
-	background-color: lightblue;
+	/*background-color: lightblue;*/
 }
 
 #librariesRightBlock {
 	display: grid;
 	grid-auto-flow: column;
-	grid-auto-columns: auto;
+	grid-auto-columns: var(--mb-button-size);
 	gap: var(--mb-library-gap);
 	list-style-type: none;
 	padding: 0 0 0 var(--mb-library-gap);
 	margin: 0 0 0 auto;
 	height: var(--mb-button-size);
 
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 210px) var(--mb-button-size);
+	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 210px) var(--mb-button-size);
 
-	background-color: pink;
+	/*background-color: pink;*/
 }
 
 .filters-list {
@@ -1358,7 +1360,7 @@ span.mini-title {
 
 /* First reduction: only selected library is enlarged */
 body.sticky-medium #librariesRightBlock {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) minmax(auto, 200px) var(--mb-button-size);
+	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 200px) var(--mb-button-size);
 }
 
 body.sticky-medium #stickyContainer .library-item:not(.search-field) {
@@ -1447,7 +1449,7 @@ body.sticky-small #bookDetailsContainer {
 }
 
 body.sticky-small #librariesRightBlock {
-	grid-template-columns: var(--mb-button-size) var(--mb-button-size) var(--mb-button-size) 1fr var(--mb-button-size);
+	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) 1fr var(--mb-button-size);
 	width: 100%;
 	padding-left: 0px;
 }

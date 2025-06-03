@@ -1161,6 +1161,7 @@
 			await displayLibraries(libraries);
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
+			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
 
 			const libNum = libraries.length;
 			const mainLibAndMenu = margin + libLargeSize + 40;
