@@ -26,11 +26,12 @@
 
 	--mb-drag-bar-height: 22px;
 
-	--mb-thumb-cover-max-width: 190px;
-	--mb-thumb-cover-dash-width: 151px;
-	--mb-thumb-cover-min-width: 141px;
-
-
+	--mb-card-cover-min-width: 141px;
+	--mb-card-cover-max-width: 190px;
+	--mb-card-cover-dash-width: 150px;
+	--mb-cover-aspect: 100 / 140;
+	--mb-card-padding: 5px;
+	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-swatches:
 		hsl(348, 92%, 38%),
@@ -461,9 +462,9 @@ a {
 
 .thumbnail-wrapper {
 	max-width: 100%;
-	width: var(--mb-thumb-cover-max-width);
+	width: var(--mb-card-cover-max-width);
 	position: relative;
-	aspect-ratio: 100 / 140;
+	aspect-ratio: var(--mb-cover-aspect);
 	overflow: hidden;
 	border-radius: 4px;
 }
@@ -503,9 +504,6 @@ a {
 	object-fit: cover;
 	object-position: center;
 	transition: opacity 0.4s ease-in-out;
-	/*was 0.5 maybe?*/
-
-	/* Adjust the duration as needed */
 }
 
 .series-status,
@@ -896,7 +894,7 @@ a {
 #homeStripSeriesResults,
 #homeStripBooksResults {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(calc(var(--mb-thumb-cover-min-width) + 10px), max-content));
+	grid-template-columns: repeat(auto-fit, minmax(var(--mb-card-min-width), max-content));
 	gap: 16px;
 	padding: 20px 20px;
 	transition: opacity 0.3s ease;
@@ -958,7 +956,7 @@ a {
 	max-height: 210px;
 	top: 55px;
 	bottom: 20px;
-	aspect-ratio: 100 / 140;
+	aspect-ratio:var(--mb-cover-aspect);
 	border-radius: 4px;
 
 }
@@ -1022,13 +1020,13 @@ a {
 
 .series-item,
 .book-item {
-	max-width: var(--mb-thumb-cover-max-width);
+	max-width: var(--mb-card-cover-max-width);
 	background-color: var(--mb-card-color);
 	text-align: left;
 	cursor: pointer;
 	font-size: 0.9em;
 	margin: 0;
-	padding: 5px;
+	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
 	border-radius: 8px;
 	transition: scale 0.3s, box-shadow 0.3s;
@@ -1043,7 +1041,7 @@ a {
 
 .home-strip .book-item,
 .home-strip .series-item {
-	width: var(--mb-thumb-cover-dash-width);
+	width: var(--mb-card-cover-dash-width);
 }
 
 series-item,
