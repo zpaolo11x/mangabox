@@ -26,6 +26,12 @@
 
 	--mb-drag-bar-height: 22px;
 
+	--mb-thumb-cover-max-width: 190px;
+	--mb-thumb-cover-dash-width: 151px;
+	--mb-thumb-cover-min-width: 141px;
+
+
+
 	--mb-swatches:
 		hsl(348, 92%, 38%),
 		hsl(39, 100%, 50%),
@@ -455,7 +461,7 @@ a {
 
 .thumbnail-wrapper {
 	max-width: 100%;
-	width: 190px;
+	width: var(--mb-thumb-cover-max-width);
 	position: relative;
 	aspect-ratio: 100 / 140;
 	overflow: hidden;
@@ -890,7 +896,7 @@ a {
 #homeStripSeriesResults,
 #homeStripBooksResults {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(151px, max-content));
+	grid-template-columns: repeat(auto-fit, minmax(calc(var(--mb-thumb-cover-min-width) + 10px), max-content));
 	gap: 16px;
 	padding: 20px 20px;
 	transition: opacity 0.3s ease;
@@ -1016,7 +1022,7 @@ a {
 
 .series-item,
 .book-item {
-	max-width: 190px;
+	max-width: var(--mb-thumb-cover-max-width);
 	background-color: var(--mb-card-color);
 	text-align: left;
 	cursor: pointer;
@@ -1037,7 +1043,7 @@ a {
 
 .home-strip .book-item,
 .home-strip .series-item {
-	width: 151px;
+	width: var(--mb-thumb-cover-dash-width);
 }
 
 series-item,
