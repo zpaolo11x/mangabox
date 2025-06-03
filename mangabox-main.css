@@ -302,8 +302,9 @@ a {
 }
 
 .library-menu-button span.filtered {
+	border-radius:5px;
 	color: white;
-	text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.5);
+	text-shadow: 0px 0px 7px rgba(255, 255, 255, 0.7);
 }
 
 .library-menu-button span:active {
@@ -1192,7 +1193,6 @@ book-item {
 	grid-row: span 2;
 	width: 125px;
 	transition: all 0.1s ease;
-
 }
 
 .header-pic {

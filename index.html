@@ -859,7 +859,8 @@
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
-			mb.libraryMenuButtons[libraryId].className = isFiltered == 0 ? 'fa-solid fa-bars' : 'fa-solid fa-sliders filtered'
+			mb.libraryMenuButtons[libraryId].classList.remove('filtered');
+			if (isFiltered != 0) mb.libraryMenuButtons[libraryId].classList.add('filtered');
 
 			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
@@ -991,7 +992,7 @@
 				document.body.classList.add('sticky-small');
 			};
 
-			if (containerWidth - mb.filterSizer >= 0){
+			if (containerWidth - mb.filterSizer >= 0) {
 				extraButtons.classList.remove('filter-small')
 			} else {
 				extraButtons.classList.add('filter-small')
@@ -1500,6 +1501,31 @@
 			//TODO Move here the logic that enables the library options buttons?
 		}
 
+		const menuClassUp = 'fa-caret-up';
+		const menuClassDown = 'fa-caret-down'
+
+		function libMenuClear(item){
+			item.classList.remove(menuClassUp);
+			item.classList.remove(menuClassDown);
+		}
+
+		function libMenuDown(item){
+			libMenuClear(item);
+			item.classList.add(menuClassDown);
+		}
+		
+		function libMenuUp(item){
+			libMenuClear(item);
+			item.classList.add(menuClassUp);
+		}
+
+		function clearLibrariesMenus() {
+			document.querySelectorAll('.is-lib-menu').forEach(item => {
+				libMenuClear(item);
+				libMenuDown(item);
+			});
+		}
+
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
@@ -1541,7 +1567,7 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: "fa-solid fa-bars"
+					className: "fa-solid "+menuClassDown+" is-lib-menu"
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
@@ -1552,11 +1578,18 @@
 				listItem.append(thumbnailWrapperMenu);
 
 				thumbnailWrapperMenu.addEventListener('click', (event) => {
+					libMenuClear(mb.libraryMenuButtons[itemId]);
+
+					if (isSectionHidden(extraMenuBar)) {
+						libMenuUp(mb.libraryMenuButtons[itemId]);
+					} else {
+						libMenuDown(mb.libraryMenuButtons[itemId]);
+					}
 					event.stopPropagation();
 					event.preventDefault();
 					sectionToggle(extraMenuBar);
 				});
-	
+
 			}
 
 			return listItem;
@@ -3459,7 +3492,9 @@
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
 			sectionHide(extraMenuBar);
-			
+
+			clearLibrariesMenus();
+
 			closeBookDetails();
 			mb.screenAR = getScreenAR();
 
