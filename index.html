@@ -1519,8 +1519,9 @@
 			item.classList.add(menuClassUp);
 		}
 
+		//TODO Questa parte probabilmente si può fare direttamente con i librarymenu objects!!!
 		function clearLibrariesMenus() {
-			document.querySelectorAll('.is-lib-menu').forEach(item => {
+			Object.entries(mb.libraryMenuButtons).forEach(([name, item]) => {
 				libMenuClear(item);
 				libMenuDown(item);
 			});
