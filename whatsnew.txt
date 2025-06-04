@@ -3,6 +3,7 @@ Main UI
 
 Reader
 - Books with no-cover tag will open in a two pages spread
+- Books with no-white-page tag will have a white back of cover added
 
 Build
 - 

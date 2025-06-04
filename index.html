@@ -2476,8 +2476,9 @@
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
+			const noWhitePage = bookData.metadata.tags.includes('no-white-page');
 
-			const pagesData = await fetchPages(rd.bookId, noCover);
+			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -2545,6 +2546,7 @@
 		}
 
 		function buildPageObject(pageData) {
+			console.log(pageData);
 			const isBlank = (pageData == 'blank');
 			const isHidden = (pageData == 'hidden');
 
@@ -2572,7 +2574,7 @@
 				size: (isBlank || isHidden) ? 0 : pageData.size,
 				pageNum: (isBlank || isHidden) ? '' : pageData.pageNum,
 				isCurrent: (isBlank || isHidden) ? false : pageData.isCurrent,
-				AR: isBlank ? 1 : pageData.AR,
+				AR: isBlank ? null : pageData.AR,
 			}
 
 			if ((pageData != 'blank') && (pageData != 'hidden')) addLazyLoading(pageItem.uiThumb);
@@ -2611,7 +2613,7 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId, noCover) {
+		async function fetchPages(bookId, noCover, noWhitePage) {
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
@@ -2636,6 +2638,7 @@
 				height: page.height,
 				AR: page.width / page.height,
 				isCover: noCover ? false : page.number == 1,
+				isOrphan : noWhitePage && (page.number == 2), //TODO Controllare thumbs in questo caso!
 				isCurrent: page.number == rd.currentPage,
 				isDoubleSpread: page.width > page.height,
 				size: page.sizeBytes
@@ -2693,7 +2696,7 @@
 					const hidden = buildPageObject('hidden');
 					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum);
 				}
-				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
+				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
 					// This is an orphan page!
 					const page1 = buildPageObject('blank');
 					const page2 = buildPageObject(pageData[i_page]);
@@ -2763,6 +2766,9 @@
 
 					pageObjectL.uiContainer.classList.add('left-page');
 					pageObjectR.uiContainer.classList.add('right-page');
+
+					pageObjectL.uiThumb.style.aspectRatio = pageObjectL.AR ?? pageObjectR.AR;
+					pageObjectR.uiThumb.style.aspectRatio = pageObjectR.AR ?? pageObjectL.AR;
 
 					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
