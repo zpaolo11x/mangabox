@@ -2474,8 +2474,10 @@
 		async function initViewer() {
 			updatePWABar('black');
 
-			const pagesData = await fetchPages(rd.bookId);
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			const noCover = bookData.metadata.tags.includes('no-cover');
+
+			const pagesData = await fetchPages(rd.bookId, noCover);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -2609,10 +2611,11 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId) {
+		async function fetchPages(bookId, noCover) {
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
@@ -2632,7 +2635,7 @@
 				width: page.width,
 				height: page.height,
 				AR: page.width / page.height,
-				isCover: page.number == 1,
+				isCover: noCover ? false : page.number == 1,
 				isCurrent: page.number == rd.currentPage,
 				isDoubleSpread: page.width > page.height,
 				size: page.sizeBytes

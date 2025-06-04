@@ -2,7 +2,7 @@ Main UI
 - Chenged library menu icon
 
 Reader
-- 
+- Books with no-cover tag will open in a two pages spread
 
 Build
 - 
