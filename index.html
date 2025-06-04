@@ -1504,17 +1504,17 @@
 		const menuClassUp = 'fa-caret-up';
 		const menuClassDown = 'fa-caret-down'
 
-		function libMenuClear(item){
+		function libMenuClear(item) {
 			item.classList.remove(menuClassUp);
 			item.classList.remove(menuClassDown);
 		}
 
-		function libMenuDown(item){
+		function libMenuDown(item) {
 			libMenuClear(item);
 			item.classList.add(menuClassDown);
 		}
-		
-		function libMenuUp(item){
+
+		function libMenuUp(item) {
 			libMenuClear(item);
 			item.classList.add(menuClassUp);
 		}
@@ -1567,7 +1567,7 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: "fa-solid "+menuClassDown+" is-lib-menu"
+					className: "fa-solid " + menuClassDown + " is-lib-menu"
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
@@ -2638,7 +2638,7 @@
 				height: page.height,
 				AR: page.width / page.height,
 				isCover: noCover ? false : page.number == 1,
-				isOrphan : noWhitePage && (page.number == 2), //TODO Controllare thumbs in questo caso!
+				isOrphan: noWhitePage && (page.number == 2), //TODO Controllare thumbs in questo caso!
 				isCurrent: page.number == rd.currentPage,
 				isDoubleSpread: page.width > page.height,
 				size: page.sizeBytes
