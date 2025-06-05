@@ -1115,6 +1115,10 @@ book-item {
 	padding-bottom: 0px;
 }
 
+.info-row {
+  word-break: break-word;
+}
+
 .custom-scrollbar {
 	display: flex;
 	justify-content: center;
