@@ -2494,11 +2494,6 @@
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 		}
 
-		function buildSizePic(item, ratio, picratio) {
-			item.style.width = `calc(min(${100 * picratio / ratio}vw, ${picratio * 100}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
-		}
-
 		function buildSize(item, ratio) {
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
 			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
@@ -2737,8 +2732,8 @@
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
 				spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-				buildSizePic(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-				buildSizePic(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
+				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
 
 				pageObjectL.uiPage.style.float = 'right';
 				pageObjectR.uiPage.style.float = 'left';
@@ -2759,8 +2754,8 @@
 					pageObjectL.uiContainer.style['marginLeft'] = 'auto';
 					pageObjectR.uiContainer.style['marginRight'] = 'auto';
 
-					buildSizePic(pageObjectL.uiPage, pageObjectL.AR, pageObjectL.AR);
-					buildSizePic(pageObjectR.uiPage, pageObjectR.AR, pageObjectR.AR);
+					buildSize(pageObjectL.uiPage, mb.readerMaxRatio * 0.5);
+					buildSize(pageObjectR.uiPage, mb.readerMaxRatio * 0.5);
 
 					addCoverSpine(pageObjectL, pageObjectR);
 
@@ -2792,8 +2787,8 @@
 					pageObjectL.uiContainer.classList.add('left-page');
 					pageObjectR.uiContainer.classList.add('right-page');
 
-					buildSizePic(pageObjectL.uiPage, pageObjectL.AR * 0.5, pageObjectL.AR * 0.5);
-					buildSizePic(pageObjectR.uiPage, pageObjectR.AR * 0.5, pageObjectR.AR * 0.5);
+					buildSize(pageObjectL.uiPage, pageObjectL.AR * 0.5);
+					buildSize(pageObjectR.uiPage, pageObjectR.AR * 0.5);
 
 				}
 				spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
