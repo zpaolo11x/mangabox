@@ -1,11 +1,11 @@
 Main UI
-- Chenged library menu icon
+- 
 
 Reader
-- Books with no-cover tag will open in a two pages spread
-- Books with no-blank-page tag will have a white page added as back of cover
+- 
+
+Build
+-
 
 Fixes
-- Fixed long words overflow in book names
-- Fixed missing flag in series header
-- Fixed year span search issue
+- 
