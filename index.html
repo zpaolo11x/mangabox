@@ -2113,7 +2113,10 @@
 			dashboardElements[element].showItems(array, stripGrid);
 		}
 
-		Object.entries(dashboardElements).forEach(([name, item]) => {
+		const dashEntries = Object.entries(dashboardElements);
+
+		dashEntries.forEach(([name, item], index) => {
+			const isLast = dashEntries.length - 1 === index;
 
 			item.element = addItem('div', { className: 'home-strip-parent' });
 			const headerContainer = addItem('div', { className: 'strip-header-container' });
@@ -2136,7 +2139,7 @@
 				innerHTML: '<span title="View All" class="fa-solid fa-grip glyph-dark"></span>',
 			});
 			item.homeStrip = addItem('div', {
-				className: 'home-strip',
+				className: 'home-strip' + (isLast ? ' last-strip' : ''),
 				binName: name,
 			})
 			item.gridButton.addEventListener('click', async () => {

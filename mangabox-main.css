@@ -758,6 +758,11 @@ a {
 
 }
 
+.home-strip.last-strip {
+	padding-bottom: 20px;
+}
+
+
 .home-strip.search-results {
 	flex-wrap: wrap;
 }

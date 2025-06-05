@@ -8,4 +8,4 @@ Build
 -
 
 Fixes
-- 
+- Fixed spacing of last strip in dashboard
