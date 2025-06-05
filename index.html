@@ -32,31 +32,31 @@
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
-				<ul id="librariesList" class="libraries-list"></ul>
-				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+				<ul id="librariesList"></ul>
+				<ul id="librariesRightBlock">
 					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
 					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
 						</div>
 					</li>
 					<li id="colorChanger" title="Theme Color" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
 					<li id="searchField" title="Search" class="library-item search-field">
-						<div id="searchIcon" class="thumbnail-wrapper">
+						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
 						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
 					</li>
 					<li id="logOut" title="Logout" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
 						</div>
 					</li>
@@ -622,9 +622,6 @@
 			libraryHighlight('searchField', false);
 
 			if (searchString.includes('y:')) {
-
-				//TODO there was a sort entry here, not needed anymore?
-				// const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
@@ -637,8 +634,12 @@
 				let filterArray = [];
 
 				for (let i = 0; i < dataArray.length; i++) {
-					if (dataArray[i].metadata.alternateTitles.length == 0) continue;
+					if (dataArray[i].metadata.alternateTitles.length == 0) {
+						filterArray.push(false);
+						continue;
+					}
 					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
+
 					start.push(Number(dateArray[0]));
 					stop.push(Number(dateArray[1] ?? dateArray[0]));
 
@@ -656,8 +657,6 @@
 				return
 			}
 
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
@@ -673,8 +672,6 @@
 			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
 				'POST', `{"condition": {"allOf": []}}`
@@ -821,7 +818,7 @@
 					name: item,
 					caption: item.toUpperCase(),
 					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
-					iconStyle: `background-image:url('flags/${item}.svg`,
+					iconStyle: `background-image:url('flags/${item}.svg')`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
 				})
 			});
@@ -866,7 +863,8 @@
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
-			mb.libraryMenuButtons[libraryId].className = isFiltered == 0 ? 'fa-solid fa-bars' : 'fa-solid fa-sliders filtered'
+			mb.libraryMenuButtons[libraryId].classList.remove('filtered');
+			if (isFiltered != 0) mb.libraryMenuButtons[libraryId].classList.add('filtered');
 
 			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
@@ -898,7 +896,7 @@
 				title: button.title,
 			});
 			button.icon = addItem('div', {
-				className: `thumbnail-wrapper`,
+				className: `smallbutton-wrapper`,
 				innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
 			});
 			button.caption = addItem('div', {
@@ -922,7 +920,7 @@
 		extraButtons.append(addItem('li', {
 			title: 'Reset filters and sorting',
 			className: `filter-item`,
-			innerHTML: `<div class="thumbnail-wrapper">
+			innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
 							</div>`,
 			onclick: async () => {
@@ -998,7 +996,7 @@
 				document.body.classList.add('sticky-small');
 			};
 
-			if (containerWidth - mb.filterSizer >= 0){
+			if (containerWidth - mb.filterSizer >= 0) {
 				extraButtons.classList.remove('filter-small')
 			} else {
 				extraButtons.classList.add('filter-small')
@@ -1168,6 +1166,7 @@
 			await displayLibraries(libraries);
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
+			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
 
 			const libNum = libraries.length;
 			const mainLibAndMenu = margin + libLargeSize + 40;
@@ -1190,8 +1189,6 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
@@ -1268,7 +1265,7 @@
 			const seriesItem = addItem('div', {
 				className: 'series-item'
 			});
-			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
+			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
 			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
 
@@ -1473,8 +1470,6 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
-			//TODO there was a sort entry here, not needed anymore?
-			//const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const allSeriesPage = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
@@ -1510,6 +1505,31 @@
 			//TODO Move here the logic that enables the library options buttons?
 		}
 
+		const menuClassUp = 'fa-caret-up';
+		const menuClassDown = 'fa-caret-down'
+
+		function libMenuClear(item) {
+			item.classList.remove(menuClassUp);
+			item.classList.remove(menuClassDown);
+		}
+
+		function libMenuDown(item) {
+			libMenuClear(item);
+			item.classList.add(menuClassDown);
+		}
+
+		function libMenuUp(item) {
+			libMenuClear(item);
+			item.classList.add(menuClassUp);
+		}
+
+		function clearLibrariesMenus() {
+			Object.entries(mb.libraryMenuButtons).forEach(([name, item]) => {
+				libMenuClear(item);
+				libMenuDown(item);
+			});
+		}
+
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
@@ -1520,7 +1540,7 @@
 			});
 
 			const thumbnailWrapper = addItem('div', {
-				className: 'thumbnail-wrapper',
+				className: 'button-wrapper',
 			})
 
 			const libraryThumbnail = addItem('img', {
@@ -1551,22 +1571,29 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: "fa-solid fa-bars"
+					className: "fa-solid " + menuClassDown + " is-lib-menu"
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
-					className: 'thumbnail-wrapper library-menu-button',
+					className: 'button-wrapper library-menu-button',
 				})
 
 				thumbnailWrapperMenu.append(mb.libraryMenuButtons[itemId]);
 				listItem.append(thumbnailWrapperMenu);
 
 				thumbnailWrapperMenu.addEventListener('click', (event) => {
+					libMenuClear(mb.libraryMenuButtons[itemId]);
+
+					if (isSectionHidden(extraMenuBar)) {
+						libMenuUp(mb.libraryMenuButtons[itemId]);
+					} else {
+						libMenuDown(mb.libraryMenuButtons[itemId]);
+					}
 					event.stopPropagation();
 					event.preventDefault();
 					sectionToggle(extraMenuBar);
 				});
-	
+
 			}
 
 			return listItem;
@@ -1644,7 +1671,10 @@
 				</div>
 			</div>
 			<div class="header-title">
-				<span class="title">${serie.metadata.title}<img width=20px height=20px style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg"></span>
+				<span class="title">
+				${serie.metadata.title}
+				${serie.metadata.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
+				</span>
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
@@ -1991,8 +2021,6 @@
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
-					//TODO there was a sort entry here, not needed anymore?
-					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
 				showItems: async (input, target) => {
@@ -2157,8 +2185,6 @@
 			let series_data = null;
 			await fetchLibraries();
 			await loadContent();
-			// Refresh theme change after content load
-			//changeTheme();//TODO Non va, deve essere automatico. Perché quando crea un nuovo item sbaglia tema?
 		}
 
 		//MB Reader Functions and Data
@@ -2453,8 +2479,11 @@
 		async function initViewer() {
 			updatePWABar('black');
 
-			const pagesData = await fetchPages(rd.bookId);
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			const noCover = bookData.metadata.tags.includes('no-cover');
+			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
+
+			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -2549,7 +2578,7 @@
 				size: (isBlank || isHidden) ? 0 : pageData.size,
 				pageNum: (isBlank || isHidden) ? '' : pageData.pageNum,
 				isCurrent: (isBlank || isHidden) ? false : pageData.isCurrent,
-				AR: isBlank ? 1 : pageData.AR,
+				AR: isBlank ? null : pageData.AR,
 			}
 
 			if ((pageData != 'blank') && (pageData != 'hidden')) addLazyLoading(pageItem.uiThumb);
@@ -2588,10 +2617,11 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId) {
+		async function fetchPages(bookId, noCover, noWhitePage) {
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
@@ -2611,7 +2641,8 @@
 				width: page.width,
 				height: page.height,
 				AR: page.width / page.height,
-				isCover: page.number == 1,
+				isCover: noCover ? false : page.number == 1,
+				isOrphan: noWhitePage && (page.number == 2),
 				isCurrent: page.number == rd.currentPage,
 				isDoubleSpread: page.width > page.height,
 				size: page.sizeBytes
@@ -2669,7 +2700,7 @@
 					const hidden = buildPageObject('hidden');
 					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum);
 				}
-				else if ((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) {
+				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
 					// This is an orphan page!
 					const page1 = buildPageObject('blank');
 					const page2 = buildPageObject(pageData[i_page]);
@@ -2739,6 +2770,9 @@
 
 					pageObjectL.uiContainer.classList.add('left-page');
 					pageObjectR.uiContainer.classList.add('right-page');
+
+					pageObjectL.uiThumb.style.aspectRatio = pageObjectL.AR ?? pageObjectR.AR;
+					pageObjectR.uiThumb.style.aspectRatio = pageObjectR.AR ?? pageObjectL.AR;
 
 					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
 					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
@@ -3471,7 +3505,9 @@
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
 			sectionHide(extraMenuBar);
-			
+
+			clearLibrariesMenus();
+
 			closeBookDetails();
 			mb.screenAR = getScreenAR();
 

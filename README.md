@@ -28,3 +28,9 @@ It is available for Windows (x86 and ARM), macOS (Intel and Apple Silicon) and L
 <img alt="Series search" src=".localassets/pics/search.png" width=450px><br>Global search for series and books looks into metadata, summary etc.
 <br>
 <br>
+<img alt="Series search" src=".localassets/pics/yearsearch.png" width=450px><br>Search prefix "y:" allows to filter all the series that have volumes in that date range.
+<br>
+<br>
+<img alt="Series search" src=".localassets/pics/addblank.png" width=450px><br>Set book tag "no-cover" to start the book with a page spread, or "no-blank-page" to add a fake back of the cover image.
+<br>
+<br>
