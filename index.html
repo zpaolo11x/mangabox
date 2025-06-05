@@ -2481,7 +2481,7 @@
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
-			const noWhitePage = bookData.metadata.tags.includes('no-white-page');
+			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
 
 			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage);
 
