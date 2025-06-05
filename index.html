@@ -141,7 +141,9 @@
 			<div id="controlPanel" class="hidden">
 				<div id="topControls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
+					<span></span>
 					<span id="bookName"></span>
+					<span id="readerTheme" title="Reader Theme" class="reader-buttons fa-solid"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
 				</div>
 
@@ -309,6 +311,8 @@
 			themePrefs: Number(localStorage.getItem('mbThemePrefs')) ?? 0,
 			darkTheme: false,
 
+			readerThemePrefs: Number(localStorage.getItem('mbReaderThemePrefs')) ?? 0,
+
 			libraryFilters: JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}'),
 			libraryMenuButtons: {},
 
@@ -363,6 +367,30 @@
 				}
 			],
 
+			readerThemeControl: [
+				{
+					label: "Classic theme",
+					icon: "fa-palette",
+					style: "classic"
+				}, {
+					label: "Light accent",
+					icon: "fa-sun",
+					style: "light-accent"
+				}, {
+					label: "Dark accent",
+					icon: "fa-moon",
+					style: "dark-accent"
+				}, {
+					label: "White",
+					icon: "fa-w",
+					style: "white"
+				}, {
+					label: "Black",
+					icon: "fa-b",
+					style: "black"
+				}
+			],
+
 			swatches: getComputedStyle(document.documentElement)
 				.getPropertyValue('--mb-swatches')
 				.match(/hsl\([^)]*\)/g)
@@ -388,6 +416,10 @@
 				document.documentElement.style.setProperty(varName, mb.swatches[id][index]);
 			});
 			document.documentElement.style.setProperty('--mb-h-deg', mb.swatches[id][0] + 'deg');
+			
+			document.documentElement.style.setProperty('--mb-gradient-1', mb.swatches[id][0]);
+			document.documentElement.style.setProperty('--mb-gradient-2', Number(mb.swatches[id][0])+10);
+
 
 			localStorage.setItem('mbAccentColor', mb.accentColor)
 		}
@@ -2179,6 +2211,7 @@
 			changeAccent(mb.accentColor);
 			// Apply first theme change
 			changeTheme();
+			changeReaderTheme();
 			setIncognito(false);
 
 			buildLanguageList();
@@ -2377,7 +2410,25 @@
 
 		readerClose.addEventListener('click', () => {
 			handleCloseReader();
-		})
+		});
+
+		function changeReaderTheme(){
+			mb.readerThemeControl.forEach(item => {
+				readerTheme.classList.remove(item.icon);
+			});
+			readerTheme.classList.add(mb.readerThemeControl[mb.readerThemePrefs].icon);
+			readerTheme.title = mb.readerThemeControl[mb.readerThemePrefs].label;
+			
+			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
+
+			localStorage.setItem('mbReaderThemePrefs', mb.readerThemePrefs);
+
+		}
+
+		readerTheme.addEventListener('click', () => {
+			mb.readerThemePrefs = (mb.readerThemePrefs + 1) % mb.readerThemeControl.length;
+			changeReaderTheme();
+		});
 
 		// Setup incognito button
 		function setIncognito(status) {
