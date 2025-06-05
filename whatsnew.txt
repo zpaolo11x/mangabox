@@ -2,7 +2,7 @@ Main UI
 - 
 
 Reader
-- 
+- Prevent cover white margins
 
 Build
 -
