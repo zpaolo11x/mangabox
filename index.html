@@ -634,8 +634,12 @@
 				let filterArray = [];
 
 				for (let i = 0; i < dataArray.length; i++) {
-					if (dataArray[i].metadata.alternateTitles.length == 0) continue;
+					if (dataArray[i].metadata.alternateTitles.length == 0) {
+						filterArray.push(false);
+						continue;
+					}
 					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
+
 					start.push(Number(dateArray[0]));
 					stop.push(Number(dateArray[1] ?? dateArray[0]));
 
