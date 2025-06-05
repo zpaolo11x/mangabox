@@ -1660,7 +1660,6 @@
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`;
 
-			console.log(serie.metadata.language);
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
@@ -2182,8 +2181,6 @@
 			let series_data = null;
 			await fetchLibraries();
 			await loadContent();
-			// Refresh theme change after content load
-			//changeTheme();//TODO Non va, deve essere automatico. Perché quando crea un nuovo item sbaglia tema?
 		}
 
 		//MB Reader Functions and Data
@@ -2550,7 +2547,6 @@
 		}
 
 		function buildPageObject(pageData) {
-			console.log(pageData);
 			const isBlank = (pageData == 'blank');
 			const isHidden = (pageData == 'hidden');
 
@@ -2642,7 +2638,7 @@
 				height: page.height,
 				AR: page.width / page.height,
 				isCover: noCover ? false : page.number == 1,
-				isOrphan: noWhitePage && (page.number == 2), //TODO Controllare thumbs in questo caso!
+				isOrphan: noWhitePage && (page.number == 2),
 				isCurrent: page.number == rd.currentPage,
 				isDoubleSpread: page.width > page.height,
 				size: page.sizeBytes
