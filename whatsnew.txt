@@ -7,3 +7,4 @@ Reader
 
 Fixes
 - Fixed long words overflow in book names
+- Fixed missing flag in series header
