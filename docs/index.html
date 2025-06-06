@@ -8,7 +8,7 @@
 	<meta name="author" content="zpaolo11x">
 	<meta name="keywords" content="MangaBox, Komga, Electron, Manga Reader, Library Management">
 	<title>MangaBox</title>
-	
+
 	<style>
 		:root {
 			--font-size: 0.95em;
@@ -96,9 +96,9 @@
 		}
 
 		#lightBoxImg {
-			position:fixed;
-			top:50%;
-			lefT:50%;
+			position: fixed;
+			top: 50%;
+			lefT: 50%;
 			transform: translate(-50%, -50%);
 
 			max-width: 90%;
@@ -108,10 +108,11 @@
 		}
 
 		#lightBoxImgNeon {
-			position:fixed;
-			top:50%;
-			lefT:50%;
-			transform: translate(-50%, -50%) scale(0.97, calc(1 - 0.03 * var(--image-ar))); /* slightly larger */
+			position: fixed;
+			top: 50%;
+			lefT: 50%;
+			transform: translate(-50%, -50%) scale(0.97, calc(1 - 0.03 * var(--image-ar)));
+			/* slightly larger */
 			filter: blur(40px) brightness(2.0) contrast(0.8);
 
 			max-width: 90%;
@@ -120,7 +121,7 @@
 		}
 
 		#lightBox.active {
-			opacity:1;
+			opacity: 1;
 			pointer-events: unset;
 		}
 
@@ -150,6 +151,15 @@
 			text-shadow: 0px 0px 6px hsla(346, 100%, 27%, 0.5);
 		}
 
+		.logo {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			margin-bottom:30px;
+		}
+
 		.github-badge img {
 			display: inline-block;
 			vertical-align: middle;
@@ -165,7 +175,12 @@
 
 <body>
 	<div class="container">
-		<img class="title-image" alt="MangaBox Logo" src="mangabox-logo-new-with-name.svg" width="450">
+		<!--<img class="title-image" alt="MangaBox Logo" src="mangabox-logo-new-with-name.svg" width="450">-->
+		<div class="logo">
+			<img src="../mangabox-logo-new.svg" width="80px" height="80px">
+			<img src="../mangabox-logoname.svg" width="350px" style="opacity:0.75; margin-bottom:-2px; margin-left:5px; margin-right:15px">
+		</div>
+
 		<p>
 			<a href="https://github.com/zpaolo11x/mangabox">MangaBox</a> is a simple Electron client for Komga.
 			<span class="github-badge">
@@ -216,12 +231,12 @@
 				<img alt="Series search" src="pics/search.png" class="clickable">
 				<p>Global search for series and books looks into metadata, summary etc.</p>
 			</div>
-			
+
 			<div class="grid-item">
 				<img alt="Series search" src="pics/yearsearch.png" class="clickable">
 				<p>Search prefix "y:" allows to filter all the series that have volumes in that date range.</p>
 			</div>
-			
+
 			<div class="grid-item">
 				<img alt="Series search" src="pics/addblank.png" class="clickable">
 				<p>Set book tag "no-cover" to start the book with a page spread, or "no-blank-page" to add a fake back of the cover image.</p>
