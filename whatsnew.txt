@@ -2,6 +2,7 @@ Main UI
 - 
 
 Reader
+- Add different color themes to reader background
 - Prevent cover white margins
 
 Build
