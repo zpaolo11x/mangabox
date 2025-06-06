@@ -97,6 +97,7 @@ jobs:
                     --exclude='electron/' \
                     --exclude='assets/' \
                     --exclude='z_*.*' \
+                    --exclude='docs/' \
                     ./ webdeploy/mangabox
 
       - name: Upload web artifact

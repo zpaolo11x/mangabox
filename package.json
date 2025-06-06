@@ -21,6 +21,7 @@
 		"files": [
 			"**/*",
 			"!z_*.*",
+			"!docs/**/*",
 			"package-main.js",
 			"package-preload.js",
 			"package.json"
