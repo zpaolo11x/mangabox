@@ -6,6 +6,8 @@ on:
       - main
       - devtest
       - devtest_*
+    paths-ignore:
+      - 'docs/**'
 
 jobs:
   version:
