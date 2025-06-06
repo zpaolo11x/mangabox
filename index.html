@@ -411,6 +411,11 @@
 
 		//MB Theme Management 
 
+		function warmth(hue){
+			const warmth = (Math.cos((hue - 50) * Math.PI / 180) + 1) / 2;
+			return warmth;
+		}
+
 		function changeAccent(id) {
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
 				document.documentElement.style.setProperty(varName, mb.swatches[id][index]);
@@ -419,7 +424,6 @@
 			
 			document.documentElement.style.setProperty('--mb-gradient-1', Number(mb.swatches[id][0]));
 			document.documentElement.style.setProperty('--mb-gradient-2', Number(mb.swatches[id][0])+10);
-
 
 			localStorage.setItem('mbAccentColor', mb.accentColor)
 		}
