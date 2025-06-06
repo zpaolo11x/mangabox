@@ -157,7 +157,7 @@
 			align-items: center;
 			justify-content: center;
 			height: 100%;
-			margin-bottom:30px;
+			margin-bottom: 30px;
 		}
 
 		.github-badge img {
@@ -165,6 +165,14 @@
 			vertical-align: middle;
 		}
 
+		li {
+			margin-bottom:5px;
+		}
+
+		pre {
+			font-size: 0.9em;
+			background-color:antiquewhite;
+		}
 		/*
 		p {
 			overflow: hidden;
@@ -189,8 +197,8 @@
 				</a>
 			</span>
 		</p>
-		<p>You can deploy MangaBox on a personal web server, and use it as a PWA on iPad or other devices. 
-			It is also available as an Electron desktop app for Windows (x86 and ARM), 
+		<p>You can deploy MangaBox on a personal web server, and use it as a PWA on iPad or other devices.
+			It is also available as an Electron desktop app for Windows (x86 and ARM),
 			macOS (Intel and Apple Silicon) and Linux (as an AppImage).</p>
 
 		<div class="grid">
@@ -245,6 +253,33 @@
 			</div>
 
 		</div>
+
+		<p>Installation notes:<br>
+		<ul>
+			<li>
+				To deploy the web verions just download the "web" release artifact and unpack it in a "mangabox"
+				folder on your web server. Because of CORS limitation by default MangaBox will work only if it's
+				on the same location as your komga server.
+			</li>
+			<li>
+				Electron version is not limited by CORS and it will work with any Komga server.
+			</li>
+			<li>
+				The macOS binaries are not signed, so they won't run by default. You can allow them to run on Intel macs
+				by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script
+				that will do the hard work for you:
+				<br>
+				<pre>
+#!/bin/bash
+app="$1"
+xattr -d com.apple.quarantine  "${app}"
+find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - {} \;
+codesign --force --timestamp --verify --verbose --sign - "${app}"
+</pre>
+				Just chmod +x the script and run it with the .app file path as argument.
+			</li>
+		</ul>
+		</p>
 
 		<!-- Lightbox -->
 		<div id="lightBox">
