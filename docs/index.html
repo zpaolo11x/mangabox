@@ -273,7 +273,7 @@
 #!/bin/bash
 app="$1"
 xattr -d com.apple.quarantine  "${app}"
-find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - {} \;
+find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;
 codesign --force --timestamp --verify --verbose --sign - "${app}"
 </pre>
 				Just chmod +x the script and run it with the .app file path as argument.
