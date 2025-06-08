@@ -144,7 +144,7 @@ jobs:
       - name: Add Android platform
         run: |
           cd cordova-app
-          if ! cordova platform ls | grep android; then
+          if ! cordova platform ls | grep -q android; then
             cordova platform add android
           else
             echo "Android platform already added"
