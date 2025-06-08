@@ -107,6 +107,47 @@ jobs:
         with:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
+          
+  android:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.version.outputs.version }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Sync with Capacitor
+        run: npx cap sync android
+
+      - name: Set up Java for Android
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build Debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-Android-${{ env.version }}
+          path: android/app/build/outputs/apk/debug/app-debug.apk
 
   release:
     needs: [build, web, version]
