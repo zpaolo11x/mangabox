@@ -142,7 +142,9 @@ jobs:
                       ./ cordova-app/www
 
       - name: Add Android platform
-        run: cordova platform add android
+        run: |
+          cd cordova-app
+          cordova platform add android
           
       - name: Set up Java 17
         uses: actions/setup-java@v3
