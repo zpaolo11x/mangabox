@@ -142,14 +142,8 @@ jobs:
                       ./ cordova-app/www
 
       - name: Add Android platform
-        run: |
-          cd cordova-app
-          if ! cordova platform ls | grep -q android; then
-            cordova platform add android
-          else
-            echo "Android platform already added"
-          fi
-
+        run: cordova platform add android
+          
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
