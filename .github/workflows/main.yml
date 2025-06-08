@@ -132,7 +132,7 @@ jobs:
         run: npm run build
 
       - name: Sync with Capacitor
-        run: npx cap sync android
+        run: ./node_modules/.bin/cap sync android
 
       - name: Set up Java for Android
         uses: actions/setup-java@v3
