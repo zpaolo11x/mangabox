@@ -1420,10 +1420,10 @@ body.sticky-small #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
-#extraButtons.filter-small .filter-item {
+#extraButtons.filter-small .filter-item:not(:first-child) {
 	width: var(--mb-filter-button-size);
-
 }
+
 
 /*
 body.sticky-small #extraMenuBar .filter-item {

@@ -770,15 +770,15 @@
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 						sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
 					}, {
-						name: '9_to_1',
-						caption: 'Books',
-						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
-					}, {
 						name: '1_to_9',
 						caption: 'Books',
-						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+						iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
 						sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
+					}, {
+						name: '9_to_1',
+						caption: 'Books',
+						iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
+						sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
 					}
 				],
 			},
