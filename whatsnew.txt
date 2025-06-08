@@ -1,12 +1,12 @@
 Main UI
-- 
+- Allow sorting libraries by book count
 
 Reader
-- Add different color themes to reader background
-- Prevent cover white margins
+- Support different color themes for reader background
+- Removed white margins from cover page
 
 Build
 -
 
 Fixes
-- Fixed spacing of last strip in dashboard
+- Fix spacing of last strip in dashboard

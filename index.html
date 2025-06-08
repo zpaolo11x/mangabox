@@ -741,34 +741,44 @@
 				switches: [
 					{
 						name: 'a_to_z',
-						caption: 'By title',
+						caption: 'Title',
 						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 					}, {
 						name: 'z_to_a',
-						caption: 'By title',
+						caption: 'Title',
 						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
 						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 					}, {
 						name: '9_to_1',
-						caption: 'By start',
+						caption: 'Start',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 						sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
 					}, {
 						name: '1_to_9',
-						caption: 'By start',
+						caption: 'Start',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 						sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 					}, {
 						name: '9_to_1',
-						caption: 'By end',
+						caption: 'End',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 						sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
 					}, {
 						name: '1_to_9',
-						caption: 'By end',
+						caption: 'End',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 						sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
+					}, {
+						name: '9_to_1',
+						caption: 'Books',
+						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+						sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
+					}, {
+						name: '1_to_9',
+						caption: 'Books',
+						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+						sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
 					}
 				],
 			},
@@ -1447,6 +1457,8 @@
 
 			item.mbSeriesStart = timeSplit(altTitle.time)[0];
 			item.mbSeriesStop = timeSplit(altTitle.time)[1];
+
+			item.mbBooksCount = serie.booksCount;
 
 			item.mbSeriesRead = (unreadCount == 0);
 			item.mbSeriesLTR = (serie.metadata.readingDirection == 'LEFT_TO_RIGHT');
