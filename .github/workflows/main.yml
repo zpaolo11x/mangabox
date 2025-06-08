@@ -139,6 +139,8 @@ jobs:
           java-version: '17'
 
       - name: Build Debug APK
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           cd android
           ./gradlew assembleDebug
