@@ -1,5 +1,6 @@
 Main UI
 - Allow sorting libraries by book count
+- Never collapse sorting button
 
 Reader
 - Support different color themes for reader background
