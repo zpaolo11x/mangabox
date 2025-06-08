@@ -10,7 +10,8 @@
 	},
 	"devDependencies": {
 		"electron": "^34.1.0",
-		"electron-builder": "^26.0.5"
+		"electron-builder": "^26.0.5",
+      "@capacitor/cli": "^5.0.0"
 	},
 	"build": {
 		"appId": "com.mangabox.app",
