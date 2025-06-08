@@ -113,7 +113,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       version: ${{ needs.version.outputs.version }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -123,14 +122,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Capacitor dependencies
-        run: |
-          npm install @capacitor/core @capacitor/cli
-          npm install @capacitor/android
+      - name: Install Cordova CLI
+        run: npm install -g cordova
 
-      - name: Prepare web assets
+      - name: Prepare Cordova project and copy web files
         run: |
-          mkdir -p distapk
+          # Create Cordova project folder (if missing)
+          if [ ! -d cordova-app ]; then
+            cordova create cordova-app com.mangabox.app MangaBox
+          fi
+          # Copy your built web app (adjust source folder if needed)
           rsync -av --exclude='.*' \
                       --exclude='*.yml' \
                       --exclude='package*.*' \
@@ -138,42 +139,33 @@ jobs:
                       --exclude='assets/' \
                       --exclude='z_*.*' \
                       --exclude='docs/' \
-                      ./ distapk
-          ls distapk/
+                      ./ cordova-app/www
 
-      - name: Create capacitor.config.json if missing
+      - name: Add Android platform
         run: |
-          if [ ! -f capacitor.config.json ]; then
-            npx cap init "MangaBox" "com.mangabox.app" --web-dir=distapk --npm-client=npm
-          fi
-
-      - name: Add Android platform (if missing)
-        run: |
-          if [ ! -d android ]; then
-            npx cap add android
+          cd cordova-app
+          if ! cordova platform ls | grep android; then
+            cordova platform add android
           else
             echo "Android platform already added"
           fi
 
-      - name: Sync with Capacitor
-        run: npx cap sync android
-
-      - name: Set up Java for Android
+      - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
 
-      - name: Build APK
+      - name: Build Cordova Android APK (debug)
         run: |
-          cd android
-          ./gradlew assembleDebug
+          cd cordova-app
+          cordova build android --debug
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: MangaBox-Android-${{ env.version }}
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: cordova-app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
 
   release:
     needs: [build, web, version]
