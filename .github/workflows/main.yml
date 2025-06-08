@@ -130,6 +130,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build
+      
+      - name: Add Android platform (if missing)
+        run: npx cap add android || echo "Android platform already added"
 
       - name: Sync with Capacitor
         run: npx cap sync android
