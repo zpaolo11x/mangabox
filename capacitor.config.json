@@ -1,5 +1,6 @@
 {
   "appId": "com.mangabox.app",
   "appName": "MangaBox",
-  "webDir": "distapk"
+  "webDir": "distapk",
+  "bundledWebRuntime": false
 }
