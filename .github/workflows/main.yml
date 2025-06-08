@@ -129,7 +129,9 @@ jobs:
       - name: Build web app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build
+        run: |
+          npm run build
+          ls dist/
       
       - name: Add Android platform (if missing)
         run: npx cap add android || echo "Android platform already added"
