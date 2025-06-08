@@ -124,7 +124,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: npm install
+        run: npm install @capacitor/android
 
       - name: Build web app
         env:
