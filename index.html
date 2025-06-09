@@ -434,7 +434,7 @@
 
 		async function setUserSettings(key, value) {
 			const payload = {
-				[key]: {value: value},
+				[key]: { value: value },
 			};
 			await callAPI('/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
 		}
@@ -451,7 +451,7 @@
 
 		let userSettings;
 
-		//delUserSettings()
+		delUserSettings()
 
 		function applyUserSettings() {
 			// Local storage variable setup
@@ -461,6 +461,7 @@
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
 		}
+
 
 
 		//MB Local Storage Update
@@ -1699,6 +1700,41 @@
 			});
 		}
 
+		function addLongPressListener(element, callback, duration = 600) {
+			let pressTimer;
+			let wasLongPress = false;
+
+			const start = (e) => {
+				wasLongPress = false;
+				pressTimer = setTimeout(() => {
+					wasLongPress = true;
+					callback(e);
+				}, duration);
+			};
+
+			const cancel = () => {
+				clearTimeout(pressTimer);
+			};
+
+			element.addEventListener('mousedown', start);
+			element.addEventListener('mouseup', cancel);
+			element.addEventListener('mouseleave', cancel);
+
+			element.addEventListener('touchstart', start);
+			element.addEventListener('touchend', cancel);
+			element.addEventListener('touchcancel', cancel);
+
+			// Prevent click after long press
+			element.addEventListener('click', (e) => {
+				if (wasLongPress) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					// Optionally log or debug here
+				}
+			}, true); // Capture phase to stop early
+		}
+
+
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -1710,6 +1746,21 @@
 
 			Array.from(libraries).forEach((library, index) => {
 				const listItem = buildLibraryItem(library.id, library.name);
+
+				addLongPressListener(listItem, async () => {
+
+					const libraryId = listItem.id
+
+					const confirmClear = confirm('Clear custom image for this library?');
+					if (confirmClear) {
+						delete mb.libraryIcons[libraryId];
+
+						// Update userSettings on the server
+						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+						bootSequence();
+
+					}
+				});
 
 				listItem.addEventListener('dragover', (event) => {
 					event.preventDefault(); // This is required to allow drop
