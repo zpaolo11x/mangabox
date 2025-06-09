@@ -397,7 +397,7 @@ a {
 	overflow: hidden;
 	font-size: 16px;
 	height: var(--mb-button-size);
-	transition: background-color 0.3s ease, width 0.3s ease;
+	transition: background-color 0.3s ease, width 0.3s ease, box-shadow 0.3s linear;
 	/*text-transform: uppercase;*/
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }

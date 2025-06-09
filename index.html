@@ -424,45 +424,42 @@
 
 		async function getUserSettings() {
 			const settings = await callAPI('/api/v1/client-settings/user/list', 'GET');
-
 			const mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
 					.filter(([key]) => key.startsWith("mangabox"))
 					.map(([key, obj]) => [key, obj.value])
 			);
-
-			console.log("SETTINGS");
-			console.log(mangaboxFlat);
 			return mangaboxFlat
 		}
 
 		async function setUserSettings(key, value) {
 			const payload = {
-				[key]: {
-					value: value
-				},
+				[key]: {value: value},
 			};
 			await callAPI('/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
-
-			console.log(payload);
 		}
 
-		async function delUserSettings(){
-			//TODO FARE QUESTA
+		async function delUserSettings() {
+			await callAPI('/api/v1/client-settings/user', 'DELETE', JSON.stringify([
+				'mangabox.ui.accentcolor',
+				'mangabox.ui.themeprefs',
+				'mangabox.ui.readerthemeprefs',
+				'mangabox.ui.libraryfilters',
+				'mangabox.ui.libraryicons',
+			]), false);
 		}
-		
+
 		let userSettings;
 
+		//delUserSettings()
+
 		function applyUserSettings() {
-			console.log("APPLYSETTINGS");
-			console.log(userSettings);
 			// Local storage variable setup
 			mb.accentColor = Number(userSettings['mangabox.ui.accentcolor'] ?? 0);
 			mb.themePrefs = Number(userSettings['mangabox.ui.themeprefs'] ?? 0);
 			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
-
-			console.log(mb.themePrefs);
+			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
 		}
 
 
@@ -482,7 +479,6 @@
 		}
 
 		function changeAccent(id) {
-			console.log("ID:" + id);
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
 				document.documentElement.style.setProperty(varName, mb.swatches[id][index]);
 			});
@@ -490,6 +486,7 @@
 
 			document.documentElement.style.setProperty('--mb-gradient-1', Number(mb.swatches[id][0]));
 			document.documentElement.style.setProperty('--mb-gradient-2', Number(mb.swatches[id][0]) + 10);
+
 			setUserSettings("mangabox.ui.accentcolor", mb.accentColor);
 		}
 
@@ -522,7 +519,7 @@
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
 			});
-			console.log(mb.themePrefs);
+
 			themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
 			themeLabel.title = mb.themeControl[mb.themePrefs].label;
 			// Change fa icons for light or dark theme
@@ -1632,9 +1629,14 @@
 				className: 'button-wrapper',
 			})
 
+			const base64Image = mb.libraryIcons[itemId];
+			const imageSrc = base64Image || (isLib
+				? `library-thumbnails/${libraryName}.png`
+				: imagePath);
+
 			const libraryThumbnail = addItem('img', {
 				className: 'library-thumbnail',
-				src: isLib ? `library-thumbnails/${libraryName}.png` : imagePath,
+				src: imageSrc,
 				alt: isLib ? `${libraryName} Cover` : libraryName,
 			})
 
@@ -1688,6 +1690,15 @@
 			return listItem;
 		}
 
+		function readFileAsBase64(file) {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onload = () => resolve(reader.result);
+				reader.onerror = reject;
+				reader.readAsDataURL(file); // This gives you "data:image/png;base64,..." format
+			});
+		}
+
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -1699,6 +1710,45 @@
 
 			Array.from(libraries).forEach((library, index) => {
 				const listItem = buildLibraryItem(library.id, library.name);
+
+				listItem.addEventListener('dragover', (event) => {
+					event.preventDefault(); // This is required to allow drop
+					listItem.style.backgroundColor = 'hsl(200, 60%, 70%)';
+				});
+
+				listItem.addEventListener('dragleave', () => {
+					listItem.style.backgroundColor = ''; // Reset visual feedback
+				});
+
+				listItem.addEventListener('drop', async (event) => {
+					event.preventDefault();
+
+					const libraryId = listItem.id
+
+					const file = event.dataTransfer.files[0];
+					if (!file || !file.type.startsWith('image/')) {
+						alert('Please drop a valid image.');
+						return;
+					}
+
+					const result = confirm('Update library image?');
+					if (result) {
+						// User clicked OK
+						console.log('Proceeding with image update');
+						const base64 = await readFileAsBase64(file);
+						mb.libraryIcons[libraryId] = base64;
+
+						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+
+						bootSequence();
+						// your logic here (e.g., read dropped file, update thumbnail, etc.)
+					} else {
+						// User clicked Cancel
+						console.log('Image update canceled');
+					}
+
+
+				})
 
 				listItem.addEventListener('click', () => {
 					const { path, params } = getHashAndParams();
@@ -2481,7 +2531,7 @@
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
-			setUserSettings ('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
+			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
 		}
 
