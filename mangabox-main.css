@@ -508,6 +508,10 @@ a {
 	transition: opacity 0.4s ease-in-out;
 }
 
+.library-thumbnail{
+border-radius: 6px;
+}
+
 .series-status,
 .book-status {
 	pointer-events: none;
