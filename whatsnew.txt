@@ -1,6 +1,7 @@
 Main UI
 - Allow sorting libraries by book count
 - Never collapse sorting button
+- Use Komga user-settings API to save settings
 
 Reader
 - Support different color themes for reader background
