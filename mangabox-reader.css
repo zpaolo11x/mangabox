@@ -311,11 +311,11 @@ div.single-page,
 	box-sizing: content-box;
 	/*z-index: 100;*/
 }
-
+/*
 div.cover-page {
 	object-position: center center;
 }
-
+*/
 #coverlayer {
 	position: absolute;
 	left: 0px;

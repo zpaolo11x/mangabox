@@ -2714,6 +2714,13 @@
 			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
 		}
 
+		function buildSizeCV(item, ratio) {
+			//item.style.objectFit = 'fill';
+			item.style.objectPosition = "center center";
+			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+		}
+
 		// Size the spread for a two pages spread with fit on page
 		function buildSize2P(item, ratio) {
 			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
@@ -2969,8 +2976,8 @@
 					pageObjectL.uiContainer.style['marginLeft'] = 'auto';
 					pageObjectR.uiContainer.style['marginRight'] = 'auto';
 
-					buildSize(pageObjectL.uiPage, mb.readerMaxRatio * 0.5);
-					buildSize(pageObjectR.uiPage, mb.readerMaxRatio * 0.5);
+					buildSizeCV(pageObjectL.uiPage, mb.readerMaxRatio * 0.5);
+					buildSizeCV(pageObjectR.uiPage, mb.readerMaxRatio * 0.5);
 
 					addCoverSpine(pageObjectL, pageObjectR);
 
