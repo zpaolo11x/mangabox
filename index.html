@@ -301,26 +301,18 @@
 			}
 		}
 
+
 		//MB Main Variable Setup 
 
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = {
-			// Local storage variable setup
-			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
-			accentColor: Number(localStorage.getItem('mbAccentColor')) ?? 0,
-			themePrefs: Number(localStorage.getItem('mbThemePrefs')) ?? 0,
-			darkTheme: false,
-
-			readerThemePrefs: Number(localStorage.getItem('mbReaderThemePrefs')) ?? 0,
-
-			libraryFilters: JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}'),
-			libraryMenuButtons: {},
 
 			authHeader: localStorage.getItem('mbAuthHeader'),
 			baseUrl: localStorage.getItem('mbBaseUrl'),
 			rememberMe: localStorage.getItem('mbRememberMe'),
 
 			basePath: '', //'/mangabox/'
+			darkTheme: false,
 
 			// Scaling of selected item control
 			currentlyScaled: null,
@@ -340,6 +332,8 @@
 			filterTable: null,
 			filterButtons: null,
 			filterSizer: null,
+
+			libraryMenuButtons: {},
 
 			libSizer: {}, // Used to calculate libraries button size
 			dashboardBin: "",
@@ -399,7 +393,78 @@
 			// Media Cache
 			mediaCache: new Map(), 	//Media cache table structure
 			cacheLimit: 250,			//Limit of items in media cache
+
+			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
+
 		}
+
+		//MB API Call Function 
+		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
+			try {
+				const response = await fetch(`${mb.baseUrl}${API_url}`, {
+					method: method,
+					headers: {
+						'Authorization': mb.authHeader,
+						'Content-Type': 'application/json',
+						'skip_zrok_interstitial': '1' // Add header to skip interstitial
+					},
+					body: body
+				});
+
+				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+
+				if (returnval) {
+					const output = await response.json();
+					return output;
+				}
+			} catch (error) {
+				console.error('Fetch libraries error:', error);
+			}
+		}
+
+		async function getUserSettings() {
+			const settings = await callAPI('/api/v1/client-settings/user/list', 'GET');
+
+			const mangaboxFlat = Object.fromEntries(
+				Object.entries(settings)
+					.filter(([key]) => key.startsWith("mangabox"))
+					.map(([key, obj]) => [key, obj.value])
+			);
+
+			console.log("SETTINGS");
+			console.log(mangaboxFlat);
+			return mangaboxFlat
+		}
+
+		async function setUserSettings(key, value) {
+			const payload = {
+				[key]: {
+					value: value
+				},
+			};
+			await callAPI('/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
+
+			console.log(payload);
+		}
+
+		async function delUserSettings(){
+			//TODO FARE QUESTA
+		}
+		
+		let userSettings;
+
+		function applyUserSettings() {
+			console.log("APPLYSETTINGS");
+			console.log(userSettings);
+			// Local storage variable setup
+			mb.accentColor = Number(userSettings['mangabox.ui.accentcolor'] ?? 0);
+			mb.themePrefs = Number(userSettings['mangabox.ui.themeprefs'] ?? 0);
+			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
+			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
+
+			console.log(mb.themePrefs);
+		}
+
 
 		//MB Local Storage Update
 		rememberMe.checked = (mb.rememberMe == 'true');
@@ -411,21 +476,21 @@
 
 		//MB Theme Management 
 
-		function warmth(hue){
+		function warmth(hue) {
 			const warmth = (Math.cos((hue - 50) * Math.PI / 180) + 1) / 2;
 			return warmth;
 		}
 
 		function changeAccent(id) {
+			console.log("ID:" + id);
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
 				document.documentElement.style.setProperty(varName, mb.swatches[id][index]);
 			});
 			document.documentElement.style.setProperty('--mb-h-deg', mb.swatches[id][0] + 'deg');
-			
-			document.documentElement.style.setProperty('--mb-gradient-1', Number(mb.swatches[id][0]));
-			document.documentElement.style.setProperty('--mb-gradient-2', Number(mb.swatches[id][0])+10);
 
-			localStorage.setItem('mbAccentColor', mb.accentColor)
+			document.documentElement.style.setProperty('--mb-gradient-1', Number(mb.swatches[id][0]));
+			document.documentElement.style.setProperty('--mb-gradient-2', Number(mb.swatches[id][0]) + 10);
+			setUserSettings("mangabox.ui.accentcolor", mb.accentColor);
 		}
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
@@ -457,6 +522,7 @@
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
 			});
+			console.log(mb.themePrefs);
 			themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
 			themeLabel.title = mb.themeControl[mb.themePrefs].label;
 			// Change fa icons for light or dark theme
@@ -465,7 +531,7 @@
 			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
 
 			// Save theme setting in local storage
-			localStorage.setItem('mbThemePrefs', mb.themePrefs);
+			setUserSettings('mangabox.ui.themeprefs', mb.themePrefs);
 
 			mb.darkTheme = toDark;
 
@@ -885,7 +951,7 @@
 				filterOut[button.name] = button.selected;
 			});
 			mb.libraryFilters[libraryId] = filterOut;
-			localStorage.setItem('mbLibraryFilters', JSON.stringify(mb.libraryFilters));
+			setUserSettings('mangabox.ui.libraryfilters', JSON.stringify(mb.libraryFilters));
 		}
 
 		function fetchLibraryFilters(libraryId) {
@@ -1086,31 +1152,6 @@
 			blanker.style.opacity = val;
 			await wait(100);
 		}
-
-		//MB API Call Function 
-		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
-			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, {
-					method: method,
-					headers: {
-						'Authorization': mb.authHeader,
-						'Content-Type': 'application/json',
-						'skip_zrok_interstitial': '1' // Add header to skip interstitial
-					},
-					body: body
-				});
-
-				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-
-				if (returnval) {
-					const output = await response.json();
-					return output;
-				}
-			} catch (error) {
-				console.error('Fetch libraries error:', error);
-			}
-		}
-
 
 		//MB Media Cache 
 
@@ -2224,6 +2265,9 @@
 		}
 
 		async function bootSequence() {
+			userSettings = await getUserSettings();
+			applyUserSettings();
+
 			changeAccent(mb.accentColor);
 			// Apply first theme change
 			changeTheme();
@@ -2428,16 +2472,16 @@
 			handleCloseReader();
 		});
 
-		function changeReaderTheme(){
+		function changeReaderTheme() {
 			mb.readerThemeControl.forEach(item => {
 				readerTheme.classList.remove(item.icon);
 			});
 			readerTheme.classList.add(mb.readerThemeControl[mb.readerThemePrefs].icon);
 			readerTheme.title = mb.readerThemeControl[mb.readerThemePrefs].label;
-			
+
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
-			localStorage.setItem('mbReaderThemePrefs', mb.readerThemePrefs);
+			setUserSettings ('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
 		}
 
@@ -2568,7 +2612,7 @@
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
 			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
 		}
-		
+
 		// Size the spread for a two pages spread with fit on page
 		function buildSize2P(item, ratio) {
 			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
