@@ -315,11 +315,11 @@
 				that will do the hard work for you:
 				<br>
 				<div class="code-block-wrapper">
-					<span class="odd">#!/bin/bash</span>
-					<span class="even">app="$1"</span>
-					<span class="odd">xattr -d com.apple.quarantine "${app}"</span>
-					<span class="even">find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;</span>
-					<span class="odd">codesign --force --timestamp --verify --verbose --sign - "${app}"</span>
+					<span class="odd">#!/bin/bash<br></span>
+					<span class="even">app="$1"<br></span>
+					<span class="odd">xattr -d com.apple.quarantine "${app}"<br></span>
+					<span class="even">find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;<br></span>
+					<span class="odd">codesign --force --timestamp --verify --verbose --sign - "${app}"<br></span>
 				</div>
 				Just chmod +x the script and run it with the .app file path as argument.
 			</li>
