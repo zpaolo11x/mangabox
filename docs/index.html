@@ -181,7 +181,7 @@
 		pre {
 			padding: 10px;
 			font-size: 13px;
-			background-color: rgb(36, 76, 16);
+			background-color: hsl(100, 65%, 18%);
 			color: white;
 			border-radius: 10px;
 
@@ -189,6 +189,34 @@
 			word-wrap: break-word;
 
 			line-height: 15px;
+		}
+
+		.odd,
+		.even {
+			display: block;
+			/* This is the key change */
+			font-family: monospace;
+			font-size: 13px;
+			padding-left: 10px;
+			padding-right: 10px;
+			color: white;
+			line-height:25px;
+			  white-space: pre-wrap; /* Preserves whitespace but allows wrapping */
+  word-wrap: break-word; /* Older property, but good for broader support */
+  word-break: break-word; /* Allows breaking within words if necessary */
+		}
+
+		span.odd {
+			background-color: hsl(115, 60%, 20%);
+		}
+
+		span.even {
+			background-color: hsl(115, 60%, 15%);
+		}
+
+		.code-block-wrapper {
+			border-radius: 10px;
+			overflow: hidden;
 		}
 
 		/*
@@ -286,13 +314,13 @@
 				by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script
 				that will do the hard work for you:
 				<br>
-				<pre>
-#!/bin/bash
-app="$1"
-xattr -d com.apple.quarantine  "${app}"
-find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;
-codesign --force --timestamp --verify --verbose --sign - "${app}"
-</pre>
+				<div class="code-block-wrapper">
+					<span class="odd">#!/bin/bash</span>
+					<span class="even">app="$1"</span>
+					<span class="odd">xattr -d com.apple.quarantine "${app}"</span>
+					<span class="even">find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;</span>
+					<span class="odd">codesign --force --timestamp --verify --verbose --sign - "${app}"</span>
+				</div>
 				Just chmod +x the script and run it with the .app file path as argument.
 			</li>
 		</ul>
