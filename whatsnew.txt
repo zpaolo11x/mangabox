@@ -8,6 +8,7 @@ Main UI
 Reader
 - Support different color themes for reader background
 - Remove white margins from cover page
+- Add highlight to turn page animation
 
 Build
 -

@@ -210,7 +210,7 @@ img.page:not(.hidden) {
 	height: 100%;
 	opacity: 0;
 	transition: opacity 0.15s;
-	background: linear-gradient(to Left, rgba(99, 76, 68, 1.0), transparent);
+	background: linear-gradient(to Left, hsla(15, 19%, 33%, 1.0), transparent);
 }
 
 .page-shadow-right {
@@ -221,7 +221,29 @@ img.page:not(.hidden) {
 	height: 100%;
 	opacity: 0;
 	transition: opacity 0.15s;
-	background: linear-gradient(to Right, rgba(99, 76, 68, 1.0), transparent);
+	background: linear-gradient(to Right, hsla(15, 19%, 33%, 1.0), transparent);
+}
+
+.page-light-right {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 15%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity 0.15s;
+	background: linear-gradient(to Right, rgba(255,255,250,0.4) , hsla(15,19%,33%,0.2) 20%, transparent 80%);
+}
+
+.page-light-left {
+	position: absolute;
+	top: 0;
+	right: 50%;
+	width: 15%;
+	height: 100%;
+	opacity: 0;
+	transition: opacity 0.15s;
+	background: linear-gradient(to Left, rgba(255,255,250,0.4) , hsla(15,19%,33%,0.2) 20%, transparent 80%);
 }
 
 .hidden-page {
