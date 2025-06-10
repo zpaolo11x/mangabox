@@ -35,7 +35,8 @@
 		}
 
 		.container {
-	position: relative; /* ← Needed for absolute positioning inside */
+			position: relative;
+			/* ← Needed for absolute positioning inside */
 			max-width: 800px;
 			margin: 30px auto;
 			padding: var(--padding-size);
@@ -133,16 +134,6 @@
 			color: var(--text-color-footer);
 		}
 
-		.github-badge {
-			position: absolute;
-			top: 20px;
-			right: 20px;
-			/*
-			float: right;
-			margin-top: -5px;
-			*/
-		}
-
 		.grid-item img:hover {
 			transform: scale(1.05);
 		}
@@ -166,10 +157,20 @@
 			margin-bottom: 30px;
 		}
 
+		.github-badge {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			/*
+			float: right;
+			margin-top: -5px;
+			*/
+		}
+
 		.github-badge img {
 			border-radius: 5px;
-			position:absolute;
-			right:0px;
+			position: absolute;
+			right: 0px;
 			vertical-align: middle;
 		}
 
@@ -207,7 +208,7 @@
 		</div>
 		<div class="github-badge">
 			<a href="https://github.com/zpaolo11x/mangabox/releases/latest">
-				<img src="https://img.shields.io/github/v/release/zpaolo11x/mangabox?label=Latest%20Release&style=flat-square" alt="Latest Release Badge">
+				<img src="https://img.shields.io/github/v/release/zpaolo11x/mangabox?label=Latest%20Release&style=flat-square&color=ba082b" alt="Latest Release Badge">
 			</a>
 		</div>
 		<p>
