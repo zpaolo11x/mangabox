@@ -32,6 +32,8 @@
 	--mb-card-cover-dash-width: 150px;
 	--mb-cover-aspect: 100 / 140;
 	--mb-card-padding: 5px;
+	--mb-cover-radius: 4px;
+	--mb-card-radius: calc(var(--mb-cover-radius) + var(--mb-card-padding));
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
@@ -479,7 +481,7 @@ a {
 	position: relative;
 	aspect-ratio: var(--mb-cover-aspect);
 	overflow: hidden;
-	border-radius: 4px;
+	border-radius: var(--mb-cover-radius);
 }
 
 .button-wrapper {
@@ -608,6 +610,7 @@ border-radius: 6px;
 .series-overlay,
 .book-overlay {
 	opacity: 0;
+	border-radius:var(--mb-cover-radius);
 	box-shadow: inset var(--mb-accent) 0px 0px 0px 3px, inset var(--mb-accent) 0px 0px 60px -17px, inset rgba(0, 0, 0, 0.5) 0px 0px 60px -17px;
 }
 
@@ -701,7 +704,7 @@ border-radius: 6px;
 	top: 0px;
 
 	border-right: 25px solid var(--mb-accent);
-	border-top-right-radius: 5px;
+	border-top-right-radius: var(--mb-cover-radius);
 	border-left: 25px solid transparent;
 	border-bottom: 25px solid transparent;
 	height: 0;
@@ -1050,7 +1053,7 @@ border-radius: 6px;
 	margin: 0;
 	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
-	border-radius: 8px;
+	border-radius: var(--mb-card-radius);
 	transition: scale 0.3s, box-shadow 0.3s;
 }
 
