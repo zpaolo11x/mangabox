@@ -384,8 +384,13 @@
 				}
 			],
 
-			swatches: getComputedStyle(document.documentElement)
-				.getPropertyValue('--mb-swatches')
+			swatchesHi: getComputedStyle(document.documentElement)
+				.getPropertyValue('--mb-swatches-hi')
+				.match(/hsl\([^)]*\)/g)
+				.map(swatch => swatch.match(/(\d+%?)/g)),
+
+			swatchesLo: getComputedStyle(document.documentElement)
+				.getPropertyValue('--mb-swatches-lo')
 				.match(/hsl\([^)]*\)/g)
 				.map(swatch => swatch.match(/(\d+%?)/g)),
 
@@ -479,13 +484,15 @@
 		}
 
 		function changeAccent(id) {
-			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
-				document.documentElement.style.setProperty(varName, mb.swatches[id][index]);
-			});
-			document.documentElement.style.setProperty('--mb-h-deg', mb.swatches[id][0] + 'deg');
+			const swatches = mb.darkTheme ? mb.swatchesLo : mb.swatchesHi;
 
-			document.documentElement.style.setProperty('--mb-gradient-1', Number(mb.swatches[id][0]));
-			document.documentElement.style.setProperty('--mb-gradient-2', Number(mb.swatches[id][0]) - 10);
+			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
+				document.documentElement.style.setProperty(varName, swatches[id][index]);
+			});
+			document.documentElement.style.setProperty('--mb-h-deg', swatches[id][0] + 'deg');
+
+			document.documentElement.style.setProperty('--mb-gradient-1', Number(swatches[id][0]));
+			document.documentElement.style.setProperty('--mb-gradient-2', Number(swatches[id][0]) - 10);
 
 			setUserSettings("mangabox.ui.accentcolor", mb.accentColor);
 		}
@@ -535,6 +542,7 @@
 			//Ttheme based top bar
 			updatePWABar();
 
+			changeAccent(mb.accentColor); //TODO Maybe this substitutes other accent color changes?
 		}
 
 		mb.prefersDarkMode.addEventListener('change', changeTheme);
@@ -565,7 +573,7 @@
 		}
 
 		colorChanger.addEventListener('click', () => {
-			mb.accentColor = (mb.accentColor + 1) % mb.swatches.length;
+			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
 			changeAccent(mb.accentColor);
 		});
 
