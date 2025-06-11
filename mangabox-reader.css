@@ -55,7 +55,7 @@
 }
 
 [data-theme-reader="dark-accent"] {
-	--color1: hsl(var(--mb-gradient-1), 18%, 51%);
+	--color1: hsl(var(--mb-gradient-1), 38%, 38%);
 	--color2: hsl(var(--mb-gradient-2), 100%, 6%);
 }
 
