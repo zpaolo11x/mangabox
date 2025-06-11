@@ -31,9 +31,11 @@
 	--mb-card-cover-max-width: 190px;
 	--mb-card-cover-dash-width: 150px;
 	--mb-cover-aspect: 100 / 140;
+
 	--mb-card-padding: 5px;
 	--mb-cover-radius: 4px;
 	--mb-card-radius: calc(var(--mb-cover-radius) + var(--mb-card-padding));
+	
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
