@@ -35,7 +35,7 @@
 	--mb-card-padding: 5px;
 	--mb-cover-radius: 4px;
 	--mb-card-radius: calc(var(--mb-cover-radius) + var(--mb-card-padding));
-	
+
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
@@ -317,7 +317,7 @@ a {
 }
 
 .library-menu-button span.filtered {
-	border-radius:5px;
+	border-radius: 5px;
 	color: white;
 	text-shadow: 0px 0px 7px rgba(255, 255, 255, 0.9);
 }
@@ -523,8 +523,8 @@ a {
 	transition: opacity 0.4s ease-in-out;
 }
 
-.library-thumbnail{
-border-radius: 6px;
+.library-thumbnail {
+	border-radius: 6px;
 }
 
 .series-status,
@@ -612,7 +612,7 @@ border-radius: 6px;
 .series-overlay,
 .book-overlay {
 	opacity: 0;
-	border-radius:var(--mb-cover-radius);
+	border-radius: var(--mb-cover-radius);
 	box-shadow: inset var(--mb-accent) 0px 0px 0px 3px, inset var(--mb-accent) 0px 0px 60px -17px, inset rgba(0, 0, 0, 0.5) 0px 0px 60px -17px;
 }
 
@@ -1099,6 +1099,8 @@ book-item {
 	line-height: 16px;
 	margin-bottom: 3px;
 	margin-top: 3px;
+	word-break: break-word;
+	hyphens: auto;
 }
 
 .book-row {
@@ -1141,7 +1143,7 @@ book-item {
 }
 
 .info-row {
-  word-break: break-word;
+	word-break: break-word;
 }
 
 .custom-scrollbar {
@@ -1156,7 +1158,7 @@ book-item {
 	color: white;
 }
 
-.highlighted .library-name{
+.highlighted .library-name {
 	text-shadow: 0px 0px 8px var(--mb-accent-dark);
 }
 

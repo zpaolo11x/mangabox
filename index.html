@@ -1358,7 +1358,7 @@
 				className: 'series-item'
 			});
 			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
-			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
+			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>';
 			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
 
 			const seriesTitle = addItem('div', {
