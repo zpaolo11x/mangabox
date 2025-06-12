@@ -1348,6 +1348,10 @@
 			});
 		}
 
+		function preventHyphenBreaks(str){
+			return str.replace(/-/g, '\u2011')
+		}
+
 		//MB Series Items Creation
 		async function buildSeriesItem(item, serie, target) {
 			item.childNodes[0]?.remove();
@@ -1364,7 +1368,7 @@
 			const seriesTitle = addItem('div', {
 				innerHTML: `
 								<div class="title-row data-row top-row">
-									<div style="flex-grow:1" class="series-title">${serie.metadata.title.replace(/-/g, '\u2011')}</div>
+									<div style="flex-grow:1" class="series-title">${preventHyphenBreaks(serie.metadata.title)}</div>
 									<div class="glyph-dark" style="text-align:right">${LTR}</div>
 										${spacer}
 									<div class="glyph-div" style="text-align:right">${LNG}</div>
