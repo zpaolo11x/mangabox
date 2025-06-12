@@ -1102,15 +1102,23 @@
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 0) {
 				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
+
 			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 0) {
 				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-medium');
 			} else {
 				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-small');
+
+				if (containerWidth - mb.libSizer.large >=0) {
+					document.body.classList.add('sticky-hybrid');
+				} 
 			};
 
 			if (containerWidth - mb.filterSizer >= 0) {

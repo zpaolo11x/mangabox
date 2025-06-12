@@ -1442,7 +1442,7 @@ body.sticky-small #mainUI:not(:has(#extraMenuBar.hidden)) {
 	grid-template-rows: 166px auto;
 }
 
-body.sticky-small #stickyContainer .library-item:not(.search-field) {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
@@ -1470,11 +1470,11 @@ body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted.
 	width: var(--mb-library-large-with-menu);
 }
 
-body.sticky-small #stickyContainer .library-name {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-name {
 	opacity: 0;
 }
 
-body.sticky-small #stickyContainer .library-item.highlighted .library-name {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item.highlighted .library-name {
 	opacity: 1;
 }
 
