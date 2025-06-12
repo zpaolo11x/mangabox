@@ -14,7 +14,7 @@
 	--mb-library-gap: 8px;
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
-	--mb-library-large: 150px;
+	--mb-library-large: 146px;
 	--mb-library-name: calc(var(--mb-library-large) - var(--mb-button-size) - 10px);
 	--mb-library-large-with-menu: calc(var(--mb-library-large) + var(--mb-span-size));
 
@@ -42,23 +42,57 @@
 
 	--mb-swatches-hi:
 		hsl(348, 92%, 38%),
+		hsl(28, 93%, 54%),
+		hsl(44, 100%, 57%),
+		hsl(105, 45%, 50%),
+		hsl(211, 100%, 50%),
+		hsl(230, 65%, 47%),
+		hsl(299, 42%, 41%),
+		hsl(331, 91%, 64%),
+		hsl(0, 0%, 60%);
+	
+	--mb-swatches-lo:
+		hsl(348, 92%, 38%),
+		hsl(28, 93%, 54%),
+		hsl(44, 100%, 57%),
+		hsl(105, 45%, 50%),
+		hsl(211, 100%, 50%),
+		hsl(230, 62%, 50%),
+		hsl(299, 42%, 41%),
+		hsl(331, 91%, 64%),
+		hsl(0, 0%, 60%);
+	
+		/*mac
+			hsl(358, 73%, 55%),
+		hsl(28, 93%, 54%),
+		hsl(44, 100%, 57%),
+		hsl(105, 45%, 50%),
+		hsl(211, 100%, 50%),
+		hsl(299, 42%, 41%),
+		hsl(331, 91%, 64%),
+		hsl(0, 0%, 60%);
+		*/
+
+		/*hi
+		hsl(348, 92%, 38%),
 		hsl(37, 100%, 50%),
 		hsl(50, 100%, 48%),
 		hsl(92, 78%, 42%),
 		hsl(210, 76%, 50%),
-		hsl(231, 65%, 47%),
-		hsl(274, 57%, 41%),
+		hsl(230, 65%, 47%),
+		hsl(274, 57%, 45%),
 		hsl(306, 70%, 60%);
-
-	--mb-swatches-lo:
+*/
+		/* lo
 		hsl(348, 92%, 38%),
 		hsl(37, 100%, 50%),
 		hsl(50, 100%, 48%),
 		hsl(92, 82%, 40%),
 		hsl(210, 76%, 50%),
-		hsl(231, 65%, 47%),
+		hsl(230, 62%, 50%),
 		hsl(274, 57%, 51%),
 		hsl(306, 70%, 60%);
+		*/
 }
 
 [data-theme="light"] {

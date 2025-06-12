@@ -50,13 +50,13 @@
 }
 
 [data-theme-reader="light-accent"] {
-	--color1: hsl(var(--mb-gradient-1), 18%, 91%);
-	--color2: hsl(var(--mb-gradient-2), 40%, 76%);
+	--color1: hsl(var(--mb-gradient-1), var(--mb-s), 91%);
+	--color2: hsl(var(--mb-gradient-2), var(--mb-s), 76%);
 }
 
 [data-theme-reader="dark-accent"] {
-	--color1: hsl(var(--mb-gradient-1), 38%, 38%);
-	--color2: hsl(var(--mb-gradient-2), 100%, 6%);
+	--color1: hsl(var(--mb-gradient-1), var(--mb-s), 38%);
+	--color2: hsl(var(--mb-gradient-2), var(--mb-s), 6%);
 }
 
 [data-theme-reader="white"] {
