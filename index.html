@@ -62,9 +62,14 @@
 					</li>
 				</ul>
 			</div>
-			<div id="extraMenuBar" class="hidden">
+
+			<div id="filtersBar" class="extra-bar hidden">
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
+
+			<div id="colorSwatchBar" class="extra-bar hidden">
+			</div>
+
 		</div>
 		<div class="scrollbox" data-scroll-direction="vertical">
 			<div id="mainContainer" class="scrollbox-content">
@@ -401,22 +406,10 @@
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
 		}
-//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
+		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
 		const colorValues = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches-hi')
 			.match(/hsl\([^)]*\)/g);
-
-//TODO: move this into the main HTML, no need to stay here
-		console.log(colorValues);
-		let swatchDimmer = addItem('div', {
-			id: 'swatchDimmer',
-			className: 'section, hidden'
-		})
-
-		let swatchContainer = addItem('div', {
-			id: 'swatchContainer',
-			className: 'swatch-container, section, hidden',
-		});
 
 		colorValues.forEach((value, index) => {
 			const colorSwatch = addItem('span', {
@@ -430,15 +423,9 @@
 				mb.accentColor = index;
 				applyAccent();
 			});
-			swatchContainer.append(colorSwatch);
+			colorSwatchBar.append(colorSwatch);
 		});
 
-		swatchDimmer.addEventListener('click', () =>{
-			sectionToggle(swatchDimmer);
-		})
-
-		swatchDimmer.append(swatchContainer);
-		stickyContainer.append(swatchDimmer);
 
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
@@ -611,7 +598,7 @@
 		}
 
 		colorChanger.addEventListener('click', () => {
-			sectionToggle(swatchDimmer)
+			sectionToggle(colorSwatchBar)
 			/*
 			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
 			applyAccent();
@@ -1736,14 +1723,14 @@
 				thumbnailWrapperMenu.addEventListener('click', (event) => {
 					libMenuClear(mb.libraryMenuButtons[itemId]);
 
-					if (isSectionHidden(extraMenuBar)) {
+					if (isSectionHidden(filtersBar)) {
 						libMenuUp(mb.libraryMenuButtons[itemId]);
 					} else {
 						libMenuDown(mb.libraryMenuButtons[itemId]);
 					}
 					event.stopPropagation();
 					event.preventDefault();
-					sectionToggle(extraMenuBar);
+					sectionToggle(filtersBar);
 				});
 
 			}
@@ -3807,7 +3794,8 @@
 
 			await executeFade(1);
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
-			sectionHide(extraMenuBar);
+			sectionHide(filtersBar);
+			sectionHide(colorSwatchBar);
 
 			clearLibrariesMenus();
 
