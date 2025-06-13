@@ -401,6 +401,44 @@
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
 		}
+//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
+		const colorValues = getComputedStyle(document.documentElement)
+			.getPropertyValue('--mb-swatches-hi')
+			.match(/hsl\([^)]*\)/g);
+
+//TODO: move this into the main HTML, no need to stay here
+		console.log(colorValues);
+		let swatchDimmer = addItem('div', {
+			id: 'swatchDimmer',
+			className: 'section, hidden'
+		})
+
+		let swatchContainer = addItem('div', {
+			id: 'swatchContainer',
+			className: 'swatch-container, section, hidden',
+		});
+
+		colorValues.forEach((value, index) => {
+			const colorSwatch = addItem('span', {
+				className: 'color-swatch',
+				style: {
+					backgroundColor: value,
+				},
+			});
+			colorSwatch.addEventListener('click', () => {
+				event.stopPropagation();
+				mb.accentColor = index;
+				applyAccent();
+			});
+			swatchContainer.append(colorSwatch);
+		});
+
+		swatchDimmer.addEventListener('click', () =>{
+			sectionToggle(swatchDimmer);
+		})
+
+		swatchDimmer.append(swatchContainer);
+		stickyContainer.append(swatchDimmer);
 
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
@@ -483,16 +521,16 @@
 			return warmth;
 		}
 
-		function changeAccent(id) {
+		function applyAccent() {
 			const swatches = mb.darkTheme ? mb.swatchesLo : mb.swatchesHi;
 
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
-				document.documentElement.style.setProperty(varName, swatches[id][index]);
+				document.documentElement.style.setProperty(varName, swatches[mb.accentColor][index]);
 			});
-			document.documentElement.style.setProperty('--mb-h-deg', swatches[id][0] + 'deg');
+			document.documentElement.style.setProperty('--mb-h-deg', swatches[mb.accentColor][0] + 'deg');
 
-			document.documentElement.style.setProperty('--mb-gradient-1', Number(swatches[id][0]));
-			document.documentElement.style.setProperty('--mb-gradient-2', Number(swatches[id][0]) - 10);
+			document.documentElement.style.setProperty('--mb-gradient-1', Number(swatches[mb.accentColor][0]));
+			document.documentElement.style.setProperty('--mb-gradient-2', Number(swatches[mb.accentColor][0]) - 10);
 
 			setUserSettings("mangabox.ui.accentcolor", mb.accentColor);
 		}
@@ -542,7 +580,7 @@
 			//Ttheme based top bar
 			updatePWABar();
 
-			changeAccent(mb.accentColor); //TODO Maybe this substitutes other accent color changes?
+			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
 
 		mb.prefersDarkMode.addEventListener('change', changeTheme);
@@ -573,8 +611,11 @@
 		}
 
 		colorChanger.addEventListener('click', () => {
+			sectionToggle(swatchDimmer)
+			/*
 			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
-			changeAccent(mb.accentColor);
+			applyAccent();
+			*/
 		});
 
 		themeChanger.addEventListener('click', () => {
@@ -1118,7 +1159,7 @@
 
 				if (containerWidth - mb.libSizer.large >= 9) {
 					document.body.classList.add('sticky-hybrid');
-				} 
+				}
 			};
 
 			if (containerWidth - mb.filterSizer >= 0) {
@@ -1356,7 +1397,7 @@
 			});
 		}
 
-		function preventHyphenBreaks(str){
+		function preventHyphenBreaks(str) {
 			return str.replace(/-/g, '\u2011')
 		}
 
@@ -1372,7 +1413,7 @@
 			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
 			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>';
 			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
-			
+
 			const seriesTitle = addItem('div', {
 				innerHTML: `
 								<div class="title-row data-row top-row">
@@ -2388,7 +2429,7 @@
 			userSettings = await getUserSettings();
 			applyUserSettings();
 
-			changeAccent(mb.accentColor);
+			applyAccent();
 			// Apply first theme change
 			changeTheme();
 			changeReaderTheme();
@@ -3343,7 +3384,7 @@
 				{ duration: duration, easing: ease }
 			]);
 		}
-		
+
 		function animLight(align, duration, ease) {
 			return ([
 				[{ [align]: '0%', width: '0%', opacity: '0.5' },
