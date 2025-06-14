@@ -179,6 +179,12 @@ body {
 	overscroll-behavior: none;
 	overflow-y: visible;
 }
+
+.fa-apple {
+	color: var(--mb-card-color);
+	margin-left:5px;
+}
+
 /*
 #swatchContainer {
 	justify-content: center;

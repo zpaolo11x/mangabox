@@ -1,10 +1,10 @@
 Main UI
 - Drag images on the library button to set a custom image
 - Long press a library button to remove custom image
+- Add new color highlights, including macOS highlight colors
 - Allow sorting libraries by book count
 - Never collapse sorting button
 - Use Komga user-settings API to save settings
-- Tune color accent for light and dark theme
 - Improve contrast of highlighted buttons
 
 Reader
