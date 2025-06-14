@@ -9,11 +9,12 @@
 	--mb-accent-active: hsl(var(--mb-h), 48%, 84%);
 	--mb-accent-a30: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.3);
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
+	--mb-accent-dark: hsl(var(--mb-h), var(--mb-s), 40%);
 
 	--mb-library-gap: 8px;
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
-	--mb-library-large: 150px;
+	--mb-library-large: 146px;
 	--mb-library-name: calc(var(--mb-library-large) - var(--mb-button-size) - 10px);
 	--mb-library-large-with-menu: calc(var(--mb-library-large) + var(--mb-span-size));
 
@@ -30,20 +31,99 @@
 	--mb-card-cover-max-width: 190px;
 	--mb-card-cover-dash-width: 150px;
 	--mb-cover-aspect: 100 / 140;
+
 	--mb-card-padding: 5px;
+	--mb-cover-radius: 4px;
+	--mb-card-radius: calc(var(--mb-cover-radius) + var(--mb-card-padding));
+
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
 
-	--mb-swatches:
+	--mb-swatches-hi:
 		hsl(348, 92%, 38%),
-		hsl(39, 100%, 50%),
-		hsl(51, 100%, 48%),
-		hsl(92, 78%, 46%),
+		hsl(358, 73%, 55%),
+		hsl(28, 92%, 54%),
+		hsl(37, 100%, 50%),
+		hsl(45, 100%, 57%),
+		hsl(107, 45%, 50%),
+		hsl(211, 100%, 50%),
+		hsl(230, 65%, 47%),
+		hsl(274, 57%, 45%),
+		hsl(300, 41%, 41%),
+		hsl(306, 70%, 60%),
+		hsl(332, 92%, 64%),
+		hsl(0, 0%, 60%);
+
+	--mb-swatches-lo:
+		hsl(348, 92%, 38%),
+		hsl(358, 100%, 66%),
+		hsl(28, 93%, 54%),
+		hsl(37, 100%, 50%),
+		hsl(47, 100%, 50%),
+		hsl(106, 46%, 50%),
+		hsl(212, 100%, 51%),
+		hsl(230, 62%, 50%),
+		hsl(274, 57%, 51%),
+		hsl(299, 36%, 48%),
+		hsl(306, 70%, 60%),
+		hsl(332, 91%, 64%),
+		hsl(0, 0%, 55%);
+
+	/*
+	--mb-swatches-hi:
+		hsl(348, 92%, 38%),
+		hsl(28, 93%, 54%),
+		hsl(44, 100%, 57%),
+		hsl(105, 45%, 50%),
+		hsl(211, 100%, 50%),
+		hsl(230, 65%, 47%),
+		hsl(299, 42%, 41%),
+		hsl(331, 91%, 64%),
+		hsl(0, 0%, 60%);
+	
+	--mb-swatches-lo:
+		hsl(348, 92%, 38%),
+		hsl(28, 93%, 54%),
+		hsl(44, 100%, 57%),
+		hsl(105, 45%, 50%),
+		hsl(211, 100%, 50%),
+		hsl(230, 62%, 50%),
+		hsl(299, 42%, 41%),
+		hsl(331, 91%, 64%),
+		hsl(0, 0%, 60%);
+	*/
+	/*mac
+			hsl(358, 73%, 55%),
+		hsl(28, 93%, 54%),
+		hsl(44, 100%, 57%),
+		hsl(105, 45%, 50%),
+		hsl(211, 100%, 50%),
+		hsl(299, 42%, 41%),
+		hsl(331, 91%, 64%),
+		hsl(0, 0%, 60%);
+		*/
+
+	/*hi
+		hsl(348, 92%, 38%),
+		hsl(37, 100%, 50%),
+		hsl(50, 100%, 48%),
+		hsl(92, 78%, 42%),
 		hsl(210, 76%, 50%),
-		hsl(231, 65%, 47%),
-		hsl(274, 57%, 41%),
+		hsl(230, 65%, 47%),
+		hsl(274, 57%, 45%),
 		hsl(306, 70%, 60%);
+*/
+	/* lo
+		hsl(348, 92%, 38%),
+		hsl(37, 100%, 50%),
+		hsl(50, 100%, 48%),
+		hsl(92, 82%, 40%),
+		hsl(210, 76%, 50%),
+		hsl(230, 62%, 50%),
+		hsl(274, 57%, 51%),
+		hsl(306, 70%, 60%);
+		*/
 }
 
 [data-theme="light"] {
@@ -98,6 +178,62 @@ html,
 body {
 	overscroll-behavior: none;
 	overflow-y: visible;
+}
+
+.fa-apple {
+	color: var(--mb-card-color);
+	margin-left:5px;
+}
+
+/*
+#swatchContainer {
+	justify-content: center;
+
+	width: 100%;
+	max-width: calc(13 * 60px);
+
+	border-radius: 5px;
+
+	position: absolute;
+	top: 0px;
+	left: 50%;
+	transform: translate(-50%, 0);
+
+	display: flex;
+	flex-wrap: wrap;
+	z-index: 10000;
+	padding: 10px;
+
+	background-color: var(--mb-card-color);
+	box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.25);
+	transition: opacity 0.3s ease;
+}
+*/
+
+#colorSwatchBar{
+	padding:0px;
+	gap:5px;
+}
+
+.color-swatch {
+	height: var(--mb-filter-button-size);
+	cursor: pointer;
+	box-sizing: border-box;
+	border: 3px solid transparent;
+	transition: border 0.2s ease;
+	border-radius: 4px;
+	flex:1;
+}
+
+.color-swatch:hover {
+	border: 3px solid rgba(255,255,255,0.5);
+}
+
+.color-swatch:first-child {
+	margin-left: 10px;
+}
+.color-swatch:last-child {
+	margin-right: 10px;
 }
 
 #debuggerObj {
@@ -228,7 +364,7 @@ a {
 	left: 8px;
 }
 
-#mainUI:not(:has(#extraMenuBar.hidden)) {
+#mainUI:has(.extra-bar:not(.hidden)) {
 	grid-template-rows: calc(var(--mb-button-size) + var(--mb-filter-button-size) + 3 * var(--mb-library-gap)) auto;
 }
 
@@ -302,9 +438,9 @@ a {
 }
 
 .library-menu-button span.filtered {
-	border-radius:5px;
+	border-radius: 5px;
 	color: white;
-	text-shadow: 0px 0px 7px rgba(255, 255, 255, 0.7);
+	text-shadow: 0px 0px 7px rgba(255, 255, 255, 0.9);
 }
 
 .library-menu-button span:active {
@@ -332,7 +468,7 @@ a {
 	z-index: 1000;
 }
 
-#extraMenuBar {
+.extra-bar {
 	display: flex;
 	align-items: center;
 
@@ -347,14 +483,15 @@ a {
 	transition: all 0.3s;
 }
 
-#extraMenuBar.hidden {
+.extra-bar.hidden {
 	opacity: 0;
 	pointer-events: none;
 }
 
-#extraMenuBar:not(.hidden) {
+.extra-bar:not(.hidden) {
 	opacity: 1;
 }
+
 
 .filter-item {
 	user-select: none;
@@ -397,7 +534,7 @@ a {
 	overflow: hidden;
 	font-size: 16px;
 	height: var(--mb-button-size);
-	transition: background-color 0.3s ease, width 0.3s ease;
+	transition: background-color 0.3s ease, width 0.3s ease, box-shadow 0.3s linear;
 	/*text-transform: uppercase;*/
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }
@@ -468,7 +605,7 @@ a {
 	position: relative;
 	aspect-ratio: var(--mb-cover-aspect);
 	overflow: hidden;
-	border-radius: 4px;
+	border-radius: var(--mb-cover-radius);
 }
 
 .button-wrapper {
@@ -506,6 +643,10 @@ a {
 	object-fit: cover;
 	object-position: center;
 	transition: opacity 0.4s ease-in-out;
+}
+
+.library-thumbnail {
+	border-radius: 6px;
 }
 
 .series-status,
@@ -593,6 +734,7 @@ a {
 .series-overlay,
 .book-overlay {
 	opacity: 0;
+	border-radius: var(--mb-cover-radius);
 	box-shadow: inset var(--mb-accent) 0px 0px 0px 3px, inset var(--mb-accent) 0px 0px 60px -17px, inset rgba(0, 0, 0, 0.5) 0px 0px 60px -17px;
 }
 
@@ -686,7 +828,7 @@ a {
 	top: 0px;
 
 	border-right: 25px solid var(--mb-accent);
-	border-top-right-radius: 5px;
+	border-top-right-radius: var(--mb-cover-radius);
 	border-left: 25px solid transparent;
 	border-bottom: 25px solid transparent;
 	height: 0;
@@ -757,6 +899,11 @@ a {
 	-webkit-mask-image: linear-gradient(to right, black 0%, black calc(100% - 50px), transparent calc(100% - 10px));
 
 }
+
+.home-strip.last-strip {
+	padding-bottom: 20px;
+}
+
 
 .home-strip.search-results {
 	flex-wrap: wrap;
@@ -1010,6 +1157,7 @@ a {
 	display: none;
 }
 
+#swatchDimmer.hidden,
 #bookDetailsContainer.hidden {
 	pointer-events: none;
 	opacity: 0;
@@ -1030,7 +1178,7 @@ a {
 	margin: 0;
 	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
-	border-radius: 8px;
+	border-radius: var(--mb-card-radius);
 	transition: scale 0.3s, box-shadow 0.3s;
 }
 
@@ -1074,6 +1222,8 @@ book-item {
 	line-height: 16px;
 	margin-bottom: 3px;
 	margin-top: 3px;
+	word-break: break-word;
+	hyphens: auto;
 }
 
 .book-row {
@@ -1116,7 +1266,7 @@ book-item {
 }
 
 .info-row {
-  word-break: break-word;
+	word-break: break-word;
 }
 
 .custom-scrollbar {
@@ -1129,6 +1279,10 @@ book-item {
 .highlighted {
 	background-color: var(--mb-accent);
 	color: white;
+}
+
+.highlighted .library-name {
+	text-shadow: 0px 0px 8px var(--mb-accent-dark);
 }
 
 .highlighted.with-menu {
@@ -1407,26 +1561,26 @@ body.sticky-small #stripGridHeaderContainer {
 	top: 114px;
 }
 
-body.sticky-small #mainUI:not(:has(#extraMenuBar.hidden)) {
+body.sticky-small #mainUI:has(.extra-bar:not(.hidden)) {
 	grid-template-rows: 166px auto;
 }
 
-body.sticky-small #stickyContainer .library-item:not(.search-field) {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
-#extraButtons.filter-small .filter-item {
+#extraButtons.filter-small .filter-item:not(:first-child) {
 	width: var(--mb-filter-button-size);
-
 }
 
+
 /*
-body.sticky-small #extraMenuBar .filter-item {
+body.sticky-small #filtersBar .filter-item {
 	width: var(--mb-filter-button-size);
 }
 */
 /*
-body.sticky-small #extraMenuBar .library-item {
+body.sticky-small #filtersBar .library-item {
 	width: var(--mb-button-size);
 }
 */
@@ -1439,11 +1593,11 @@ body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted.
 	width: var(--mb-library-large-with-menu);
 }
 
-body.sticky-small #stickyContainer .library-name {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-name {
 	opacity: 0;
 }
 
-body.sticky-small #stickyContainer .library-item.highlighted .library-name {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item.highlighted .library-name {
 	opacity: 1;
 }
 

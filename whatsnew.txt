@@ -1,11 +1,20 @@
 Main UI
-- Chenged library menu icon
+- Drag images on the library button to set a custom image
+- Long press a library button to remove custom image
+- Add new color highlights, including macOS highlight colors
+- Allow sorting libraries by book count
+- Never collapse sorting button
+- Use Komga user-settings API to save settings
+- Improve contrast of highlighted buttons
 
 Reader
-- Books with no-cover tag will open in a two pages spread
-- Books with no-blank-page tag will have a white page added as back of cover
+- Support different color themes for reader background
+- Remove white margins from cover page
+- Add highlight to turn page animation
+- Increase saturation of reader background
+
+Build
+- Updated documentation
 
 Fixes
-- Fixed long words overflow in book names
-- Fixed missing flag in series header
-- Fixed year span search issue
+- Fix spacing of last strip in dashboard
