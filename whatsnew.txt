@@ -14,7 +14,7 @@ Reader
 - Increase saturation of reader background
 
 Build
--
+- Updated documentation
 
 Fixes
 - Fix spacing of last strip in dashboard
