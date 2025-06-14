@@ -412,7 +412,7 @@
 			.match(/hsl\([^)]*\)/g);
 
 		colorValues.forEach((value, index) => {
-			const appleColor = [0,1,1,0,1,1,1,0,0,1,0,1,1];
+			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
 				className: 'color-swatch',
 				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',

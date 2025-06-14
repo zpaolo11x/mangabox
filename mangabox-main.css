@@ -182,7 +182,7 @@ body {
 
 .fa-apple {
 	color: var(--mb-card-color);
-	margin-left:5px;
+	margin-left: 5px;
 }
 
 /*
@@ -210,9 +210,9 @@ body {
 }
 */
 
-#colorSwatchBar{
-	padding:0px;
-	gap:5px;
+#colorSwatchBar {
+	padding: 0px;
+	gap: 5px;
 }
 
 .color-swatch {
@@ -222,16 +222,17 @@ body {
 	border: 3px solid transparent;
 	transition: border 0.2s ease;
 	border-radius: 4px;
-	flex:1;
+	flex: 1;
 }
 
 .color-swatch:hover {
-	border: 3px solid rgba(255,255,255,0.5);
+	border: 3px solid rgba(255, 255, 255, 0.5);
 }
 
 .color-swatch:first-child {
 	margin-left: 10px;
 }
+
 .color-swatch:last-child {
 	margin-right: 10px;
 }
