@@ -323,7 +323,7 @@ a {
 	left: 0;
 	right: 0;
 	height: var(--mb-drag-bar-height);
-	/*z-index:3000;*/
+	z-index:3000;
 	background: var(--mb-card-color);
 	display: flex;
 	flex-direction: column;
