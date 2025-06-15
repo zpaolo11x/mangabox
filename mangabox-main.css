@@ -332,12 +332,12 @@ a {
 	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease 0.5s; /*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
 }
-/*
+
 #dragBar.onReader{
 	background: linear-gradient(180deg, var(--mb-card-color) -30%, transparent 100%);
-	opacity:0.1;
+	/*opacity:0.1;*/
 }
-
+/*
 #dragBar.onReader:hover{
 	opacity:1;
 }
