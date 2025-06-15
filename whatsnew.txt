@@ -1,5 +1,5 @@
 Main UI
-- 
+- Window controls are visible in reader view
 
 Reader
 - 
@@ -8,4 +8,4 @@ Build
 - 
 
 Fixes
-- 
+- Fixed drag bar when in reader view
