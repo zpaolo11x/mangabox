@@ -335,7 +335,7 @@ a {
 
 #dragBar.onReader{
 	background: transparent;
-	/*opacity:0.1;*/
+	opacity:0.5;
 }
 /*
 #dragBar.onReader:hover{
