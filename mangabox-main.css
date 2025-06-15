@@ -364,6 +364,7 @@ a {
 	top: 8px;
 	right: 8px;
 	font-size: 14px;
+	transition:opacity 0.3s ease;
 }
 
 .window-controls span {
