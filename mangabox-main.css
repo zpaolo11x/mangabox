@@ -334,7 +334,7 @@ a {
 }
 
 #dragBar.onReader{
-	background: linear-gradient(180deg, var(--mb-card-color) -30%, transparent 100%);
+	background: transparent;/*linear-gradient(180deg, var(--mb-card-color) -30%, transparent 100%);*/
 	/*opacity:0.1;*/
 }
 
