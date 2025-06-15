@@ -336,21 +336,17 @@ a {
 #dragBar.onReader{
 	background: transparent;
 	opacity:0.5;
-		-webkit-app-region: no-drag;
-
 }
 
 #dragBar.onReader:hover{
 	background:red;
 	opacity:1;
-		-webkit-app-region: drag;
-
 }
 
 .window-controls {
 	display: flex;
 	gap: 5px;
-	-webkit-app-region: no-drag;
+	/*-webkit-app-region: no-drag;*/
 	position: absolute;
 	top: 8px;
 	right: 8px;
@@ -536,7 +532,7 @@ a {
 }
 
 .library-item {
-	-webkit-app-region: no-drag;
+	/*-webkit-app-region: no-drag;*/
 
 	user-select: none;
 	box-sizing: border-box;
