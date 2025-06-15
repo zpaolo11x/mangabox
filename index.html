@@ -221,7 +221,7 @@
 
 		//MB Manage Electron titlebar
 
-		const isElectronApp =  !!window.electronAPI;
+		const isElectronApp = !!window.electronAPI;
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -233,7 +233,7 @@
 			}
 		}
 
-		
+
 		if (isElectronApp) {
 			dragbarMinBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
@@ -263,6 +263,14 @@
 
 			window.electronAPI.getAppVersion().then(version => {
 				dragbarAppTitle.textContent = 'MangaBox v' + version;
+			});
+
+			dragBar.addEventListener('mouseenter', () => {
+				dragBar.classList.add('hovered');
+			});
+
+			dragBar.addEventListener('mouseleave', () => {
+				dragBar.classList.remove('hovered');
 			});
 		}
 
@@ -2617,7 +2625,7 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-			
+
 			dragBar.classList.remove('onReader');
 			updatePWABar();
 		}
