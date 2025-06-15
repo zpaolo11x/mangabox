@@ -336,9 +336,11 @@ a {
 #dragBar.onReader{
 	background: linear-gradient(180deg, var(--mb-card-color) -30%, transparent 100%);
 	opacity:0;
+	pointer-events: none;
 }
 
 #dragBar.onReader:hover{
+	pointer-events: auto;
 	opacity:1;
 }
 
