@@ -2542,6 +2542,7 @@
 			readerViewer.innerHTML = '';
 
 			setThumbZoom(false);
+
 			dragBarOnReader();
 			sectionShow(readerContainer);
 
@@ -2606,6 +2607,8 @@
 
 		// Setup close button
 		function handleCloseReader() {
+			dragBarOffReader();
+
 			hideMenu();
 			setIncognito(false);
 			//XXX WAS incognitoMark.classList.remove('incognito'); but why didn't I just sue setIncognito(false)?
@@ -2620,8 +2623,6 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-
-			dragBarOffReader();
 
 			updatePWABar();
 		}
