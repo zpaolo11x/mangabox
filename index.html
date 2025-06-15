@@ -171,6 +171,7 @@
 
 	<div id="dragBar" class="draggable">
 		<img id="barLogo" src="mangabox-logo-16.svg">
+
 		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
 		<div class="window-controls no-drag">
@@ -221,7 +222,7 @@
 
 		//MB Manage Electron titlebar
 
-		const isElectronApp = !!window.electronAPI;
+		const isElectronApp =  !!window.electronAPI;
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -233,7 +234,7 @@
 			}
 		}
 
-
+		
 		if (isElectronApp) {
 			dragbarMinBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
@@ -263,14 +264,6 @@
 
 			window.electronAPI.getAppVersion().then(version => {
 				dragbarAppTitle.textContent = 'MangaBox v' + version;
-			});
-
-			dragBar.addEventListener('mouseenter', () => {
-				dragBar.classList.add('hovered');
-			});
-
-			dragBar.addEventListener('mouseleave', () => {
-				dragBar.classList.remove('hovered');
 			});
 		}
 
@@ -2625,7 +2618,7 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-
+			
 			dragBar.classList.remove('onReader');
 			updatePWABar();
 		}

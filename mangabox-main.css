@@ -331,18 +331,17 @@ a {
 	transition: all 0.3s;
 	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease 0.5s; /*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
-	opacity: 1.0;
 }
 
 #dragBar.onReader{
 	background: linear-gradient(180deg, var(--mb-card-color) -30%, transparent 100%);
-	opacity:0;
+	/*opacity:0.1;*/
 }
-
-#dragBar.onReader.hovered{
-	opacity:1.0;
+/*
+#dragBar.onReader:hover{
+	opacity:1;
 }
-
+*/
 .window-controls {
 	display: flex;
 	gap: 5px;
