@@ -337,11 +337,12 @@ a {
 	background: transparent;
 	opacity:0.5;
 }
-/*
+
 #dragBar.onReader:hover{
+	background:red;
 	opacity:1;
 }
-*/
+
 .window-controls {
 	display: flex;
 	gap: 5px;
