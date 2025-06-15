@@ -3813,6 +3813,7 @@
 			const { path, params } = getHashAndParams();
 
 			await executeFade(1);
+			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
 			sectionHide(filtersBar);
 			sectionHide(colorSwatchBar);
