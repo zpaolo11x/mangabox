@@ -181,8 +181,11 @@ body {
 }
 
 .fa-apple {
+	width:100%;
 	color: var(--mb-card-color);
-	margin-left: 5px;
+	text-align:left;
+	margin-left: 2px;
+	margin-right: 2px;
 }
 
 /*
@@ -223,6 +226,7 @@ body {
 	transition: border 0.2s ease;
 	border-radius: 4px;
 	flex: 1;
+	min-width: 22px;
 }
 
 .color-swatch:hover {
