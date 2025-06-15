@@ -337,6 +337,20 @@ a {
 	background: linear-gradient(180deg, var(--mb-card-color) -30%, transparent 100%);
 	/*opacity:0.1;*/
 }
+
+#dragBar.onReader.barLogo,
+#dragBar.onReader.dragbarAppTitle{
+	opacity:0;
+}
+
+#dragBar.onReader.windowControls{
+	opacity:0.5;
+}
+#dragBar.onReader.windowControls:hover{
+	opacity:1;
+}
+
+
 /*
 #dragBar.onReader:hover{
 	opacity:1;
