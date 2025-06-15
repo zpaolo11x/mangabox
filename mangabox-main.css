@@ -336,11 +336,15 @@ a {
 #dragBar.onReader{
 	background: transparent;
 	opacity:0.5;
+		-webkit-app-region: no-drag;
+
 }
 
 #dragBar.onReader:hover{
 	background:red;
 	opacity:1;
+		-webkit-app-region: drag;
+
 }
 
 .window-controls {
