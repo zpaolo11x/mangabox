@@ -313,7 +313,7 @@ a {
 	transition: grid-template-rows 0.2s;
 }
 
-#dragBar {
+#dragbar {
 	text-align: left;
 	padding-left: 32px;
 	font-size: 14px;
@@ -333,7 +333,7 @@ a {
 	/*border-bottom:1px red solid;*/
 }
 
-#dragBar.onReader{
+#dragbar.onReader{
 	background-color: transparent;
 	transition: background-color 0.3s;
 }
@@ -344,20 +344,20 @@ a {
 		transition: opacity 0.3s ease;
 }
 
-#dragBar.onReader #barLogo,
-#dragBar.onReader #dragbarAppTitle{
+#dragbar.onReader #barLogo,
+#dragbar.onReader #dragbarAppTitle{
 	opacity:0;
 }
 
-#dragBar.onReader #windowControls{
+#dragbar.onReader #windowControls{
 	opacity:0.35;
 }
-#dragBar.onReader #windowControls:hover{
+#dragbar.onReader #windowControls:hover{
 	opacity:1;
 }
 
 /*
-#dragBar.onReader:hover{
+#dragbar.onReader:hover{
 	opacity:1;
 }
 */

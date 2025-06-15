@@ -108,7 +108,7 @@
 		</div>
 
 	</div>
-	<div id="dragBar" class="draggable">
+	<div id="dragbar" class="draggable">
 		<img id="barLogo" src="mangabox-logo-16.svg">
 
 		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
@@ -230,10 +230,10 @@
 			window.electronAPI.onFullscreenChange((isFullscreen) => {
 				if (isFullscreen) {
 					document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-					dragBar.style.display = 'none';
+					dragbar.style.display = 'none';
 				} else {
 					document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
-					dragBar.style.display = '';
+					dragbar.style.display = '';
 				}
 			});
 
@@ -256,10 +256,10 @@
 		(function () {
 			if (!isElectron) {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-				document.getElementById('dragBar').style.display = 'none';
+				document.getElementById('dragbar').style.display = 'none';
 			} else {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
-				document.getElementById('dragBar').style.display = '';
+				document.getElementById('dragbar').style.display = '';
 			}
 		})();
 

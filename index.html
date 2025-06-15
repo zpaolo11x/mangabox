@@ -169,7 +169,7 @@
 		</div>
 	</div>
 
-	<div id="dragBar" class="draggable">
+	<div id="dragbar" class="draggable">
 		<img id="barLogo" src="mangabox-logo-16.svg">
 
 		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
@@ -227,10 +227,10 @@
 		function enableDragbar(enabled) {
 			if (!enabled) {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-				document.getElementById('dragBar').style.display = 'none';
+				document.getElementById('dragbar').style.display = 'none';
 			} else {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
-				document.getElementById('dragBar').style.display = '';
+				document.getElementById('dragbar').style.display = '';
 			}
 		}
 
@@ -2438,7 +2438,7 @@
 
 		// General reader data structure
 		let rd = {
-			dragBarTimer: null,
+			dragbarTimer: null,
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
@@ -2543,7 +2543,7 @@
 
 			setThumbZoom(false);
 			
-			dragBarOnReader();
+			dragbarOnReader();
 			sectionShow(readerContainer);
 
 			initViewer();
@@ -2621,7 +2621,7 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-			dragBarOffReader();
+			dragbarOffReader();
 			updatePWABar();
 		}
 
@@ -2740,17 +2740,17 @@
 			}
 		}
 
-		function dragBarOffReader() {
-			rd.dragBarTimer = setTimeout(() => {
-				dragBar.classList.remove('onReader');
+		function dragbarOffReader() {
+			rd.dragbarTimer = setTimeout(() => {
+				dragbar.classList.remove('onReader');
 			}, 500);
-			//dragBar.classList.remove('offReader');
+			//dragbar.classList.remove('offReader');
 		}
 
-		function dragBarOnReader() {
-			clearTimeout(rd.dragBarTimer);
-			dragBar.classList.remove('onReader');
-			dragBar.classList.add('onReader');
+		function dragbarOnReader() {
+			clearTimeout(rd.dragbarTimer);
+			dragbar.classList.remove('onReader');
+			dragbar.classList.add('onReader');
 		}
 
 		function initReaderUI(pagesData, bookData) {
