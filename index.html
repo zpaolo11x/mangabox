@@ -234,7 +234,6 @@
 			}
 		}
 
-		
 		if (isElectronApp) {
 			dragbarMinBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
@@ -2439,6 +2438,8 @@
 
 		// General reader data structure
 		let rd = {
+			dragBarTimer: null,
+
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
 			preloadCount: 15,			// Image preload count
@@ -2619,7 +2620,10 @@
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 			
-			dragBar.classList.remove('onReader');
+			rd.dragBarTimer = setTimeout(() => {
+				dragBar.classList.remove('onReader');
+			}, 500);
+			//dragBar.classList.remove('offReader');
 			updatePWABar();
 		}
 
@@ -2739,6 +2743,7 @@
 		}
 
 		function initReaderUI(pagesData, bookData) {
+			clearTimeout(rd.dragBarTimer);
 			dragBar.classList.add('onReader');
 			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
 			rightLimit.innerText = rd.ltr ? pagesData.length : 1;

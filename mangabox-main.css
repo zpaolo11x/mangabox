@@ -324,7 +324,7 @@ a {
 	right: 0;
 	height: var(--mb-drag-bar-height);
 	z-index:3000;
-	background: var(--mb-card-color);
+	background-color: var(--mb-card-color);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
@@ -334,8 +334,14 @@ a {
 }
 
 #dragBar.onReader{
-	background: transparent;/*linear-gradient(180deg, var(--mb-card-color) -30%, transparent 100%);*/
-	/*opacity:0.1;*/
+	background-color: transparent;
+	transition: background-color 0.3s;
+}
+
+#barLogo,
+#dragbarAppTitle,
+#windowControls{
+		transition: opacity 0.3s ease;
 }
 
 #dragBar.onReader #barLogo,
@@ -349,7 +355,6 @@ a {
 #dragBar.onReader #windowControls:hover{
 	opacity:1;
 }
-
 
 /*
 #dragBar.onReader:hover{
