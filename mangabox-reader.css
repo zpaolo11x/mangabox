@@ -135,7 +135,7 @@
 	right: 0;
 	top: 0;
 	bottom: 0;
-	z-index: 1002;
+	/*z-index: 1002;*/
 	transition: top 0.3s;
 
 	margin: 0;

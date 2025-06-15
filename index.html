@@ -116,19 +116,8 @@
 				<div class="scrollbox-thumb"></div>
 			</div>
 		</div>
-
 	</div>
-	<div id="dragBar" class="draggable">
-		<img id="barLogo" src="mangabox-logo-16.svg">
 
-		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
-		<span id="dragbarAppTitle">MangaBox</span>
-		<div class="window-controls no-drag">
-			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
-			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
-			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
-		</div>
-	</div>
 	<div id="readerContainer" class="section hidden">
 		<div id="readerBackground" class="hidden"></div>
 
@@ -180,6 +169,18 @@
 		</div>
 	</div>
 
+	<div id="dragBar" class="draggable">
+		<img id="barLogo" src="mangabox-logo-16.svg">
+
+		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
+		<span id="dragbarAppTitle">MangaBox</span>
+		<div class="window-controls no-drag">
+			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
+			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
+			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
+		</div>
+	</div>
+
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
 			<img src="mangabox-logo-new.svg" width="80px" height="80px">
@@ -221,7 +222,7 @@
 
 		//MB Manage Electron titlebar
 
-		const isElectronApp = !!window.electronAPI;
+		const isElectronApp =  !!window.electronAPI;
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -233,6 +234,7 @@
 			}
 		}
 
+		
 		if (isElectronApp) {
 			dragbarMinBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
@@ -2616,7 +2618,8 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-
+			
+			dragBar.classList.remove('onReader');
 			updatePWABar();
 		}
 
@@ -2736,6 +2739,7 @@
 		}
 
 		function initReaderUI(pagesData, bookData) {
+			dragBar.classList.add('onReader');
 			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
 			rightLimit.innerText = rd.ltr ? pagesData.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
