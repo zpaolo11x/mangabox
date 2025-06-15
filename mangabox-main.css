@@ -329,7 +329,7 @@ a {
 	flex-direction: column;
 	justify-content: flex-end;
 	transition: all 0.3s;
-	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease 0.5s; /*bgcolor was 0.1s ease*/
+	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease; /*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
 }
 
