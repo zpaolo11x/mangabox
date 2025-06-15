@@ -174,7 +174,7 @@
 
 		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
-		<div id="windowControls", class="window-controls no-drag">
+		<div id="windowControls" , class="window-controls no-drag">
 			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
 			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
 			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
@@ -222,7 +222,7 @@
 
 		//MB Manage Electron titlebar
 
-		const isElectronApp =  !!window.electronAPI;
+		const isElectronApp = !!window.electronAPI;
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -2542,6 +2542,7 @@
 			readerViewer.innerHTML = '';
 
 			setThumbZoom(false);
+			dragBarOnReader();
 			sectionShow(readerContainer);
 
 			initViewer();
@@ -2619,11 +2620,9 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-			
-			rd.dragBarTimer = setTimeout(() => {
-				dragBar.classList.remove('onReader');
-			}, 500);
-			//dragBar.classList.remove('offReader');
+
+			dragBarOffReader();
+
 			updatePWABar();
 		}
 
@@ -2742,9 +2741,20 @@
 			}
 		}
 
-		function initReaderUI(pagesData, bookData) {
+		function dragBarOffReader() {
+			rd.dragBarTimer = setTimeout(() => {
+				dragBar.classList.remove('onReader');
+			}, 500);
+			//dragBar.classList.remove('offReader');
+		}
+
+		function dragBarOnReader() {
 			clearTimeout(rd.dragBarTimer);
+			dragBar.classList.remove('onReader');
 			dragBar.classList.add('onReader');
+		}
+
+		function initReaderUI(pagesData, bookData) {
 			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
 			rightLimit.innerText = rd.ltr ? pagesData.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
