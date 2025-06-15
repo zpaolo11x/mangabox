@@ -344,7 +344,7 @@ a {
 }
 
 #dragBar.onReader #windowControls{
-	opacity:0.5;
+	opacity:0.35;
 }
 #dragBar.onReader #windowControls:hover{
 	opacity:1;
