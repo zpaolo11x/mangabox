@@ -169,11 +169,11 @@
 	-webkit-user-select: none;
 	-ms-user-select: none;
 }
-
+/*
 .draggable {
 	-webkit-app-region: drag;
 }
-
+*/
 html,
 body {
 	overscroll-behavior: none;
@@ -331,22 +331,25 @@ a {
 	transition: all 0.3s;
 	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease; /*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
+	-webkit-app-region: drag;
 }
 
 #dragBar.onReader{
 	background: transparent;
 	opacity:0.5;
+	-webkit-app-region: no-drag;
 }
 
 #dragBar.onReader:hover{
 	background:red;
 	opacity:1;
+	-webkit-app-region: drag;
 }
 
 .window-controls {
 	display: flex;
 	gap: 5px;
-	/*-webkit-app-region: no-drag;*/
+	-webkit-app-region: no-drag;
 	position: absolute;
 	top: 8px;
 	right: 8px;
