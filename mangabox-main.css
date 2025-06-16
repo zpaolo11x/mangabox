@@ -614,7 +614,7 @@ a {
 	border: none;
 	outline: none;
 	background-color: var(--mb-input-color);
-	border-radius: 4px;
+	border-radius: 6px;
 	height: var(--mb-span-size);
 	box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.25);
 	font-size: 16px;
