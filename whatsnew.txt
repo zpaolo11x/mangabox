@@ -1,12 +1,12 @@
 Main UI
-- Keep window controls visible in reader view
+- Improve dragbar layering
 
 Reader
-- 
+- Keep window controls visible in reader view
 
 Build
 - 
 
 Fixes
-- Fix y: search code
+- Fix "y:" search for time range
 - Fix drag bar when in reader view
