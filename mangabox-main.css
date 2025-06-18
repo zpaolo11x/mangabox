@@ -533,7 +533,7 @@ a {
 	width: 100px;
 	margin: 0px;
 	padding: calc(0.5*(var(--mb-filter-button-size) - var(--mb-filter-span-size)));
-	border-radius: 8px;
+	border-radius: calc(var(--mb-filter-button-size) * 0.5);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -558,7 +558,7 @@ a {
 	padding: calc(0.5*(var(--mb-button-size) - var(--mb-span-size)));
 	width: var(--mb-library-large);
 	margin: 0px;
-	border-radius: 8px;
+	border-radius: calc(var(--mb-button-size)*0.5);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -610,11 +610,11 @@ a {
 	margin: 0px;
 	padding: 0px;
 	margin-left: 5px;
-	padding-left: 10px;
+	padding-left: 15px;
 	border: none;
 	outline: none;
 	background-color: var(--mb-input-color);
-	border-radius: 6px;
+	border-radius: calc(var(--mb-span-size)*0.5);
 	height: var(--mb-span-size);
 	box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.25);
 	font-size: 16px;

@@ -4,7 +4,7 @@
 <head>
 	<title>MangaBox</title>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 	<meta name="theme-color" content="black">
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
@@ -1175,11 +1175,11 @@
 			if (!metaViewport) return;
 
 			// Temporarily disable zoom
-			metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
+			metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover';
 
 			setTimeout(() => {
 				// Restore zoom capability after layout stabilizes
-				metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
+				metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1, viewport-fit=cover';
 			}, 350); // Adjust timeout as needed
 		}
 
