@@ -289,7 +289,7 @@ body {
 	margin: 0;
 	padding: 0;
 
-	background: var(--mb-page-color);
+  	background: black;
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--mb-text-color);
@@ -305,13 +305,14 @@ a {
 #mainUI {
 	position: fixed;
 	top: var(--mb-drag-bar-height);
-	left: 0;
-	right: 0;
+	left: env(safe-area-inset-left);
+   right: env(safe-area-inset-right);
 	bottom: 0;
 	display: grid;
 	grid-template-columns: auto;
 	grid-template-rows: 60px auto;
 	transition: grid-template-rows 0.2s;
+	background:var(--mb-page-color);
 }
 
 #dragbar {
