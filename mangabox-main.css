@@ -32,6 +32,8 @@
 	--mb-card-cover-dash-width: 150px;
 	--mb-cover-aspect: 100 / 140;
 
+	--mb-float-padding: 8px;
+
 	--mb-card-padding: 5px;
 	--mb-cover-radius: 4px;
 	--mb-card-radius: calc(var(--mb-cover-radius) + var(--mb-card-padding));
@@ -181,9 +183,9 @@ body {
 }
 
 .fa-apple {
-	width:100%;
+	width: 100%;
 	color: var(--mb-card-color);
-	text-align:left;
+	text-align: left;
 	margin-left: 2px;
 	margin-right: 2px;
 }
@@ -308,9 +310,9 @@ a {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	display: grid;
-	grid-template-columns: auto;
-	grid-template-rows: 60px auto;
+	display: flex;
+	flex-direction: column;
+
 	transition: grid-template-rows 0.2s;
 }
 
@@ -324,37 +326,39 @@ a {
 	left: 0;
 	right: 0;
 	height: var(--mb-drag-bar-height);
-	z-index:3000;
+	z-index: 3000;
 	background-color: var(--mb-card-color);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
 	transition: all 0.3s;
-	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease; /*bgcolor was 0.1s ease*/
+	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+	/*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
 }
 
-#dragbar.onReader{
+#dragbar.onReader {
 	background-color: transparent;
 	transition: background-color 0.3s;
 }
 
 #barLogo,
 #dragbarAppTitle,
-#windowControls{
-		transition: opacity 0.3s ease;
+#windowControls {
+	transition: opacity 0.3s ease;
 }
 
 #dragbar.onReader #barLogo,
-#dragbar.onReader #dragbarAppTitle{
-	opacity:0;
+#dragbar.onReader #dragbarAppTitle {
+	opacity: 0;
 }
 
-#dragbar.onReader #windowControls{
-	opacity:0.35;
+#dragbar.onReader #windowControls {
+	opacity: 0.35;
 }
-#dragbar.onReader #windowControls:hover{
-	opacity:1;
+
+#dragbar.onReader #windowControls:hover {
+	opacity: 1;
 }
 
 /*
@@ -370,7 +374,7 @@ a {
 	top: 8px;
 	right: 8px;
 	font-size: 14px;
-	transition:opacity 0.3s ease;
+	transition: opacity 0.3s ease;
 }
 
 .window-controls span {
@@ -405,7 +409,6 @@ a {
 
 #mainContainer {
 	position: relative;
-	grid-row: 2;
 	overflow-y: auto;
 	/*
 	background-color:pink;
@@ -415,18 +418,22 @@ a {
 
 /* Sticky container for libraries */
 #stickyContainer {
-	grid-row: 1;
+	position:fixed;
 	display: flex;
 	align-items: center;
 	top: 0;
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	padding: var(--mb-library-gap) 10px;
+	padding: var(--mb-library-gap) 8px;
 	z-index: 1000;
 	transition: all 0.3s ease;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 	flex-wrap: nowrap;
+	border-radius: calc(var(--mb-button-size)*0.5 + 8px);
+	margin-top: var(--mb-float-padding);
+	margin-left: var(--mb-float-padding);
+	margin-right: var(--mb-float-padding);
 }
 
 #librariesList {
