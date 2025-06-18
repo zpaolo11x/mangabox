@@ -680,7 +680,7 @@ a {
 }
 
 .library-thumbnail {
-	border-radius: 6px;
+	border-radius: 50%;
 }
 
 .series-status,
