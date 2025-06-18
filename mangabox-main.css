@@ -288,7 +288,7 @@ body {
 	font-family: 'Roboto Flex', sans-serif;
 	margin: 0;
 	padding: 0;
-	background: var(--mb-page-color);
+	background: black;
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--mb-text-color);
@@ -311,6 +311,7 @@ a {
 	grid-template-columns: auto;
 	grid-template-rows: 60px auto;
 	transition: grid-template-rows 0.2s;
+	background: var(--mb-page-color);
 }
 
 #dragbar {
