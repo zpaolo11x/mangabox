@@ -544,7 +544,7 @@ div.single-page {
 	height: 60px;
 	left: 0px;
 	right: 0px;
-	gap: 10px;
+	gap: 0px;
 	background-color: var(--mb-card-color);
 	/* rgba(250, 250, 250, 0.8);*/
 	/*z-index: 1003;*/
@@ -743,7 +743,8 @@ div.single-page {
 	cursor: pointer;
 	border-radius: 5px;
 	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.15);
-
+	margin-left:10px;
+	margin-right:10px;
 }
 
 #readerProgress {
@@ -785,12 +786,12 @@ div.single-page {
 	background-color: var(--mb-accent);
 	color: white;
 	border: none;
-	border-radius: 50%;
 	cursor: pointer;
 	transition: background-color 0.3s;
 	text-align: center;
 	vertical-align: middle;
 }
+
 
 .bar-note {
 	width: 40px;
@@ -799,10 +800,26 @@ div.single-page {
 	margin: 0px;
 	text-align: center;
 	line-height: 40px;
-	border-radius: 50%;
 	background-color: var(--mb-bar-color);
 	cursor: pointer;
 }
+
+.corner-circle {
+	border-radius:50%;
+}
+
+.corner-right {
+	border-radius: 0 50% 50% 0;
+	width:35px;
+	padding-right:5px;
+}
+
+.corner-left {
+	border-radius: 50% 0 0 50%;
+	width:35px;
+	padding-left:5px;
+}
+
 
 .reader-buttons:hover {
 	background-color: var(--mb-accent-light);
