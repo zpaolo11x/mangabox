@@ -3782,10 +3782,21 @@ console.log("UNSKIP")
 		});
 
 		document.addEventListener('mouseup', () => {
-			rd.isDraggingProgressBar = false;
+			if (rd.isDraggingProgressBar){
+				rd.isDraggingProgressBar = false;
+				seek(event);
+			} else {
+				rd.isDraggingProgressBar = false;
+			}
 		});
+
 		document.addEventListener('touchend', () => {
-			rd.isDraggingProgressBar = false;
+			if (rd.isDraggingProgressBar){
+				rd.isDraggingProgressBar = false;
+				seek(event.touches[0]);
+			} else {
+				rd.isDraggingProgressBar = false;
+			}
 		});
 
 		document.addEventListener('keydown', (event) => {
