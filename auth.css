@@ -39,21 +39,13 @@
 	-moz-appearance: none;
 	appearance: none;
 	border: none;
-	/* Removes default border */
 	outline: none;
-	/* Removes focus outline */
 	background: none;
-	/* Removes default background */
 	padding: 0;
-	/* Removes any internal padding */
 	margin: 0;
-	/* Removes any external margin */
 	box-shadow: none;
-	/* Removes any shadow */
 	font: inherit;
-	/* Inherits font properties from parent */
 	color: inherit;
-	/* Inherits text color */
 
 	box-sizing: border-box;
 	height: var(--login-button-height);
@@ -61,8 +53,7 @@
 	border-radius: var(--login-button-radius);
 	border: 1px #c0c0c0 solid;
 	padding-left: calc(var(--login-button-height) + 5px);
-		/*WAS 10px*/
-	;
+	
 	padding-right: 10px;
 	font-size: var(--login-font-size);
 
