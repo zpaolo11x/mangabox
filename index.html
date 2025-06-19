@@ -3781,7 +3781,7 @@ console.log("UNSKIP")
 			}
 		});
 
-		document.addEventListener('mouseup', () => {
+		document.addEventListener('mouseup', (event) => {
 			if (rd.isDraggingProgressBar){
 				rd.isDraggingProgressBar = false;
 				seek(event);
@@ -3790,7 +3790,7 @@ console.log("UNSKIP")
 			}
 		});
 
-		document.addEventListener('touchend', () => {
+		document.addEventListener('touchend', (event) => {
 			if (rd.isDraggingProgressBar){
 				rd.isDraggingProgressBar = false;
 				seek(event.touches[0]);
