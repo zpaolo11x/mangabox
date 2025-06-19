@@ -41,6 +41,9 @@
 	--mb-gradient-2: 40;
 	--color1: rgba(140, 130, 120, 1);
 	--color2: rgba(30, 20, 0, 1);
+
+	--mb-pill-width: 37px;
+	--mb-pill-pad: calc(40px - var(--mb-pill-width));
 }
 
 
@@ -684,13 +687,13 @@ div.single-page {
 }
 
 #bottomControls {
-	grid-template-columns: 40px 40px 1fr 40px 40px;
+	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) 1fr var(--mb-pill-width) var(--mb-pill-width);
 	bottom: 0px;
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 }
 
 #topControls {
-	grid-template-columns: 40px 40px 1fr 40px 40px;
+	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) 1fr var(--mb-pill-width) var(--mb-pill-width);
 	top: 0px;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 }
@@ -726,7 +729,8 @@ div.single-page {
 #bookName {
 	text-align: center;
 	font-size: 20px;
-
+	margin-left:10px;
+	margin-right:10px;
 	display: -webkit-box;
 	line-clamp: 2;
 	-webkit-line-clamp: 2;
@@ -805,19 +809,19 @@ div.single-page {
 }
 
 .corner-circle {
-	border-radius:50%;
+	border-radius: 20px;
 }
 
 .corner-right {
-	border-radius: 0 50% 50% 0;
-	width:35px;
-	padding-right:5px;
+	border-radius: 0 20px 20px 0;
+	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
+	padding-right: var(--mb-pill-pad);
 }
 
 .corner-left {
-	border-radius: 50% 0 0 50%;
-	width:35px;
-	padding-left:5px;
+	border-radius: 20px 0 0 20px;
+	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
+	padding-left: var(--mb-pill-pad);
 }
 
 
