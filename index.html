@@ -2709,12 +2709,12 @@ function fixZoomOnPWA() {
 			debugPrint('Transition ended')
 		});
 
-		function updateProgressBar() {
-			const progressPercent = (rd.currentSpreadIndex / (spreadsTotal() - 1)) * 100;
+		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
+			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
 
-			[rd.currentPage, readerPage.innerText] = getPageFromSpread(rd.currentSpreadIndex);
+			[rd.currentPage, readerPage.innerText] = getPageFromSpread(currentSpreadIndex);
 
 			readerPage.style.left = rd.ltr
 				? `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
@@ -3656,6 +3656,12 @@ function fixZoomOnPWA() {
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
 
+			if (rd.isDraggingProgressBar) {
+				console.log("SKIP")
+				updateProgressBar(targetSpreadIndex);
+				return;
+			}
+
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
 
@@ -3664,13 +3670,16 @@ function fixZoomOnPWA() {
 			if (targetSpreadFocus == null) {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
 			}
+			
 
+console.log("UNSKIP")
 			purgeLoading();
 
 			rd.oldSpreadIndex = localOldSpreadIndex;
 			rd.currentSpreadIndex = localNewSpreadIndex;
 
 			if (isSectionHidden(readerContainer)) return;
+
 
 			populateSpread(localNewSpreadIndex);
 
@@ -3717,6 +3726,7 @@ function fixZoomOnPWA() {
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {
+		console.log(rd.isDraggingProgressBar)
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
