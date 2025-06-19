@@ -760,14 +760,12 @@
 			libraryHighlight('searchField', false);
 
 			if (searchString.includes('y:')) {
-				console.log("y search")
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
 				);
 				const dataArray = unFilteredSeries.content;
 				const searchYear = timeSplit(searchString.split('y:')[1].split(' ')[0]);
-				console.log(searchYear);
 
 				let start = 0;
 				let stop = 0;
@@ -3656,7 +3654,6 @@ function fixZoomOnPWA() {
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
 
 			if (rd.isDraggingProgressBar) {
-				console.log("SKIP")
 				updateProgressBar(targetSpreadIndex);
 				return;
 			}
@@ -3670,8 +3667,6 @@ function fixZoomOnPWA() {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
 			}
 			
-
-console.log("UNSKIP")
 			purgeLoading();
 
 			rd.oldSpreadIndex = localOldSpreadIndex;
@@ -3725,7 +3720,7 @@ console.log("UNSKIP")
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {
-		console.log(rd.isDraggingProgressBar)
+
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
