@@ -1,7 +1,7 @@
 Main UI
 - Improve Electron dragbar layering
 - Improve responsiveness of seek bar
-- Seek bar only updates pages when stopped
+- Only update pages when seek bar stops
 
 Reader
 - Keep window controls visible in reader view
