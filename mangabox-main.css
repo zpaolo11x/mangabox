@@ -242,7 +242,8 @@ body {
 }
 
 #debuggerObj {
-	display: none;
+	display:none;
+	pointer-events:none;
 	position: fixed;
 	z-index: 10000;
 	font-size: 20px;
@@ -260,7 +261,6 @@ body {
 	from {
 		opacity: 0;
 	}
-
 	to {
 		opacity: 1;
 	}
@@ -274,7 +274,6 @@ body {
 	from {
 		opacity: 1;
 	}
-
 	to {
 		opacity: 0;
 	}

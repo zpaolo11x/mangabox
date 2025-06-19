@@ -2706,7 +2706,6 @@ function fixZoomOnPWA() {
 
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStripScrollContent.style.overflow = 'auto';
-			debugPrint('Transition ended')
 		});
 
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
@@ -3777,7 +3776,7 @@ console.log("UNSKIP")
 		});
 		document.addEventListener('touchmove', (event) => {
 			if (rd.isDraggingProgressBar) {
-				seek(event.touches[0]); // Use the first touch point
+				seek(event.touches[0]); 
 			}
 		});
 
@@ -3793,7 +3792,7 @@ console.log("UNSKIP")
 		document.addEventListener('touchend', (event) => {
 			if (rd.isDraggingProgressBar){
 				rd.isDraggingProgressBar = false;
-				seek(event.touches[0]);
+				seek(event.changedTouches[0]);
 			} else {
 				rd.isDraggingProgressBar = false;
 			}
