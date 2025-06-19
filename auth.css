@@ -1,3 +1,10 @@
+:root {
+	--login-padding: 15px;
+	--login-button-height: 34px;
+	--login-button-radius: calc(var(--login-button-height) * 0.5);
+	--login-box-radius: calc(var(--login-padding) + var(--login-button-radius));
+}
+
 #loginScreen {
 	position: fixed;
 	left: 0;
@@ -18,9 +25,9 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	padding: 20px;
+	padding: var(--login-padding);
 	border: 1px solid #ccc;
-	border-radius: 20px;
+	border-radius: var(--login-box-radius);
 	background-color: #fff;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -48,11 +55,11 @@
 	/* Inherits text color */
 
 	box-sizing: border-box;
-	height: 30px;
+	height: var(--login-button-height);
 	width: 280px;
-	border-radius: 15px;
+	border-radius: var(--login-button-radius);
 	border: 1px #c0c0c0 solid;
-	padding-left: 35px
+	padding-left: calc(var(--login-button-height) + 5px);
 		/*WAS 10px*/
 	;
 	padding-right: 10px;
@@ -76,7 +83,7 @@
 	display: grid;
 	grid-template-columns: auto 120px;
 	width: 280px;
-	gap: 15px;
+	gap: var(--login-padding);
 
 }
 
@@ -85,10 +92,10 @@
 	appearance: none;
 	background: #ddd;
 	border: 1px solid #aaa;
-	border-radius:15px;
-	height: 30px;
+	border-radius:var(--login-button-radius);
+	height: var(--login-button-height);
 	width: 100%;
-	margin-top: 15px;
+	margin-top: var(--login-padding);
 	transition: 0.3s all;
 	color: black;
 }
@@ -118,7 +125,7 @@
 .remember-me-container {
 	display: flex;
 	align-items: center;
-	margin-top: 15px;
+	margin-top: var(--login-padding);
 	width: 100%;
 	/* Match the width of input boxes */
 }
@@ -126,13 +133,13 @@
 .remember-me-checkbox {
 	appearance: none;
 	/* Remove the default checkbox appearance */
-	width: 20px;
-	height: 20px;
+	width: var(--login-button-height);
+	height: var(--login-button-height);
 	border: 1px solid #c0c0c0;
-	border-radius: 10px;
+	border-radius: var(--login-button-radius);
 	background: #fff;
 	/* Default white background */
-	margin: 0px 10px 0px 0px;
+	margin: 0px 5px 0px 0px;
 	position: relative;
 	cursor: pointer;
 	/* Indicate it's clickable */
@@ -181,7 +188,7 @@
 .input-wrapper {
 	position: relative;
 	width: 100%;
-	margin-top: 15px;
+	margin-top: var(--login-padding);
 
 }
 
@@ -194,9 +201,9 @@
 	/* White icon color */
 	background-color: #ddd;
 	/* Accent color */
-	width: 30px;
-	height: 30px;
-	border-radius: 15px 0px 0px 15px;
+	width: var(--login-button-height);
+	height: var(--login-button-height);
+	border-radius: var(--login-button-radius) 0px 0px var(--login-button-radius);
 	border: 1px solid #aaa;
 	border-right: transparent;
 	display: flex;
