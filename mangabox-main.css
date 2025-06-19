@@ -1112,6 +1112,7 @@ a {
 	align-items: flex-start;
 	transition: all 0.3s;
 	overflow-y: hidden;
+	z-index: 960;
 }
 
 .ul-container {
@@ -1369,6 +1370,7 @@ book-item {
 	padding: 8px 20px 8px 20px;
 	box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.2);
 	cursor: pointer;
+	z-index:950;
 }
 
 #seriesMiniHeader.hidden {
