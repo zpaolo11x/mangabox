@@ -777,8 +777,8 @@
 						continue;
 					}
 					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
-					start=(Number(dateArray[0]));
-					stop=(Number(dateArray[1] ?? dateArray[0]));
+					start = (Number(dateArray[0]));
+					stop = (Number(dateArray[1] ?? dateArray[0]));
 
 					filterArray.push(!((start > Number(searchYear[1])) || (stop < Number(searchYear[0]))));
 				}
@@ -1168,21 +1168,21 @@
 			}, 250);
 		});
 
-function fixZoomOnPWA() {
-  let metaViewport = document.querySelector('meta[name="viewport"]');
-  if (!metaViewport) return;
+		function fixZoomOnPWA() {
+			let metaViewport = document.querySelector('meta[name="viewport"]');
+			if (!metaViewport) return;
 
-  // Disable zoom temporarily
-  metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
+			// Disable zoom temporarily
+			metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
 
-  // Wait for two animation frames to ensure the change takes effect
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      // Now restore zoom capability
-      metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
-    });
-  });
-}
+			// Wait for two animation frames to ensure the change takes effect
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					// Now restore zoom capability
+					metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
+				});
+			});
+		}
 
 
 		window.addEventListener('orientationchange', fixZoomOnPWA);
@@ -1354,12 +1354,18 @@ function fixZoomOnPWA() {
 					if (mb.currentlyScaled !== item) {
 						if (mb.currentlyScaled) {
 							mb.currentlyScaled.classList.remove('scaled');
+							mb.currentlyScaled.parentElement.classList.remove('top-pop');
+
 						}
 						item.classList.add('scaled');
+						item.parentElement.classList.add('top-pop');
+
 						mb.currentlyScaled = item;
 						event.preventDefault();
 					} else {
 						item.classList.remove('scaled');
+						item.parentElement.classList.remove('top-pop');
+
 						mb.currentlyScaled = null;
 						execute();
 					}
@@ -1367,9 +1373,11 @@ function fixZoomOnPWA() {
 					// MOUSE DEVICE
 					if (!item.classList.contains('scaled')) {
 						item.classList.add('scaled');
+						item.parentElement.classList.add('top-pop');
 						mb.currentlyScaled = item;
 					} else {
 						item.classList.remove('scaled');
+						item.parentElement.classList.remove('top-pop');
 						mb.currentlyScaled = null;
 						execute();
 					}
@@ -1380,13 +1388,17 @@ function fixZoomOnPWA() {
 				// Added this to unselect pre-scaled book
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
+					mb.currentlyScaled.parentElement.classList.remove('top-pop');
+
 					// mb.currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
 				}
 				item.classList.add('scaled');
+				item.parentElement.classList.add('top-pop');
 			});
 
 			item.addEventListener('mouseleave', () => {
 				item.classList.remove('scaled');
+				item.parentElement.classList.remove('top-pop');
 			});
 		}
 
@@ -1632,6 +1644,8 @@ function fixZoomOnPWA() {
 
 				mb.currentlyScaled = item.firstChild;
 				item.firstChild.classList.add('scaled');
+				item.classList.add('top-pop');
+
 			}
 		}
 
@@ -2545,7 +2559,7 @@ function fixZoomOnPWA() {
 			readerViewer.innerHTML = '';
 
 			setThumbZoom(false);
-			
+
 			dragbarOnReader();
 			sectionShow(readerContainer);
 
@@ -2625,7 +2639,7 @@ function fixZoomOnPWA() {
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 			//dragbarOffReader();
-			
+
 			updatePWABar();
 		}
 
@@ -3666,7 +3680,7 @@ function fixZoomOnPWA() {
 			if (targetSpreadFocus == null) {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
 			}
-			
+
 			purgeLoading();
 
 			rd.oldSpreadIndex = localOldSpreadIndex;
@@ -3771,12 +3785,12 @@ function fixZoomOnPWA() {
 		});
 		document.addEventListener('touchmove', (event) => {
 			if (rd.isDraggingProgressBar) {
-				seek(event.touches[0]); 
+				seek(event.touches[0]);
 			}
 		});
 
 		document.addEventListener('mouseup', (event) => {
-			if (rd.isDraggingProgressBar){
+			if (rd.isDraggingProgressBar) {
 				rd.isDraggingProgressBar = false;
 				seek(event);
 			} else {
@@ -3785,7 +3799,7 @@ function fixZoomOnPWA() {
 		});
 
 		document.addEventListener('touchend', (event) => {
-			if (rd.isDraggingProgressBar){
+			if (rd.isDraggingProgressBar) {
 				rd.isDraggingProgressBar = false;
 				seek(event.changedTouches[0]);
 			} else {
@@ -3818,6 +3832,8 @@ function fixZoomOnPWA() {
 		document.addEventListener('pointerup', (event) => {
 			if (mb.currentlyScaled && !mb.currentlyScaled.contains(event.target)) {
 				mb.currentlyScaled.classList.remove('scaled');
+				mb.currentlyScaled.parentElement.classList.remove('top-pop');
+
 				mb.currentlyScaled = null;
 			}
 		});
