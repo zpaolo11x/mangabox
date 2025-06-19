@@ -288,7 +288,7 @@ body {
 	margin: 0;
 	padding: 0;
 
-  	background: black;
+  	background: var(--mb-page-color);
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--mb-text-color);
