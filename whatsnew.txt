@@ -1,5 +1,7 @@
 Main UI
-- Improve dragbar layering
+- Improve Electron dragbar layering
+- Improve responsiveness of seek bar
+- Seek bar only updates pages when stopped
 
 Reader
 - Keep window controls visible in reader view
@@ -8,5 +10,6 @@ Build
 - 
 
 Fixes
+- Fix z-index issue when scaling thumbnails
 - Fix "y:" search for time range
 - Fix drag bar when in reader view
