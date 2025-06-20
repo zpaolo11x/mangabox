@@ -3878,6 +3878,8 @@
 			await executeFade(1);
 			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+			
+			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
 			sectionHide(colorSwatchBar);
 
