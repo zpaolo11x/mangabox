@@ -312,6 +312,9 @@
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = {
 
+			libMenuVisible: null,
+			swatchMenuVisible: false,
+
 			authHeader: localStorage.getItem('mbAuthHeader'),
 			baseUrl: localStorage.getItem('mbBaseUrl'),
 			rememberMe: localStorage.getItem('mbRememberMe'),
@@ -577,7 +580,7 @@
 
 		// Show/Hide section functions
 		function sectionHide(item) {
-			item.classList.add('hidden');
+			if (!item.classList.contains('hidden')) item.classList.add('hidden');
 		}
 		function sectionShow(item) {
 			item.classList.remove('hidden');
@@ -601,7 +604,11 @@
 		}
 
 		colorChanger.addEventListener('click', () => {
+
 			sectionToggle(colorSwatchBar)
+			mb.swatchMenuVisible = !mb.swatchMenuVisible
+
+			console.log(mb.swatchMenuVisible)
 			/*
 			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
 			applyAccent();
@@ -1745,9 +1752,14 @@
 
 					if (isSectionHidden(filtersBar)) {
 						libMenuUp(mb.libraryMenuButtons[itemId]);
+						mb.libMenuVisible = itemId;
+						mb.swatchMenuVisible = false;
+						sectionHide(colorSwatchBar);
 					} else {
 						libMenuDown(mb.libraryMenuButtons[itemId]);
+						mb.libMenuVisible = null;
 					}
+
 					event.stopPropagation();
 					event.preventDefault();
 					sectionToggle(filtersBar);
@@ -3836,6 +3848,20 @@
 
 				mb.currentlyScaled = null;
 			}
+		});
+
+		document.addEventListener('click', (event) => {
+			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
+				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
+				sectionToggle(filtersBar);
+				mb.libMenuVisible = null;
+			}
+
+			if ((mb.swatchMenuVisible) && (!colorSwatchBar.contains(event.target)) && (!colorChanger.contains(event.target))) {
+				mb.swatchMenuVisible = false;
+				sectionHide(colorSwatchBar);
+			}
+
 		});
 
 		//MB URL Parsing and LoadContent Function 
