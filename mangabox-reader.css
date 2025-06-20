@@ -53,13 +53,13 @@
 }
 
 [data-theme-reader="light-accent"] {
-	--color1: hsl(var(--mb-gradient-1), var(--mb-s), 91%);
-	--color2: hsl(var(--mb-gradient-2), var(--mb-s), 76%);
+	--color1: hsl(var(--mb-gradient-1), calc(var(--mb-s)*0.5), 93%);
+	--color2: hsl(var(--mb-gradient-2), calc(var(--mb-s)*0.8), 80%);
 }
 
 [data-theme-reader="dark-accent"] {
-	--color1: hsl(var(--mb-gradient-1), var(--mb-s), 38%);
-	--color2: hsl(var(--mb-gradient-2), var(--mb-s), 6%);
+	--color1: hsl(var(--mb-gradient-1), calc(var(--mb-s)*0.8), 38%);
+	--color2: hsl(var(--mb-gradient-2), calc(var(--mb-s)*0.9), 6%);
 }
 
 [data-theme-reader="white"] {
