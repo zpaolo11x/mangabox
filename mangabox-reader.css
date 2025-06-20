@@ -557,6 +557,10 @@ div.single-page {
 	/*backdrop-filter: blur(15px);*/
 }
 
+#topControls {
+	padding-top: var(--mb-drag-bar-height)
+}
+
 #thumbStrip {
 	position: fixed;
 	height: calc(var(--mb-thumb-height-px) + 30px);
