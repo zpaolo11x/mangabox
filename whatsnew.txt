@@ -1,10 +1,11 @@
 Main UI
+- Add new pill-shaped buttons and controls
 - Improve Electron dragbar layering
-- Improve responsiveness of seek bar
-- Only update pages when seek bar stops
 
 Reader
 - Keep window controls visible in reader view
+- Improve responsiveness of seek bar
+- Only update pages when seek bar stops
 
 Build
 - 
