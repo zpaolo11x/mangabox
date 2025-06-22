@@ -5,7 +5,7 @@
 	--mb-l: 38%;
 
 	--mb-accent: hsl(var(--mb-h), var(--mb-s), var(--mb-l));
-	--mb-accent-light: hsl(var(--mb-h), var(--mb-s), calc(var(--mb-l)*1.1));
+	--mb-accent-light: hsl(var(--mb-h), var(--mb-s), calc(var(--mb-l)*1.15));
 	--mb-accent-active: hsl(var(--mb-h), 48%, 84%);
 	--mb-accent-a30: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.3);
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
@@ -1330,12 +1330,12 @@ book-item {
 }
 
 .highlighted:hover {
-	background-color: var(--mb-accent-light);
+	background-color: var(--mb-accent);
 	color: white;
 }
 
 .highlighted:active {
-	background-color: var(--mb-accent-active);
+	background-color: var(--mb-accent-light);
 	color: white;
 }
 
