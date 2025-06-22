@@ -137,6 +137,8 @@
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
 	--mb-bar-color: #dddddd;
+
+	--mb-red-hover: var(--mb-accent-a50);
 }
 
 [data-theme="dark"] {
@@ -150,6 +152,9 @@
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
 	--mb-glyph-color: rgba(255, 255, 255, 0.75);
 	--mb-bar-color: #606060;
+
+	--mb-red-hover: var(--mb-accent-light);
+
 }
 
 /*
@@ -1175,7 +1180,7 @@ a {
 }
 
 .red:hover {
-	text-shadow: var(--mb-accent-a50) 0px 0px 4px;
+	text-shadow: var(--mb-red-hover) 0px 0px 4px;
 }
 
 #homeStripsContainer,
