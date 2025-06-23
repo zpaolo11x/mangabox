@@ -173,6 +173,7 @@
 	user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .draggable {
@@ -556,6 +557,16 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
+.press-button:active{
+	transition: box-shadow 0.3s ease, scale 0.3s linear;
+	scale: 0.98;
+	box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+}
+.press-button:not(:active){
+	scale: 1.0;
+	box-shadow: inset 0 2px 5px rgba(0,0,0,0.0);
+}
+
 .library-item {
 	-webkit-app-region: no-drag;
 
@@ -635,13 +646,6 @@ a {
 	background-color: var(--mb-hover-color);
 }
 
-.library-item:active,
-.filter-item:active {
-	transition: box-shadow 0.3s ease, scale 0.3s linear;
-	scale: 0.98;
-	box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
-	background-color: var(--mb-hover-color);
-}
 
 .thumbnail-wrapper {
 	max-width: 100%;
@@ -1325,7 +1329,9 @@ book-item {
 	/* Place above .home-strip */
 }
 
-.highlighted {
+.highlighted,
+.highlighted:hover,
+.highlighted:active {
 	background-color: var(--mb-accent);
 	color: white;
 }
@@ -1336,16 +1342,6 @@ book-item {
 
 .highlighted.with-menu {
 	width: var(--mb-library-large-with-menu);
-}
-
-.highlighted:hover {
-	background-color: var(--mb-accent);
-	color: white;
-}
-
-.highlighted:active {
-	background-color: var(--mb-accent);
-	color: white;
 }
 
 .highlighted:has(.library-menu-button span:active) {

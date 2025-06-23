@@ -34,17 +34,17 @@
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
 				<ul id="librariesRightBlock">
-					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item">
+					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
+					<li id="themeChanger" title="Light/Dark Theme" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="colorChanger" title="Theme Color" class="library-item">
+					<li id="colorChanger" title="Theme Color" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
@@ -55,7 +55,7 @@
 						</div>
 						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
 					</li>
-					<li id="logOut" title="Logout" class="library-item">
+					<li id="logOut" title="Logout" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
 						</div>
@@ -134,11 +134,11 @@
 
 			<div id="controlPanel" class="hidden">
 				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons corner-circle fa-solid fa-xmark"></span>
+					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
 					<span></span>
 					<span id="bookName"></span>
-					<span id="readerTheme" title="Reader Theme" class="reader-buttons corner-left fa-solid"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons corner-right fa-solid fa-ghost"></span>
+					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
+					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
 
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
@@ -156,14 +156,14 @@
 				</div>
 
 				<div id="bottomControls">
-					<span id="leftArrow" class="reader-buttons corner-left fa-solid fa-caret-left"></span>
-					<span id="leftLimit" class="bar-note corner-right"></span>
+					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
+					<span id="leftLimit" class="bar-note press-button corner-right"></span>
 					<div id="readerProgressBar" onclick="seek(event)">
 						<div id="readerProgress"></div>
 						<div id="readerPage"></div>
 					</div>
-					<span id="rightLimit" class="bar-note corner-left"></span>
-					<span id="rightArrow" class="reader-buttons corner-right fa-solid fa-caret-right"></span>
+					<span id="rightLimit" class="bar-note press-button corner-left"></span>
+					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 				</div>
 			</div>
 		</div>
@@ -1046,7 +1046,7 @@
 
 		mb.filterButtons.forEach(button => {
 			button.item = addItem('li', {
-				className: `filter-item`,
+				className: `filter-item press-button`,
 				title: button.title,
 			});
 			button.icon = addItem('div', {
@@ -1073,7 +1073,7 @@
 
 		extraButtons.append(addItem('li', {
 			title: 'Reset filters and sorting',
-			className: `filter-item`,
+			className: `filter-item press-button`,
 			innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
 							</div>`,
@@ -1696,7 +1696,7 @@
 
 			const listItem = addItem('li', {
 				id: itemId,
-				className: 'library-item',
+				className: 'library-item press-button',
 				title: libraryName,
 			});
 

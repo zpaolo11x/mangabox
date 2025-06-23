@@ -829,14 +829,6 @@ div.single-page {
 }
 
 
-.reader-buttons:hover {
-	background-color: var(--mb-accent-light);
-}
-
-.reader-buttons:active {
-	background-color: var(--mb-accent-active);
-}
-
 .reader-buttons.incognito {
 	/*
 	background-color: rgb(210, 168, 214);
