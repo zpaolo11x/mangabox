@@ -140,7 +140,7 @@
 
 	--mb-red-hover: var(--mb-accent-a50);
 
-	--mb-button-press: 
+	--mb-button-press:
 		inset 0 3px 10px rgba(0, 0, 0, 0.2),
 		0 -2px 2px rgba(0, 0, 0, 0.3),
 		0 2px 2px rgba(255, 255, 255, 0.3);
@@ -160,7 +160,7 @@
 
 	--mb-red-hover: var(--mb-accent-light);
 
-	--mb-button-press: 
+	--mb-button-press:
 		inset 0 3px 10px rgba(0, 0, 0, 0.5),
 		0 -2px 2px rgba(0, 0, 0, 0.3),
 		0 2px 2px rgba(255, 255, 255, 0.3);
@@ -575,13 +575,13 @@ a {
 .press-button:active {
 	transition: box-shadow 0.15s ease, scale 0.15s ease, transform 0.15s ease;
 	/*scale: 0.975;*/
-transform: scale(0.97) translateY(1px);
+	transform: scale(0.975) translateY(0.5px);
 	box-shadow: var(--mb-button-press);
 }
 
 .press-button:not(:active) {
 	/*scale: 1.0;*/
-	box-shadow: 
+	box-shadow:
 		inset 0 3px 10px rgba(0, 0, 0, 0.0),
 		0 -2px 2px rgba(0, 0, 0, 0.0),
 		0 2px 2px rgba(255, 255, 255, 0.0);
@@ -606,7 +606,7 @@ transform: scale(0.97) translateY(1px);
 	overflow: hidden;
 	font-size: 16px;
 	height: var(--mb-button-size);
-	transition: background-color 0.3s ease, width 0.3s ease, box-shadow 0.3s linear;
+	transition: background-color 0.3s ease, width 0.3s ease;
 
 	/*text-transform: uppercase;*/
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
