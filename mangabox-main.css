@@ -572,7 +572,7 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
-.press-button:active:not(:has(input:focus)) {
+.press-button:active:not(:has(input:focus)):not(:has(.library-menu-button:hover)) {
 	transition: box-shadow 0.15s ease, scale 0.15s ease, transform 0.15s ease, filter 0.15s ease;
 	/*scale: 0.975;*/
 	transform: scale(0.975) translateY(1px);
