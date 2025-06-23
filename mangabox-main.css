@@ -490,7 +490,11 @@ a {
 
 .library-menu-button span {
 	color: rgba(255, 255, 255, 0.5);
-	transition: text-shadow 0.3s ease, color 0.3s ease;
+	transition: text-shadow 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.library-menu-button span:active{
+	transform: scale(0.8);
 }
 
 .library-menu-button span.filtered {
