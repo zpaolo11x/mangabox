@@ -575,6 +575,7 @@ a {
 	font-size: 16px;
 	height: var(--mb-button-size);
 	transition: background-color 0.3s ease, width 0.3s ease, box-shadow 0.3s linear;
+	
 	/*text-transform: uppercase;*/
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }
@@ -636,7 +637,10 @@ a {
 
 .library-item:active,
 .filter-item:active {
-	background-color: var(--mb-active-color);
+	transition: box-shadow 0.3s ease, scale 0.3s linear;
+	scale: 0.98;
+	box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+	background-color: var(--mb-hover-color);
 }
 
 .thumbnail-wrapper {
@@ -1340,12 +1344,12 @@ book-item {
 }
 
 .highlighted:active {
-	background-color: var(--mb-accent-light);
+	background-color: var(--mb-accent);
 	color: white;
 }
 
 .highlighted:has(.library-menu-button span:active) {
-	background-color: var(--mb-accent-light);
+	background-color: var(--mb-accent);
 }
 
 #seriesHeader {
