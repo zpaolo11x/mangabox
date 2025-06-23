@@ -573,9 +573,11 @@ a {
 }
 
 .press-button:active {
-	transition: box-shadow 0.15s ease, scale 0.15s ease, transform 0.15s ease;
+	transition: box-shadow 0.15s ease, scale 0.15s ease, transform 0.15s ease, filter 0.15s ease;
 	/*scale: 0.975;*/
-	transform: scale(0.975) translateY(0.5px);
+	transform: scale(0.975) translateY(1px);
+	filter: brightness(0.98);
+
 	box-shadow: var(--mb-button-press);
 }
 
