@@ -139,6 +139,12 @@
 	--mb-bar-color: #dddddd;
 
 	--mb-red-hover: var(--mb-accent-a50);
+
+	--mb-button-press: 
+		inset 0 -3px 10px rgba(255, 255, 255, 0.5),
+		inset 0 3px 10px rgba(0, 0, 0, 0.2),
+		0 -2px 2px rgba(0, 0, 0, 0.3),
+		0 2px 2px rgba(255, 255, 255, 0.3);
 }
 
 [data-theme="dark"] {
@@ -155,7 +161,14 @@
 
 	--mb-red-hover: var(--mb-accent-light);
 
+	--mb-button-press: 
+		inset 0 -3px 10px rgba(255, 255, 255, 0.2),
+		inset 0 3px 10px rgba(0, 0, 0, 0.5),
+		0 -2px 2px rgba(0, 0, 0, 0.3),
+		0 2px 2px rgba(255, 255, 255, 0.3);
 }
+
+
 
 /*
 @font-face {
@@ -187,9 +200,9 @@ body {
 }
 
 .fa-apple {
-	width:100%;
+	width: 100%;
 	color: var(--mb-card-color);
-	text-align:left;
+	text-align: left;
 	margin-left: 2px;
 	margin-right: 2px;
 }
@@ -248,8 +261,8 @@ body {
 }
 
 #debuggerObj {
-	display:none;
-	pointer-events:none;
+	display: none;
+	pointer-events: none;
 	position: fixed;
 	z-index: 10000;
 	font-size: 20px;
@@ -267,6 +280,7 @@ body {
 	from {
 		opacity: 0;
 	}
+
 	to {
 		opacity: 1;
 	}
@@ -280,6 +294,7 @@ body {
 	from {
 		opacity: 1;
 	}
+
 	to {
 		opacity: 0;
 	}
@@ -294,7 +309,7 @@ body {
 	margin: 0;
 	padding: 0;
 
-  	background: var(--mb-page-color);
+	background: var(--mb-page-color);
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--mb-text-color);
@@ -311,13 +326,13 @@ a {
 	position: fixed;
 	top: var(--mb-drag-bar-height);
 	left: env(safe-area-inset-left);
-   right: env(safe-area-inset-right);
+	right: env(safe-area-inset-right);
 	bottom: 0;
 	display: grid;
 	grid-template-columns: auto;
 	grid-template-rows: 60px auto;
 	transition: grid-template-rows 0.2s;
-	background:var(--mb-page-color);
+	background: var(--mb-page-color);
 }
 
 #dragbar {
@@ -330,37 +345,39 @@ a {
 	left: 0;
 	right: 0;
 	height: var(--mb-drag-bar-height);
-	z-index:3000;
+	z-index: 3000;
 	background-color: var(--mb-card-color);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
 	transition: all 0.3s;
-	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease; /*bgcolor was 0.1s ease*/
+	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+	/*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
 }
 
-#dragbar.onReader{
+#dragbar.onReader {
 	background-color: transparent;
 	transition: background-color 0.3s;
 }
 
 #barLogo,
 #dragbarAppTitle,
-#windowControls{
-		transition: opacity 0.3s ease;
+#windowControls {
+	transition: opacity 0.3s ease;
 }
 
 #dragbar.onReader #barLogo,
-#dragbar.onReader #dragbarAppTitle{
-	opacity:0;
+#dragbar.onReader #dragbarAppTitle {
+	opacity: 0;
 }
 
-#dragbar.onReader #windowControls{
-	opacity:0.35;
+#dragbar.onReader #windowControls {
+	opacity: 0.35;
 }
-#dragbar.onReader #windowControls:hover{
-	opacity:1;
+
+#dragbar.onReader #windowControls:hover {
+	opacity: 1;
 }
 
 /*
@@ -376,7 +393,7 @@ a {
 	top: 8px;
 	right: 8px;
 	font-size: 14px;
-	transition:opacity 0.3s ease;
+	transition: opacity 0.3s ease;
 }
 
 .window-controls span {
@@ -557,14 +574,20 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
-.press-button:active{
-	transition: box-shadow 0.3s ease, scale 0.3s linear;
-	scale: 0.98;
-	box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+.press-button:active {
+	transition: box-shadow 0.15s ease, scale 0.15s ease;
+	scale: 0.975;
+	box-shadow: var(--mb-button-press);
 }
-.press-button:not(:active){
+
+.press-button:not(:active) {
 	scale: 1.0;
-	box-shadow: inset 0 2px 5px rgba(0,0,0,0.0);
+	box-shadow: 
+		inset 0 -3px 10px rgba(255, 255, 255, 0.0),
+		inset 0 3px 10px rgba(0, 0, 0, 0.0),
+		0 -2px 2px rgba(0, 0, 0, 0.0),
+		0 2px 2px rgba(255, 255, 255, 0.0);
+	;
 }
 
 .library-item {
@@ -586,7 +609,7 @@ a {
 	font-size: 16px;
 	height: var(--mb-button-size);
 	transition: background-color 0.3s ease, width 0.3s ease, box-shadow 0.3s linear;
-	
+
 	/*text-transform: uppercase;*/
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }
@@ -1375,7 +1398,7 @@ book-item {
 	padding: 8px 20px 8px 20px;
 	box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.2);
 	cursor: pointer;
-	z-index:950;
+	z-index: 950;
 }
 
 #seriesMiniHeader.hidden {
