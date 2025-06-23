@@ -1260,6 +1260,20 @@ a {
 	scale: 1.06;
 }
 
+@keyframes zoomInOut {
+  0%   { scale:1.06; }
+  50%  { scale:1.03; } /* zoom in */
+  100% { scale:1.06; }   /* zoom out */
+}
+
+
+/*//TODO Magari non mi piace...*/
+.series-item.scaled:active,
+.book-item.scaled:active{
+	/*scale: 1.03;*/
+  animation: zoomInOut 0.2s ease 0s 1 forwards;
+}
+
 .series-container.top-pop,
 .book-container.top-pop {
 	z-index: 900;
