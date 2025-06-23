@@ -2,6 +2,7 @@ Main UI
 - Add new pill-shaped buttons and controls
 - Improve Electron dragbar layering
 - New button press effect on main UI
+- Custom dialogs for adding/removing images
 
 Reader
 - Keep window controls visible in reader view

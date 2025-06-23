@@ -213,6 +213,14 @@
 		</div>
 	</div>
 
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<p id="modalMessage">This is the message content.</p>
+			<button id="modalOk" class="ok press-button">OK</button>
+			<button id="modalCancel"  class="cancel press-button">Cancel</button>
+		</div>
+	</div>
+
 	<div id="debuggerObj"></div>
 
 	<script src="auth.js"></script>
@@ -753,6 +761,28 @@
 		}
 
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
+
+		// MB Modal Dialog
+
+		function showModal(message, okText, cancelText, okFunction, cancelFunction) {
+			modalMessage.textContent = message;
+			myModal.style.display = 'flex';
+			modalOk.addEventListener('click', () => {
+				okFunction();
+			});
+			if (cancelText != null){
+				myModal.classList.remove('ok-only');
+				modalCancel.addEventListener('click', () => {
+					cancelFunction();
+				});
+			} else {
+				myModal.classList.add('ok-only');
+			}
+		}
+
+		function closeModal() {
+			myModal.style.display = 'none';
+		}
 
 		//MB Search Functions 
 
@@ -1833,7 +1863,18 @@
 				addLongPressListener(listItem, async () => {
 
 					const libraryId = listItem.id
-
+					showModal('Clear custom image for this library?', 'Ok', 'Cancel',
+						async () => {
+							delete mb.libraryIcons[libraryId];
+							// Update userSettings on the server
+							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+							closeModal();
+							bootSequence();
+						},
+						() => {
+							closeModal();
+						});
+					/*
 					const confirmClear = confirm('Clear custom image for this library?');
 					if (confirmClear) {
 						delete mb.libraryIcons[libraryId];
@@ -1842,7 +1883,7 @@
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 						bootSequence();
 
-					}
+					}*/
 				});
 
 				listItem.addEventListener('dragover', (event) => {
@@ -1861,27 +1902,47 @@
 
 					const file = event.dataTransfer.files[0];
 					if (!file || !file.type.startsWith('image/')) {
-						alert('Please drop a valid image.');
-						return;
-					}
-
-					const result = confirm('Update library image?');
-					if (result) {
-						// User clicked OK
-						console.log('Proceeding with image update');
-						const base64 = await readFileAsBase64(file);
-						mb.libraryIcons[libraryId] = base64;
-
-						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-
-						bootSequence();
-						// your logic here (e.g., read dropped file, update thumbnail, etc.)
+						showModal('Please drop a valid image.', 'Ok', null, () => {
+							closeModal();
+							bootSequence();
+						}, ()=>{});
+						
 					} else {
-						// User clicked Cancel
-						listItem.style.backgroundColor = '';
-						console.log('Image update canceled');
-					}
+					showModal('Confirm library image update?', 'Ok', 'Cancel',
+						async () => {
+							console.log('Proceeding with image update');
+							const base64 = await readFileAsBase64(file);
+							mb.libraryIcons[libraryId] = base64;
 
+							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+							closeModal();
+							bootSequence();
+						},
+						() => {
+							// User clicked Cancel
+							listItem.style.backgroundColor = '';
+							console.log('Image update canceled');
+							closeModal();
+						});
+					}
+					/*
+										const result = confirm('Update library image?');
+										if (result) {
+											// User clicked OK
+											console.log('Proceeding with image update');
+											const base64 = await readFileAsBase64(file);
+											mb.libraryIcons[libraryId] = base64;
+					
+											await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+					
+											bootSequence();
+											// your logic here (e.g., read dropped file, update thumbnail, etc.)
+										} else {
+											// User clicked Cancel
+											listItem.style.backgroundColor = '';
+											console.log('Image update canceled');
+										}
+					*/
 
 				})
 
@@ -3883,7 +3944,7 @@
 			await executeFade(1);
 			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
-			
+
 			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
 			sectionHide(colorSwatchBar);

@@ -230,6 +230,70 @@ body {
 }
 */
 
+.modal {
+	display: none;
+	position: fixed;
+	z-index: 10000;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.4);
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-content {
+	background: var(--mb-card-color);
+	padding: var(--login-padding);
+	border-radius: var(--login-box-radius);
+	text-align: center;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	/*max-width: 400px;*/
+	width: auto;
+	color: var(--mb-text-color);
+	font-size: 18px;
+}
+
+.modal-content p {
+	padding-left: var(--login-padding);
+	padding-right: var(--login-padding);
+	margin-top:var(--login-padding);
+	margin-bottom: calc(2*var(--login-padding));
+}
+
+.modal-content button {
+	border: none;
+	border-radius: 20px;
+	cursor: pointer;
+	width: calc(50% - 0.5 * var(--login-padding));
+	height: var(--login-button-height);
+	font-size: 16px;
+	padding:0;
+	margin:0;
+}
+
+.modal-content button.ok {
+	background: var(--mb-accent);
+	color: white;
+	float:left;
+
+}
+
+.modal-content button.cancel {
+	background: var(--mb-bar-color);
+	color: var(--mb-text-color);
+	float:right;
+}
+
+#myModal.ok-only #modalCancel{
+	display:none;
+}
+
+#myModal.ok-only #modalOk{
+	width:100%;
+}
+
 #colorSwatchBar {
 	padding: 0px;
 	gap: 5px;
@@ -493,7 +557,7 @@ a {
 	transition: text-shadow 0.3s ease, color 0.3s ease, transform 0.2s ease;
 }
 
-.library-menu-button span:active{
+.library-menu-button span:active {
 	transform: scale(0.8);
 }
 
@@ -1265,17 +1329,28 @@ a {
 }
 
 @keyframes zoomInOut {
-  0%   { transform: scale(1.0); }
-  50%  { transform: scale(0.98); } /* zoom in */
-  100% { transform: scale(1.0); }   /* zoom out */
+	0% {
+		transform: scale(1.0);
+	}
+
+	50% {
+		transform: scale(0.98);
+	}
+
+	/* zoom in */
+	100% {
+		transform: scale(1.0);
+	}
+
+	/* zoom out */
 }
 
 
 /*//TODO Magari non mi piace...*/
 .series-item.scaled:active,
-.book-item.scaled:active{
+.book-item.scaled:active {
 	/*scale: 1.03;*/
-  animation: zoomInOut 0.2s ease 0s 1 forwards;
+	animation: zoomInOut 0.2s ease 0s 1 forwards;
 }
 
 .series-container.top-pop,
