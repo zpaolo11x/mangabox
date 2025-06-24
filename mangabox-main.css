@@ -258,8 +258,8 @@ body {
 .modal-content p {
 	padding-left: var(--login-padding);
 	padding-right: var(--login-padding);
-	margin-top: var(--login-padding);
-	margin-bottom: calc(2*var(--login-padding));
+	margin-top: calc(0.5 * var(--login-padding));
+	margin-bottom: var(--login-padding);
 }
 
 .modal-content button {
@@ -293,8 +293,11 @@ body {
 }
 
 #modalImage {
-	width:100px;
-	height:100px;
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	object-position: center;
+
 }
 
 .color-swatch {
