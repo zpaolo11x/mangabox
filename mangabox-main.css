@@ -297,7 +297,7 @@ body {
 	height: 100px;
 	object-fit: cover;
 	object-position: center;
-
+	border-radius:50px;
 }
 
 .color-swatch {
@@ -767,6 +767,7 @@ a {
 	min-width: var(--mb-span-size);
 	min-height: var(--mb-span-size);
 	padding-top: 0;
+	border-radius:inherit;
 }
 
 .smallbutton-wrapper {

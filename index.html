@@ -1921,7 +1921,7 @@
 					const file = event.dataTransfer.files[0];
 
 					if (!file || !file.type.startsWith('image/')) {
-						showModal('mark.png', 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+						showModal('markcircle.png', 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
 					} else {
 						const base64 = await readFileAsBase64(file);
