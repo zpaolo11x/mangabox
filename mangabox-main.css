@@ -258,7 +258,7 @@ body {
 .modal-content p {
 	padding-left: var(--login-padding);
 	padding-right: var(--login-padding);
-	margin-top:var(--login-padding);
+	margin-top: var(--login-padding);
 	margin-bottom: calc(2*var(--login-padding));
 }
 
@@ -269,29 +269,29 @@ body {
 	width: calc(50% - 0.5 * var(--login-padding));
 	height: var(--login-button-height);
 	font-size: 16px;
-	padding:0;
-	margin:0;
+	padding: 0;
+	margin: 0;
 }
 
 .modal-content button.ok {
 	background: var(--mb-accent);
 	color: white;
-	float:left;
+	float: left;
 
 }
 
 .modal-content button.cancel {
 	background: var(--mb-bar-color);
 	color: var(--mb-text-color);
-	float:right;
+	float: right;
 }
 
-#myModal.ok-only #modalCancel{
-	display:none;
+#myModal.ok-only #modalCancel {
+	display: none;
 }
 
-#myModal.ok-only #modalOk{
-	width:100%;
+#myModal.ok-only #modalOk {
+	width: 100%;
 }
 
 #colorSwatchBar {
@@ -658,6 +658,17 @@ a {
 	;
 }
 
+.press-flat-button:active {
+	/*scale: 0.975;*/
+	animation: zoomInOutButton 0.2s ease 0s 1 forwards;
+
+}
+
+.press-flat-button:not(:active) {
+	/*scale: 0.975;*/
+}
+
+
 .library-item {
 	-webkit-app-region: no-drag;
 
@@ -893,6 +904,10 @@ a {
 	transition: opacity 0.3s ease 0.2s, text-shadow 0.3s ease;
 }
 
+.flip-horizontal {
+	scale: -1 1;
+}
+
 .mini-buttons:hover {
 	text-shadow: 0px 0px 12px rgba(255, 255, 255, 1.0), 0px 0px 5px rgba(255, 255, 255, 0.8);
 }
@@ -922,9 +937,7 @@ a {
 	font-size: 20px;
 	display: flex;
 	justify-content: center;
-	/* Horizontally center the content */
 	align-items: center;
-	/* Vertically center the content */
 	cursor: pointer;
 	transition: all 0.3s;
 }
@@ -946,6 +959,10 @@ a {
 }
 
 #bookDetailsContainer .thumbnail-wrapper {
+	cursor: pointer;
+}
+
+#bookDetailCover {
 	cursor: pointer;
 }
 
@@ -1337,18 +1354,30 @@ a {
 		transform: scale(0.98);
 	}
 
-	/* zoom in */
 	100% {
 		transform: scale(1.0);
 	}
+}
 
-	/* zoom out */
+@keyframes zoomInOutButton {
+	0% {
+		transform: scale(1.0) translateY(0px);
+	}
+
+	50% {
+		transform: scale(0.9) translateY(1px);
+	}
+
+	100% {
+		transform: scale(1.0) translateY(0px);
+	}
 }
 
 
 /*//TODO Magari non mi piace...*/
 .series-item.scaled:active,
-.book-item.scaled:active {
+.book-item.scaled:active,
+#bookDetailsContainerThumbnailWrapper:active {
 	/*scale: 1.03;*/
 	animation: zoomInOut 0.2s ease 0s 1 forwards;
 }

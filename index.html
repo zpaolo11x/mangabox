@@ -86,8 +86,8 @@
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
-							<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
-							</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+							<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play flip-horizontal glyph-dark press-flat-button"></span>
+							<span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark press-flat-button"></span>
 						</div>
 					</div>
 				</div>
@@ -217,7 +217,7 @@
 		<div class="modal-content">
 			<p id="modalMessage">This is the message content.</p>
 			<button id="modalOk" class="ok press-button">OK</button>
-			<button id="modalCancel"  class="cancel press-button">Cancel</button>
+			<button id="modalCancel" class="cancel press-button">Cancel</button>
 		</div>
 	</div>
 
@@ -770,7 +770,7 @@
 			modalOk.addEventListener('click', () => {
 				okFunction();
 			});
-			if (cancelText != null){
+			if (cancelText != null) {
 				myModal.classList.remove('ok-only');
 				modalCancel.addEventListener('click', () => {
 					cancelFunction();
@@ -1905,25 +1905,25 @@
 						showModal('Please drop a valid image.', 'Ok', null, () => {
 							closeModal();
 							bootSequence();
-						}, ()=>{});
-						
-					} else {
-					showModal('Confirm library image update?', 'Ok', 'Cancel',
-						async () => {
-							console.log('Proceeding with image update');
-							const base64 = await readFileAsBase64(file);
-							mb.libraryIcons[libraryId] = base64;
+						}, () => { });
 
-							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-							closeModal();
-							bootSequence();
-						},
-						() => {
-							// User clicked Cancel
-							listItem.style.backgroundColor = '';
-							console.log('Image update canceled');
-							closeModal();
-						});
+					} else {
+						showModal('Confirm library image update?', 'Ok', 'Cancel',
+							async () => {
+								console.log('Proceeding with image update');
+								const base64 = await readFileAsBase64(file);
+								mb.libraryIcons[libraryId] = base64;
+
+								await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+								closeModal();
+								bootSequence();
+							},
+							() => {
+								// User clicked Cancel
+								listItem.style.backgroundColor = '';
+								console.log('Image update canceled');
+								closeModal();
+							});
 					}
 					/*
 										const result = confirm('Update library image?');
@@ -2068,13 +2068,13 @@
 			let text = `
 			<div class="book-details-pic-container">
 				<div class="mini-controls">
-					<div class="mini-buttons-2 prev-book" title="Previous book" onclick="jumpBookDetailsPrev()">
+					<div class="mini-buttons-2 prev-book press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
 						<span class="fa-solid fa-chevron-left"></span>
 					</div>
-					<div class="mini-buttons-2 prev-book" title="Go to library" onclick="navigateTo('#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}')">
+					<div class="mini-buttons-2 prev-book  press-flat-button" title="Go to library" onclick="navigateTo('#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}')">
 						<span class="fa-solid fa-layer-group"></span>
 					</div>
-					<div class="mini-buttons-2 next-book" title="Next book" onclick="jumpBookDetailsNext()">
+					<div class="mini-buttons-2 next-book  press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
 						<span class="fa-solid fa-chevron-right"></span>
 					</div>			
 				</div>
@@ -2090,7 +2090,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="close-details mini-buttons-2" onclick="closeBookDetails()">
+			<div class="close-details mini-buttons-2  press-flat-button" onclick="closeBookDetails()">
 				<span class="fa-solid fa-xmark"></span>
 			</div>
 			`;
@@ -2470,7 +2470,7 @@
 				value: '0'
 			});
 			item.gridButton = addItem('div', {
-				className: 'strip-all',
+				className: 'strip-all press-flat-button',
 				innerHTML: '<span title="View All" class="fa-solid fa-grip glyph-dark"></span>',
 			});
 			item.homeStrip = addItem('div', {
