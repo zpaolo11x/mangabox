@@ -762,6 +762,8 @@
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
 		//MB Modal Dialog
+		let modalOkGlobal = null;
+		let modalCancelGlobal = null;
 
 		function showModal(image, message, okText, cancelText, okFunction, cancelFunction) {
 			modalOkGlobal = okFunction;
@@ -1850,11 +1852,6 @@
 				}
 			}, true); // Capture phase to stop early
 		}
-
-		//let workLibraryId = null;
-		//let workLibraryImg = null;
-		let modalOkGlobal = null;
-		let modalCancelGlobal = null;
 
 		function cancelUpdate() {
 			closeModal();
