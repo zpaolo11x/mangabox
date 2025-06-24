@@ -664,10 +664,11 @@ a {
 
 }
 
+/*
 .press-flat-button:not(:active) {
-	/*scale: 0.975;*/
+	scale: 0.975;
 }
-
+*/
 
 .library-item {
 	-webkit-app-region: no-drag;
