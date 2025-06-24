@@ -1895,7 +1895,7 @@
 						return;
 					};
 					workLibraryId = libraryId
-					showModal(mb.libraryIcons[libraryId], 'Clear custom image for this library?', 'Ok', 'Cancel', async () => {
+					showModal(mb.libraryIcons[libraryId], 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
 						await delete mb.libraryIcons[libraryId];
 						// Update userSettings on the server
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
@@ -1921,13 +1921,13 @@
 					const file = event.dataTransfer.files[0];
 
 					if (!file || !file.type.startsWith('image/')) {
-						showModal(null, 'Please drop a valid image.', 'Ok', null, cancelUpdate, cancelUpdate);
+						showModal('mark.png', 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
 					} else {
 						const base64 = await readFileAsBase64(file);
 						workLibraryId = libraryId
 						workLibraryImg = base64;
-						showModal(base64, 'Confirm library image update?', 'Ok', 'Cancel', async () => {
+						showModal(base64, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
 							mb.libraryIcons[libraryId] = base64;
 							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 							closeModal();

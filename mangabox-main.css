@@ -246,11 +246,11 @@ body {
 .modal-content {
 	background: var(--mb-card-color);
 	padding: var(--login-padding);
-	border-radius: var(--login-box-radius);
+	border-radius: calc(var(--login-padding) + 20px);
 	text-align: center;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	/*max-width: 400px;*/
-	width: auto;
+	width: 200px;
 	color: var(--mb-text-color);
 	font-size: 18px;
 }
@@ -267,7 +267,7 @@ body {
 	border-radius: 20px;
 	cursor: pointer;
 	width: 100%;
-	height: var(--login-button-height);
+	height: 40px;
 	font-size: 16px;
 	padding: 0;
 	margin-top: calc(0.5 * var(--login-padding));
