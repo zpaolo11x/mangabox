@@ -266,7 +266,7 @@ body {
 	border: none;
 	border-radius: 20px;
 	cursor: pointer;
-	width: calc(100% - 0.5 * var(--login-padding));
+	width: 100%;
 	height: var(--login-button-height);
 	font-size: 16px;
 	padding: 0;
@@ -285,10 +285,6 @@ body {
 
 #myModal.ok-only #modalCancel {
 	display: none;
-}
-
-#myModal.ok-only #modalOk {
-	width: 100%;
 }
 
 #colorSwatchBar {
