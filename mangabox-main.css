@@ -266,24 +266,21 @@ body {
 	border: none;
 	border-radius: 20px;
 	cursor: pointer;
-	width: calc(50% - 0.5 * var(--login-padding));
+	width: calc(100% - 0.5 * var(--login-padding));
 	height: var(--login-button-height);
 	font-size: 16px;
 	padding: 0;
-	margin: 0;
+	margin-top: calc(0.5 * var(--login-padding));
 }
 
 .modal-content button.ok {
 	background: var(--mb-accent);
 	color: white;
-	float: left;
-
 }
 
 .modal-content button.cancel {
 	background: var(--mb-bar-color);
 	color: var(--mb-text-color);
-	float: right;
 }
 
 #myModal.ok-only #modalCancel {
@@ -297,6 +294,11 @@ body {
 #colorSwatchBar {
 	padding: 0px;
 	gap: 5px;
+}
+
+#modalImage {
+	width:100px;
+	height:100px;
 }
 
 .color-swatch {

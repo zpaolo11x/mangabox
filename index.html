@@ -215,6 +215,7 @@
 
 	<div id="myModal" class="modal">
 		<div class="modal-content">
+			<img id="modalImage">
 			<p id="modalMessage">This is the message content.</p>
 			<button id="modalOk" class="ok press-button">OK</button>
 			<button id="modalCancel" class="cancel press-button">Cancel</button>
@@ -615,8 +616,6 @@
 
 			sectionToggle(colorSwatchBar)
 			mb.swatchMenuVisible = !mb.swatchMenuVisible
-
-			console.log(mb.swatchMenuVisible)
 			/*
 			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
 			applyAccent();
@@ -764,7 +763,8 @@
 
 		// MB Modal Dialog
 
-		function showModal(message, okText, cancelText, okFunction, cancelFunction) {
+		function showModal(image, message, okText, cancelText, okFunction, cancelFunction) {
+			modalImage.src = image;
 			modalMessage.textContent = message;
 			myModal.style.display = 'flex';
 			modalOk.addEventListener('click', () => {
@@ -1861,29 +1861,24 @@
 				const listItem = buildLibraryItem(library.id, library.name);
 
 				addLongPressListener(listItem, async () => {
-
+					
 					const libraryId = listItem.id
-					showModal('Clear custom image for this library?', 'Ok', 'Cancel',
+					if (mb.libraryIcons[libraryId] == null) return;
+
+					showModal(mb.libraryIcons[libraryId], 'Clear custom image for this library?', 'Ok', 'Cancel',
 						async () => {
-							delete mb.libraryIcons[libraryId];
+							console.log("Clearing library")
+							await delete mb.libraryIcons[libraryId];
 							// Update userSettings on the server
 							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+
 							closeModal();
 							bootSequence();
 						},
 						() => {
 							closeModal();
-						});
-					/*
-					const confirmClear = confirm('Clear custom image for this library?');
-					if (confirmClear) {
-						delete mb.libraryIcons[libraryId];
-
-						// Update userSettings on the server
-						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-						bootSequence();
-
-					}*/
+						}
+					);
 				});
 
 				listItem.addEventListener('dragover', (event) => {
@@ -1901,17 +1896,18 @@
 					const libraryId = listItem.id
 
 					const file = event.dataTransfer.files[0];
+
 					if (!file || !file.type.startsWith('image/')) {
-						showModal('Please drop a valid image.', 'Ok', null, () => {
+						showModal(null, 'Please drop a valid image.', 'Ok', null, () => {
 							closeModal();
 							bootSequence();
 						}, () => { });
 
 					} else {
-						showModal('Confirm library image update?', 'Ok', 'Cancel',
+						const base64 = await readFileAsBase64(file);
+						showModal(base64, 'Confirm library image update?', 'Ok', 'Cancel',
 							async () => {
 								console.log('Proceeding with image update');
-								const base64 = await readFileAsBase64(file);
 								mb.libraryIcons[libraryId] = base64;
 
 								await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
@@ -2512,6 +2508,7 @@
 
 		async function bootSequence() {
 			userSettings = await getUserSettings();
+			console.log(userSettings);
 			applyUserSettings();
 
 			applyAccent();
