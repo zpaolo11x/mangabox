@@ -215,7 +215,7 @@
 
 	<div id="myModal" class="modal">
 		<div class="modal-content">
-			<img id="modalImage">
+			<div id="modalWrapper"><img id="modalImage"></div>
 			<p id="modalMessage">This is the message content.</p>
 			<button id="modalOk" class="ok press-button">OK</button>
 			<button id="modalCancel" class="cancel press-button">Cancel</button>
@@ -771,7 +771,9 @@
 
 			modalImage.src = image;
 			modalMessage.textContent = message;
-			myModal.style.display = 'flex';
+			//myModal.style.display = 'flex';
+
+			myModal.classList.add('visible');
 
 			modalOk.addEventListener('click', modalOkGlobal);
 			if (cancelText != null) {
@@ -785,9 +787,16 @@
 		function closeModal() {
 			modalOk.removeEventListener('click', modalOkGlobal);
 			modalCancel.removeEventListener('click', modalCancelGlobal);
-			myModal.style.display = 'none';
-			workOk = null;
-			workCancel = null;
+			myModal.classList.add("unfade");
+			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+			setTimeout(() => {
+				// Optional: if you still want to hide it completely from screen readers / tab order
+				myModal.classList.remove("visible");
+				myModal.classList.remove("unfade");
+				workOk = null;
+				workCancel = null;
+			}, 300);
 		}
 
 		//MB Search Functions 
@@ -1839,6 +1848,7 @@
 			element.addEventListener('mousedown', start);
 			element.addEventListener('mouseup', cancel);
 			element.addEventListener('mouseleave', cancel);
+			element.addEventListener('dragstart', cancel);
 
 			element.addEventListener('touchstart', start);
 			element.addEventListener('touchend', cancel);
@@ -1858,24 +1868,7 @@
 			closeModal();
 			bootSequence();
 		}
-		/*
-				async function removeImage() {
-					await delete mb.libraryIcons[workLibraryId];
-					// Update userSettings on the server
-					await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-		
-					closeModal();
-					bootSequence();
-				}
-		
-				async function addImage() {
-					mb.libraryIcons[workLibraryId] = workLibraryImg;
-		
-					await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-					closeModal();
-					bootSequence();
-				}
-		**/
+
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -1892,18 +1885,16 @@
 
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
-						workLibraryId = null;
-						return;
-					};
-					workLibraryId = libraryId
-					showModal(mb.libraryIcons[libraryId], 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
-						await delete mb.libraryIcons[libraryId];
-						// Update userSettings on the server
-						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+						showModal('circle-info-tr.png', 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
+					} else {
+						showModal(mb.libraryIcons[libraryId], 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
+							await delete mb.libraryIcons[libraryId];
+							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 
-						closeModal();
-						bootSequence();
-					}, cancelUpdate);
+							closeModal();
+							bootSequence();
+						}, cancelUpdate);
+					}
 				});
 
 				listItem.addEventListener('dragover', (event) => {
@@ -1922,12 +1913,10 @@
 					const file = event.dataTransfer.files[0];
 
 					if (!file || !file.type.startsWith('image/')) {
-						showModal('markcircle.png', 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+						showModal('circle-mark-tr.png', 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
 					} else {
 						const base64 = await readFileAsBase64(file);
-						workLibraryId = libraryId
-						workLibraryImg = base64;
 						showModal(base64, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
 							mb.libraryIcons[libraryId] = base64;
 							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
