@@ -715,7 +715,7 @@ a {
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
 	font-size: 25px;
-	border-radius: inherit;
+	border-radius: 50%;
 }
 
 .filter-item span.fa-solid,
@@ -724,7 +724,7 @@ a {
 	height: var(--mb-filter-span-size);
 	line-height: var(--mb-filter-span-size);
 	font-size: 20px;
-	border-radius: inherit;
+	border-radius: 50%;
 }
 
 .library-item.search-field.highlighted span.fa-solid,
@@ -732,6 +732,7 @@ a {
 .filter-item.highlighted span.fa-regular {
 	color: white;
 	opacity: 1;
+	border-radius: 50%;
 }
 
 .search-input {

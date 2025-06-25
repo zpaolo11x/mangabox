@@ -427,7 +427,7 @@
 		colorValues.forEach((value, index) => {
 			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
-				className: 'color-swatch',
+				className: 'color-swatch press-flat-button',
 				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
 				style: {
 					backgroundColor: value,
@@ -1824,6 +1824,7 @@
 			let wasLongPress = false;
 
 			const start = (e) => {
+				if (e.target.classList.contains('is-lib-menu')) return;
 				wasLongPress = false;
 				pressTimer = setTimeout(() => {
 					wasLongPress = true;
