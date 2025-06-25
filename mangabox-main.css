@@ -553,9 +553,14 @@ a {
 	height: var(--mb-filter-button-size);
 }
 
+.library-menu-button {
+	border-radius: 50%;
+}
+
 .library-menu-button span {
 	color: rgba(255, 255, 255, 0.5);
 	transition: text-shadow 0.3s ease, color 0.3s ease, transform 0.2s ease;
+	border-radius: 50%;
 }
 
 .library-menu-button span:active {
@@ -563,7 +568,7 @@ a {
 }
 
 .library-menu-button span.filtered {
-	border-radius: 5px;
+	/*border-radius: 5px;*/
 	color: white;
 	text-shadow: 0px 0px 7px rgba(255, 255, 255, 0.9);
 }
@@ -710,6 +715,7 @@ a {
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
 	font-size: 25px;
+	border-radius: inherit;
 }
 
 .filter-item span.fa-solid,
@@ -718,6 +724,7 @@ a {
 	height: var(--mb-filter-span-size);
 	line-height: var(--mb-filter-span-size);
 	font-size: 20px;
+	border-radius: inherit;
 }
 
 .library-item.search-field.highlighted span.fa-solid,
