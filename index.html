@@ -765,10 +765,10 @@
 		let modalOkGlobal = null;
 		let modalCancelGlobal = null;
 
-		function showModal(image, message, okText, cancelText, okFunction, cancelFunction) {
+		function showModal(image, bg, message, okText, cancelText, okFunction, cancelFunction) {
 			modalOkGlobal = okFunction;
 			modalCancelGlobal = cancelFunction;
-
+			modalWrapper.style.backgroundImage = bg ? "" : "none";
 			modalImage.src = image;
 			modalMessage.textContent = message;
 			//myModal.style.display = 'flex';
@@ -1885,9 +1885,9 @@
 
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
-						showModal('circle-info-tr.png', 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
+						showModal('circle-info-tr.png', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
 					} else {
-						showModal(mb.libraryIcons[libraryId], 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
+						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
 							await delete mb.libraryIcons[libraryId];
 							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 
@@ -1913,11 +1913,11 @@
 					const file = event.dataTransfer.files[0];
 
 					if (!file || !file.type.startsWith('image/')) {
-						showModal('circle-mark-tr.png', 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+						showModal('circle-mark-tr.png', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
 					} else {
 						const base64 = await readFileAsBase64(file);
-						showModal(base64, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
+						showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
 							mb.libraryIcons[libraryId] = base64;
 							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 							closeModal();

@@ -313,14 +313,14 @@ body {
 	object-fit: cover;
 	object-position: center;
 	border-radius: 50px;
-	  margin: -30px; /* same as wrapper's padding */
-  display: block; /* remove inline gap */
+	margin: -30px;
+	display: block;
 }
 
 #modalWrapper {
-		box-sizing: border-box;
+	box-sizing: border-box;
 
-	margin: 0 auto;
+	margin: var(--login-padding) auto;
 	padding: 15px;
 	overflow: visible;
 	width: 70px;
