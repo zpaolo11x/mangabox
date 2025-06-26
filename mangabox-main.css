@@ -695,11 +695,11 @@ a {
 }
 
 .press-flat-button:active {
-	/*scale: 0.975;*/
 	animation: zoomInOutButton 0.2s ease 0s 1 forwards;
-
 }
-
+.press-flat-button-shallow:active {
+	animation: zoomInOutButtonShallow 0.2s ease 0s 1 forwards;
+}
 /*
 .press-flat-button:not(:active) {
 	scale: 0.975;
@@ -1414,6 +1414,19 @@ a {
 	}
 }
 
+@keyframes zoomInOutButtonShallow {
+	0% {
+		transform: scale(1.0) translateY(0px);
+	}
+
+	50% {
+		transform: scale(0.97) translateY(1px);
+	}
+
+	100% {
+		transform: scale(1.0) translateY(0px);
+	}
+}
 
 /*//TODO Magari non mi piace...*/
 .series-item.scaled:active,
