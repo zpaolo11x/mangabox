@@ -1885,7 +1885,7 @@
 
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
-						showModal('circle-info-tr.png', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
+						showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
 					} else {
 						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
 							await delete mb.libraryIcons[libraryId];
@@ -1913,7 +1913,7 @@
 					const file = event.dataTransfer.files[0];
 
 					if (!file || !file.type.startsWith('image/')) {
-						showModal('circle-mark-tr.png', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+						showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
 					} else {
 						const base64 = await readFileAsBase64(file);
