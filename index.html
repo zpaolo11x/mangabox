@@ -1759,7 +1759,7 @@
 					filter: 'brightness(1)',
 					boxShadow: 'var(--mb-button-unpress)'
 				},
-				{ duration: 150, fill: 'forwards', easing: 'ease-in' }
+				{ duration: 50, fill: 'forwards', easing: 'ease-in' }
 			);
 		}
 
@@ -1773,11 +1773,13 @@
 			item.animate({ scale: 0.8 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
 		}
 		function scaleUp(item) {
-			item.animate({ scale: 1 }, { duration: 150, fill: 'forwards', easing: 'ease-in' });
+			item.animate({ scale: 1 }, { duration: 50, fill: 'forwards', easing: 'ease-in' });
 		}
 
 		function addPressEvents(item, downFunction, upFunction) {
-			item.addEventListener('pointerdown', () => {
+			item.addEventListener('pointerdown', (event) => {
+				event.stopPropagation();
+				event.preventDefault();
 				downFunction(item);
 			});
 			item.addEventListener('pointerup', () => {
@@ -1848,6 +1850,8 @@
 
 				thumbnailWrapperMenu.append(mb.libraryMenuButtons[itemId]);
 				listItem.append(thumbnailWrapperMenu);
+
+				addPressEvents(thumbnailWrapperMenu, scaleDownDeep, scaleUp)
 
 				thumbnailWrapperMenu.addEventListener('click', (event) => {
 					libMenuClear(mb.libraryMenuButtons[itemId]);
