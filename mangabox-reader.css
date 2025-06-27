@@ -311,7 +311,7 @@ img.page:not(.hidden) {
 /* hidden viene impostato in questo caso? perché altrimenti taglia subito! */
 .page-container:has(img.page.loaded)::before {
 	opacity: 0;
-	animation: loader_spin 1s linear 2;cl
+	animation: loader_spin 1s linear 2;
 }
 
 img.multiply {

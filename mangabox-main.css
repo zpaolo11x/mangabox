@@ -40,6 +40,20 @@
 
 	--mb-num-buttons: 1;
 
+	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
+	--mb-button-transition:
+		opacity 0.3s,
+		color 0.3s ease,
+		background-color 0.3s,
+		border 0.2s ease,
+		scale 0.15s ease,
+		box-shadow 0.15s ease,
+		text-shadow 0.3s ease,
+		width 0.3s ease,
+		scale 0.15s ease,
+		transform 0.15s ease,
+		filter 0.15s ease;
+
 	--mb-swatches-hi:
 		hsl(348, 92%, 38%),
 		hsl(358, 73%, 55%),
@@ -70,60 +84,6 @@
 		hsl(332, 91%, 64%),
 		hsl(0, 0%, 55%);
 
-	/*
-	--mb-swatches-hi:
-		hsl(348, 92%, 38%),
-		hsl(28, 93%, 54%),
-		hsl(44, 100%, 57%),
-		hsl(105, 45%, 50%),
-		hsl(211, 100%, 50%),
-		hsl(230, 65%, 47%),
-		hsl(299, 42%, 41%),
-		hsl(331, 91%, 64%),
-		hsl(0, 0%, 60%);
-	
-	--mb-swatches-lo:
-		hsl(348, 92%, 38%),
-		hsl(28, 93%, 54%),
-		hsl(44, 100%, 57%),
-		hsl(105, 45%, 50%),
-		hsl(211, 100%, 50%),
-		hsl(230, 62%, 50%),
-		hsl(299, 42%, 41%),
-		hsl(331, 91%, 64%),
-		hsl(0, 0%, 60%);
-	*/
-	/*mac
-			hsl(358, 73%, 55%),
-		hsl(28, 93%, 54%),
-		hsl(44, 100%, 57%),
-		hsl(105, 45%, 50%),
-		hsl(211, 100%, 50%),
-		hsl(299, 42%, 41%),
-		hsl(331, 91%, 64%),
-		hsl(0, 0%, 60%);
-		*/
-
-	/*hi
-		hsl(348, 92%, 38%),
-		hsl(37, 100%, 50%),
-		hsl(50, 100%, 48%),
-		hsl(92, 78%, 42%),
-		hsl(210, 76%, 50%),
-		hsl(230, 65%, 47%),
-		hsl(274, 57%, 45%),
-		hsl(306, 70%, 60%);
-*/
-	/* lo
-		hsl(348, 92%, 38%),
-		hsl(37, 100%, 50%),
-		hsl(50, 100%, 48%),
-		hsl(92, 82%, 40%),
-		hsl(210, 76%, 50%),
-		hsl(230, 62%, 50%),
-		hsl(274, 57%, 51%),
-		hsl(306, 70%, 60%);
-		*/
 }
 
 [data-theme="light"] {
@@ -335,7 +295,6 @@ body {
 	cursor: pointer;
 	box-sizing: border-box;
 	border: 3px solid transparent;
-	transition: border 0.2s ease;
 	border-radius: 4px;
 	flex: 1;
 	min-width: 22px;
@@ -589,14 +548,14 @@ a {
 
 .library-menu-button span {
 	color: rgba(255, 255, 255, 0.5);
-	transition: text-shadow 0.3s ease, color 0.3s ease, transform 0.2s ease;
 	border-radius: 50%;
+	transition: text-shadow 0.3s ease, color 0.3s ease;
 }
-
+/*
 .library-menu-button span:active {
 	transform: scale(0.8);
 }
-
+*/
 .library-menu-button span.filtered {
 	/*border-radius: 5px;*/
 	color: white;
@@ -676,12 +635,18 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
+.press-button,
+.press-flat-button-shallow,
+.press-flat-button,
+.press-flat-button-deep {
+	transition:var(--mb-button-transition);
+}
+
 .press-button:active:not(:has(input:focus)):not(:has(.library-menu-button:hover)) {
-	transition: box-shadow 0.15s ease, scale 0.15s ease, transform 0.15s ease, filter 0.15s ease;
+	/*transition: box-shadow 0.15s ease, scale 0.15s ease, transform 0.15s ease, filter 0.15s ease;*/
 	/*scale: 0.975;*/
 	transform: scale(0.975) translateY(1px);
 	filter: brightness(0.98);
-
 	box-shadow: var(--mb-button-press);
 }
 
@@ -695,10 +660,20 @@ a {
 }
 
 .press-flat-button:active {
-	animation: zoomInOutButton 0.2s ease 0s 1 forwards;
+	scale: 0.9;
+	/*transform:translateY(1px);*/
+	/*animation: zoomInOutButton 0.2s ease 0s 1 forwards;*/
 }
+
 .press-flat-button-shallow:active {
-	animation: zoomInOutButtonShallow 0.2s ease 0s 1 forwards;
+	scale: 0.95;
+	/*transform:translateY(1px);*/
+	/*animation: zoomInOutButtonShallow 0.2s ease 0s 1 forwards;*/
+}
+.press-flat-button-deep:active {
+	scale: 0.8;
+	/*transform:translateY(1px);*/
+	/*animation: zoomInOutButtonShallow 0.2s ease 0s 1 forwards;*/
 }
 /*
 .press-flat-button:not(:active) {
@@ -980,7 +955,7 @@ a {
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
-	transition: all 0.3s;
+	transition: var(--mb-button-transition);
 }
 
 .mini-buttons-2:hover {
@@ -1400,6 +1375,7 @@ a {
 	}
 }
 
+/*
 @keyframes zoomInOutButton {
 	0% {
 		transform: scale(1.0) translateY(0px);
@@ -1427,6 +1403,7 @@ a {
 		transform: scale(1.0) translateY(0px);
 	}
 }
+*/
 
 /*//TODO Magari non mi piace...*/
 .series-item.scaled:active,
