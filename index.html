@@ -427,12 +427,13 @@
 		colorValues.forEach((value, index) => {
 			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
-				className: 'color-swatch press-flat-button-shallow',
+				className: 'color-swatch press-flat-button-shallow', //TODO tornare ai vecchi modi?
 				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
 				style: {
 					backgroundColor: value,
 				},
 			});
+			addPressEvents(colorSwatch, scaleDownShallow, scaleUp);
 			colorSwatch.addEventListener('click', () => {
 				event.stopPropagation();
 				mb.accentColor = index;
@@ -1741,30 +1742,54 @@
 		}
 
 		function pressDown(item) {
-			item.animate([
-				{ transform: 'scale(0.975) translateY(1px)',
+			item.animate(
+				{
+					transform: 'scale(0.975) translateY(1px)',
 					filter: 'brightness(0.98)',
 					boxShadow: 'var(--mb-button-press)'
-				 }
-			], {
-				duration:150,
-				fill: 'forwards',
-				easing: 'ease-out'
-			});
+				},
+				{ duration: 150, fill: 'forwards', easing: 'ease-out' }
+			);
 		}
 
-		function pressUp(item) {
-			item.animate([
-				{ transform: 'scale(1) translateY(0px)',
+		function pressUp(item) {//TODO reduce press up time
+			item.animate(
+				{
+					transform: 'scale(1) translateY(0px)',
 					filter: 'brightness(1)',
 					boxShadow: 'var(--mb-button-unpress)'
-				 }
-			], {
-				duration: 150,
-				fill: 'forwards',
-				easing: 'ease-in'
-			});
+				},
+				{ duration: 150, fill: 'forwards', easing: 'ease-in' }
+			);
 		}
+
+		function scaleDownShallow(item) {
+			item.animate({ scale: 0.95 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+		}
+		function scaleDown(item) {
+			item.animate({ scale: 0.9 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+		}
+		function scaleDownDeep(item) {
+			item.animate({ scale: 0.8 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+		}
+		function scaleUp(item) {
+			item.animate({ scale: 1 }, { duration: 150, fill: 'forwards', easing: 'ease-in' });
+		}
+
+		function addPressEvents(item, downFunction, upFunction) {
+			item.addEventListener('pointerdown', () => {
+				downFunction(item);
+			});
+			item.addEventListener('pointerup', () => {
+				upFunction(item);
+			});
+			item.addEventListener('pointerleave', () => {
+				upFunction(item);
+			});
+			item.addEventListener('pointercancel', () => {
+				upFunction(item);
+			});
+		};
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
@@ -1775,17 +1800,7 @@
 				title: libraryName,
 			});
 
-			listItem.addEventListener('pointerdown', () => {
-				pressDown(listItem);
-			});
-			listItem.addEventListener('pointerup', () => {
-				pressUp(listItem);
-			});
-			listItem.addEventListener('pointerleave', () => {
-				pressUp(listItem);
-			}); listItem.addEventListener('pointercancel', () => {
-				pressUp(listItem);
-			});
+			addPressEvents(listItem, pressDown, pressUp);
 
 			const thumbnailWrapper = addItem('div', {
 				className: 'button-wrapper',
@@ -2115,6 +2130,7 @@
 			bookDetailsContainer.innerHTML = text;
 			bookDetailCover.lazySrc = `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`;
 			addLazyLoading(bookDetailCover);
+			document.querySelectorAll('.mini-buttons-2').forEach(item => addPressEvents(item, scaleDown, scaleUp));
 
 		}
 
@@ -4063,6 +4079,8 @@
 
 		window.addEventListener('hashchange', loadContent);
 		document.addEventListener('popstate', loadContent);
+
+		document.querySelectorAll('.press-button').forEach(item => addPressEvents(item, pressDown, pressUp));
 
 		if (loginScreen.classList.contains('auth-hidden')) bootSequence();
 

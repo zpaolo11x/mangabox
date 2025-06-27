@@ -679,22 +679,18 @@ a {
 	;
 }
 */
+/*
 .press-flat-button:active {
 	scale: 0.9;
-	/*transform:translateY(1px);*/
-	/*animation: zoomInOutButton 0.2s ease 0s 1 forwards;*/
 }
 
 .press-flat-button-shallow:active {
 	scale: 0.95;
-	/*transform:translateY(1px);*/
-	/*animation: zoomInOutButtonShallow 0.2s ease 0s 1 forwards;*/
 }
 .press-flat-button-deep:active {
 	scale: 0.8;
-	/*transform:translateY(1px);*/
-	/*animation: zoomInOutButtonShallow 0.2s ease 0s 1 forwards;*/
 }
+*/
 /*
 .press-flat-button:not(:active) {
 	scale: 0.975;
