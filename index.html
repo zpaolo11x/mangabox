@@ -1740,13 +1740,51 @@
 			});
 		}
 
+		function pressDown(item) {
+			item.animate([
+				{ transform: 'scale(0.975) translateY(1px)',
+					filter: 'brightness(0.98)',
+					boxShadow: 'var(--mb-button-press)'
+				 }
+			], {
+				duration:150,
+				fill: 'forwards',
+				easing: 'ease-out'
+			});
+		}
+
+		function pressUp(item) {
+			item.animate([
+				{ transform: 'scale(1) translateY(0px)',
+					filter: 'brightness(1)',
+					boxShadow: 'var(--mb-button-unpress)'
+				 }
+			], {
+				duration: 150,
+				fill: 'forwards',
+				easing: 'ease-in'
+			});
+		}
+
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
 			const listItem = addItem('li', {
 				id: itemId,
-				className: 'library-item press-button',
+				className: 'library-item',
 				title: libraryName,
+			});
+
+			listItem.addEventListener('pointerdown', () => {
+				pressDown(listItem);
+			});
+			listItem.addEventListener('pointerup', () => {
+				pressUp(listItem);
+			});
+			listItem.addEventListener('pointerleave', () => {
+				pressUp(listItem);
+			}); listItem.addEventListener('pointercancel', () => {
+				pressUp(listItem);
 			});
 
 			const thumbnailWrapper = addItem('div', {

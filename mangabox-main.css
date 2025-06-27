@@ -115,6 +115,11 @@
 		inset 0 3px 10px rgba(0, 0, 0, 0.2),
 		0 -2px 2px rgba(0, 0, 0, 0.3),
 		0 2px 2px rgba(255, 255, 255, 0.3);
+	
+	--mb-button-unpress:
+	inset 0 3px 10px rgba(0, 0, 0, 0.0),
+		0 -2px 2px rgba(0, 0, 0, 0.0),
+		0 2px 2px rgba(255, 255, 255, 0.0);
 }
 
 [data-theme="dark"] {
@@ -135,6 +140,11 @@
 		inset 0 3px 10px rgba(0, 0, 0, 0.3),
 		0 -2px 2px rgba(0, 0, 0, 0.2),
 		0 2px 2px rgba(255, 255, 255, 0.2);
+
+			--mb-button-unpress:
+	inset 0 3px 10px rgba(0, 0, 0, 0.0),
+		0 -2px 2px rgba(0, 0, 0, 0.0),
+		0 2px 2px rgba(255, 255, 255, 0.0);
 }
 
 
