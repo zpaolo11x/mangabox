@@ -1179,7 +1179,7 @@
 
 		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
 		stripNextPage.addEventListener('click', () => stepPageChange(1));
-		
+
 		addPressEvents(stripPrevPage, scaleDown, scaleUp);
 		addPressEvents(stripNextPage, scaleDown, scaleUp);
 
@@ -2535,7 +2535,7 @@
 				mb.dashboardBin = name;
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
-			
+
 			addPressEvents(item.gridButton, scaleDown, scaleUp);
 
 			item.scrollInput.addEventListener('input', () => {
@@ -4104,6 +4104,10 @@
 		document.addEventListener('popstate', loadContent);
 
 		document.querySelectorAll('.press-button').forEach(item => addPressEvents(item, pressDown, pressUp));
+
+		searchInput.addEventListener('pointerdown', (event) => {
+			event.stopPropagation();
+		})
 
 		if (loginScreen.classList.contains('auth-hidden')) bootSequence();
 
