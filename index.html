@@ -1179,6 +1179,9 @@
 
 		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
 		stripNextPage.addEventListener('click', () => stepPageChange(1));
+		
+		addPressEvents(stripPrevPage, scaleDown, scaleUp);
+		addPressEvents(stripNextPage, scaleDown, scaleUp);
 
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
@@ -2532,6 +2535,9 @@
 				mb.dashboardBin = name;
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
+			
+			addPressEvents(item.gridButton, scaleDown, scaleUp);
+
 			item.scrollInput.addEventListener('input', () => {
 				item.homeStrip.scrollLeft = item.scrollInput.value;
 			});
