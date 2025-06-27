@@ -1742,7 +1742,7 @@
 		}
 
 		function pressDown(item) {
-			item.animate(
+			const anim = item.animate(
 				{
 					transform: 'scale(0.975) translateY(1px)',
 					filter: 'brightness(0.98)',
@@ -1750,36 +1750,49 @@
 				},
 				{ duration: 150, fill: 'forwards', easing: 'ease-out' }
 			);
+			item._pressAnim = anim; // save reference
+			return anim.finished;
 		}
 
 		function pressUp(item) {//TODO reduce press up time
-			item.animate(
-				{
-					transform: 'scale(1) translateY(0px)',
-					filter: 'brightness(1)',
-					boxShadow: 'var(--mb-button-unpress)'
-				},
-				{ duration: 50, fill: 'forwards', easing: 'ease-in' }
-			);
+			const finish = item._pressAnim?.finished || Promise.resolve();
+			finish.then(() => {
+				item.animate(
+					{
+						transform: 'scale(1) translateY(0px)',
+						filter: 'brightness(1)',
+						boxShadow: 'var(--mb-button-unpress)'
+					},
+					{ duration: 50, fill: 'forwards', easing: 'ease-in' }
+				);
+			});
 		}
-
 		function scaleDownShallow(item) {
-			item.animate({ scale: 0.95 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			const anim = item.animate({ scale: 0.95 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			item._pressAnim = anim; // save reference
+			return anim.finished;
 		}
 		function scaleDown(item) {
-			item.animate({ scale: 0.9 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			const anim = item.animate({ scale: 0.9 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			item._pressAnim = anim; // save reference
+			return anim.finished;
 		}
 		function scaleDownDeep(item) {
-			item.animate({ scale: 0.8 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			const anim = item.animate({ scale: 0.8 }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			item._pressAnim = anim; // save reference
+			return anim.finished;
 		}
 		function scaleUp(item) {
-			item.animate({ scale: 1 }, { duration: 50, fill: 'forwards', easing: 'ease-in' });
+			const finish = item._pressAnim?.finished || Promise.resolve();
+			finish.then(() => {
+				item.animate({ scale: 1 }, { duration: 50, fill: 'forwards', easing: 'ease-in' }
+				);
+			});
 		}
 
 		function addPressEvents(item, downFunction, upFunction) {
 			item.addEventListener('pointerdown', (event) => {
 				event.stopPropagation();
-				event.preventDefault();
 				downFunction(item);
 			});
 			item.addEventListener('pointerup', () => {
