@@ -44,7 +44,7 @@
 	--mb-button-transition:
 		opacity 0.3s,
 		color 0.3s ease,
-		background-color 0.3s,
+		background-color 0.3s ease,
 		border 0.2s ease,
 		box-shadow 0.15s ease,
 		text-shadow 0.3s ease,
@@ -56,7 +56,7 @@
 	--mb-button-transition-fast:
 		opacity 0.3s,
 		color 0.3s ease,
-		background-color 0.3s,
+		background-color 0.3s ease,
 		border 0.2s ease,
 		box-shadow 0.05s ease,
 		text-shadow 0.3s ease,
@@ -707,7 +707,7 @@ a {
 	align-items: center;
 	text-align: center;
 	cursor: pointer;
-	transition: all 0.3s ease;
+	/*transition: all 0.3s ease;*/
 	overflow: hidden;
 	font-size: 16px;
 	height: var(--mb-button-size);
