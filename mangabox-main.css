@@ -935,6 +935,7 @@ a {
 	color: white;
 	opacity: 0;
 	transition: opacity 0.3s ease 0.2s, text-shadow 0.3s ease;
+	will-change: transform;
 }
 
 .flip-horizontal {
