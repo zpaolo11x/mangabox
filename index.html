@@ -4116,7 +4116,7 @@
 		document.addEventListener('popstate', loadContent);
 
 		document.querySelectorAll('.press-button').forEach(item => addPressEvents(item, pressDown, pressUp));
-		document.querySelectorAll('.mini-buttons-2').forEach(item => addPressEvents(item, scaleDown, scaleUp));
+		document.querySelectorAll('.mini-buttons-2').forEach(item => addPressEvents(item, scaleDownDeep, scaleUp));
 
 		searchInput.addEventListener('pointerdown', (event) => {
 			event.stopPropagation();
