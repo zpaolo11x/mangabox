@@ -108,7 +108,34 @@
 					<div id="homeStripBooksResults" class="books-results search-results"></div>
 				</div>
 
-				<div id="bookDetailsContainer" class="section hidden"></div>
+				<div id="bookDetailsContainer" class="section hidden">
+					<div class="book-details-pic-container">
+						<div class="mini-controls">
+							<div class="mini-buttons-2 prev-book press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
+								<span class="fa-solid fa-chevron-left"></span>
+							</div>
+							<div class="mini-buttons-2 prev-book  press-flat-button" title="Go to library" onclick="jumpBookLibrary()">
+								<span class="fa-solid fa-layer-group"></span>
+							</div>
+							<div class="mini-buttons-2 next-book  press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
+								<span class="fa-solid fa-chevron-right"></span>
+							</div>
+						</div>
+						<div id="bookDetailsContainerThumbnailWrapper" title="Open Book" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+							<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
+						</div>
+					</div>
+					<div>
+						<div id="bookDetailsTitle" class="book-details-title"></div>
+						<div class="ul-container">
+							<ul id="bookDetailsSummary">
+							</ul>
+						</div>
+					</div>
+					<div class="close-details mini-buttons-2  press-flat-button" onclick="closeBookDetails()">
+						<span class="fa-solid fa-xmark"></span>
+					</div>
+				</div>
 
 				<div id="blanker"></div>
 			</div>
@@ -336,6 +363,7 @@
 
 			// Current book references for book details
 			currentBook: null,
+			seriesData: null,
 			prevBook: null,
 			nextBook: null,
 
@@ -427,7 +455,7 @@
 		colorValues.forEach((value, index) => {
 			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
-				className: 'color-swatch press-flat-button-shallow', //TODO tornare ai vecchi modi?
+				className: 'color-swatch press-flat-button', //TODO tornare ai vecchi modi?
 				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
 				style: {
 					backgroundColor: value,
@@ -1757,7 +1785,7 @@
 			return anim.finished;
 		}
 
-		function pressUp(item) {//TODO reduce press up time
+		function pressUp(item) {
 			const finish = item._pressAnim?.finished || Promise.resolve();
 			finish.then(() => {
 				item.animate(
@@ -1861,7 +1889,7 @@
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
-					className: 'button-wrapper library-menu-button press-flat-button-deep',
+					className: 'button-wrapper library-menu-button press-flat-button',
 				})
 
 				thumbnailWrapperMenu.append(mb.libraryMenuButtons[itemId]);
@@ -2085,9 +2113,12 @@
 
 		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
+			//TODO PUT THIS BACK?
+			/*
 			setTimeout(() => {
 				bookDetailsContainer.innerHTML = ''
 			}, 300);
+			*/
 		}
 
 		function jumpBookDetailsPrev() {
@@ -2095,6 +2126,9 @@
 		}
 		function jumpBookDetailsNext() {
 			if (mb.nextBook != null) showBookDetails(mb.nextBook);
+		}
+		function jumpBookLibrary() {
+			navigateTo(`#series?library_id=${mb.currentBook.libraryId}&series_id=${mb.currentBook.seriesId}&book_id=${mb.currentBook.id}`)
 		}
 
 		async function showBookDetails(book) {
@@ -2105,6 +2139,7 @@
 			);
 			const readingDirection = seriesData.metadata.readingDirection;
 
+			mb.seriesData = seriesData;
 			mb.currentBook = book;
 			mb.prevBook = null;
 			mb.nextBook = null;
@@ -2118,39 +2153,10 @@
 			sectionShow(bookDetailsContainer);
 			let summaryArray = book.metadata.summary.split(/\r?\n/);
 
-			let text = `
-			<div class="book-details-pic-container">
-				<div class="mini-controls">
-					<div class="mini-buttons-2 prev-book press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
-						<span class="fa-solid fa-chevron-left"></span>
-					</div>
-					<div class="mini-buttons-2 prev-book  press-flat-button" title="Go to library" onclick="navigateTo('#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}')">
-						<span class="fa-solid fa-layer-group"></span>
-					</div>
-					<div class="mini-buttons-2 next-book  press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
-						<span class="fa-solid fa-chevron-right"></span>
-					</div>			
-				</div>
-				<div id="bookDetailsContainerThumbnailWrapper" title="Open Book" onclick="navigateToReadBook(mb.currentBook, '${readingDirection}')">
-					<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
-				</div>
-			</div>
-			<div>
-				<div class="book-details-title">${book.metadata.title}</div>
-				<div class="ul-container">
-					<ul>
-						${summaryArray.map(element => `<li>${element}</li>`).join('')}
-					</ul>
-				</div>
-			</div>
-			<div class="close-details mini-buttons-2  press-flat-button" onclick="closeBookDetails()">
-				<span class="fa-solid fa-xmark"></span>
-			</div>
-			`;
-			bookDetailsContainer.innerHTML = text;
+			bookDetailsTitle.innerText = book.metadata.title;
+			bookDetailsSummary.innerHTML = summaryArray.map(element => `<li>${element}</li>`).join('');
 			bookDetailCover.lazySrc = `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`;
 			addLazyLoading(bookDetailCover);
-			document.querySelectorAll('.mini-buttons-2').forEach(item => addPressEvents(item, scaleDown, scaleUp));
 
 		}
 
@@ -3438,7 +3444,6 @@
 		function getPageFromSpread(index) {
 			const spreadObject = rd.spreadsArray[index];
 
-			//TODO Cosa succede se finisce con uno un orfano?
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
@@ -4104,6 +4109,7 @@
 		document.addEventListener('popstate', loadContent);
 
 		document.querySelectorAll('.press-button').forEach(item => addPressEvents(item, pressDown, pressUp));
+		document.querySelectorAll('.mini-buttons-2').forEach(item => addPressEvents(item, scaleDown, scaleUp));
 
 		searchInput.addEventListener('pointerdown', (event) => {
 			event.stopPropagation();

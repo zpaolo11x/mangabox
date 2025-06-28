@@ -657,10 +657,9 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
+/* All press-button classes are animated with 3D button */
 .press-button,
-.press-flat-button-shallow,
-.press-flat-button,
-.press-flat-button-deep {
+.press-flat-button{
 	transition: var(--mb-button-transition);
 }
 
