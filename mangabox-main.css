@@ -956,9 +956,10 @@ a {
 }
 
 .mini-buttons.book-details {
-	left: 50%;
+	left: 0;
+	right: 0;
+	margin: auto;
 	bottom: 10px;
-	margin-left: -12.5px
 	/* Centers the div */
 }
 
