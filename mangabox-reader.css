@@ -820,12 +820,16 @@ div.single-page {
 	border-radius: 0 20px 20px 0;
 	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
 	padding-right: var(--mb-pill-pad);
+	transform-origin: center left;
+
 }
 
 .corner-left {
 	border-radius: 20px 0 0 20px;
 	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
 	padding-left: var(--mb-pill-pad);
+	transform-origin: center right;
+
 }
 
 
