@@ -1343,22 +1343,21 @@
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData, null);
 			} else {
-				console.log("X")
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
-					console.log("Y")
 					const oldTop = mainContainer.scrollTop;
 					await Promise.all(
 						Object.entries(dashboardElements).map(async ([name, item]) => {
 							const resultsObject = await item.getItems(0, 20);
+							//TODO consolidate this with other places?
+							item.element.style.display = resultsObject.empty ? 'none' : 'block';
 							item.showItems(resultsObject.content, item.homeStrip);
 						})
 					);
 					setTimeout(updateSliderProperties, 100);
 					mainContainer.scrollTop = oldTop;
 				} else {
-					console.log("Z")
 					const bookData = await callAPI(`/api/v1/books/${bookId}`);
 					buildBookItem(item, bookData, format, null);
 				}
@@ -2510,7 +2509,7 @@
 			stripNextPage.classList.remove('disabled');
 			if (data.first) stripPrevPage.classList.add('disabled');
 			if (data.last) stripNextPage.classList.add('disabled');
-
+				
 			dashboardElements[element].showItems(array, stripGrid);
 		}
 
