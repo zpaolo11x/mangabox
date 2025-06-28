@@ -1,12 +1,12 @@
 Main UI
-- Add new pill-shaped buttons and controls
+- New pill-shaped buttons and controls
+- New press button effects on main UI
 - Improve Electron dragbar layering
-- New button press effect on main UI
 - Custom dialogs for adding/removing images
 
 Reader
 - Keep window controls visible in reader view
-- Improve responsiveness of seek bar
+- Improve responsiveness of seek bar dragging
 - Only update pages when seek bar stops
 
 Build
