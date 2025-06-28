@@ -1563,6 +1563,7 @@
 				event.stopPropagation();
 				await setSeriesReadStatus(serie.id, true, item);
 			})
+			addPressEvents(markAsRead, scaleDown, scaleUp)
 			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
@@ -1575,6 +1576,7 @@
 				await setSeriesReadStatus(serie.id, false, item);
 			})
 			noPointerDown(markAsUnread);
+			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			// Find alternate title with label 'Time'
 			const altTitle = getAltTitles(serie);
