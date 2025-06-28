@@ -10,7 +10,7 @@ Reader
 - Only update pages when seek bar stops
 
 Build
-- 
+- Update web documentation
 
 Fixes
 - Fix z-index issue when scaling thumbnails
