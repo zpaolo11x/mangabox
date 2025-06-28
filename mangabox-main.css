@@ -1427,7 +1427,7 @@ a {
 .book-item.scaled:active,
 #bookDetailsContainerThumbnailWrapper:active {
 	/*scale: 1.03;*/
-	animation: zoomInOut 0.2s ease 0s 1 forwards;
+	animation: zoomInOut 0.3s ease 0s 1 forwards;
 }
 
 .series-container.top-pop,
