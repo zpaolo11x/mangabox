@@ -16,3 +16,4 @@ Fixes
 - Fix z-index issue when scaling thumbnails
 - Fix "y:" search for time range
 - Fix drag bar when in reader view
+- Fix dashboard update when marking as read/unread
