@@ -462,7 +462,7 @@
 				},
 			});
 			addPressEvents(colorSwatch, scaleDownShallow, scaleUp);
-			colorSwatch.addEventListener('click', () => {
+			colorSwatch.addEventListener('click', (event) => {
 				event.stopPropagation();
 				mb.accentColor = index;
 				applyAccent();
@@ -2261,10 +2261,11 @@
 				title: 'Mark book as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
-			markAsRead.addEventListener('click', () => {
+			markAsRead.addEventListener('click', (event) => {
 				event.stopPropagation();
 				setBookReadStatus(book.id, true, item, format);
 			})
+			addPressEvents(markAsRead, scaleDown, scaleUp)
 			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
@@ -2272,11 +2273,12 @@
 				title: 'Mark book as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
-			markAsUnread.addEventListener('click', () => {
+			markAsUnread.addEventListener('click', (event) => {
 				event.stopPropagation();
 				setBookReadStatus(book.id, false, item, format);
 			});
 			noPointerDown(markAsUnread);
+			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			bookOverlay.append(markAsRead, markAsUnread);
 
@@ -2292,6 +2294,7 @@
 					showBookDetails(book);
 				})
 				noPointerDown(bookDetails);
+			addPressEvents(bookDetails, scaleDown, scaleUp)
 
 				bookOverlay.append(bookDetails);
 			}

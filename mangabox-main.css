@@ -958,7 +958,7 @@ a {
 .mini-buttons.book-details {
 	left: 50%;
 	bottom: 10px;
-	transform: translate(-50%, 0%);
+	margin-left: -12.5px
 	/* Centers the div */
 }
 
@@ -1423,8 +1423,8 @@ a {
 */
 
 /*//TODO Magari non mi piace...*/
-.series-item.scaled:active,
-.book-item.scaled:active,
+.series-item.scaled:active:not(:has(.mini-buttons:hover)),
+.book-item.scaled:active:not(:has(.mini-buttons:hover)),
 #bookDetailsContainerThumbnailWrapper:active {
 	/*scale: 1.03;*/
 	animation: zoomInOut 0.3s ease 0s 1 forwards;
