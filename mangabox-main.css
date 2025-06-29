@@ -717,7 +717,6 @@ a {
 	font-size: 16px;
 	height: var(--mb-button-size);
 	/*transition: background-color 0.3s ease, width 0.3s ease;*/
-
 	/*text-transform: uppercase;*/
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }
@@ -1134,7 +1133,10 @@ a {
 	vertical-align: top;
 	margin-top: 0px;
 	cursor: pointer;
+}
 
+.strip-button:hover {
+	opacity: 0.7;
 }
 
 .strip-header-container {
