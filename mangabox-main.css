@@ -1158,6 +1158,7 @@ a {
 	transition: all 0.3s;
 	box-shadow: 0px 2px 25px rgba(0, 0, 0, 0);
 	height: 32px;
+	z-index: 950;
 }
 
 #stripGridHeaderContainer.collapse {
