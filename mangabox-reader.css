@@ -235,7 +235,7 @@ img.page:not(.hidden) {
 	height: 100%;
 	opacity: 0;
 	transition: opacity 0.15s;
-	background: linear-gradient(to Right, rgba(255,255,250,0.4) , hsla(15,19%,33%,0.2) 20%, transparent 80%);
+	background: linear-gradient(to Right, rgba(255, 255, 250, 0.4), hsla(15, 19%, 33%, 0.2) 20%, transparent 80%);
 }
 
 .page-light-left {
@@ -246,7 +246,7 @@ img.page:not(.hidden) {
 	height: 100%;
 	opacity: 0;
 	transition: opacity 0.15s;
-	background: linear-gradient(to Left, rgba(255,255,250,0.4) , hsla(15,19%,33%,0.2) 20%, transparent 80%);
+	background: linear-gradient(to Left, rgba(255, 255, 250, 0.4), hsla(15, 19%, 33%, 0.2) 20%, transparent 80%);
 }
 
 .hidden-page {
@@ -336,6 +336,7 @@ div.single-page,
 	box-sizing: content-box;
 	/*z-index: 100;*/
 }
+
 /*
 div.cover-page {
 	object-position: center center;
@@ -581,8 +582,9 @@ div.single-page {
 	position: fixed;
 	width: 150px;
 	/*background-color: red;*/
-	left: 50%;
-	transform: translateX(-50%);
+	left: 0;
+	right: 0;
+	margin: auto;
 	/* Center it horizontally */
 	bottom: calc(var(--mb-thumb-height-px) + 60px + 10px);
 	z-index: 10;
@@ -733,8 +735,8 @@ div.single-page {
 #bookName {
 	text-align: center;
 	font-size: 20px;
-	margin-left:10px;
-	margin-right:10px;
+	margin-left: 10px;
+	margin-right: 10px;
 	display: -webkit-box;
 	line-clamp: 2;
 	-webkit-line-clamp: 2;
@@ -751,8 +753,8 @@ div.single-page {
 	cursor: pointer;
 	border-radius: 5px;
 	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.15);
-	margin-left:10px;
-	margin-right:10px;
+	margin-left: 10px;
+	margin-right: 10px;
 }
 
 #readerProgress {

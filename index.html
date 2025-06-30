@@ -743,7 +743,7 @@
 			scrollbox.addEventListener('mouseenter', () => {
 				updateThumb();
 				showScrollbarTemporarily();
-		});
+			});
 
 			// Drag support
 			let isDragging = false;
@@ -2514,7 +2514,7 @@
 			stripNextPage.classList.remove('disabled');
 			if (data.first) stripPrevPage.classList.add('disabled');
 			if (data.last) stripNextPage.classList.add('disabled');
-				
+
 			dashboardElements[element].showItems(array, stripGrid);
 		}
 
@@ -2855,6 +2855,7 @@
 		thumbStripButton.addEventListener('click', () => {
 			setThumbZoom(!rd.thumbZoom);
 		});
+		addPressEvents(thumbStripButton, scaleDown, scaleUp);
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {

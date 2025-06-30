@@ -659,7 +659,7 @@ a {
 
 /* All press-button classes are animated with 3D button */
 .press-button,
-.press-flat-button{
+.press-flat-button {
 	transition: var(--mb-button-transition);
 }
 
