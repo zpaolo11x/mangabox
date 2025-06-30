@@ -740,7 +740,10 @@
 				showScrollbarTemporarily();
 			});
 
-			scrollbox.addEventListener('mouseenter', showScrollbarTemporarily);
+			scrollbox.addEventListener('mouseenter', () => {
+				updateThumb();
+				showScrollbarTemporarily();
+		});
 
 			// Drag support
 			let isDragging = false;
