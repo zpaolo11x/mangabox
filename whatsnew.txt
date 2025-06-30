@@ -1,5 +1,5 @@
 Main UI
-- 
+- Fixed mini buttons positioning on Chromium
 
 Reader
 - 
