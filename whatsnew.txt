@@ -1,20 +1,19 @@
 Main UI
-- Drag images on the library button to set a custom image
-- Long press a library button to remove custom image
-- Add new color highlights, including macOS highlight colors
-- Allow sorting libraries by book count
-- Never collapse sorting button
-- Use Komga user-settings API to save settings
-- Improve contrast of highlighted buttons
+- New pill-shaped buttons and controls
+- New press button effects on main UI
+- Improve Electron dragbar layering
+- Custom dialogs for adding/removing images
 
 Reader
-- Support different color themes for reader background
-- Remove white margins from cover page
-- Add highlight to turn page animation
-- Increase saturation of reader background
+- Keep window controls visible in reader view
+- Improve responsiveness of seek bar dragging
+- Only update pages when seek bar stops
 
 Build
-- Updated documentation
+- Update web documentation
 
 Fixes
-- Fix spacing of last strip in dashboard
+- Fix z-index issue when scaling thumbnails
+- Fix "y:" search for time range
+- Fix drag bar when in reader view
+- Fix dashboard update when marking as read/unread

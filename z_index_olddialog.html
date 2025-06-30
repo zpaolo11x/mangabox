@@ -23,7 +23,7 @@
 
 	<link rel="stylesheet" href="fontawesome/all.min.css">
 
-	<link rel="stylesheet" href="mangabox.css">
+	<link rel="stylesheet" href="mangabox-main.css">
 	<link rel="stylesheet" href="mangabox-reader.css">
 
 </head>
@@ -32,34 +32,44 @@
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
-				<ul id="librariesList" class="libraries-list"></ul>
-				<ul id="librariesRightBlock" class="libraries-list buttons right-block">
+				<ul id="librariesList"></ul>
+				<ul id="librariesRightBlock">
+					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item">
+						<div class="button-wrapper">
+							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
+						</div>
+					</li>
 					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
 						</div>
 					</li>
 					<li id="colorChanger" title="Theme Color" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
 					<li id="searchField" title="Search" class="library-item search-field">
-						<div id="searchIcon" class="thumbnail-wrapper">
+						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
 						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
 					</li>
 					<li id="logOut" title="Logout" class="library-item">
-						<div class="thumbnail-wrapper">
+						<div class="button-wrapper">
 							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
 			</div>
-			<div id="extraMenuBar" class="hidden">
+
+			<div id="filtersBar" class="extra-bar hidden">
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
+
+			<div id="colorSwatchBar" class="extra-bar hidden">
+			</div>
+
 		</div>
 		<div class="scrollbox" data-scroll-direction="vertical">
 			<div id="mainContainer" class="scrollbox-content">
@@ -106,29 +116,14 @@
 				<div class="scrollbox-thumb"></div>
 			</div>
 		</div>
-
 	</div>
-	<div id="dragbar" class="draggable">
-		<img id="barLogo" src="mangabox-logo-16.svg">
 
-		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
-		<span id="appName">MangaBox</span>
-		<div class="window-controls no-drag">
-			<span class="fa-solid fa-window-minimize glyph-dark" id="minBtn"></span>
-			<span class="fa-regular fa-window-maximize glyph-dark" id="maxBtn"></span>
-			<span class="fa-solid fa-xmark glyph-dark" id="closeBtn"></span>
-		</div>
-	</div>
 	<div id="readerContainer" class="section hidden">
 		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
-		<!--
-		<img id="leftForeEdge" src="pagesZ3.png">
-		<img id="rightForeEdge" src="pagesZ3.png">
-		-->
 
-		<div id="readerOverlay" class="draggable">
+		<div id="readerOverlay">
 			<div id="incognitoMark"></div>
 
 			<div id="touchPanel">
@@ -139,9 +134,11 @@
 
 			<div id="controlPanel" class="hidden">
 				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
+					<span id="readerClose" title="Close Reader" class="reader-buttons corner-circle fa-solid fa-xmark"></span>
+					<span></span>
 					<span id="bookName"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
+					<span id="readerTheme" title="Reader Theme" class="reader-buttons corner-left fa-solid"></span>
+					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons corner-right fa-solid fa-ghost"></span>
 				</div>
 
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
@@ -159,16 +156,28 @@
 				</div>
 
 				<div id="bottomControls">
-					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
-					<span id="leftLimit" class="bar-note"></span>
+					<span id="leftArrow" class="reader-buttons corner-left fa-solid fa-caret-left"></span>
+					<span id="leftLimit" class="bar-note corner-right"></span>
 					<div id="readerProgressBar" onclick="seek(event)">
 						<div id="readerProgress"></div>
 						<div id="readerPage"></div>
 					</div>
-					<span id="rightLimit" class="bar-note"></span>
-					<span id="rightArrow" class="reader-buttons fa-solid fa-caret-right"></span>
+					<span id="rightLimit" class="bar-note corner-left"></span>
+					<span id="rightArrow" class="reader-buttons corner-right fa-solid fa-caret-right"></span>
 				</div>
 			</div>
+		</div>
+	</div>
+
+	<div id="dragbar" class="draggable">
+		<img id="barLogo" src="mangabox-logo-16.svg">
+
+		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
+		<span id="dragbarAppTitle">MangaBox</span>
+		<div id="windowControls" , class="window-controls no-drag">
+			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
+			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
+			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
 		</div>
 	</div>
 
@@ -210,57 +219,56 @@
 
 	<script>
 
+
 		//MB Manage Electron titlebar
 
-		const isElectron = !!window.electronAPI;
+		const isElectronApp = !!window.electronAPI;
 
-		if (isElectron) {
-			minBtn.addEventListener('click', () => {
-				window.electronAPI.minimize();
-			});
-
-			maxBtn.addEventListener('click', () => {
-				window.electronAPI.maximize();
-			});
-
-			closeBtn.addEventListener('click', () => {
-				window.electronAPI.close();
-			});
-
-			window.electronAPI.onFullscreenChange((isFullscreen) => {
-				if (isFullscreen) {
-					document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-					dragbar.style.display = 'none';
-				} else {
-					document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
-					dragbar.style.display = '';
-				}
-			});
-
-			window.electronAPI.onMaximize(() => {
-				maxBtn.classList.remove('fa-window-maximize');
-				maxBtn.classList.add('fa-window-restore');
-			});
-
-			window.electronAPI.onUnmaximize(() => {
-				maxBtn.classList.remove('fa-window-restore');
-				maxBtn.classList.add('fa-window-maximize');
-			});
-
-			window.electronAPI.getAppVersion().then(version => {
-				appName.textContent = 'MangaBox v' + version;
-			});
-		}
-
-		// Hide dragbar in PWA mode
-		(function () {
-			if (!isElectron) {
+		function enableDragbar(enabled) {
+			if (!enabled) {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
 				document.getElementById('dragbar').style.display = 'none';
 			} else {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
 				document.getElementById('dragbar').style.display = '';
 			}
+		}
+
+		if (isElectronApp) {
+			dragbarMinBtn.addEventListener('click', () => {
+				window.electronAPI.minimize();
+			});
+
+			dragbarMaxBtn.addEventListener('click', () => {
+				window.electronAPI.maximize();
+			});
+
+			dragbarCloseBtn.addEventListener('click', () => {
+				window.electronAPI.close();
+			});
+
+			window.electronAPI.onFullscreenChange((isFullscreen) => {
+				enableDragbar(!isFullscreen);
+			});
+
+			window.electronAPI.onMaximize(() => {
+				dragbarMaxBtn.classList.remove('fa-window-maximize');
+				dragbarMaxBtn.classList.add('fa-window-restore');
+			});
+
+			window.electronAPI.onUnmaximize(() => {
+				dragbarMaxBtn.classList.remove('fa-window-restore');
+				dragbarMaxBtn.classList.add('fa-window-maximize');
+			});
+
+			window.electronAPI.getAppVersion().then(version => {
+				dragbarAppTitle.textContent = 'MangaBox v' + version;
+			});
+		}
+
+		// Hide dragbar in PWA mode
+		(function () {
+			enableDragbar(isElectronApp);
 		})();
 
 
@@ -270,28 +278,46 @@
 		}
 
 		function addItem(itemkind, properties) {
-			return Object.assign(document.createElement(itemkind), properties);
+			const { style, ...rest } = properties;
+			const element = Object.assign(document.createElement(itemkind), rest);
+			if (style) Object.assign(element.style, style);
+			return element;
 		}
 
 		function getScreenAR() {
 			return (window.innerWidth / window.innerHeight);
 		}
 
+		function toggleFullscreen() {
+			if (!document.fullscreenElement) {
+				document.documentElement.requestFullscreen();
+			} else {
+				document.exitFullscreen();
+			}
+		}
+
+		document.addEventListener('fullscreenchange', updateFullscreenLabel);
+
+		function updateFullscreenLabel() {
+			fullscreenLabel.classList.remove('fa-expand', 'fa-compress');
+			if (document.fullscreenElement) {
+				fullscreenLabel.classList.add('fa-compress');
+			} else {
+				fullscreenLabel.classList.add('fa-expand');
+			}
+		}
+
 		//MB Main Variable Setup 
 
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = {
-			// Local storage variable setup
-			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
-			accentColor: Number(localStorage.getItem('mbAccentColor')) ?? 0,
-			themePrefs: Number(localStorage.getItem('mbThemePrefs')) ?? 0,
-			darkTheme: false,
-			libraryFilters: JSON.parse(localStorage.getItem('mbLibraryFilters') || '{}'),
+
 			authHeader: localStorage.getItem('mbAuthHeader'),
 			baseUrl: localStorage.getItem('mbBaseUrl'),
 			rememberMe: localStorage.getItem('mbRememberMe'),
 
 			basePath: '', //'/mangabox/'
+			darkTheme: false,
 
 			// Scaling of selected item control
 			currentlyScaled: null,
@@ -310,6 +336,9 @@
 			// Filter table placeholders
 			filterTable: null,
 			filterButtons: null,
+			filterSizer: null,
+
+			libraryMenuButtons: {},
 
 			libSizer: {}, // Used to calculate libraries button size
 			dashboardBin: "",
@@ -337,15 +366,135 @@
 				}
 			],
 
-			swatches: getComputedStyle(document.documentElement)
-				.getPropertyValue('--mb-swatches')
+			readerThemeControl: [
+				{
+					label: "Classic theme",
+					icon: "fa-palette",
+					style: "classic"
+				}, {
+					label: "Dark accent",
+					icon: "fa-moon",
+					style: "dark-accent"
+				}, {
+					label: "Light accent",
+					icon: "fa-sun",
+					style: "light-accent"
+				}, {
+					label: "White",
+					icon: "fa-w",
+					style: "white"
+				}, {
+					label: "Black",
+					icon: "fa-b",
+					style: "black"
+				}
+			],
+
+			swatchesHi: getComputedStyle(document.documentElement)
+				.getPropertyValue('--mb-swatches-hi')
+				.match(/hsl\([^)]*\)/g)
+				.map(swatch => swatch.match(/(\d+%?)/g)),
+
+			swatchesLo: getComputedStyle(document.documentElement)
+				.getPropertyValue('--mb-swatches-lo')
 				.match(/hsl\([^)]*\)/g)
 				.map(swatch => swatch.match(/(\d+%?)/g)),
 
 			// Media Cache
 			mediaCache: new Map(), 	//Media cache table structure
 			cacheLimit: 250,			//Limit of items in media cache
+
+			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
+
 		}
+		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
+		const colorValues = getComputedStyle(document.documentElement)
+			.getPropertyValue('--mb-swatches-hi')
+			.match(/hsl\([^)]*\)/g);
+
+		colorValues.forEach((value, index) => {
+			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
+			const colorSwatch = addItem('span', {
+				className: 'color-swatch',
+				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
+				style: {
+					backgroundColor: value,
+				},
+			});
+			colorSwatch.addEventListener('click', () => {
+				event.stopPropagation();
+				mb.accentColor = index;
+				applyAccent();
+			});
+			colorSwatchBar.append(colorSwatch);
+		});
+
+
+		//MB API Call Function 
+		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
+			try {
+				const response = await fetch(`${mb.baseUrl}${API_url}`, {
+					method: method,
+					headers: {
+						'Authorization': mb.authHeader,
+						'Content-Type': 'application/json',
+						'skip_zrok_interstitial': '1' // Add header to skip interstitial
+					},
+					body: body
+				});
+
+				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+
+				if (returnval) {
+					const output = await response.json();
+					return output;
+				}
+			} catch (error) {
+				console.error('Fetch libraries error:', error);
+			}
+		}
+
+		async function getUserSettings() {
+			const settings = await callAPI('/api/v1/client-settings/user/list', 'GET');
+			const mangaboxFlat = Object.fromEntries(
+				Object.entries(settings)
+					.filter(([key]) => key.startsWith("mangabox"))
+					.map(([key, obj]) => [key, obj.value])
+			);
+			return mangaboxFlat
+		}
+
+		async function setUserSettings(key, value) {
+			const payload = {
+				[key]: { value: value },
+			};
+			await callAPI('/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
+		}
+
+		async function delUserSettings() {
+			await callAPI('/api/v1/client-settings/user', 'DELETE', JSON.stringify([
+				'mangabox.ui.accentcolor',
+				'mangabox.ui.themeprefs',
+				'mangabox.ui.readerthemeprefs',
+				'mangabox.ui.libraryfilters',
+				'mangabox.ui.libraryicons',
+			]), false);
+		}
+
+		let userSettings;
+
+		//delUserSettings()
+
+		function applyUserSettings() {
+			// Local storage variable setup
+			mb.accentColor = Number(userSettings['mangabox.ui.accentcolor'] ?? 0);
+			mb.themePrefs = Number(userSettings['mangabox.ui.themeprefs'] ?? 0);
+			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
+			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
+			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
+		}
+
+
 
 		//MB Local Storage Update
 		rememberMe.checked = (mb.rememberMe == 'true');
@@ -357,17 +506,23 @@
 
 		//MB Theme Management 
 
-		function changeAccent(id) {
+		function warmth(hue) {
+			const warmth = (Math.cos((hue - 50) * Math.PI / 180) + 1) / 2;
+			return warmth;
+		}
+
+		function applyAccent() {
+			const swatches = mb.darkTheme ? mb.swatchesLo : mb.swatchesHi;
+
 			['--mb-h', '--mb-s', '--mb-l'].forEach((varName, index) => {
-				document.documentElement.style.setProperty(varName, mb.swatches[id][index]);
+				document.documentElement.style.setProperty(varName, swatches[mb.accentColor][index]);
 			});
-			document.documentElement.style.setProperty('--mb-h-deg', mb.swatches[id][0] + 'deg');
-			/*
-			// Custom colored top bar
-			const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-			metaThemeColor.setAttribute('content', `hsl(${mb.swatches[id][0]},100%,10%)`);
-			*/
-			localStorage.setItem('mbAccentColor', mb.accentColor)
+			document.documentElement.style.setProperty('--mb-h-deg', swatches[mb.accentColor][0] + 'deg');
+
+			document.documentElement.style.setProperty('--mb-gradient-1', Number(swatches[mb.accentColor][0]));
+			document.documentElement.style.setProperty('--mb-gradient-2', Number(swatches[mb.accentColor][0]) - 10);
+
+			setUserSettings("mangabox.ui.accentcolor", mb.accentColor);
 		}
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
@@ -399,6 +554,7 @@
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
 			});
+
 			themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
 			themeLabel.title = mb.themeControl[mb.themePrefs].label;
 			// Change fa icons for light or dark theme
@@ -407,13 +563,14 @@
 			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
 
 			// Save theme setting in local storage
-			localStorage.setItem('mbThemePrefs', mb.themePrefs);
+			setUserSettings('mangabox.ui.themeprefs', mb.themePrefs);
 
 			mb.darkTheme = toDark;
 
 			//Ttheme based top bar
 			updatePWABar();
 
+			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
 
 		mb.prefersDarkMode.addEventListener('change', changeTheme);
@@ -433,24 +590,33 @@
 		}
 
 		// Show/Hide reader pages/spreads
-		function spreadHide(item) {
-			item.classList.add('hidden-spread');
+		function spreadHide(index) {
+			rd.spreadsArray[index].uiItem.classList.add('hidden-spread');
 		}
-		function spreadShow(item) {
-			item.classList.remove('hidden-spread');
+		function spreadShow(index) {
+			rd.spreadsArray[index].uiItem.classList.remove('hidden-spread');
 		}
-		function isSpreadHidden(item) {
-			return (item.classList.contains('hidden-spread'));
+		function isSpreadHidden(index) {
+			return (rd.spreadsArray[index].uiItem.classList.contains('hidden-spread'));
 		}
 
 		colorChanger.addEventListener('click', () => {
-			mb.accentColor = (mb.accentColor + 1) % mb.swatches.length;
-			changeAccent(mb.accentColor);
+			sectionToggle(colorSwatchBar)
+			/*
+			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
+			applyAccent();
+			*/
 		});
 
 		themeChanger.addEventListener('click', () => {
 			mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
 			changeTheme();
+		})
+
+		fullscreenChanger.addEventListener('click', () => {
+			//mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
+			//changeTheme();
+			toggleFullscreen();
 		})
 
 		logOut.addEventListener('click', async () => {
@@ -591,30 +757,32 @@
 		}
 
 		async function performSearch(searchString) {
-			libraryHighlight('searchField');
+			libraryHighlight('searchField', false);
 
 			if (searchString.includes('y:')) {
-
-				//TODO there was a sort entry here, not needed anymore?
-				// const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
+				console.log("y search")
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
 				);
 				const dataArray = unFilteredSeries.content;
 				const searchYear = timeSplit(searchString.split('y:')[1].split(' ')[0]);
+				console.log(searchYear);
 
-				let start = [];
-				let stop = [];
+				let start = 0;
+				let stop = 0;
 				let filterArray = [];
 
 				for (let i = 0; i < dataArray.length; i++) {
-					if (dataArray[i].metadata.alternateTitles.length == 0) continue;
+					if (dataArray[i].metadata.alternateTitles.length == 0) {
+						filterArray.push(false);
+						continue;
+					}
 					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
-					start.push(Number(dateArray[0]));
-					stop.push(Number(dateArray[1] ?? dateArray[0]));
+					start=(Number(dateArray[0]));
+					stop=(Number(dateArray[1] ?? dateArray[0]));
 
-					filterArray.push(!((start[i] > Number(searchYear[1])) || (stop[i] < Number(searchYear[0]))));
+					filterArray.push(!((start > Number(searchYear[1])) || (stop < Number(searchYear[0]))));
 				}
 
 				const filteredSeries = dataArray.filter((item, index) =>
@@ -622,14 +790,12 @@
 				);
 				displaySeries(filteredSeries, homeStripSeriesResults);
 				focusItem('top');
-				setTimeout(updateSliderMax, 10);
+				setTimeout(updateSliderProperties, 10);
 				sectionShow(searchStripsContainer);
 
 				return
 			}
 
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
@@ -645,8 +811,6 @@
 			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredBooks = await callAPI(`/api/v1/books?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredBooks = await callAPI(
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
 				'POST', `{"condition": {"allOf": []}}`
@@ -662,7 +826,7 @@
 			);
 			displayBooks(filteredBooks, homeStripBooksResults, 'compact', 'top');
 
-			setTimeout(updateSliderMax, 10);
+			setTimeout(updateSliderProperties, 10);
 			sectionShow(searchStripsContainer);
 		}
 
@@ -680,34 +844,44 @@
 				switches: [
 					{
 						name: 'a_to_z',
-						caption: 'By title',
+						caption: 'by Title',
 						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 					}, {
 						name: 'z_to_a',
-						caption: 'By title',
+						caption: 'by Title',
 						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
 						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 					}, {
 						name: '9_to_1',
-						caption: 'By start',
+						caption: 'by Start',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 						sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
 					}, {
 						name: '1_to_9',
-						caption: 'By start',
+						caption: 'by Start',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 						sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 					}, {
 						name: '9_to_1',
-						caption: 'By end',
+						caption: 'by End',
 						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 						sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
 					}, {
 						name: '1_to_9',
-						caption: 'By end',
+						caption: 'by End',
 						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 						sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
+					}, {
+						name: '1_to_9',
+						caption: 'Books',
+						iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
+						sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
+					}, {
+						name: '9_to_1',
+						caption: 'Books',
+						iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
+						sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
 					}
 				],
 			},
@@ -793,7 +967,7 @@
 					name: item,
 					caption: item.toUpperCase(),
 					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
-					iconStyle: `background-image:url('flags/${item}.svg`,
+					iconStyle: `background-image:url('flags/${item}.svg')`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
 				})
 			});
@@ -814,7 +988,7 @@
 				filterOut[button.name] = button.selected;
 			});
 			mb.libraryFilters[libraryId] = filterOut;
-			localStorage.setItem('mbLibraryFilters', JSON.stringify(mb.libraryFilters));
+			setUserSettings('mangabox.ui.libraryfilters', JSON.stringify(mb.libraryFilters));
 		}
 
 		function fetchLibraryFilters(libraryId) {
@@ -828,14 +1002,18 @@
 		}
 
 		async function applyLibraryFilters() {
-			const divs = Array.from(seriesGrid.children);
+			const { path, params } = getHashAndParams();
+			const libraryId = params.get('library_id');
 
+			const divs = Array.from(seriesGrid.children);
 			divs.forEach(div => {
 				div.infilter = true;
 			});
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
-			libraryMenuIcon.className = isFiltered == 0 ? 'fa-solid fa-sliders glyph-dark' : 'fa-solid fa-sliders mb-accent glyph-dark'
+
+			mb.libraryMenuButtons[libraryId].classList.remove('filtered');
+			if (isFiltered != 0) mb.libraryMenuButtons[libraryId].classList.add('filtered');
 
 			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
@@ -867,7 +1045,7 @@
 				title: button.title,
 			});
 			button.icon = addItem('div', {
-				className: `thumbnail-wrapper`,
+				className: `smallbutton-wrapper`,
 				innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
 			});
 			button.caption = addItem('div', {
@@ -891,7 +1069,7 @@
 		extraButtons.append(addItem('li', {
 			title: 'Reset filters and sorting',
 			className: `filter-item`,
-			innerHTML: `<div class="thumbnail-wrapper">
+			innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
 							</div>`,
 			onclick: async () => {
@@ -905,24 +1083,28 @@
 			}
 		}));
 
+		function isReaderHorizontal(screenAR) {
+			return (screenAR / mb.readerMaxRatio > rd.orientationThresholdRatio);
+		}
+
 		function updateReaderOrientation() {
 			let newScreenAR = getScreenAR();
 
 			if (isSectionHidden(readerContainer)) {
 				mb.screenAR = newScreenAR;
-				mb.readerHorizontal = newScreenAR / mb.readerMaxRatio > rd.thresholdRatio;
+				mb.readerHorizontal = isReaderHorizontal(newScreenAR);
 			} else {
-				let newReaderHorizontal = (newScreenAR / mb.readerMaxRatio > rd.thresholdRatio);
+				let newReaderHorizontal = isReaderHorizontal(newScreenAR);
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
 					mb.readerHorizontal = newReaderHorizontal;
-					spreadSetFocus(getCenterClass(rd.currentSpreadIndex), true, false);
+					spreadSetFocusSmooth(getSpreadFocus(rd.currentSpreadIndex));
 				}
 			}
 		}
 
-		// Set the slider max value based on the scroll width
-		function updateSliderMax() {
+		// Set the slider max value and grpahics properties based on the scroll width
+		function updateSliderProperties() {
 			if (isSectionHidden(homeStripsContainer)) return;
 
 			Object.entries(dashboardElements).forEach(([name, item]) => {
@@ -949,42 +1131,61 @@
 
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
+
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 0) {
 				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
+
 			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 0) {
 				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-medium');
 			} else {
 				document.body.classList.remove('sticky-medium');
+				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-small');
-			};
-		}
 
+				if (containerWidth - mb.libSizer.large >= 9) {
+					document.body.classList.add('sticky-hybrid');
+				}
+			};
+
+			if (containerWidth - mb.filterSizer >= 0) {
+				extraButtons.classList.remove('filter-small')
+			} else {
+				extraButtons.classList.add('filter-small')
+			}
+
+		}
 
 		window.addEventListener('resize', () => {
 			clearTimeout(mb.resizeTimeout);
 			mb.resizeTimeout = setTimeout(() => {
 				updateStickyMenu();
-				updateSliderMax();
+				updateSliderProperties();
 				updateReaderOrientation();
 			}, 250);
 		});
 
-		function fixZoomOnPWA() {
-			let metaViewport = document.querySelector('meta[name="viewport"]');
-			if (!metaViewport) return;
+function fixZoomOnPWA() {
+  let metaViewport = document.querySelector('meta[name="viewport"]');
+  if (!metaViewport) return;
 
-			// Temporarily disable zoom
-			metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
+  // Disable zoom temporarily
+  metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
 
-			setTimeout(() => {
-				// Restore zoom capability after layout stabilizes
-				metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
-			}, 350); // Adjust timeout as needed
-		}
+  // Wait for two animation frames to ensure the change takes effect
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      // Now restore zoom capability
+      metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
+    });
+  });
+}
+
 
 		window.addEventListener('orientationchange', fixZoomOnPWA);
 		document.addEventListener('visibilitychange', fixZoomOnPWA);
@@ -1000,31 +1201,6 @@
 			blanker.style.opacity = val;
 			await wait(100);
 		}
-
-		//MB API Call Function 
-		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
-			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, {
-					method: method,
-					headers: {
-						'Authorization': mb.authHeader,
-						'Content-Type': 'application/json',
-						'skip_zrok_interstitial': '1' // Add header to skip interstitial
-					},
-					body: body
-				});
-
-				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-
-				if (returnval) {
-					const output = await response.json();
-					return output;
-				}
-			} catch (error) {
-				console.error('Fetch libraries error:', error);
-			}
-		}
-
 
 		//MB Media Cache 
 
@@ -1079,7 +1255,7 @@
 			mb.mediaCache.clear();
 		}
 
-		async function setReadStatus(seriesId, bookId, read, item, format = null) {
+		async function setReadStatus(seriesId, bookId, read, item, format) {
 			if (bookId == null) {
 				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
@@ -1095,7 +1271,7 @@
 							item.showItems(resultsObject.content, item.homeStrip);
 						})
 					);
-					setTimeout(updateSliderMax, 10);
+					setTimeout(updateSliderProperties, 10);
 					mainContainer.scrollTop = oldTop;
 				} else {
 					const bookData = await callAPI(`/api/v1/books/${bookId}`);
@@ -1104,42 +1280,51 @@
 			}
 		}
 
+		async function setSeriesReadStatus(seriesId, read, item) {
+			setReadStatus(seriesId, null, read, item, null);
+		}
+
+		async function setBookReadStatus(bookId, read, item, format) {
+			setReadStatus(null, bookId, read, item, format);
+		}
+
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
-			const libGap = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
-			const libSmall = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
-			let libLarge = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			const gapSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
+			const libSmallSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
+			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
+			const filterButtonSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-filter-button-size'));
+			const searchFieldSize = libLargeSize;
+			const margin = 10;
 
 			const libraries = await callAPI('/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
 
-			const maxWidth = Array.from(librariesList.childNodes)
-				.map(item => item.childNodes[1].getBoundingClientRect().width + libSmall)
-				.reduce((max, width) => Math.max(max, width), 0);
-
-			if (maxWidth > libLarge) {
-				libLarge = Math.ceil(maxWidth)
-				document.documentElement.style.setProperty('--mb-library-large', libLarge + 'px');
-			}
+			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
+			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
 
 			const libNum = libraries.length;
-			mb.libSizer.large = libGap + libLarge + libGap + libSmall + libGap + libNum * (libLarge + libGap);
-			mb.libSizer.medium = libGap + libLarge + libGap + libSmall + libGap + libNum * (libSmall + libGap);
-			mb.libSizer.rightmin = libSmall * 3 + libGap * 3 + 150;
+			const mainLibAndMenu = margin + libLargeSize + 40;
+			mb.libSizer.large = mainLibAndMenu + libNum * (libLargeSize + gapSize);
+			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
+			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
+
+			mb.filterSizer = mb.filterButtons.length * (100 + gapSize) + filterButtonSize + 2 * margin;
+
 			updateStickyMenu();
 		}
 
 
 		// This function is called when a library is selected, it manages the library menu and library naming in the URL
-		function libraryHighlight(libraryId) {
+		function libraryHighlight(libraryId, withMenu) {
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('highlighted'));
+			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('with-menu'));
 			document.getElementById(libraryId).classList.add('highlighted');
+			if (withMenu) document.getElementById(libraryId).classList.add('with-menu');
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
-			//TODO there was a sort entry here, not needed anymore?
-			//const unFilteredSeries = await callAPI(`/api/v1/series?page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const unFilteredSeries = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
@@ -1207,6 +1392,10 @@
 			});
 		}
 
+		function preventHyphenBreaks(str) {
+			return str.replace(/-/g, '\u2011')
+		}
+
 		//MB Series Items Creation
 		async function buildSeriesItem(item, serie, target) {
 			item.childNodes[0]?.remove();
@@ -1216,14 +1405,14 @@
 			const seriesItem = addItem('div', {
 				className: 'series-item'
 			});
-			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg'" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
-			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark"></span>';
+			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
+			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>';
 			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
 
 			const seriesTitle = addItem('div', {
 				innerHTML: `
 								<div class="title-row data-row top-row">
-									<div style="flex-grow:1" class="series-title">${serie.metadata.title}</div>
+									<div style="flex-grow:1" class="series-title">${preventHyphenBreaks(serie.metadata.title)}</div>
 									<div class="glyph-dark" style="text-align:right">${LTR}</div>
 										${spacer}
 									<div class="glyph-div" style="text-align:right">${LNG}</div>
@@ -1272,7 +1461,7 @@
 			});
 			markAsRead.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				await setReadStatus(serie.id, null, true, item);
+				await setSeriesReadStatus(serie.id, true, item);
 			})
 			noPointerDown(markAsRead);
 
@@ -1283,7 +1472,7 @@
 			});
 			markAsUnread.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				await setReadStatus(serie.id, null, false, item);
+				await setSeriesReadStatus(serie.id, false, item);
 			})
 			noPointerDown(markAsUnread);
 
@@ -1303,7 +1492,7 @@
 			});
 			timeLabel.addEventListener('click', async (event) => {
 				event.stopPropagation();
-				if (target.binName) mb.dashboardBin = target.binName;
+				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
 			noPointerDown(timeLabel);
@@ -1333,12 +1522,12 @@
 				artistRow.append(storyLabel, artLabel);
 				storyLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				artLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
 				noPointerDown(artLabel);
@@ -1352,7 +1541,7 @@
 				artistRow.append(artistLabel);
 				artistLabel.addEventListener('click', async (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
 				noPointerDown(artistLabel);
@@ -1362,6 +1551,8 @@
 
 			item.mbSeriesStart = timeSplit(altTitle.time)[0];
 			item.mbSeriesStop = timeSplit(altTitle.time)[1];
+
+			item.mbBooksCount = serie.booksCount;
 
 			item.mbSeriesRead = (unreadCount == 0);
 			item.mbSeriesLTR = (serie.metadata.readingDirection == 'LEFT_TO_RIGHT');
@@ -1389,7 +1580,7 @@
 			);
 
 			addTouchScaler(seriesItem, () => {
-				if (target.binName) mb.dashboardBin = target.binName;
+				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
@@ -1421,8 +1612,6 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
-			//TODO there was a sort entry here, not needed anymore?
-			//const allSeriesPage = await callAPI(`/api/v1/series?library_id=${libraryId}&page=0&unpaged=true&sort=metadata.titleSort,asc`);
 			const allSeriesPage = await callAPI(
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
@@ -1450,12 +1639,37 @@
 
 		// Compose function that opens a specific library based on it ID
 		async function openLibrary(libraryId, seriesId) {
-			await libraryHighlight(libraryId);		// Triggers and manages the library menu
+			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 			await displaySeries(allSeries, seriesGrid);
 			fetchLibraryFilters(libraryId);
 			focusItem(seriesId || 'top');
-			libraryMenu.classList.remove('disabled');
+			//TODO Move here the logic that enables the library options buttons?
+		}
+
+		const menuClassUp = 'fa-caret-up';
+		const menuClassDown = 'fa-caret-down'
+
+		function libMenuClear(item) {
+			item.classList.remove(menuClassUp);
+			item.classList.remove(menuClassDown);
+		}
+
+		function libMenuDown(item) {
+			libMenuClear(item);
+			item.classList.add(menuClassDown);
+		}
+
+		function libMenuUp(item) {
+			libMenuClear(item);
+			item.classList.add(menuClassUp);
+		}
+
+		function clearLibrariesMenus() {
+			Object.entries(mb.libraryMenuButtons).forEach(([name, item]) => {
+				libMenuClear(item);
+				libMenuDown(item);
+			});
 		}
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
@@ -1464,15 +1678,21 @@
 			const listItem = addItem('li', {
 				id: itemId,
 				className: 'library-item',
+				title: libraryName,
 			});
 
 			const thumbnailWrapper = addItem('div', {
-				className: 'thumbnail-wrapper',
+				className: 'button-wrapper',
 			})
+
+			const base64Image = mb.libraryIcons[itemId];
+			const imageSrc = base64Image || (isLib
+				? `library-thumbnails/${libraryName}.png`
+				: imagePath);
 
 			const libraryThumbnail = addItem('img', {
 				className: 'library-thumbnail',
-				src: isLib ? `library-thumbnails/${libraryName}.png` : imagePath,
+				src: imageSrc,
 				alt: isLib ? `${libraryName} Cover` : libraryName,
 			})
 
@@ -1496,13 +1716,85 @@
 			thumbnailWrapper.append(libraryThumbnail);
 			listItem.append(thumbnailWrapper, libraryNameDiv);
 
+			if (isLib) {
+				mb.libraryMenuButtons[itemId] = addItem('span', {
+					className: "fa-solid " + menuClassDown + " is-lib-menu"
+				})
+
+				const thumbnailWrapperMenu = addItem('div', {
+					className: 'button-wrapper library-menu-button',
+				})
+
+				thumbnailWrapperMenu.append(mb.libraryMenuButtons[itemId]);
+				listItem.append(thumbnailWrapperMenu);
+
+				thumbnailWrapperMenu.addEventListener('click', (event) => {
+					libMenuClear(mb.libraryMenuButtons[itemId]);
+
+					if (isSectionHidden(filtersBar)) {
+						libMenuUp(mb.libraryMenuButtons[itemId]);
+					} else {
+						libMenuDown(mb.libraryMenuButtons[itemId]);
+					}
+					event.stopPropagation();
+					event.preventDefault();
+					sectionToggle(filtersBar);
+				});
+
+			}
+
 			return listItem;
 		}
+
+		function readFileAsBase64(file) {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onload = () => resolve(reader.result);
+				reader.onerror = reject;
+				reader.readAsDataURL(file); // This gives you "data:image/png;base64,..." format
+			});
+		}
+
+		function addLongPressListener(element, callback, duration = 600) {
+			let pressTimer;
+			let wasLongPress = false;
+
+			const start = (e) => {
+				wasLongPress = false;
+				pressTimer = setTimeout(() => {
+					wasLongPress = true;
+					callback(e);
+				}, duration);
+			};
+
+			const cancel = () => {
+				clearTimeout(pressTimer);
+			};
+
+			element.addEventListener('mousedown', start);
+			element.addEventListener('mouseup', cancel);
+			element.addEventListener('mouseleave', cancel);
+
+			element.addEventListener('touchstart', start);
+			element.addEventListener('touchend', cancel);
+			element.addEventListener('touchcancel', cancel);
+
+			// Prevent click after long press
+			element.addEventListener('click', (e) => {
+				if (wasLongPress) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					// Optionally log or debug here
+				}
+			}, true); // Capture phase to stop early
+		}
+
 
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			librariesList.append(buildLibraryItem('homeButton', 'Home', 'mangabox-logo-new.svg'));
+			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'mangabox-logo-new.svg')
+			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
@@ -1510,8 +1802,62 @@
 			Array.from(libraries).forEach((library, index) => {
 				const listItem = buildLibraryItem(library.id, library.name);
 
+				addLongPressListener(listItem, async () => {
+
+					const libraryId = listItem.id
+
+					const confirmClear = confirm('Clear custom image for this library?');
+					if (confirmClear) {
+						delete mb.libraryIcons[libraryId];
+						console.log("clearing image")
+						// Update userSettings on the server
+						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+						bootSequence();
+
+					}
+				});
+
+				listItem.addEventListener('dragover', (event) => {
+					event.preventDefault(); // This is required to allow drop
+					listItem.style.backgroundColor = 'hsl(200, 60%, 70%)';
+				});
+
+				listItem.addEventListener('dragleave', () => {
+					listItem.style.backgroundColor = ''; // Reset visual feedback
+				});
+
+				listItem.addEventListener('drop', async (event) => {
+					event.preventDefault();
+
+					const libraryId = listItem.id
+
+					const file = event.dataTransfer.files[0];
+					if (!file || !file.type.startsWith('image/')) {
+						alert('Please drop a valid image.');
+						return;
+					}
+
+					const result = confirm('Update library image?');
+					if (result) {
+						// User clicked OK
+						console.log('Proceeding with image update');
+						const base64 = await readFileAsBase64(file);
+						mb.libraryIcons[libraryId] = base64;
+
+						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+
+						bootSequence();
+						// your logic here (e.g., read dropped file, update thumbnail, etc.)
+					} else {
+						// User clicked Cancel
+						console.log('Image update canceled');
+					}
+
+
+				})
+
 				listItem.addEventListener('click', () => {
-					const{path, params} = getHashAndParams();
+					const { path, params } = getHashAndParams();
 					if ((path == 'series') && (params.get('library_id') == library.id)) {
 						navigateTo(`#library?library_id=${library.id}&series_id=${params.get('series_id')}`);
 					}
@@ -1523,21 +1869,6 @@
 				librariesList.append(listItem);
 			});
 
-			const libraryOptionsButton = addItem('li', {
-				id: 'libraryMenu',
-				title: 'Library Menu',
-				className: 'library-item disabled',
-				innerHTML: `
-						<div class="thumbnail-wrapper">
-							<span id="libraryMenuIcon" class="fa-solid fa-sliders glyph-dark"></span>
-						</div>
-					`
-			});
-
-			librariesList.append(libraryOptionsButton);
-			libraryMenu.addEventListener('click', () => {
-				sectionToggle(extraMenuBar);
-			});
 		}
 
 		function getAltTitles(serie) {
@@ -1585,7 +1916,10 @@
 				</div>
 			</div>
 			<div class="header-title">
-				<span class="title">${serie.metadata.title}<img width=20px height=20px style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg"></span>
+				<span class="title">
+				${serie.metadata.title}
+				${serie.metadata.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
+				</span>
 				<span class="notes">
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
@@ -1706,7 +2040,7 @@
 				mainRow.textContent = book.seriesTitle;
 				mainRow.addEventListener('click', (event) => {
 					event.stopPropagation();
-					if (target.binName) mb.dashboardBin = target.binName;
+					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
 				noPointerDown(mainRow);
@@ -1759,17 +2093,9 @@
 
 			addLazyLoading(bookThumbnail);
 
-			const bookFader = addItem('div', {
-				className: 'book-fader'
-			});
-
-			const bookOverlay = addItem('div', {
-				className: 'book-overlay'
-			});
-
-			const bookStatus = addItem('div', {
-				className: 'book-status'
-			});
+			const bookFader = addItem('div', { className: 'book-fader' });
+			const bookOverlay = addItem('div', { className: 'book-overlay' });
+			const bookStatus = addItem('div', { className: 'book-status' });
 
 			const unread = (book.readProgress == null);
 
@@ -1787,7 +2113,7 @@
 			});
 			markAsRead.addEventListener('click', () => {
 				event.stopPropagation();
-				setReadStatus(null, book.id, true, item, format);
+				setBookReadStatus(book.id, true, item, format);
 			})
 			noPointerDown(markAsRead);
 
@@ -1798,8 +2124,8 @@
 			});
 			markAsUnread.addEventListener('click', () => {
 				event.stopPropagation();
-				setReadStatus(null, book.id, false, item, format);
-			})
+				setBookReadStatus(book.id, false, item, format);
+			});
 			noPointerDown(markAsUnread);
 
 			bookOverlay.append(markAsRead, markAsUnread);
@@ -1853,7 +2179,7 @@
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
 				setIncognito(false);
-				if (target.binName) mb.dashboardBin = target.binName;
+				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
@@ -1875,11 +2201,9 @@
 			*/
 			// focus is the book id to focus on
 
-
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
-
 
 			if (books.length === 0) {
 				const noBooksMsg = document.createElement('p');
@@ -1915,7 +2239,7 @@
 		// Function to trigger the home page layout
 		async function selectHome() {
 
-			libraryHighlight('homeButton');
+			libraryHighlight('homeButton', false);
 
 			seriesGrid.innerHTML = '';
 			booksGrid.innerHTML = '';
@@ -1930,7 +2254,7 @@
 					item.showItems(resultsObject.content, item.homeStrip);
 				})
 			);
-			setTimeout(updateSliderMax, 10);
+			setTimeout(updateSliderProperties, 10);
 
 		}
 
@@ -1942,8 +2266,6 @@
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
-					//TODO there was a sort entry here, not needed anymore?
-					//out.content.sort((a, b) => new Date(b.readProgress.readDate) - new Date(a.readProgress.readDate));
 					return (out);
 				},
 				showItems: async (input, target) => {
@@ -2015,7 +2337,7 @@
 
 		async function dashboardAll(element, page) {
 
-			libraryHighlight('homeButton');
+			libraryHighlight('homeButton', false);
 
 			seriesGrid.innerHTML = ''; // Clear the series grid
 			booksGrid.innerHTML = ''; // Clear the series grid
@@ -2036,7 +2358,10 @@
 			dashboardElements[element].showItems(array, stripGrid);
 		}
 
-		Object.entries(dashboardElements).forEach(([name, item]) => {
+		const dashEntries = Object.entries(dashboardElements);
+
+		dashEntries.forEach(([name, item], index) => {
+			const isLast = dashEntries.length - 1 === index;
 
 			item.element = addItem('div', { className: 'home-strip-parent' });
 			const headerContainer = addItem('div', { className: 'strip-header-container' });
@@ -2059,7 +2384,7 @@
 				innerHTML: '<span title="View All" class="fa-solid fa-grip glyph-dark"></span>',
 			});
 			item.homeStrip = addItem('div', {
-				className: 'home-strip',
+				className: 'home-strip' + (isLast ? ' last-strip' : ''),
 				binName: name,
 			})
 			item.gridButton.addEventListener('click', async () => {
@@ -2085,22 +2410,24 @@
 
 			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 
-			let books = await callAPI(
+			const books = (await callAPI(
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
-			);
+			)).content;
 
-			books = books.content;
-
-			await libraryHighlight(libraryId);
+			await libraryHighlight(libraryId, false);
 			displayHeader(seriesData);
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
 
 		async function bootSequence() {
-			changeAccent(mb.accentColor);
+			userSettings = await getUserSettings();
+			applyUserSettings();
+
+			applyAccent();
 			// Apply first theme change
 			changeTheme();
+			changeReaderTheme();
 			setIncognito(false);
 
 			buildLanguageList();
@@ -2110,15 +2437,15 @@
 			let series_data = null;
 			await fetchLibraries();
 			await loadContent();
-			// Refresh theme change after content load
-			//changeTheme();//TODO Non va, deve essere automatico. Perché quando crea un nuovo item sbaglia tema?
 		}
 
 		//MB Reader Functions and Data
 
 		// General reader data structure
 		let rd = {
-			thresholdRatio: 1.0,	//Orientation threshold
+			dragbarTimer: null,
+
+			orientationThresholdRatio: 1.0,		//Orientation threshold
 
 			preloadCount: 15,			// Image preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
@@ -2130,17 +2457,8 @@
 
 			ltr: null,
 			currentPage: 0,
-			pages: [],					// this is the array of pages data in the form url, iscover etc
-			uiPages: [],				// array of page images with alt = page number
-			uiPagesContainer: [],
-
-			uiSpreads: [],				// array of divs with the correct paged uiPages inside
-			spreadsData: [],			// array with spreads data: 
-											// 	spreadKind: what kind of page is this (cover, double spread, two pages etc)
-											// 	pageNums: array of the page indexes that are into the spread index
-											// 	imageRefs: array of the image index for each page (for double spreads where the same IMAGE is in two PAGES in one SPREAD)
-			uiSpreadsPageShadowL: [],
-			uiSpreadsPageShadowR: [],
+			pagesDataArray: [],		// this is the array of pages data in the form url, iscover etc
+			spreadsArray: [],			// Array of spreads objects, containing:
 
 			currentPageIndex: 0,
 			currentSpreadIndex: 0,
@@ -2148,10 +2466,7 @@
 			isDraggingProgressBar: false,
 
 			thumbZoom: false,
-			thumbsWidth: 0,
-
-			uiPagesThumbs: [],
-			uiSpreadsThumbs: [],
+			thumbWidth: 0,
 
 			libraryId: 0,
 			seriesId: 0,
@@ -2162,30 +2477,27 @@
 
 			incognito: false,
 
-			spreadFocus: 'focus-center',
-
-			// These two parameters shape the page width and ForeEdge width for a full book
-			//ForeEdgePicRate: 0.2,		// Full book ForeEdge size in ratio of the height, the image is stretched to fill
-			//ForeEdgePicCut: 0.7,			// Portion of the full book image that's acutally used on a full book
-			leftForeEdge: null,
-			rightForeEdge: null,
-			leftDrop: null,
-			rightDrop: null,
+			foreEdgeL: null,
+			foreEdgeR: null,
+			dropShadowL: null,
+			dropShadowR: null,
 
 			turnTimeout: null,
 			pageTurning: null,
 
-			speedTurn: 500,			// Speed of turning page animation
-			shadowOpacityForward: '0.4',
-			shadowOpacityBackward: '0.3',
-			shadowWidthForward: '10%',
-			shadowWidthBackward: '15%',
+			turnTime: 500,				// Duration of turning page animation
+			scrollSpeed: 500,			// Duration of spread page scrolling
+			turnScrollDelay: 300,	// Delay of spread page scrolling during page turn
+			turnScrollTime: 500,		// Duration of spread page scrolling during page turn
 
-			speedScroll: 500,			// Speed of spread page scrolling
-			speedScrollDelay: 300,	// Delay of spread page scrolling during page turn
-			speedScrollTurn: 500,	// Speed of spread page scrolling during page turn
+			pageShadowOpacityFWD: '0.4',
+			pageShadowOpacityBWD: '0.3',
+			pageShadowWidthFWD: '10%',
+			pageShadowWidthBWD: '15%',
 
-			focusFrames: {
+			spreadFocus: 'focus-center',
+
+			focusTransition: {
 				'focus-right-page': 'translate(-75%, -50%)',
 				'focus-left-page': 'translate(-25%, -50%)',
 				'focus-center': 'translate(-50%, -50%)',
@@ -2218,24 +2530,13 @@
 
 			rd.ltr = (dir == 'ltr');
 			rd.currentPage = pag;
-			rd.pages = [];					// this is the array of pages data in the form url, iscover etc
 
-			/* CLEARED IN THE CLEAR ROUTINE
-			rd.uiPages = [];				// array of page images with alt = page number
-			rd.uiPagesContainer = [];				// array of page images with alt = page number
-			rd.uiSpreads = [];				// array of divs with the correct paged uiPages inside
-			*/
-			rd.spreadsData = [];
+			rd.spreadsArray = [];
 
 			rd.currentPageIndex = 0;
 			rd.currentSpreadIndex = 0;
 			rd.oldSpreadIndex = 0;
 			rd.isDraggingProgressBar = false;
-
-			/* CLEARED IN THE CLEAR ROUTINE
-			rd.uiSpreadsThumbs = [];
-			rd.uiPagesThumbs = [];
-			*/
 
 			rd.libraryId = libraryId;
 			rd.seriesId = seriesId;
@@ -2246,6 +2547,8 @@
 			readerViewer.innerHTML = '';
 
 			setThumbZoom(false);
+			
+			dragbarOnReader();
 			sectionShow(readerContainer);
 
 			initViewer();
@@ -2254,29 +2557,57 @@
 
 		// Reader cleanup functions to remove all dangling spreads and pages
 		function clearReader() {
-			// Cleanup all DOM objects and array of objects 
-			["uiPages", "uiPagesContainer", "uiSpreads", "uiPagesThumbs", "uiSpreadsThumbs", "uiSpreadsPageShadowL", "uiSpreadsPageShadowR"].forEach(key => {
-				rd[key].forEach(item => item.remove());
-				rd[key].length = 0;
-			});
 
 			// Cleanup ForeEdge and drop shadows
-			["leftForeEdge", "rightForeEdge", "leftDrop", "rightDrop"].forEach(key => {
+			["foreEdgeL", "foreEdgeR", "dropShadowL", "dropShadowR"].forEach(key => {
 				if (rd[key]) {
 					rd[key].remove();
 					rd[key] = null;
 				}
 			});
+
+			// Cleanup all the spreads: remove each uiItem (and their descendants) from dom, then null all the graphics item
+			// like uiShadowL and uiShadowR, then cleanup the array
+			rd.spreadsArray.forEach(item => {
+				item.uiItem.remove();
+				item.uiThumb.remove();
+				item.uiItem = null;
+				item.uiThumb = null;
+				item.uiShadowL = null;
+				item.uiShadowR = null;
+				item.uiLightL = null;
+				item.uiLightR = null;
+				['pageObjL', 'pageObjR'].forEach(key => {
+					if (item[key] != null) {
+						item[key].uiPage.remove();
+						item[key].uiContainer.remove();
+						item[key].uiThumb.remove();
+						item[key].uiPage = null;
+						item[key].uiContainer = null;
+						item[key].uiThumb = null;
+					}
+					item[key] = null;
+				});
+			});
+			rd.spreadsArray = [];
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
-			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.speedScrollTurn, rd.speedScrollDelay] : [rd.speedScroll, 0]);
+			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.turnScrollTime, rd.turnScrollDelay] : [rd.scrollSpeed, 0]);
 
 			readerViewer.animate(
-				[{ transform: rd.focusFrames[focusString] }],
+				[{ transform: rd.focusTransition[focusString] }],
 				{ duration: duration, easing: 'ease', fill: 'forwards', delay: delay }
 			);
 			rd.spreadFocus = focusString;
+		}
+
+		function spreadSetFocusSmooth(focusString) {
+			spreadSetFocus(focusString, true, false)
+		};
+
+		function spreadSetFocusSmoothDelay(focusString) {
+			spreadSetFocus(focusString, true, true)
 		}
 
 		// Setup close button
@@ -2287,7 +2618,7 @@
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
-				spreadSetFocus('none', false, false);
+				spreadSetFocus('none');
 				clearReader();
 			}, 400); //300ms timeout so the reader can slide out
 
@@ -2295,13 +2626,32 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-
+			//dragbarOffReader();
+			
 			updatePWABar();
 		}
 
 		readerClose.addEventListener('click', () => {
 			handleCloseReader();
-		})
+		});
+
+		function changeReaderTheme() {
+			mb.readerThemeControl.forEach(item => {
+				readerTheme.classList.remove(item.icon);
+			});
+			readerTheme.classList.add(mb.readerThemeControl[mb.readerThemePrefs].icon);
+			readerTheme.title = mb.readerThemeControl[mb.readerThemePrefs].label;
+
+			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
+
+			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
+
+		}
+
+		readerTheme.addEventListener('click', () => {
+			mb.readerThemePrefs = (mb.readerThemePrefs + 1) % mb.readerThemeControl.length;
+			changeReaderTheme();
+		});
 
 		// Setup incognito button
 		function setIncognito(status) {
@@ -2322,7 +2672,7 @@
 
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
-			rd.thumbsWidth = thumbStripInner.clientWidth;
+			rd.thumbWidth = thumbStripInner.clientWidth;
 			thumbStripScrollContent.style.overflow = 'hidden';
 			const oldWidth = thumbStripInner.clientWidth;
 
@@ -2344,34 +2694,27 @@
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
-				const oldWidth = rd.thumbsWidth;
+				const oldWidth = rd.thumbWidth;
 				const newWidth = thumbStripInner.clientWidth;
 				const scrollScaler = newWidth / oldWidth;
 				thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
-				rd.thumbsWidth = newWidth;
+				rd.thumbWidth = newWidth;
 			}
 		});
 
 		resizeObserver.observe(thumbStripInner);
 
-		//TODO remove this and trigger rd.thumbsWidth when zoom is initiated
-		/*
-		thumbStripInner.addEventListener('transitionrun', () => {
-			debugPrint('Transition started')
-		});
-		thumbStripInner.addEventListener('transitionstart', () => debugPrint('Transition actually started'));
-*/
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStripScrollContent.style.overflow = 'auto';
 			debugPrint('Transition ended')
 		});
 
 		function updateProgressBar() {
-			const progressPercent = (rd.currentSpreadIndex / (rd.uiSpreads.length - 1)) * 100;
+			const progressPercent = (rd.currentSpreadIndex / (spreadsTotal() - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
 
-			[rd.currentPage, readerPage.innerText] = getPage(rd.currentSpreadIndex);
+			[rd.currentPage, readerPage.innerText] = getPageFromSpread(rd.currentSpreadIndex);
 
 			readerPage.style.left = rd.ltr
 				? `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
@@ -2379,10 +2722,7 @@
 		}
 
 		function preloadPage(index) {
-			if (picLoadStackSize() >= 20000000) {
-				return;
-			}
-			populateSpread(index, true);
+			if (picLoadStackSize() < 20000000) populateSpreadPreload(index);
 		}
 
 		function calcDelay(i, delay, scale, power) {
@@ -2397,7 +2737,7 @@
 				const forwardIndex = startSpreadIndex + i;
 				const backwardIndex = startSpreadIndex - i;
 
-				if (forwardIndex < rd.uiSpreads.length && !(forwardIndex in rd.preloadStack)) {
+				if (forwardIndex < spreadsTotal() && !(forwardIndex in rd.preloadStack)) {
 					startTimeout(forwardIndex, calcDelay(i, 300, 0.25, 2), () => preloadPage(forwardIndex));
 				}
 				if (backwardIndex >= 0 && !(backwardIndex in rd.preloadStack)) {
@@ -2406,31 +2746,52 @@
 			}
 		}
 
+		function dragbarOffReader() {
+			rd.dragbarTimer = setTimeout(() => {
+				dragbar.classList.remove('onReader');
+			}, 500);
+			//dragbar.classList.remove('offReader');
+		}
+
+		function dragbarOnReader() {
+			clearTimeout(rd.dragbarTimer);
+			dragbar.classList.remove('onReader');
+			dragbar.classList.add('onReader');
+		}
+
+		function initReaderUI(pagesData, bookData) {
+			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
+			rightLimit.innerText = rd.ltr ? pagesData.length : 1;
+			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
+		}
+
 		// Initialize viewer with page data
 		async function initViewer() {
 			updatePWABar('black');
 
-			rd.pages = await fetchPages(rd.bookId);
+			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			const noCover = bookData.metadata.tags.includes('no-cover');
+			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
 
-			let bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
-			leftLimit.innerText = rd.ltr ? 1 : rd.pages.length;
-			rightLimit.innerText = rd.ltr ? rd.pages.length : 1;
-			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
+			initReaderUI(pagesData, bookData)
 
-			jumpToSpread(rd.currentSpreadIndex, null, null, true);
-		}
-
-		function buildSizePic(item, ratio, picratio) {
-			item.style.width = `calc(min(${100 * picratio / ratio}vw, ${picratio * 100}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 		}
 
 		function buildSize(item, ratio) {
+			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+		}
+
+		function buildSizeCV(item, ratio) {
+			//item.style.objectFit = 'fill';
+			item.style.objectPosition = "center center";
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
 			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
 		}
@@ -2458,27 +2819,113 @@
 
 		//MB Reader Fetch Page Function
 
-		function pushSpreadData(spreadKind, pageNums, imageRefs) {
-			rd.spreadsData.push({
-				spreadKind: spreadKind,
-				pageNums: pageNums,
-				imageRefs: imageRefs,
+		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage) {
+			// I put the image item and container item in the array so I can target them for changes
+			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
+			return ({
+				// dom object, spread div and its content
+				// dom object, shadow for page effect, children of uiItem in the dom
+				//  "
+				// dom object, thumbnail of the spread for the strip view
+				uiItem: addItem('div', { className: 'spread-layout' }),
+				uiShadowL: addItem('div', { className: 'page-shadow-left' }),
+				uiShadowR: addItem('div', { className: 'page-shadow-right' }),
+				uiLightL: addItem('div', { className: 'page-light-left' }),
+				uiLightR: addItem('div', { className: 'page-light-right' }),
+				uiThumb: addItem('div', { className: 'spread-thumb' }),
+				pageObjL: spreadPages["left"] ?? null,
+				pageObjR: spreadPages["right"] ?? null,
+				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
+				spreadRefPage: spreadRefPage
 			})
 		}
 
+		function spreadsTotal() {
+			return rd.spreadsArray.length
+		}
+
+		function buildPageObject(pageData) {
+			const isBlank = (pageData == 'blank');
+			const isHidden = (pageData == 'hidden');
+
+			const pageItem = {
+				uiPage: addItem('img', {
+					alt: isBlank ? '' : pageData.pageNum,
+					className: 'page multiply hidden',
+					src: 'transparent.png',
+				}),
+				uiContainer: addItem('div', {
+					className: isHidden ? 'page-container hidden-page' : 'page-container'
+				}),
+				uiThumb: addItem('img', {
+					className: isHidden ? 'page-thumb multiply hidden hidden-page' : 'page-thumb multiply hidden',
+					alt: (isBlank || isHidden) ? '' : pageData.pageNum,
+					src: 'transparent.png',
+					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
+					style: {
+						height: 'var(--mb-thumb-height-px)',
+						aspectRatio: isHidden ? '0.001' : pageData.AR,
+					}
+				}),
+				hasSrc: (isBlank || isHidden) ? true : false,
+				lazySrc: (isBlank || isHidden) ? '' : pageData.url,
+				size: (isBlank || isHidden) ? 0 : pageData.size,
+				pageNum: (isBlank || isHidden) ? '' : pageData.pageNum,
+				isCurrent: (isBlank || isHidden) ? false : pageData.isCurrent,
+				AR: isBlank ? null : pageData.AR,
+			}
+
+			if ((pageData != 'blank') && (pageData != 'hidden')) addLazyLoading(pageItem.uiThumb);
+			pageItem.uiContainer.append(pageItem.uiPage);
+
+			return pageItem;
+		};
+
+		function pageTable(page1, page2) {
+			return (
+				rd.ltr ?
+					{ left: page1, right: page2 } :
+					{ left: page2, right: page1 }
+			)
+		}
+
+		function addCoverSpine(pageObjectL, pageObjectR) {
+			const coverlayR = addItem('div', {
+				id: 'coverlayer',
+				className: 'LTR',
+				style: {
+					width: pageObjectR.uiContainer.style.width,
+					height: pageObjectR.uiContainer.style.height,
+				}
+			});
+			pageObjectR.uiContainer.append(coverlayR);
+			const coverlayL = addItem('div', {
+				id: 'coverlayer',
+				className: 'RTL',
+				style: {
+					width: pageObjectR.uiContainer.style.width,
+					height: pageObjectR.uiContainer.style.height,
+				}
+			});
+			pageObjectL.uiContainer.append(coverlayL);
+		}
+
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId) {
+		async function fetchPages(bookId, noCover, noWhitePage) {
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
-
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, 100vh))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
 			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+
+			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
+			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
 			// Create pageData structure with the fields from fetched data
 			const pageData = komgaPageData.map(page => ({
@@ -2488,386 +2935,178 @@
 				width: page.width,
 				height: page.height,
 				AR: page.width / page.height,
-				isCover: page.number == 1,
+				isCover: noCover ? false : page.number == 1,
+				isOrphan: noWhitePage && (page.number == 2),
 				isCurrent: page.number == rd.currentPage,
 				isDoubleSpread: page.width > page.height,
 				size: page.sizeBytes
 			}));
 
-			rd.leftForeEdge = addItem('div', {
-				id: 'leftForeEdge',
+			rd.foreEdgeL = addItem('div', {
+				id: 'foreEdgeL',
 				src: 'pages-left.png',
-				style: 'clip-path: inset(0 0 0 100%)'
+				style: {
+					clipPath: 'inset(0 0 0 100%)'
+				},
 			});
 
-			rd.rightForeEdge = addItem('div', {
-				id: 'rightForeEdge',
+			rd.foreEdgeR = addItem('div', {
+				id: 'foreEdgeR',
 				src: 'pages-right.png',
-				style: 'clip-path: inset(0 100% 0 0)'
+				style: {
+					clipPath: 'inset(0 100% 0 0)'
+				}
 			});
 
-			rd.leftDrop = addItem('div', {
-				id: 'leftDrop',
-			});
+			//Default shadow opacity is 0, it is overriden at the time of creation so it transitions in 0.5s
+			rd.dropShadowL = addItem('div', { id: 'dropShadowL' });
+			rd.dropShadowR = addItem('div', { id: 'dropShadowR' });
 
-			rd.rightDrop = addItem('div', {
-				id: 'rightDrop',
-			});
-
-			readerViewer.append(rd.leftForeEdge, rd.rightForeEdge, rd.leftDrop, rd.rightDrop);
+			readerViewer.append(rd.foreEdgeL, rd.foreEdgeR, rd.dropShadowL, rd.dropShadowR);
 
 			// Create html structure for every page and related page thumbnails
 			// and organize data structur for spread formation
 
-			rd.spreadsData = [];
+			let i_page = 0; 		// Index of komga page data
 
-			let i_image = 0;
-			let i_counter = 0;
-			let i_spread = 0;
+			// double spread with single page are treated as this:
+			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
+			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
-			let arrayPagenums = null;
-			let arrayImageRefs = null;
-			let spreadKind = null;
-
-			let element = null;
-
-			let doubleSpread = false;
-			let secondPage = false;
-
-			while (i_image < pageData.length) {
-				// Create an image entry for page image
-				const imgDiv = addItem('div', {
-					className: 'page-container'
-				});
-				const imgPage = addItem('img', {
-					alt: pageData[i_image].pageNum,
-					className: 'page multiply hidden',
-					src: 'transparent.png',
-					hasSrc: false,
-					lazySrc: pageData[i_image].url,
-					size: pageData[i_image].size
-				});
-				imgDiv.append(imgPage);
-
-				rd.uiPages.push(imgPage);
-				rd.uiPagesContainer.push(imgDiv);
-
-				// Create a thumb entry for page image
-				const imgThumb = addItem('img', {
-					className: 'page-thumb multiply hidden',
-					alt: pageData[i_image].pageNum,
-					src: 'transparent.png',
-					lazySrc: pageData[i_image].thumb,
-				});
-				imgThumb.style.height = 'var(--mb-thumb-height-px)';
-				imgThumb.style.aspectRatio = pageData[i_image].AR;
-
-				addLazyLoading(imgThumb);
-				rd.uiPagesThumbs.push(imgThumb);
-
-				if (pageData[i_image].isCover) {
+			// Create spreads objects and pages objects
+			while (i_page < pageData.length) {
+				let spreadObject = null;
+				if (pageData[i_page].isCover) {
 					// Element is a cover
-					pushSpreadData('cover-page', [i_image], [i_counter]);
-
-					i_counter++;
-					i_image++;
-					i_spread++;
+					const cover = buildPageObject(pageData[i_page]);
+					const hidden = buildPageObject('hidden');
+					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum);
 				}
-				else if ((pageData[i_image].isDoubleSpread && !doubleSpread)) {
-					// Element is a double spread and we ar not running second spread pass
-					doubleSpread = true;
-					arrayPagenums = [i_image];
-					arrayImageRefs = [i_counter];
-					spreadKind = 'double-spread';
-					i_counter++;
+				else if (pageData[i_page].isDoubleSpread) {
+					// Element is a double spread, generate second set of images
+					const page1 = buildPageObject(pageData[i_page]);
+					const page2 = buildPageObject(pageData[i_page]);
+					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
-				else if (pageData[i_image].isDoubleSpread && doubleSpread) {
-					// Element is a double spread, this is the second picture
-					doubleSpread = false;
-					arrayPagenums.push(i_image);
-					arrayImageRefs.push(i_counter);
-					i_counter++;
-					i_image++;
-					i_spread++;
-					pushSpreadData(spreadKind, arrayPagenums, arrayImageRefs);
+				else if (i_page == pageData.length - 1) {
+					// Element is last single page, so back cover
+					const cover = buildPageObject(pageData[i_page]);
+					const hidden = buildPageObject('hidden');
+					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum);
 				}
-				else if (!secondPage) {
-					arrayPagenums = [i_image];
-					arrayImageRefs = [i_counter];
-					spreadKind = 'two-pages';
-
-					if (i_image == pageData.length - 1) {
-						pushSpreadData('back-cover', [i_image], [i_counter]);
-						i_counter++;
-						i_image++;
-						i_spread++;
-					}
-					else if ((i_image + 1 < pageData.length) && (pageData[i_image + 1].isDoubleSpread)) {
-						// This is an orphan page!
-
-						// Create blank page
-						const imgDivBlank = addItem('div', {
-							className: 'page-container'
-						});
-						const imgPageBlank = addItem('img', {
-							alt: '',
-							className: 'page multiply hidden',
-							src: 'transparent.png',
-							hasSrc: true,
-							size: 0
-						});
-						imgDivBlank.append(imgPageBlank);
-
-						rd.uiPages.push(imgPageBlank);
-						rd.uiPagesContainer.push(imgDivBlank);
-
-						// Create a thumb entry for blank page
-						const imgThumbBlank = addItem('img', {
-							className: 'page-thumb multiply hidden',
-							alt: '',
-							src: 'transparent.png',
-						});
-						imgThumbBlank.style.height = 'var(--mb-thumb-height-px)';
-						imgThumbBlank.style.aspectRatio = pageData[i_image].AR;
-
-						rd.uiPagesThumbs.push(imgThumbBlank);
-
-						arrayPagenums.push(i_image);
-						i_counter++;
-						arrayImageRefs.push(i_counter);
-						i_counter++;
-
-						i_spread++;
-						i_image++;
-						pushSpreadData(spreadKind, arrayPagenums.reverse(), arrayImageRefs.reverse());
-					} else {
-						secondPage = true;
-						i_counter++;
-						i_image++;
-					}
+				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
+					// This is an orphan page!
+					const page1 = buildPageObject('blank');
+					const page2 = buildPageObject(pageData[i_page]);
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
-				else if (secondPage) {
-					secondPage = false;
-					arrayPagenums.push(i_image);
-					arrayImageRefs.push(i_counter);
-					i_counter++;
-					i_image++;
-					i_spread++;
-					pushSpreadData(spreadKind, arrayPagenums, arrayImageRefs);
+				else {
+					// these are two normal pages
+					const page1 = buildPageObject(pageData[i_page]);
+					const page2 = buildPageObject(pageData[i_page + 1]);
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
+					i_page++;
 				}
+				rd.spreadsArray.push(spreadObject);
+				i_page++;
 			}
-			// Prepare 'spreads' structure based on the layout chosen in the UI
-			mb.readerHorizontal = ((mb.screenAR / mb.readerMaxRatio > rd.thresholdRatio));
-			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
 
-			// Populate and create spread structure
-			rd.spreadsData.forEach((spreadData, index) => {
+			// Style and structure the spread objects and pages
+			rd.spreadsArray.forEach((spreadObject, index) => {
 
-				const spreadItem = document.createElement('div');
-				const spreadItemThumb = document.createElement('div');
+				let pageObjectL = spreadObject.pageObjL;
+				let pageObjectR = spreadObject.pageObjR;
 
-				const spreadPageShadowL = addItem('div', {
-					className: 'page-shadow-left'
-				})
-				const spreadPageShadowR = addItem('div', {
-					className: 'page-shadow-right'
-				})
+				spreadObject.uiThumb.append(
+					pageObjectL.uiThumb,
+					pageObjectR.uiThumb,
+				);
 
+				spreadObject.uiItem.append(
+					pageObjectL.uiContainer,
+					pageObjectR.uiContainer,
+				);
 
-				spreadItem.classList.add('spread-layout');
-				spreadItemThumb.classList.add('spread-thumb');
+				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
+				//TODO Ma questo serve???? Farlo uguale a readerViewer?
+				spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
-				if ((spreadData.spreadKind == 'cover-page')) {
-					let imageIndex = rd.spreadsData[index].imageRefs[0];
-					let pageRef = rd.spreadsData[index].pageNums[0];
+				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
+				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
 
-					spreadItemThumb.append(rd.uiPagesThumbs[imageIndex]);
+				pageObjectL.uiPage.style.float = 'right';
+				pageObjectR.uiPage.style.float = 'left';
+				pageObjectL.uiPage.style.objectFit = 'cover';
+				pageObjectR.uiPage.style.objectFit = 'cover';
+				pageObjectL.uiPage.style.objectPosition = 'left';
+				pageObjectR.uiPage.style.objectPosition = 'right';
+				pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
+				pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
-					spreadItem.append(rd.uiPagesContainer[imageIndex]);
-					spreadItem.classList.add('cover-page')
+				if ((pageObjectL.isCurrent) || (pageObjectR.isCurrent)) rd.currentSpreadIndex = index;
 
-					buildSize2P(spreadItem, mb.readerMaxRatio);
-					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+				if ((spreadObject.spreadKind == 'cover-page') || (spreadObject.spreadKind == 'back-cover')) {
+					spreadObject.uiItem.classList.add('cover-page')
 
+					pageObjectL.uiContainer.classList.add('cover-page-RTL');
+					pageObjectR.uiContainer.classList.add('cover-page-LTR');
+					pageObjectL.uiContainer.style['marginLeft'] = 'auto';
+					pageObjectR.uiContainer.style['marginRight'] = 'auto';
 
-					buildSizePic(rd.uiPagesContainer[imageIndex], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
+					buildSizeCV(pageObjectL.uiPage, mb.readerMaxRatio * 0.5);
+					buildSizeCV(pageObjectR.uiPage, mb.readerMaxRatio * 0.5);
 
-					rd.uiPagesContainer[imageIndex].classList.add(rd.ltr ? 'cover-page-LTR' : 'cover-page-RTL');
-					if (rd.ltr) {
-						rd.uiPagesContainer[imageIndex].style.marginLeft = 'auto';
-					} else {
-						rd.uiPagesContainer[imageIndex].style.marginRight = 'auto';
-					}
-
-
-					buildSizePic(rd.uiPages[imageIndex], pageData[pageRef].AR, pageData[pageRef].AR);
-
-					rd.uiPages[imageIndex].style.objectFit = 'cover';
-					rd.uiPages[imageIndex].style.objectPosition = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex].style.height = rd.uiPagesContainer[imageIndex].style.height;
-
-					if (pageData[pageRef].isCurrent) {
-						rd.currentSpreadIndex = index;
-					}
-
-					const coverlay = document.createElement('div');
-					coverlay.id = 'coverlayer';
-					coverlay.classList.add(rd.ltr ? 'LTR' : 'RTL')
-					coverlay.style.width = rd.uiPagesContainer[imageIndex].style.width;
-					coverlay.style.height = rd.uiPagesContainer[imageIndex].style.height;
-					rd.uiPagesContainer[imageIndex].append(coverlay);
-				}
-				else if ((spreadData.spreadKind == 'back-cover')) {
-					let imageIndex = rd.spreadsData[index].imageRefs[0];
-					let pageRef = rd.spreadsData[index].pageNums[0];
-
-					spreadItemThumb.append(rd.uiPagesThumbs[imageIndex]);
-
-					spreadItem.append(rd.uiPagesContainer[imageIndex]);
-					spreadItem.classList.add('cover-page')
-
-					buildSize2P(spreadItem, mb.readerMaxRatio);
-					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-					buildSizePic(rd.uiPagesContainer[imageIndex], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-
-					rd.uiPagesContainer[imageIndex].classList.add(rd.ltr ? 'cover-page-RTL' : 'cover-page-LTR');
-					if (rd.ltr) {
-						rd.uiPagesContainer[imageIndex].style.marginRight = 'auto';
-					} else {
-						rd.uiPagesContainer[imageIndex].style.marginLeft = 'auto';
-					}
-
-
-					buildSizePic(rd.uiPages[imageIndex], pageData[pageRef].AR, pageData[pageRef].AR);
-
-					rd.uiPages[imageIndex].style.objectFit = 'cover';
-					rd.uiPages[imageIndex].style.objectPosition = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex].style.height = rd.uiPagesContainer[imageIndex].style.height;
-
-					if (pageData[pageRef].isCurrent) {
-						rd.currentSpreadIndex = index;
-					}
-
-					const coverlay = document.createElement('div');
-					coverlay.id = 'coverlayer';
-					coverlay.classList.add(rd.ltr ? 'RTL' : 'LTR')
-					coverlay.style.width = rd.uiPagesContainer[imageIndex].style.width;
-					coverlay.style.height = rd.uiPagesContainer[imageIndex].style.height;
-					rd.uiPagesContainer[imageIndex].append(coverlay);
+					addCoverSpine(pageObjectL, pageObjectR);
 
 				}
-				else if (spreadData.spreadKind == 'two-pages') {
-					let imageIndex1 = rd.spreadsData[index].imageRefs[0];
-					let imageIndex2 = rd.spreadsData[index].imageRefs[1];
-					let pageRef1 = rd.spreadsData[index].pageNums[0];
-					let pageRef2 = rd.spreadsData[index].pageNums[1];
+				else if (spreadObject.spreadKind == 'two-pages') {
+					spreadObject.uiItem.classList.add('two-pages');
 
-					spreadItemThumb.append(
-						rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1],
-					);
+					pageObjectL.uiContainer.classList.add('left-page');
+					pageObjectR.uiContainer.classList.add('right-page');
 
-					spreadItem.append(
-						rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1],
-					);
+					pageObjectL.uiThumb.style.aspectRatio = pageObjectL.AR ?? pageObjectR.AR;
+					pageObjectR.uiThumb.style.aspectRatio = pageObjectR.AR ?? pageObjectL.AR;
 
-					rd.uiPages[imageIndex1].style.float = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex2].style.float = rd.ltr ? 'left' : 'right';
-
-					rd.uiPagesContainer[imageIndex1].classList.add(rd.ltr ? 'left-page' : 'right-page');
-					rd.uiPagesContainer[imageIndex2].classList.add(rd.ltr ? 'right-page' : 'left-page');
-
-					spreadItem.classList.add('two-pages');
-
-					buildSize2P(spreadItem, mb.readerMaxRatio);
-					//TODO Ma questo serve???? Farlo uguale a readerViewer?
-					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-					buildSizePic(rd.uiPagesContainer[imageIndex1], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(rd.uiPagesContainer[imageIndex2], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-
-					rd.uiPages[imageIndex1].style.height = rd.uiPagesContainer[imageIndex1].style.height;
-					rd.uiPages[imageIndex2].style.height = rd.uiPagesContainer[imageIndex2].style.height;
-
-					if (pageData[pageRef1].isCurrent) rd.currentSpreadIndex = index;
-					if (pageData[pageRef2].isCurrent) rd.currentSpreadIndex = index;
+					pageObjectL.uiPage.style.height = pageObjectL.uiContainer.style.height;
+					pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 				}
-				else if (spreadData.spreadKind == 'double-spread') {
-					let imageIndex1 = rd.spreadsData[index].imageRefs[0];
-					let imageIndex2 = rd.spreadsData[index].imageRefs[1];
-					let pageRef = rd.spreadsData[index].pageNums[0];
+				else if (spreadObject.spreadKind == 'double-spread') {
+					spreadObject.uiItem.classList.add('two-pages');
+
 					// Crop double spreads thumbnails
-					rd.uiPagesThumbs[imageIndex1].style.aspectRatio = pageData[pageRef].AR * 0.5;
-					rd.uiPagesThumbs[imageIndex2].style.aspectRatio = pageData[pageRef].AR * 0.5;
-					rd.uiPagesThumbs[imageIndex1].style.objectFit = 'cover';
-					rd.uiPagesThumbs[imageIndex2].style.objectFit = 'cover';
-					rd.uiPagesThumbs[imageIndex1].style.objectPosition = rd.ltr ? 'left' : 'right';
-					rd.uiPagesThumbs[imageIndex2].style.objectPosition = rd.ltr ? 'right' : 'left';
+					pageObjectL.uiThumb.style.aspectRatio = pageObjectL.AR * 0.5;
+					pageObjectR.uiThumb.style.aspectRatio = pageObjectL.AR * 0.5;
+					pageObjectL.uiThumb.style.objectFit = 'cover';
+					pageObjectR.uiThumb.style.objectFit = 'cover';
+					pageObjectL.uiThumb.style.objectPosition = 'left';
+					pageObjectR.uiThumb.style.objectPosition = 'right';
 
-					spreadItemThumb.append(
-						rd.uiPagesThumbs[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesThumbs[rd.ltr ? imageIndex2 : imageIndex1],
-					);
+					pageObjectL.uiContainer.classList.add('left-page');
+					pageObjectR.uiContainer.classList.add('right-page');
 
-					// Add page containers
-					spreadItem.append(
-						rd.uiPagesContainer[rd.ltr ? imageIndex1 : imageIndex2],
-						rd.uiPagesContainer[rd.ltr ? imageIndex2 : imageIndex1],
-					);
-
-					rd.uiPages[imageIndex1].style.float = rd.ltr ? 'right' : 'left';
-					rd.uiPages[imageIndex2].style.float = rd.ltr ? 'left' : 'right';
-
-					rd.uiPagesContainer[imageIndex1].classList.add(rd.ltr ? 'left-page' : 'right-page');
-					rd.uiPagesContainer[imageIndex2].classList.add(rd.ltr ? 'right-page' : 'left-page');
-
-					spreadItem.classList.add('two-pages');
-
-					buildSize2P(spreadItem, mb.readerMaxRatio);
-					spreadItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-					buildSizePic(rd.uiPagesContainer[imageIndex1], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-					buildSizePic(rd.uiPagesContainer[imageIndex2], mb.readerMaxRatio * 0.5, mb.readerMaxRatio * 0.5);
-
-					buildSizePic(rd.uiPages[imageIndex1], pageData[pageRef].AR * 0.5, pageData[pageRef].AR * 0.5);
-					buildSizePic(rd.uiPages[imageIndex2], pageData[pageRef].AR * 0.5, pageData[pageRef].AR * 0.5);
-
-					rd.uiPages[imageIndex1].style.objectFit = 'cover';
-					rd.uiPages[imageIndex2].style.objectFit = 'cover';
-
-					rd.uiPages[imageIndex1].style.objectPosition = rd.ltr ? 'left' : 'right';
-					rd.uiPages[imageIndex2].style.objectPosition = rd.ltr ? 'right' : 'left';
-
-					rd.uiPages[imageIndex1].style.height = rd.uiPagesContainer[imageIndex1].style.height;
-					rd.uiPages[imageIndex2].style.height = rd.uiPagesContainer[imageIndex2].style.height;
-
-					if (pageData[pageRef].isCurrent) rd.currentSpreadIndex = index;
-
+					buildSize(pageObjectL.uiPage, pageObjectL.AR * 0.5);
+					buildSize(pageObjectR.uiPage, pageObjectR.AR * 0.5);
 
 				}
-				spreadItem.append(spreadPageShadowL, spreadPageShadowR);
-				rd.uiSpreadsPageShadowL.push(spreadPageShadowL);
-				rd.uiSpreadsPageShadowR.push(spreadPageShadowR);
+				spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
+				spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
 
-				rd.uiSpreads.push(spreadItem);
-				readerViewer.append(spreadItem);
-				spreadHide(spreadItem);
+				readerViewer.append(spreadObject.uiItem);
+				spreadHide(index);
 
 				const localSpread = index;
 
-				spreadItemThumb.addEventListener('click', () => {
+				spreadObject.uiThumb.addEventListener('click', () => {
 					jumpToSpread(localSpread);
 				});
-				rd.uiSpreadsThumbs.push(spreadItemThumb);
-				thumbStripInner.append(spreadItemThumb);
+				thumbStripInner.append(spreadObject.uiThumb);
 
 			});
 
-			//TODO Qui non funziona bene, spostato  dopo initviewer, si può togliere?
-			spreadSetFocus(getCenterClass(rd.currentSpreadIndex), false, false);
+			//TODO Qui non funziona bene, spostato dopo initviewer, si può togliere?
+			spreadSetFocus(getSpreadFocus(rd.currentSpreadIndex));
 
 			return pageData;
 		}
@@ -2896,7 +3135,7 @@
 		function picLoadStackSize() {
 			let out = 0;
 			rd.picLoadStack.forEach(element => {
-				out += rd.uiPages[element].size;
+				out += element.size;
 			});
 			return (out);
 		}
@@ -2917,16 +3156,21 @@
 		async function populateSpread(spreadIndex, isPreload = false) {
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
 
-			const promises = rd.spreadsData[spreadIndex].imageRefs.map(async (element, index) => {
+			let uiPageArray = [
+				rd.spreadsArray[spreadIndex].pageObjL,
+				rd.spreadsArray[spreadIndex].pageObjR,
+			].filter(el => el != null);
+
+			const promises = uiPageArray.map(async (element, index) => {
 
 				if (rd.picLoadStack.indexOf(element) == -1) {
-					if (!rd.uiPages[element].hasSrc) {
+					if (!element.hasSrc) {
 						rd.picLoadStack.push(element); // Add to the stack
 						printStack('S');
-						rd.uiPages[element].classList.add('loading');
+						element.uiPage.classList.add('loading');
 						try {
 							// Fetch the image
-							const blobUrl = await fetchMedia(rd.uiPages[element].lazySrc);
+							const blobUrl = await fetchMedia(element.lazySrc);
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
@@ -2934,14 +3178,14 @@
 							img.src = blobUrl;
 							await img.decode();
 
-							rd.uiPages[element].src = blobUrl;
-							rd.uiPages[element].hasSrc = true;
-							//rd.uiPages[element].src = rd.pages[element].url;
+							element.uiPage.src = blobUrl;
+							element.hasSrc = true;
+							//rd.uiPages[element].src = rd.pagesDataArray[element].url;
 							// Handle successful load
-							rd.uiPages[element].addEventListener('load', () => {
-								rd.uiPages[element].classList.add('loaded');
-								rd.uiPages[element].classList.remove('hidden');
-								rd.uiPages[element].classList.remove('loading');
+							element.uiPage.addEventListener('load', () => {
+								element.uiPage.classList.add('loaded');
+								element.uiPage.classList.remove('hidden');
+								element.uiPage.classList.remove('loading');
 								if (isSectionHidden(readerContainer)) {
 									printStack('LX ');
 									return;
@@ -2962,10 +3206,10 @@
 					}
 
 					// Immediately handle cached images
-					else if (rd.uiPages[element].complete) {
-						rd.uiPages[element].classList.add('loaded');
-						rd.uiPages[element].classList.remove('hidden');
-						rd.uiPages[element].classList.remove('loading');
+					else if (element.uiPage.complete) {
+						element.uiPage.classList.add('loaded');
+						element.uiPage.classList.remove('hidden');
+						element.uiPage.classList.remove('loading');
 						const index = rd.picLoadStack.indexOf(element);
 						if (index !== -1) {
 							rd.picLoadStack.splice(index, 1);
@@ -2983,24 +3227,29 @@
 			await Promise.all(promises);
 		}
 
+		function populateSpreadPreload(spreadIndex) {
+			populateSpread(spreadIndex, true)
+		}
+
 		function handleArrow(direction) {
 			const isDirectionLeft = (direction === 'left');
 			const delta = (rd.ltr === isDirectionLeft) ? -1 : 1;
 			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.pageTurning === direction) return;
-			if (newSpread < 0 || newSpread > rd.uiSpreads.length) return;
+			if (newSpread < 0 || newSpread > spreadsTotal()) return;
+			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
 
 			const edgeFocus = isDirectionLeft ? 'focus-right-page' : 'focus-left-page';
 			const targetFocus = isDirectionLeft ? 'focus-left-page' : 'focus-right-page';
 
-			if (!mb.readerHorizontal && newSpread === rd.uiSpreads.length && rd.spreadFocus === edgeFocus) {
-				return spreadSetFocus(targetFocus, true, false);
+			if (!mb.readerHorizontal && newSpread === spreadsTotal() && rd.spreadFocus === edgeFocus) {
+				return spreadSetFocusSmooth(targetFocus);
 			}
 
-			if ((newSpread === 0 || newSpread === rd.uiSpreads.length - 1) && rd.pageTurning) return;
+			if ((newSpread === 0 || newSpread === spreadsTotal() - 1) && rd.pageTurning) return;
 
-			const earlyTurnBlock = (isDirectionLeft === rd.ltr) && rd.currentSpreadIndex === rd.uiSpreads.length - 2;
+			const earlyTurnBlock = (isDirectionLeft === rd.ltr) && rd.currentSpreadIndex === spreadsTotal() - 2;
 			const lateTurnBlock = (isDirectionLeft !== rd.ltr) && rd.currentSpreadIndex === 1;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
@@ -3008,7 +3257,7 @@
 			if (mb.readerHorizontal) {
 				jumpToSpread(newSpread);
 			} else if (rd.spreadFocus === edgeFocus) {
-				spreadSetFocus(targetFocus, true, false);
+				spreadSetFocusSmooth(targetFocus);
 			} else {
 				jumpToSpread(newSpread, edgeFocus);
 			}
@@ -3023,11 +3272,11 @@
 		}
 
 		function handleLeftLimit() {
-			jumpToSpread(rd.ltr ? 0 : rd.uiSpreads.length - 1);
+			jumpToSpread(rd.ltr ? 0 : spreadsTotal() - 1);
 		}
 
 		function handleRightLimit() {
-			jumpToSpread(rd.ltr ? rd.uiSpreads.length - 1 : 0);
+			jumpToSpread(rd.ltr ? spreadsTotal() - 1 : 0);
 		}
 
 		function handleSmallThumbs() {
@@ -3039,22 +3288,22 @@
 		};
 
 
-		function getPage(index) {
-			let pageNumber = (1 + Number((rd.ltr
-				? rd.spreadsData[index].pageNums[0]
-				: rd.spreadsData[index].pageNums[1] ?? rd.spreadsData[index].pageNums[0]))
-			);
+		function getPageFromSpread(index) {
+			const spreadObject = rd.spreadsArray[index];
 
-			const twoPages = rd.uiSpreads[index].classList.contains('two-pages');
-			const lastSpread = (twoPages && (index == (rd.uiSpreads.length - 1)));
+			//TODO Cosa succede se finisce con uno un orfano?
+			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
+			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
-			const out = [
-				(lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber,
-				pageNumber + (twoPages ? ' ' + (pageNumber + (rd.ltr ? 1 : -1)) : '')
-			];
+			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
+			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
+			const pageNumText = spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum;
+
+			const out = [currentPage, pageNumText];
 
 			return out;
 		}
+
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
 			const stringOut = `${mb.basePath}#bookread
@@ -3075,8 +3324,8 @@
 		function purgeLoading() {
 			for (let i = rd.picLoadStack.length - 1; i >= 0; i--) {
 				const item = rd.picLoadStack[i];
-				rd.uiPages[item].hasSrc = false;
-				rd.uiPages[item].src = 'transparent.png';
+				item.hasSrc = false;
+				item.uiPage.src = 'transparent.png';
 				rd.picLoadStack.splice(i, 1); // Remove the element at index i
 				printStack('P');
 			}
@@ -3084,7 +3333,7 @@
 		}
 
 		// Thumbnail scrolling functions
-		function smoothScroll(container, targetScrollLeft, duration = 500) {
+		function thumbSmoothScroll(container, targetScrollLeft, duration = 500) {
 			const start = container.scrollLeft;
 			const change = targetScrollLeft - start;
 			const startTime = performance.now();
@@ -3104,7 +3353,6 @@
 					requestAnimationFrame(animateScroll);
 				}
 			}
-
 			requestAnimationFrame(animateScroll);
 		}
 
@@ -3120,65 +3368,93 @@
 			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 
 			if (targetElement) {
-
 				const targetScrollLeft = -thumbStripScrollContent.clientWidth / 2 + targetElement.offsetLeft - thumbStripScrollContent.offsetLeft + targetElement.clientWidth / 2;
 
 				if (!fast) {
-					smoothScroll(thumbStripScrollContent, targetScrollLeft, 300);
+					thumbSmoothScroll(thumbStripScrollContent, targetScrollLeft, 300);
 				} else {
 					thumbStripScrollContent.scrollLeft = targetScrollLeft;
 				};
 
 				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
-
 			}
 		}
 
-		function pageTurn(index, oldindex, turnDirection, force = false) {
+		function animShadowFWD(align, duration, ease) {
+			return ([
+				[{ [align]: '0%', width: '0', opacity: '0.1' },
+				{ [align]: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
+				{ [align]: '100%', width: '0', opacity: '0' }],
+				{ duration: duration, easing: ease }
+			]);
+		}
 
+		function animShadowBWD(align, duration, ease) {
+			return ([
+				[{ [align]: '100%', width: '0', opacity: '0' },
+				{ [align]: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
+				{ [align]: '50%', width: '0', opacity: '0' }],
+				{ duration: duration, easing: ease }
+			]);
+		}
+
+		function animLight(align, duration, ease) {
+			return ([
+				[{ [align]: '0%', width: '0%', opacity: '0.5' },
+				{ [align]: '25%', width: '20%', opacity: '1' },
+				{ [align]: '50%', width: '30%', opacity: '0' }],
+				{ duration: duration, easing: ease }
+			]);
+		}
+
+		function hideOldSpread(index, oldindex) {
+			if (oldindex != index) spreadHide(oldindex);
+		}
+
+		function pageTurn(index, oldindex, turnDirection, force = false) {
 			//Z-index control
-			rd.uiSpreads[index].style.zIndex = rd.uiSpreads.length + 1;
+			rd.spreadsArray[index].uiItem.style.zIndex = spreadsTotal() + 1;
 
 			if (turnDirection == 'turn-right') {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? rd.uiSpreads.length - oldindex : oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? spreadsTotal() - oldindex : oldindex;
 			} else {
-				rd.uiSpreads[oldindex].style.zIndex = rd.ltr ? oldindex : rd.uiSpreads.length - oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? oldindex : spreadsTotal() - oldindex;
 			}
 
-			rd.leftDrop.style.zIndex = rd.rightDrop.style.zIndex = 0;
+			rd.dropShadowL.style.zIndex = rd.dropShadowR.style.zIndex = 0;
 
 			const easeFull = 'cubic-bezier(0.42, 0, 0.58, 1)'
 			const easeIn = 'cubic-bezier(0.42, 0, 0.71, 1)'
 			const easeOut = 'cubic-bezier(0.29, 0.5, 0.58, 1)'
 
 			// Animation preparation
-			const turnSpeed = force ? 0 : rd.speedTurn;
-			const animData = { duration: turnSpeed, easing: easeFull, fill: 'forwards' };
+			const turnTime = force ? 0 : rd.turnTime;
+			const animData = { duration: turnTime, easing: easeFull, fill: 'forwards' };
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
-				{ clipPath: 'inset(0 0 0 100%)', left: '-100%' }, // Fully clipped
-				{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+				{ clipPath: 'inset(0 0 0 100%)', left: '-100%' },
+				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearL2R = [
-				{ clipPath: 'inset(0 100% 0 0)' }, // Fully clipped
-				{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+				{ clipPath: 'inset(0 100% 0 0)' },
+				{ clipPath: 'inset(0 0 0 0)' }
 			];
 			const appearL2R_sildeinR2L = [
-				{ clipPath: 'inset(0 100% 0 0)', left: '100%' }, // Fully clipped
-				{ clipPath: 'inset(0 0 0 0)', left: '0%' } // Fully visible
+				{ clipPath: 'inset(0 100% 0 0)', left: '100%' },
+				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearR2L = [
-				{ clipPath: 'inset(0 0 0 100%)' }, // Fully clipped
-				{ clipPath: 'inset(0 0 0 0)' } // Fully visible
+				{ clipPath: 'inset(0 0 0 100%)' },
+				{ clipPath: 'inset(0 0 0 0)' }
 			];
 			const clipL2R = [
-				{ clipPath: 'inset(0 0 0 0)' }, // Fully visible
-				{ clipPath: 'inset(0 0 0 100%)' } // Fully clipped
+				{ clipPath: 'inset(0 0 0 0)' },
+				{ clipPath: 'inset(0 0 0 100%)' }
 			];
 			const clipR2L = [
-				{ clipPath: 'inset(0 0 0 0)' }, // Fully visible
-				{ clipPath: 'inset(0 100% 0 0)' } // Fully clipped
+				{ clipPath: 'inset(0 0 0 0)' },
+				{ clipPath: 'inset(0 100% 0 0)' }
 			];
 			const unFade = [
 				{ filter: 'brightness(90%) sepia(10%)' },
@@ -3189,167 +3465,170 @@
 				{ filter: 'brightness(90%) sepia(10%)' }
 			];
 
-			if (oldindex != index) rd.uiSpreads[oldindex].animate(fade, { duration: rd.speedTurn, easing: 'ease-in' });
+			if (oldindex != index) rd.spreadsArray[oldindex].uiItem.animate(fade, { duration: rd.turnTime, easing: 'ease-in' });
 
-			const startCover = rd.spreadsData[oldindex].imageRefs.length == 1
-			const stopCover = rd.spreadsData[index].imageRefs.length == 1
+			const startCover = ((rd.spreadsArray[oldindex].spreadKind == 'cover-page') || (rd.spreadsArray[oldindex].spreadKind == 'back-cover'));
+			const stopCover = ((rd.spreadsArray[index].spreadKind == 'cover-page') || (rd.spreadsArray[index].spreadKind == 'back-cover'));
 
 			//turnDirection can be 'turn-right' or 'turn-left'
-			rd.leftForeEdge.style.transition = 'clip-path 0.3s';
-			rd.rightForeEdge.style.transition = 'clip-path 0.3s';
-			rd.leftDrop.style.transition = 'margin 0.3s';
-			rd.rightDrop.style.transition = 'margin 0.3s';
+			rd.foreEdgeL.style.transition = 'clip-path 0.3s';
+			rd.foreEdgeR.style.transition = 'clip-path 0.3s';
+			rd.dropShadowL.style.transition = 'margin 0.3s, opacity 0.5s';
+			rd.dropShadowR.style.transition = 'margin 0.3s, opacity 0.5s';
 
-			clipForeEdge = buildForeEdge(index, rd.uiSpreads.length)
+			clipForeEdge = buildForeEdge(index, spreadsTotal())
 
 			// Margins are defined as percentage of total width, so to have the correct size we divide
 			// by mb.readerMaxRatio, then multiply by the drop aspect ratio (0.1) and apply the dropL and dropR proportion
-			rd.leftDrop.style.marginRight = (0.1 * clipForeEdge.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
-			rd.rightDrop.style.marginLeft = (0.1 * clipForeEdge.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.dropShadowL.style.marginRight = (0.1 * clipForeEdge.dropL * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.dropShadowR.style.marginLeft = (0.1 * clipForeEdge.dropR * 100 * 1 / mb.readerMaxRatio) + '%';
+			rd.dropShadowR.style.opacity = 1;
+			rd.dropShadowL.style.opacity = 1;
 
 			rd.pageTurning = (turnDirection == 'turn-right' ? 'right' : 'left');
 
 			if (!startCover && !stopCover) {
-				let rightPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[rd.ltr ? 1 : 0]]
-				let leftPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[rd.ltr ? 0 : 1]]
+				let rightPage = rd.spreadsArray[index].pageObjR.uiContainer;
+				let leftPage = rd.spreadsArray[index].pageObjL.uiContainer;
 
-				let newSpreadShadowL = rd.uiSpreadsPageShadowL[index];
-				let newSpreadShadowR = rd.uiSpreadsPageShadowR[index];
+				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
+				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
+				let newSpreadLightL = rd.spreadsArray[index].uiLightL;
+				let newSpreadLightR = rd.spreadsArray[index].uiLightR;
 
 				if (turnDirection == 'turn-right') {
-					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
+					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R, animData);
-					leftPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
-					newSpreadShadowR.animate(
-						[{ left: '0%', width: '0', opacity: '0.1' },
-						{ left: '50%', width: rd.shadowWidthForward, opacity: rd.shadowOpacityForward },
-						{ left: '100%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
-					newSpreadShadowL.animate(
-						[{ right: '100%', width: '0', opacity: '0' },
-						{ right: '75%', width: rd.shadowWidthBackward, opacity: rd.shadowOpacityBackward },
-						{ right: '50%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
-					//Removed to avoid slip below page
-					//leftPage_old.animate(clipL2R, animDataHalf);
+					leftPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
+
+					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animShadowBWD('right', turnTime, easeFull));
+					newSpreadLightR.animate(...animLight('left', turnTime, easeFull));
 				} else {
-					//TODO This is the playground for shadow
-					rightPage.animate(appearR2L, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
+					rightPage.animate(appearR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R_sildeinR2L, animData);
-					rightPage.animate(unFade, { duration: rd.speedTurn, easing: 'ease-in' });
-					newSpreadShadowL.animate(
-						[{ right: '0%', width: '0', opacity: '0.1' },
-						{ right: '50%', width: rd.shadowWidthForward, opacity: rd.shadowOpacityForward },
-						{ right: '100%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
-					newSpreadShadowR.animate(
-						[{ left: '100%', width: '0', opacity: '0' },
-						{ left: '75%', width: rd.shadowWidthBackward, opacity: rd.shadowOpacityBackward },
-						{ left: '50%', width: '0', opacity: '0' }],
-						{ duration: turnSpeed, easing: easeFull });
-					//Removed to avoid slip below page
-					//rightPage_old.animate(clipR2L, animDataHalf);
+					rightPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
+
+					newSpreadShadowL.animate(...animShadowFWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animShadowBWD('left', turnTime, easeFull));
+					newSpreadLightL.animate(...animLight('right', turnTime, easeFull));
 				}
 
-
-
-				rd.leftForeEdge.style.clipPath = clipForeEdge.left;
-				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
+				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
+				rd.foreEdgeR.style.clipPath = clipForeEdge.right;
 
 			} else if (startCover && stopCover) {
-				let startCoverPage = rd.uiPagesContainer[rd.spreadsData[oldindex].imageRefs[0]]
-				let stopCoverPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[0]]
+				let startCoverPageL = rd.spreadsArray[oldindex].pageObjL.uiContainer
+				let startCoverPageR = rd.spreadsArray[oldindex].pageObjR.uiContainer
+				let stopCoverPageL = rd.spreadsArray[index].pageObjL.uiContainer
+				let stopCoverPageR = rd.spreadsArray[index].pageObjR.uiContainer
 
-				rd.leftForeEdge.style.transition = 'clip-path 0s';
-				rd.rightForeEdge.style.transition = 'clip-path 0s';
-				rd.leftForeEdge.style.clipPath = `inset(0 0 0 100%)`;
-				rd.rightForeEdge.style.clipPath = `inset(0 100% 0 0)`;
-				rd.leftDrop.style.transition = 'margin 0s';
-				rd.rightDrop.style.transition = 'margin 0s';
-				rd.leftDrop.style.marginRight = 0;
-				rd.rightDrop.style.marginLeft = 0;
+				rd.foreEdgeL.style.transition = 'clip-path 0s';
+				rd.foreEdgeR.style.transition = 'clip-path 0s';
+				rd.foreEdgeL.style.clipPath = `inset(0 0 0 100%)`;
+				rd.foreEdgeR.style.clipPath = `inset(0 100% 0 0)`;
+				rd.dropShadowL.style.transition = 'margin 0s';
+				rd.dropShadowR.style.transition = 'margin 0s';
+				rd.dropShadowL.style.marginRight = 0;
+				rd.dropShadowR.style.marginLeft = 0;
 
 				if (turnDirection == 'turn-right') {
-					startCoverPage.animate(clipL2R, animInstant).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
-					stopCoverPage.animate(appearR2L, animInstant);
-					rd.rightDrop.animate([{ left: '100%' }], animInstant);
-					rd.leftDrop.animate([{ right: '50%' }], animInstant);
+					startCoverPageR.animate(clipL2R, animInstant).finished.then(() => hideOldSpread(index, oldindex));
+					stopCoverPageR.animate(appearR2L, animInstant);
+					rd.dropShadowR.animate([{ left: '100%' }], animInstant);
+					rd.dropShadowL.animate([{ right: '50%' }], animInstant);
 				} else {
-					startCoverPage.animate(clipR2L, animInstant).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
-					stopCoverPage.animate(appearL2R, animInstant);
-					rd.leftDrop.animate([{ right: '100%' }], animInstant);
-					rd.rightDrop.animate([{ left: '50%' }], animInstant);
+					startCoverPageL.animate(clipR2L, animInstant).finished.then(() => hideOldSpread(index, oldindex));
+					stopCoverPageL.animate(appearL2R, animInstant);
+					rd.dropShadowL.animate([{ right: '100%' }], animInstant);
+					rd.dropShadowR.animate([{ left: '50%' }], animInstant);
 				}
 			} else if (startCover) {
 				// Start Page (cover or back cover)
-				let coverPage = rd.uiPagesContainer[rd.spreadsData[oldindex].imageRefs[0]]
+				//let coverPage = rd.spreadsArray[oldindex].pageObj.uiContainer
 				// Stop Page (mid spread)
-				let rightPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[rd.ltr ? 1 : 0]]
-				let leftPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[rd.ltr ? 0 : 1]]
+				let rightPage = rd.spreadsArray[index].pageObjR.uiContainer
+				let leftPage = rd.spreadsArray[index].pageObjL.uiContainer
+
+				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
+				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
+				let newSpreadLightL = rd.spreadsArray[index].uiLightL;
+				let newSpreadLightR = rd.spreadsArray[index].uiLightR;
+
 				if (turnDirection == 'turn-right') {
-					rd.rightForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
-					rd.rightDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
-					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
+					rd.foreEdgeR.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
+					rd.dropShadowR.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
+
+					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
+					newSpreadShadowL.animate(...animShadowBWD('right', turnTime, easeFull));
+					newSpreadLightR.animate(...animLight('left', turnTime, easeFull));
+
+					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R, animData);
-					rd.rightDrop.animate(
+					rd.dropShadowR.animate(
 						[{ left: '100%' }],
-						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
 					);
 				} else {
-					rd.leftForeEdge.style.transition = `clip-path 0.15s ease-in-out ${turnSpeed}ms`;
-					rd.leftDrop.style.transition = `margin 0.15s ease-in-out ${turnSpeed}ms`;
+					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
+					rd.dropShadowL.style.transition = `margin 0.15s ease-in-out ${turnTime}ms`;
+
+					newSpreadShadowL.animate(...animShadowFWD('right', turnTime, easeFull));
+					newSpreadShadowR.animate(...animShadowBWD('left', turnTime, easeFull));
+					newSpreadLightL.animate(...animLight('right', turnTime, easeFull));
+
 					rightPage.animate(appearR2L, animData);
-					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
-					rd.leftDrop.animate(
+					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
+					rd.dropShadowL.animate(
 						[{ right: '100%' }],
-						{ duration: turnSpeed * 0.5, easing: easeOut, fill: "forwards", delay: turnSpeed * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
 					);
 				}
-				rd.leftForeEdge.style.clipPath = clipForeEdge.left;
-				rd.rightForeEdge.style.clipPath = clipForeEdge.right;
+				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
+				rd.foreEdgeR.style.clipPath = clipForeEdge.right;
 			} else if (stopCover) {
 				// Start Page (mid spread)
-				let rightPage = rd.uiPagesContainer[rd.spreadsData[oldindex].imageRefs[rd.ltr ? 1 : 0]]
-				let leftPage = rd.uiPagesContainer[rd.spreadsData[oldindex].imageRefs[rd.ltr ? 0 : 1]]
+				let rightPage = rd.spreadsArray[oldindex].pageObjR.uiContainer
+				let leftPage = rd.spreadsArray[oldindex].pageObjL.uiContainer
 				// Stop Page (cover or back cover)
-				let coverPage = rd.uiPagesContainer[rd.spreadsData[index].imageRefs[0]]
+				let coverPageL = rd.spreadsArray[index].pageObjL.uiContainer
+				let coverPageR = rd.spreadsArray[index].pageObjR.uiContainer
 
-				rd.leftDrop.style.marginRight = 0;
-				rd.rightDrop.style.marginLeft = 0;
-				rd.leftForeEdge.style.clipPath = `inset(0 0 0 100%)`;
-				rd.rightForeEdge.style.clipPath = `inset(0 100% 0 0)`;
+				rd.dropShadowL.style.marginRight = 0;
+				rd.dropShadowR.style.marginLeft = 0;
+				rd.foreEdgeL.style.clipPath = `inset(0 0 0 100%)`;
+				rd.foreEdgeR.style.clipPath = `inset(0 100% 0 0)`;
+
+				let newSpreadShadowL = rd.spreadsArray[index].uiShadowL;
+				let newSpreadShadowR = rd.spreadsArray[index].uiShadowR;
+				let newSpreadLightL = rd.spreadsArray[index].uiLightL;
+				let newSpreadLightR = rd.spreadsArray[index].uiLightR;
 
 				if (turnDirection == 'turn-right') {
-					rd.leftForeEdge.style.transition = 'clip-path 0s';
-					leftPage.animate(clipL2R, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
-					coverPage.animate(appearR2L_slideinL2R, animData);
-					rd.leftDrop.animate(
+					rd.foreEdgeL.style.transition = 'clip-path 0s';
+					leftPage.animate(clipL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
+
+					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
+					newSpreadLightR.animate(...animLight('left', turnTime, easeFull));
+
+					coverPageR.animate(appearR2L_slideinL2R, animData);
+					coverPageL.animate(appearL2R, animData);
+					rd.dropShadowL.animate(
 						[{ right: '50%' }],
-						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
+						{ duration: turnTime, easing: easeFull, fill: "forwards" }
 					);
 				} else {
-					rd.rightForeEdge.style.transition = 'clip-path 0s';
-					rightPage.animate(clipR2L, animData).finished.then(() => {
-						if (oldindex != index) spreadHide(rd.uiSpreads[oldindex]);
-					});
-					coverPage.animate(appearL2R_sildeinR2L, animData);
-					rd.rightDrop.animate(
+					rd.foreEdgeR.style.transition = 'clip-path 0s';
+					rightPage.animate(clipR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
+
+					newSpreadShadowL.animate(...animShadowFWD('right', turnTime, easeFull));
+					newSpreadLightL.animate(...animLight('right', turnTime, easeFull));
+
+					coverPageL.animate(appearL2R_sildeinR2L, animData);
+					coverPageR.animate(appearR2L, animData);
+					rd.dropShadowR.animate(
 						[{ left: '50%' }],
-						{ duration: turnSpeed, easing: easeFull, fill: "forwards" }
+						{ duration: turnTime, easing: easeFull, fill: "forwards" }
 					);
 				}
 			}
@@ -3357,12 +3636,12 @@
 			clearTimeout(rd.turnTimeout);
 			rd.turnTimeout = setTimeout(() => {
 				rd.pageTurning = null;
-			}, turnSpeed);
+			}, turnTime);
 		}
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
-		function getCenterClass(spreadIndex) {
-			const spreadKind = rd.spreadsData[spreadIndex].spreadKind;
+		function getSpreadFocus(spreadIndex) {
+			const spreadKind = rd.spreadsArray[spreadIndex].spreadKind;
 			if (spreadKind === 'cover-page') {
 				return rd.ltr ? 'focus-right-page' : 'focus-left-page';
 			}
@@ -3375,18 +3654,16 @@
 			return rd.ltr ? 'focus-left-page' : 'focus-right-page';
 		}
 
+		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
 
-		function jumpToSpread(newSpreadTarget, spreadClass = null, turnDirection = null, force = false) {
+			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
+			const localNewSpreadIndex = targetSpreadIndex;
 
-			const localOldSpreadIndex = force ? 0 : rd.currentSpreadIndex;
-			const localNewSpreadIndex = newSpreadTarget;
+			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
 
-			if ((newSpreadTarget < 0) || (newSpreadTarget >= rd.uiSpreads.length) || (!force && (localOldSpreadIndex == localNewSpreadIndex))) return;
-
-			//buildForeEdge(newSpreadTarget, localOldSpreadIndex, rd.uiSpreads.length)
-
-			let spreadClassX = getCenterClass(localNewSpreadIndex);
-			if (spreadClass != null) spreadClassX = spreadClass;
+			if (targetSpreadFocus == null) {
+				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
+			}
 
 			purgeLoading();
 
@@ -3396,26 +3673,26 @@
 			if (isSectionHidden(readerContainer)) return;
 
 			populateSpread(localNewSpreadIndex);
-			spreadSetFocus(spreadClassX, true, true);
 
-			spreadShow(rd.uiSpreads[localNewSpreadIndex]);
+			// TODO
+			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
+			// center and there's no scrolling happening in that case, page turn is treated separately 
+			// This adds a slight delay when jumping cover to cover
+			spreadSetFocusSmoothDelay(targetSpreadFocus);
 
-			let turnDirectionCalc = null;
+			spreadShow(localNewSpreadIndex);
 
-			if (turnDirection != null) {
-				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirection, force)
-			} else {
-				if (rd.ltr) {
-					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-left' : 'turn-right';
-				} else {
-					turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) ? 'turn-right' : 'turn-left';
-				}
-				pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, force)
-			}
+			const turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) === rd.ltr ? 'turn-left' : 'turn-right';
+			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
 			centerThumb();
 			updateProgressBar();
-			if (!force) history.replaceState(null, '', jumpString());
+
+			if (!skipHistory) history.replaceState(null, '', jumpString());
+		}
+
+		function jumpToSpreadSkipHistory(targetSpreadIndex) {
+			jumpToSpread(targetSpreadIndex, null, true)
 		}
 
 		// Reader UI Control Buttons
@@ -3444,16 +3721,16 @@
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
 
-			jumpToSpread(Math.floor(newProgressPercent * (rd.uiSpreads.length - 1)));
+			jumpToSpread(Math.floor(newProgressPercent * (spreadsTotal() - 1)));
 		}
 
 		// Dragging the progress bar
 		readerProgressBar.addEventListener('mousedown', (event) => {
 			rd.isDraggingProgressBar = true;
 			event.preventDefault();
-
 			seek(event);
 		});
+
 		readerProgressBar.addEventListener('touchstart', (event) => {
 			rd.isDraggingProgressBar = true;
 			seek(event.touches[0]); // Use the first touch point
@@ -3502,14 +3779,24 @@
 		});
 
 		document.addEventListener('keydown', (event) => {
-			if (event.key === 'ArrowLeft') {
-				if (!isSectionHidden(readerContainer)) handleLeftArrow();
-			} else if (event.key === 'ArrowRight') {
-				if (!isSectionHidden(readerContainer)) handleRightArrow();
-			} else if (event.key === 'Escape' || event.key === 'ArrowDown') {
-				if (!isSectionHidden(readerContainer)) handleCloseReader();
-			} else if (event.code === 'Space' || event.key === ' ') {
-				if (!isSectionHidden(readerContainer)) toggleMenu();
+			const readerVisible = !isSectionHidden(readerContainer);
+
+			switch (event.key) {
+				case 'ArrowLeft':
+					if (readerVisible) handleLeftArrow();
+					break;
+				case 'ArrowRight':
+					if (readerVisible) handleRightArrow();
+					break;
+				case 'Escape':
+				case 'ArrowDown':
+					if (readerVisible) handleCloseReader();
+					break;
+				case ' ':
+					if (readerVisible) toggleMenu();
+					break;
+				default:
+					break;
 			}
 		});
 
@@ -3532,9 +3819,13 @@
 			const { path, params } = getHashAndParams();
 
 			await executeFade(1);
+			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
-			libraryMenu.classList.add('disabled');
-			sectionHide(extraMenuBar);
+			sectionHide(filtersBar);
+			sectionHide(colorSwatchBar);
+
+			clearLibrariesMenus();
+
 			closeBookDetails();
 			mb.screenAR = getScreenAR();
 

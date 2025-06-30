@@ -5,7 +5,7 @@
 	--mb-l: 38%;
 
 	--mb-accent: hsl(var(--mb-h), var(--mb-s), var(--mb-l));
-	--mb-accent-light: hsl(var(--mb-h), var(--mb-s), calc(var(--mb-l)*1.1));
+	--mb-accent-light: hsl(var(--mb-h), var(--mb-s), calc(var(--mb-l)*1.12));
 	--mb-accent-active: hsl(var(--mb-h), 48%, 84%);
 	--mb-accent-a30: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.3);
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
@@ -40,6 +40,31 @@
 
 	--mb-num-buttons: 1;
 
+	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
+	--mb-button-transition:
+		opacity 0.3s,
+		color 0.3s ease,
+		background-color 0.3s ease,
+		border 0.2s ease,
+		box-shadow 0.15s ease,
+		text-shadow 0.3s ease,
+		width 0.3s ease,
+		scale 0.15s ease,
+		transform 0.15s ease,
+		filter 0.15s ease;
+
+	--mb-button-transition-fast:
+		opacity 0.3s,
+		color 0.3s ease,
+		background-color 0.3s ease,
+		border 0.2s ease,
+		box-shadow 0.05s ease,
+		text-shadow 0.3s ease,
+		width 0.15s ease,
+		scale 0.05s ease,
+		transform 0.05s ease,
+		filter 0.15s ease;
+
 	--mb-swatches-hi:
 		hsl(348, 92%, 38%),
 		hsl(358, 73%, 55%),
@@ -70,60 +95,6 @@
 		hsl(332, 91%, 64%),
 		hsl(0, 0%, 55%);
 
-	/*
-	--mb-swatches-hi:
-		hsl(348, 92%, 38%),
-		hsl(28, 93%, 54%),
-		hsl(44, 100%, 57%),
-		hsl(105, 45%, 50%),
-		hsl(211, 100%, 50%),
-		hsl(230, 65%, 47%),
-		hsl(299, 42%, 41%),
-		hsl(331, 91%, 64%),
-		hsl(0, 0%, 60%);
-	
-	--mb-swatches-lo:
-		hsl(348, 92%, 38%),
-		hsl(28, 93%, 54%),
-		hsl(44, 100%, 57%),
-		hsl(105, 45%, 50%),
-		hsl(211, 100%, 50%),
-		hsl(230, 62%, 50%),
-		hsl(299, 42%, 41%),
-		hsl(331, 91%, 64%),
-		hsl(0, 0%, 60%);
-	*/
-	/*mac
-			hsl(358, 73%, 55%),
-		hsl(28, 93%, 54%),
-		hsl(44, 100%, 57%),
-		hsl(105, 45%, 50%),
-		hsl(211, 100%, 50%),
-		hsl(299, 42%, 41%),
-		hsl(331, 91%, 64%),
-		hsl(0, 0%, 60%);
-		*/
-
-	/*hi
-		hsl(348, 92%, 38%),
-		hsl(37, 100%, 50%),
-		hsl(50, 100%, 48%),
-		hsl(92, 78%, 42%),
-		hsl(210, 76%, 50%),
-		hsl(230, 65%, 47%),
-		hsl(274, 57%, 45%),
-		hsl(306, 70%, 60%);
-*/
-	/* lo
-		hsl(348, 92%, 38%),
-		hsl(37, 100%, 50%),
-		hsl(50, 100%, 48%),
-		hsl(92, 82%, 40%),
-		hsl(210, 76%, 50%),
-		hsl(230, 62%, 50%),
-		hsl(274, 57%, 51%),
-		hsl(306, 70%, 60%);
-		*/
 }
 
 [data-theme="light"] {
@@ -137,6 +108,18 @@
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
 	--mb-bar-color: #dddddd;
+
+	--mb-red-hover: var(--mb-accent-a50);
+
+	--mb-button-press:
+		inset 0 3px 10px rgba(0, 0, 0, 0.2),
+		0 -2px 2px rgba(0, 0, 0, 0.3),
+		0 2px 2px rgba(255, 255, 255, 0.3);
+
+	--mb-button-unpress:
+		inset 0 3px 10px rgba(0, 0, 0, 0.0),
+		0 -2px 2px rgba(0, 0, 0, 0.0),
+		0 2px 2px rgba(255, 255, 255, 0.0);
 }
 
 [data-theme="dark"] {
@@ -150,7 +133,21 @@
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
 	--mb-glyph-color: rgba(255, 255, 255, 0.75);
 	--mb-bar-color: #606060;
+
+	--mb-red-hover: var(--mb-accent-light);
+
+	--mb-button-press:
+		inset 0 3px 10px rgba(0, 0, 0, 0.3),
+		0 -2px 2px rgba(0, 0, 0, 0.2),
+		0 2px 2px rgba(255, 255, 255, 0.2);
+
+	--mb-button-unpress:
+		inset 0 3px 10px rgba(0, 0, 0, 0.0),
+		0 -2px 2px rgba(0, 0, 0, 0.0),
+		0 2px 2px rgba(255, 255, 255, 0.0);
 }
+
+
 
 /*
 @font-face {
@@ -168,6 +165,7 @@
 	user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .draggable {
@@ -181,8 +179,11 @@ body {
 }
 
 .fa-apple {
+	width: 100%;
 	color: var(--mb-card-color);
-	margin-left:5px;
+	text-align: left;
+	margin-left: 2px;
+	margin-right: 2px;
 }
 
 /*
@@ -210,9 +211,104 @@ body {
 }
 */
 
-#colorSwatchBar{
-	padding:0px;
-	gap:5px;
+.modal {
+	opacity: 0;
+	visibility: hidden;
+	display: flex;
+	position: fixed;
+	z-index: 10000;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.4);
+	justify-content: center;
+	align-items: center;
+	transition: opacity 0.3s ease;
+	pointer-events: none;
+}
+
+.modal.visible {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+.modal.unfade {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.modal-content {
+	background: var(--mb-card-color);
+	padding: var(--login-padding);
+	border-radius: calc(var(--login-padding) + 20px);
+	text-align: center;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	/*max-width: 400px;*/
+	width: 200px;
+	color: var(--mb-text-color);
+	font-size: 18px;
+}
+
+.modal-content p {
+	padding-left: var(--login-padding);
+	padding-right: var(--login-padding);
+	margin-top: calc(0.5 * var(--login-padding));
+	margin-bottom: var(--login-padding);
+}
+
+.modal-content button {
+	border: none;
+	border-radius: 20px;
+	cursor: pointer;
+	width: 100%;
+	height: 40px;
+	font-size: 16px;
+	padding: 0;
+	margin-top: calc(0.5 * var(--login-padding));
+}
+
+.modal-content button.ok {
+	background: var(--mb-accent);
+	color: white;
+}
+
+.modal-content button.cancel {
+	background: var(--mb-bar-color);
+	color: var(--mb-text-color);
+}
+
+#myModal.ok-only #modalCancel {
+	display: none;
+}
+
+#colorSwatchBar {
+	padding: 0px;
+	gap: 5px;
+}
+
+#modalImage {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	object-position: center;
+	border-radius: 50px;
+	margin: -30px;
+	display: block;
+}
+
+#modalWrapper {
+	box-sizing: border-box;
+
+	margin: var(--login-padding) auto;
+	padding: 15px;
+	overflow: visible;
+	width: 70px;
+	height: 70px;
+	background-image: radial-gradient(circle, var(--mb-accent-active) 30%, var(--mb-accent));
+	border-radius: 50px;
+
 }
 
 .color-swatch {
@@ -220,24 +316,26 @@ body {
 	cursor: pointer;
 	box-sizing: border-box;
 	border: 3px solid transparent;
-	transition: border 0.2s ease;
 	border-radius: 4px;
-	flex:1;
+	flex: 1;
+	min-width: 22px;
 }
 
 .color-swatch:hover {
-	border: 3px solid rgba(255,255,255,0.5);
+	border: 3px solid rgba(255, 255, 255, 0.5);
 }
 
 .color-swatch:first-child {
 	margin-left: 10px;
 }
+
 .color-swatch:last-child {
 	margin-right: 10px;
 }
 
 #debuggerObj {
 	display: none;
+	pointer-events: none;
 	position: fixed;
 	z-index: 10000;
 	font-size: 20px;
@@ -283,6 +381,7 @@ body {
 	font-family: 'Roboto Flex', sans-serif;
 	margin: 0;
 	padding: 0;
+
 	background: var(--mb-page-color);
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
@@ -299,16 +398,17 @@ a {
 #mainUI {
 	position: fixed;
 	top: var(--mb-drag-bar-height);
-	left: 0;
-	right: 0;
+	left: env(safe-area-inset-left);
+	right: env(safe-area-inset-right);
 	bottom: 0;
 	display: grid;
 	grid-template-columns: auto;
 	grid-template-rows: 60px auto;
 	transition: grid-template-rows 0.2s;
+	background: var(--mb-page-color);
 }
 
-#dragBar {
+#dragbar {
 	text-align: left;
 	padding-left: 32px;
 	font-size: 14px;
@@ -318,16 +418,46 @@ a {
 	left: 0;
 	right: 0;
 	height: var(--mb-drag-bar-height);
-	/*z-index:3000;*/
-	background: var(--mb-card-color);
-	transition: background-color 0.1s ease, color 0.3s ease;
+	z-index: 3000;
+	background-color: var(--mb-card-color);
 	display: flex;
 	flex-direction: column;
 	justify-content: flex-end;
 	transition: all 0.3s;
+	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+	/*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
 }
 
+#dragbar.onReader {
+	background-color: transparent;
+	transition: background-color 0.3s;
+}
+
+#barLogo,
+#dragbarAppTitle,
+#windowControls {
+	transition: opacity 0.3s ease;
+}
+
+#dragbar.onReader #barLogo,
+#dragbar.onReader #dragbarAppTitle {
+	opacity: 0;
+}
+
+#dragbar.onReader #windowControls {
+	opacity: 0.35;
+}
+
+#dragbar.onReader #windowControls:hover {
+	opacity: 1;
+}
+
+/*
+#dragbar.onReader:hover{
+	opacity:1;
+}
+*/
 .window-controls {
 	display: flex;
 	gap: 5px;
@@ -336,6 +466,7 @@ a {
 	top: 8px;
 	right: 8px;
 	font-size: 14px;
+	transition: opacity 0.3s ease;
 }
 
 .window-controls span {
@@ -432,13 +563,23 @@ a {
 	height: var(--mb-filter-button-size);
 }
 
+.library-menu-button {
+	border-radius: 50%;
+}
+
 .library-menu-button span {
 	color: rgba(255, 255, 255, 0.5);
+	border-radius: 50%;
 	transition: text-shadow 0.3s ease, color 0.3s ease;
 }
 
+/*
+.library-menu-button span:active {
+	transform: scale(0.8);
+}
+*/
 .library-menu-button span.filtered {
-	border-radius: 5px;
+	/*border-radius: 5px;*/
 	color: white;
 	text-shadow: 0px 0px 7px rgba(255, 255, 255, 0.9);
 }
@@ -499,7 +640,7 @@ a {
 	width: 100px;
 	margin: 0px;
 	padding: calc(0.5*(var(--mb-filter-button-size) - var(--mb-filter-span-size)));
-	border-radius: 8px;
+	border-radius: calc(var(--mb-filter-button-size) * 0.5);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -516,6 +657,47 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
+/* All press-button classes are animated with 3D button */
+.press-button,
+.press-flat-button {
+	transition: var(--mb-button-transition);
+}
+
+/*
+.press-button:active:not(:has(input:focus)):not(:has(.library-menu-button:hover)) {
+	transform: scale(0.975) translateY(1px);
+	filter: brightness(0.98);
+	box-shadow: var(--mb-button-press);
+}
+*/
+/*
+.press-button:not(:active) {
+	transition:var(--mb-button-transition-fast);
+	box-shadow:
+		inset 0 3px 10px rgba(0, 0, 0, 0.0),
+		0 -2px 2px rgba(0, 0, 0, 0.0),
+		0 2px 2px rgba(255, 255, 255, 0.0);
+	;
+}
+*/
+/*
+.press-flat-button:active {
+	scale: 0.9;
+}
+
+.press-flat-button-shallow:active {
+	scale: 0.95;
+}
+.press-flat-button-deep:active {
+	scale: 0.8;
+}
+*/
+/*
+.press-flat-button:not(:active) {
+	scale: 0.975;
+}
+*/
+
 .library-item {
 	-webkit-app-region: no-drag;
 
@@ -524,17 +706,17 @@ a {
 	padding: calc(0.5*(var(--mb-button-size) - var(--mb-span-size)));
 	width: var(--mb-library-large);
 	margin: 0px;
-	border-radius: 8px;
+	border-radius: calc(var(--mb-button-size)*0.5);
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	text-align: center;
 	cursor: pointer;
-	transition: all 0.3s ease;
+	/*transition: all 0.3s ease;*/
 	overflow: hidden;
 	font-size: 16px;
 	height: var(--mb-button-size);
-	transition: background-color 0.3s ease, width 0.3s ease, box-shadow 0.3s linear;
+	/*transition: background-color 0.3s ease, width 0.3s ease;*/
 	/*text-transform: uppercase;*/
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }
@@ -554,6 +736,7 @@ a {
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
 	font-size: 25px;
+	border-radius: 50%;
 }
 
 .filter-item span.fa-solid,
@@ -562,6 +745,7 @@ a {
 	height: var(--mb-filter-span-size);
 	line-height: var(--mb-filter-span-size);
 	font-size: 20px;
+	border-radius: 50%;
 }
 
 .library-item.search-field.highlighted span.fa-solid,
@@ -569,6 +753,7 @@ a {
 .filter-item.highlighted span.fa-regular {
 	color: white;
 	opacity: 1;
+	border-radius: 50%;
 }
 
 .search-input {
@@ -576,11 +761,11 @@ a {
 	margin: 0px;
 	padding: 0px;
 	margin-left: 5px;
-	padding-left: 10px;
+	padding-left: 15px;
 	border: none;
 	outline: none;
 	background-color: var(--mb-input-color);
-	border-radius: 4px;
+	border-radius: calc(var(--mb-span-size)*0.5);
 	height: var(--mb-span-size);
 	box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.25);
 	font-size: 16px;
@@ -594,10 +779,6 @@ a {
 	background-color: var(--mb-hover-color);
 }
 
-.library-item:active,
-.filter-item:active {
-	background-color: var(--mb-active-color);
-}
 
 .thumbnail-wrapper {
 	max-width: 100%;
@@ -615,6 +796,7 @@ a {
 	min-width: var(--mb-span-size);
 	min-height: var(--mb-span-size);
 	padding-top: 0;
+	border-radius: inherit;
 }
 
 .smallbutton-wrapper {
@@ -646,7 +828,7 @@ a {
 }
 
 .library-thumbnail {
-	border-radius: 6px;
+	border-radius: 50%;
 }
 
 .series-status,
@@ -752,6 +934,11 @@ a {
 	color: white;
 	opacity: 0;
 	transition: opacity 0.3s ease 0.2s, text-shadow 0.3s ease;
+	will-change: transform;
+}
+
+.flip-horizontal {
+	scale: -1 1;
 }
 
 .mini-buttons:hover {
@@ -769,9 +956,10 @@ a {
 }
 
 .mini-buttons.book-details {
-	left: 50%;
+	left: 0;
+	right: 0;
+	margin: auto;
 	bottom: 10px;
-	transform: translate(-50%, 0%);
 	/* Centers the div */
 }
 
@@ -783,11 +971,9 @@ a {
 	font-size: 20px;
 	display: flex;
 	justify-content: center;
-	/* Horizontally center the content */
 	align-items: center;
-	/* Vertically center the content */
 	cursor: pointer;
-	transition: all 0.3s;
+	transition: var(--mb-button-transition);
 }
 
 .mini-buttons-2:hover {
@@ -807,6 +993,10 @@ a {
 }
 
 #bookDetailsContainer .thumbnail-wrapper {
+	cursor: pointer;
+}
+
+#bookDetailCover {
 	cursor: pointer;
 }
 
@@ -943,7 +1133,10 @@ a {
 	vertical-align: top;
 	margin-top: 0px;
 	cursor: pointer;
+}
 
+.strip-button:hover {
+	opacity: 0.7;
 }
 
 .strip-header-container {
@@ -967,6 +1160,7 @@ a {
 	transition: all 0.3s;
 	box-shadow: 0px 2px 25px rgba(0, 0, 0, 0);
 	height: 32px;
+	z-index: 950;
 }
 
 #stripGridHeaderContainer.collapse {
@@ -1069,7 +1263,7 @@ a {
 	/* Ensures padding and border are included in size */
 	background-color: var(--mb-card-color);
 	box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.5);
-	border-radius: 10px;
+	border-radius: 20px;
 	padding: 20px;
 	font-size: 16px;
 	line-height: 20px;
@@ -1077,6 +1271,7 @@ a {
 	align-items: flex-start;
 	transition: all 0.3s;
 	overflow-y: hidden;
+	z-index: 960;
 }
 
 .ul-container {
@@ -1139,7 +1334,7 @@ a {
 }
 
 .red:hover {
-	text-shadow: var(--mb-accent-a50) 0px 0px 4px;
+	text-shadow: var(--mb-red-hover) 0px 0px 4px;
 }
 
 #homeStripsContainer,
@@ -1186,6 +1381,62 @@ a {
 .book-item.scaled {
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -5px;
 	scale: 1.06;
+}
+
+@keyframes zoomInOut {
+	0% {
+		transform: scale(1.0);
+	}
+
+	50% {
+		transform: scale(0.98);
+	}
+
+	100% {
+		transform: scale(1.0);
+	}
+}
+
+/*
+@keyframes zoomInOutButton {
+	0% {
+		transform: scale(1.0) translateY(0px);
+	}
+
+	50% {
+		transform: scale(0.9) translateY(1px);
+	}
+
+	100% {
+		transform: scale(1.0) translateY(0px);
+	}
+}
+
+@keyframes zoomInOutButtonShallow {
+	0% {
+		transform: scale(1.0) translateY(0px);
+	}
+
+	50% {
+		transform: scale(0.97) translateY(1px);
+	}
+
+	100% {
+		transform: scale(1.0) translateY(0px);
+	}
+}
+*/
+
+/*//TODO Magari non mi piace...*/
+.series-item.scaled:active:not(:has(.mini-buttons:hover)),
+.book-item.scaled:active:not(:has(.mini-buttons:hover)),
+#bookDetailsContainerThumbnailWrapper:active {
+	/*scale: 1.03;*/
+	animation: zoomInOut 0.3s ease 0s 1 forwards;
+}
+
+.series-container.top-pop,
+.book-container.top-pop {
 	z-index: 900;
 }
 
@@ -1276,7 +1527,9 @@ book-item {
 	/* Place above .home-strip */
 }
 
-.highlighted {
+.highlighted,
+.highlighted:hover,
+.highlighted:active {
 	background-color: var(--mb-accent);
 	color: white;
 }
@@ -1289,18 +1542,8 @@ book-item {
 	width: var(--mb-library-large-with-menu);
 }
 
-.highlighted:hover {
-	background-color: var(--mb-accent-light);
-	color: white;
-}
-
-.highlighted:active {
-	background-color: var(--mb-accent-active);
-	color: white;
-}
-
 .highlighted:has(.library-menu-button span:active) {
-	background-color: var(--mb-accent-light);
+	background-color: var(--mb-accent);
 }
 
 #seriesHeader {
@@ -1330,6 +1573,7 @@ book-item {
 	padding: 8px 20px 8px 20px;
 	box-shadow: 0px 2px 25px rgba(0, 0, 0, 0.2);
 	cursor: pointer;
+	z-index: 950;
 }
 
 #seriesMiniHeader.hidden {

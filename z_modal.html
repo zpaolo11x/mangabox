@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Modal Alert</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed;
+      z-index: 1000;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 80%;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+    }
+
+    .modal-content button {
+      margin-top: 20px;
+      padding: 8px 16px;
+      border: none;
+      background: #3498db;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background: #2980b9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Custom Modal Alert Demo</h1>
+  <button onclick="showModal('Custom Title', 'This is a custom alert message.')">Show Modal</button>
+
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Modal Title</h2>
+      <p id="modalMessage">This is the message content.</p>
+      <button onclick="closeModal()">OK</button>
+    </div>
+  </div>
+
+  <script>
+    function showModal(title, message) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      document.getElementById('myModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('myModal').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

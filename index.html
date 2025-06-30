@@ -34,28 +34,28 @@
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
 				<ul id="librariesRightBlock">
-					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item">
+					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="themeChanger" title="Light/Dark Theme" class="library-item">
+					<li id="themeChanger" title="Light/Dark Theme" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="colorChanger" title="Theme Color" class="library-item">
+					<li id="colorChanger" title="Theme Color" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
-					<li id="searchField" title="Search" class="library-item search-field">
+					<li id="searchField" title="Search" class="library-item search-field press-button">
 						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
 						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
 					</li>
-					<li id="logOut" title="Logout" class="library-item">
+					<li id="logOut" title="Logout" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
 						</div>
@@ -86,8 +86,8 @@
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
-							<span id="stripPrevPage" title="Previous Page" class="fa-solid fa-play fa-rotate-180 glyph-dark">
-							</span><span id="stripNextPage" title="Next Page" class="fa-solid fa-play glyph-dark"></span>
+							<span id="stripPrevPage" title="Previous Page" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
+							<span id="stripNextPage" title="Next Page" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
 						</div>
 					</div>
 				</div>
@@ -108,7 +108,34 @@
 					<div id="homeStripBooksResults" class="books-results search-results"></div>
 				</div>
 
-				<div id="bookDetailsContainer" class="section hidden"></div>
+				<div id="bookDetailsContainer" class="section hidden">
+					<div class="book-details-pic-container">
+						<div class="mini-controls">
+							<div class="mini-buttons-2 prev-book press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
+								<span class="fa-solid fa-chevron-left"></span>
+							</div>
+							<div class="mini-buttons-2 prev-book  press-flat-button" title="Go to library" onclick="jumpBookLibrary()">
+								<span class="fa-solid fa-layer-group"></span>
+							</div>
+							<div class="mini-buttons-2 next-book  press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
+								<span class="fa-solid fa-chevron-right"></span>
+							</div>
+						</div>
+						<div id="bookDetailsContainerThumbnailWrapper" title="Open Book" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+							<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
+						</div>
+					</div>
+					<div>
+						<div id="bookDetailsTitle" class="book-details-title"></div>
+						<div class="ul-container">
+							<ul id="bookDetailsSummary">
+							</ul>
+						</div>
+					</div>
+					<div class="close-details mini-buttons-2  press-flat-button" onclick="closeBookDetails()">
+						<span class="fa-solid fa-xmark"></span>
+					</div>
+				</div>
 
 				<div id="blanker"></div>
 			</div>
@@ -116,25 +143,14 @@
 				<div class="scrollbox-thumb"></div>
 			</div>
 		</div>
-
 	</div>
-	<div id="dragBar" class="draggable">
-		<img id="barLogo" src="mangabox-logo-16.svg">
 
-		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
-		<span id="dragbarAppTitle">MangaBox</span>
-		<div class="window-controls no-drag">
-			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
-			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
-			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
-		</div>
-	</div>
 	<div id="readerContainer" class="section hidden">
 		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer"></div>
 
-		<div id="readerOverlay" class="draggable">
+		<div id="readerOverlay">
 			<div id="incognitoMark"></div>
 
 			<div id="touchPanel">
@@ -145,11 +161,11 @@
 
 			<div id="controlPanel" class="hidden">
 				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons fa-solid fa-xmark"></span>
+					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
 					<span></span>
 					<span id="bookName"></span>
-					<span id="readerTheme" title="Reader Theme" class="reader-buttons fa-solid"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons fa-solid fa-ghost"></span>
+					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
+					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
 
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
@@ -167,16 +183,28 @@
 				</div>
 
 				<div id="bottomControls">
-					<span id="leftArrow" class="reader-buttons fa-solid fa-caret-left"></span>
-					<span id="leftLimit" class="bar-note"></span>
+					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
+					<span id="leftLimit" class="bar-note press-button corner-right"></span>
 					<div id="readerProgressBar" onclick="seek(event)">
 						<div id="readerProgress"></div>
 						<div id="readerPage"></div>
 					</div>
-					<span id="rightLimit" class="bar-note"></span>
-					<span id="rightArrow" class="reader-buttons fa-solid fa-caret-right"></span>
+					<span id="rightLimit" class="bar-note press-button corner-left"></span>
+					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 				</div>
 			</div>
+		</div>
+	</div>
+
+	<div id="dragbar" class="draggable">
+		<img id="barLogo" src="mangabox-logo-16.svg">
+
+		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
+		<span id="dragbarAppTitle">MangaBox</span>
+		<div id="windowControls" , class="window-controls no-drag">
+			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
+			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
+			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
 		</div>
 	</div>
 
@@ -212,6 +240,15 @@
 		</div>
 	</div>
 
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<div id="modalWrapper"><img id="modalImage"></div>
+			<p id="modalMessage">This is the message content.</p>
+			<button id="modalOk" class="ok press-button">OK</button>
+			<button id="modalCancel" class="cancel press-button">Cancel</button>
+		</div>
+	</div>
+
 	<div id="debuggerObj"></div>
 
 	<script src="auth.js"></script>
@@ -226,10 +263,10 @@
 		function enableDragbar(enabled) {
 			if (!enabled) {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '0px');
-				document.getElementById('dragBar').style.display = 'none';
+				document.getElementById('dragbar').style.display = 'none';
 			} else {
 				document.documentElement.style.setProperty('--mb-drag-bar-height', '22px');
-				document.getElementById('dragBar').style.display = '';
+				document.getElementById('dragbar').style.display = '';
 			}
 		}
 
@@ -311,6 +348,9 @@
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = {
 
+			libMenuVisible: null,
+			swatchMenuVisible: false,
+
 			authHeader: localStorage.getItem('mbAuthHeader'),
 			baseUrl: localStorage.getItem('mbBaseUrl'),
 			rememberMe: localStorage.getItem('mbRememberMe'),
@@ -323,6 +363,7 @@
 
 			// Current book references for book details
 			currentBook: null,
+			seriesData: null,
 			prevBook: null,
 			nextBook: null,
 
@@ -412,15 +453,16 @@
 			.match(/hsl\([^)]*\)/g);
 
 		colorValues.forEach((value, index) => {
-			const appleColor = [0,1,1,0,1,1,1,0,0,1,0,1,1];
+			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
-				className: 'color-swatch',
+				className: 'color-swatch press-flat-button', //TODO tornare ai vecchi modi?
 				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
 				style: {
 					backgroundColor: value,
 				},
 			});
-			colorSwatch.addEventListener('click', () => {
+			addPressEvents(colorSwatch, scaleDownShallow, scaleUp);
+			colorSwatch.addEventListener('click', (event) => {
 				event.stopPropagation();
 				mb.accentColor = index;
 				applyAccent();
@@ -576,7 +618,7 @@
 
 		// Show/Hide section functions
 		function sectionHide(item) {
-			item.classList.add('hidden');
+			if (!item.classList.contains('hidden')) item.classList.add('hidden');
 		}
 		function sectionShow(item) {
 			item.classList.remove('hidden');
@@ -600,7 +642,9 @@
 		}
 
 		colorChanger.addEventListener('click', () => {
+
 			sectionToggle(colorSwatchBar)
+			mb.swatchMenuVisible = !mb.swatchMenuVisible
 			/*
 			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
 			applyAccent();
@@ -696,7 +740,10 @@
 				showScrollbarTemporarily();
 			});
 
-			scrollbox.addEventListener('mouseenter', showScrollbarTemporarily);
+			scrollbox.addEventListener('mouseenter', () => {
+				updateThumb();
+				showScrollbarTemporarily();
+			});
 
 			// Drag support
 			let isDragging = false;
@@ -746,6 +793,44 @@
 
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
+		//MB Modal Dialog
+		let modalOkGlobal = null;
+		let modalCancelGlobal = null;
+
+		function showModal(image, bg, message, okText, cancelText, okFunction, cancelFunction) {
+			modalOkGlobal = okFunction;
+			modalCancelGlobal = cancelFunction;
+			modalWrapper.style.backgroundImage = bg ? "" : "none";
+			modalImage.src = image;
+			modalMessage.textContent = message;
+			//myModal.style.display = 'flex';
+
+			myModal.classList.add('visible');
+
+			modalOk.addEventListener('click', modalOkGlobal);
+			if (cancelText != null) {
+				myModal.classList.remove('ok-only');
+				modalCancel.addEventListener('click', modalCancelGlobal);
+			} else {
+				myModal.classList.add('ok-only');
+			}
+		}
+
+		function closeModal() {
+			modalOk.removeEventListener('click', modalOkGlobal);
+			modalCancel.removeEventListener('click', modalCancelGlobal);
+			myModal.classList.add("unfade");
+			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+			setTimeout(() => {
+				// Optional: if you still want to hide it completely from screen readers / tab order
+				myModal.classList.remove("visible");
+				myModal.classList.remove("unfade");
+				workOk = null;
+				workCancel = null;
+			}, 300);
+		}
+
 		//MB Search Functions 
 
 		function timeSplit(inTime) {
@@ -766,8 +851,8 @@
 				const dataArray = unFilteredSeries.content;
 				const searchYear = timeSplit(searchString.split('y:')[1].split(' ')[0]);
 
-				let start = [];
-				let stop = [];
+				let start = 0;
+				let stop = 0;
 				let filterArray = [];
 
 				for (let i = 0; i < dataArray.length; i++) {
@@ -776,11 +861,10 @@
 						continue;
 					}
 					const dateArray = dataArray[i].metadata.alternateTitles.find(item => item.label === 'Time').title.replace('TBD', '5000').split('-');
+					start = (Number(dateArray[0]));
+					stop = (Number(dateArray[1] ?? dateArray[0]));
 
-					start.push(Number(dateArray[0]));
-					stop.push(Number(dateArray[1] ?? dateArray[0]));
-
-					filterArray.push(!((start[i] > Number(searchYear[1])) || (stop[i] < Number(searchYear[0]))));
+					filterArray.push(!((start > Number(searchYear[1])) || (stop < Number(searchYear[0]))));
 				}
 
 				const filteredSeries = dataArray.filter((item, index) =>
@@ -1039,7 +1123,7 @@
 
 		mb.filterButtons.forEach(button => {
 			button.item = addItem('li', {
-				className: `filter-item`,
+				className: `filter-item press-button`,
 				title: button.title,
 			});
 			button.icon = addItem('div', {
@@ -1066,7 +1150,7 @@
 
 		extraButtons.append(addItem('li', {
 			title: 'Reset filters and sorting',
-			className: `filter-item`,
+			className: `filter-item press-button`,
 			innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
 							</div>`,
@@ -1127,6 +1211,9 @@
 		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
 		stripNextPage.addEventListener('click', () => stepPageChange(1));
 
+		addPressEvents(stripPrevPage, scaleDown, scaleUp);
+		addPressEvents(stripNextPage, scaleDown, scaleUp);
+
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
@@ -1172,14 +1259,18 @@
 			let metaViewport = document.querySelector('meta[name="viewport"]');
 			if (!metaViewport) return;
 
-			// Temporarily disable zoom
+			// Disable zoom temporarily
 			metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
 
-			setTimeout(() => {
-				// Restore zoom capability after layout stabilizes
-				metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
-			}, 350); // Adjust timeout as needed
+			// Wait for two animation frames to ensure the change takes effect
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => {
+					// Now restore zoom capability
+					metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
+				});
+			});
 		}
+
 
 		window.addEventListener('orientationchange', fixZoomOnPWA);
 		document.addEventListener('visibilitychange', fixZoomOnPWA);
@@ -1262,10 +1353,12 @@
 					await Promise.all(
 						Object.entries(dashboardElements).map(async ([name, item]) => {
 							const resultsObject = await item.getItems(0, 20);
+							//TODO consolidate this with other places?
+							item.element.style.display = resultsObject.empty ? 'none' : 'block';
 							item.showItems(resultsObject.content, item.homeStrip);
 						})
 					);
-					setTimeout(updateSliderProperties, 10);
+					setTimeout(updateSliderProperties, 100);
 					mainContainer.scrollTop = oldTop;
 				} else {
 					const bookData = await callAPI(`/api/v1/books/${bookId}`);
@@ -1350,23 +1443,35 @@
 					if (mb.currentlyScaled !== item) {
 						if (mb.currentlyScaled) {
 							mb.currentlyScaled.classList.remove('scaled');
+							mb.currentlyScaled.parentElement.classList.remove('top-pop');
+
 						}
 						item.classList.add('scaled');
+						item.parentElement.classList.add('top-pop');
+
 						mb.currentlyScaled = item;
 						event.preventDefault();
 					} else {
+						/*
 						item.classList.remove('scaled');
+						item.parentElement.classList.remove('top-pop');
+
 						mb.currentlyScaled = null;
+						*/
 						execute();
 					}
 				} else if (event.button == 0) {
 					// MOUSE DEVICE
 					if (!item.classList.contains('scaled')) {
 						item.classList.add('scaled');
+						item.parentElement.classList.add('top-pop');
 						mb.currentlyScaled = item;
 					} else {
+						/*
 						item.classList.remove('scaled');
+						item.parentElement.classList.remove('top-pop');
 						mb.currentlyScaled = null;
+						*/
 						execute();
 					}
 				}
@@ -1376,13 +1481,17 @@
 				// Added this to unselect pre-scaled book
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
+					mb.currentlyScaled.parentElement.classList.remove('top-pop');
+
 					// mb.currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
 				}
 				item.classList.add('scaled');
+				item.parentElement.classList.add('top-pop');
 			});
 
 			item.addEventListener('mouseleave', () => {
 				item.classList.remove('scaled');
+				item.parentElement.classList.remove('top-pop');
 			});
 		}
 
@@ -1457,6 +1566,7 @@
 				event.stopPropagation();
 				await setSeriesReadStatus(serie.id, true, item);
 			})
+			addPressEvents(markAsRead, scaleDown, scaleUp)
 			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
@@ -1469,6 +1579,7 @@
 				await setSeriesReadStatus(serie.id, false, item);
 			})
 			noPointerDown(markAsUnread);
+			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			// Find alternate title with label 'Time'
 			const altTitle = getAltTitles(serie);
@@ -1628,6 +1739,8 @@
 
 				mb.currentlyScaled = item.firstChild;
 				item.firstChild.classList.add('scaled');
+				item.classList.add('top-pop');
+
 			}
 		}
 
@@ -1666,14 +1779,81 @@
 			});
 		}
 
+		function pressDown(item) {
+			const anim = item.animate(
+				{
+					transform: 'scale(0.975) translateY(1px)',
+					filter: 'brightness(0.98)',
+					boxShadow: 'var(--mb-button-press)'
+				},
+				{ duration: 150, fill: 'forwards', easing: 'ease-out' }
+			);
+			item._pressAnim = anim; // save reference
+			return anim.finished;
+		}
+
+		function pressUp(item) {
+			const finish = item._pressAnim?.finished || Promise.resolve();
+			finish.then(() => {
+				item.animate(
+					{
+						transform: 'scale(1) translateY(0px)',
+						filter: 'brightness(1)',
+						boxShadow: 'var(--mb-button-unpress)'
+					},
+					{ duration: 50, fill: 'forwards', easing: 'ease-in' }
+				);
+			});
+		}
+		function scaleDownShallow(item) {
+			const anim = item.animate({ transform: 'scale(0.95)' }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			item._pressAnim = anim; // save reference
+			return anim.finished;
+		}
+		function scaleDown(item) {
+			const anim = item.animate({ transform: 'scale(0.9)' }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			item._pressAnim = anim; // save reference
+			return anim.finished;
+		}
+		function scaleDownDeep(item) {
+			const anim = item.animate({ transform: 'scale(0.8)' }, { duration: 150, fill: 'forwards', easing: 'ease-out' });
+			item._pressAnim = anim; // save reference
+			return anim.finished;
+		}
+		function scaleUp(item) {
+			const finish = item._pressAnim?.finished || Promise.resolve();
+			finish.then(() => {
+				item.animate({ transform: 'scale(1.0)' }, { duration: 50, fill: 'forwards', easing: 'ease-in' }
+				);
+			});
+		}
+
+		function addPressEvents(item, downFunction, upFunction) {
+			item.addEventListener('pointerdown', (event) => {
+				event.stopPropagation();
+				downFunction(item);
+			});
+			item.addEventListener('pointerup', () => {
+				upFunction(item);
+			});
+			item.addEventListener('pointerleave', () => {
+				upFunction(item);
+			});
+			item.addEventListener('pointercancel', () => {
+				upFunction(item);
+			});
+		};
+
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
 			const listItem = addItem('li', {
 				id: itemId,
-				className: 'library-item',
+				className: 'library-item press-button',
 				title: libraryName,
 			});
+
+			addPressEvents(listItem, pressDown, pressUp);
 
 			const thumbnailWrapper = addItem('div', {
 				className: 'button-wrapper',
@@ -1716,20 +1896,27 @@
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
-					className: 'button-wrapper library-menu-button',
+					className: 'button-wrapper library-menu-button press-flat-button',
 				})
 
 				thumbnailWrapperMenu.append(mb.libraryMenuButtons[itemId]);
 				listItem.append(thumbnailWrapperMenu);
+
+				addPressEvents(thumbnailWrapperMenu, scaleDownDeep, scaleUp)
 
 				thumbnailWrapperMenu.addEventListener('click', (event) => {
 					libMenuClear(mb.libraryMenuButtons[itemId]);
 
 					if (isSectionHidden(filtersBar)) {
 						libMenuUp(mb.libraryMenuButtons[itemId]);
+						mb.libMenuVisible = itemId;
+						mb.swatchMenuVisible = false;
+						sectionHide(colorSwatchBar);
 					} else {
 						libMenuDown(mb.libraryMenuButtons[itemId]);
+						mb.libMenuVisible = null;
 					}
+
 					event.stopPropagation();
 					event.preventDefault();
 					sectionToggle(filtersBar);
@@ -1754,6 +1941,7 @@
 			let wasLongPress = false;
 
 			const start = (e) => {
+				if (e.target.classList.contains('is-lib-menu')) return;
 				wasLongPress = false;
 				pressTimer = setTimeout(() => {
 					wasLongPress = true;
@@ -1768,6 +1956,7 @@
 			element.addEventListener('mousedown', start);
 			element.addEventListener('mouseup', cancel);
 			element.addEventListener('mouseleave', cancel);
+			element.addEventListener('dragstart', cancel);
 
 			element.addEventListener('touchstart', start);
 			element.addEventListener('touchend', cancel);
@@ -1783,6 +1972,10 @@
 			}, true); // Capture phase to stop early
 		}
 
+		function cancelUpdate() {
+			closeModal();
+			bootSequence();
+		}
 
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
@@ -1799,15 +1992,16 @@
 				addLongPressListener(listItem, async () => {
 
 					const libraryId = listItem.id
+					if (mb.libraryIcons[libraryId] == null) {
+						showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
+					} else {
+						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
+							await delete mb.libraryIcons[libraryId];
+							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 
-					const confirmClear = confirm('Clear custom image for this library?');
-					if (confirmClear) {
-						delete mb.libraryIcons[libraryId];
-
-						// Update userSettings on the server
-						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-						bootSequence();
-
+							closeModal();
+							bootSequence();
+						}, cancelUpdate);
 					}
 				});
 
@@ -1824,30 +2018,20 @@
 					event.preventDefault();
 
 					const libraryId = listItem.id
-
 					const file = event.dataTransfer.files[0];
+
 					if (!file || !file.type.startsWith('image/')) {
-						alert('Please drop a valid image.');
-						return;
-					}
+						showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
-					const result = confirm('Update library image?');
-					if (result) {
-						// User clicked OK
-						console.log('Proceeding with image update');
-						const base64 = await readFileAsBase64(file);
-						mb.libraryIcons[libraryId] = base64;
-
-						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-
-						bootSequence();
-						// your logic here (e.g., read dropped file, update thumbnail, etc.)
 					} else {
-						// User clicked Cancel
-						console.log('Image update canceled');
+						const base64 = await readFileAsBase64(file);
+						showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
+							mb.libraryIcons[libraryId] = base64;
+							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+							closeModal();
+							bootSequence();
+						}, cancelUpdate);
 					}
-
-
 				})
 
 				listItem.addEventListener('click', () => {
@@ -1936,9 +2120,12 @@
 
 		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
+			//TODO PUT THIS BACK?
+			/*
 			setTimeout(() => {
 				bookDetailsContainer.innerHTML = ''
 			}, 300);
+			*/
 		}
 
 		function jumpBookDetailsPrev() {
@@ -1946,6 +2133,9 @@
 		}
 		function jumpBookDetailsNext() {
 			if (mb.nextBook != null) showBookDetails(mb.nextBook);
+		}
+		function jumpBookLibrary() {
+			navigateTo(`#series?library_id=${mb.currentBook.libraryId}&series_id=${mb.currentBook.seriesId}&book_id=${mb.currentBook.id}`)
 		}
 
 		async function showBookDetails(book) {
@@ -1956,6 +2146,7 @@
 			);
 			const readingDirection = seriesData.metadata.readingDirection;
 
+			mb.seriesData = seriesData;
 			mb.currentBook = book;
 			mb.prevBook = null;
 			mb.nextBook = null;
@@ -1969,36 +2160,8 @@
 			sectionShow(bookDetailsContainer);
 			let summaryArray = book.metadata.summary.split(/\r?\n/);
 
-			let text = `
-			<div class="book-details-pic-container">
-				<div class="mini-controls">
-					<div class="mini-buttons-2 prev-book" title="Previous book" onclick="jumpBookDetailsPrev()">
-						<span class="fa-solid fa-chevron-left"></span>
-					</div>
-					<div class="mini-buttons-2 prev-book" title="Go to library" onclick="navigateTo('#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}')">
-						<span class="fa-solid fa-layer-group"></span>
-					</div>
-					<div class="mini-buttons-2 next-book" title="Next book" onclick="jumpBookDetailsNext()">
-						<span class="fa-solid fa-chevron-right"></span>
-					</div>			
-				</div>
-				<div id="bookDetailsContainerThumbnailWrapper" title="Open Book" onclick="navigateToReadBook(mb.currentBook, '${readingDirection}')">
-					<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
-				</div>
-			</div>
-			<div>
-				<div class="book-details-title">${book.metadata.title}</div>
-				<div class="ul-container">
-					<ul>
-						${summaryArray.map(element => `<li>${element}</li>`).join('')}
-					</ul>
-				</div>
-			</div>
-			<div class="close-details mini-buttons-2" onclick="closeBookDetails()">
-				<span class="fa-solid fa-xmark"></span>
-			</div>
-			`;
-			bookDetailsContainer.innerHTML = text;
+			bookDetailsTitle.innerText = book.metadata.title;
+			bookDetailsSummary.innerHTML = summaryArray.map(element => `<li>${element}</li>`).join('');
 			bookDetailCover.lazySrc = `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`;
 			addLazyLoading(bookDetailCover);
 
@@ -2105,10 +2268,11 @@
 				title: 'Mark book as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
-			markAsRead.addEventListener('click', () => {
+			markAsRead.addEventListener('click', (event) => {
 				event.stopPropagation();
 				setBookReadStatus(book.id, true, item, format);
 			})
+			addPressEvents(markAsRead, scaleDown, scaleUp)
 			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
@@ -2116,11 +2280,12 @@
 				title: 'Mark book as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
-			markAsUnread.addEventListener('click', () => {
+			markAsUnread.addEventListener('click', (event) => {
 				event.stopPropagation();
 				setBookReadStatus(book.id, false, item, format);
 			});
 			noPointerDown(markAsUnread);
+			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			bookOverlay.append(markAsRead, markAsUnread);
 
@@ -2136,6 +2301,7 @@
 					showBookDetails(book);
 				})
 				noPointerDown(bookDetails);
+				addPressEvents(bookDetails, scaleDown, scaleUp)
 
 				bookOverlay.append(bookDetails);
 			}
@@ -2374,7 +2540,7 @@
 				value: '0'
 			});
 			item.gridButton = addItem('div', {
-				className: 'strip-all',
+				className: 'strip-all press-flat-button strip-button',
 				innerHTML: '<span title="View All" class="fa-solid fa-grip glyph-dark"></span>',
 			});
 			item.homeStrip = addItem('div', {
@@ -2385,6 +2551,9 @@
 				mb.dashboardBin = name;
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
+
+			addPressEvents(item.gridButton, scaleDown, scaleUp);
+
 			item.scrollInput.addEventListener('input', () => {
 				item.homeStrip.scrollLeft = item.scrollInput.value;
 			});
@@ -2416,6 +2585,7 @@
 
 		async function bootSequence() {
 			userSettings = await getUserSettings();
+
 			applyUserSettings();
 
 			applyAccent();
@@ -2437,6 +2607,8 @@
 
 		// General reader data structure
 		let rd = {
+			dragbarTimer: null,
+
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
 			preloadCount: 15,			// Image preload count
@@ -2539,6 +2711,8 @@
 			readerViewer.innerHTML = '';
 
 			setThumbZoom(false);
+
+			dragbarOnReader();
 			sectionShow(readerContainer);
 
 			initViewer();
@@ -2616,6 +2790,7 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
+			//dragbarOffReader();
 
 			updatePWABar();
 		}
@@ -2680,6 +2855,7 @@
 		thumbStripButton.addEventListener('click', () => {
 			setThumbZoom(!rd.thumbZoom);
 		});
+		addPressEvents(thumbStripButton, scaleDown, scaleUp);
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
@@ -2695,15 +2871,14 @@
 
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStripScrollContent.style.overflow = 'auto';
-			debugPrint('Transition ended')
 		});
 
-		function updateProgressBar() {
-			const progressPercent = (rd.currentSpreadIndex / (spreadsTotal() - 1)) * 100;
+		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
+			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.ltr ? 'left' : 'right';
 
-			[rd.currentPage, readerPage.innerText] = getPageFromSpread(rd.currentSpreadIndex);
+			[rd.currentPage, readerPage.innerText] = getPageFromSpread(currentSpreadIndex);
 
 			readerPage.style.left = rd.ltr
 				? `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
@@ -2733,6 +2908,19 @@
 					startTimeout(backwardIndex, calcDelay(i, 300, 0.25, 2), () => preloadPage(backwardIndex));
 				}
 			}
+		}
+
+		function dragbarOffReader() {
+			rd.dragbarTimer = setTimeout(() => {
+				dragbar.classList.remove('onReader');
+			}, 500);
+			//dragbar.classList.remove('offReader');
+		}
+
+		function dragbarOnReader() {
+			clearTimeout(rd.dragbarTimer);
+			dragbar.classList.remove('onReader');
+			dragbar.classList.add('onReader');
 		}
 
 		function initReaderUI(pagesData, bookData) {
@@ -3267,7 +3455,6 @@
 		function getPageFromSpread(index) {
 			const spreadObject = rd.spreadsArray[index];
 
-			//TODO Cosa succede se finisce con uno un orfano?
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
@@ -3632,6 +3819,11 @@
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
 
+			if (rd.isDraggingProgressBar) {
+				updateProgressBar(targetSpreadIndex);
+				return;
+			}
+
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
 
@@ -3647,6 +3839,7 @@
 			rd.currentSpreadIndex = localNewSpreadIndex;
 
 			if (isSectionHidden(readerContainer)) return;
+
 
 			populateSpread(localNewSpreadIndex);
 
@@ -3693,6 +3886,7 @@
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {
+
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
 			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
@@ -3743,15 +3937,26 @@
 		});
 		document.addEventListener('touchmove', (event) => {
 			if (rd.isDraggingProgressBar) {
-				seek(event.touches[0]); // Use the first touch point
+				seek(event.touches[0]);
 			}
 		});
 
-		document.addEventListener('mouseup', () => {
-			rd.isDraggingProgressBar = false;
+		document.addEventListener('mouseup', (event) => {
+			if (rd.isDraggingProgressBar) {
+				rd.isDraggingProgressBar = false;
+				seek(event);
+			} else {
+				rd.isDraggingProgressBar = false;
+			}
 		});
-		document.addEventListener('touchend', () => {
-			rd.isDraggingProgressBar = false;
+
+		document.addEventListener('touchend', (event) => {
+			if (rd.isDraggingProgressBar) {
+				rd.isDraggingProgressBar = false;
+				seek(event.changedTouches[0]);
+			} else {
+				rd.isDraggingProgressBar = false;
+			}
 		});
 
 		document.addEventListener('keydown', (event) => {
@@ -3779,8 +3984,24 @@
 		document.addEventListener('pointerup', (event) => {
 			if (mb.currentlyScaled && !mb.currentlyScaled.contains(event.target)) {
 				mb.currentlyScaled.classList.remove('scaled');
+				mb.currentlyScaled.parentElement.classList.remove('top-pop');
+
 				mb.currentlyScaled = null;
 			}
+		});
+
+		document.addEventListener('click', (event) => {
+			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
+				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
+				sectionToggle(filtersBar);
+				mb.libMenuVisible = null;
+			}
+
+			if ((mb.swatchMenuVisible) && (!colorSwatchBar.contains(event.target)) && (!colorChanger.contains(event.target))) {
+				mb.swatchMenuVisible = false;
+				sectionHide(colorSwatchBar);
+			}
+
 		});
 
 		//MB URL Parsing and LoadContent Function 
@@ -3795,7 +4016,10 @@
 			const { path, params } = getHashAndParams();
 
 			await executeFade(1);
+			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+
+			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
 			sectionHide(colorSwatchBar);
 
@@ -3894,6 +4118,13 @@
 
 		window.addEventListener('hashchange', loadContent);
 		document.addEventListener('popstate', loadContent);
+
+		document.querySelectorAll('.press-button').forEach(item => addPressEvents(item, pressDown, pressUp));
+		document.querySelectorAll('.mini-buttons-2').forEach(item => addPressEvents(item, scaleDownDeep, scaleUp));
+
+		searchInput.addEventListener('pointerdown', (event) => {
+			event.stopPropagation();
+		})
 
 		if (loginScreen.classList.contains('auth-hidden')) bootSequence();
 

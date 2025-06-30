@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Button Shadow Test</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 2rem;
+			font-family: sans-serif;
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;
+		}
+
+		.container {
+			padding: 2rem;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.light-bg {
+			background-color: #ffffff;
+		}
+
+		.dark-bg {
+			background-color: #333333;
+		}
+
+		.test-button {
+			width: 250px;
+			height: 40px;
+			color: white;
+			font-weight: bold;
+			border: none;
+			border-radius: 20px;
+			cursor: pointer;
+
+			transition: transform 0.1s ease;
+		}
+
+		.test-button:active {
+			transform: scale(0.97);
+		}
+
+		.dark-bg .grey {
+			background-color: #606060;
+			box-shadow:
+				inset 0 -3px 10px rgba(255, 255, 255, 0.2),
+				inset 0 3px 10px rgba(0, 0, 0, 0.5),
+				0 -3px 5px rgba(0, 0, 0, 0.3),
+				0 3px 5px rgba(255, 255, 255, 0.3);
+		}
+
+		.light-bg .grey {
+			background-color: #eeeeee;
+			box-shadow:
+				inset 0 -3px 10px rgba(255, 255, 255, 0.5),
+				inset 0 3px 10px rgba(0, 0, 0, 0.2),
+				0 -3px 5px rgba(0, 0, 0, 0.3),
+				0 3px 5px rgba(255, 255, 255, 0.3);
+		}
+
+		.dark-bg .orange {
+			background-color: orange;
+			box-shadow:
+				inset 0 -3px 10px rgba(255, 255, 255, 0.3),
+				inset 0 3px 10px rgba(0, 0, 0, 0.3),
+				0 -3px 5px rgba(0, 0, 0, 0.3),
+				0 3px 5px rgba(255, 255, 255, 0.3);
+		}
+
+		.light-bg .orange {
+			background-color: orange;
+			box-shadow:
+				inset 0 -3px 10px rgba(255, 255, 255, 0.3),
+				inset 0 3px 10px rgba(0, 0, 0, 0.3),
+				0 -3px 5px rgba(0, 0, 0, 0.3),
+				0 3px 5px rgba(255, 255, 255, 0.3);
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="container light-bg">
+		<button class="test-button orange"></button>
+	</div>
+
+	<div class="container dark-bg">
+		<button class="test-button orange"></button>
+	</div>
+
+	<div class="container light-bg">
+		<button class="test-button grey"></button>
+	</div>
+
+	<div class="container dark-bg">
+		<button class="test-button grey"></button>
+	</div>
+
+</body>
+
+</html>
