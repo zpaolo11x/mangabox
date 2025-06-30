@@ -721,6 +721,7 @@ a {
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }
 
+
 .library-item:not(:has(.library-name)) {
 	width: var(--mb-button-size);
 }
@@ -956,6 +957,7 @@ a {
 }
 
 .mini-buttons.book-details {
+	text-align:center;
 	left: 0;
 	right: 0;
 	margin: auto;
