@@ -1,19 +1,11 @@
 Main UI
-- New pill-shaped buttons and controls
-- New press button effects on main UI
-- Improve Electron dragbar layering
-- Custom dialogs for adding/removing images
+- 
 
 Reader
-- Keep window controls visible in reader view
-- Improve responsiveness of seek bar dragging
-- Only update pages when seek bar stops
+- 
 
 Build
-- Update web documentation
+- 
 
 Fixes
-- Fix z-index issue when scaling thumbnails
-- Fix "y:" search for time range
-- Fix drag bar when in reader view
-- Fix dashboard update when marking as read/unread
+- 
