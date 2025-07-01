@@ -140,6 +140,11 @@ jobs:
                       --exclude='z_*.*' \
                       --exclude='docs/' \
                       ./ cordova-app/www
+                      
+      - name: Install Cordova HTTP Plugin
+        run: |
+          cd cordova-app
+          cordova plugin add cordova-plugin-advanced-http
 
       - name: Add Android platform
         run: |

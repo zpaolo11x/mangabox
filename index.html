@@ -1088,28 +1088,69 @@
 		}
 
 		//MB API Call Function 
-		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
-			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, {
-					method: method,
-					headers: {
-						'Authorization': mb.authHeader,
-						'Content-Type': 'application/json',
-						'skip_zrok_interstitial': '1' // Add header to skip interstitial
-					},
-					body: body
+async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
+	const url = `${mb.baseUrl}${API_url}`;
+	const isNativeHTTP = window.cordova && window.cordova.plugin && window.cordova.plugin.http;
+
+	try {
+		if (isNativeHTTP) {
+			// Native HTTP request via plugin
+			return await new Promise((resolve, reject) => {
+				const headers = {
+					'Authorization': mb.authHeader,
+					'Content-Type': 'application/json',
+					'skip_zrok_interstitial': '1'
+				};
+
+				const options = {
+					method,
+					headers,
+					data: body ? JSON.parse(body) : {}, // Must be object, not string
+					responseType: 'json',
+					timeout: 30 // seconds
+				};
+
+				cordova.plugin.http.sendRequest(url, options, response => {
+					if (returnval) {
+						try {
+							resolve(response.data);
+						} catch (err) {
+							reject(new Error('Failed to parse native HTTP response.'));
+						}
+					} else {
+						resolve();
+					}
+				}, error => {
+					console.error('Native HTTP error:', error);
+					reject(error);
 				});
+			});
+		} else {
+			// Web fetch fallback
+			const response = await fetch(url, {
+				method,
+				headers: {
+					'Authorization': mb.authHeader,
+					'Content-Type': 'application/json',
+					'skip_zrok_interstitial': '1'
+				},
+				body
+			});
 
-				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+			if (!response.ok) {
+				throw new Error(`Network response was not ok: ${response.statusText}`);
+			}
 
-				if (returnval) {
-					const output = await response.json();
-					return output;
-				}
-			} catch (error) {
-				console.error('Fetch libraries error:', error);
+			if (returnval) {
+				const output = await response.json();
+				return output;
 			}
 		}
+	} catch (error) {
+		console.error('API request failed:', error);
+	}
+}
+
 
 
 		//MB Media Cache 
