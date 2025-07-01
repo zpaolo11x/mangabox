@@ -10,9 +10,6 @@ if (!localStorage.getItem('mbAuthHeader') || !localStorage.getItem('mbBaseUrl'))
 
 function login() {
 	let baseUrlVal = loginBaseUrl.value;
-	const usernameVal = loginUsername.value;
-	const passwordVal = loginPassword.value;
-	const rememberMeVal = loginRememberMe.checked;
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		// Add http:// if no protocol is present
@@ -21,7 +18,7 @@ function login() {
 
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	const mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
+	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
 	// Test the auth header and base URL with a simple API call to validate credentials
 	fetch(`${baseUrlVal}/api/v1/login/set-cookie`, {
@@ -34,7 +31,7 @@ function login() {
 		.then(response => {
 			console.log(response);
 			if (response.ok) {
-				localStorage.setItem('mbRememberMe', rememberMeVal);
+				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
 				localStorage.setItem('mbAuthHeader', mbAuthHeader); // Save auth header
 				localStorage.setItem('mbBaseUrl', baseUrlVal);       // Save base URL
 				hideLoginDialog();
