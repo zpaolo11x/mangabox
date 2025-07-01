@@ -353,7 +353,6 @@
 
 			authHeader: localStorage.getItem('mbAuthHeader'),
 			baseUrl: localStorage.getItem('mbBaseUrl'),
-			rememberMe: localStorage.getItem('mbRememberMe'),
 
 			basePath: '', //'/mangabox/'
 			darkTheme: false,
@@ -536,15 +535,6 @@
 		}
 
 
-
-		//MB Local Storage Update
-		loginRememberMe.checked = (mb.rememberMe == 'true');
-
-		//Questa cosa qui spostarla quando uno chiude la finestra!
-		if (mb.rememberMe != 'true') {
-			localStorage.removeItem('mbAuthHeader');
-		};
-
 		//MB Theme Management 
 
 		function warmth(hue) {
@@ -663,6 +653,21 @@
 		})
 
 		logOut.addEventListener('click', async () => {
+			try {
+				if (mb.baseUrl) {
+					await fetch(`${mb.baseUrl}/api/logout`, {
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'skip_zrok_interstitial': '1',
+						},
+					});
+				}
+			} catch (error) {
+				console.warn('Logout API call failed:', error);
+				// We continue cleanup anyway
+			}
+
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 			localStorage.removeItem('mbAuthHeader');

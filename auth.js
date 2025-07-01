@@ -1,12 +1,38 @@
 // script.js
-
-// Show the login dialog if no auth header or base URL is available
-if (!localStorage.getItem('mbAuthHeader') || !localStorage.getItem('mbBaseUrl')) {
-	if (localStorage.getItem('mbBaseUrl')) {
-		loginBaseUrl.value = localStorage.getItem('mbBaseUrl');
+async function sessionCheck() {
+	const baseUrl = localStorage.getItem('mbBaseUrl');
+	if (!baseUrl) {
+		showLoginDialog();
+		return;
 	}
-	showLoginDialog();
+
+	try {
+		const response = await fetch(`${baseUrl}/api/v1/user/me`, {
+			method: 'GET',
+			credentials: 'include', // Important: send cookies!
+			headers: {
+				//'Authorization': 'Basic dummy', // trick to prevent popup
+				'skip_zrok_interstitial': '1'
+			}
+		});
+		if (response.ok) {
+			console.log("SESSION IS ON")
+			// Session is alive, proceed
+			hideLoginDialog();
+
+			// fetch libraries or continue normal flow
+		} else {
+			console.log("SESSION EXPIRED")
+			// Session expired or invalid
+			showLoginDialog();
+		}
+	} catch (e) {
+		console.error('Error checking session', e);
+		showLoginDialog();
+	}
 }
+
+sessionCheck()
 
 function login() {
 	let baseUrlVal = loginBaseUrl.value;
@@ -21,7 +47,7 @@ function login() {
 	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
 	// Test the auth header and base URL with a simple API call to validate credentials
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie`, {
+	fetch(`${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
 		method: 'GET',
 		headers: {
 			'Authorization': mbAuthHeader,
@@ -31,8 +57,6 @@ function login() {
 		.then(response => {
 			console.log(response);
 			if (response.ok) {
-				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
-				localStorage.setItem('mbAuthHeader', mbAuthHeader); // Save auth header
 				localStorage.setItem('mbBaseUrl', baseUrlVal);       // Save base URL
 				hideLoginDialog();
 				location.reload(true);
