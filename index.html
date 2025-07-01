@@ -353,8 +353,6 @@
 
 			baseUrl: localStorage.getItem('mbBaseUrl'),
 			token: localStorage.getItem('mbToken'),
-			rememberMe: localStorage.getItem('mbRememberMe'),
-			inSession: localStorage.getItem('mbInSession'),
 
 			basePath: '', //'/mangabox/'
 			darkTheme: false,
@@ -477,8 +475,8 @@
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, {
 					method: method,
-						credentials: 'include',
 					headers: {
+    					'X-Auth-Token': mb.token,
 						'Content-Type': 'application/json',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					},
@@ -659,8 +657,8 @@
 				if (mb.baseUrl) {
 					await fetch(`${mb.baseUrl}/api/logout`, {
 						method: 'POST',
-						credentials: 'include',
 						headers: {
+    						//'X-Auth-Token': mb.token,
 							'skip_zrok_interstitial': '1',
 						},
 					});
@@ -673,8 +671,6 @@
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 			localStorage.removeItem('mbToken');
-			localStorage.removeItem('mbRememberMe');
-			localStorage.removeItem('mbInSession');
 			history.pushState(null, '', mb.basePath);
 			location.reload(true);
 		})
@@ -1310,8 +1306,8 @@
 			try {
 				const response = await fetch(url, {
 					method: 'GET',
-						credentials: 'include',
 					headers: {
+					   'X-Auth-Token': mb.token,
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					}
 				});
