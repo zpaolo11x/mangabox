@@ -19,7 +19,7 @@ async function sessionCheck() {
 */
 
 	try {
-		const response = await fetch(`${baseUrl}/api/v1/login/set-cookie`, {
+		const response = await fetch(`${baseUrl}/api/v2/users/me`, {
 			method: 'GET',
 			headers: {
     			'X-Auth-Token': sessionToken,
@@ -58,7 +58,7 @@ function login() {
 
 	console.log("checked:"+loginRememberMe.checked);
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+	fetch(`${baseUrlVal}/api/v2/users/me`, {
 		method: 'GET',
 		headers: {
 			'Authorization': mbAuthHeader,
