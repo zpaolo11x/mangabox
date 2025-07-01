@@ -1,9 +1,12 @@
 // script.js
+
 async function sessionCheck() {
+
 	const baseUrl = localStorage.getItem('mbBaseUrl');
 	const sessionToken = localStorage.getItem('mbToken');
 
 	if ((!baseUrl) || (!sessionToken)) {
+		if (baseUrl) loginBaseUrl.value = baseUrl;
 		console.log("NO URL OR NO TOKEN")
 		showLoginDialog();
 		return;
