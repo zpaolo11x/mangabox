@@ -215,22 +215,22 @@
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
 			</div>
 
 			<div class="input-wrapper" title="Username">
 				<i class="fas fa-user"></i> <!-- Icon for username -->
-				<input type="text" class="login-input" id="username" placeholder="Username">
+				<input type="text" class="login-input" id="loginUsername" placeholder="Username">
 			</div>
 
 			<div class="input-wrapper" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
-				<input type="password" class="login-input" id="password" placeholder="Password">
+				<input type="password" class="login-input" id="loginPassword" placeholder="Password">
 			</div>
 
 			<div class="login-buttons">
 				<div class="remember-me-container">
-					<input type="checkbox" id="rememberMe" class="remember-me-checkbox">
+					<input type="checkbox" id="loginRememberMe" class="remember-me-checkbox">
 					<label for="rememberMe" class="remember-me-label">Remember Me</label>
 				</div>
 				<button class="login-button" onclick="login()">Login</button>
@@ -538,7 +538,7 @@
 
 
 		//MB Local Storage Update
-		rememberMe.checked = (mb.rememberMe == 'true');
+		loginRememberMe.checked = (mb.rememberMe == 'true');
 
 		//Questa cosa qui spostarla quando uno chiude la finestra!
 		if (mb.rememberMe != 'true') {
