@@ -20,7 +20,8 @@ app.on('ready', () => {
 			preload: path.join(__dirname, 'package-preload.js'),
 			nodeIntegration: false,
 			contextIsolation: true,
-			allowRunningInsecureContent: true
+			allowRunningInsecureContent: true,
+			sandbox: false // ⬅️ this is the critical fix
 		},
 	});
 
