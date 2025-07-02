@@ -43,6 +43,7 @@ function login() {
 
 	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
 		method: 'GET',
+		credentials: 'include', // ✅ Important!
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
