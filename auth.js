@@ -1,8 +1,31 @@
 // script.js
+async function saveToken() {
+	await window.secureStore.setCredentials('mangabox', mb.authToken);
+	alert("Token saved securely.");
+}
+
+async function loadToken() {
+	const token = await window.secureStore.getCredentials('mangabox');
+	if (token) {
+		alert("Token loaded: " + token);
+		return(token);
+	} else {
+		alert("No token found.");
+		return(null);
+	}
+}
+
+async function deleteTolen() {
+	await window.secureStore.deleteCredentials('mangabox');
+	alert ("Token deleted.");
+}
 
 async function sessionCheck() {
 	const baseUrl = localStorage.getItem('mbBaseUrl');
-	const authToken = localStorage.getItem('mbAuthToken');
+	
+	const authToken = loadToken();
+	//const authToken = localStorage.getItem('mbAuthToken');
+
 	if ((!baseUrl) || (!authToken)){
 		showLoginDialog();
 		return;

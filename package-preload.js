@@ -1,5 +1,6 @@
 // preload.js
 const { contextBridge, ipcRenderer } = require('electron');
+const keytar = require('keytar');
 
 contextBridge.exposeInMainWorld('electronAPI', {
 	minimize: () => ipcRenderer.send('window-minimize'),
@@ -11,3 +12,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	getAppVersion: () => ipcRenderer.invoke('get-app-version'),
 });
 
+contextBridge.exposeInMainWorld('secureStore', {
+	setCredentials: async (account, secret) => {
+		return await keytar.setPassword(SERVICE, account, secret);
+	},
+	getCredentials: async (account) => {
+		return await keytar.getPassword(SERVICE, account);
+	},
+	deleteCredentials: async (account) => {
+		return await keytar.deletePassword(SERVICE, account);
+	}
+});
