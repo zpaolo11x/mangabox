@@ -1,5 +1,5 @@
 // script.js
-async function sessionCheck() {
+async function sessionCheck_TEST() {
 	const baseUrl = localStorage.getItem('mbBaseUrl');
 	const sessionToken = localStorage.getItem('mbToken');
 	const inSession = localStorage.getItem('mbInSession') == 'true';
@@ -21,7 +21,7 @@ console.log(inSession && (!rememberMe));
 	}
 }
 
-async function sessionCheckWRONG() {
+async function sessionCheck() {
 	const baseUrl = localStorage.getItem('mbBaseUrl');
 	if (!baseUrl) {
 		showLoginDialog();
