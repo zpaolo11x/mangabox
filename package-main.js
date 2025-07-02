@@ -56,7 +56,10 @@ app.on('ready', () => {
 			});
 
 			// Pipe response body
-			response.body.pipe(res);
+			//response.body.pipe(res);
+			const buffer = await response.arrayBuffer();
+			res.end(Buffer.from(buffer));
+
 		} catch (error) {
 			console.error('Proxy error:', error);
 			res.status(500).send('Proxy error: ' + error.message);
