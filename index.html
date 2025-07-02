@@ -354,7 +354,6 @@
 			swatchMenuVisible: false,
 
 			baseUrl: localStorage.getItem('mbBaseUrl'),
-			authToken: localStorage.getItem('mbAuthToken'),
 			rememberMe: localStorage.getItem('mbRememberMe'),
 
 			basePath: '', //'/mangabox/'
@@ -480,7 +479,7 @@
 					method: method,
 					credentials: 'include',
 					headers: {
-						'X-Auth-Token': mb.authToken,
+						'X-Auth-Token': authToken,
 						'Content-Type': 'application/json',
 						'X-Requested-With': 'XMLHttpRequest',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
@@ -1316,7 +1315,7 @@
 					method: 'GET',
 					credentials: 'include',
 					headers: {
-						'X-Auth-Token': mb.authToken,
+						'X-Auth-Token': authToken,
 						'X-Requested-With': 'XMLHttpRequest',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					}

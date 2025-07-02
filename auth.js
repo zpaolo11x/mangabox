@@ -1,4 +1,7 @@
 // script.js
+
+const authToken = true;
+
 async function saveToken(token) {
 	await window.secureStore.setCredentials('auth', token);
 	console.log("Token saved securely.");
@@ -24,7 +27,7 @@ async function sessionCheck() {
 	console.log("isElectronApp? "+isElectronApp);
 	console.log("Start Session Check")
 	const baseUrl = localStorage.getItem('mbBaseUrl');
-	const authToken = isElectronApp ? await loadToken() : true;
+	authToken = isElectronApp ? await loadToken() : true;
 
 	console.log("*" + baseUrl + "* *" + authToken + "*");
 
