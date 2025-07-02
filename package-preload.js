@@ -9,5 +9,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onMaximize: (callback) => ipcRenderer.on('window-maximized', callback),
 	onUnmaximize: (callback) => ipcRenderer.on('window-unmaximized', callback),
 	getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+	setKomgaUrl: (url) => ipcRenderer.invoke('set-komga-url', url),
 });
 
