@@ -352,9 +352,6 @@
 			swatchMenuVisible: false,
 
 			baseUrl: localStorage.getItem('mbBaseUrl'),
-			token: localStorage.getItem('mbToken'),
-			rememberMe: localStorage.getItem('mbRememberMe'),
-			inSession: localStorage.getItem('mbInSession'),
 
 			basePath: '', //'/mangabox/'
 			darkTheme: false,
@@ -480,6 +477,7 @@
 						credentials: 'include',
 					headers: {
 						'Content-Type': 'application/json',
+						'X-Requested-With': 'XMLHttpRequest',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					},
 					body: body
@@ -661,6 +659,8 @@
 						method: 'POST',
 						credentials: 'include',
 						headers: {
+
+						'X-Requested-With': 'XMLHttpRequest',
 							'skip_zrok_interstitial': '1',
 						},
 					});
@@ -672,9 +672,7 @@
 
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
-			localStorage.removeItem('mbToken');
-			localStorage.removeItem('mbRememberMe');
-			localStorage.removeItem('mbInSession');
+
 			history.pushState(null, '', mb.basePath);
 			location.reload(true);
 		})
@@ -1312,6 +1310,8 @@
 					method: 'GET',
 						credentials: 'include',
 					headers: {
+
+						'X-Requested-With': 'XMLHttpRequest',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					}
 				});
