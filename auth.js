@@ -37,7 +37,7 @@ async function login() {
 
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-   if (iselectronApp) await window.electronAPI.setKomgaUrl(baseUrlVal);
+   if (isElectronApp) await window.electronAPI.setKomgaUrl(baseUrlVal);
 
 	setKomgaUrl(baseUrlVal);
 	
