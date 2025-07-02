@@ -11,12 +11,12 @@ async function loadToken() {
 		return(token);
 	} else {
 		alert("No token found.");
-		return(null);
+		return(false);
 	}
 }
 
 async function deleteTolen() {
-	await window.secureStore.deleteCredentials('mangabox');
+	await window.secureStore.deleteCredentials('auth');
 	alert ("Token deleted.");
 }
 
@@ -80,9 +80,9 @@ function login() {
 			const token = response.headers.get('X-Auth-Token');
 			console.log(token);
 			if (response.ok && token) {
-				console.log("✅ Got session token:", token);
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 				localStorage.setItem('mbAuthToken', token);
+				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
 				hideLoginDialog();
 				location.reload(true);
 				//fetchLibraries(); // Fetch libraries after successful login

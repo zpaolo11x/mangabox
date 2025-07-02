@@ -8,6 +8,9 @@
 		"start": "electron .",
 		"build": "electron-builder"
 	},
+	"dependencies": {
+		"keytar": "^7.9.0"
+	},
 	"devDependencies": {
 		"electron": "^34.1.0",
 		"electron-builder": "^26.0.5"
@@ -15,6 +18,9 @@
 	"build": {
 		"appId": "com.mangabox.app",
 		"productName": "MangaBox",
+		"asarUnpack": [
+			"**/node_modules/keytar/**"
+		],
 		"directories": {
 			"output": "dist"
 		},
