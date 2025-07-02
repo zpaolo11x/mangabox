@@ -27,6 +27,7 @@ async function sessionCheck() {
 	//const authToken = localStorage.getItem('mbAuthToken');
 
 	if ((!baseUrl) || (!authToken)){
+		console.log('missing baseUrl or authToken');
 		showLoginDialog();
 		return;
 	}
@@ -34,20 +35,22 @@ async function sessionCheck() {
 	try {
 		const response = await fetch(`${baseUrl}/api/v1/login/set-cookie`, {
 			method: 'GET',
-			credentials: 'include',
+			//TODO ADD THIS FOR WEB credentials: 'include',
 			headers: {
-				'X-Auth-Token': authToken,
+				'X-Auth-Token': authToken, //TODO Remove this for WEB
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
 		});
 		if (response.ok) {
+			alert("response OK")
 			hideLoginDialog();
 			bootSequence();
 		} else {
 			showLoginDialog();
 		}
 	} catch (error) {
+		console.log('login error')
 		showLoginDialog();
 	}
 }
