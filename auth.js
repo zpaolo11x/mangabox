@@ -2,7 +2,8 @@
 
 async function sessionCheck() {
 	const baseUrl = localStorage.getItem('mbBaseUrl');
-	if (!baseUrl) {
+	const authToken = localStorage.getItem('mbAuthToken');
+	if ((!baseUrl) || (!authToken)){
 		showLoginDialog();
 		return;
 	}
@@ -12,6 +13,7 @@ async function sessionCheck() {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
+				'X-Auth-Token': authToken,
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
@@ -43,7 +45,7 @@ function login() {
 
 	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
 		method: 'GET',
-		credentials: 'include', // ✅ Important!
+		//credentials: 'include', // ✅ Important!
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
@@ -57,6 +59,7 @@ function login() {
 			if (response.ok && token) {
 				console.log("✅ Got session token:", token);
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				localStorage.setItem('mbAuthToken', token);
 				hideLoginDialog();
 				location.reload(true);
 				//fetchLibraries(); // Fetch libraries after successful login
