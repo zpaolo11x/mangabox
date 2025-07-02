@@ -1,6 +1,6 @@
 // script.js
-async function saveToken() {
-	await window.secureStore.setCredentials('auth', mb.authToken);
+async function saveToken(token) {
+	await window.secureStore.setCredentials('auth', token);
 	alert("Token saved securely.");
 }
 
@@ -81,6 +81,7 @@ function login() {
 			console.log(token);
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				saveToken(token);
 				localStorage.setItem('mbAuthToken', token);
 				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
 				hideLoginDialog();
