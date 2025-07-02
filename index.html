@@ -251,14 +251,14 @@
 
 	<div id="debuggerObj"></div>
 
+	<script>
+		const isElectronApp = !!window.electronAPI;
+	</script>
 	<script src="auth.js"></script>
 
 	<script>
 
-
 		//MB Manage Electron titlebar
-
-		const isElectronApp = !!window.electronAPI;
 
 		function enableDragbar(enabled) {
 			if (!enabled) {

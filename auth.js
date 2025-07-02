@@ -27,7 +27,12 @@ async function sessionCheck() {
 	}
 }
 
-function login() {
+async function setKomgaUrl(url) {
+  await ipcRenderer.invoke('set-komga-url', url);
+  // Proceed with login or app flow
+}
+
+async function login() {
 	let baseUrlVal = loginBaseUrl.value;
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
@@ -37,11 +42,17 @@ function login() {
 
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
+	setKomgaUrl(baseUrlVal);
+	
 	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
 	// Test the auth header and base URL with a simple API call to validate credentials
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+	const loginUrl = isElectronApp 
+	? `/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`
+	: `${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`
+
+	fetch(loginUrl, {
 		method: 'GET',
 		//credentials: 'include', // ✅ Important!
 		headers: {
