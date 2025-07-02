@@ -353,7 +353,7 @@
 
 			baseUrl: localStorage.getItem('mbBaseUrl'),
 			authToken: localStorage.getItem('mbAuthToken'),
-			
+
 			basePath: '', //'/mangabox/'
 			darkTheme: false,
 
@@ -475,8 +475,9 @@
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, {
 					method: method,
-						credentials: 'include',
+					credentials: 'include',
 					headers: {
+						'X-Auth-Token': mb.authToken,
 						'Content-Type': 'application/json',
 						'X-Requested-With': 'XMLHttpRequest',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
@@ -660,8 +661,8 @@
 						method: 'POST',
 						credentials: 'include',
 						headers: {
-
-						'X-Requested-With': 'XMLHttpRequest',
+							'X-Auth-Token': mb.authToken,
+							'X-Requested-With': 'XMLHttpRequest',
 							'skip_zrok_interstitial': '1',
 						},
 					});
@@ -1309,9 +1310,9 @@
 			try {
 				const response = await fetch(url, {
 					method: 'GET',
-						credentials: 'include',
+					credentials: 'include',
 					headers: {
-
+						'X-Auth-Token': mb.authToken,
 						'X-Requested-With': 'XMLHttpRequest',
 						'skip_zrok_interstitial': '1' // Add header to skip interstitial
 					}
@@ -4138,12 +4139,12 @@
 
 		console.log("checkboot");
 		sessionCheck()
-/*
-		if (loginScreen.classList.contains('auth-hidden')) {
-				console.log("AAA")
-				bootSequence();
-		}
-*/
+		/*
+				if (loginScreen.classList.contains('auth-hidden')) {
+						console.log("AAA")
+						bootSequence();
+				}
+		*/
 		//MB Reader touch response fucntions
 		function getTrueScale() {
 			return window.innerWidth / window.visualViewport.width;
