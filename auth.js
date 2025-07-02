@@ -1,33 +1,34 @@
 // script.js
 async function saveToken(token) {
 	await window.secureStore.setCredentials('auth', token);
-	alert("Token saved securely.");
+	console.log("Token saved securely.");
 }
 
 async function loadToken() {
 	const token = await window.secureStore.getCredentials('auth');
 	if (token) {
-		alert("Token loaded: " + token);
+		console.log ("Token loaded: " + token);
 		return(token);
 	} else {
-		alert("No token found.");
+		console.log ("No token found.");
 		return(false);
 	}
 }
 
 async function deleteTolen() {
 	await window.secureStore.deleteCredentials('auth');
-	alert ("Token deleted.");
+	console.log ("Token deleted.");
 }
 
 async function sessionCheck() {
+	console.log("Start Session Check")
 	const baseUrl = localStorage.getItem('mbBaseUrl');
-	
 	const authToken = loadToken();
-	//const authToken = localStorage.getItem('mbAuthToken');
+
+	console.log("*" + baseUrl + "* *" + authToken + "*");
 
 	if ((!baseUrl) || (!authToken)){
-		console.log('missing baseUrl or authToken');
+		console.log('Missing baseUrl or authToken');
 		showLoginDialog();
 		return;
 	}
@@ -43,10 +44,11 @@ async function sessionCheck() {
 			}
 		});
 		if (response.ok) {
-			alert("response OK")
+			console.log("Response OK")
 			hideLoginDialog();
 			bootSequence();
 		} else {
+			console.log ("Response NOT OK")
 			showLoginDialog();
 		}
 	} catch (error) {
