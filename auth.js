@@ -1,6 +1,6 @@
 // script.js
 
-const authToken = true;
+let authToken = true;
 
 async function saveToken(token) {
 	await window.secureStore.setCredentials('auth', token);
