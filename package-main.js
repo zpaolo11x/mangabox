@@ -12,7 +12,7 @@ app.on('ready', () => {
 	const PORT = 3000;  // You can change this if needed
 
 	// Serve your static files from your app directory (adjust path if needed)
-	expressApp.use(express.static(path.join('dist/')));
+	expressApp.use(express.static(path.join(__dirname)));
 
 	// Start the server
 	server = expressApp.listen(PORT, () => {
