@@ -17,46 +17,51 @@ app.on('ready', () => {
 	expressApp.use(express.static(path.join(__dirname)));
 
 	// Proxy middleware for /api requests
-expressApp.use('/api', async (req, res) => {
-	if (!komgaBaseUrl) {
-		console.error('Komga base URL not set');
-		return res.status(500).send('Komga server URL not set');
-	}
+	expressApp.use('/api', async (req, res) => {
+		if (!komgaBaseUrl) {
+			return res.status(500).send('Komga server URL not set');
+		}
 
-	const targetUrl = new URL(req.url, komgaBaseUrl).toString();
-	console.log(`[Proxy] Forwarding ${req.method} ${req.url} -> ${targetUrl}`);
+		// Construct full URL to Komga API
+		const targetUrl = new URL(req.url, komgaBaseUrl).toString();
 
-	try {
+		// Prepare fetch options
 		const headers = { ...req.headers };
-		delete headers['host'];     // Strip potentially problematic headers
+		// Optionally delete/modify headers that might cause issues:
+		delete headers['host'];
 		delete headers['origin'];
 		delete headers['referer'];
 
-		// Forward the request body only for non-GET/HEAD
-		const fetchOptions = {
-			method: req.method,
-			headers,
-			body: (req.method !== 'GET' && req.method !== 'HEAD') ? req : null,
-			redirect: 'manual'
-		};
+		let body = null;
+		if (req.method !== 'GET' && req.method !== 'HEAD') {
+			body = req;
+		}
 
-		const response = await fetch(targetUrl, fetchOptions);
+		try {
+			const response = await fetch(targetUrl, {
+				method: req.method,
+				headers,
+				body,
+				redirect: 'manual'
+			});
 
-		// Forward status and headers
-		res.status(response.status);
-		response.headers.forEach((value, key) => {
-			if (key.toLowerCase() === 'content-encoding') return; // avoid encoding issues
-			res.setHeader(key, value);
-		});
+			// Copy status
+			res.status(response.status);
 
-		// Forward body
-		response.body.pipe(res);
-	} catch (err) {
-		console.error(`[Proxy Error] Failed to forward request to ${targetUrl}`, err);
-		res.status(500).send('Proxy error: ' + err.message);
-	}
-});
+			// Copy headers (you might want to filter some headers)
+			response.headers.forEach((value, key) => {
+				// Exclude content-encoding to avoid double compression issues
+				if (key.toLowerCase() === 'content-encoding') return;
+				res.setHeader(key, value);
+			});
 
+			// Pipe response body
+			response.body.pipe(res);
+		} catch (error) {
+			console.error('Proxy error:', error);
+			res.status(500).send('Proxy error: ' + error.message);
+		}
+	});
 
 	// Start server
 	server = expressApp.listen(PORT, () => {
