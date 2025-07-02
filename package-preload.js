@@ -14,12 +14,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
 contextBridge.exposeInMainWorld('secureStore', {
 	setCredentials: async (account, secret) => {
-		return await keytar.setPassword(SERVICE, account, secret);
+		return await keytar.setPassword('MangaBox', account, secret);
 	},
 	getCredentials: async (account) => {
-		return await keytar.getPassword(SERVICE, account);
+		return await keytar.getPassword('MangaBox', account);
 	},
 	deleteCredentials: async (account) => {
-		return await keytar.deletePassword(SERVICE, account);
+		return await keytar.deletePassword('MangaBox', account);
 	}
 });

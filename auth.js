@@ -1,11 +1,11 @@
 // script.js
 async function saveToken() {
-	await window.secureStore.setCredentials('mangabox', mb.authToken);
+	await window.secureStore.setCredentials('auth', mb.authToken);
 	alert("Token saved securely.");
 }
 
 async function loadToken() {
-	const token = await window.secureStore.getCredentials('mangabox');
+	const token = await window.secureStore.getCredentials('auth');
 	if (token) {
 		alert("Token loaded: " + token);
 		return(token);
