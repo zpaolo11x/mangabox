@@ -38,8 +38,6 @@ async function login() {
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
    if (isElectronApp) await window.electronAPI.setKomgaUrl(baseUrlVal);
-
-	setKomgaUrl(baseUrlVal);
 	
 	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
