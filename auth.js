@@ -23,7 +23,7 @@ async function deleteTolen() {
 async function sessionCheck() {
 	console.log("Start Session Check")
 	const baseUrl = localStorage.getItem('mbBaseUrl');
-	const authToken = loadToken();
+	const authToken = await loadToken();
 
 	console.log("*" + baseUrl + "* *" + authToken + "*");
 
@@ -81,12 +81,12 @@ function login() {
 			'skip_zrok_interstitial': '1'
 		}
 	})
-		.then(response => {
+		.then(async response => {
 			const token = response.headers.get('X-Auth-Token');
 			console.log(token);
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				saveToken(token);
+				await saveToken(token);
 				localStorage.setItem('mbAuthToken', token);
 				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
 				hideLoginDialog();
