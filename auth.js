@@ -7,48 +7,59 @@ async function saveToken(token) {
 async function loadToken() {
 	const token = await window.secureStore.getCredentials('auth');
 	if (token) {
-		console.log ("Token loaded: " + token);
-		return(token);
+		console.log("Token loaded: " + token);
+		return (token);
 	} else {
-		console.log ("No token found.");
-		return(false);
+		console.log("No token found.");
+		return (false);
 	}
 }
 
-async function deleteTolen() {
+async function deleteToken() {
 	await window.secureStore.deleteCredentials('auth');
-	console.log ("Token deleted.");
+	console.log("Token deleted.");
 }
 
 async function sessionCheck() {
+	console.log("isElectronApp? "+isElectronApp);
 	console.log("Start Session Check")
 	const baseUrl = localStorage.getItem('mbBaseUrl');
-	const authToken = await loadToken();
+	const authToken = isElectronApp ? await loadToken() : true;
 
 	console.log("*" + baseUrl + "* *" + authToken + "*");
 
-	if ((!baseUrl) || (!authToken)){
+	if ((!baseUrl) || (!authToken)) {
 		console.log('Missing baseUrl or authToken');
 		showLoginDialog();
 		return;
 	}
 
-	try {
-		const response = await fetch(`${baseUrl}/api/v1/login/set-cookie`, {
+	const fetchPayload = isElectronApp ?
+		{
 			method: 'GET',
-			//TODO ADD THIS FOR WEB credentials: 'include',
 			headers: {
-				'X-Auth-Token': authToken, //TODO Remove this for WEB
+				'X-Auth-Token': authToken,
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
-		});
+		} :
+		{
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
+			}
+		};
+
+	try {
+		const response = await fetch(`${baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 		if (response.ok) {
 			console.log("Response OK")
 			hideLoginDialog();
 			bootSequence();
 		} else {
-			console.log ("Response NOT OK")
+			console.log("Response NOT OK")
 			showLoginDialog();
 		}
 	} catch (error) {
@@ -86,14 +97,12 @@ function login() {
 			console.log(token);
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				await saveToken(token);
-				localStorage.setItem('mbAuthToken', token);
+				if (isElectronApp) await saveToken(token);
 				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
 				hideLoginDialog();
 				location.reload(true);
-				//fetchLibraries(); // Fetch libraries after successful login
 			} else {
-				localStorage.setItem('mbBaseUrl', baseUrlVal);       // Save base URL
+				localStorage.setItem('mbBaseUrl', baseUrlVal); // Save base URL
 				loginError.classList.remove('auth-hidden'); // Show error message
 			}
 		})

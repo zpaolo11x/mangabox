@@ -251,14 +251,16 @@
 
 	<div id="debuggerObj"></div>
 
+	<script>
+		const isElectronApp = !!window.electronAPI;
+	</script>
+
 	<script src="auth.js"></script>
 
 	<script>
 
 
 		//MB Manage Electron titlebar
-
-		const isElectronApp = !!window.electronAPI;
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -662,7 +664,6 @@
 						method: 'POST',
 						credentials: 'include',
 						headers: {
-							'X-Auth-Token': mb.authToken,
 							'X-Requested-With': 'XMLHttpRequest',
 							'skip_zrok_interstitial': '1',
 						},
@@ -672,7 +673,9 @@
 				console.warn('Logout API call failed:', error);
 				// We continue cleanup anyway
 			}
-
+			
+			if (isElectronApp) await deleteToken();
+			
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 
