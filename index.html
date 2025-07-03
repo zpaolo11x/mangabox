@@ -354,6 +354,7 @@
 			swatchMenuVisible: false,
 
 			baseUrl: localStorage.getItem('mbBaseUrl'),
+			authToken: false,
 
 			basePath: '', //'/mangabox/'
 			darkTheme: false,
@@ -490,7 +491,7 @@
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(authToken, method, body));
+				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
 
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
@@ -1316,7 +1317,7 @@
 			}
 
 			try {
-				const response = await fetch(url, buildRequest(authToken, 'GET', null));
+				const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();

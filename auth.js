@@ -1,7 +1,5 @@
 // script.js
 
-let authToken = false;
-
 async function saveToken(token) {
 	await window.secureStore.setCredentials('auth', token);
 	console.log("Token saved securely.");
@@ -26,15 +24,16 @@ async function deleteToken() {
 async function sessionCheck() {
 	console.log("isElectronApp? "+isElectronApp);
 	console.log("Start Session Check")
+	console.log(mb.baseUrl);
 	const baseUrl = localStorage.getItem('mbBaseUrl');
 
 	loginBaseUrl.value = baseUrl;
 
-	authToken = isElectronApp ? await loadToken() : true;
+	mb.authToken = isElectronApp ? await loadToken() : true;
 
-	console.log("*" + baseUrl + "* *" + authToken + "*");
+	console.log("*" + baseUrl + "* *" + mb.authToken + "*");
 
-	if ((!baseUrl) || (!authToken)) {
+	if ((!baseUrl) || (!mb.authToken)) {
 		console.log('Missing baseUrl or authToken');
 		showLoginDialog();
 		return;
@@ -44,7 +43,7 @@ async function sessionCheck() {
 		{
 			method: 'GET',
 			headers: {
-				'X-Auth-Token': authToken,
+				'X-Auth-Token': mb.authToken,
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
