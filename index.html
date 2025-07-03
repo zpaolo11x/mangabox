@@ -471,20 +471,28 @@
 		});
 
 
+		function buildRequest(authToken, method, body) {
+			const headers = {
+				'Content-Type': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
+			}
+			if (isElectronApp) headers['X-Auth-Token'] = authToken;
+
+			let requestTable = {
+				method: method,
+				headers: headers,
+			}
+			if (body) requestTable['body'] = body;
+			if (isElectronApp) requestTable['credentials'] = 'include';
+
+			return requestTable
+		}
+
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, {
-					method: method,
-					credentials: 'include',
-					headers: {
-						'X-Auth-Token': authToken,
-						'Content-Type': 'application/json',
-						'X-Requested-With': 'XMLHttpRequest',
-						'skip_zrok_interstitial': '1' // Add header to skip interstitial
-					},
-					body: body
-				});
+				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(authToken, method, body));
 
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
@@ -671,9 +679,9 @@
 				console.warn('Logout API call failed:', error);
 				// We continue cleanup anyway
 			}
-			
+
 			if (isElectronApp) await deleteToken();
-			
+
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 
@@ -1310,15 +1318,7 @@
 			}
 
 			try {
-				const response = await fetch(url, {
-					method: 'GET',
-					credentials: 'include',
-					headers: {
-						'X-Auth-Token': authToken,
-						'X-Requested-With': 'XMLHttpRequest',
-						'skip_zrok_interstitial': '1' // Add header to skip interstitial
-					}
-				});
+				const response = await fetch(url, buildRequest(authToken, 'GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();

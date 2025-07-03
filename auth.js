@@ -27,6 +27,9 @@ async function sessionCheck() {
 	console.log("isElectronApp? "+isElectronApp);
 	console.log("Start Session Check")
 	const baseUrl = localStorage.getItem('mbBaseUrl');
+
+	loginBaseUrl.value = baseUrl;
+
 	authToken = isElectronApp ? await loadToken() : true;
 
 	console.log("*" + baseUrl + "* *" + authToken + "*");
