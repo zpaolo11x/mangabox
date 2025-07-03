@@ -104,7 +104,6 @@ function login() {
 					window.electronAPI.sendRememberMe(loginRememberMe.checked);
 					await saveToken(token);
 				}
-				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
 				hideLoginDialog();
 				location.reload(true);
 			} else {
