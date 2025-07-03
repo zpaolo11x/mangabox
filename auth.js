@@ -24,16 +24,14 @@ async function deleteToken() {
 async function sessionCheck() {
 	console.log("isElectronApp? "+isElectronApp);
 	console.log("Start Session Check")
-	console.log(mb.baseUrl);
-	const baseUrl = localStorage.getItem('mbBaseUrl');
 
-	loginBaseUrl.value = baseUrl;
+	loginBaseUrl.value = mb.baseUrl;
 
 	mb.authToken = isElectronApp ? await loadToken() : true;
 
-	console.log("*" + baseUrl + "* *" + mb.authToken + "*");
+	console.log("*" + mb.baseUrl + "* *" + mb.authToken + "*");
 
-	if ((!baseUrl) || (!mb.authToken)) {
+	if ((!mb.baseUrl) || (!mb.authToken)) {
 		console.log('Missing baseUrl or authToken');
 		showLoginDialog();
 		return;
@@ -58,7 +56,7 @@ async function sessionCheck() {
 		};
 
 	try {
-		const response = await fetch(`${baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 		if (response.ok) {
 			console.log("Response OK")
 			hideLoginDialog();
