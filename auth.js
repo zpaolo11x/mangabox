@@ -100,7 +100,10 @@ function login() {
 			console.log(token);
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				if (isElectronApp) await saveToken(token);
+				if (isElectronApp) {
+					window.electronAPI.sendRememberMe(loginRememberMe.checked);
+					await saveToken(token);
+				}
 				localStorage.setItem('mbRememberMe', loginRememberMe.checked);
 				hideLoginDialog();
 				location.reload(true);

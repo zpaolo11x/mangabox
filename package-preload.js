@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onMaximize: (callback) => ipcRenderer.on('window-maximized', callback),
 	onUnmaximize: (callback) => ipcRenderer.on('window-unmaximized', callback),
 	getAppVersion: () => ipcRenderer.invoke('get-app-version'),
+	sendRememberMe: (value) => ipcRenderer.send('remember-me-state', value),
 });
 
 contextBridge.exposeInMainWorld('secureStore', {

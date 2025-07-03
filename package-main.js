@@ -1,7 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const keytar = require('keytar'); // ✅ keytar used here for secure token deletion
 
 let mainWindow;
+let rememberMe = false; // ✅ Track remember-me state
 
 app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
 
@@ -64,6 +66,12 @@ app.on('ready', () => {
 	ipcMain.handle('get-app-version', () => {
 		return app.getVersion(); // This uses the version from package.json
 	});
+
+	// ✅ Receive rememberMe status from renderer
+	ipcMain.on('remember-me-state', (_, value) => {
+		rememberMe = value;
+	});
+
 	// Check URL changes and enable zoom conditionally
 	/* 
 	 mainWindow.webContents.on('did-navigate', (_, url) => {
@@ -76,6 +84,18 @@ app.on('ready', () => {
 	  }
 	});
 	*/
+});
+
+// ✅ Secure token cleanup if rememberMe is false
+app.on('before-quit', async () => {
+	if (!rememberMe) {
+		try {
+			await keytar.deletePassword('MangaBox', 'auth');
+			console.log("🔒 Token deleted on app quit (rememberMe was false).");
+		} catch (err) {
+			console.error("⚠️ Failed to delete token:", err);
+		}
+	}
 });
 
 app.on('window-all-closed', () => {
