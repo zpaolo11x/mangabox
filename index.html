@@ -470,22 +470,19 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-
 		function buildRequest(authToken, method, body) {
-			const headers = {
-				'Content-Type': 'application/json',
-				'X-Requested-With': 'XMLHttpRequest',
-				'skip_zrok_interstitial': '1'
-			}
-			if (isElectronApp) headers['X-Auth-Token'] = authToken;
-
-			let requestTable = {
+			const requestTable = {
 				method: method,
-				headers: headers,
+				...(!isElectronApp && { credentials: 'include' }),
+				headers: {
+					'Content-Type': 'application/json',
+					'X-Requested-With': 'XMLHttpRequest',
+					'skip_zrok_interstitial': '1',
+					...(isElectronApp && { 'X-Auth-Token': authToken })
+				},
+				...(body && { body }),
 			}
-			if (body) requestTable['body'] = body;
-			if (isElectronApp) requestTable['credentials'] = 'include';
-
+			console.log(requestTable)
 			return requestTable
 		}
 
