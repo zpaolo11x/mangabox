@@ -382,7 +382,7 @@
 			libraryMenuButtons: {},
 
 			libSizer: {}, // Used to calculate libraries button size
-			dashboardBin: "",
+			dashboardBin: '',
 			/*
 				When an item from a bin is opened, the mb.dashboardBin is set, so when the dashboard is reloaded
 				it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
@@ -393,41 +393,41 @@
 			// Theme management variables
 			themeControl: [
 				{
-					label: "Light theme",
-					icon: "fa-sun",
+					label: 'Light theme',
+					icon: 'fa-sun',
 					isDark: 0
 				}, {
-					label: "Dark theme",
-					icon: "fa-moon",
+					label: 'Dark theme',
+					icon: 'fa-moon',
 					isDark: 1
 				}, {
-					label: "System theme",
-					icon: "fa-wand-magic-sparkles",
+					label: 'System theme',
+					icon: 'fa-wand-magic-sparkles',
 					isDark: 2
 				}
 			],
 
 			readerThemeControl: [
 				{
-					label: "Classic theme",
-					icon: "fa-palette",
-					style: "classic"
+					label: 'Classic theme',
+					icon: 'fa-palette',
+					style: 'classic'
 				}, {
-					label: "Dark accent",
-					icon: "fa-moon",
-					style: "dark-accent"
+					label: 'Dark accent',
+					icon: 'fa-moon',
+					style: 'dark-accent'
 				}, {
-					label: "Light accent",
-					icon: "fa-sun",
-					style: "light-accent"
+					label: 'Light accent',
+					icon: 'fa-sun',
+					style: 'light-accent'
 				}, {
-					label: "White",
-					icon: "fa-w",
-					style: "white"
+					label: 'White',
+					icon: 'fa-w',
+					style: 'white'
 				}, {
-					label: "Black",
-					icon: "fa-b",
-					style: "black"
+					label: 'Black',
+					icon: 'fa-b',
+					style: 'black'
 				}
 			],
 
@@ -484,7 +484,6 @@
 				},
 				...(body && { body }),
 			}
-			console.log(requestTable)
 			return requestTable
 		}
 
@@ -508,7 +507,7 @@
 			const settings = await callAPI('/api/v1/client-settings/user/list', 'GET');
 			const mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
-					.filter(([key]) => key.startsWith("mangabox"))
+					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
 			return mangaboxFlat
@@ -563,7 +562,7 @@
 			document.documentElement.style.setProperty('--mb-gradient-1', Number(swatches[mb.accentColor][0]));
 			document.documentElement.style.setProperty('--mb-gradient-2', Number(swatches[mb.accentColor][0]) - 10);
 
-			setUserSettings("mangabox.ui.accentcolor", mb.accentColor);
+			setUserSettings('mangabox.ui.accentcolor', mb.accentColor);
 		}
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
@@ -818,7 +817,7 @@
 		function showModal(image, bg, message, okText, cancelText, okFunction, cancelFunction) {
 			modalOkGlobal = okFunction;
 			modalCancelGlobal = cancelFunction;
-			modalWrapper.style.backgroundImage = bg ? "" : "none";
+			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
 			modalMessage.textContent = message;
 			//myModal.style.display = 'flex';
@@ -837,13 +836,13 @@
 		function closeModal() {
 			modalOk.removeEventListener('click', modalOkGlobal);
 			modalCancel.removeEventListener('click', modalCancelGlobal);
-			myModal.classList.add("unfade");
+			myModal.classList.add('unfade');
 			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
 			setTimeout(() => {
 				// Optional: if you still want to hide it completely from screen readers / tab order
-				myModal.classList.remove("visible");
-				myModal.classList.remove("unfade");
+				myModal.classList.remove('visible');
+				myModal.classList.remove('unfade');
 				workOk = null;
 				workCancel = null;
 			}, 300);
@@ -1904,7 +1903,7 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: "fa-solid " + menuClassDown + " is-lib-menu"
+					className: 'fa-solid ' + menuClassDown + ' is-lib-menu'
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
@@ -2735,7 +2734,7 @@
 		function clearReader() {
 
 			// Cleanup ForeEdge and drop shadows
-			["foreEdgeL", "foreEdgeR", "dropShadowL", "dropShadowR"].forEach(key => {
+			['foreEdgeL', 'foreEdgeR', 'dropShadowL', 'dropShadowR'].forEach(key => {
 				if (rd[key]) {
 					rd[key].remove();
 					rd[key] = null;
@@ -2967,7 +2966,7 @@
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
-			item.style.objectPosition = "center center";
+			item.style.objectPosition = 'center center';
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
 			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
 		}
@@ -3009,8 +3008,8 @@
 				uiLightL: addItem('div', { className: 'page-light-left' }),
 				uiLightR: addItem('div', { className: 'page-light-right' }),
 				uiThumb: addItem('div', { className: 'spread-thumb' }),
-				pageObjL: spreadPages["left"] ?? null,
-				pageObjR: spreadPages["right"] ?? null,
+				pageObjL: spreadPages['left'] ?? null,
+				pageObjR: spreadPages['right'] ?? null,
 				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
 				spreadRefPage: spreadRefPage
 			})
@@ -3472,7 +3471,7 @@
 
 			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			const pageNumText = spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum;
+			const pageNumText = spreadObject.pageObjL.pageNum + ' ' + spreadObject.pageObjR.pageNum;
 
 			const out = [currentPage, pageNumText];
 
@@ -3742,7 +3741,7 @@
 					leftPage.animate(appearL2R, animData);
 					rd.dropShadowR.animate(
 						[{ left: '100%' }],
-						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: 'forwards', delay: turnTime * 0.5 }
 					);
 				} else {
 					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
@@ -3756,7 +3755,7 @@
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 					rd.dropShadowL.animate(
 						[{ right: '100%' }],
-						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: 'forwards', delay: turnTime * 0.5 }
 					);
 				}
 				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
@@ -3790,7 +3789,7 @@
 					coverPageL.animate(appearL2R, animData);
 					rd.dropShadowL.animate(
 						[{ right: '50%' }],
-						{ duration: turnTime, easing: easeFull, fill: "forwards" }
+						{ duration: turnTime, easing: easeFull, fill: 'forwards' }
 					);
 				} else {
 					rd.foreEdgeR.style.transition = 'clip-path 0s';
@@ -3803,7 +3802,7 @@
 					coverPageR.animate(appearR2L, animData);
 					rd.dropShadowR.animate(
 						[{ left: '50%' }],
-						{ duration: turnTime, easing: easeFull, fill: "forwards" }
+						{ duration: turnTime, easing: easeFull, fill: 'forwards' }
 					);
 				}
 			}
@@ -4138,14 +4137,8 @@
 			event.stopPropagation();
 		})
 
-		console.log("checkboot");
 		sessionCheck()
-		/*
-				if (loginScreen.classList.contains('auth-hidden')) {
-						console.log("AAA")
-						bootSequence();
-				}
-		*/
+
 		//MB Reader touch response fucntions
 		function getTrueScale() {
 			return window.innerWidth / window.visualViewport.width;

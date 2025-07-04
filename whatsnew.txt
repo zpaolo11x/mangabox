@@ -1,12 +1,13 @@
 Main UI
-- Fix mini buttons positioning on Chromium
+- 
 
 Reader
 - 
 
 Build
-- Improve authentication secuirty on Electron app
-- Authenticate web app through cookies
+- Use cookies to authenticate web app
+- Use x-auth-token to authenticate Electron app
+- Store x-auth-token in OS keychain with keytar
 
 Fixes
-- 
+- Fix mini buttons positioning on Chromium

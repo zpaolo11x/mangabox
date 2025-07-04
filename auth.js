@@ -2,37 +2,27 @@
 
 async function saveToken(token) {
 	await window.secureStore.setCredentials('auth', token);
-	console.log("Token saved securely.");
 }
 
 async function loadToken() {
 	const token = await window.secureStore.getCredentials('auth');
 	if (token) {
-		console.log("Token loaded: " + token);
 		return (token);
 	} else {
-		console.log("No token found.");
 		return (false);
 	}
 }
 
 async function deleteToken() {
 	await window.secureStore.deleteCredentials('auth');
-	console.log("Token deleted.");
 }
 
 async function sessionCheck() {
-	console.log("isElectronApp? "+isElectronApp);
-	console.log("Start Session Check")
-
 	loginBaseUrl.value = mb.baseUrl;
 
 	mb.authToken = isElectronApp ? await loadToken() : true;
 
-	console.log("*" + mb.baseUrl + "* *" + mb.authToken + "*");
-
 	if ((!mb.baseUrl) || (!mb.authToken)) {
-		console.log('Missing baseUrl or authToken');
 		showLoginDialog();
 		return;
 	}
@@ -58,15 +48,12 @@ async function sessionCheck() {
 	try {
 		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 		if (response.ok) {
-			console.log("Response OK")
 			hideLoginDialog();
 			bootSequence();
 		} else {
-			console.log("Response NOT OK")
 			showLoginDialog();
 		}
 	} catch (error) {
-		console.log('login error')
 		showLoginDialog();
 	}
 }
@@ -97,7 +84,6 @@ function login() {
 	})
 		.then(async response => {
 			const token = response.headers.get('X-Auth-Token');
-			console.log(token);
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 				if (isElectronApp) {
