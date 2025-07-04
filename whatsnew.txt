@@ -1,11 +1,12 @@
 Main UI
-- Fixed mini buttons positioning on Chromium
+- Fix mini buttons positioning on Chromium
 
 Reader
 - 
 
 Build
-- 
+- Improve authentication secuirty on Electron app
+- Authenticate web app through cookies
 
 Fixes
 - 
