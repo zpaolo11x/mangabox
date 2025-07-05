@@ -642,8 +642,15 @@
 
 		colorChanger.addEventListener('click', () => {
 
+			if ((mb.libMenuVisible != null)) {
+				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
+				sectionToggle(filtersBar);
+				mb.libMenuVisible = null;
+			}
+			
 			sectionToggle(colorSwatchBar)
 			mb.swatchMenuVisible = !mb.swatchMenuVisible
+			
 			/*
 			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
 			applyAccent();
@@ -4002,6 +4009,7 @@
 			}
 		});
 
+		/*
 		document.addEventListener('click', (event) => {
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
@@ -4015,6 +4023,7 @@
 			}
 
 		});
+*/
 
 		//MB URL Parsing and LoadContent Function 
 		function getHashAndParams() {
