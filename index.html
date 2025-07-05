@@ -650,11 +650,11 @@
 				mb.libMenuVisible = null;
 			}
 
-			mb.swatchMenuVisible = !mb.swatchMenuVisible
-
 			setTimeout(() => {
 				sectionToggle(colorSwatchBar);
 			}, unrollTimeout);
+
+			mb.swatchMenuVisible = !mb.swatchMenuVisible
 
 			//sectionToggle(colorSwatchBar)
 
@@ -4054,7 +4054,9 @@
 			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
 			sectionHide(colorSwatchBar);
-
+			mb.libMenuVisible = null;
+			mb.swatchMenuVisible = false
+			
 			clearLibrariesMenus();
 
 			closeBookDetails();
