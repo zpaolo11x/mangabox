@@ -2965,9 +2965,8 @@
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
-			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
 
-			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne);
+			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -3013,7 +3012,7 @@
 
 		//MB Reader Fetch Page Function
 
-		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
+		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage) {
 			// I put the image item and container item in the array so I can target them for changes
 			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
 			return ({
@@ -3029,10 +3028,6 @@
 				uiThumb: addItem('div', { className: 'spread-thumb' }),
 				pageObjL: spreadPages['left'] ?? null,
 				pageObjR: spreadPages['right'] ?? null,
-
-				pageNumL: spreadPageNums['left'] ?? null,
-				pageNumR: spreadPageNums['right'] ?? null,
-
 				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
 				spreadRefPage: spreadRefPage
 			})
@@ -3109,7 +3104,7 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
+		async function fetchPages(bookId, noCover, noWhitePage) {
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
@@ -3166,69 +3161,47 @@
 			// and organize data structur for spread formation
 
 			let i_page = 0; 		// Index of komga page data
-			let realPage = 1;		// Index of real page
 
 			// double spread with single page are treated as this:
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
-			const firstNonCover = coverIsPageOne ? 2 : 1;
-
 			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {
 				let spreadObject = null;
-
-				pageNum1 = realPage == firstNonCover ? (coverIsPageOne ? 2 : ' ') : realPage;
-				pageNum2 = realPage == firstNonCover ? (coverIsPageOne ? 3 : realPage) : realPage + 1
-				pageCover = pageData[i_page].isCover;
-
 				if (pageData[i_page].isCover) {
 					// Element is a cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum, pageTable(coverIsPageOne ? ' ' : ' ', coverIsPageOne ? 1 : ' '));
+					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum);
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page]);
-					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
+					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum, pageTable(realPage, ' '));
+					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum);
 				}
 				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
 					// This is an orphan page!
 					const page1 = buildPageObject('blank');
 					const page2 = buildPageObject(pageData[i_page]);
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else {
 					// these are two normal pages
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page + 1]);
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 					i_page++;
 				}
-
 				rd.spreadsArray.push(spreadObject);
 				i_page++;
-
-				if (pageCover) {
-					if (coverIsPageOne) {
-						realPage = 2;
-					}
-				} else {
-					if (coverIsPageOne && (realPage == firstNonCover)) {
-						realPage = 4
-					} else {
-						realPage = realPage + (realPage == firstNonCover ? 1 : 2);
-					}
-				}
 			}
 
 			// Style and structure the spread objects and pages
@@ -3517,7 +3490,7 @@
 
 			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			const pageNumText = spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			const pageNumText = spreadObject.pageObjL.pageNum + ' ' + spreadObject.pageObjR.pageNum;
 
 			const out = [currentPage, pageNumText];
 
@@ -4047,9 +4020,9 @@
 			}
 		});
 
-		document.addEventListener('pointerdown', (event) => {
-
-			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target)) ) {
+		/*
+		document.addEventListener('click', (event) => {
+			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
 				sectionToggle(filtersBar);
 				mb.libMenuVisible = null;
@@ -4059,7 +4032,9 @@
 				mb.swatchMenuVisible = false;
 				sectionHide(colorSwatchBar);
 			}
+
 		});
+*/
 
 		//MB URL Parsing and LoadContent Function 
 		function getHashAndParams() {
