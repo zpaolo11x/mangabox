@@ -757,6 +757,8 @@
 				showScrollbarTemporarily();
 			});
 
+			//TODO TOLTO PER NON FAR CASINO COL TOUCH MA COSì NON SI VEDE QUANDO ENTRI COL MOUSE
+
 			scrollbox.addEventListener('mouseenter', () => {
 				updateThumb();
 				showScrollbarTemporarily();
@@ -4029,7 +4031,9 @@
 			}
 		});
 
-		document.addEventListener('click', (event) => {
+		//TODO CONSOLIDEATE click AND touch
+		document.addEventListener('pointerup', (event) => {
+
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
 				sectionToggle(filtersBar);
@@ -4040,7 +4044,6 @@
 				mb.swatchMenuVisible = false;
 				sectionHide(colorSwatchBar);
 			}
-
 		});
 
 		//MB URL Parsing and LoadContent Function 
