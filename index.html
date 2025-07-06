@@ -447,6 +447,8 @@
 
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
+			pointerLock: false,
+
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
@@ -771,7 +773,7 @@
 				showScrollbarTemporarily();
 			});
 
-			scrollbox.addEventListener('mouseenter', () => {
+			scrollbox.addEventListener('pointerenter', () => {
 				updateThumb();
 				showScrollbarTemporarily();
 			});
@@ -1486,6 +1488,11 @@
 						execute();
 					}
 				} else if (event.button == 0) {
+					if (mb.pointerLock) {
+						mb.pointerLock = false;
+						return;
+					}
+
 					// MOUSE DEVICE
 					if (!item.classList.contains('scaled')) {
 						item.classList.add('scaled');
@@ -1502,7 +1509,7 @@
 				}
 			});
 
-			item.addEventListener('mouseenter', () => {
+			item.addEventListener('pointerenter', () => {
 				// Added this to unselect pre-scaled book
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
@@ -4059,18 +4066,16 @@
 		document.addEventListener('pointerdown', (event) => {
 
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
-				setTimeout(() => {
-					libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
-					sectionToggle(filtersBar);
-					mb.libMenuVisible = null;
-				}, 200)
+				mb.pointerLock = true;
+				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
+				sectionToggle(filtersBar);
+				mb.libMenuVisible = null;
 			}
 
 			if ((mb.swatchMenuVisible) && (!colorSwatchBar.contains(event.target)) && (!colorChanger.contains(event.target))) {
-				setTimeout(() => {
-					mb.swatchMenuVisible = false;
-					sectionHide(colorSwatchBar);
-				}, 200)
+				mb.pointerLock = true;
+				mb.swatchMenuVisible = false;
+				sectionHide(colorSwatchBar);
 			}
 		});
 
