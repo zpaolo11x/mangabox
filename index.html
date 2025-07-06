@@ -3213,13 +3213,13 @@
 					const page2 = buildPageObject(pageData[i_page]);
 					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
 					rd.realLastPage = Math.max(pageNum1, pageNum2);
-			}
+				}
 				else {
 					// these are two normal pages
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page + 1]);
 					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-				rd.realLastPage = Math.max(pageNum1, pageNum2);
+					rd.realLastPage = Math.max(pageNum1, pageNum2);
 
 					i_page++;
 				}
@@ -3239,7 +3239,7 @@
 					}
 				}
 			}
-			
+
 			// Style and structure the spread objects and pages
 			rd.spreadsArray.forEach((spreadObject, index) => {
 
@@ -4058,16 +4058,20 @@
 
 		document.addEventListener('pointerdown', (event) => {
 
-			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target)) ) {
-				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
-				sectionToggle(filtersBar);
-				mb.libMenuVisible = null;
+			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
+				setTimeout(() => {
+					libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
+					sectionToggle(filtersBar);
+					mb.libMenuVisible = null;
+				}, 200)
 			}
 
 			if ((mb.swatchMenuVisible) && (!colorSwatchBar.contains(event.target)) && (!colorChanger.contains(event.target))) {
-				mb.swatchMenuVisible = false;
-				sectionHide(colorSwatchBar);
-			}
+				setTimeout(() => {
+					mb.swatchMenuVisible = false;
+					sectionHide(colorSwatchBar);
+				}, 200)
+s			}
 		});
 
 		//MB URL Parsing and LoadContent Function 
@@ -4090,7 +4094,7 @@
 			sectionHide(colorSwatchBar);
 			mb.libMenuVisible = null;
 			mb.swatchMenuVisible = false
-			
+
 			clearLibrariesMenus();
 
 			closeBookDetails();
