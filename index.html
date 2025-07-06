@@ -2695,7 +2695,10 @@
 				'focus-left-page': 'translate(-25%, -50%)',
 				'focus-center': 'translate(-50%, -50%)',
 				'none': 'translate(-50%, -50%)',
-			}
+			},
+
+			realFirstPage: 0,
+			realLastPage: 0,
 
 		};
 
@@ -2953,8 +2956,8 @@
 		}
 
 		function initReaderUI(pagesData, bookData) {
-			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
-			rightLimit.innerText = rd.ltr ? pagesData.length : 1;
+			leftLimit.innerText = rd.ltr ? rd.realFirstPage : rd.realLastPage;
+			rightLimit.innerText = rd.ltr ? rd.realLastPage : rd.realFirstPage;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 		}
 
@@ -3174,6 +3177,8 @@
 
 			const firstNonCover = coverIsPageOne ? 2 : 1;
 
+			rd.realFirstPage = coverIsPageOne ? '1' : 'C';
+
 			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {
 				let spreadObject = null;
@@ -3193,24 +3198,28 @@
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page]);
 					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
+					rd.realLastPage = Math.max(pageNum1, pageNum2);
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
 					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum, pageTable(realPage, ' '));
+					rd.realLastPage = realPage;
 				}
 				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
 					// This is an orphan page!
 					const page1 = buildPageObject('blank');
 					const page2 = buildPageObject(pageData[i_page]);
 					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-				}
+					rd.realLastPage = Math.max(pageNum1, pageNum2);
+			}
 				else {
 					// these are two normal pages
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page + 1]);
 					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
+				rd.realLastPage = Math.max(pageNum1, pageNum2);
 
 					i_page++;
 				}
@@ -3230,7 +3239,7 @@
 					}
 				}
 			}
-
+			
 			// Style and structure the spread objects and pages
 			rd.spreadsArray.forEach((spreadObject, index) => {
 
