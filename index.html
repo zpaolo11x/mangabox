@@ -1495,7 +1495,7 @@
 						mb.pointerLock = false;
 						return;
 					}
-						console.log("parse mouse device")
+					console.log("parse mouse device")
 
 					// MOUSE DEVICE
 					if (!item.classList.contains('scaled')) {
@@ -4059,15 +4059,14 @@
 		});
 
 		document.addEventListener('pointerup', (event) => {
-			console.log("pointerup:"+mb.pointerLock)
+			console.log("pointerup:" + mb.pointerLock)
 			if (mb.currentlyScaled && !mb.currentlyScaled.contains(event.target)) {
 				mb.currentlyScaled.classList.remove('scaled');
 				mb.currentlyScaled.parentElement.classList.remove('top-pop');
 
 				mb.currentlyScaled = null;
 			} else {
-								mb.pointerLock = false;
-
+				mb.pointerLock = false;
 			}
 		});
 
