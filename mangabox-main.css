@@ -1113,8 +1113,8 @@ a {
 	scrollbar-width: none;
 }
 
-.home-strip-parent:first-of-type {
-	margin-top: 10px;
+#homeStripsContainer {
+	padding-top: 10px;
 }
 
 #searchStripsContainer {
