@@ -215,22 +215,22 @@
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+				<input type="text" class="login-input" id="mbBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
 			</div>
 
 			<div class="input-wrapper" title="Username">
 				<i class="fas fa-user"></i> <!-- Icon for username -->
-				<input type="text" class="login-input" id="loginUsername" placeholder="Username">
+				<input type="text" class="login-input" id="username" placeholder="Username">
 			</div>
 
 			<div class="input-wrapper" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
-				<input type="password" class="login-input" id="loginPassword" placeholder="Password">
+				<input type="password" class="login-input" id="password" placeholder="Password">
 			</div>
 
 			<div class="login-buttons">
 				<div class="remember-me-container">
-					<input type="checkbox" id="loginRememberMe" class="remember-me-checkbox">
+					<input type="checkbox" id="rememberMe" class="remember-me-checkbox">
 					<label for="rememberMe" class="remember-me-label">Remember Me</label>
 				</div>
 				<button class="login-button" onclick="login()">Login</button>
@@ -251,16 +251,14 @@
 
 	<div id="debuggerObj"></div>
 
-	<script>
-		const isElectronApp = !!window.electronAPI;
-	</script>
-
 	<script src="auth.js"></script>
 
 	<script>
 
 
 		//MB Manage Electron titlebar
+
+		const isElectronApp = !!window.electronAPI;
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -353,8 +351,9 @@
 			libMenuVisible: null,
 			swatchMenuVisible: false,
 
+			authHeader: localStorage.getItem('mbAuthHeader'),
 			baseUrl: localStorage.getItem('mbBaseUrl'),
-			authToken: false,
+			rememberMe: localStorage.getItem('mbRememberMe'),
 
 			basePath: '', //'/mangabox/'
 			darkTheme: false,
@@ -382,7 +381,7 @@
 			libraryMenuButtons: {},
 
 			libSizer: {}, // Used to calculate libraries button size
-			dashboardBin: '',
+			dashboardBin: "",
 			/*
 				When an item from a bin is opened, the mb.dashboardBin is set, so when the dashboard is reloaded
 				it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
@@ -393,41 +392,41 @@
 			// Theme management variables
 			themeControl: [
 				{
-					label: 'Light theme',
-					icon: 'fa-sun',
+					label: "Light theme",
+					icon: "fa-sun",
 					isDark: 0
 				}, {
-					label: 'Dark theme',
-					icon: 'fa-moon',
+					label: "Dark theme",
+					icon: "fa-moon",
 					isDark: 1
 				}, {
-					label: 'System theme',
-					icon: 'fa-wand-magic-sparkles',
+					label: "System theme",
+					icon: "fa-wand-magic-sparkles",
 					isDark: 2
 				}
 			],
 
 			readerThemeControl: [
 				{
-					label: 'Classic theme',
-					icon: 'fa-palette',
-					style: 'classic'
+					label: "Classic theme",
+					icon: "fa-palette",
+					style: "classic"
 				}, {
-					label: 'Dark accent',
-					icon: 'fa-moon',
-					style: 'dark-accent'
+					label: "Dark accent",
+					icon: "fa-moon",
+					style: "dark-accent"
 				}, {
-					label: 'Light accent',
-					icon: 'fa-sun',
-					style: 'light-accent'
+					label: "Light accent",
+					icon: "fa-sun",
+					style: "light-accent"
 				}, {
-					label: 'White',
-					icon: 'fa-w',
-					style: 'white'
+					label: "White",
+					icon: "fa-w",
+					style: "white"
 				}, {
-					label: 'Black',
-					icon: 'fa-b',
-					style: 'black'
+					label: "Black",
+					icon: "fa-b",
+					style: "black"
 				}
 			],
 
@@ -447,11 +446,7 @@
 
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
-			clickingTile: null,
-			pointerLock: false,
-
 		}
-
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
 		const colorValues = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches-hi')
@@ -475,25 +470,19 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-		function buildRequest(authToken, method, body) {
-			const requestTable = {
-				method: method,
-				...(!isElectronApp && { credentials: 'include' }),
-				headers: {
-					'Content-Type': 'application/json',
-					'X-Requested-With': 'XMLHttpRequest',
-					'skip_zrok_interstitial': '1',
-					...(isElectronApp && { 'X-Auth-Token': authToken })
-				},
-				...(body && { body }),
-			}
-			return requestTable
-		}
 
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
+				const response = await fetch(`${mb.baseUrl}${API_url}`, {
+					method: method,
+					headers: {
+						'Authorization': mb.authHeader,
+						'Content-Type': 'application/json',
+						'skip_zrok_interstitial': '1' // Add header to skip interstitial
+					},
+					body: body
+				});
 
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
@@ -510,7 +499,7 @@
 			const settings = await callAPI('/api/v1/client-settings/user/list', 'GET');
 			const mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
-					.filter(([key]) => key.startsWith('mangabox'))
+					.filter(([key]) => key.startsWith("mangabox"))
 					.map(([key, obj]) => [key, obj.value])
 			);
 			return mangaboxFlat
@@ -547,6 +536,15 @@
 		}
 
 
+
+		//MB Local Storage Update
+		rememberMe.checked = (mb.rememberMe == 'true');
+
+		//Questa cosa qui spostarla quando uno chiude la finestra!
+		if (mb.rememberMe != 'true') {
+			localStorage.removeItem('mbAuthHeader');
+		};
+
 		//MB Theme Management 
 
 		function warmth(hue) {
@@ -565,7 +563,7 @@
 			document.documentElement.style.setProperty('--mb-gradient-1', Number(swatches[mb.accentColor][0]));
 			document.documentElement.style.setProperty('--mb-gradient-2', Number(swatches[mb.accentColor][0]) - 10);
 
-			setUserSettings('mangabox.ui.accentcolor', mb.accentColor);
+			setUserSettings("mangabox.ui.accentcolor", mb.accentColor);
 		}
 
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
@@ -645,22 +643,8 @@
 
 		colorChanger.addEventListener('click', () => {
 
-			const unrollTimeout = isSectionHidden(filtersBar) ? 0 : 200
-
-			if ((mb.libMenuVisible != null)) {
-				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
-				sectionToggle(filtersBar);
-				mb.libMenuVisible = null;
-			}
-
-			setTimeout(() => {
-				sectionToggle(colorSwatchBar);
-			}, unrollTimeout);
-
+			sectionToggle(colorSwatchBar)
 			mb.swatchMenuVisible = !mb.swatchMenuVisible
-
-			//sectionToggle(colorSwatchBar)
-
 			/*
 			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
 			applyAccent();
@@ -679,27 +663,9 @@
 		})
 
 		logOut.addEventListener('click', async () => {
-			try {
-				if (mb.baseUrl) {
-					await fetch(`${mb.baseUrl}/api/logout`, {
-						method: 'POST',
-						credentials: 'include',
-						headers: {
-							'X-Requested-With': 'XMLHttpRequest',
-							'skip_zrok_interstitial': '1',
-						},
-					});
-				}
-			} catch (error) {
-				console.warn('Logout API call failed:', error);
-				// We continue cleanup anyway
-			}
-
-			if (isElectronApp) await deleteToken();
-
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
-
+			localStorage.removeItem('mbAuthHeader');
 			history.pushState(null, '', mb.basePath);
 			location.reload(true);
 		})
@@ -774,7 +740,7 @@
 				showScrollbarTemporarily();
 			});
 
-			scrollbox.addEventListener('pointerenter', () => {
+			scrollbox.addEventListener('mouseenter', () => {
 				updateThumb();
 				showScrollbarTemporarily();
 			});
@@ -834,7 +800,7 @@
 		function showModal(image, bg, message, okText, cancelText, okFunction, cancelFunction) {
 			modalOkGlobal = okFunction;
 			modalCancelGlobal = cancelFunction;
-			modalWrapper.style.backgroundImage = bg ? '' : 'none';
+			modalWrapper.style.backgroundImage = bg ? "" : "none";
 			modalImage.src = image;
 			modalMessage.textContent = message;
 			//myModal.style.display = 'flex';
@@ -853,13 +819,13 @@
 		function closeModal() {
 			modalOk.removeEventListener('click', modalOkGlobal);
 			modalCancel.removeEventListener('click', modalCancelGlobal);
-			myModal.classList.add('unfade');
+			myModal.classList.add("unfade");
 			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
 			setTimeout(() => {
 				// Optional: if you still want to hide it completely from screen readers / tab order
-				myModal.classList.remove('visible');
-				myModal.classList.remove('unfade');
+				myModal.classList.remove("visible");
+				myModal.classList.remove("unfade");
 				workOk = null;
 				workCancel = null;
 			}, 300);
@@ -1333,7 +1299,13 @@
 			}
 
 			try {
-				const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
+				const response = await fetch(url, {
+					method: 'GET',
+					headers: {
+						'Authorization': mb.authHeader,
+						'skip_zrok_interstitial': '1' // Add header to skip interstitial
+					}
+				});
 
 				if (response.ok) {
 					const blob = await response.blob();
@@ -1458,29 +1430,14 @@
 
 		//MB Touch And Hover Scaler 
 
-		function noPointerUp(item) {
+		function noPointerDown(item) {
 			item.addEventListener('pointerup', (event) => {
 				event.stopPropagation();
 			})
 		}
 
 		function addTouchScaler(item, execute) {
-			item.addEventListener('pointerdown', async (event) => {
-				console.log("POINTERDOWN ON ITEM:");
-				console.log(item);
-				mb.clickingTile = item;
-			});
-
 			item.addEventListener('pointerup', async (event) => {
-				console.log("POINTERUP ON ITEM:");
-				console.log(item);
-
-				if (mb.clickingTile != item ) {
-					mb.clickingTile = null;
-					console.log("ABORT ACTION");
-					return
-				}
-
 				if (event.pointerType === 'touch') {
 					// TOUCH DEVICE
 					if (mb.currentlyScaled !== item) {
@@ -1535,8 +1492,6 @@
 			item.addEventListener('mouseleave', () => {
 				item.classList.remove('scaled');
 				item.parentElement.classList.remove('top-pop');
-								mb.clickingTile = null;
-
 			});
 		}
 
@@ -1612,7 +1567,7 @@
 				await setSeriesReadStatus(serie.id, true, item);
 			})
 			addPressEvents(markAsRead, scaleDown, scaleUp)
-			noPointerUp(markAsRead);
+			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
@@ -1623,7 +1578,7 @@
 				event.stopPropagation();
 				await setSeriesReadStatus(serie.id, false, item);
 			})
-			noPointerUp(markAsUnread);
+			noPointerDown(markAsUnread);
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			// Find alternate title with label 'Time'
@@ -1645,7 +1600,7 @@
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
-			noPointerUp(timeLabel);
+			noPointerDown(timeLabel);
 
 			const booksLabel = addItem('span', {
 				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
@@ -1680,8 +1635,8 @@
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
-				noPointerUp(artLabel);
-				noPointerUp(storyLabel);
+				noPointerDown(artLabel);
+				noPointerDown(storyLabel);
 			} else {
 				const artistLabel = addItem('div', {
 					innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
@@ -1694,7 +1649,7 @@
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
-				noPointerUp(artistLabel);
+				noPointerDown(artistLabel);
 			}
 
 			item.mbSeriesTitle = serie.metadata.title ?? '';
@@ -1937,7 +1892,7 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: 'fa-solid ' + menuClassDown + ' is-lib-menu'
+					className: "fa-solid " + menuClassDown + " is-lib-menu"
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
@@ -1952,8 +1907,6 @@
 				thumbnailWrapperMenu.addEventListener('click', (event) => {
 					libMenuClear(mb.libraryMenuButtons[itemId]);
 
-					const unrollTimeout = isSectionHidden(colorSwatchBar) ? 0 : 200
-
 					if (isSectionHidden(filtersBar)) {
 						libMenuUp(mb.libraryMenuButtons[itemId]);
 						mb.libMenuVisible = itemId;
@@ -1966,9 +1919,7 @@
 
 					event.stopPropagation();
 					event.preventDefault();
-					setTimeout(() => {
-						sectionToggle(filtersBar);
-					}, unrollTimeout);
+					sectionToggle(filtersBar);
 				});
 
 			}
@@ -2249,7 +2200,7 @@
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
-				noPointerUp(mainRow);
+				noPointerDown(mainRow);
 			}
 
 			const secondRow = addItem('div', {
@@ -2322,7 +2273,7 @@
 				setBookReadStatus(book.id, true, item, format);
 			})
 			addPressEvents(markAsRead, scaleDown, scaleUp)
-			noPointerUp(markAsRead);
+			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
@@ -2333,7 +2284,7 @@
 				event.stopPropagation();
 				setBookReadStatus(book.id, false, item, format);
 			});
-			noPointerUp(markAsUnread);
+			noPointerDown(markAsUnread);
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			bookOverlay.append(markAsRead, markAsUnread);
@@ -2349,7 +2300,7 @@
 					event.stopPropagation();
 					showBookDetails(book);
 				})
-				noPointerUp(bookDetails);
+				noPointerDown(bookDetails);
 				addPressEvents(bookDetails, scaleDown, scaleUp)
 
 				bookOverlay.append(bookDetails);
@@ -2715,10 +2666,7 @@
 				'focus-left-page': 'translate(-25%, -50%)',
 				'focus-center': 'translate(-50%, -50%)',
 				'none': 'translate(-50%, -50%)',
-			},
-
-			realFirstPage: 0,
-			realLastPage: 0,
+			}
 
 		};
 
@@ -2775,7 +2723,7 @@
 		function clearReader() {
 
 			// Cleanup ForeEdge and drop shadows
-			['foreEdgeL', 'foreEdgeR', 'dropShadowL', 'dropShadowR'].forEach(key => {
+			["foreEdgeL", "foreEdgeR", "dropShadowL", "dropShadowR"].forEach(key => {
 				if (rd[key]) {
 					rd[key].remove();
 					rd[key] = null;
@@ -2976,8 +2924,8 @@
 		}
 
 		function initReaderUI(pagesData, bookData) {
-			leftLimit.innerText = rd.ltr ? rd.realFirstPage : rd.realLastPage;
-			rightLimit.innerText = rd.ltr ? rd.realLastPage : rd.realFirstPage;
+			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
+			rightLimit.innerText = rd.ltr ? pagesData.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 		}
 
@@ -2988,9 +2936,8 @@
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
-			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
 
-			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne);
+			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -3008,7 +2955,7 @@
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
-			item.style.objectPosition = 'center center';
+			item.style.objectPosition = "center center";
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
 			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
 		}
@@ -3036,7 +2983,7 @@
 
 		//MB Reader Fetch Page Function
 
-		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
+		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage) {
 			// I put the image item and container item in the array so I can target them for changes
 			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
 			return ({
@@ -3050,12 +2997,8 @@
 				uiLightL: addItem('div', { className: 'page-light-left' }),
 				uiLightR: addItem('div', { className: 'page-light-right' }),
 				uiThumb: addItem('div', { className: 'spread-thumb' }),
-				pageObjL: spreadPages['left'] ?? null,
-				pageObjR: spreadPages['right'] ?? null,
-
-				pageNumL: spreadPageNums['left'] ?? null,
-				pageNumR: spreadPageNums['right'] ?? null,
-
+				pageObjL: spreadPages["left"] ?? null,
+				pageObjR: spreadPages["right"] ?? null,
 				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
 				spreadRefPage: spreadRefPage
 			})
@@ -3132,7 +3075,7 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
+		async function fetchPages(bookId, noCover, noWhitePage) {
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
@@ -3189,75 +3132,47 @@
 			// and organize data structur for spread formation
 
 			let i_page = 0; 		// Index of komga page data
-			let realPage = 1;		// Index of real page
 
 			// double spread with single page are treated as this:
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
-			const firstNonCover = coverIsPageOne ? 2 : 1;
-
-			rd.realFirstPage = coverIsPageOne ? '1' : 'C';
-
 			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {
 				let spreadObject = null;
-
-				pageNum1 = realPage == firstNonCover ? (coverIsPageOne ? 2 : ' ') : realPage;
-				pageNum2 = realPage == firstNonCover ? (coverIsPageOne ? 3 : realPage) : realPage + 1
-				pageCover = pageData[i_page].isCover;
-
 				if (pageData[i_page].isCover) {
 					// Element is a cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum, pageTable(coverIsPageOne ? ' ' : ' ', coverIsPageOne ? 1 : ' '));
+					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum);
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page]);
-					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-					rd.realLastPage = Math.max(pageNum1, pageNum2);
+					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum, pageTable(realPage, ' '));
-					rd.realLastPage = realPage;
+					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum);
 				}
 				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
 					// This is an orphan page!
 					const page1 = buildPageObject('blank');
 					const page2 = buildPageObject(pageData[i_page]);
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-					rd.realLastPage = Math.max(pageNum1, pageNum2);
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else {
 					// these are two normal pages
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page + 1]);
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-					rd.realLastPage = Math.max(pageNum1, pageNum2);
-
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 					i_page++;
 				}
-
 				rd.spreadsArray.push(spreadObject);
 				i_page++;
-
-				if (pageCover) {
-					if (coverIsPageOne) {
-						realPage = 2;
-					}
-				} else {
-					if (coverIsPageOne && (realPage == firstNonCover)) {
-						realPage = 4
-					} else {
-						realPage = realPage + (realPage == firstNonCover ? 1 : 2);
-					}
-				}
 			}
 
 			// Style and structure the spread objects and pages
@@ -3355,8 +3270,7 @@
 			});
 
 			//TODO Qui non funziona bene, spostato dopo initviewer, si può togliere?
-			//TODO Tolto, verificare
-			//spreadSetFocus(getSpreadFocus(rd.currentSpreadIndex));
+			spreadSetFocus(getSpreadFocus(rd.currentSpreadIndex));
 
 			return pageData;
 		}
@@ -3546,7 +3460,7 @@
 
 			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			const pageNumText = spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			const pageNumText = spreadObject.pageObjL.pageNum + " " + spreadObject.pageObjR.pageNum;
 
 			const out = [currentPage, pageNumText];
 
@@ -3816,7 +3730,7 @@
 					leftPage.animate(appearL2R, animData);
 					rd.dropShadowR.animate(
 						[{ left: '100%' }],
-						{ duration: turnTime * 0.5, easing: easeOut, fill: 'forwards', delay: turnTime * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
 					);
 				} else {
 					rd.foreEdgeL.style.transition = `clip-path 0.15s ease-in-out ${turnTime}ms`;
@@ -3830,7 +3744,7 @@
 					leftPage.animate(appearL2R_sildeinR2L, animData).finished.then(() => hideOldSpread(index, oldindex));
 					rd.dropShadowL.animate(
 						[{ right: '100%' }],
-						{ duration: turnTime * 0.5, easing: easeOut, fill: 'forwards', delay: turnTime * 0.5 }
+						{ duration: turnTime * 0.5, easing: easeOut, fill: "forwards", delay: turnTime * 0.5 }
 					);
 				}
 				rd.foreEdgeL.style.clipPath = clipForeEdge.left;
@@ -3864,7 +3778,7 @@
 					coverPageL.animate(appearL2R, animData);
 					rd.dropShadowL.animate(
 						[{ right: '50%' }],
-						{ duration: turnTime, easing: easeFull, fill: 'forwards' }
+						{ duration: turnTime, easing: easeFull, fill: "forwards" }
 					);
 				} else {
 					rd.foreEdgeR.style.transition = 'clip-path 0s';
@@ -3877,7 +3791,7 @@
 					coverPageR.animate(appearR2L, animData);
 					rd.dropShadowR.animate(
 						[{ left: '50%' }],
-						{ duration: turnTime, easing: easeFull, fill: 'forwards' }
+						{ duration: turnTime, easing: easeFull, fill: "forwards" }
 					);
 				}
 			}
@@ -4076,10 +3990,7 @@
 			}
 		});
 
-		document.addEventListener('pointerdown', (event) => {
-			console.log("clickingTile:" + mb.clickingTile);
-			if(mb.clickingTile != null) return;
-
+		document.addEventListener('click', (event) => {
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
 				sectionToggle(filtersBar);
@@ -4111,8 +4022,6 @@
 			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
 			sectionHide(colorSwatchBar);
-			mb.libMenuVisible = null;
-			mb.swatchMenuVisible = false
 
 			clearLibrariesMenus();
 
@@ -4217,7 +4126,8 @@
 			event.stopPropagation();
 		})
 
-		sessionCheck()
+		if (loginScreen.classList.contains('auth-hidden')) bootSequence();
+
 
 		//MB Reader touch response fucntions
 		function getTrueScale() {
