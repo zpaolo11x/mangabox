@@ -1384,7 +1384,7 @@ a {
 .series-item.scaled,
 .book-item.scaled {
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -5px;
-	scale: 1.0; /*1.06;*/
+	scale: 1.06;
 }
 
 @keyframes zoomInOut {
