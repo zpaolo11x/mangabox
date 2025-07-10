@@ -1,5 +1,6 @@
 Main UI
 - Add spring animation to toolbars
+- Improved tile zooming and toolbar hiding logic
 
 Reader
 - Refer page number to actual pages, not image files
