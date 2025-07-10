@@ -1466,18 +1466,12 @@
 
 		function addTouchScaler(item, execute) {
 			item.addEventListener('pointerdown', async (event) => {
-				console.log("POINTERDOWN ON ITEM:");
-				console.log(item);
 				mb.clickingTile = item;
 			});
 
 			item.addEventListener('pointerup', async (event) => {
-				console.log("POINTERUP ON ITEM:");
-				console.log(item);
-
 				if (mb.clickingTile != item ) {
 					mb.clickingTile = null;
-					console.log("ABORT ACTION");
 					return
 				}
 
@@ -4077,7 +4071,6 @@
 		});
 
 		document.addEventListener('pointerdown', (event) => {
-			console.log("clickingTile:" + mb.clickingTile);
 			if(mb.clickingTile != null) return;
 
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
