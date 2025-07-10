@@ -721,6 +721,7 @@ a {
 	/*box-shadow: 0px 2px 5px rgba(0,0,0,0.15);*/
 }
 
+
 .library-item:not(:has(.library-name)) {
 	width: var(--mb-button-size);
 }
@@ -934,7 +935,9 @@ a {
 	color: white;
 	opacity: 0;
 	transition: opacity 0.3s ease 0.2s, text-shadow 0.3s ease;
+	text-shadow: 0px 0px 12px rgba(255, 255, 255, 0.0), 0px 0px 5px rgba(255, 255, 255, 0.0);
 	will-change: transform;
+
 }
 
 .flip-horizontal {
@@ -956,6 +959,7 @@ a {
 }
 
 .mini-buttons.book-details {
+	text-align: center;
 	left: 0;
 	right: 0;
 	margin: auto;
@@ -1109,8 +1113,8 @@ a {
 	scrollbar-width: none;
 }
 
-.home-strip-parent:first-of-type {
-	margin-top: 10px;
+#homeStripsContainer {
+	padding-top: 10px;
 }
 
 #searchStripsContainer {

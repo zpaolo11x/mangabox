@@ -447,9 +447,6 @@
 
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
-			clickingTile: null,
-			pointerLock: false,
-
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
@@ -774,7 +771,7 @@
 				showScrollbarTemporarily();
 			});
 
-			scrollbox.addEventListener('pointerenter', () => {
+			scrollbox.addEventListener('mouseenter', () => {
 				updateThumb();
 				showScrollbarTemporarily();
 			});
@@ -1458,23 +1455,14 @@
 
 		//MB Touch And Hover Scaler 
 
-		function noPointerUp(item) {
+		function noPointerDown(item) {
 			item.addEventListener('pointerup', (event) => {
 				event.stopPropagation();
 			})
 		}
 
 		function addTouchScaler(item, execute) {
-			item.addEventListener('pointerdown', async (event) => {
-				mb.clickingTile = item;
-			});
-
 			item.addEventListener('pointerup', async (event) => {
-				if (mb.clickingTile != item ) {
-					mb.clickingTile = null;
-					return
-				}
-
 				if (event.pointerType === 'touch') {
 					// TOUCH DEVICE
 					if (mb.currentlyScaled !== item) {
@@ -1529,8 +1517,6 @@
 			item.addEventListener('mouseleave', () => {
 				item.classList.remove('scaled');
 				item.parentElement.classList.remove('top-pop');
-								mb.clickingTile = null;
-
 			});
 		}
 
@@ -1606,7 +1592,7 @@
 				await setSeriesReadStatus(serie.id, true, item);
 			})
 			addPressEvents(markAsRead, scaleDown, scaleUp)
-			noPointerUp(markAsRead);
+			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
@@ -1617,7 +1603,7 @@
 				event.stopPropagation();
 				await setSeriesReadStatus(serie.id, false, item);
 			})
-			noPointerUp(markAsUnread);
+			noPointerDown(markAsUnread);
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			// Find alternate title with label 'Time'
@@ -1639,7 +1625,7 @@
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
 			});
-			noPointerUp(timeLabel);
+			noPointerDown(timeLabel);
 
 			const booksLabel = addItem('span', {
 				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
@@ -1674,8 +1660,8 @@
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
-				noPointerUp(artLabel);
-				noPointerUp(storyLabel);
+				noPointerDown(artLabel);
+				noPointerDown(storyLabel);
 			} else {
 				const artistLabel = addItem('div', {
 					innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
@@ -1688,7 +1674,7 @@
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
-				noPointerUp(artistLabel);
+				noPointerDown(artistLabel);
 			}
 
 			item.mbSeriesTitle = serie.metadata.title ?? '';
@@ -2243,7 +2229,7 @@
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
 				});
-				noPointerUp(mainRow);
+				noPointerDown(mainRow);
 			}
 
 			const secondRow = addItem('div', {
@@ -2316,7 +2302,7 @@
 				setBookReadStatus(book.id, true, item, format);
 			})
 			addPressEvents(markAsRead, scaleDown, scaleUp)
-			noPointerUp(markAsRead);
+			noPointerDown(markAsRead);
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
@@ -2327,7 +2313,7 @@
 				event.stopPropagation();
 				setBookReadStatus(book.id, false, item, format);
 			});
-			noPointerUp(markAsUnread);
+			noPointerDown(markAsUnread);
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			bookOverlay.append(markAsRead, markAsUnread);
@@ -2343,7 +2329,7 @@
 					event.stopPropagation();
 					showBookDetails(book);
 				})
-				noPointerUp(bookDetails);
+				noPointerDown(bookDetails);
 				addPressEvents(bookDetails, scaleDown, scaleUp)
 
 				bookOverlay.append(bookDetails);
@@ -2709,10 +2695,7 @@
 				'focus-left-page': 'translate(-25%, -50%)',
 				'focus-center': 'translate(-50%, -50%)',
 				'none': 'translate(-50%, -50%)',
-			},
-
-			realFirstPage: 0,
-			realLastPage: 0,
+			}
 
 		};
 
@@ -2970,8 +2953,8 @@
 		}
 
 		function initReaderUI(pagesData, bookData) {
-			leftLimit.innerText = rd.ltr ? rd.realFirstPage : rd.realLastPage;
-			rightLimit.innerText = rd.ltr ? rd.realLastPage : rd.realFirstPage;
+			leftLimit.innerText = rd.ltr ? 1 : pagesData.length;
+			rightLimit.innerText = rd.ltr ? pagesData.length : 1;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 		}
 
@@ -2982,9 +2965,8 @@
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
-			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
 
-			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne);
+			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -3030,7 +3012,7 @@
 
 		//MB Reader Fetch Page Function
 
-		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
+		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage) {
 			// I put the image item and container item in the array so I can target them for changes
 			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
 			return ({
@@ -3046,10 +3028,6 @@
 				uiThumb: addItem('div', { className: 'spread-thumb' }),
 				pageObjL: spreadPages['left'] ?? null,
 				pageObjR: spreadPages['right'] ?? null,
-
-				pageNumL: spreadPageNums['left'] ?? null,
-				pageNumR: spreadPageNums['right'] ?? null,
-
 				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
 				spreadRefPage: spreadRefPage
 			})
@@ -3126,7 +3104,7 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
+		async function fetchPages(bookId, noCover, noWhitePage) {
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
@@ -3183,75 +3161,47 @@
 			// and organize data structur for spread formation
 
 			let i_page = 0; 		// Index of komga page data
-			let realPage = 1;		// Index of real page
 
 			// double spread with single page are treated as this:
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
-			const firstNonCover = coverIsPageOne ? 2 : 1;
-
-			rd.realFirstPage = coverIsPageOne ? '1' : 'C';
-
 			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {
 				let spreadObject = null;
-
-				pageNum1 = realPage == firstNonCover ? (coverIsPageOne ? 2 : ' ') : realPage;
-				pageNum2 = realPage == firstNonCover ? (coverIsPageOne ? 3 : realPage) : realPage + 1
-				pageCover = pageData[i_page].isCover;
-
 				if (pageData[i_page].isCover) {
 					// Element is a cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum, pageTable(coverIsPageOne ? ' ' : ' ', coverIsPageOne ? 1 : ' '));
+					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum);
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page]);
-					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-					rd.realLastPage = Math.max(pageNum1, pageNum2);
+					spreadObject = buildSpreadObject('double-spread', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else if (i_page == pageData.length - 1) {
 					// Element is last single page, so back cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum, pageTable(realPage, ' '));
-					rd.realLastPage = realPage;
+					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum);
 				}
 				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
 					// This is an orphan page!
 					const page1 = buildPageObject('blank');
 					const page2 = buildPageObject(pageData[i_page]);
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-					rd.realLastPage = Math.max(pageNum1, pageNum2);
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 				}
 				else {
 					// these are two normal pages
 					const page1 = buildPageObject(pageData[i_page]);
 					const page2 = buildPageObject(pageData[i_page + 1]);
-					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum, pageTable(pageNum1, pageNum2));
-					rd.realLastPage = Math.max(pageNum1, pageNum2);
-
+					spreadObject = buildSpreadObject('two-pages', pageTable(page1, page2), pageData[i_page].pageNum);
 					i_page++;
 				}
-
 				rd.spreadsArray.push(spreadObject);
 				i_page++;
-
-				if (pageCover) {
-					if (coverIsPageOne) {
-						realPage = 2;
-					}
-				} else {
-					if (coverIsPageOne && (realPage == firstNonCover)) {
-						realPage = 4
-					} else {
-						realPage = realPage + (realPage == firstNonCover ? 1 : 2);
-					}
-				}
 			}
 
 			// Style and structure the spread objects and pages
@@ -3540,7 +3490,7 @@
 
 			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			const pageNumText = spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			const pageNumText = spreadObject.pageObjL.pageNum + ' ' + spreadObject.pageObjR.pageNum;
 
 			const out = [currentPage, pageNumText];
 
@@ -4070,9 +4020,8 @@
 			}
 		});
 
-		document.addEventListener('pointerdown', (event) => {
-			if(mb.clickingTile != null) return;
-
+		/*
+		document.addEventListener('click', (event) => {
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
 				sectionToggle(filtersBar);
@@ -4085,6 +4034,7 @@
 			}
 
 		});
+*/
 
 		//MB URL Parsing and LoadContent Function 
 		function getHashAndParams() {
@@ -4106,7 +4056,7 @@
 			sectionHide(colorSwatchBar);
 			mb.libMenuVisible = null;
 			mb.swatchMenuVisible = false
-
+			
 			clearLibrariesMenus();
 
 			closeBookDetails();

@@ -1,12 +1,15 @@
 {
 	"name": "mangabox",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Komga desktop client using Electron",
 	"main": "package-main.js",
 	"scripts": {
 		"start": "electron .",
 		"build": "electron-builder"
+	},
+	"dependencies": {
+		"keytar": "^7.9.0"
 	},
 	"devDependencies": {
 		"electron": "^34.1.0",
@@ -15,6 +18,9 @@
 	"build": {
 		"appId": "com.mangabox.app",
 		"productName": "MangaBox",
+		"asarUnpack": [
+			"**/node_modules/keytar/**"
+		],
 		"directories": {
 			"output": "dist"
 		},

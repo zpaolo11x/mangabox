@@ -1,60 +1,112 @@
 // script.js
 
-// Show the login dialog if no auth header or base URL is available
-if (!localStorage.getItem('mbAuthHeader') || !localStorage.getItem('mbBaseUrl')) {
-	if (localStorage.getItem('mbBaseUrl')) {
-		document.getElementById('mbBaseUrl').value = localStorage.getItem('mbBaseUrl');
+async function saveToken(token) {
+	await window.secureStore.setCredentials('auth', token);
+}
+
+async function loadToken() {
+	const token = await window.secureStore.getCredentials('auth');
+	if (token) {
+		return (token);
+	} else {
+		return (false);
 	}
-	showLoginDialog();
+}
+
+async function deleteToken() {
+	await window.secureStore.deleteCredentials('auth');
+}
+
+async function sessionCheck() {
+	loginBaseUrl.value = mb.baseUrl;
+
+	mb.authToken = isElectronApp ? await loadToken() : true;
+
+	if ((!mb.baseUrl) || (!mb.authToken)) {
+		showLoginDialog();
+		return;
+	}
+
+	const fetchPayload = isElectronApp ?
+		{
+			method: 'GET',
+			headers: {
+				'X-Auth-Token': mb.authToken,
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
+			}
+		} :
+		{
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
+			}
+		};
+
+	try {
+		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+		if (response.ok) {
+			hideLoginDialog();
+			bootSequence();
+		} else {
+			showLoginDialog();
+		}
+	} catch (error) {
+		showLoginDialog();
+	}
 }
 
 function login() {
-	let mbBaseUrl = document.getElementById('mbBaseUrl').value;
-	const username = document.getElementById('username').value;
-	const password = document.getElementById('password').value;
-	const rememberMe = document.getElementById('rememberMe').checked;
+	let baseUrlVal = loginBaseUrl.value;
 
-	if (!/^https?:\/\//i.test(mbBaseUrl)) {
+	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		// Add http:// if no protocol is present
-		mbBaseUrl = 'https://' + mbBaseUrl;
+		baseUrlVal = 'https://' + baseUrlVal;
 	}
 
-	mbBaseUrl = mbBaseUrl.replace(/\/$/, '');
+	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	const mbAuthHeader = 'Basic ' + btoa(`${username}:${password}`);
+	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
 	// Test the auth header and base URL with a simple API call to validate credentials
-	fetch(`${mbBaseUrl}/api/v1/login/set-cookie`, {
+
+	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
 		method: 'GET',
-		headers: { 
+		//credentials: 'include', // ✅ Important!
+		headers: {
 			'Authorization': mbAuthHeader,
+			'X-Requested-With': 'XMLHttpRequest',
+			'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
-		 }
+		}
 	})
-		.then(response => {
-			console.log(response);
-			if (response.ok) {
-				localStorage.setItem('mbRememberMe', rememberMe);
-				localStorage.setItem('mbAuthHeader', mbAuthHeader); // Save auth header
-				localStorage.setItem('mbBaseUrl', mbBaseUrl);       // Save base URL
+		.then(async response => {
+			const token = response.headers.get('X-Auth-Token');
+			if (response.ok && token) {
+				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				if (isElectronApp) {
+					window.electronAPI.sendRememberMe(loginRememberMe.checked);
+					await saveToken(token);
+				}
 				hideLoginDialog();
 				location.reload(true);
-				//fetchLibraries(); // Fetch libraries after successful login
 			} else {
-				localStorage.setItem('mbBaseUrl', mbBaseUrl);       // Save base URL
-				document.getElementById('loginError').classList.remove('auth-hidden'); // Show error message
+				localStorage.setItem('mbBaseUrl', baseUrlVal); // Save base URL
+				loginError.classList.remove('auth-hidden'); // Show error message
 			}
 		})
 		.catch(error => {
 			console.error('Login error:', error);
-			document.getElementById('loginError').classList.remove('auth-hidden');
+			loginError.classList.remove('auth-hidden');
 		});
 }
 
 function showLoginDialog() {
-	document.getElementById('loginScreen').classList.remove('auth-hidden');
+	loginScreen.classList.remove('auth-hidden');
 }
 
 function hideLoginDialog() {
-	document.getElementById('loginScreen').classList.add('auth-hidden');
+	loginScreen.classList.add('auth-hidden');
 }
