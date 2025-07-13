@@ -1,11 +1,3 @@
-:root {
-	--login-padding: 15px;
-	--login-button-height: 34px;
-	--login-button-radius: calc(var(--login-button-height) * 0.5);
-	--login-box-radius: calc(var(--login-padding) + var(--login-button-radius));
-	--login-font-size: 15px;
-}
-
 #loginScreen {
 	position: fixed;
 	left: 0;
@@ -26,9 +18,11 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	padding: var(--login-padding);
+
 	border: 1px solid #ccc;
-	border-radius: var(--login-box-radius);
+
+	padding: var(--mb-dialog-padding);
+	border-radius: var(--mb-dialog-box-radius);
 	background-color: #fff;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -48,14 +42,14 @@
 	color: inherit;
 
 	box-sizing: border-box;
-	height: var(--login-button-height);
-	width: 280px;
-	border-radius: var(--login-button-radius);
+	height: var(--mb-dialog-button-height);
+	width: 300px;
+	border-radius: var(--mb-dialog-button-radius);
 	border: 1px #c0c0c0 solid;
-	padding-left: calc(var(--login-button-height) + 5px);
+	padding-left: calc(var(--mb-dialog-button-height) + 5px);
 	
 	padding-right: 10px;
-	font-size: var(--login-font-size);
+	font-size: var(--mb-dialog-font-size);
 
 	transition: all 0.3s, box-shadow 0.1s;
 }
@@ -74,8 +68,8 @@
 	padding: 0px;
 	display: grid;
 	grid-template-columns: auto 120px;
-	width: 280px;
-	gap: var(--login-padding);
+	width: 300px;
+	gap: var(--mb-dialog-padding);
 
 }
 
@@ -84,13 +78,13 @@
 	appearance: none;
 	background: #ddd;
 	border: 1px solid #aaa;
-	border-radius:var(--login-button-radius);
-	height: var(--login-button-height);
+	border-radius:var(--mb-dialog-button-radius);
+	height: var(--mb-dialog-button-height);
 	width: 100%;
-	margin-top: var(--login-padding);
+	margin-top: var(--mb-dialog-padding);
 	transition: 0.3s all;
 	color: black;
-	font-size: var(--login-font-size);
+	font-size: var(--mb-dialog-font-size);
 }
 
 .login-button:hover {
@@ -109,9 +103,9 @@
 }
 
 .error-message {
-	width:280px;
+	width:300px;
 	color: red;
-	font-size: var(--login-font-size);
+	font-size: var(--mb-dialog-font-size);
 	margin-top: 10px;
 }
 
@@ -119,7 +113,7 @@
 .remember-me-container {
 	display: flex;
 	align-items: center;
-	margin-top: var(--login-padding);
+	margin-top: var(--mb-dialog-padding);
 	width: 100%;
 	/* Match the width of input boxes */
 }
@@ -127,10 +121,10 @@
 .remember-me-checkbox {
 	appearance: none;
 	/* Remove the default checkbox appearance */
-	width: var(--login-button-height);
-	height: var(--login-button-height);
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
 	border: 1px solid #c0c0c0;
-	border-radius: var(--login-button-radius);
+	border-radius: var(--mb-dialog-button-radius);
 	background: #fff;
 	/* Default white background */
 	margin: 0px 5px 0px 0px;
@@ -169,11 +163,11 @@
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	font-size: var(--login-font-size);
+	font-size: var(--mb-dialog-font-size);
 }
 
 .remember-me-label {
-	font-size: var(--login-font-size);
+	font-size: var(--mb-dialog-font-size);
 	color: #555;
 	cursor: pointer;
 	/* Matches cursor with checkbox */
@@ -182,7 +176,7 @@
 .input-wrapper {
 	position: relative;
 	width: 100%;
-	margin-top: var(--login-padding);
+	margin-top: var(--mb-dialog-padding);
 
 }
 
@@ -195,15 +189,15 @@
 	/* White icon color */
 	background-color: #ddd;
 	/* Accent color */
-	width: var(--login-button-height);
-	height: var(--login-button-height);
-	border-radius: var(--login-button-radius) 0px 0px var(--login-button-radius);
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
+	border-radius: var(--mb-dialog-button-radius) 0px 0px var(--mb-dialog-button-radius);
 	border: 1px solid #aaa;
 	border-right: transparent;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: var(--login-font-size);
+	font-size: var(--mb-dialog-font-size);
 	pointer-events: none;
 	/* Make the icon not respond to hover directly */
 	transition: all 0.3s;

@@ -21,6 +21,13 @@
 	--mb-filter-button-size: 34px;
 	--mb-filter-span-size: 30px;
 
+	--mb-dialog-padding: 15px;
+	--mb-dialog-button-height: 40px;
+	--mb-dialog-button-font-size: 15px;
+	--mb-dialog-button-radius: calc(var(--mb-dialog-button-height) * 0.5);
+	--mb-dialog-box-radius: calc(var(--mb-dialog-padding) + var(--mb-dialog-button-radius));
+	--mb-dialog-font-size: 18px;
+
 	--mb-panel-full-height: calc(var(--mb-button-size)+var(--mb-filter-button-size)+2*var(--mb-library-gap));
 
 	--mb-scrollbar-width: 10px;
@@ -241,8 +248,8 @@ body {
 
 .modal-content {
 	background: var(--mb-card-color);
-	padding: var(--login-padding);
-	border-radius: calc(var(--login-padding) + 20px);
+	padding: var(--mb-dialog-padding);
+	border-radius: calc(var(--mb-dialog-padding) + 20px);
 	text-align: center;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	/*max-width: 400px;*/
@@ -252,21 +259,15 @@ body {
 }
 
 .modal-content p {
-	padding-left: var(--login-padding);
-	padding-right: var(--login-padding);
-	margin-top: calc(0.5 * var(--login-padding));
-	margin-bottom: var(--login-padding);
+	padding-left: var(--mb-dialog-padding);
+	padding-right: var(--mb-dialog-padding);
+	margin-top: calc(0.5 * var(--mb-dialog-padding));
+	margin-bottom: var(--mb-dialog-padding);
 }
 
 .modal-content button {
-	border: none;
-	border-radius: 20px;
-	cursor: pointer;
 	width: 100%;
-	height: 40px;
-	font-size: 16px;
-	padding: 0;
-	margin-top: calc(0.5 * var(--login-padding));
+	margin-top: calc(0.5 * var(--mb-dialog-padding));
 }
 
 .modal-content button.ok {
@@ -301,7 +302,7 @@ body {
 #modalWrapper {
 	box-sizing: border-box;
 
-	margin: var(--login-padding) auto;
+	margin: var(--mb-dialog-padding) auto;
 	padding: 15px;
 	overflow: visible;
 	width: 70px;
@@ -749,6 +750,7 @@ a {
 	border-radius: 50%;
 }
 
+
 .library-item.search-field.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-regular {
@@ -861,6 +863,37 @@ a {
 	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 	transition: opacity 0.4s;
+}
+
+
+.dialog-button {
+	-webkit-app-region: no-drag;
+
+	border:none;
+	
+	user-select: none;
+	box-sizing: border-box;
+	padding: 0px;
+	margin: 0px;
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
+	border-radius: var(--mb-dialog-button-radius);
+
+	align-items: center;
+	text-align: center;
+	cursor: pointer;
+
+	overflow: hidden;
+	font-size: 16px;
+}
+
+.dialog-button span.fa-solid,
+.dialog-button span.fa-regular {
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
+	line-height: var(--mb-dialog-button-height);
+	font-size: 25px;
+	border-radius: 50%;
 }
 
 @keyframes loader_spin {
@@ -985,15 +1018,12 @@ a {
 }
 
 #bookDetailsContainer .close-details {
-	color: var(--mb-text-color);
-	width: 25px;
-	height: 25px;
-	line-height: 25px;
-	font-size: 25px;
+	background-color: var(--mb-accent);
+	color: white;
+	
 	position: absolute;
-	right: 10px;
-	top: 10px;
-	cursor: pointer;
+	right: var(--mb-dialog-padding);
+	top: var(--mb-dialog-padding);
 }
 
 #bookDetailsContainer .thumbnail-wrapper {
@@ -1005,8 +1035,12 @@ a {
 }
 
 .mini-controls {
+	display: flex;
+  align-items: center; /* vertical centering */
+  justify-content: center; /* optional: horizontal centering */
+  
 	margin-top: 0px;
-	margin-bottom: 15px;
+	height: 40px;
 	display: grid;
 	grid-template-columns: 30% 40% 30%;
 	width: 100%;
@@ -1265,10 +1299,12 @@ a {
 	height: 350px;
 	box-sizing: border-box;
 	/* Ensures padding and border are included in size */
+
+	padding: var(--mb-dialog-padding);
+	border-radius: var(--mb-dialog-box-radius);
 	background-color: var(--mb-card-color);
-	box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.5);
-	border-radius: 20px;
-	padding: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
 	font-size: 16px;
 	line-height: 20px;
 	display: flex;
@@ -1284,7 +1320,7 @@ a {
 	/* Enables scrolling within the ul-container */
 	left: 170px;
 	right: 15px;
-	top: 50px;
+	top: 70px;
 	bottom: 20px;
 	overflow-y: auto;
 }
@@ -1302,7 +1338,7 @@ a {
 	box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
 	max-width: 150px;
 	max-height: 210px;
-	top: 55px;
+	top: 70px;
 	bottom: 20px;
 	aspect-ratio: var(--mb-cover-aspect);
 	border-radius: 4px;
@@ -1317,7 +1353,8 @@ a {
 	font-weight: 500;
 	font-size: 20px;
 	margin-left: 20px;
-	margin-bottom: 10px;
+	height: 40px;
+	line-height:40px;
 }
 
 .book-details-pic-container {

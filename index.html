@@ -111,13 +111,13 @@
 				<div id="bookDetailsContainer" class="section hidden">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
-							<div class="mini-buttons-2 prev-book press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
+							<div class="mini-buttons-2 press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
 								<span class="fa-solid fa-chevron-left"></span>
 							</div>
-							<div class="mini-buttons-2 prev-book  press-flat-button" title="Go to library" onclick="jumpBookLibrary()">
+							<div class="mini-buttons-2 press-flat-button" title="Go to library" onclick="jumpBookLibrary()">
 								<span class="fa-solid fa-layer-group"></span>
 							</div>
-							<div class="mini-buttons-2 next-book  press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
+							<div class="mini-buttons-2 press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
 								<span class="fa-solid fa-chevron-right"></span>
 							</div>
 						</div>
@@ -132,7 +132,7 @@
 							</ul>
 						</div>
 					</div>
-					<div class="close-details mini-buttons-2  press-flat-button" onclick="closeBookDetails()">
+					<div class="close-details dialog-button press-button" onclick="closeBookDetails()">
 						<span class="fa-solid fa-xmark"></span>
 					</div>
 				</div>
@@ -210,8 +210,8 @@
 
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
-			<img src="mangabox-logo-new.svg" width="80px" height="80px">
-			<img src="mangabox-logoname.svg" width="280px" style="opacity:0.7; margin-bottom:5px;">
+			<img src="mangabox-logo-new.svg" width="90px" height="90px">
+			<img src="mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
@@ -244,8 +244,8 @@
 		<div class="modal-content">
 			<div id="modalWrapper"><img id="modalImage"></div>
 			<p id="modalMessage">This is the message content.</p>
-			<button id="modalOk" class="ok press-button">OK</button>
-			<button id="modalCancel" class="cancel press-button">Cancel</button>
+			<button id="modalOk" class="ok dialog-button press-button">OK</button>
+			<button id="modalCancel" class="cancel dialog-button press-button">Cancel</button>
 		</div>
 	</div>
 
