@@ -448,8 +448,7 @@
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
 			clickingTile: null,
-			pointerLock: false,
-
+			pointerItem: null,
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
@@ -1242,8 +1241,8 @@
 			navigateTo('#dashboard?all=' + params.get('all') + '&page=' + (parseInt(params.get('page')) + increment));
 		}
 
-		stripPrevPage.addEventListener('click', () => stepPageChange(-1));
-		stripNextPage.addEventListener('click', () => stepPageChange(1));
+		addClickPointerEvents(stripPrevPage, () => stepPageChange(-1));
+		addClickPointerEvents(stripNextPage, () => stepPageChange(1));
 
 		addPressEvents(stripPrevPage, scaleDown, scaleUp);
 		addPressEvents(stripNextPage, scaleDown, scaleUp);
@@ -1458,9 +1457,19 @@
 
 		//MB Touch And Hover Scaler 
 
-		function noPointerUp(item) {
-			item.addEventListener('pointerup', (event) => {
+		function addClickPointerEvents(item, execute) {
+			item.addEventListener('pointerdown', () => {
+				mb.pointerItem = item
+			});
+			item.addEventListener('pointerup', () => {
 				event.stopPropagation();
+
+				if (mb.pointerItem != item) {
+					mb.pointerItem = null;
+					return;
+				};
+
+				execute();
 			})
 		}
 
@@ -1470,7 +1479,7 @@
 			});
 
 			item.addEventListener('pointerup', async (event) => {
-				if (mb.clickingTile != item ) {
+				if (mb.clickingTile != item) {
 					mb.clickingTile = null;
 					return
 				}
@@ -1529,7 +1538,7 @@
 			item.addEventListener('mouseleave', () => {
 				item.classList.remove('scaled');
 				item.parentElement.classList.remove('top-pop');
-								mb.clickingTile = null;
+				mb.clickingTile = null;
 
 			});
 		}
@@ -1601,23 +1610,19 @@
 				title: 'Mark series as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
-			markAsRead.addEventListener('click', async (event) => {
-				event.stopPropagation();
+			addClickPointerEvents(markAsRead, async () => {
 				await setSeriesReadStatus(serie.id, true, item);
 			})
 			addPressEvents(markAsRead, scaleDown, scaleUp)
-			noPointerUp(markAsRead);
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
 				title: 'Mark series as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
-			markAsUnread.addEventListener('click', async (event) => {
-				event.stopPropagation();
+			addClickPointerEvents(markAsRead, async () => {
 				await setSeriesReadStatus(serie.id, false, item);
 			})
-			noPointerUp(markAsUnread);
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			// Find alternate title with label 'Time'
@@ -1634,12 +1639,10 @@
 				className: 'red search-trigger',
 				title: `Filter time: ${altTitle.time}`
 			});
-			timeLabel.addEventListener('click', async (event) => {
-				event.stopPropagation();
+			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
-			});
-			noPointerUp(timeLabel);
+			})
 
 			const booksLabel = addItem('span', {
 				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
@@ -1664,18 +1667,16 @@
 				});
 
 				artistRow.append(storyLabel, artLabel);
-				storyLabel.addEventListener('click', async (event) => {
-					event.stopPropagation();
+
+				addClickPointerEvents(storyLabel, async () => {
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
-				artLabel.addEventListener('click', async (event) => {
-					event.stopPropagation();
+
+				addClickPointerEvents(artLabel, async () => {
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
 				});
-				noPointerUp(artLabel);
-				noPointerUp(storyLabel);
 			} else {
 				const artistLabel = addItem('div', {
 					innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
@@ -1683,12 +1684,10 @@
 					className: 'red data-label search-trigger'
 				});
 				artistRow.append(artistLabel);
-				artistLabel.addEventListener('click', async (event) => {
-					event.stopPropagation();
+				addClickPointerEvents(artistLabel, async () => {
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
 				});
-				noPointerUp(artistLabel);
 			}
 
 			item.mbSeriesTitle = serie.metadata.title ?? '';
@@ -2238,12 +2237,10 @@
 				mainRow.classList.add('book-series-row', 'red');
 				mainRow.title = `Open series: ${book.seriesTitle}`;
 				mainRow.textContent = book.seriesTitle;
-				mainRow.addEventListener('click', (event) => {
-					event.stopPropagation();
+				addClickPointerEvents(mainRow, () => {
 					if (target?.binName) mb.dashboardBin = target.binName;
 					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
-				});
-				noPointerUp(mainRow);
+				})
 			}
 
 			const secondRow = addItem('div', {
@@ -2311,23 +2308,20 @@
 				title: 'Mark book as read',
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
-			markAsRead.addEventListener('click', (event) => {
-				event.stopPropagation();
+			addClickPointerEvents(markAsRead, () => {
 				setBookReadStatus(book.id, true, item, format);
 			})
+
 			addPressEvents(markAsRead, scaleDown, scaleUp)
-			noPointerUp(markAsRead);
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
 				title: 'Mark book as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
-			markAsUnread.addEventListener('click', (event) => {
-				event.stopPropagation();
+			addClickPointerEvents(markAsUnread, () => {
 				setBookReadStatus(book.id, false, item, format);
-			});
-			noPointerUp(markAsUnread);
+			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			bookOverlay.append(markAsRead, markAsUnread);
@@ -2339,13 +2333,11 @@
 					title: 'Book Details',
 					innerHTML: `<span class="fa-solid fa-align-justify"></span>`
 				});
-				bookDetails.addEventListener('click', async (event) => {
-					event.stopPropagation();
+
+				addClickPointerEvents(bookDetails, () => {
 					showBookDetails(book);
 				})
-				noPointerUp(bookDetails);
 				addPressEvents(bookDetails, scaleDown, scaleUp)
-
 				bookOverlay.append(bookDetails);
 			}
 
@@ -2590,7 +2582,8 @@
 				className: 'home-strip' + (isLast ? ' last-strip' : ''),
 				binName: name,
 			})
-			item.gridButton.addEventListener('click', async () => {
+
+			addClickPointerEvents(item.gridButton, async () => {
 				mb.dashboardBin = name;
 				navigateTo('#dashboard?all=' + name + '&page=0')
 			});
@@ -4006,7 +3999,7 @@
 			}
 		});
 
-		seriesMiniHeader.addEventListener('click', () => {
+		addClickPointerEvents(seriesMiniHeader, () => {
 			mainContainer.scrollTo({ top: 0, behavior: 'smooth' });
 		});
 
@@ -4071,7 +4064,7 @@
 		});
 
 		document.addEventListener('pointerdown', (event) => {
-			if(mb.clickingTile != null) return;
+			if (mb.clickingTile != null) return;
 
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
