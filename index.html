@@ -773,7 +773,8 @@
 				showScrollbarTemporarily();
 			});
 
-			scrollbox.addEventListener('pointerenter', () => {
+			//TODO Verifica bene che mouseenter al posto di pointerenter non dia problemi!
+			scrollbox.addEventListener('mouseenter', () => {
 				updateThumb();
 				showScrollbarTemporarily();
 			});
