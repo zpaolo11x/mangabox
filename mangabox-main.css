@@ -1026,10 +1026,6 @@ a {
 	top: var(--mb-dialog-padding);
 }
 
-#bookDetailsContainer .thumbnail-wrapper {
-	cursor: pointer;
-}
-
 #bookDetailCover {
 	cursor: pointer;
 }
@@ -1332,8 +1328,7 @@ a {
 	/* Removes the bullet points */
 }
 
-#bookDetailsContainerThumbnailWrapper {
-
+.book-details-thumbnail-wrapper {
 	position: absolute;
 	box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
 	max-width: 150px;
@@ -1341,8 +1336,11 @@ a {
 	top: 70px;
 	bottom: 20px;
 	aspect-ratio: var(--mb-cover-aspect);
-	border-radius: 4px;
 
+	overflow: hidden;
+	border-radius: var(--mb-cover-radius);
+
+	cursor: pointer;
 }
 
 #bookDetailsContainer li {
