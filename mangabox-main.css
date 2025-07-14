@@ -27,6 +27,9 @@
 	--mb-dialog-button-radius: calc(var(--mb-dialog-button-height) * 0.5);
 	--mb-dialog-box-radius: calc(var(--mb-dialog-padding) + var(--mb-dialog-button-radius));
 	--mb-dialog-font-size: 18px;
+	
+	--mb-pill-width: 37px;
+	--mb-pill-pad: calc(var(--mb-dialog-button-hright) - var(--mb-pill-width));
 
 	--mb-panel-full-height: calc(var(--mb-button-size)+var(--mb-filter-button-size)+2*var(--mb-library-gap));
 
@@ -869,8 +872,8 @@ a {
 .dialog-button {
 	-webkit-app-region: no-drag;
 
-	border:none;
-	
+	border: none;
+
 	user-select: none;
 	box-sizing: border-box;
 	padding: 0px;
@@ -1020,7 +1023,7 @@ a {
 #bookDetailsContainer .close-details {
 	background-color: var(--mb-accent);
 	color: white;
-	
+
 	position: absolute;
 	right: var(--mb-dialog-padding);
 	top: var(--mb-dialog-padding);
@@ -1032,11 +1035,13 @@ a {
 
 .mini-controls {
 	display: flex;
-  align-items: center; /* vertical centering */
-  justify-content: center; /* optional: horizontal centering */
-  
+	align-items: center;
+	/* vertical centering */
+	justify-content: center;
+	/* optional: horizontal centering */
+
 	margin-top: 0px;
-	height: 40px;
+	height: var(--mb-dialog-button-height);
 	display: grid;
 	grid-template-columns: 30% 40% 30%;
 	width: 100%;
@@ -1351,8 +1356,8 @@ a {
 	font-weight: 500;
 	font-size: 20px;
 	margin-left: 20px;
-	height: 40px;
-	line-height:40px;
+	height: var(--mb-dialog-button-height);
+	line-height: var(--mb-dialog-button-height);
 }
 
 .book-details-pic-container {
