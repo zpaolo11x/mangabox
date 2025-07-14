@@ -29,7 +29,7 @@
 	--mb-dialog-font-size: 18px;
 	
 	--mb-pill-width: 37px;
-	--mb-pill-pad: calc(var(--mb-dialog-button-hright) - var(--mb-pill-width));
+	--mb-pill-pad: calc(var(--mb-dialog-button-height) - var(--mb-pill-width));
 
 	--mb-panel-full-height: calc(var(--mb-button-size)+var(--mb-filter-button-size)+2*var(--mb-library-gap));
 
