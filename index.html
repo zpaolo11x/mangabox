@@ -257,16 +257,16 @@
 		let isAndroid = false;
 					loginButton.textContent = isCordova;
 
-		document.addEventListener('deviceready', () => {
+		//document.addEventListener('deviceready', () => {
 			isCordova = !!window.cordova;
-			isAndroid = device.platform === 'Android';
+			try{isAndroid = device.platform === 'Android'}catch(err){isAndroid = false};
 
 			if (isCordova && isAndroid) {
 			} else {
 			}
 
 			loginButton.textContent = "c:"+isCordova;
-		}, false);
+		//}, false);
 
 	</script>
 
