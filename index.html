@@ -257,6 +257,7 @@
 		let isAndroid = false;
 					loginButton.textContent = isCordova;
 
+		document.addEventListener('deviceready', () => {
 			isCordova = !!window.cordova;
 			isAndroid = device.platform === 'Android';
 
@@ -264,7 +265,8 @@
 			} else {
 			}
 
-			loginButton.innerText = "c:"+isCordova;
+			loginButton.textContent = "c:"+isCordova;
+		}, false);
 
 	</script>
 
