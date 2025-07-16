@@ -233,7 +233,7 @@
 					<input type="checkbox" id="loginRememberMe" class="remember-me-checkbox">
 					<label for="rememberMe" class="remember-me-label">Remember Me</label>
 				</div>
-				<button class="login-button" onclick="login()">Login</button>
+				<button id="loginButton" class="login-button" onclick="login()">Login</button>
 			</div>
 
 			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
@@ -255,17 +255,17 @@
 		const isElectronApp = !!window.electronAPI;
 		let isCordova = false;
 		let isAndroid = false;
-		alert("START")
+					loginButton.textContent = isCordova;
+
 		document.addEventListener('deviceready', () => {
 			isCordova = !!window.cordova;
 			isAndroid = device.platform === 'Android';
 
 			if (isCordova && isAndroid) {
-				alert('Running under Cordova on Android');
-				console.log('Running under Cordova on Android');
 			} else {
-				alert('not Android')
 			}
+
+			loginButton.innerText = "c:"+isCordova;
 		}, false);
 
 	</script>
