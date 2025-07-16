@@ -106,47 +106,39 @@ function login() {
 		});
 }
 */
-  debugPrint("START CALL");
+ 
+(async () => {
+  try {
+    debugPrint("START CALL");
 
-cordova.plugin.http.sendRequest(`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
-  method: 'get', // lowercase 'get' recommended
-  headers: {
-    'Authorization': 'Basic ' + btoa(`testuser@test.com:test`),
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-Auth-Token': '',
-    'skip_zrok_interstitial': '1'
-  }
-})
-.then(async response => {
-  // response.status is numeric
-  // response.data is response body string
-  // response.headers is a plain object { 'x-auth-token': '...' }
-  debugPrint("RESPONSE DONE");
+    const response = await cordova.plugin.http.sendRequest(
+      `https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
+      {
+        method: 'get',
+        headers: {
+          'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
+          'X-Requested-With': 'XMLHttpRequest',
+          'skip_zrok_interstitial': '1'
+        }
+      }
+    );
 
-  debugPrint(response.status === 200);
+    debugPrint("RESPONSE DONE");
+    debugPrint(response.status);
 
-  // Header keys are lowercase
-  const token = response.headers['x-auth-token'];
+    const token = response.headers['x-auth-token'];
 
-  if (response.status === 200 && token) {
-    localStorage.setItem('mbBaseUrl', baseUrlVal);
-
-    if (isElectronApp) {
-      window.electronAPI.sendRememberMe(loginRememberMe.checked);
-      await saveToken(token);
+    if (response.status === 200 && token) {
+      // Your success logic
+    } else {
+      loginError.classList.remove('auth-hidden');
     }
-
-    hideLoginDialog();
-    location.reload(true);
-  } else {
-    localStorage.setItem('mbBaseUrl', baseUrlVal); // Save base URL
-    loginError.classList.remove('auth-hidden'); // Show error message
+  } catch (err) {
+    debugPrint('Caught error: ' + JSON.stringify(err));
+    loginError.classList.remove('auth-hidden');
   }
-})
-.catch(error => {
-  debugPrint('Login error:', error);
-  loginError.classList.remove('auth-hidden');
-});
+})();
+
 
 }
 
