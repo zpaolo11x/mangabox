@@ -260,18 +260,17 @@
 		let isCordova = false;
 		let isAndroid = false;
 		debugPrint("startup scripts\n");
-		document.addEventListener('deviceready', () => {
-			debugPrint("deviceready\n");
-			isCordova = !!window.cordova;
-			try{isAndroid = device.platform === 'Android'}catch(err){isAndroid = false};
+		window.addEventListener('load', () => {
+			debugPrint("pageload\n");
+			document.addEventListener('deviceready', () => {
+				debugPrint("deviceready\n");
+				isCordova = !!window.cordova;
+				try { isAndroid = device.platform === 'Android' } catch (err) { isAndroid = false };
 
-			if (isCordova && isAndroid) {
-			} else {
-			}
 
-			debugPrint("cordova:"+isCordova+"\n");
-		}, false);
-
+				debugPrint("cordova:" + isCordova + "\n");
+			}, false);
+		});
 	</script>
 
 	<script src="auth.js"></script>
