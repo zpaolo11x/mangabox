@@ -111,6 +111,64 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
 
+  android:
+    needs: version
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Cordova CLI
+        run: npm install -g cordova
+
+      - name: Prepare Cordova project and copy web files
+        run: |
+          # Create Cordova project folder (if missing)
+          if [ ! -d cordova-app ]; then
+            cordova create cordova-app com.mangabox.app MangaBox
+          fi
+          # Copy your built web app (adjust source folder if needed)
+          rsync -av --exclude='.*' \
+                      --exclude='*.yml' \
+                      --exclude='package*.*' \
+                      --exclude='electron/' \
+                      --exclude='assets/' \
+                      --exclude='z_*.*' \
+                      --exclude='docs/' \
+                      ./ cordova-app/www
+                      
+      - name: Install Cordova HTTP Plugin
+        run: |
+          cd cordova-app
+          cordova plugin add cordova-plugin-advanced-http
+      - name: Add Android platform
+        run: |
+          cd cordova-app
+          cordova platform add android
+          
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build Cordova Android APK (debug)
+        run: |
+          cd cordova-app
+          cordova build android --debug
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-Android-${{ env.version }}
+          path: cordova-app/platforms/android/app/build/outputs/apk/debug/app-debug.apk
+
   release:
     needs: [build, web, version]
     env:
