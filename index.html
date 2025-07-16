@@ -233,7 +233,7 @@
 					<input type="checkbox" id="loginRememberMe" class="remember-me-checkbox">
 					<label for="rememberMe" class="remember-me-label">Remember Me</label>
 				</div>
-				<button id="loginButton" class="login-button" onclick="login()">Login</button>
+				<button class="login-button" onclick="login()">Login</button>
 			</div>
 
 			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
@@ -252,12 +252,16 @@
 	<div id="debuggerObj"></div>
 
 	<script>
+		function debugPrint(text) {
+			debuggerObj.innerText = debuggerObj.innerText + text;
+		}
+
 		const isElectronApp = !!window.electronAPI;
 		let isCordova = false;
 		let isAndroid = false;
-					loginButton.textContent = isCordova;
-
-		//document.addEventListener('deviceready', () => {
+		debugPrint("startup scripts\n");
+		document.addEventListener('deviceready', () => {
+			debugPrint("deviceready\n");
 			isCordova = !!window.cordova;
 			try{isAndroid = device.platform === 'Android'}catch(err){isAndroid = false};
 
@@ -265,8 +269,8 @@
 			} else {
 			}
 
-			loginButton.textContent = "c:"+isCordova;
-		//}, false);
+			debugPrint("cordova:"+isCordova+"\n");
+		}, false);
 
 	</script>
 
@@ -326,9 +330,6 @@
 
 
 		//MB General Functions 
-		function debugPrint(text) {
-			debuggerObj.innerText = debuggerObj.innerText + text;
-		}
 
 		function addItem(itemkind, properties) {
 			const { style, ...rest } = properties;
