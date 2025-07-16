@@ -263,6 +263,13 @@
 		let isAndroid = false;
 		debugPrint("startup scripts\n");
 			document.addEventListener('deviceready', () => {
+
+				  if (cordova && cordova.plugin && cordova.plugin.http) {
+    debugPrint('Advanced HTTP plugin is available');
+  } else {
+    debugPrint('Advanced HTTP plugin is NOT available');
+  }
+
 				debugPrint("deviceready\n");
 				isCordova = !!window.cordova;
 				try { isAndroid = device.platform === 'Android' } catch (err) { isAndroid = false };
