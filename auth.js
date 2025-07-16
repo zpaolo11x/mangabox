@@ -71,18 +71,9 @@ function login() {
 	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
 	// Test the auth header and base URL with a simple API call to validate credentials
-/*
-cordova.plugin.http.sendRequest('https://your-api', {
-  method: 'get',
-  headers: { Authorization: 'Basic ...' }
-}, response => {
-  console.log('Success:', response.data);
-}, error => {
-  console.error('Error:', error);
-});
-*/
-	//fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
-	cordova.plugin.http.sendRequest(`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+
+	/*
+	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
 		method: 'GET',
 		//credentials: 'include', // ✅ Important!
 		headers: {
@@ -113,6 +104,48 @@ cordova.plugin.http.sendRequest('https://your-api', {
 			console.error('Login error:', error);
 			loginError.classList.remove('auth-hidden');
 		});
+}
+*/
+
+cordova.plugin.http.sendRequest(`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+  method: 'get', // lowercase 'get' recommended
+  headers: {
+    'Authorization': 'Basic ' + btoa(`testuser@test.com:test`),
+    'X-Requested-With': 'XMLHttpRequest',
+    'X-Auth-Token': '',
+    'skip_zrok_interstitial': '1'
+  }
+})
+.then(async response => {
+  // response.status is numeric
+  // response.data is response body string
+  // response.headers is a plain object { 'x-auth-token': '...' }
+
+  debugPrint(response.status === 200);
+
+  // Header keys are lowercase
+  const token = response.headers['x-auth-token'];
+
+  if (response.status === 200 && token) {
+    localStorage.setItem('mbBaseUrl', baseUrlVal);
+
+    if (isElectronApp) {
+      window.electronAPI.sendRememberMe(loginRememberMe.checked);
+      await saveToken(token);
+    }
+
+    hideLoginDialog();
+    location.reload(true);
+  } else {
+    localStorage.setItem('mbBaseUrl', baseUrlVal); // Save base URL
+    loginError.classList.remove('auth-hidden'); // Show error message
+  }
+})
+.catch(error => {
+  console.error('Login error:', error);
+  loginError.classList.remove('auth-hidden');
+});
+
 }
 
 function showLoginDialog() {
