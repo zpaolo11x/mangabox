@@ -107,39 +107,43 @@ function login() {
 }
 */
  
-(async () => {
-  try {
-    debugPrint("START CALL");
 
-    const response = await cordova.plugin.http.sendRequest(
-      `https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
-      {
-        method: 'get',
-        headers: {
-          'Authorization': mbAuthHeader,
-          'X-Requested-With': 'XMLHttpRequest',
-          'skip_zrok_interstitial': '1'
-        }
-      }
-    );
-
+cordova.plugin.http.sendRequest(
+  `https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
+  {
+    method: 'get',
+    headers: {
+      'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
+      'X-Requested-With': 'XMLHttpRequest',
+      'skip_zrok_interstitial': '1'
+    }
+  },
+  async response => {
     debugPrint("RESPONSE DONE");
-    debugPrint(response.status);
+    debugPrint(response.status === 200);
 
     const token = response.headers['x-auth-token'];
 
     if (response.status === 200 && token) {
-      // Your success logic
+      localStorage.setItem('mbBaseUrl', baseUrlVal);
+      if (isElectronApp) {
+        window.electronAPI.sendRememberMe(loginRememberMe.checked);
+        await saveToken(token);
+      }
+      hideLoginDialog();
+      location.reload(true);
     } else {
+      localStorage.setItem('mbBaseUrl', baseUrlVal);
       loginError.classList.remove('auth-hidden');
     }
-} catch (err) {
+  },
+  error => {
   debugPrint('Caught error: ' + JSON.stringify(err));
   debugPrint('Error name: ' + err?.name);
   debugPrint('Error message: ' + err?.message);
-}
-
-})();
+   loginError.classList.remove('auth-hidden');
+  }
+);
 
 
 }
