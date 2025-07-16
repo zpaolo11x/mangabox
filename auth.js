@@ -106,7 +106,8 @@ function login() {
 		});
 }
 */
- 
+ debugPrint('>>> about to call cordova.plugin.http.sendRequest');
+
 cordova.plugin.http.sendRequest(
   `https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
   {
@@ -118,36 +119,19 @@ cordova.plugin.http.sendRequest(
     }
   },
   function(response) {
-    // Success callback (response is an object with .status, .data, .headers)
-    debugPrint("RESPONSE DONE");
-    debugPrint(response.status === 200);
-
-    const token = response.headers['x-auth-token'];
-
-    if (response.status === 200 && token) {
-      localStorage.setItem('mbBaseUrl', baseUrlVal);
-
-      if (isElectronApp) {
-        window.electronAPI.sendRememberMe(loginRememberMe.checked);
-        saveToken(token).then(() => {
-          hideLoginDialog();
-          location.reload(true);
-        });
-      } else {
-        hideLoginDialog();
-        location.reload(true);
-      }
-    } else {
-      localStorage.setItem('mbBaseUrl', baseUrlVal);
-      loginError.classList.remove('auth-hidden');
-    }
+    debugPrint('>>> SUCCESS callback called');
+    debugPrint('Status: ' + response.status);
+    debugPrint('Headers: ' + JSON.stringify(response.headers));
+    debugPrint('Data: ' + response.data);
   },
   function(error) {
-    // Error callback
-    debugPrint('Login error: ' + JSON.stringify(error));
-    loginError.classList.remove('auth-hidden');
+    debugPrint('>>> ERROR callback called');
+    debugPrint(JSON.stringify(error));
   }
 );
+
+debugPrint('>>> after sendRequest call');
+
 
 
 
