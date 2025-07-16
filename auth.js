@@ -71,9 +71,18 @@ function login() {
 	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
 	// Test the auth header and base URL with a simple API call to validate credentials
-
+/*
+cordova.plugin.http.sendRequest('https://your-api', {
+  method: 'get',
+  headers: { Authorization: 'Basic ...' }
+}, response => {
+  console.log('Success:', response.data);
+}, error => {
+  console.error('Error:', error);
+});
+*/
 	//fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
-	fetch(`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+	cordova.plugin.http.sendRequest(`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
 		method: 'GET',
 		//credentials: 'include', // ✅ Important!
 		headers: {
