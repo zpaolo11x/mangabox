@@ -72,17 +72,20 @@ function login() {
 
 	// Test the auth header and base URL with a simple API call to validate credentials
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+	//fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+	fetch(`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
 		method: 'GET',
 		//credentials: 'include', // ✅ Important!
 		headers: {
-			'Authorization': mbAuthHeader,
+			//'Authorization': mbAuthHeader,
+			'Authorization': 'Basic ' + btoa(`testuser@test.com:test`),
 			'X-Requested-With': 'XMLHttpRequest',
 			'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
 		}
 	})
 		.then(async response => {
+			debugPrint(response.ok);
 			const token = response.headers.get('X-Auth-Token');
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
