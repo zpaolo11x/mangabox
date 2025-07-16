@@ -116,7 +116,7 @@ function login() {
       {
         method: 'get',
         headers: {
-          'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
+          'Authorization': mbAuthHeader,
           'X-Requested-With': 'XMLHttpRequest',
           'skip_zrok_interstitial': '1'
         }
