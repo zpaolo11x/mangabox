@@ -253,9 +253,9 @@
 
 	<script>
 		const isElectronApp = !!window.electronAPI;
-		const isCordova = false;
-		const isAndroid = false;
-
+		let isCordova = false;
+		let isAndroid = false;
+		alert("START")
 		document.addEventListener('deviceready', () => {
 			isCordova = !!window.cordova;
 			isAndroid = device.platform === 'Android';
@@ -263,6 +263,8 @@
 			if (isCordova && isAndroid) {
 				alert('Running under Cordova on Android');
 				console.log('Running under Cordova on Android');
+			} else {
+				alert('not Android')
 			}
 		}, false);
 
