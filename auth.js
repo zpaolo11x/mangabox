@@ -106,6 +106,7 @@ function login() {
 		});
 }
 */
+  debugPrint("START CALL");
 
 cordova.plugin.http.sendRequest(`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
   method: 'get', // lowercase 'get' recommended
