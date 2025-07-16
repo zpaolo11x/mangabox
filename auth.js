@@ -115,7 +115,9 @@ cordova.plugin.http.sendRequest(
     headers: {
       'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
       'X-Requested-With': 'XMLHttpRequest',
-      'skip_zrok_interstitial': '1'
+      'skip_zrok_interstitial': '1',
+					'X-Auth-Token': '',
+
     }
   },
   function(response) {
