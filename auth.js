@@ -120,6 +120,7 @@ cordova.plugin.http.sendRequest(`https://aerobox.freeddns.it/komga/api/v1/login/
   // response.status is numeric
   // response.data is response body string
   // response.headers is a plain object { 'x-auth-token': '...' }
+  debugPrint("RESPONSE DONE");
 
   debugPrint(response.status === 200);
 
@@ -142,7 +143,7 @@ cordova.plugin.http.sendRequest(`https://aerobox.freeddns.it/komga/api/v1/login/
   }
 })
 .catch(error => {
-  console.error('Login error:', error);
+  debugPrint('Login error:', error);
   loginError.classList.remove('auth-hidden');
 });
 
