@@ -133,10 +133,12 @@ function login() {
     } else {
       loginError.classList.remove('auth-hidden');
     }
-  } catch (err) {
-    debugPrint('Caught error: ' + JSON.stringify(err));
-    loginError.classList.remove('auth-hidden');
-  }
+} catch (err) {
+  debugPrint('Caught error: ' + JSON.stringify(err));
+  debugPrint('Error name: ' + err?.name);
+  debugPrint('Error message: ' + err?.message);
+}
+
 })();
 
 
