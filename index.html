@@ -257,6 +257,10 @@
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
+		
+		function debugPrintLn(text) {
+			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
+		}
 
 		//MB Cordova and Electron management
 
@@ -268,9 +272,9 @@
 		document.addEventListener('deviceready', () => {
 
 			if (cordova && cordova.plugin && cordova.plugin.http) {
-				debugPrint('Advanced HTTP plugin is available\n');
+				debugPrintLn('Advanced HTTP plugin is available');
 			} else {
-				debugPrint('Advanced HTTP plugin is NOT available\n');
+				debugPrintLn('Advanced HTTP plugin is NOT available');
 			}
 
 			isCordova = !!window.cordova;
@@ -278,8 +282,8 @@
 
 			if (isCordova) {
 				secureStore = new cordova.plugins.SecureStorage(
-					() => debugPrint('SecureStorage ready'),
-					(err) => debugPrint('SecureStorage error: ' + err),
+					() => debugPrintLn('SecureStorage ready'),
+					(err) => debugPrintLn('SecureStorage error: ' + err),
 					'MangaBoxSecure'
 				);
 			}
@@ -1383,7 +1387,7 @@
 		//MB Media Cache 
 
 		async function fetchMedia(url) {
-			debugPrint(url + "\n");
+			debugPrintLn(url);
 			if (mb.mediaCache.has(url)) {
 				const value = mb.mediaCache.get(url);
 				mb.mediaCache.delete(url);
@@ -1394,7 +1398,7 @@
 			try {
 				if (isCordova) {
 					return await new Promise((resolve, reject) => {
-						debugPrint("Fetching media with Cordova HTTP\n");
+						debugPrintLn("Fetching media with Cordova HTTP");
 
 						cordova.plugin.http.sendRequest(
 							url,
@@ -1406,14 +1410,14 @@
 								}
 							},
 							function (response) {
-								debugPrint("CORDOVA MEDIA RESPONSE OK\n");
+								debugPrintLn("CORDOVA MEDIA RESPONSE OK");
 								try {
 									// Log what kind of data we really got
-									debugPrint("response.data typeof: " + typeof response.data + "\n");
-									debugPrint("response.data instanceof Blob: " + (response.data instanceof Blob) + "\n");
-									debugPrint("response.data: " + JSON.stringify(response.data) + "\n"); // May error if Blob
-									debugPrint("Blob size: " + response.data.size + "\n");
-									debugPrint("Blob type: " + response.data.type + "\n");
+									debugPrintLn("response.data typeof: " + typeof response.data);
+									debugPrintLn("response.data instanceof Blob: " + (response.data instanceof Blob));
+									debugPrintLn("response.data: " + JSON.stringify(response.data)); // May error if Blob
+									debugPrintLn("Blob size: " + response.data.size);
+									debugPrintLn("Blob type: " + response.data.type);
 
 									// If we get here, create object URL
 									const blob = response.data;
@@ -1428,13 +1432,13 @@
 
 									resolve(objectURL);
 								} catch (e) {
-									debugPrint("Blob handling error: " + e.message);
+									debugPrintLn("Blob handling error: " + e.message);
 									resolve('fallback-image.jpg');
 								}
 							},
 							function (error) {
-								debugPrint("CORDOVA MEDIA RESPONSE FAIL\n");
-								debugPrint("Cordova HTTP error: " + JSON.stringify(error));
+								debugPrintLn("CORDOVA MEDIA RESPONSE FAIL");
+								debugPrintLn("Cordova HTTP error: " + JSON.stringify(error));
 								resolve('fallback-image.jpg');
 							}
 						);
@@ -2260,9 +2264,7 @@
 			</div>
 			`;
 
-			debugPrint("A1\n")
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
-			debugPrint("A2\n")
 			createCustomScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${serie.metadata.title}</span>
@@ -3518,11 +3520,8 @@
 						element.uiPage.classList.add('loading');
 						try {
 							// Fetch the image
-							debugPrint("B1\n")
-
 							const blobUrl = await fetchMedia(element.lazySrc);
-							debugPrint("B2\n")
-
+		
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
@@ -4277,9 +4276,9 @@
 					img.classList.add('loading');
 
 					// TODO Set the actual src from lazySrc, check if needed
-					debugPrint("C1\n")
+					debugPrintLn("C1")
 					const imageUrl = await fetchMedia(img.lazySrc);
-					debugPrint("C2\n")
+					debugPrintLn("C2")
 
 					img.src = imageUrl;
 

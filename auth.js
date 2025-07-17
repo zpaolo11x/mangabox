@@ -29,10 +29,10 @@ function loadTokenCordova(token) {
 	// Read token later
 	secureStore.get(
 		(value) => {
-			debugPrint('Loaded token: ' + value+"\n");
+			debugPrintLn('Loaded token: ' + value);
 			useToken(value);
 		},
-		(err) => debugPrint('Token read failed: ' + err+"\n"),
+		(err) => debugPrintLn('Token read failed: ' + err),
 		'auth_token'
 	);
 }
@@ -65,8 +65,9 @@ async function sessionCheck() {
 		mb.authToken = true;
 	}
 
-	debugPrint("*** Loaded auth token \n");
-	debugPrint("*** " + mb.authToken + "\n\n");
+	debugPrintLn("*** Loaded auth token");
+	debugPrintLn("*** " + mb.authToken );
+	debugPrintLn("");
 
 
 	// Check for missing credentials
