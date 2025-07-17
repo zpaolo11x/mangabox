@@ -1,10 +1,31 @@
 // script.js
 
-async function saveToken(token) {
+async function saveTokenCordova(token) {
+	secureStore.set(
+		() => debugPrint('Token saved securely\n'),
+		(err) => debugPrint('Failed to save token: ' + err+"\n"),
+		'auth_token',
+		token
+	);
+}
+
+async function loadTokenCordova(token) {
+	// Read token later
+	secureStore.get(
+		(value) => {
+			debugPrint('Loaded token: ' + value);
+			useToken(value);
+		},
+		(err) => debugPrint('Token read failed: ' + err),
+		'auth_token'
+	);
+}
+
+async function saveTokenElectron(token) {
 	await window.secureStore.setCredentials('auth', token);
 }
 
-async function loadToken() {
+async function loadTokenElectron() {
 	const token = await window.secureStore.getCredentials('auth');
 	if (token) {
 		return (token);
@@ -13,14 +34,14 @@ async function loadToken() {
 	}
 }
 
-async function deleteToken() {
+async function deleteTokenElectron() {
 	await window.secureStore.deleteCredentials('auth');
 }
 
 async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
-	mb.authToken = isElectronApp ? await loadToken() : true;
+	mb.authToken = isElectronApp ? await loadTokenElectron() : true;
 
 	if ((!mb.baseUrl) || (!mb.authToken)) {
 		showLoginDialog();
@@ -89,7 +110,7 @@ function login() {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 				if (isElectronApp) {
 					window.electronAPI.sendRememberMe(loginRememberMe.checked);
-					await saveToken(token);
+					await saveTokenElectron(token);
 				}
 				hideLoginDialog();
 				location.reload(true);
@@ -103,49 +124,49 @@ function login() {
 			loginError.classList.remove('auth-hidden');
 		});
 */
- debugPrint('>>> about to call cordova.plugin.http.sendRequest');
+	debugPrint('>>> about to call cordova.plugin.http.sendRequest');
 
-cordova.plugin.http.sendRequest(
-  `https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
-  {
-    method: 'get',
-    headers: {
-      'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
-      'X-Requested-With': 'XMLHttpRequest',
-      'skip_zrok_interstitial': '1',
-		'X-Auth-Token': '',
-    }
-  },
-  function(response) {
-	 const token = response.headers['x-auth-token'];
-	 const responseOk = response.status === 204;
+	cordova.plugin.http.sendRequest(
+		`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
+		{
+			method: 'get',
+			headers: {
+				'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
+				'X-Requested-With': 'XMLHttpRequest',
+				'X-Auth-Token': '',
+				'skip_zrok_interstitial': '1',
+			}
+		},
+		async function (response) {
+			const token = response.headers['x-auth-token'];
+			const responseOk = (response.status === 204);
 
-    debugPrint('Token: ' + token);
+			debugPrint('Token: ' + token);
 
-    if (responseOk && token) {
-      localStorage.setItem('mbBaseUrl', baseUrlVal);
-		//localStorage.setItem('mbToken', token);
-	 }
-	 
-    debugPrint('>>> SUCCESS callback called');
-    debugPrint("\n");
-	 debugPrint('Status:\n' + response.status);
-    debugPrint("\n");
-    debugPrint('Headers:\n' + JSON.stringify(response.headers));
-    debugPrint("\n");
-    debugPrint('Data:\n' + response.data);
-    debugPrint("\n");
-  },
-  function(error) {
-    debugPrint('>>> ERROR callback called');
-    debugPrint(JSON.stringify(error));
-  }
-);
+			if (responseOk && token) {
+				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				await saveTokenCordova(token);
+				
+				//hideLoginDialog();
+				//location.reload(true);
+			}
 
-debugPrint('>>> after sendRequest call');
+			debugPrint('>>> SUCCESS callback called');
+			debugPrint("\n");
+			debugPrint('Status:\n' + response.status);
+			debugPrint("\n");
+			debugPrint('Headers:\n' + JSON.stringify(response.headers));
+			debugPrint("\n");
+			debugPrint('Data:\n' + response.data);
+			debugPrint("\n");
+		},
+		function (error) {
+			debugPrint('>>> ERROR callback called');
+			debugPrint(JSON.stringify(error));
+		}
+	);
 
-
-
+	debugPrint('>>> after sendRequest call');
 
 }
 

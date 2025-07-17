@@ -258,11 +258,17 @@
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
 
-		const isElectronApp = !!window.electronAPI;
+		//MB Cordova and Electron management
+
+		let isElectronApp = !!window.electronAPI;
 		let isCordova = false;
 		let isAndroid = false;
+		let cordovaStore = null;
+
 		debugPrint("startup scripts\n");
+
 		document.addEventListener('deviceready', () => {
+			debugPrint("deviceready\n");
 
 			if (cordova && cordova.plugin && cordova.plugin.http) {
 				debugPrint('Advanced HTTP plugin is available\n');
@@ -270,11 +276,20 @@
 				debugPrint('Advanced HTTP plugin is NOT available\n');
 			}
 
-			debugPrint("deviceready\n");
 			isCordova = !!window.cordova;
 			try { isAndroid = device.platform === 'Android' } catch (err) { isAndroid = false };
 
 			debugPrint("cordova:" + isCordova + "\n");
+			debugPrint("android:" + isAndroid + "\n");
+
+			if (isCordova) {
+				secureStore = new cordova.plugins.SecureStorage(
+					() => debugPrint('SecureStorage ready'),
+					(err) => debugPrint('SecureStorage error: ' + err),
+					'MangaBoxSecure'
+				);
+			}
+
 		}, false);
 	</script>
 
@@ -714,7 +729,7 @@
 				// We continue cleanup anyway
 			}
 
-			if (isElectronApp) await deleteToken();
+			if (isElectronApp) await deleteTokenElectron();
 
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
