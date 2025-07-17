@@ -125,6 +125,7 @@ cordova.plugin.http.sendRequest(
 
     if (responseOk && token) {
       localStorage.setItem('mbBaseUrl', baseUrlVal);
+		debugPrint("\n"+token+"\n")
       //localStorage.setItem('mbToken', token);
 	 }
 	 

@@ -148,6 +148,7 @@ jobs:
         run: |
           cd cordova-app
           cordova plugin add cordova-plugin-advanced-http
+          cordova plugin add cordova-plugin-secure-storage-echo
       - name: Add Android platform
         run: |
           cd cordova-app
