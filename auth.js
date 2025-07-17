@@ -54,6 +54,7 @@ async function sessionCheck() {
 		return;
 	}
 
+	
 	const fetchPayload = isElectronApp ?
 		{
 			method: 'GET',
