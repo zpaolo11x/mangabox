@@ -180,7 +180,7 @@ function login() {
 		{
 			method: 'get',
 			headers: {
-				'Authorization': mb.mbAuthHeader,
+				'Authorization': mbAuthHeader,
 				'X-Requested-With': 'XMLHttpRequest',
 				'X-Auth-Token': '',
 				'skip_zrok_interstitial': '1',
