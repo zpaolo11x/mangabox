@@ -101,7 +101,7 @@ async function sessionCheck() {
 				if (response.status >= 200 && response.status < 300) {
 					hideLoginDialog();
 					debugPrint("TRIGGER BOOT SEQUENCE")
-					//bootSequence();
+					bootSequence();
 				} else {
 					showLoginDialog();
 				}
