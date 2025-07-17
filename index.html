@@ -7,13 +7,19 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="black">
 <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self' data: gap: blob: filesystem: 'unsafe-inline' 'unsafe-eval' cdvfile: file:;
-    connect-src 'self' data: *; /* Allow connections to any external domain for debugging */
-    img-src 'self' data: blob: content: *; /* Allow images from anywhere */
-    style-src 'self' 'unsafe-inline';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval';
+    default-src * 'unsafe-inline' 'unsafe-eval' data: blob: filesystem: ws: wss: cdvfile: file:;
+    img-src * data: blob: content:;
+    font-src * data:;
+    style-src * 'unsafe-inline';
+    script-src * 'unsafe-inline' 'unsafe-eval';
+    connect-src *;
+    object-src *;
     media-src *;
-">	
+    frame-src *;
+    child-src *;
+    worker-src *;
+    manifest-src *;
+">
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
 	<link rel="icon" href="mangabox-logo-16.svg" type="image/svg+xml">
 	<link rel="apple-touch-icon" href="mangabox-logo-new-red.png">
