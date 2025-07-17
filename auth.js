@@ -88,6 +88,8 @@ async function sessionCheck() {
 function login() {
 	let baseUrlVal = loginBaseUrl.value;
 
+	baseUrlVal = 'https://aerobox.freeddns.it/komga' //XXX
+
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		// Add http:// if no protocol is present
 		baseUrlVal = 'https://' + baseUrlVal;
@@ -95,7 +97,9 @@ function login() {
 
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+
+	mbAuthHeader = 'Basic ' + btoa('testuser@test.com:test'); //XXX
 
 	// Test the auth header and base URL with a simple API call to validate credentials
 
@@ -137,7 +141,7 @@ function login() {
 		{
 			method: 'get',
 			headers: {
-				'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
+				'Authorization': mb.mbAuthHeader,
 				'X-Requested-With': 'XMLHttpRequest',
 				'X-Auth-Token': '',
 				'skip_zrok_interstitial': '1',
