@@ -45,10 +45,16 @@ async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
 	if (isElectronApp) {
+			debugPrint("session is Electron \n");
+
 		mb.authToken = await loadTokenElectron();
 	} else if (isCordova) {
+			debugPrint("session is Cordova \n");
+
 		mb.authToken = localStorage.getItem('mbAuthToken');
 	} else {
+			debugPrint("session is PWA \n");
+
 		mb.authToken = true;
 	}
 	
