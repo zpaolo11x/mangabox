@@ -530,22 +530,31 @@
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 
 			if (isCordova) {
-				cordova.plugin.http.sendRequest(
-					`${mb.baseUrl}${API_url}`,
-					buildRequest(mb.authToken, method, body),
-					function (response) {
-						if (returnval) {
-							const output = response.json();
-							return output;
-						}
-					},
-					function (error) {
-						debugPrint("*** Response error\n")
-						debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
-					}
-				);
+	debugPrint("callAPI CORDOVA EDITION\n");
 
-			} else {
+	cordova.plugin.http.sendRequest(
+		`${mb.baseUrl}${API_url}`,
+		buildRequest(mb.authToken, method, body),
+		function (response) {
+			try {
+				if (returnval) {
+					const output = JSON.parse(response.data);
+					// Resolve or pass it to a callback
+					debugPrint("Cordova API call success:");
+					debugPrint(JSON.stringify(output));
+					// You might need to return it via a callback or Promise pattern
+				}
+			} catch (err) {
+				debugPrint("Error parsing response data: " + err);
+			}
+		},
+		function (error) {
+			debugPrint("*** Response error\n");
+			debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
+		}
+	);
+}
+else {
 				try {
 					const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
 
@@ -2677,13 +2686,13 @@
 		}
 
 		async function bootSequence() {
-			debugPrint("get user serrings");
+			debugPrint("get user serrings\n");
 			userSettings = await getUserSettings();
 
-			debugPrint("apply user serrings");
+			debugPrint("apply user serrings\n");
 			applyUserSettings();
 
-			debugPrint("apply accent");
+			debugPrint("apply accent\n");
 			applyAccent();
 			// Apply first theme change
 			changeTheme();
