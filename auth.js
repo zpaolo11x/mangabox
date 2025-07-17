@@ -39,107 +39,81 @@ async function deleteTokenElectron() {
 }
 
 async function sessionCheck() {
-  debugPrint('sessionCheck\n');
-  loginBaseUrl.value = mb.baseUrl;
+	debugPrint('sessionCheck\n');
+	loginBaseUrl.value = mb.baseUrl;
 
-  // Try to load auth token based on platform
-  if (isElectronApp) {
-    mb.authToken = await loadTokenElectron();
-  } else if (isCordova) {
-    try {
-      const secureStore = new cordova.plugins.SecureStorage(
-        () => debugPrint('SecureStorage ready'),
-        (err) => debugPrint('SecureStorage error: ' + err),
-        'MangaBoxSecure'
-      );
+	mb.authToken = true;
+	if (isElectronApp) mb.authToken = await loadTokenElectron();
+	if (isCordova) mb.authToken = localStorage.getItem('mbAuthToken');
+	debugPrint(mb.authToken + "\n\n")
 
-      mb.authToken = await new Promise((resolve, reject) => {
-        secureStore.get(
-          resolve,
-          (error) => {
-            debugPrint('SecureStorage get error: ' + error);
-            // fallback to localStorage
-            resolve(localStorage.getItem('mbAuthToken'));
-          },
-          'authToken'
-        );
-      });
-    } catch (e) {
-      debugPrint('SecureStorage failed: ' + e);
-      mb.authToken = localStorage.getItem('mbAuthToken');
-    }
-  } else {
-    // Web fallback
-    mb.authToken = true;
-  }
+	debugPrint('Loaded auth token: ' + mb.authToken + '\n');
 
-  debugPrint('Loaded auth token: ' + mb.authToken + '\n');
+	// Check for missing credentials
+	if (!mb.baseUrl || !mb.authToken) {
+		showLoginDialog();
+		return;
+	}
 
-  // Check for missing credentials
-  if (!mb.baseUrl || !mb.authToken) {
-    showLoginDialog();
-    return;
-  }
+	// Setup fetch or HTTP call
+	if (isCordova) {
+		// Native HTTP plugin call
+		cordova.plugin.http.sendRequest(
+			`${mb.baseUrl}/api/v1/login/set-cookie`,
+			{
+				method: 'get',
+				headers: {
+					'X-Auth-Token': mb.authToken,
+					'X-Requested-With': 'XMLHttpRequest',
+					'skip_zrok_interstitial': '1'
+				}
+			},
+			function (response) {
+				if (response.status >= 200 && response.status < 300) {
+					hideLoginDialog();
+					bootSequence();
+				} else {
+					showLoginDialog();
+				}
+			},
+			function (error) {
+				debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
+				showLoginDialog();
+			}
+		);
+	} else {
+		// Web / Electron fetch
+		const fetchPayload = isElectronApp
+			? {
+				method: 'GET',
+				headers: {
+					'X-Auth-Token': mb.authToken,
+					'X-Requested-With': 'XMLHttpRequest',
+					'skip_zrok_interstitial': '1'
+				}
+			}
+			: {
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+					'skip_zrok_interstitial': '1'
+				}
+			};
 
-  // Setup fetch or HTTP call
-  if (isCordova) {
-    // Native HTTP plugin call
-    cordova.plugin.http.sendRequest(
-      `${mb.baseUrl}/api/v1/login/set-cookie`,
-      {
-        method: 'get',
-        headers: {
-          'X-Auth-Token': mb.authToken,
-          'X-Requested-With': 'XMLHttpRequest',
-          'skip_zrok_interstitial': '1'
-        }
-      },
-      function (response) {
-        if (response.status >= 200 && response.status < 300) {
-          hideLoginDialog();
-          bootSequence();
-        } else {
-          showLoginDialog();
-        }
-      },
-      function (error) {
-        debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
-        showLoginDialog();
-      }
-    );
-  } else {
-    // Web / Electron fetch
-    const fetchPayload = isElectronApp
-      ? {
-          method: 'GET',
-          headers: {
-            'X-Auth-Token': mb.authToken,
-            'X-Requested-With': 'XMLHttpRequest',
-            'skip_zrok_interstitial': '1'
-          }
-        }
-      : {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'skip_zrok_interstitial': '1'
-          }
-        };
-
-    try {
-      const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
-      if (response.ok) {
-        hideLoginDialog();
-        bootSequence();
-      } else {
-        showLoginDialog();
-      }
-    } catch (error) {
-      debugPrint('Fetch error: ' + error);
-      showLoginDialog();
-    }
-  }
+		try {
+			const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+			if (response.ok) {
+				hideLoginDialog();
+				bootSequence();
+			} else {
+				showLoginDialog();
+			}
+		} catch (error) {
+			debugPrint('Fetch error: ' + error);
+			showLoginDialog();
+		}
+	}
 }
 
 
