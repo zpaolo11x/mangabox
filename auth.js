@@ -39,6 +39,8 @@ async function deleteTokenElectron() {
 }
 
 async function sessionCheck() {
+	debugPrint("CORDOVA CHECK: \n");
+	debugPrint(window.cordova+"\n\n");
 	debugPrint('sessionCheck\n');
 	loginBaseUrl.value = mb.baseUrl;
 
