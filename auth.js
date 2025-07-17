@@ -3,7 +3,7 @@
 async function saveTokenCordova(token) {
 	secureStore.set(
 		() => debugPrint('Token saved securely\n'),
-		(err) => debugPrint('Failed to save token: ' + err+"\n"),
+		(err) => debugPrint('Failed to save token: ' + err + "\n"),
 		'auth_token',
 		token
 	);
@@ -137,7 +137,7 @@ function login() {
 				'skip_zrok_interstitial': '1',
 			}
 		},
-		async function (response) {
+		function (response) {
 			const token = response.headers['x-auth-token'];
 			const responseOk = (response.status === 204);
 
@@ -145,10 +145,13 @@ function login() {
 
 			if (responseOk && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				await saveTokenCordova(token);
-				
-				//hideLoginDialog();
-				//location.reload(true);
+				saveTokenCordova(token).then(() => {
+					debugPrint("Token saved\n");
+					//hideLoginDialog();
+					//location.reload(true);
+					// do stuff
+				}).catch((e) => debugPrint('Token save error: ' + e));
+
 			}
 
 			debugPrint('>>> SUCCESS callback called');
