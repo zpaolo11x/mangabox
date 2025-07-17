@@ -39,9 +39,15 @@ async function deleteTokenElectron() {
 }
 
 async function sessionCheck() {
+	debugPrint('sessionCheck\n')
 	loginBaseUrl.value = mb.baseUrl;
 
-	mb.authToken = isElectronApp ? await loadTokenElectron() : true;
+	mb.authToken = true;
+	if (isElectronApp) mb.authToken = await loadTokenElectron();
+	if (isCordova) mb.authToken = localStorage.getItem('mbAuthToken');
+	debugPrint(mb.authToken+"\n\n")
+
+	//mb.authToken = isElectronApp ? await loadTokenElectron() : true;
 
 	if ((!mb.baseUrl) || (!mb.authToken)) {
 		showLoginDialog();
@@ -145,13 +151,18 @@ function login() {
 
 			if (responseOk && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
+
 				saveTokenCordova(token).then(() => {
 					debugPrint("Token saved\n");
-					//hideLoginDialog();
-					//location.reload(true);
-					// do stuff
-				}).catch((e) => debugPrint('Token save error: ' + e));
-
+					hideLoginDialog();
+					location.reload(true);
+				}).catch((e) => {
+					debugPrint('Token save error: ' + e + '\n');
+					debugPrint('Saving to local storage\n')
+					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
+					hideLoginDialog();
+					location.reload(true);
+				});
 			}
 
 			debugPrint('>>> SUCCESS callback called');
