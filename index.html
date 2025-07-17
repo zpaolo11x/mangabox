@@ -1393,7 +1393,7 @@
 
 			try {
 				if (isCordova) {
-					return await new Promise((resolve, reject) => {
+					return new Promise((resolve, reject) => {
 						cordova.plugin.http.sendRequest(
 							url,
 							{
@@ -4269,10 +4269,9 @@
 					img.classList.add('loading');
 
 					// TODO Set the actual src from lazySrc, check if needed
-								debugPrint("C1\n")
-
+					debugPrint("C1\n")
 					const imageUrl = await fetchMedia(img.lazySrc);
-								debugPrint("C2\n")
+					debugPrint("C2\n")
 
 					img.src = imageUrl;
 
