@@ -4277,9 +4277,8 @@
 					debugPrintLn("C1")
 					const imageUrl = await fetchMedia(img.lazySrc);
 					debugPrintLn("C2")
-debugPrintLn(imageUrl);
+
 					img.src = imageUrl;
-debugPrintLn(img.src);
 
 					// Remove lazySrc to clean up
 					delete img.lazySrc;
