@@ -1397,9 +1397,7 @@
 
 			try {
 				if (isCordova) {
-					return await new Promise((resolve, reject) => {
-						debugPrintLn("Fetching media with Cordova HTTP");
-
+					return new Promise((resolve, reject) => {
 						cordova.plugin.http.sendRequest(
 							url,
 							{
