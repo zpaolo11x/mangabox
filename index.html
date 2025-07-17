@@ -283,8 +283,7 @@
 			debugPrint("android:" + isAndroid + "\n");
 
 			if (isCordova) {
-				let SecureStorageEcho = cordova.require('cordova-plugin-secure-storage-echo.SecureStorage');
-				secureStore = new SecureStorageEcho(
+				secureStore = new cordova.plugins.SecureStorage(
 					() => debugPrint('SecureStorage ready'),
 					(err) => debugPrint('SecureStorage error: ' + err),
 					'MangaBoxSecure'
