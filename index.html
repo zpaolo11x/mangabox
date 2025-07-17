@@ -1383,7 +1383,7 @@
 		//MB Media Cache 
 
 		async function fetchMedia(url) {
-			debugPrint(url+"\n");
+			debugPrint(url + "\n");
 			if (mb.mediaCache.has(url)) {
 				const value = mb.mediaCache.get(url);
 				mb.mediaCache.delete(url);
@@ -1393,25 +1393,30 @@
 
 			try {
 				if (isCordova) {
-					return new Promise((resolve, reject) => {
+					return await new Promise((resolve, reject) => {
+						debugPrint("Fetching media with Cordova HTTP\n");
+
 						cordova.plugin.http.sendRequest(
 							url,
 							{
 								method: 'get',
-								responseType: 'blob', // fallback if binary not supported
+								responseType: 'blob', // Important!
 								headers: {
 									'X-Auth-Token': mb.authToken,
 								}
 							},
 							function (response) {
+								debugPrint("CORDOVA MEDIA RESPONSE OK\n");
 								try {
-									debugPrint('\n>>> SUCCESS callback called\n');
-									debugPrint('Status:' + response.status + ' Data:\n' + response.data + "\n");
+									// Log what kind of data we really got
+									debugPrint("response.data typeof: " + typeof response.data);
+									debugPrint("response.data instanceof Blob: " + (response.data instanceof Blob));
+									debugPrint("response.data: " + JSON.stringify(response.data)); // May error if Blob
 
-									const blob = response.data; // Already a Blob
+									// If we get here, create object URL
+									const blob = response.data;
 									const objectURL = URL.createObjectURL(blob);
 
-									// Add to cache and enforce size limit
 									mb.mediaCache.set(url, objectURL);
 									if (mb.mediaCache.size > mb.cacheLimit) {
 										const oldestKey = mb.mediaCache.keys().next().value;
@@ -1421,12 +1426,13 @@
 
 									resolve(objectURL);
 								} catch (e) {
-									console.error("Error decoding base64 media", e);
+									debugPrint("Blob handling error: " + e.message);
 									resolve('fallback-image.jpg');
 								}
 							},
 							function (error) {
-								console.error(`Cordova media fetch error from ${url}`, error);
+								debugPrint("CORDOVA MEDIA RESPONSE FAIL\n");
+								debugPrint("Cordova HTTP error: " + JSON.stringify(error));
 								resolve('fallback-image.jpg');
 							}
 						);
@@ -3510,10 +3516,10 @@
 						element.uiPage.classList.add('loading');
 						try {
 							// Fetch the image
-										debugPrint("B1\n")
+							debugPrint("B1\n")
 
 							const blobUrl = await fetchMedia(element.lazySrc);
-										debugPrint("B2\n")
+							debugPrint("B2\n")
 
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
