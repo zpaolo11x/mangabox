@@ -342,11 +342,11 @@ body {
 	pointer-events: none;
 	position: fixed;
 	z-index: 10000;
-	font-size: 20px;
+	font-size: 15px;
 	color: white;
 	font-family: 'Courier New', Courier, monospace;
 	font-weight: bold;
-	top: 280px;
+	top: 100px;
 	right: 0px;
 	left: 0px;
 	bottom: 0px;
