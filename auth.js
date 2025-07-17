@@ -113,8 +113,7 @@ cordova.plugin.http.sendRequest(
       'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
       'X-Requested-With': 'XMLHttpRequest',
       'skip_zrok_interstitial': '1',
-					'X-Auth-Token': '',
-
+		'X-Auth-Token': '',
     }
   },
   function(response) {
@@ -125,14 +124,17 @@ cordova.plugin.http.sendRequest(
 
     if (responseOk && token) {
       localStorage.setItem('mbBaseUrl', baseUrlVal);
-		debugPrint("\n"+token+"\n")
-      //localStorage.setItem('mbToken', token);
+		//localStorage.setItem('mbToken', token);
 	 }
 	 
     debugPrint('>>> SUCCESS callback called');
-    debugPrint('Status: ' + response.status);
-    debugPrint('Headers: ' + JSON.stringify(response.headers));
-    debugPrint('Data: ' + response.data);
+    debugPrint("\n");
+	 debugPrint('Status:\n' + response.status);
+    debugPrint("\n");
+    debugPrint('Headers:\n' + JSON.stringify(response.headers));
+    debugPrint("\n");
+    debugPrint('Data:\n' + response.data);
+    debugPrint("\n");
   },
   function(error) {
     debugPrint('>>> ERROR callback called');
