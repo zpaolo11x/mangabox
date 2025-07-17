@@ -212,13 +212,15 @@ function login() {
 				saveTokenCordova(token).then(() => {
 					debugPrint("Token saved\n");
 					hideLoginDialog();
-					location.reload(true);
+					debugPrint("Location RELOAD")
+					//location.reload(true);
 				}).catch((e) => {
 					debugPrint('Token save error: ' + e + '\n');
 					debugPrint('Saving to local storage\n')
 					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
 					hideLoginDialog();
-					location.reload(true);
+					debugPrint("Location RELOAD")
+					//location.reload(true);
 				});
 			}
 
