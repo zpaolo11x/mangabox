@@ -40,7 +40,7 @@ async function deleteTokenElectron() {
 
 async function sessionCheck() {
 	debugPrint("CORDOVA CHECK: \n");
-	debugPrint(window.cordova+"\n\n");
+	debugPrint(window.cordova + "\n\n");
 	debugPrint('sessionCheck\n');
 	loginBaseUrl.value = mb.baseUrl;
 
@@ -51,8 +51,9 @@ async function sessionCheck() {
 	} else {
 		mb.authToken = true;
 	}
-
-	debugPrint(mb.authToken + "\n\n")
+	
+	debugPrint("auth token \n");
+	debugPrint(mb.authToken + "\n\n");
 
 	debugPrint('Loaded auth token: ' + mb.authToken + '\n');
 
@@ -64,7 +65,7 @@ async function sessionCheck() {
 
 	// Setup fetch or HTTP call
 	if (isCordova) {
-		debugPrint ("Is Cordova\n")
+		debugPrint("Is Cordova\n")
 		// Native HTTP plugin call
 		cordova.plugin.http.sendRequest(
 			`${mb.baseUrl}/api/v1/login/set-cookie`,
@@ -77,7 +78,7 @@ async function sessionCheck() {
 				}
 			},
 			function (response) {
-						debugPrint ("Response: "+response.status+"\n")
+				debugPrint("Response: " + response.status + "\n")
 
 				if (response.status >= 200 && response.status < 300) {
 					hideLoginDialog();
@@ -87,7 +88,7 @@ async function sessionCheck() {
 				}
 			},
 			function (error) {
-										debugPrint ("Response error\n")
+				debugPrint("Response error\n")
 
 				debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
 				showLoginDialog();
@@ -95,7 +96,7 @@ async function sessionCheck() {
 		);
 	} else {
 		// Web / Electron fetch
-		debugPrint ("Is NOT Cordova\n")
+		debugPrint("Is NOT Cordova\n")
 		const fetchPayload = isElectronApp
 			? {
 				method: 'GET',
