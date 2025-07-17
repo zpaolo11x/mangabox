@@ -6,20 +6,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="black">
-<meta http-equiv="Content-Security-Policy" content="
-    default-src * 'unsafe-inline' 'unsafe-eval' data: blob: filesystem: ws: wss: cdvfile: file:;
-    img-src * data: blob: content:;
-    font-src * data:;
-    style-src * 'unsafe-inline';
-    script-src * 'unsafe-inline' 'unsafe-eval';
-    connect-src *;
-    object-src *;
-    media-src *;
-    frame-src *;
-    child-src *;
-    worker-src *;
-    manifest-src *;
-">
+
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
 	<link rel="icon" href="mangabox-logo-16.svg" type="image/svg+xml">
 	<link rel="apple-touch-icon" href="mangabox-logo-new-red.png">
@@ -270,7 +257,7 @@
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
-		
+
 		function debugPrintLn(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
 		}
@@ -1399,6 +1386,26 @@
 
 		//MB Media Cache 
 
+		function blobToBase64(blob) {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+
+				// Event handler for when the file reading is complete
+				reader.onloadend = () => {
+					// reader.result will contain the Data URL (Base64 string with prefix)
+					resolve(reader.result);
+				};
+
+				// Event handler for errors during file reading
+				reader.onerror = (error) => {
+					reject(error);
+				};
+
+				// Start reading the blob as a Data URL
+				reader.readAsDataURL(blob);
+			});
+		}
+
 		async function fetchMedia(url) {
 			debugPrintLn(url);
 			if (mb.mediaCache.has(url)) {
@@ -1432,6 +1439,9 @@
 
 									// If we get here, create object URL
 									const blob = response.data;
+									const imgBase64 = blobToBase64(blob);
+									debugPrintLn(imgBase64);
+
 									const objectURL = URL.createObjectURL(blob);
 
 									mb.mediaCache.set(url, objectURL);
@@ -3532,7 +3542,7 @@
 						try {
 							// Fetch the image
 							const blobUrl = await fetchMedia(element.lazySrc);
-		
+
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
@@ -4287,9 +4297,9 @@
 					img.classList.add('loading');
 
 					// TODO Set the actual src from lazySrc, check if needed
-					debugPrintLn("C1")
+					//debugPrintLn("C1")
 					const imageUrl = await fetchMedia(img.lazySrc);
-					debugPrintLn("C2")
+					//debugPrintLn("C2")
 
 					img.src = imageUrl;
 
