@@ -45,19 +45,19 @@ async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
 	if (isElectronApp) {
-			debugPrint("session is Electron \n");
+		debugPrint("session is Electron \n");
 
 		mb.authToken = await loadTokenElectron();
 	} else if (isCordova) {
-			debugPrint("session is Cordova \n");
+		debugPrint("session is Cordova \n");
 
 		mb.authToken = localStorage.getItem('mbAuthToken');
 	} else {
-			debugPrint("session is PWA \n");
+		debugPrint("session is PWA \n");
 
 		mb.authToken = true;
 	}
-	
+
 	debugPrint("auth token \n");
 	debugPrint(mb.authToken + "\n\n");
 
@@ -88,7 +88,8 @@ async function sessionCheck() {
 
 				if (response.status >= 200 && response.status < 300) {
 					hideLoginDialog();
-					bootSequence();
+					debugPrint("TRIGGER BOOT SEQUENCE")
+					//bootSequence();
 				} else {
 					showLoginDialog();
 				}
