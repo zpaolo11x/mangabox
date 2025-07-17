@@ -1406,11 +1406,8 @@
 							function (response) {
 								try {
 									debugPrint('\n>>> SUCCESS callback called\n');
-									debugPrint('Status:\n' + response.status + "\n");
-									debugPrint('Data:\n' + response.data + "\n");
-									debugPrint("\n");
+									debugPrint('Status:' + response.status + ' Data:\n' + response.data + "\n");
 
-									// Convert base64 to blob
 									const blob = response.data; // Already a Blob
 									const objectURL = URL.createObjectURL(blob);
 
@@ -2255,7 +2252,9 @@
 			</div>
 			`;
 
+			debugPrint("A1\n")
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
+			debugPrint("A2\n")
 			createCustomScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${serie.metadata.title}</span>
@@ -3511,7 +3510,11 @@
 						element.uiPage.classList.add('loading');
 						try {
 							// Fetch the image
+										debugPrint("B1\n")
+
 							const blobUrl = await fetchMedia(element.lazySrc);
+										debugPrint("B2\n")
+
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
@@ -4266,7 +4269,11 @@
 					img.classList.add('loading');
 
 					// TODO Set the actual src from lazySrc, check if needed
+								debugPrint("C1\n")
+
 					const imageUrl = await fetchMedia(img.lazySrc);
+								debugPrint("C2\n")
+
 					img.src = imageUrl;
 
 					// Remove lazySrc to clean up
