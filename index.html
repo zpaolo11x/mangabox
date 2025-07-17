@@ -265,10 +265,7 @@
 		let isAndroid = false;
 		let cordovaStore = null;
 
-		debugPrint("startup scripts\n");
-
 		document.addEventListener('deviceready', () => {
-			debugPrint("deviceready\n");
 
 			if (cordova && cordova.plugin && cordova.plugin.http) {
 				debugPrint('Advanced HTTP plugin is available\n');
@@ -278,9 +275,6 @@
 
 			isCordova = !!window.cordova;
 			try { isAndroid = device.platform === 'Android' } catch (err) { isAndroid = false };
-
-			debugPrint("cordova:" + isCordova + "\n");
-			debugPrint("android:" + isAndroid + "\n");
 
 			if (isCordova) {
 				secureStore = new cordova.plugins.SecureStorage(
@@ -529,7 +523,6 @@
 		//MB API Call Function 
 	async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 	if (isCordova) {
-		debugPrint("callAPI CORDOVA EDITION\n");
 
 		// Return a Promise so it can be awaited
 		return new Promise((resolve, reject) => {
@@ -540,20 +533,15 @@
 					try {
 						if (returnval) {
 							const output = JSON.parse(response.data);
-							debugPrint("Cordova API call success:");
-							debugPrint(JSON.stringify(output));
 							resolve(output); // resolves the Promise
 						} else {
 							resolve(); // resolves with undefined
 						}
 					} catch (err) {
-						debugPrint("Error parsing response data: " + err);
 						reject(err);
 					}
 				},
 				function (error) {
-					debugPrint("*** Response error\n");
-					debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
 					reject(error); // rejects the Promise
 				}
 			);
@@ -1416,6 +1404,15 @@ async function fetchMedia(url) {
 					},
 					function (response) {
 						try {
+										debugPrint('\n>>> SUCCESS callback called');
+			debugPrint("\n");
+			debugPrint('Status:\n' + response.status + "\n");
+			debugPrint("\n");
+			debugPrint('Headers:\n' + JSON.stringify(response.headers) + "\n");
+			debugPrint("\n");
+			debugPrint('Data:\n' + response.data + "\n");
+			debugPrint("\n");
+
 							// Convert base64 to blob
 							const contentType = response.headers['Content-Type'] || 'image/jpeg'; // fallback
 							const byteCharacters = atob(response.data);
@@ -2743,13 +2740,10 @@ async function fetchMedia(url) {
 		}
 
 		async function bootSequence() {
-			debugPrint("get user serrings\n");
 			userSettings = await getUserSettings();
 
-			debugPrint("apply user serrings\n");
 			applyUserSettings();
 
-			debugPrint("apply accent\n");
 			applyAccent();
 			// Apply first theme change
 			changeTheme();
