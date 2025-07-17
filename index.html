@@ -1386,7 +1386,7 @@
 
 		//MB Media Cache 
 
-		function blobToBase64(blob) {
+		async function blobToBase64(blob) {
 			return new Promise((resolve, reject) => {
 				const reader = new FileReader();
 
@@ -1427,7 +1427,7 @@
 									'X-Auth-Token': mb.authToken,
 								}
 							},
-							function (response) {
+							async function (response) {
 								debugPrintLn("CORDOVA MEDIA RESPONSE OK");
 								try {
 									// Log what kind of data we really got
@@ -1439,7 +1439,7 @@
 
 									// If we get here, create object URL
 									const blob = response.data;
-									const imgBase64 = blobToBase64(blob);
+									const imgBase64 = await blobToBase64(blob);
 									debugPrintLn(imgBase64);
 
 									const objectURL = URL.createObjectURL(blob);
