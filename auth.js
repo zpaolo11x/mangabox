@@ -1,5 +1,21 @@
 // script.js
-
+function saveTokenCordova(token) {
+  return new Promise((resolve, reject) => {
+    const secureStore = new cordova.plugins.SecureStorage(
+      () => {
+        secureStore.set(
+          () => resolve(), // ✅ Success
+          (err) => reject('SecureStorage set error: ' + err), // ❌ Failure
+          'auth_token',
+          token
+        );
+      },
+      (err) => reject('SecureStorage init error: ' + err), // ❌ Init failed
+      'MangaBoxSecure'
+    );
+  });
+}
+/*
 function saveTokenCordova(token) {
 	secureStore.set(
 		() => debugPrint('Token saved securely\n'),
@@ -8,7 +24,7 @@ function saveTokenCordova(token) {
 		token
 	);
 }
-
+*/
 function loadTokenCordova(token) {
 	// Read token later
 	secureStore.get(
