@@ -1386,7 +1386,7 @@
 
 		//MB Media Cache 
 
-		async function blobToBase64(blob) {
+		function blobToBase64(blob) {
 			return new Promise((resolve, reject) => {
 				const reader = new FileReader();
 
@@ -1438,9 +1438,15 @@
 									debugPrintLn("Blob type: " + response.data.type);
 
 									// If we get here, create object URL
-									const blob = response.data;
-									const imgBase64 = await blobToBase64(blob);
-									debugPrintLn(imgBase64);
+                 debugPrintLn("Blob size: " + blob.size);
+                     debugPrintLn("Blob type: " + blob.type);
+
+                     // AWAIT the blobToBase64 conversion
+                     const imgBase64 = await blobToBase64(blob);
+                     debugPrintLn("Base64 conversion complete.");
+                     debugPrintLn("Base64 string (first 50 chars): " + imgBase64.substring(0, 50) + "...");
+
+							debugPrintLn(imgBase64);
 
 									const objectURL = URL.createObjectURL(blob);
 
