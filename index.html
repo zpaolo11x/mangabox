@@ -1383,6 +1383,7 @@
 		//MB Media Cache 
 
 		async function fetchMedia(url) {
+			debugPrint(url+"\n");
 			if (mb.mediaCache.has(url)) {
 				const value = mb.mediaCache.get(url);
 				mb.mediaCache.delete(url);
@@ -1404,12 +1405,8 @@
 							},
 							function (response) {
 								try {
-									debugPrint('\n>>> SUCCESS callback called');
-									debugPrint("\n");
+									debugPrint('\n>>> SUCCESS callback called\n');
 									debugPrint('Status:\n' + response.status + "\n");
-									debugPrint("\n");
-									debugPrint('Headers:\n' + JSON.stringify(response.headers) + "\n");
-									debugPrint("\n");
 									debugPrint('Data:\n' + response.data + "\n");
 									debugPrint("\n");
 
