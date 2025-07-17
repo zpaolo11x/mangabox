@@ -225,14 +225,14 @@ function login() {
 					debugPrint("*** Token saved\n");
 					debugPrint("Location RELOAD\n")
 					hideLoginDialog();
-					location.reload(true);
+					//location.reload(true);
 				}).catch((e) => {
 					debugPrint('*** Token save error: ' + e + '\n');
 					debugPrint('*** Saving to local storage\n')
 					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
 					debugPrint("Location RELOAD\n")
 					hideLoginDialog();
-					location.reload(true);
+					//location.reload(true);
 				});
 			}
 

@@ -2658,10 +2658,13 @@
 		}
 
 		async function bootSequence() {
+			debugPrint("get user serrings");
 			userSettings = await getUserSettings();
 
+			debugPrint("apply user serrings");
 			applyUserSettings();
 
+			debugPrint("apply accent");
 			applyAccent();
 			// Apply first theme change
 			changeTheme();
