@@ -64,6 +64,7 @@ async function sessionCheck() {
 
 	// Setup fetch or HTTP call
 	if (isCordova) {
+		debugPrint ("Is Cordova\n")
 		// Native HTTP plugin call
 		cordova.plugin.http.sendRequest(
 			`${mb.baseUrl}/api/v1/login/set-cookie`,
@@ -76,6 +77,8 @@ async function sessionCheck() {
 				}
 			},
 			function (response) {
+						debugPrint ("Response: "+response.status+"\n")
+
 				if (response.status >= 200 && response.status < 300) {
 					hideLoginDialog();
 					bootSequence();
@@ -84,12 +87,15 @@ async function sessionCheck() {
 				}
 			},
 			function (error) {
+										debugPrint ("Response error\n")
+
 				debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
 				showLoginDialog();
 			}
 		);
 	} else {
 		// Web / Electron fetch
+		debugPrint ("Is NOT Cordova\n")
 		const fetchPayload = isElectronApp
 			? {
 				method: 'GET',
