@@ -290,6 +290,8 @@
 				);
 			}
 
+			sessionCheck()
+
 		}, false);
 	</script>
 
@@ -4239,7 +4241,7 @@
 			event.stopPropagation();
 		})
 
-		sessionCheck()
+		if (!isCordova) sessionCheck();
 
 		//MB Reader touch response fucntions
 		function getTrueScale() {

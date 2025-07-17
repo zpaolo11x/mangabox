@@ -42,90 +42,52 @@ async function sessionCheck() {
 	debugPrint('sessionCheck\n');
 	loginBaseUrl.value = mb.baseUrl;
 
-	if (isElectronApp) {
-		mb.authToken = await loadTokenElectron();
-	} else if (isCordova) {
-		mb.authToken = localStorage.getItem('mbAuthToken');
-	} else {
-		mb.authToken = true;
-	}
-
+	mb.authToken = true;
+	if (isElectronApp) mb.authToken = await loadTokenElectron();
+	if (isCordova) mb.authToken = localStorage.getItem('mbAuthToken');
 	debugPrint(mb.authToken + "\n\n")
 
-	debugPrint('Loaded auth token: ' + mb.authToken + '\n');
+	//mb.authToken = isElectronApp ? await loadTokenElectron() : true;
 
-	// Check for missing credentials
-	if (!mb.baseUrl || !mb.authToken) {
+	if ((!mb.baseUrl) || (!mb.authToken)) {
 		showLoginDialog();
 		return;
 	}
 
-	// Setup fetch or HTTP call
-	if (isCordova) {
-		// Native HTTP plugin call
-		cordova.plugin.http.sendRequest(
-			`${mb.baseUrl}/api/v1/login/set-cookie`,
-			{
-				method: 'get',
-				headers: {
-					'X-Auth-Token': mb.authToken,
-					'X-Requested-With': 'XMLHttpRequest',
-					'skip_zrok_interstitial': '1'
-				}
-			},
-			function (response) {
-				if (response.status >= 200 && response.status < 300) {
-					hideLoginDialog();
-					bootSequence();
-				} else {
-					showLoginDialog();
-				}
-			},
-			function (error) {
-				debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
-				showLoginDialog();
-			}
-		);
-	} else {
-		// Web / Electron fetch
-		const fetchPayload = isElectronApp
-			? {
-				method: 'GET',
-				headers: {
-					'X-Auth-Token': mb.authToken,
-					'X-Requested-With': 'XMLHttpRequest',
-					'skip_zrok_interstitial': '1'
-				}
-			}
-			: {
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'X-Requested-With': 'XMLHttpRequest',
-					'skip_zrok_interstitial': '1'
-				}
-			};
 
-		try {
-			const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
-			if (response.ok) {
-				hideLoginDialog();
-				bootSequence();
-			} else {
-				showLoginDialog();
+	const fetchPayload = isElectronApp ?
+		{
+			method: 'GET',
+			headers: {
+				'X-Auth-Token': mb.authToken,
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
 			}
-		} catch (error) {
-			debugPrint('Fetch error: ' + error);
+		} :
+		{
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
+			}
+		};
+
+	try {
+		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+		if (response.ok) {
+			hideLoginDialog();
+			bootSequence();
+		} else {
 			showLoginDialog();
 		}
+	} catch (error) {
+		showLoginDialog();
 	}
 }
 
-
 function login() {
 	let baseUrlVal = loginBaseUrl.value;
-
-	baseUrlVal = 'https://aerobox.freeddns.it/komga' //XXX
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		// Add http:// if no protocol is present
@@ -134,9 +96,7 @@ function login() {
 
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
-
-	mbAuthHeader = 'Basic ' + btoa('testuser@test.com:test'); //XXX
+	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
 	// Test the auth header and base URL with a simple API call to validate credentials
 
@@ -178,7 +138,7 @@ function login() {
 		{
 			method: 'get',
 			headers: {
-				'Authorization': mb.mbAuthHeader,
+				'Authorization': 'Basic ' + btoa('testuser@test.com:test'),
 				'X-Requested-With': 'XMLHttpRequest',
 				'X-Auth-Token': '',
 				'skip_zrok_interstitial': '1',
