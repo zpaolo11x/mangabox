@@ -216,7 +216,7 @@ function login() {
 			const token = response.headers['x-auth-token'];
 			const responseOk = (response.status === 204);
 
-			debugPrint('.  Token: ' + token+"\n");
+			debugPrint('*** Token: ' + token+"\n");
 
 			if (responseOk && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
@@ -224,15 +224,15 @@ function login() {
 				saveTokenCordova(token).then(() => {
 					debugPrint("*** Token saved\n");
 					debugPrint("Location RELOAD\n")
-					//hideLoginDialog();
-					//location.reload(true);
+					hideLoginDialog();
+					location.reload(true);
 				}).catch((e) => {
 					debugPrint('*** Token save error: ' + e + '\n');
 					debugPrint('*** Saving to local storage\n')
 					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
 					debugPrint("Location RELOAD\n")
-					//hideLoginDialog();
-					//location.reload(true);
+					hideLoginDialog();
+					location.reload(true);
 				});
 			}
 
