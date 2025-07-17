@@ -521,47 +521,47 @@
 		}
 
 		//MB API Call Function 
-	async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
-	if (isCordova) {
+		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
+			if (isCordova) {
 
-		// Return a Promise so it can be awaited
-		return new Promise((resolve, reject) => {
-			cordova.plugin.http.sendRequest(
-				`${mb.baseUrl}${API_url}`,
-				buildRequest(mb.authToken, method, body),
-				function (response) {
-					try {
-						if (returnval) {
-							const output = JSON.parse(response.data);
-							resolve(output); // resolves the Promise
-						} else {
-							resolve(); // resolves with undefined
+				// Return a Promise so it can be awaited
+				return new Promise((resolve, reject) => {
+					cordova.plugin.http.sendRequest(
+						`${mb.baseUrl}${API_url}`,
+						buildRequest(mb.authToken, method, body),
+						function (response) {
+							try {
+								if (returnval) {
+									const output = JSON.parse(response.data);
+									resolve(output); // resolves the Promise
+								} else {
+									resolve(); // resolves with undefined
+								}
+							} catch (err) {
+								reject(err);
+							}
+						},
+						function (error) {
+							reject(error); // rejects the Promise
 						}
-					} catch (err) {
-						reject(err);
+					);
+				});
+			} else {
+				try {
+					const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
+
+					if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+
+					if (returnval) {
+						const output = await response.json();
+						return output;
 					}
-				},
-				function (error) {
-					reject(error); // rejects the Promise
+				} catch (error) {
+					console.error('Fetch error:', error);
+					throw error;
 				}
-			);
-		});
-	} else {
-		try {
-			const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
-
-			if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-
-			if (returnval) {
-				const output = await response.json();
-				return output;
 			}
-		} catch (error) {
-			console.error('Fetch error:', error);
-			throw error;
 		}
-	}
-}
 
 
 		async function getUserSettings() {
@@ -1382,100 +1382,87 @@
 
 		//MB Media Cache 
 
-async function fetchMedia(url) {
-	if (mb.mediaCache.has(url)) {
-		const value = mb.mediaCache.get(url);
-		mb.mediaCache.delete(url);
-		mb.mediaCache.set(url, value);
-		return value;
-	}
+		async function fetchMedia(url) {
+			if (mb.mediaCache.has(url)) {
+				const value = mb.mediaCache.get(url);
+				mb.mediaCache.delete(url);
+				mb.mediaCache.set(url, value);
+				return value;
+			}
 
-	try {
-		if (isCordova) {
-			return await new Promise((resolve, reject) => {
-				cordova.plugin.http.sendRequest(
-					url,
-					{
-						method: 'get',
-						responseType: 'blob', // fallback if binary not supported
-						headers: {
-							'X-Auth-Token': mb.authToken,
-						}
-					},
-					function (response) {
-						try {
-										debugPrint('\n>>> SUCCESS callback called');
-			debugPrint("\n");
-			debugPrint('Status:\n' + response.status + "\n");
-			debugPrint("\n");
-			debugPrint('Headers:\n' + JSON.stringify(response.headers) + "\n");
-			debugPrint("\n");
-			debugPrint('Data:\n' + response.data + "\n");
-			debugPrint("\n");
-
-							// Convert base64 to blob
-							const contentType = response.headers['Content-Type'] || 'image/jpeg'; // fallback
-							const byteCharacters = atob(response.data);
-							const byteArrays = [];
-
-							for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-								const slice = byteCharacters.slice(offset, offset + 512);
-								const byteNumbers = new Array(slice.length);
-								for (let i = 0; i < slice.length; i++) {
-									byteNumbers[i] = slice.charCodeAt(i);
+			try {
+				if (isCordova) {
+					return await new Promise((resolve, reject) => {
+						cordova.plugin.http.sendRequest(
+							url,
+							{
+								method: 'get',
+								responseType: 'blob', // fallback if binary not supported
+								headers: {
+									'X-Auth-Token': mb.authToken,
 								}
-								byteArrays.push(new Uint8Array(byteNumbers));
+							},
+							function (response) {
+								try {
+									debugPrint('\n>>> SUCCESS callback called');
+									debugPrint("\n");
+									debugPrint('Status:\n' + response.status + "\n");
+									debugPrint("\n");
+									debugPrint('Headers:\n' + JSON.stringify(response.headers) + "\n");
+									debugPrint("\n");
+									debugPrint('Data:\n' + response.data + "\n");
+									debugPrint("\n");
+
+									// Convert base64 to blob
+									const blob = response.data; // Already a Blob
+									const objectURL = URL.createObjectURL(blob);
+
+									// Add to cache and enforce size limit
+									mb.mediaCache.set(url, objectURL);
+									if (mb.mediaCache.size > mb.cacheLimit) {
+										const oldestKey = mb.mediaCache.keys().next().value;
+										URL.revokeObjectURL(mb.mediaCache.get(oldestKey));
+										mb.mediaCache.delete(oldestKey);
+									}
+
+									resolve(objectURL);
+								} catch (e) {
+									console.error("Error decoding base64 media", e);
+									resolve('fallback-image.jpg');
+								}
+							},
+							function (error) {
+								console.error(`Cordova media fetch error from ${url}`, error);
+								resolve('fallback-image.jpg');
 							}
+						);
+					});
+				} else {
+					// PWA / Electron
+					const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
 
-							const blob = new Blob(byteArrays, { type: contentType });
-							const objectURL = URL.createObjectURL(blob);
+					if (response.ok) {
+						const blob = await response.blob();
+						const objectURL = URL.createObjectURL(blob);
 
-							// Add to cache and enforce size limit
-							mb.mediaCache.set(url, objectURL);
-							if (mb.mediaCache.size > mb.cacheLimit) {
-								const oldestKey = mb.mediaCache.keys().next().value;
-								URL.revokeObjectURL(mb.mediaCache.get(oldestKey));
-								mb.mediaCache.delete(oldestKey);
-							}
-
-							resolve(objectURL);
-						} catch (e) {
-							console.error("Error decoding base64 media", e);
-							resolve('fallback-image.jpg');
+						mb.mediaCache.set(url, objectURL);
+						if (mb.mediaCache.size > mb.cacheLimit) {
+							const oldestKey = mb.mediaCache.keys().next().value;
+							URL.revokeObjectURL(mb.mediaCache.get(oldestKey));
+							mb.mediaCache.delete(oldestKey);
 						}
-					},
-					function (error) {
-						console.error(`Cordova media fetch error from ${url}`, error);
-						resolve('fallback-image.jpg');
+
+						return objectURL;
+					} else {
+						console.error(`Failed to load media from ${url}`, response.status);
+						return 'fallback-image.jpg';
 					}
-				);
-			});
-		} else {
-			// PWA / Electron
-			const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
-
-			if (response.ok) {
-				const blob = await response.blob();
-				const objectURL = URL.createObjectURL(blob);
-
-				mb.mediaCache.set(url, objectURL);
-				if (mb.mediaCache.size > mb.cacheLimit) {
-					const oldestKey = mb.mediaCache.keys().next().value;
-					URL.revokeObjectURL(mb.mediaCache.get(oldestKey));
-					mb.mediaCache.delete(oldestKey);
 				}
-
-				return objectURL;
-			} else {
-				console.error(`Failed to load media from ${url}`, response.status);
+			} catch (error) {
+				console.error(`Error fetching media: ${error.message}`);
 				return 'fallback-image.jpg';
 			}
 		}
-	} catch (error) {
-		console.error(`Error fetching media: ${error.message}`);
-		return 'fallback-image.jpg';
-	}
-}
 
 
 
