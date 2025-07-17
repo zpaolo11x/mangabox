@@ -1394,41 +1394,92 @@
 
 		//MB Media Cache 
 
-		async function fetchMedia(url) {
-			if (mb.mediaCache.has(url)) {
-				// Move the accessed item to the end to mark it as recently used
-				const value = mb.mediaCache.get(url);
-				mb.mediaCache.delete(url);
-				mb.mediaCache.set(url, value);
-				return value;
-			}
+async function fetchMedia(url) {
+	if (mb.mediaCache.has(url)) {
+		const value = mb.mediaCache.get(url);
+		mb.mediaCache.delete(url);
+		mb.mediaCache.set(url, value);
+		return value;
+	}
 
-			try {
-				const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
+	try {
+		if (isCordova) {
+			return await new Promise((resolve, reject) => {
+				cordova.plugin.http.sendRequest(
+					url,
+					{
+						method: 'get',
+						responseType: 'blob', // fallback if binary not supported
+						headers: {
+							'X-Auth-Token': mb.authToken,
+						}
+					},
+					function (response) {
+						try {
+							// Convert base64 to blob
+							const contentType = response.headers['Content-Type'] || 'image/jpeg'; // fallback
+							const byteCharacters = atob(response.data);
+							const byteArrays = [];
 
-				if (response.ok) {
-					const blob = await response.blob();
-					const objectURL = URL.createObjectURL(blob);
+							for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+								const slice = byteCharacters.slice(offset, offset + 512);
+								const byteNumbers = new Array(slice.length);
+								for (let i = 0; i < slice.length; i++) {
+									byteNumbers[i] = slice.charCodeAt(i);
+								}
+								byteArrays.push(new Uint8Array(byteNumbers));
+							}
 
-					// Add to cache and enforce size limit
-					mb.mediaCache.set(url, objectURL);
-					if (mb.mediaCache.size > mb.cacheLimit) {
-						// Remove the oldest entry
-						const oldestKey = mb.mediaCache.keys().next().value;
-						URL.revokeObjectURL(mb.mediaCache.get(oldestKey)); // Revoke object URL
-						mb.mediaCache.delete(oldestKey);
+							const blob = new Blob(byteArrays, { type: contentType });
+							const objectURL = URL.createObjectURL(blob);
+
+							// Add to cache and enforce size limit
+							mb.mediaCache.set(url, objectURL);
+							if (mb.mediaCache.size > mb.cacheLimit) {
+								const oldestKey = mb.mediaCache.keys().next().value;
+								URL.revokeObjectURL(mb.mediaCache.get(oldestKey));
+								mb.mediaCache.delete(oldestKey);
+							}
+
+							resolve(objectURL);
+						} catch (e) {
+							console.error("Error decoding base64 media", e);
+							resolve('fallback-image.jpg');
+						}
+					},
+					function (error) {
+						console.error(`Cordova media fetch error from ${url}`, error);
+						resolve('fallback-image.jpg');
 					}
+				);
+			});
+		} else {
+			// PWA / Electron
+			const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
 
-					return objectURL;
-				} else {
-					console.error(`Failed to load media from ${url}`, response.status);
-					return 'fallback-image.jpg';
+			if (response.ok) {
+				const blob = await response.blob();
+				const objectURL = URL.createObjectURL(blob);
+
+				mb.mediaCache.set(url, objectURL);
+				if (mb.mediaCache.size > mb.cacheLimit) {
+					const oldestKey = mb.mediaCache.keys().next().value;
+					URL.revokeObjectURL(mb.mediaCache.get(oldestKey));
+					mb.mediaCache.delete(oldestKey);
 				}
-			} catch (error) {
-				console.error(`Error fetching media: ${error.message}`);
+
+				return objectURL;
+			} else {
+				console.error(`Failed to load media from ${url}`, response.status);
 				return 'fallback-image.jpg';
 			}
 		}
+	} catch (error) {
+		console.error(`Error fetching media: ${error.message}`);
+		return 'fallback-image.jpg';
+	}
+}
+
 
 
 		// Function to clear the cache entirely
