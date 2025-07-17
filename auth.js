@@ -1,6 +1,6 @@
 // script.js
 
-async function saveTokenCordova(token) {
+function saveTokenCordova(token) {
 	secureStore.set(
 		() => debugPrint('Token saved securely\n'),
 		(err) => debugPrint('Failed to save token: ' + err + "\n"),
@@ -9,7 +9,7 @@ async function saveTokenCordova(token) {
 	);
 }
 
-async function loadTokenCordova(token) {
+function loadTokenCordova(token) {
 	// Read token later
 	secureStore.get(
 		(value) => {
@@ -187,7 +187,7 @@ function login() {
 			loginError.classList.remove('auth-hidden');
 		});
 */
-	debugPrint('>>> about to call cordova.plugin.http.sendRequest');
+	debugPrint('>>> about to call cordova.plugin.http.sendRequest\n');
 
 	cordova.plugin.http.sendRequest(
 		`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
@@ -211,15 +211,15 @@ function login() {
 
 				saveTokenCordova(token).then(() => {
 					debugPrint("Token saved\n");
-					hideLoginDialog();
-					debugPrint("Location RELOAD")
+					debugPrint("Location RELOAD\n")
+					//hideLoginDialog();
 					//location.reload(true);
 				}).catch((e) => {
 					debugPrint('Token save error: ' + e + '\n');
 					debugPrint('Saving to local storage\n')
 					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
-					hideLoginDialog();
-					debugPrint("Location RELOAD")
+					debugPrint("Location RELOAD\n")
+					//hideLoginDialog();
 					//location.reload(true);
 				});
 			}
