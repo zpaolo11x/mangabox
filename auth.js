@@ -121,6 +121,14 @@ cordova.plugin.http.sendRequest(
     }
   },
   function(response) {
+	   const token = response.headers['x-auth-token'];
+    debugPrint('Token: ' + token);
+
+    if (response.status === 204 && token) {
+      localStorage.setItem('mbBaseUrl', baseUrlVal);
+      localStorage.setItem('mbToken', token);
+	 }
+	 
     debugPrint('>>> SUCCESS callback called');
     debugPrint('Status: ' + response.status);
     debugPrint('Headers: ' + JSON.stringify(response.headers));
