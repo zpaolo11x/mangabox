@@ -43,21 +43,21 @@ async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
 	if (isElectronApp) {
-		debugPrint("   session is Electron \n");
+		debugPrint("*** session is Electron \n");
 
 		mb.authToken = await loadTokenElectron();
 	} else if (isCordova) {
-		debugPrint("   session is Cordova \n");
+		debugPrint("*** session is Cordova \n");
 
 		mb.authToken = localStorage.getItem('mbAuthToken');
 	} else {
-		debugPrint("   session is PWA \n");
+		debugPrint("*** session is PWA \n");
 
 		mb.authToken = true;
 	}
 
-	debugPrint("   Loaded auth token \n");
-	debugPrint("   " + mb.authToken + "\n\n");
+	debugPrint("*** Loaded auth token \n");
+	debugPrint("*** " + mb.authToken + "\n\n");
 
 
 	// Check for missing credentials
@@ -80,7 +80,7 @@ async function sessionCheck() {
 				}
 			},
 			function (response) {
-				debugPrint("   Response: " + response.status + "\n")
+				debugPrint("*** Response: " + response.status + "\n")
 
 				if (response.status >= 200 && response.status < 300) {
 					hideLoginDialog();
@@ -91,7 +91,7 @@ async function sessionCheck() {
 				}
 			},
 			function (error) {
-				debugPrint("   Response error\n")
+				debugPrint("*** Response error\n")
 
 				debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
 				showLoginDialog();
@@ -126,7 +126,7 @@ async function sessionCheck() {
 				showLoginDialog();
 			}
 		} catch (error) {
-			debugPrint('   Fetch error: ' + error);
+			debugPrint('*** Fetch error: ' + error);
 			showLoginDialog();
 		}
 	}
@@ -183,7 +183,7 @@ function login() {
 			loginError.classList.remove('auth-hidden');
 		});
 */
-	debugPrint('   call cordova.plugin.http.sendRequest\n');
+	debugPrint('*** call cordova.plugin.http.sendRequest\n');
 
 	cordova.plugin.http.sendRequest(
 		`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
@@ -200,19 +200,19 @@ function login() {
 			const token = response.headers['x-auth-token'];
 			const responseOk = (response.status === 204);
 
-			debugPrint('.  Token: ' + token);
+			debugPrint('.  Token: ' + token+"\n");
 
 			if (responseOk && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 
 				saveTokenCordova(token).then(() => {
-					debugPrint("   Token saved\n");
+					debugPrint("*** Token saved\n");
 					debugPrint("Location RELOAD\n")
 					//hideLoginDialog();
 					//location.reload(true);
 				}).catch((e) => {
-					debugPrint('   Token save error: ' + e + '\n');
-					debugPrint('   Saving to local storage\n')
+					debugPrint('*** Token save error: ' + e + '\n');
+					debugPrint('*** Saving to local storage\n')
 					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
 					debugPrint("Location RELOAD\n")
 					//hideLoginDialog();
@@ -230,12 +230,12 @@ function login() {
 			debugPrint("\n");
 		},
 		function (error) {
-			debugPrint('>>> ERROR callback called');
+			debugPrint('>>> ERROR callback called\n');
 			debugPrint(JSON.stringify(error));
 		}
 	);
 
-	debugPrint('>>> after sendRequest call');
+	debugPrint('>>> after sendRequest call\n');
 
 }
 
