@@ -1411,9 +1411,9 @@
 								debugPrintLn("CORDOVA MEDIA RESPONSE OK");
 								try {
 									// Log what kind of data we really got
-									debugPrintLn("response.data typeof: " + typeof response.data);
-									debugPrintLn("response.data instanceof Blob: " + (response.data instanceof Blob));
-									debugPrintLn("response.data: " + JSON.stringify(response.data)); // May error if Blob
+									//debugPrintLn("response.data typeof: " + typeof response.data);
+									//debugPrintLn("response.data instanceof Blob: " + (response.data instanceof Blob));
+									//debugPrintLn("response.data: " + JSON.stringify(response.data)); // May error if Blob
 									debugPrintLn("Blob size: " + response.data.size);
 									debugPrintLn("Blob type: " + response.data.type);
 
@@ -4277,7 +4277,7 @@
 					debugPrintLn("C1")
 					const imageUrl = await fetchMedia(img.lazySrc);
 					debugPrintLn("C2")
-
+debugPrintLn(imageUrl);
 					img.src = imageUrl;
 
 					// Remove lazySrc to clean up
