@@ -1409,9 +1409,11 @@
 								debugPrint("CORDOVA MEDIA RESPONSE OK\n");
 								try {
 									// Log what kind of data we really got
-									debugPrint("response.data typeof: " + typeof response.data);
-									debugPrint("response.data instanceof Blob: " + (response.data instanceof Blob));
-									debugPrint("response.data: " + JSON.stringify(response.data)); // May error if Blob
+									debugPrint("response.data typeof: " + typeof response.data + "\n");
+									debugPrint("response.data instanceof Blob: " + (response.data instanceof Blob) + "\n");
+									debugPrint("response.data: " + JSON.stringify(response.data) + "\n"); // May error if Blob
+									debugPrint("Blob size: " + response.data.size + "\n");
+									debugPrint("Blob type: " + response.data.type + "\n");
 
 									// If we get here, create object URL
 									const blob = response.data;
