@@ -530,31 +530,32 @@
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
 
 			if (isCordova) {
-	debugPrint("callAPI CORDOVA EDITION\n");
+				debugPrint("callAPI CORDOVA EDITION\n");
 
-	cordova.plugin.http.sendRequest(
-		`${mb.baseUrl}${API_url}`,
-		buildRequest(mb.authToken, method, body),
-		function (response) {
-			try {
-				if (returnval) {
-					const output = JSON.parse(response.data);
-					// Resolve or pass it to a callback
-					debugPrint("Cordova API call success:");
-					debugPrint(JSON.stringify(output));
-					// You might need to return it via a callback or Promise pattern
-				}
-			} catch (err) {
-				debugPrint("Error parsing response data: " + err);
+				cordova.plugin.http.sendRequest(
+					`${mb.baseUrl}${API_url}`,
+					buildRequest(mb.authToken, method, body),
+					function (response) {
+						try {
+							if (returnval) {
+								const output = JSON.parse(response.data);
+								// Resolve or pass it to a callback
+								debugPrint("Cordova API call success:");
+								debugPrint(JSON.stringify(output));
+								return (output);
+								// You might need to return it via a callback or Promise pattern
+							}
+						} catch (err) {
+							debugPrint("Error parsing response data: " + err);
+						}
+					},
+					function (error) {
+						debugPrint("*** Response error\n");
+						debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
+					}
+				);
 			}
-		},
-		function (error) {
-			debugPrint("*** Response error\n");
-			debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
-		}
-	);
-}
-else {
+			else {
 				try {
 					const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
 

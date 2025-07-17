@@ -100,7 +100,7 @@ async function sessionCheck() {
 
 				if (response.status >= 200 && response.status < 300) {
 					hideLoginDialog();
-					debugPrint("TRIGGER BOOT SEQUENCE")
+					debugPrint("TRIGGER BOOT SEQUENCE\n")
 					bootSequence();
 				} else {
 					showLoginDialog();
@@ -109,7 +109,7 @@ async function sessionCheck() {
 			function (error) {
 				debugPrint("*** Response error\n")
 
-				debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
+				debugPrint('Cordova HTTP error: ' + JSON.stringify(error)+"\n");
 				showLoginDialog();
 			}
 		);
