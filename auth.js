@@ -77,15 +77,13 @@ function login() {
 		method: 'GET',
 		//credentials: 'include', // ✅ Important!
 		headers: {
-			//'Authorization': mbAuthHeader,
-			'Authorization': 'Basic ' + btoa(`testuser@test.com:test`),
+			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
 			'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
 		}
 	})
 		.then(async response => {
-			debugPrint(response.ok);
 			const token = response.headers.get('X-Auth-Token');
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
@@ -104,7 +102,6 @@ function login() {
 			console.error('Login error:', error);
 			loginError.classList.remove('auth-hidden');
 		});
-}
 */
  debugPrint('>>> about to call cordova.plugin.http.sendRequest');
 
@@ -121,12 +118,14 @@ cordova.plugin.http.sendRequest(
     }
   },
   function(response) {
-	   const token = response.headers['x-auth-token'];
+	 const token = response.headers['x-auth-token'];
+	 const responseOk = response.status === 204;
+
     debugPrint('Token: ' + token);
 
-    if (response.status === 204 && token) {
+    if (responseOk && token) {
       localStorage.setItem('mbBaseUrl', baseUrlVal);
-      localStorage.setItem('mbToken', token);
+      //localStorage.setItem('mbToken', token);
 	 }
 	 
     debugPrint('>>> SUCCESS callback called');
