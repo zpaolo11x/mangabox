@@ -513,13 +513,13 @@
 
 		function buildRequest(authToken, method, body) {
 			const requestTable = {
-				method: method,
+				method: method.toLowerCase(),
 				...(!isElectronApp && { credentials: 'include' }),
 				headers: {
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectronApp && { 'X-Auth-Token': authToken })
+					...((isElectronApp || isCordova) && { 'X-Auth-Token': authToken })
 				},
 				...(body && { body }),
 			}
@@ -528,17 +528,36 @@
 
 		//MB API Call Function 
 		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
-			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
 
-				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+			if (isCordova) {
+				cordova.plugin.http.sendRequest(
+					`${mb.baseUrl}${API_url}`,
+					buildRequest(mb.authToken, method, body),
+					function (response) {
+						if (returnval) {
+							const output = response.json();
+							return output;
+						}
+					},
+					function (error) {
+						debugPrint("*** Response error\n")
+						debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
+					}
+				);
 
-				if (returnval) {
-					const output = await response.json();
-					return output;
+			} else {
+				try {
+					const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
+
+					if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+
+					if (returnval) {
+						const output = await response.json();
+						return output;
+					}
+				} catch (error) {
+					console.error('Fetch error:', error);
 				}
-			} catch (error) {
-				console.error('Fetch libraries error:', error);
 			}
 		}
 

@@ -1,19 +1,19 @@
 // script.js
-async function saveTokenCordova(token) {
-	return new Promise((resolve, reject) => {
-		const secureStore = new cordova.plugins.SecureStorage(
-			() => {
-				secureStore.set(
-					() => resolve(), // ✅ Success
-					(err) => reject('SecureStorage set error: ' + err), // ❌ Failure
-					'auth_token',
-					token
-				);
-			},
-			(err) => reject('SecureStorage init error: ' + err), // ❌ Init failed
-			'MangaBoxSecure'
-		);
-	});
+function saveTokenCordova(token) {
+  return new Promise((resolve, reject) => {
+    const secureStore = new cordova.plugins.SecureStorage(
+      () => {
+        secureStore.set(
+          () => resolve(), // ✅ Success
+          (err) => reject('SecureStorage set error: ' + err), // ❌ Failure
+          'auth_token',
+          token
+        );
+      },
+      (err) => reject('SecureStorage init error: ' + err), // ❌ Init failed
+      'MangaBoxSecure'
+    );
+  });
 }
 /*
 function saveTokenCordova(token) {
@@ -29,10 +29,10 @@ function loadTokenCordova(token) {
 	// Read token later
 	secureStore.get(
 		(value) => {
-			debugPrint('Loaded token: ' + value + "\n");
+			debugPrint('Loaded token: ' + value+"\n");
 			useToken(value);
 		},
-		(err) => debugPrint('Token read failed: ' + err + "\n"),
+		(err) => debugPrint('Token read failed: ' + err+"\n"),
 		'auth_token'
 	);
 }
@@ -212,30 +212,29 @@ function login() {
 				'skip_zrok_interstitial': '1',
 			}
 		},
-		async function (response) {
+		function (response) {
 			const token = response.headers['x-auth-token'];
 			const responseOk = (response.status === 204);
 
-			debugPrint('*** Token: ' + token + "\n");
+			debugPrint('*** Token: ' + token+"\n");
 
 			if (responseOk && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 
-				try {
-					await saveTokenCordova(token);
+				saveTokenCordova(token).then(() => {
 					debugPrint("*** Token saved\n");
-				} catch (e) {
+					debugPrint("Location RELOAD\n")
+					hideLoginDialog();
+					location.reload(true);
+				}).catch((e) => {
 					debugPrint('*** Token save error: ' + e + '\n');
-					debugPrint('*** Saving to local storage\n');
-					localStorage.setItem('mbAuthToken', token); // fallback
-				}
-
-				debugPrint("Location RELOAD\n");
-				// hideLoginDialog();
-				// location.reload(true);
+					debugPrint('*** Saving to local storage\n')
+					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
+					debugPrint("Location RELOAD\n")
+					hideLoginDialog();
+					location.reload(true);
+				});
 			}
-
-
 
 			debugPrint('\n>>> SUCCESS callback called');
 			debugPrint("\n");
