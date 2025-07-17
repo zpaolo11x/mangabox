@@ -13,10 +13,10 @@ function loadTokenCordova(token) {
 	// Read token later
 	secureStore.get(
 		(value) => {
-			debugPrint('Loaded token: ' + value);
+			debugPrint('Loaded token: ' + value+"\n");
 			useToken(value);
 		},
-		(err) => debugPrint('Token read failed: ' + err),
+		(err) => debugPrint('Token read failed: ' + err+"\n"),
 		'auth_token'
 	);
 }
@@ -39,29 +39,26 @@ async function deleteTokenElectron() {
 }
 
 async function sessionCheck() {
-	debugPrint("CORDOVA CHECK: \n");
-	debugPrint(window.cordova + "\n\n");
 	debugPrint('sessionCheck\n');
 	loginBaseUrl.value = mb.baseUrl;
 
 	if (isElectronApp) {
-		debugPrint("session is Electron \n");
+		debugPrint("   session is Electron \n");
 
 		mb.authToken = await loadTokenElectron();
 	} else if (isCordova) {
-		debugPrint("session is Cordova \n");
+		debugPrint("   session is Cordova \n");
 
 		mb.authToken = localStorage.getItem('mbAuthToken');
 	} else {
-		debugPrint("session is PWA \n");
+		debugPrint("   session is PWA \n");
 
 		mb.authToken = true;
 	}
 
-	debugPrint("auth token \n");
-	debugPrint(mb.authToken + "\n\n");
+	debugPrint("   Loaded auth token \n");
+	debugPrint("   " + mb.authToken + "\n\n");
 
-	debugPrint('Loaded auth token: ' + mb.authToken + '\n');
 
 	// Check for missing credentials
 	if (!mb.baseUrl || !mb.authToken) {
@@ -71,7 +68,6 @@ async function sessionCheck() {
 
 	// Setup fetch or HTTP call
 	if (isCordova) {
-		debugPrint("Is Cordova\n")
 		// Native HTTP plugin call
 		cordova.plugin.http.sendRequest(
 			`${mb.baseUrl}/api/v1/login/set-cookie`,
@@ -84,7 +80,7 @@ async function sessionCheck() {
 				}
 			},
 			function (response) {
-				debugPrint("Response: " + response.status + "\n")
+				debugPrint("   Response: " + response.status + "\n")
 
 				if (response.status >= 200 && response.status < 300) {
 					hideLoginDialog();
@@ -95,7 +91,7 @@ async function sessionCheck() {
 				}
 			},
 			function (error) {
-				debugPrint("Response error\n")
+				debugPrint("   Response error\n")
 
 				debugPrint('Cordova HTTP error: ' + JSON.stringify(error));
 				showLoginDialog();
@@ -103,7 +99,6 @@ async function sessionCheck() {
 		);
 	} else {
 		// Web / Electron fetch
-		debugPrint("Is NOT Cordova\n")
 		const fetchPayload = isElectronApp
 			? {
 				method: 'GET',
@@ -131,7 +126,7 @@ async function sessionCheck() {
 				showLoginDialog();
 			}
 		} catch (error) {
-			debugPrint('Fetch error: ' + error);
+			debugPrint('   Fetch error: ' + error);
 			showLoginDialog();
 		}
 	}
@@ -139,6 +134,7 @@ async function sessionCheck() {
 
 
 function login() {
+	debugPrint("Login\n")
 	let baseUrlVal = loginBaseUrl.value;
 
 	baseUrlVal = 'https://aerobox.freeddns.it/komga' //XXX
@@ -187,7 +183,7 @@ function login() {
 			loginError.classList.remove('auth-hidden');
 		});
 */
-	debugPrint('>>> about to call cordova.plugin.http.sendRequest\n');
+	debugPrint('   call cordova.plugin.http.sendRequest\n');
 
 	cordova.plugin.http.sendRequest(
 		`https://aerobox.freeddns.it/komga/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`,
@@ -204,19 +200,19 @@ function login() {
 			const token = response.headers['x-auth-token'];
 			const responseOk = (response.status === 204);
 
-			debugPrint('Token: ' + token);
+			debugPrint('.  Token: ' + token);
 
 			if (responseOk && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 
 				saveTokenCordova(token).then(() => {
-					debugPrint("Token saved\n");
+					debugPrint("   Token saved\n");
 					debugPrint("Location RELOAD\n")
 					//hideLoginDialog();
 					//location.reload(true);
 				}).catch((e) => {
-					debugPrint('Token save error: ' + e + '\n');
-					debugPrint('Saving to local storage\n')
+					debugPrint('   Token save error: ' + e + '\n');
+					debugPrint('   Saving to local storage\n')
 					localStorage.setItem('mbAuthToken', token); // fallback (not secure)
 					debugPrint("Location RELOAD\n")
 					//hideLoginDialog();
@@ -224,7 +220,7 @@ function login() {
 				});
 			}
 
-			debugPrint('>>> SUCCESS callback called');
+			debugPrint('\n>>> SUCCESS callback called');
 			debugPrint("\n");
 			debugPrint('Status:\n' + response.status);
 			debugPrint("\n");
