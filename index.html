@@ -254,8 +254,11 @@
 	<script>
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+		debugPrint("FIRST JS");
+		debugPrint("FIRST JS - Is capacitor? " + isCapacitor);
 		let CapacitorHTTP;
 		if (isCapacitor) CapacitorHTTP = window.Capacitor.Plugins.Http;
+		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP)
 	</script>
 
 	<script src="auth.js"></script>
