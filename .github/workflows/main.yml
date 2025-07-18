@@ -153,7 +153,7 @@ jobs:
       - name: Debug Verify capacitor.js exists in webDir
         # This is CRITICAL. It verifies if capacitor.js was *actually generated*
         # in the correct place after `npx cap copy web`.
-        run: ls -lR dist/mangabox # Expect to see capacitor.js here
+        run: ls -lR dist # Expect to see capacitor.js here
 
       # --- END OF CAPACITOR-SPECIFIC ADDITIONS ---
       
