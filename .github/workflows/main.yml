@@ -117,14 +117,8 @@ jobs:
     env:
       version: ${{ needs.version.outputs.version }}
     steps:
-      - name: print working directory (initial)
-        run: pwd
-
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Debug List contents after checkout
-        run: ls -la # Verify capacitor.config.json is at root
 
       - name: Download webdeploy artifact
         uses: actions/download-artifact@v4
@@ -132,16 +126,8 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: dist # Artifact contents go into './dist'
 
-      - name: Debug Verify downloaded artifact structure
-        # This is CRITICAL. It will show you exactly what's in 'dist'.
-        # Look for 'dist/mangabox/index.html'.
-        run: ls -lR dist
-
       - name: Install dependencies
         run: npm install
-
-      - name: Add web platform
-        run: npx cap add web
 
       - name: Generate Capacitor Web Runtime and Copy Assets
         run: npx cap sync web
@@ -169,6 +155,7 @@ jobs:
         with:
           name: MangaBox-Android-${{ env.version }}
           path: android/app/build/outputs/apk/debug/app-debug.apk
+          
   release:
     needs: [build, web, version]
     env:
