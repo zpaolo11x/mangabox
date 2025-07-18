@@ -135,6 +135,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      # --- START OF CAPACITOR-SPECIFIC ADDITIONS ---
+
+      - name: Generate Capacitor Web Runtime and Copy Assets
+        # This step is crucial for bundledWebRuntime: true
+        # We need to run `npx cap copy web` after the web assets are in place.
+        # Assuming your capacitor.config.json's "webDir" is set to "dist".
+        # If your webDir is 'www', you might need to adjust the path here or your config.
+        # It's safer to ensure your webDir points to 'dist' in your capacitor.config.json.
+        run: npx cap copy web
+        # Important: Your capacitor.config.json file must be at the root of your checked-out repo
+        # for `npx cap` commands to pick it up correctly.
+
+      # --- END OF CAPACITOR-SPECIFIC ADDITIONS ---
+      
       - name: Add Android platform
         run: npx cap add android
 
