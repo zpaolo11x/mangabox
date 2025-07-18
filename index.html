@@ -1386,6 +1386,15 @@
 
 		//MB Media Cache 
 
+		function blobToBase64(blob) {
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.onloadend = () => resolve(reader.result); // this includes the data URL prefix
+				reader.onerror = reject;
+				reader.readAsDataURL(blob);
+			});
+		}
+
 		async function fetchMedia(url) {
 			debugPrintLn(url);
 			if (mb.mediaCache.has(url)) {
@@ -1407,19 +1416,26 @@
 									'X-Auth-Token': mb.authToken,
 								}
 							},
-							function (response) {
+							async function (response) {
 								debugPrintLn("CORDOVA MEDIA RESPONSE OK");
 
 								try {
-									const blob = response.data;
+									let blob;
+
+									if (typeof response.data === 'object' && response.data instanceof Blob) {
+										blob = response.data;
+									} else {
+										// Assume it's raw bytes, turn it into a Uint8Array and then Blob
+										const byteArray = new Uint8Array(response.data);
+										blob = new Blob([byteArray], { type: 'image/jpeg' }); // adjust mime type if needed
+									}
 
 									debugPrintLn("Blob size: " + blob.size);
 									debugPrintLn("Blob type: " + blob.type);
 									debugPrintLn("Using FileReader to convert blob to base64...");
 
-									const reader = new FileReader();
-									reader.onloadend = () => {
-										const base64Url = reader.result;
+									const base64Url = await blobToBase64(blob);
+
 
 										mb.mediaCache.set(url, base64Url);
 										if (mb.mediaCache.size > mb.cacheLimit) {
@@ -1428,13 +1444,7 @@
 										}
 
 										resolve(base64Url); // Use base64 image URL
-									};
-									reader.onerror = () => {
-										debugPrintLn("FileReader error: " + reader.error);
-										resolve('fallback-image.jpg');
-									};
-
-									reader.readAsDataURL(blob); // Convert blob to base64
+									
 								} catch (e) {
 									debugPrintLn("Blob handling error: " + e.message);
 									resolve('fallback-image.jpg');
