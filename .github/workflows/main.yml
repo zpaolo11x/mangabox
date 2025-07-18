@@ -112,11 +112,15 @@ jobs:
           path: webdeploy/
 
   android:
-    needs: version
+    needs: [version, web]
     runs-on: ubuntu-latest
     env:
       version: ${{ needs.version.outputs.version }}
     steps:
+      - name: Debug List web assets folder contents
+        run: |
+          ls -lR ./webdeploy/mangabox
+        
       - name: Checkout code
         uses: actions/checkout@v3
 
