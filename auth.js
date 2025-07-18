@@ -61,12 +61,16 @@ async function sessionCheck() {
 async function login() {
   let baseUrlVal = loginBaseUrl.value;
 
+	baseUrlVal = "https://aerobox.freeddns.it/komga"; //XXX
+
   if (!/^https?:\/\//i.test(baseUrlVal)) {
     baseUrlVal = 'https://' + baseUrlVal;
   }
   baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-  const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+  let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+
+  mbAuthHeader = 'Basic ' + btoa(`testuser@test.com:test`); //XXX
 
   if (isCapacitor) {
 	debugPrint("CAPACITOR SESSION")
@@ -106,7 +110,7 @@ async function login() {
       loginError.classList.remove('auth-hidden');
 
     } catch (error) {
-      console.error('Native HTTP login error:', error);
+      debugPrint('Native HTTP login error: '+ error);
       loginError.classList.remove('auth-hidden');
     }
   } else {
