@@ -128,7 +128,7 @@ jobs:
           path: ./
 
       - name: Debug verify web assets
-        run: ls -lR webdeploy/mangabox
+        run: ls -lR
 
       - name: Install dependencies
         run: npm install
