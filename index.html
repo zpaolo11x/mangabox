@@ -252,13 +252,22 @@
 	<div id="debuggerObj"></div>
 
 	<script>
+		function debugPrint(text) {
+			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
+		}
+
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 		debugPrint("FIRST JS");
 		debugPrint("FIRST JS - Is capacitor? " + isCapacitor);
 		let CapacitorHTTP;
-		if (isCapacitor) CapacitorHTTP = window.Capacitor.Plugins.Http;
+		let CapacitorHTTP2;
+		if (isCapacitor) {
+			CapacitorHTTP = window.Capacitor.Plugins.Http;
+			CapacitorHTTP2 = window.Capacitor.Http;
+		}
 		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP)
+		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP2)
 	</script>
 
 	<script src="auth.js"></script>
@@ -317,9 +326,6 @@
 
 
 		//MB General Functions 
-		function debugPrint(text) {
-			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
-		}
 
 		function addItem(itemkind, properties) {
 			const { style, ...rest } = properties;
