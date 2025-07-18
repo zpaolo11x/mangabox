@@ -77,7 +77,7 @@ async function login() {
     // Use Capacitor native HTTP
     try {
       const url = `${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`;
-      const response = await Http.request({
+      const response = await CapacitorHTTP.request({
         method: 'GET',
         url: url,
         headers: {
