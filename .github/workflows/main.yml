@@ -119,12 +119,6 @@ jobs:
     steps:
       - name: print working directory
         run: pwd
-        
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
 
       - name: Checkout code
         uses: actions/checkout@v3
