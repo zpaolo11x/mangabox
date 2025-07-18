@@ -257,7 +257,7 @@
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text;
 		}
-
+		
 		function debugPrintLn(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
 		}
@@ -1386,26 +1386,6 @@
 
 		//MB Media Cache 
 
-		function blobToBase64(blob) {
-			return new Promise((resolve, reject) => {
-				const reader = new FileReader();
-
-				// Event handler for when the file reading is complete
-				reader.onloadend = () => {
-					// reader.result will contain the Data URL (Base64 string with prefix)
-					resolve(reader.result);
-				};
-
-				// Event handler for errors during file reading
-				reader.onerror = (error) => {
-					reject(error);
-				};
-
-				// Start reading the blob as a Data URL
-				reader.readAsDataURL(blob);
-			});
-		}
-
 		async function fetchMedia(url) {
 			debugPrintLn(url);
 			if (mb.mediaCache.has(url)) {
@@ -1427,7 +1407,7 @@
 									'X-Auth-Token': mb.authToken,
 								}
 							},
-							async function (response) {
+							function (response) {
 								debugPrintLn("CORDOVA MEDIA RESPONSE OK");
 								try {
 									// Log what kind of data we really got
@@ -1438,16 +1418,7 @@
 									debugPrintLn("Blob type: " + response.data.type);
 
 									// If we get here, create object URL
-                 debugPrintLn("Blob size: " + blob.size);
-                     debugPrintLn("Blob type: " + blob.type);
-
-                     // AWAIT the blobToBase64 conversion
-                     const imgBase64 = await blobToBase64(blob);
-                     debugPrintLn("Base64 conversion complete.");
-                     debugPrintLn("Base64 string (first 50 chars): " + imgBase64.substring(0, 50) + "...");
-
-							debugPrintLn(imgBase64);
-
+									const blob = response.data;
 									const objectURL = URL.createObjectURL(blob);
 
 									mb.mediaCache.set(url, objectURL);
@@ -3548,7 +3519,7 @@
 						try {
 							// Fetch the image
 							const blobUrl = await fetchMedia(element.lazySrc);
-
+		
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
@@ -4303,9 +4274,9 @@
 					img.classList.add('loading');
 
 					// TODO Set the actual src from lazySrc, check if needed
-					//debugPrintLn("C1")
+					debugPrintLn("C1")
 					const imageUrl = await fetchMedia(img.lazySrc);
-					//debugPrintLn("C2")
+					debugPrintLn("C2")
 
 					img.src = imageUrl;
 
