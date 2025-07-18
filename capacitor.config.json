@@ -1,6 +1,6 @@
 {
   "appId": "com.mangabox.app",
   "appName": "MangaBox",
-  "webDir": "webdeploy/mangabox",
+  "webDir": ".",
   "bundledWebRuntime": false
 }
