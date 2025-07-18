@@ -140,11 +140,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Add web platform
+        run: npx cap add web
+
       - name: Generate Capacitor Web Runtime and Copy Assets
         run: npx cap sync web
 
       - name: Debug Verify capacitor.js exists in webDir
-        run: ls -lR dist # Expect to see capacitor.js here
+        run: ls -lR ./ # Expect to see capacitor.js here
       
       - name: Add Android platform
         run: npx cap add android
