@@ -110,6 +110,47 @@ jobs:
         with:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
+          
+  android:
+    needs: [version, web]  # Ensures web build is complete
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Capacitor CLI
+        run: npm install @capacitor/cli
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+
+      - name: Cache Gradle files
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Build APK with Gradle
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-Android-${{ env.version }}
+          path: android/app/build/outputs/apk/release/app-release.apk
 
   release:
     needs: [build, web, version]
