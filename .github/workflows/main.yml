@@ -140,33 +140,17 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # --- START OF CAPACITOR-SPECIFIC ADDITIONS ---
-
       - name: Generate Capacitor Web Runtime and Copy Assets
-        # This command reads your capacitor.config.json (from repo root)
-        # and expects "webDir": "dist/mangabox" to exist and contain your PWA files.
-        # It should then create capacitor.js directly within "dist/mangabox".
-        run: npx cap copy web
-        env: # Add this to get more verbose output from Capacitor CLI
-          CAPACITOR_DEBUG: true
+        run: npx cap sync web
 
       - name: Debug Verify capacitor.js exists in webDir
-        # This is CRITICAL. It verifies if capacitor.js was *actually generated*
-        # in the correct place after `npx cap copy web`.
         run: ls -lR dist # Expect to see capacitor.js here
-
-      # --- END OF CAPACITOR-SPECIFIC ADDITIONS ---
       
       - name: Add Android platform
         run: npx cap add android
 
       - name: Capacitor sync
-        # This command will take the content from "dist/mangabox"
-        # (which should now include capacitor.js) and copy it to the
-        # Android native project's assets/public directory.
         run: npx cap sync android
-        env: # Add this for verbose output during sync
-          CAPACITOR_DEBUG: true
 
       - name: Build APK
         run: |
