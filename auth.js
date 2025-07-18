@@ -58,50 +58,90 @@ async function sessionCheck() {
 	}
 }
 
-function login() {
-	let baseUrlVal = loginBaseUrl.value;
+async function login() {
+  let baseUrlVal = loginBaseUrl.value;
 
-	if (!/^https?:\/\//i.test(baseUrlVal)) {
-		// Add http:// if no protocol is present
-		baseUrlVal = 'https://' + baseUrlVal;
-	}
+  if (!/^https?:\/\//i.test(baseUrlVal)) {
+    baseUrlVal = 'https://' + baseUrlVal;
+  }
+  baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	baseUrlVal = baseUrlVal.replace(/\/$/, '');
+  const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+  if (isCapacitor) {
+	debugPrint("CAPACITOR SESSION")
+    // Use Capacitor native HTTP
+    try {
+      const url = `${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`;
+      const response = await Http.request({
+        method: 'GET',
+        url: url,
+        headers: {
+          'Authorization': mbAuthHeader,
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-Auth-Token': '',
+          'skip_zrok_interstitial': '1'
+        },
+      });
+		debugPrint("RESPONSE: "+response.status);
+      // Capacitor Http.request returns status and headers differently:
+      if (response.status >= 200 && response.status < 300) {
+        // X-Auth-Token header might be lowercase or uppercase - check response.headers
+        const token = response.headers['x-auth-token'] || response.headers['X-Auth-Token'];
 
-	// Test the auth header and base URL with a simple API call to validate credentials
+		  debugPrint("TOKEN: " + token);
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
-		method: 'GET',
-		//credentials: 'include', // ✅ Important!
-		headers: {
-			'Authorization': mbAuthHeader,
-			'X-Requested-With': 'XMLHttpRequest',
-			'X-Auth-Token': '',
-			'skip_zrok_interstitial': '1'
-		}
-	})
-		.then(async response => {
-			const token = response.headers.get('X-Auth-Token');
-			if (response.ok && token) {
-				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				if (isElectronApp) {
-					window.electronAPI.sendRememberMe(loginRememberMe.checked);
-					await saveToken(token);
-				}
-				hideLoginDialog();
-				location.reload(true);
-			} else {
-				localStorage.setItem('mbBaseUrl', baseUrlVal); // Save base URL
-				loginError.classList.remove('auth-hidden'); // Show error message
-			}
-		})
-		.catch(error => {
-			console.error('Login error:', error);
-			loginError.classList.remove('auth-hidden');
-		});
+        if (token) {
+          localStorage.setItem('mbBaseUrl', baseUrlVal);
+          localStorage.setItem('mbAuthToken', token);
+          localStorage.setItem('mbRememberMe', loginRememberMe.checked ? '1' : '0');
+
+          //hideLoginDialog();
+          //location.reload(true);
+          return;
+        }
+      }
+      // If we reach here, show error
+      localStorage.setItem('mbBaseUrl', baseUrlVal);
+      loginError.classList.remove('auth-hidden');
+
+    } catch (error) {
+      console.error('Native HTTP login error:', error);
+      loginError.classList.remove('auth-hidden');
+    }
+  } else {
+    // Regular fetch for web / Electron
+    fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': mbAuthHeader,
+        'X-Requested-With': 'XMLHttpRequest',
+        'X-Auth-Token': '',
+        'skip_zrok_interstitial': '1'
+      }
+    })
+    .then(async response => {
+      const token = response.headers.get('X-Auth-Token');
+      if (response.ok && token) {
+        localStorage.setItem('mbBaseUrl', baseUrlVal);
+        if (isElectronApp) {
+          window.electronAPI.sendRememberMe(loginRememberMe.checked);
+          await saveToken(token);
+        }
+        hideLoginDialog();
+        location.reload(true);
+      } else {
+        localStorage.setItem('mbBaseUrl', baseUrlVal);
+        loginError.classList.remove('auth-hidden');
+      }
+    })
+    .catch(error => {
+      console.error('Login error:', error);
+      loginError.classList.remove('auth-hidden');
+    });
+  }
 }
+
 
 function showLoginDialog() {
 	loginScreen.classList.remove('auth-hidden');
