@@ -11,7 +11,6 @@
 	"dependencies": {
 		"@capacitor/core": "^6.0.0",
 	   "@capacitor/android": "^6.0.0",
-	   "@capacitor/http": "^5.0.0",
 		"keytar": "^7.9.0"
 	},
 	"devDependencies": {
