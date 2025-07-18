@@ -1396,52 +1396,59 @@
 			}
 
 			try {
-				if (isCordova) {
-					return new Promise((resolve, reject) => {
-						cordova.plugin.http.sendRequest(
-							url,
-							{
-								method: 'get',
-								responseType: 'blob', // Important!
-								headers: {
-									'X-Auth-Token': mb.authToken,
-								}
-							},
-							function (response) {
-								debugPrintLn("CORDOVA MEDIA RESPONSE OK");
-								try {
-									// Log what kind of data we really got
-									//debugPrintLn("response.data typeof: " + typeof response.data);
-									//debugPrintLn("response.data instanceof Blob: " + (response.data instanceof Blob));
-									//debugPrintLn("response.data: " + JSON.stringify(response.data)); // May error if Blob
-									debugPrintLn("Blob size: " + response.data.size);
-									debugPrintLn("Blob type: " + response.data.type);
+	if (isCordova) {
+		return new Promise((resolve, reject) => {
+			cordova.plugin.http.sendRequest(
+				url,
+				{
+					method: 'get',
+					responseType: 'blob',
+					headers: {
+						'X-Auth-Token': mb.authToken,
+					}
+				},
+				function (response) {
+					debugPrintLn("CORDOVA MEDIA RESPONSE OK");
 
-									// If we get here, create object URL
-									const blob = response.data;
-									const objectURL = URL.createObjectURL(blob);
+					try {
+						const blob = response.data;
 
-									mb.mediaCache.set(url, objectURL);
-									if (mb.mediaCache.size > mb.cacheLimit) {
-										const oldestKey = mb.mediaCache.keys().next().value;
-										URL.revokeObjectURL(mb.mediaCache.get(oldestKey));
-										mb.mediaCache.delete(oldestKey);
-									}
+						debugPrintLn("Blob size: " + blob.size);
+						debugPrintLn("Blob type: " + blob.type);
+						debugPrintLn("Using FileReader to convert blob to base64...");
 
-									resolve(objectURL);
-								} catch (e) {
-									debugPrintLn("Blob handling error: " + e.message);
-									resolve('fallback-image.jpg');
-								}
-							},
-							function (error) {
-								debugPrintLn("CORDOVA MEDIA RESPONSE FAIL");
-								debugPrintLn("Cordova HTTP error: " + JSON.stringify(error));
-								resolve('fallback-image.jpg');
+						const reader = new FileReader();
+						reader.onloadend = () => {
+							const base64Url = reader.result;
+
+							mb.mediaCache.set(url, base64Url);
+							if (mb.mediaCache.size > mb.cacheLimit) {
+								const oldestKey = mb.mediaCache.keys().next().value;
+								mb.mediaCache.delete(oldestKey);
 							}
-						);
-					});
-				} else {
+
+							resolve(base64Url); // Use base64 image URL
+						};
+						reader.onerror = () => {
+							debugPrintLn("FileReader error: " + reader.error);
+							resolve('fallback-image.jpg');
+						};
+
+						reader.readAsDataURL(blob); // Convert blob to base64
+					} catch (e) {
+						debugPrintLn("Blob handling error: " + e.message);
+						resolve('fallback-image.jpg');
+					}
+				},
+				function (error) {
+					debugPrintLn("CORDOVA MEDIA RESPONSE FAIL");
+					debugPrintLn("Cordova HTTP error: " + JSON.stringify(error));
+					resolve('fallback-image.jpg');
+				}
+			);
+		});
+	}
+ else {
 					// PWA / Electron
 					const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
 
