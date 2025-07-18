@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"@capacitor/core": "^5.6.5",
+	   "@capacitor/android": "^5.6.5",
 		"keytar": "^7.9.0"
 	},
 	"devDependencies": {
