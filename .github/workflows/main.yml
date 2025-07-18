@@ -117,12 +117,18 @@ jobs:
     env:
       version: ${{ needs.version.outputs.version }}
     steps:
-      - name: Debug List web assets folder contents
-        run: |
-          pwd
-        
+       
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download webdeploy artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: ./
+
+      - name: Debug verify web assets
+        run: ls -lR webdeploy/mangabox
 
       - name: Install dependencies
         run: npm install
