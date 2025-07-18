@@ -125,7 +125,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: MangaBox-Web-${{ env.version }}
-          path: dist/**
+          path: dist/mangabox
 
       - name: Debug verify web assets
         run: ls -lR
