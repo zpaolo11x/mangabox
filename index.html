@@ -255,7 +255,7 @@
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 		let CapacitorHTTP;
-		if (isCapacitor) CapacitorHTTP = Capacitor.Http;
+		if (isCapacitor) CapacitorHTTP = window.Capacitor.Plugins.Http;
 	</script>
 
 	<script src="auth.js"></script>
