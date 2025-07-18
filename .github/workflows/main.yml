@@ -156,8 +156,6 @@ jobs:
           name: MangaBox-Android-${{ env.version }}
           path: android/app/build/outputs/apk/release/app-release-unsigned.apk
 
-
-
   release:
     needs: [build, web, version]
     env:
