@@ -1,5 +1,6 @@
 Main UI
 - Improve touch events management
+- Redesigned book details dialog
 
 Reader
 - 
