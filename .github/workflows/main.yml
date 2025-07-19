@@ -143,7 +143,6 @@ jobs:
 
       - name: Copy capacitor.js manually
         run: | 
-          ls node_modules/@capacitor/core/dist/
           cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
 
       - name: Build APK
