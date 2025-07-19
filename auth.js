@@ -24,7 +24,7 @@ async function sessionCheck() {
 
 	mb.authToken = true;
 	if (isElectronApp) mb.authToken = await loadToken();
-	if (isCapacitor) mb.authToken = localStorage.getItem("mbAuthToken");
+	//if (isCapacitor) mb.authToken = localStorage.getItem("mbAuthToken");
 
 
 	debugPrint("CURRENT TOKEN:\n" + mb.authToken);
@@ -35,7 +35,7 @@ async function sessionCheck() {
 	}
 
 
-	let fetchPayload = (isElectronApp || isCapacitor)
+	let fetchPayload = (isElectronApp)
 		? {
 			method: 'GET',
 			headers: {
