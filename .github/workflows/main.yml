@@ -133,13 +133,16 @@ jobs:
         run: npm install @capacitor-community/http
 
       - name: Install Secure Storage plugin
-        run: npm install capacitor-secure-storage-plugin@0.10.0
+        run: npm install @capawesome-team/capacitor-secure-storage
 
       - name: Add Android platform
         run: npx cap add android
 
       - name: Copy capacitor.js manually
         run: cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
+
+      - name: Copy secureStorage plugin manually
+        run: cp node_modules/@capawesome-team/capacitor-secure-storage/dist/plugin.js dist/mangabox/capacitorSecureStorage.js
 
       - name: Capacitor sync
         run: npx cap sync android
