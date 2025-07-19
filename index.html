@@ -267,6 +267,14 @@
 		if (isCapacitor) {
 			CapacitorHTTP = window.Capacitor.Plugins.Http;
 			CapacitorSecureStoragePlugin = window.Capacitor.Plugins.CapacitorSecureStoragePlugin;
+
+	// Save token
+	await CapacitorSecureStoragePlugin.set({ key: 'authToken', value: 'your_token_here' });
+
+	// Get token
+	const result = await CapacitorSecureStoragePlugin.get({ key: 'authToken' });
+	debugPrint('Stored token:', result.value);
+
 		}
 		
 		
