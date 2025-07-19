@@ -24,9 +24,10 @@ async function sessionCheck() {
 
 	mb.authToken = true;
 	if (isElectronApp) mb.authToken = await loadToken();
-	if (isCapacitor) mb.authToken = localStorage.get("mbAuthToken");
+	if (isCapacitor) mb.authToken = localStorage.getItem("mbAuthToken");
 
-	debugPrint(mb.authToken);
+
+	debugPrint("CURRENT TOKEN:\n" + mb.authToken);
 
 	if ((!mb.baseUrl) || (!mb.authToken)) {
 		showLoginDialog();
