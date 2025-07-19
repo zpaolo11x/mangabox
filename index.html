@@ -260,9 +260,13 @@
 
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+		
 		let CapacitorHTTP;
+		let CapacitorSecureStoragePlugin;
+
 		if (isCapacitor) {
 			CapacitorHTTP = window.Capacitor.Plugins.Http;
+			CapacitorSecureStoragePlugin = window.Capacitor.Plugins.CapacitorSecureStoragePlugin;
 		}
 		
 		

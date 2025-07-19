@@ -132,6 +132,9 @@ jobs:
       - name: Install Capacitor HTTP plugin
         run: npm install @capacitor-community/http
 
+      - name: Install Secure Storage plugin
+        run: npm install capacitor-secure-storage-plugin
+
       - name: Add Android platform
         run: npx cap add android
 
