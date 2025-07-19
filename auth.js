@@ -136,26 +136,24 @@ async function login() {
 				'X-Auth-Token': '',
 				'skip_zrok_interstitial': '1'
 			}
-		})
-			.then(async response => {
-				const token = response.headers.get('X-Auth-Token');
-				if (response.ok && token) {
-					localStorage.setItem('mbBaseUrl', baseUrlVal);
-					if (isElectronApp) {
-						window.electronAPI.sendRememberMe(loginRememberMe.checked);
-						await saveToken(token);
-					}
-					hideLoginDialog();
-					location.reload(true);
-				} else {
-					localStorage.setItem('mbBaseUrl', baseUrlVal);
-					loginError.classList.remove('auth-hidden');
+		}).then(async response => {
+			const token = response.headers.get('X-Auth-Token');
+			if (response.ok && token) {
+				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				if (isElectronApp) {
+					window.electronAPI.sendRememberMe(loginRememberMe.checked);
+					await saveToken(token);
 				}
-			})
-			.catch(error => {
-				console.error('Login error:', error);
+				hideLoginDialog();
+				location.reload(true);
+			} else {
+				localStorage.setItem('mbBaseUrl', baseUrlVal);
 				loginError.classList.remove('auth-hidden');
-			});
+			}
+		}).catch(error => {
+			console.error('Login error:', error);
+			loginError.classList.remove('auth-hidden');
+		});
 	}
 }
 
