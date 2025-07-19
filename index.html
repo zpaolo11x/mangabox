@@ -254,15 +254,6 @@
 	<script src="capacitor.js"></script>
 
 	<script>
-		async function testToken() {
-			// Save token
-			await CapacitorSecureStoragePlugin.set({ key: 'authToken', value: 'your_token_here' });
-
-			// Get token
-			const result = await CapacitorSecureStoragePlugin.get({ key: 'authToken' });
-			debugPrint('Stored token:', result.value);
-		}
-		
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
 		}
@@ -271,16 +262,10 @@
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
 		let CapacitorHTTP;
-		let CapacitorSecureStoragePlugin;
-
 		if (isCapacitor) {
 			CapacitorHTTP = window.Capacitor.Plugins.Http;
-			CapacitorSecureStoragePlugin = window.Capacitor.Plugins.CapacitorSecureStoragePlugin;
-
 			debugPrint(CapacitorHTTP);
-			debugPrint(CapacitorSecureStoragePlugin);
 		}
-
 
 	</script>
 
