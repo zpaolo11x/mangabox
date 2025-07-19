@@ -34,8 +34,32 @@ async function sessionCheck() {
 		return;
 	}
 
+	if (isCapacitor) {
+		try {
+			const response = await CapacitorHTTP.request({
+				method: 'GET',
+				url: `${mb.baseUrl}/api/v1/login/set-cookie`,
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+					'X-Auth-Token': mb.authToken,
+					'skip_zrok_interstitial': '1'
+				},
+				params: {}
 
-		let fetchPayload = (isElectronApp || isCapacitor)
+			});
+			debugPrint("RESPONSE CHECK: "+response.status)
+			if (response.status >= 200 && response.status < 300) {
+				hideLoginDialog();
+				bootSequence();
+			} else {
+				showLoginDialog();
+			}
+		} catch (error) {
+			showLoginDialog();
+		}
+
+	} else {
+		let fetchPayload = isElectronApp
 		?	{
 				method: 'GET',
 				headers: {
@@ -66,7 +90,7 @@ async function sessionCheck() {
 		}
 	}
 
-
+}
 
 async function login() {
 	let baseUrlVal = loginBaseUrl.value;
