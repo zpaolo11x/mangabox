@@ -264,10 +264,14 @@
 		if (isCapacitor) {
 			CapacitorHTTP = window.Capacitor.Plugins.Http;
 		}
-		debugPrint ("EARLY DEBUG")
-		debugPrint(JSON.stringify(window.Capacitor))
-		debugPrint(JSON.stringify(window.Capacitor.Plugins.Http))
-		debugPrint ("DONE DEBUG")
+		try {
+  const response = await Capacitor.Plugins.Http.get({
+    url: 'https://jsonplaceholder.typicode.com/posts/1',
+  });
+  debugPrint("Success! Got title: " + response.data.title);
+} catch (err) {
+  debugPrint("Request failed: " + err.message);
+}
 		
 	</script>
 
