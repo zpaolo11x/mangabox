@@ -90,6 +90,7 @@ async function login() {
           'X-Auth-Token': '',
           'skip_zrok_interstitial': '1'
         },
+		  params: {} 
       });
 		debugPrint("RESPONSE: "+response.status);
       // Capacitor Http.request returns status and headers differently:
