@@ -254,32 +254,37 @@
 	<script src="capacitor.js"></script>
 
 	<script>
-		function debugPrint(text) {
-			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
+	function debugPrint(text) {
+		debuggerObj.innerText = debuggerObj.innerText + text + "\n";
+	}
+
+	const isElectronApp = !!window.electronAPI;
+	const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+	let CapacitorHTTP;
+
+	debugPrint("Is Capacitor: " + isCapacitor);
+
+	if (isCapacitor) {
+		CapacitorHTTP = window.Capacitor.Plugins.Http;
+		debugPrint("CapacitorHTTP: " + JSON.stringify(CapacitorHTTP));
+
+		// Call the async function
+		testHttp();
+	}
+
+	async function testHttp() {
+		try {
+			debugPrint("TEST HTTP");
+			const response = await window.Capacitor.Plugins.Http.get({
+				url: 'https://jsonplaceholder.typicode.com/posts/1',
+			});
+			debugPrint("Success! Got title: " + response.data.title);
+		} catch (err) {
+			debugPrint("Request failed: " + err.message);
 		}
+	}
+</script>
 
-		const isElectronApp = !!window.electronAPI;
-		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
-		let CapacitorHTTP;
-		
-		debugPrint(isCapacitor);
-
-		if (isCapacitor) {
-			CapacitorHTTP = window.Capacitor.Plugins.Http;
-			debugPrint ("CapacitorHTTP");
-
-			try {
-				debugPrint ("TEST HTTP")
-				const response = window.Capacitor.Plugins.Http.get({
-					url: 'https://jsonplaceholder.typicode.com/posts/1',
-				});
-				debugPrint("Success! Got title: " + response.data.title);
-			} catch (err) {
-				debugPrint("Request failed: " + err.message);
-			}
-		}
-
-	</script>
 
 	<script src="auth.js"></script>
 
