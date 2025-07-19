@@ -9,4 +9,4 @@ Build
 - 
 
 Fixes
-- 
+- Fix unread books marker on Chrome for Android
