@@ -276,6 +276,30 @@
 		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP2)
 		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP3)
 		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP4)
+
+
+		document.addEventListener('DOMContentLoaded', async () => {
+  const { Capacitor } = window;
+
+  const isCapacitor = !!Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform();
+  debugPrint("FIRST JS - Is capacitor? " + isCapacitor);
+
+  if (isCapacitor) {
+    // Wait for Capacitor to be ready
+    await window.Capacitor.Plugins?.App?.addListener?.("appStateChange", () => {}); // cheap dummy call
+
+    let CapacitorHTTP = window.Capacitor.Plugins.Http;
+    let CapacitorHTTP2 = window.Capacitor.Http;
+    let CapacitorHTTP3 = Capacitor.Plugins.Http;
+    let CapacitorHTTP4 = Capacitor.Http;
+
+    debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP)
+    debugPrint("FIRST KS - CapacitorHTTP2: " + CapacitorHTTP2)
+    debugPrint("FIRST KS - CapacitorHTTP3: " + CapacitorHTTP3)
+    debugPrint("FIRST KS - CapacitorHTTP4: " + CapacitorHTTP4)
+  }
+});
+
 	</script>
 
 	<script src="auth.js"></script>

@@ -124,28 +124,22 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: MangaBox-Web-${{ env.version }}
-          path: dist # Artifact contents go into './dist'
+          path: dist
 
       - name: Install dependencies
         run: npm install
 
-      - name: Generate Capacitor Web Runtime and Copy Assets
-        run: npx cap sync web
-
-      - name: Debug Verify capacitor.js exists in webDir
-        run: ls -lR ./ # Expect to see capacitor.js here
-      
       - name: Add Android platform
         run: npx cap add android
 
       - name: Copy capacitor.js manually
-        run: | 
-          ls node_modules/@capacitor/core/dist/
-          cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
-          ls dist/mangabox/
-          
+        run: cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
+
       - name: Capacitor sync
         run: npx cap sync android
+
+      - name: Debug Check copied assets
+        run: ls -lR android/app/src/main/assets/public/
 
       - name: Build APK
         run: |
@@ -161,7 +155,7 @@ jobs:
         with:
           name: MangaBox-Android-${{ env.version }}
           path: android/app/build/outputs/apk/debug/app-debug.apk
-          
+
   release:
     needs: [build, web, version]
     env:
