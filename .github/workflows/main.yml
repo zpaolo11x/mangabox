@@ -129,14 +129,8 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      - name: Install Capacitor HTTP plugin
-        run: npm install @capacitor-community/http
-
       - name: Add Android platform
         run: npx cap add android
-
-      - name: Copy capacitor.js manually
-        run: cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
 
       - name: Capacitor sync
         run: npx cap sync android
