@@ -66,8 +66,6 @@ async function sessionCheck() {
 		}
 	}
 
-
-
 async function login() {
 	let baseUrlVal = loginBaseUrl.value;
 
