@@ -35,36 +35,36 @@ async function sessionCheck() {
 	}
 
 
-		let fetchPayload = (isElectronApp || isCapacitor)
-		?	{
-				method: 'GET',
-				headers: {
-					'X-Auth-Token': mb.authToken,
-					'X-Requested-With': 'XMLHttpRequest',
-					'skip_zrok_interstitial': '1'
-				}
+	let fetchPayload = (isElectronApp || isCapacitor)
+		? {
+			method: 'GET',
+			headers: {
+				'X-Auth-Token': mb.authToken,
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
 			}
-		:	{
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'X-Requested-With': 'XMLHttpRequest',
-					'skip_zrok_interstitial': '1'
-				}
-			};
+		}
+		: {
+			method: 'GET',
+			credentials: 'include',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest',
+				'skip_zrok_interstitial': '1'
+			}
+		};
 
-		try {
-			const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
-			if (response.ok) {
-				hideLoginDialog();
-				bootSequence();
-			} else {
-				showLoginDialog();
-			}
-		} catch (error) {
+	try {
+		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+		if (response.ok) {
+			hideLoginDialog();
+			bootSequence();
+		} else {
 			showLoginDialog();
 		}
+	} catch (error) {
+		showLoginDialog();
 	}
+}
 
 async function login() {
 	let baseUrlVal = loginBaseUrl.value;
