@@ -259,32 +259,25 @@
 		}
 
 		const isElectronApp = !!window.electronAPI;
+		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+		debugPrint("FIRST JS");
+		debugPrint("FIRST JS - Is capacitor? " + isCapacitor);
+		let CapacitorHTTP;
+		let CapacitorHTTP2;
+		let CapacitorHTTP3;
+		let CapacitorHTTP4;
+		if (isCapacitor) {
+			CapacitorHTTP = window.Capacitor.Plugins.Http;
+			CapacitorHTTP2 = window.Capacitor.Http;
+			CapacitorHTTP3 = Capacitor.Plugins.Http;
+			CapacitorHTTP4 = Capacitor.Http;
+		}
+		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP)
+		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP2)
+		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP3)
+		debugPrint("FIRST KS - CapacitorHTTP: " + CapacitorHTTP4)
 		
 	</script>
-<script>
-  document.addEventListener('DOMContentLoaded', async () => {
-    const { Capacitor } = window;
-
-    if (Capacitor?.isNativePlatform?.()) {
-      debugPrint("✅ Native platform detected.");
-
-      // Wait for plugins to be initialized
-      await new Promise(resolve => setTimeout(resolve, 100)); // small delay
-
-      const http1 = Capacitor.Plugins?.Http;
-      const http2 = window.Capacitor?.Plugins?.Http;
-
-      debugPrint("Capacitor.Plugins.Http:", http1);
-      debugPrint("window.Capacitor.Plugins.Http:", http2);
-
-      if (!http1 && !http2) {
-        debugPrint("❌ Http plugin not found, even though capacitor.js is present.");
-      }
-    } else {
-      debugPrint("Not running on a native Capacitor platform.");
-    }
-  });
-</script>
 
 	<script src="auth.js"></script>
 
