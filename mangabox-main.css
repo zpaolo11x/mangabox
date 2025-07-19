@@ -1057,7 +1057,7 @@ a {
 	top: 0px;
 
 	border-right: 25px solid var(--mb-accent);
-	border-top-right-radius: var(--mb-cover-radius);
+	/*border-top-right-radius: var(--mb-cover-radius);*/
 	border-left: 25px solid transparent;
 	border-bottom: 25px solid transparent;
 	height: 0;
