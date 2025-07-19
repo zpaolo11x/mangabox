@@ -35,13 +35,11 @@ async function sessionCheck() {
 	}
 
 	if (isCapacitor) {
-
 		try {
 			const response = await CapacitorHTTP.request({
 				method: 'GET',
 				url: `${mb.baseUrl}/api/v1/login/set-cookie`,
 				headers: {
-					'Authorization': mbAuthHeader,
 					'X-Requested-With': 'XMLHttpRequest',
 					'X-Auth-Token': mb.authToken,
 					'skip_zrok_interstitial': '1'
