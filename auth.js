@@ -80,56 +80,10 @@ async function login() {
 
 	// mbAuthHeader = 'Basic ' + btoa(`testuser@test.com:test`); //XXX
 
-	if (isCapacitor) {
-		debugPrint("CAPACITOR SESSION")
-		// Use Capacitor native HTTP
-		try {
-			const url = `${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`;
-			debugPrint("CapacitorHTTP: \n" + JSON.stringify(CapacitorHTTP));
-			debugPrint("url:" + url);
-			debugPrint("authHeader: " + mbAuthHeader);
-
-			const response = await CapacitorHTTP.request({
-				method: 'GET',
-				url: url,
-				headers: {
-					'Authorization': mbAuthHeader,
-					'X-Requested-With': 'XMLHttpRequest',
-					'X-Auth-Token': '',
-					'skip_zrok_interstitial': '1'
-				},
-				params: {}
-			});
-			debugPrint("RESPONSE: " + response.status);
-			// Capacitor Http.request returns status and headers differently:
-			if (response.status >= 200 && response.status < 300) {
-				// X-Auth-Token header might be lowercase or uppercase - check response.headers
-				const token = response.headers['x-auth-token'] || response.headers['X-Auth-Token'];
-
-				debugPrint("TOKEN: " + token);
-
-				if (token) {
-					localStorage.setItem('mbBaseUrl', baseUrlVal);
-					localStorage.setItem('mbAuthToken', token);
-					localStorage.setItem('mbRememberMe', loginRememberMe.checked ? '1' : '0');
-
-					hideLoginDialog();
-					location.reload(true);
-					return;
-				}
-			}
-			// If we reach here, show error
-			localStorage.setItem('mbBaseUrl', baseUrlVal);
-			loginError.classList.remove('auth-hidden');
-
-		} catch (error) {
-			debugPrint('Native HTTP login error: ' + error);
-			loginError.classList.remove('auth-hidden');
-		}
-	} else {
 		// Regular fetch for web / Electron
 		fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
 			method: 'GET',
+			credentials: 'include', 
 			headers: {
 				'Authorization': mbAuthHeader,
 				'X-Requested-With': 'XMLHttpRequest',
@@ -154,7 +108,7 @@ async function login() {
 			console.error('Login error:', error);
 			loginError.classList.remove('auth-hidden');
 		});
-	}
+	
 }
 
 
