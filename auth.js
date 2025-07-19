@@ -95,7 +95,7 @@ async function sessionCheck() {
 async function login() {
 	let baseUrlVal = loginBaseUrl.value;
 
-	baseUrlVal = "https://aerobox.freeddns.it/komga"; //XXX
+	// baseUrlVal = "https://aerobox.freeddns.it/komga"; //XXX
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
@@ -104,7 +104,7 @@ async function login() {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	mbAuthHeader = 'Basic ' + btoa(`testuser@test.com:test`); //XXX
+	// mbAuthHeader = 'Basic ' + btoa(`testuser@test.com:test`); //XXX
 
 	if (isCapacitor) {
 		debugPrint("CAPACITOR SESSION")
