@@ -153,11 +153,17 @@ jobs:
         run: |
           find android/app/build/outputs/ -type f
 
+      - name: Rename APK with version
+        run: |
+          VERSION=$(jq -r .version capacitor.config.json)
+          mv android/app/build/outputs/apk/debug/app-debug.apk \
+            android/app/build/outputs/apk/debug/mangabox-v${{ env.version }}-debug.apk
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MangaBox-Android-${{ env.version }}
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/mangabox-v${{ env.version }}-debug.apk
 
   release:
     needs: [build, web, version]
