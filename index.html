@@ -256,15 +256,8 @@
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
 		}
 
-		let StatusBar;
-
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
-
-		if (isCapacitor) {
-			let StatusBar = window.Capacitor?.Plugins?.StatusBar;
-			debugPrint("StatusBar:" + StatusBar);
-		}
 
 	</script>
 
@@ -586,25 +579,6 @@
 			});
 		}
 
-		function updateAppBarColor(color = null) {
-			debugPrint("app bar color routine")
-			const fallbackColor = mb.darkTheme ? '#353535' : '#ffffff';
-
-			if (isCapacitor) {
-				debugPrint("Set Status Bar Color in capacitor");
-				try {
-					StatusBar.setBackgroundColor({ color: color ?? fallbackColor });
-				} catch (error){
-					debugPrint("Error:" + error);
-				}			
-			} else {
-				debugPrint("Set Status Bar Color in PWA");
-				document.querySelector('meta[name="theme-color"]')
-					?.setAttribute('content', color ?? fallbackColor);
-			}
-		}
-
-
 		function updatePWABar(color = null) {
 			document.querySelector('meta[name="theme-color"]')
 				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
@@ -639,7 +613,7 @@
 			mb.darkTheme = toDark;
 
 			//Ttheme based top bar
-			updateAppBarColor();
+			updatePWABar();
 
 			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
@@ -2862,7 +2836,7 @@
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 			//dragbarOffReader();
 
-			updateAppBarColor();
+			updatePWABar();
 		}
 
 		readerClose.addEventListener('click', () => {
@@ -3001,7 +2975,7 @@
 
 		// Initialize viewer with page data
 		async function initViewer() {
-			updateAppBarColor('black');
+			updatePWABar('black');
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
