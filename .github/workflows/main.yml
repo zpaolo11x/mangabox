@@ -134,7 +134,7 @@ jobs:
         run: npm install @capacitor-community/http
  
       - name: Install Capacitor Status Bar plugin
-        run: npm install @capacitor/status-bar
+        run: npm install @capacitor/status-bar@6
 
       - name: Add Android platform
         run: npx cap add android
