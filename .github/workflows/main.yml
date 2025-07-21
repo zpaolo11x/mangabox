@@ -137,10 +137,7 @@ jobs:
         run: npm install --save-dev @capacitor/assets
 
       - name: Generate Android assets
-        run: |
-          npx @capacitor/assets generate \
-            --iconPath assets/icons/logo1024.png \
-            --splashPath assets/icons/splash1024.png
+        run: npx @capacitor/assets generate
             
       - name: Add Android platform
         run: npx cap add android
