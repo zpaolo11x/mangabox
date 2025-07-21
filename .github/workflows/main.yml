@@ -139,7 +139,6 @@ jobs:
       - name: Generate Android assets
         run: |
           npx @capacitor/assets generate \
-            --platform android \
             --iconPath assets/icons/logo1024.png \
             --splashPath assets/icons/splash1024.png
             
