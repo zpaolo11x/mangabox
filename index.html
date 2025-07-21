@@ -594,9 +594,11 @@
 
 			if (isCapacitor) {
 				debugPrint("Set Status Bar Color in capacitor");
-				StatusBar.setBackgroundColor({ color: color ?? fallbackColor })
-					.then(() => debugPrint("Status bar color set"))
-					.catch((error) => debugPrint("Error setting status bar color: " + error));
+				try {
+					StatusBar.setBackgroundColor({ color: color ?? fallbackColor });
+				} catch (error){
+					debugPrint("Error:" + error);
+				}			
 			} else {
 				debugPrint("Set Status Bar Color in PWA");
 				document.querySelector('meta[name="theme-color"]')
