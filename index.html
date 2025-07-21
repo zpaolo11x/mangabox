@@ -592,7 +592,7 @@
 			debugPrint("app bar color routine")
 			const fallbackColor = mb.darkTheme ? '#353535' : '#ffffff';
 
-			if (isCapacitor && StatusBar) {
+			if (isCapacitor) {
 				debugPrint("Set Status Bar Color in capacitor");
 				StatusBar.setBackgroundColor({ color: color ?? fallbackColor })
 					.then(() => debugPrint("Status bar color set"))
