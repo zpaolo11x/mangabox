@@ -10,3 +10,4 @@ Build
 
 Fixes
 - Fix unread books marker on Chrome for Android
+- Fix mini button triggering when invisible

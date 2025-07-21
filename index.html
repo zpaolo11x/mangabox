@@ -1491,6 +1491,7 @@
 
 		function addClickPointerEvents(item, execute) {
 			item.addEventListener('pointerdown', () => {
+				if (getComputedStyle(item).opacity == 0) return;
 				mb.pointerItem = item
 			});
 			item.addEventListener('pointerup', () => {
