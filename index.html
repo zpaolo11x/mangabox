@@ -592,7 +592,12 @@
 			const fallbackColor = mb.darkTheme ? '#353535' : '#ffffff';
 
 			if (isCapacitor && StatusBar) {
-				StatusBar.setBackgroundColor({ color: color ?? fallbackColor }).catch(console.warn);
+				debugPrint("Set Status Bar Color");
+				try {
+					StatusBar.setBackgroundColor({ color: color ?? fallbackColor });
+				} catch (error){
+					debugPrint("Error:" + error);
+				}
 			} else {
 				document.querySelector('meta[name="theme-color"]')
 					?.setAttribute('content', color ?? fallbackColor);
