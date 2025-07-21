@@ -2,10 +2,6 @@
 	"appId": "com.mangabox.app",
 	"appName": "MangaBox",
 	"webDir": "dist/mangabox",
-	"bundledWebRuntime": true,
-	"plugins": {
-		"CapacitorHttp": {
-			"enabled": true
-		}
-	}
+	"bundledWebRuntime": true
+
 }
