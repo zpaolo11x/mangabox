@@ -141,10 +141,7 @@ jobs:
       
       - name: Generate Android assets
         run: npx @capacitor/assets generate
-               
-      - name: Copy capacitor.js manually
-        run: cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
-
+            
       - name: Capacitor sync
         run: npx cap sync android
 

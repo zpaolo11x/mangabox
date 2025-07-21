@@ -1,11 +1,15 @@
 {
-  "appId": "com.mangabox.app",
-  "appName": "MangaBox",
-  "webDir": "dist/mangabox",
-  "bundledWebRuntime": true,
-  "plugins": {
-    "CapacitorHttp": {
-      "enabled": true
-    }
-  }
+	"appId": "com.mangabox.app",
+	"appName": "MangaBox",
+	"webDir": "dist/mangabox",
+	"bundledWebRuntime": true,
+	"plugins": {
+		"CapacitorHttp": {
+			"enabled": true
+		},
+		"StatusBar": {
+			"style": "LIGHT",
+			"backgroundColor": "#ff0000"
+		}
+	}
 }
