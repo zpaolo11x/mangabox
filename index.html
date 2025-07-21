@@ -258,8 +258,14 @@
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
 		}
 
+		let StatusBar;
+
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
+		if (isCapacitor){
+			let StatusBar = window.Capacitor?.Plugins?.StatusBar;
+		}
 
 	</script>
 
@@ -581,6 +587,18 @@
 			});
 		}
 
+		function updateAppBarColor(color = null) {
+			const fallbackColor = mb.darkTheme ? '#353535' : '#ffffff';
+
+			if (isCapacitor && StatusBar) {
+				StatusBar.setBackgroundColor({ color: color ?? fallbackColor }).catch(console.warn);
+			} else {
+				document.querySelector('meta[name="theme-color"]')
+					?.setAttribute('content', color ?? fallbackColor);
+			}
+		}
+
+
 		function updatePWABar(color = null) {
 			document.querySelector('meta[name="theme-color"]')
 				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
@@ -615,7 +633,7 @@
 			mb.darkTheme = toDark;
 
 			//Ttheme based top bar
-			updatePWABar();
+			updateAppBarColor();
 
 			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
@@ -2837,7 +2855,7 @@
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 			//dragbarOffReader();
 
-			updatePWABar();
+			updateAppBarColor();
 		}
 
 		readerClose.addEventListener('click', () => {
@@ -2976,7 +2994,7 @@
 
 		// Initialize viewer with page data
 		async function initViewer() {
-			updatePWABar('black');
+			updateAppBarColor('black');
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
