@@ -263,9 +263,9 @@
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
-		if (isCapacitor){
+		if (isCapacitor) {
 			let StatusBar = window.Capacitor?.Plugins?.StatusBar;
-			debugPrint("StatusBar:"+StatusBar);
+			debugPrint("StatusBar:" + StatusBar);
 		}
 
 	</script>
@@ -589,16 +589,16 @@
 		}
 
 		function updateAppBarColor(color = null) {
+			debugPrint("app bar color routine")
 			const fallbackColor = mb.darkTheme ? '#353535' : '#ffffff';
 
 			if (isCapacitor && StatusBar) {
-				debugPrint("Set Status Bar Color");
-				try {
-					StatusBar.setBackgroundColor({ color: color ?? fallbackColor });
-				} catch (error){
-					debugPrint("Error:" + error);
-				}
+				debugPrint("Set Status Bar Color in capacitor");
+				StatusBar.setBackgroundColor({ color: color ?? fallbackColor })
+					.then(() => debugPrint("Status bar color set"))
+					.catch((error) => debugPrint("Error setting status bar color: " + error));
 			} else {
+				debugPrint("Set Status Bar Color in PWA");
 				document.querySelector('meta[name="theme-color"]')
 					?.setAttribute('content', color ?? fallbackColor);
 			}
