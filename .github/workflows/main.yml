@@ -132,16 +132,13 @@ jobs:
         
       - name: Install Capacitor HTTP plugin
         run: npm install @capacitor-community/http
-
-      - name: Install Capacitor Assets Manager
-        run: npm install --save-dev @capacitor/assets
-
-      - name: Generate Android assets
-        run: npx @capacitor/assets generate
-            
+ 
       - name: Add Android platform
         run: npx cap add android
-
+      
+      - name: Generate Android assets
+        run: npx @capacitor/assets generate
+           
       - name: Copy capacitor.js manually
         run: cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
 
