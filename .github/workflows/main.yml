@@ -133,15 +133,21 @@ jobs:
       - name: Install Capacitor HTTP plugin
         run: npm install @capacitor-community/http
 
+      - name: Install Capacitor Assets Manager
+        run: npm install --save-dev @capacitor/assets
+
+      - name: Generate Android assets
+        run: |
+          npx @capacitor/assets generate \
+            --platform android \
+            --iconPath assets/icons/logo1024.png \
+            --splashPath assets/icons/splash1024.png
+            
       - name: Add Android platform
         run: npx cap add android
 
       - name: Copy capacitor.js manually
         run: cp node_modules/@capacitor/core/dist/capacitor.js dist/mangabox/capacitor.js
-
-      - name: Replace app icon
-        run: |
-          cp -r assets/icons/android-res/* android/app/src/main/res/
 
       - name: Capacitor sync
         run: npx cap sync android
