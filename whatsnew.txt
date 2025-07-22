@@ -1,12 +1,12 @@
 Main UI
 - Improve touch events management
-- Redesigned book details dialog
+- Redesign book details dialog
 
 Reader
 - 
 
 Build
-- 
+- Add Android build
 
 Fixes
 - Fix unread books marker on Chrome for Android
