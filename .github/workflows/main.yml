@@ -1,4 +1,4 @@
-name: Build and Release Electron App
+name: Build and Release Web, Electron, Android
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-  build:
+  electron:
     needs: version
     runs-on: ${{ matrix.os }}
     env: 
@@ -73,7 +73,7 @@ jobs:
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
+        run: npm run build-electron -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
       - name: Upload artifacts
@@ -163,7 +163,7 @@ jobs:
           path: android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-debug.apk
 
   release:
-    needs: [build, web, version]
+    needs: [electron, web, android, version]
     env:
       version: ${{ needs.version.outputs.version }}
     if: github.ref_name == 'main' # Run this job only for the 'main' branch
@@ -203,11 +203,20 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy
 
-      - name: List dist directory contents
-        run: ls -lR dist/
+      - name: Download Android APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Android-${{ env.version }}
+          path: android
 
-      - name: List webdeploy directory contents
-        run: ls -lR webdeploy/
+      - name: List release contents
+        run: |
+          echo "== dist =="
+          ls -lR dist/
+          echo "== webdeploy =="
+          ls -lR webdeploy/
+          echo "== android =="
+          ls -lR android/
 
       - name: Zip web folder
         run: |
@@ -225,6 +234,7 @@ jobs:
           files: |
             dist/*/*
             webdeploy/MangaBox-${{ env.version }}-Web.zip
+            android/mangabox-${{ env.version }}-debug.apk
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
