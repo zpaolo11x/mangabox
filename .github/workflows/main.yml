@@ -142,11 +142,9 @@ jobs:
       - name: Debug CAT style before
         run: cat android/app/src/main/res/values/styles.xml
 
-      - name: Customize status bar color
+      - name: Copy custom styles.xml
         run: |
-          FILE="android/app/src/main/res/values/styles.xml"
-          COLOR="#FF0000"
-          sed -i "s|<item name=\"android:statusBarColor\">.*</item>|<item name=\"android:statusBarColor\">$COLOR</item>|" "$FILE"
+          cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
 
       - name: Debug CAT style after
         run: cat android/app/src/main/res/values/styles.xml
