@@ -2191,10 +2191,21 @@
 
 		async function showBookDetails(book) {
 			bookDetailCover.className = "book-thumbnail hidden";
+			bookDetailsTitle.style.opacity = 0;
+			bookDetailsSummary.style.opacity = 0;
+
 			removeLazyLoading(bookDetailCover);
+			sectionShow(bookDetailsContainer);
 
 			bookDetailCover.lazySrc = `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`;
 			addLazyLoading(bookDetailCover);
+
+			bookDetailsTitle.innerText = book.metadata.title;
+			bookDetailsTitle.style.opacity = 1;
+
+			let summaryArray = book.metadata.summary.split(/\r?\n/);
+			bookDetailsSummary.innerHTML = summaryArray.map(element => `<li>${element}</li>`).join('');
+			bookDetailsSummary.style.opacity = 1;
 
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
 			const seriesBooks = await callAPI(
@@ -2214,13 +2225,6 @@
 			if (book.number < seriesData.booksCount) {
 				mb.nextBook = seriesBooks.content[book.number];
 			}
-			sectionShow(bookDetailsContainer);
-			let summaryArray = book.metadata.summary.split(/\r?\n/);
-
-			bookDetailsTitle.innerText = book.metadata.title;
-			bookDetailsSummary.innerHTML = summaryArray.map(element => `<li>${element}</li>`).join('');
-			
-
 		}
 
 		//MB Book Item Creation
