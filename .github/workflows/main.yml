@@ -139,18 +139,8 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync android
 
-      - name: Debug CAT style before
-        run: cat android/app/src/main/res/values/styles.xml
-
       - name: Copy custom styles.xml
-        run: |
-          cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
-
-      - name: Debug CAT style after
-        run: cat android/app/src/main/res/values/styles.xml
-
-      - name: Debug Check copied assets
-        run: ls -lR android/app/src/main/assets/public/
+        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
 
       - name: Build APK
         run: |
@@ -158,8 +148,7 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Check for APK output
-        run: |
-          find android/app/build/outputs/ -type f
+        run: find android/app/build/outputs/ -type f
 
       - name: Rename APK with version
         run: |
