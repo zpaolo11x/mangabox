@@ -139,11 +139,17 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync android
 
+      - name: Debug CAT style before
+        run: cat android/app/src/main/res/values/styles.xml
+
       - name: Customize status bar color
         run: |
           FILE="android/app/src/main/res/values/styles.xml"
           COLOR="#FF0000"
           sed -i "s|<item name=\"android:statusBarColor\">.*</item>|<item name=\"android:statusBarColor\">$COLOR</item>|" "$FILE"
+
+      - name: Debug CAT style after
+        run: cat android/app/src/main/res/values/styles.xml
 
       - name: Debug Check copied assets
         run: ls -lR android/app/src/main/assets/public/
