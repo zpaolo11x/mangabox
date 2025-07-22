@@ -7,6 +7,8 @@ Reader
 
 Build
 - Add Android build
+- Cleanup build workflow
+- Update documentation
 
 Fixes
 - Fix unread books marker on Chrome for Android
