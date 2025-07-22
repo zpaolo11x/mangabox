@@ -140,9 +140,9 @@ jobs:
       #  run: cp capacitor.Info.plist ios/App/App/Info.plist
 
       # Optional: Update version in Xcode project
-      - name: Set version in Xcode project
-        run: |
-          agvtool new-version -all ${{ env.version }}
+      #- name: Set version in Xcode project
+      #  run: |
+      #    agvtool new-version -all ${{ env.version }}
 
       - name: Build .app for Simulator
         run: |
