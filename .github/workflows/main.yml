@@ -111,6 +111,69 @@ jobs:
         with:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
+  ios:
+    needs: [version, web]
+    runs-on: macos-latest
+    env:
+      version: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download webdeploy artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: dist
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add iOS platform
+        run: npx cap add ios
+
+      - name: Capacitor sync
+        run: npx cap sync ios
+
+      - name: Copy custom Info.plist (optional)
+        run: cp capacitor.Info.plist ios/App/App/Info.plist
+
+      # Optional: Update version in Xcode project
+      - name: Set version in Xcode project
+        run: |
+          agvtool new-version -all ${{ env.version }}
+
+      - name: Build .app for Simulator
+        run: |
+          cd ios/App
+          xcodebuild -scheme App -configuration Debug -sdk iphonesimulator -derivedDataPath build
+
+      - name: Find built .app file
+        run: find ios/App/build -name "*.app"
+
+      - name: Upload .app artifact (for simulator)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-iOS-${{ env.version }}-app
+          path: ios/App/build/Build/Products/Debug-iphonesimulator/*.app
+
+      # Optional: Build .ipa for real devices (requires signing)
+      - name: Build .ipa (optional)
+        run: |
+          cd ios/App
+          xcodebuild -scheme App -configuration Debug -sdk iphoneos -derivedDataPath build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+
+      - name: Export .ipa (optional)
+        run: |
+          cd ios/App
+          mkdir -p export
+          xcrun -sdk iphoneos PackageApplication -v build/Build/Products/Debug-iphoneos/*.app -o $PWD/export/mangabox-${{ env.version }}.ipa
+
+      - name: Upload .ipa artifact (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-iOS-${{ env.version }}-ipa
+          path: ios/App/export/mangabox-${{ env.version }}.ipa
 
   android:
     needs: [version, web]
