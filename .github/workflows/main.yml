@@ -73,7 +73,7 @@ jobs:
       - name: Build the app
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npm run build-electron -- --${{ matrix.sys }} --${{ matrix.arch }}
+        run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
       - name: Upload artifacts
