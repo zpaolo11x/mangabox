@@ -135,8 +135,9 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync ios
 
-      - name: Copy custom Info.plist (optional)
-        run: cp capacitor.Info.plist ios/App/App/Info.plist
+      #Optional
+      #- name: Copy custom Info.plist (optional)
+      #  run: cp capacitor.Info.plist ios/App/App/Info.plist
 
       # Optional: Update version in Xcode project
       - name: Set version in Xcode project
