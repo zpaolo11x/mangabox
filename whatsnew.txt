@@ -2,9 +2,6 @@ Main UI
 - Improve touch events management
 - Redesign book details dialog
 
-Reader
-- 
-
 Build
 - Add Android build
 - Cleanup build workflow
