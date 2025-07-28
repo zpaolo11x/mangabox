@@ -42,8 +42,6 @@
 	--color1: rgba(140, 130, 120, 1);
 	--color2: rgba(30, 20, 0, 1);
 
-	--mb-pill-width: 37px;
-	--mb-pill-pad: calc(40px - var(--mb-pill-width));
 }
 
 
@@ -789,12 +787,12 @@ div.single-page {
 .reader-buttons {
 	-webkit-app-region: no-drag;
 
-	width: 40px;
-	height: 40px;
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
 	padding: 0px;
 	margin: 0px;
 	font-size: 25px;
-	line-height: 40px;
+	line-height: var(--mb-dialog-button-height);
 	background-color: var(--mb-accent);
 	color: white;
 	border: none;
@@ -806,22 +804,22 @@ div.single-page {
 
 
 .bar-note {
-	width: 40px;
-	height: 40px;
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
 	padding: 0px;
 	margin: 0px;
 	text-align: center;
-	line-height: 40px;
+	line-height: var(--mb-dialog-button-height);
 	background-color: var(--mb-bar-color);
 	cursor: pointer;
 }
 
 .corner-circle {
-	border-radius: 20px;
+	border-radius: var(--mb-dialog-button-radius);
 }
 
 .corner-right {
-	border-radius: 0 20px 20px 0;
+	border-radius: 0 var(--mb-dialog-button-radius) var(--mb-dialog-button-radius) 0;
 	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
 	padding-right: var(--mb-pill-pad);
 	transform-origin: center left;
@@ -829,7 +827,7 @@ div.single-page {
 }
 
 .corner-left {
-	border-radius: 20px 0 0 20px;
+	border-radius: var(--mb-dialog-button-radius) 0 0 var(--mb-dialog-button-radius);
 	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
 	padding-left: var(--mb-pill-pad);
 	transform-origin: center right;

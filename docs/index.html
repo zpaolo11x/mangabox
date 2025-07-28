@@ -34,6 +34,12 @@
 			color: var(--text-color-main);
 		}
 
+		ul {
+			padding-left: 20px;
+		}
+		li {
+			line-height: 120%;
+		}
 		.container {
 			position: relative;
 			/* ← Needed for absolute positioning inside */
@@ -245,10 +251,18 @@
 		<p>
 			<a href="https://github.com/zpaolo11x/mangabox">MangaBox</a> is a web and Electron client for <a href="https://komga.org">Komga</a>, the manga and comics media server.
 		</p>
-		<p>You can deploy MangaBox on a personal web server, and use it as a PWA on iPad or other devices.
-			It is also available as an Electron desktop app for Windows (x86 and ARM),
-			macOS (Intel and Apple Silicon) and Linux (as an AppImage).</p>
-
+		
+		<p>MangaBox is available in different formats: </p>
+		<ul>
+			<li>Web/PWA - Deploy MangaBox on a personal web server, use it as a PWA on iPad or other devices.</li>
+			<li>Electron desktop application</li>
+			<ul>
+				<li>Windows (x86 and ARM)</li>
+				<li>macOS (Intel and Apple Silicon)</li>
+				<li>Linux (AppImage)</li>
+			</ul>
+			<li>Android APK - This is a debug APK you can manually install on Android devices</li>
+		</ul>
 		<div class="grid">
 			<div class="grid-item">
 				<img alt="Dashboard view" src="pics/dashboard.png" class="clickable">

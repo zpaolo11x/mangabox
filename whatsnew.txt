@@ -1,17 +1,12 @@
 Main UI
-- Add spring animation to toolbars
-- Improved tile zooming and toolbar hiding logic
-
-Reader
-- Refer page number to actual pages, not image files
-- Page numbering starts after back of cover
-- Add cover-is-page-one tag to a book to start numbering pages from the cover
+- Improve touch events management
+- Redesign book details dialog
 
 Build
-- Use cookies to authenticate web app
-- Use x-auth-token to authenticate Electron app
-- Store x-auth-token in OS keychain with keytar
+- Add Android build
+- Cleanup build workflow
+- Update documentation
 
 Fixes
-- Fix padding of dashboard lists
-- Fix mini buttons positioning on Chromium
+- Fix unread books marker on Chrome for Android
+- Fix mini button triggering when invisible

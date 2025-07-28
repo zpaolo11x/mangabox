@@ -1,4 +1,4 @@
-name: Build and Release Electron App
+name: Build and Release Web, Electron, Android
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-  build:
+  electron:
     needs: version
     runs-on: ${{ matrix.os }}
     env: 
@@ -103,6 +103,7 @@ jobs:
                     --exclude='assets/' \
                     --exclude='z_*.*' \
                     --exclude='docs/' \
+                    --exclude='capacitor*' \
                     ./ webdeploy/mangabox
 
       - name: Upload web artifact
@@ -111,8 +112,58 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
 
+  android:
+    needs: [version, web]
+    runs-on: ubuntu-latest
+    env:
+      version: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download webdeploy artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: dist
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add Android platform
+        run: npx cap add android
+      
+      - name: Generate Android assets
+        run: npx @capacitor/assets generate
+            
+      - name: Capacitor sync
+        run: npx cap sync android
+
+      - name: Copy custom styles.xml
+        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
+
+      - name: Build APK
+        run: |
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Check for APK output
+        run: find android/app/build/outputs/ -type f
+
+      - name: Rename APK with version
+        run: |
+          VERSION=$(jq -r .version capacitor.config.json)
+          mv android/app/build/outputs/apk/debug/app-debug.apk \
+            android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-debug.apk
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-Android-${{ env.version }}
+          path: android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-debug.apk
+
   release:
-    needs: [build, web, version]
+    needs: [electron, web, android, version]
     env:
       version: ${{ needs.version.outputs.version }}
     if: github.ref_name == 'main' # Run this job only for the 'main' branch
@@ -152,11 +203,20 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy
 
-      - name: List dist directory contents
-        run: ls -lR dist/
+      - name: Download Android APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Android-${{ env.version }}
+          path: android
 
-      - name: List webdeploy directory contents
-        run: ls -lR webdeploy/
+      - name: List release contents
+        run: |
+          echo "== dist =="
+          ls -lR dist/
+          echo "== webdeploy =="
+          ls -lR webdeploy/
+          echo "== android =="
+          ls -lR android/
 
       - name: Zip web folder
         run: |
@@ -174,6 +234,7 @@ jobs:
           files: |
             dist/*/*
             webdeploy/MangaBox-${{ env.version }}-Web.zip
+            android/mangabox-${{ env.version }}-debug.apk
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 

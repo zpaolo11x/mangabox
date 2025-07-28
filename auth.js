@@ -20,23 +20,29 @@ async function deleteToken() {
 async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
-	mb.authToken = isElectronApp ? await loadToken() : true;
+	debugPrint("SESSION CHECK")
+
+	mb.authToken = true;
+	if (isElectronApp) mb.authToken = await loadToken();
+
+	debugPrint("CURRENT TOKEN:\n" + mb.authToken);
 
 	if ((!mb.baseUrl) || (!mb.authToken)) {
 		showLoginDialog();
 		return;
 	}
 
-	const fetchPayload = isElectronApp ?
-		{
+
+	let fetchPayload = (isElectronApp)
+		? {
 			method: 'GET',
 			headers: {
 				'X-Auth-Token': mb.authToken,
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
-		} :
-		{
+		}
+		: {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
@@ -58,31 +64,31 @@ async function sessionCheck() {
 	}
 }
 
-function login() {
+async function login() {
 	let baseUrlVal = loginBaseUrl.value;
 
+	// baseUrlVal = "https://aerobox.freeddns.it/komga"; //XXX
+
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
-		// Add http:// if no protocol is present
 		baseUrlVal = 'https://' + baseUrlVal;
 	}
-
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	const mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	// Test the auth header and base URL with a simple API call to validate credentials
+	// mbAuthHeader = 'Basic ' + btoa(`testuser@test.com:test`); //XXX
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
-		method: 'GET',
-		//credentials: 'include', // ✅ Important!
-		headers: {
-			'Authorization': mbAuthHeader,
-			'X-Requested-With': 'XMLHttpRequest',
-			'X-Auth-Token': '',
-			'skip_zrok_interstitial': '1'
-		}
-	})
-		.then(async response => {
+		// Regular fetch for web / Electron
+		fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+			method: 'GET',
+			credentials: 'include', 
+			headers: {
+				'Authorization': mbAuthHeader,
+				'X-Requested-With': 'XMLHttpRequest',
+				'X-Auth-Token': '',
+				'skip_zrok_interstitial': '1'
+			}
+		}).then(async response => {
 			const token = response.headers.get('X-Auth-Token');
 			if (response.ok && token) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
@@ -93,15 +99,16 @@ function login() {
 				hideLoginDialog();
 				location.reload(true);
 			} else {
-				localStorage.setItem('mbBaseUrl', baseUrlVal); // Save base URL
-				loginError.classList.remove('auth-hidden'); // Show error message
+				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				loginError.classList.remove('auth-hidden');
 			}
-		})
-		.catch(error => {
+		}).catch(error => {
 			console.error('Login error:', error);
 			loginError.classList.remove('auth-hidden');
 		});
+	
 }
+
 
 function showLoginDialog() {
 	loginScreen.classList.remove('auth-hidden');
