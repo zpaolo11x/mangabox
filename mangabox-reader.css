@@ -142,13 +142,21 @@
 	margin: 0;
 	padding: 0;
 	display: flex;
-	flex-direction: column;
 	align-items: center;
 	background-color: var(--mb-page-color);
 	height: 100vh;
-	overflow: hidden;
 
 	background: none;
+}
+
+#readerContainer:not(.webtoon) {
+	flex-direction: column;
+	overflow: hidden;
+}
+
+#readerContainer.webtoon{
+	flex-direction: column;
+	overflow: scroll;
 }
 
 #readerContainer.hidden {
@@ -173,6 +181,10 @@ img.page:not([src]) {
 	color: transparent;
 }
 */
+
+.webtoon-layout img.page {
+		display: block;
+}
 
 .spread-layout img.page {
 	display: block;
@@ -255,7 +267,7 @@ img.page:not(.hidden) {
 	position: relative;
 	overflow: hidden;
 	background: white;
-	/*border: green 5px solid!important;*/
+	border: green 5px solid!important;
 }
 
 .page-container.left-page {
@@ -442,14 +454,6 @@ div.two-pages {
 	border-style: solid;
 	border-color: transparent;
 
-	/*
-	border-image: url('pagesZ3.png') 0 80 0 80;
-	border-color:red;
-	border-style: solid;
-	*/
-	/*background-color: #d0cbc1;*/
-
-	/*border: 3px red solid;*/
 }
 
 .page-container.cover-page-RTL {
@@ -504,27 +508,32 @@ div.single-page {
 */
 
 #readerViewer {
-	position: absolute;
-
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-
 	box-sizing: content-box;
 
 	margin: 0;
 	padding: 0;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-
-	height: 100vh;
-	/*overflow: hidden;*/
-	/*transition: top 0.3s ease 0.5s;*/
 
 	background: none;
 	gap: 0px;
+}
+
+#readerViewer:not(.webtoon) {
+	position: absolute;
+	align-items: center;
+	justify-content: center;
+
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	height: 100vh;
+
+}
+
+#readerViewer.webtoon {
+
 }
 
 #readerContainer.hidden #readerViewer {
@@ -858,6 +867,14 @@ div.single-page {
 	opacity: 0;
 }
 
+#readerOverlay {
+	position: fixed;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom:0px;
+}
+
 #touchPanel {
 	position: absolute;
 	left: 0px;
@@ -874,6 +891,8 @@ div.single-page {
 	border-bottom: 5px solid transparent;
 
 	transition: border 0.3s;
+
+	border:10px red solid;
 }
 
 #touchPanel.shrink {

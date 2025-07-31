@@ -1554,6 +1554,13 @@
 
 		//MB Series Items Creation
 		async function buildSeriesItem(item, serie, target) {
+			const LTRvals = {
+				RIGHT_TO_LEFT: '',
+				LEFT_TO_RIGHT: '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>',
+				WEBTOON: '<span class="fa-solid fa-mobile glyph-dark" style="margin-left:2px;"></span>',
+				VERTICAL: '<span class="fa-solid fa-mobile glyph-dark" style="margin-left:2px;"></span>',
+			}
+
 			item.childNodes[0]?.remove();
 
 			item.title = 'Open series';
@@ -1562,7 +1569,7 @@
 				className: 'series-item'
 			});
 			const LNG = ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '');
-			const LTR = serie.metadata.readingDirection == 'RIGHT_TO_LEFT' ? '' : '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>';
+			const LTR = LTRvals[serie.metadata.readingDirection];
 			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
 
 			const seriesTitle = addItem('div', {
@@ -1703,6 +1710,7 @@
 			item.mbBooksCount = serie.booksCount;
 
 			item.mbSeriesRead = (unreadCount == 0);
+			//TODO This is for filtering purposes, to fix
 			item.mbSeriesLTR = (serie.metadata.readingDirection == 'LEFT_TO_RIGHT');
 			item.mbSeriesLanguage = serie.metadata.language;
 
@@ -2212,7 +2220,6 @@
 				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
 			);
-			const readingDirection = seriesData.metadata.readingDirection;
 
 			mb.seriesData = seriesData;
 			mb.currentBook = book;
@@ -2397,7 +2404,7 @@
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
 						&book_id=${book.id}
-						&dir=${(readingDirection == 'RIGHT_TO_LEFT' ? 'rtl' : 'ltr')}
+						&dir=${readingDirection}
 						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
 			});
 
@@ -2673,7 +2680,9 @@
 			preloadStack: {}, 		// Contains all the preload timers, one for each spread that's going to be loaded
 			picLoadStack: [], 		// Contains all load image objects, both direct load and preload
 
-			ltr: null,
+			direction: null,
+			webtoon: null,
+			rtl: null,
 			currentPage: 0,
 			pagesDataArray: [],		// this is the array of pages data in the form url, iscover etc
 			spreadsArray: [],			// Array of spreads objects, containing:
@@ -2734,7 +2743,7 @@
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
 						&book_id=${book.id}
-						&dir=${(readingDirection == 'RIGHT_TO_LEFT' ? 'rtl' : 'ltr')}
+						&dir=${readingDirection}
 						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
 		}
 
@@ -2749,7 +2758,10 @@
 			rd.picLoadStack = [];
 			rd.jumpTimeout = null;
 
-			rd.ltr = (dir == 'ltr');
+			rd.direction = dir;
+			rd.webtoon = (dir == 'WEBTOON');
+			rd.rtl = (dir == 'RIGHT_TO_LEFT');
+
 			rd.currentPage = pag;
 
 			rd.spreadsArray = [];
@@ -2933,13 +2945,13 @@
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
 			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
-			readerProgress.style.float = rd.ltr ? 'left' : 'right';
+			readerProgress.style.float = rd.rtl ? 'right' : 'left';
 
 			[rd.currentPage, readerPage.innerText] = getPageFromSpread(currentSpreadIndex);
 
-			readerPage.style.left = rd.ltr
-				? `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
-				: `min(max(0px, calc(${100 - progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
+			readerPage.style.left = rd.rtl
+				? `min(max(0px, calc(${100 - progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
+				: `min(max(0px, calc(${progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
 		}
 
 		function preloadPage(index) {
@@ -2981,8 +2993,8 @@
 		}
 
 		function initReaderUI(pagesData, bookData) {
-			leftLimit.innerText = rd.ltr ? rd.realFirstPage : rd.realLastPage;
-			rightLimit.innerText = rd.ltr ? rd.realLastPage : rd.realFirstPage;
+			leftLimit.innerText = rd.rtl ? rd.realLastPage : rd.realFirstPage;
+			rightLimit.innerText = rd.rtl ? rd.realFirstPage : rd.realLastPage;
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 		}
 
@@ -2995,7 +3007,9 @@
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
 			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
 
-			const pagesData = await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne);
+			const pagesData = !rd.webtoon ?
+				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne) :
+				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -3030,7 +3044,7 @@
 		function buildForeEdge(index, total) {
 			// book size is a parabola based on number of spreads capped at 400 spreads
 			const fullBook = (total / 400 > 1 ? 1 : ((1 - (total / 400 - 1) * (total / 400 - 1))));
-			const pageRate = rd.ltr ? index / total : 1.0 - index / total;
+			const pageRate = rd.rtl ? 1.0 - index / total : index / total;
 
 			[clipLeft, clipRight] = [
 				`inset(0 0 0 ${100 * ((1.0 - fullBook) + fullBook * (1 - pageRate))}%)`,
@@ -3044,26 +3058,49 @@
 		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
 			// I put the image item and container item in the array so I can target them for changes
 			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
-			return ({
-				// dom object, spread div and its content
-				// dom object, shadow for page effect, children of uiItem in the dom
-				//  "
-				// dom object, thumbnail of the spread for the strip view
-				uiItem: addItem('div', { className: 'spread-layout' }),
-				uiShadowL: addItem('div', { className: 'page-shadow-left' }),
-				uiShadowR: addItem('div', { className: 'page-shadow-right' }),
-				uiLightL: addItem('div', { className: 'page-light-left' }),
-				uiLightR: addItem('div', { className: 'page-light-right' }),
-				uiThumb: addItem('div', { className: 'spread-thumb' }),
-				pageObjL: spreadPages['left'] ?? null,
-				pageObjR: spreadPages['right'] ?? null,
+			if (!rd.webtoon) {
+				return ({
+					// dom object, spread div and its content
+					// dom object, shadow for page effect, children of uiItem in the dom
+					//  "
+					// dom object, thumbnail of the spread for the strip view
+					uiItem: addItem('div', { className: 'spread-layout' }),
+					uiShadowL: addItem('div', { className: 'page-shadow-left' }),
+					uiShadowR: addItem('div', { className: 'page-shadow-right' }),
+					uiLightL: addItem('div', { className: 'page-light-left' }),
+					uiLightR: addItem('div', { className: 'page-light-right' }),
+					uiThumb: addItem('div', { className: 'spread-thumb' }),
+					pageObjL: spreadPages['left'] ?? null,
+					pageObjR: spreadPages['right'] ?? null,
 
-				pageNumL: spreadPageNums['left'] ?? null,
-				pageNumR: spreadPageNums['right'] ?? null,
+					pageNumL: spreadPageNums['left'] ?? null,
+					pageNumR: spreadPageNums['right'] ?? null,
 
-				spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
-				spreadRefPage: spreadRefPage
-			})
+					spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
+					spreadRefPage: spreadRefPage
+				})
+			} else {
+				return ({
+					// dom object, spread div and its content
+					// dom object, shadow for page effect, children of uiItem in the dom
+					//  "
+					// dom object, thumbnail of the spread for the strip view
+					uiItem: addItem('div', { className: 'webtoon-layout' }),
+					//uiShadowL: addItem('div', { className: 'page-shadow-left' }),
+					//uiShadowR: addItem('div', { className: 'page-shadow-right' }),
+					//uiLightL: addItem('div', { className: 'page-light-left' }),
+					//uiLightR: addItem('div', { className: 'page-light-right' }),
+					uiThumb: addItem('div', { className: 'spread-thumb' }),
+					pageObjL: spreadPages ?? null,
+					//pageObjR: spreadPages['right'] ?? null,
+
+					pageNumL: spreadPageNums ?? null,
+					//pageNumR: spreadPageNums['right'] ?? null,
+
+					spreadKind: spreadKind,	// what kind of page is this (cover, double spread, two pages etc)
+					spreadRefPage: spreadRefPage
+				})
+			}
 		}
 
 		function spreadsTotal() {
@@ -3109,9 +3146,9 @@
 
 		function pageTable(page1, page2) {
 			return (
-				rd.ltr ?
-					{ left: page1, right: page2 } :
-					{ left: page2, right: page1 }
+				rd.rtl ?
+					{ left: page2, right: page1 } :
+					{ left: page1, right: page2 }
 			)
 		}
 
@@ -3136,8 +3173,113 @@
 			pageObjectL.uiContainer.append(coverlayL);
 		}
 
+		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne) {
+			// Get the pages data structure from komga for the current book
+			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+
+			//TODO ADD THE OPPOSITE CODE IN THE OTHER fetchPages function
+			if (!readerViewer.classList.contains('webtoon')) {
+				readerContainer.classList.add('webtoon');
+				readerViewer.classList.add('webtoon');
+			}
+
+			const webtoonScale = 0.5;
+
+			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
+				.reduce((sum, width) => sum + width, 0) / komgaPageData.length) + 'px';
+
+			readerViewer.style.height = webtoonScale * (komgaPageData.map(item => ((item.height)))
+				.reduce((sum, width) => sum + width, 0)) + 'px';
+
+			const pageData = komgaPageData.map(page => ({
+				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				thumb: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
+				pageNum: page.number,
+				width: page.width,
+				height: page.height,
+				AR: page.width / page.height,
+				isCover: noCover ? false : page.number == 1,
+				isCurrent: page.number == rd.currentPage,
+				size: page.sizeBytes
+			}));
+
+			let i_page = 0; 		// Index of komga page data
+			let realPage = 1;		// Index of real page
+
+			// double spread with single page are treated as this:
+			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
+			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
+
+			rd.realFirstPage = '1';
+
+			while (i_page < pageData.length) {
+				let spreadObject = null;
+
+				pageNum1 = realPage
+
+				// these are two normal pages
+				const page1 = buildPageObject(pageData[i_page]);
+
+				page1.uiPage.style.width = webtoonScale * pageData[i_page].width + "px";
+				page1.uiPage.style.height = webtoonScale * pageData[i_page].height + "px";
+
+				spreadObject = buildSpreadObject('webtoon-page', page1, pageData[i_page].pageNum, pageNum1);
+				rd.realLastPage = pageNum1;
+
+				rd.spreadsArray.push(spreadObject);
+				i_page++;
+				realPage++;
+
+			}
+
+			rd.spreadsArray.forEach((spreadObject, index) => {
+
+				let pageObjectL = spreadObject.pageObjL;
+console.log(pageObjectL)
+				spreadObject.uiThumb.append(
+					pageObjectL.uiThumb,
+				);
+
+				spreadObject.uiItem.append(
+					pageObjectL.uiContainer,
+				);
+
+				spreadObject.uiItem.style.width = pageObjectL.uiPage.style.width
+				spreadObject.uiItem.style.height = pageObjectL.uiPage.style.height
+
+				//buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
+				//TODO Ma questo serve???? Farlo uguale a readerViewer?
+				//spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+
+				//buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
+				//buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
+
+				pageObjectL.uiPage.style.float = 'right';
+				pageObjectL.uiPage.style.objectFit = 'cover';
+				pageObjectL.uiPage.style.objectPosition = 'left';
+
+				if ((pageObjectL.isCurrent)) rd.currentSpreadIndex = index;
+
+				//spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
+				//spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
+
+				readerViewer.append(spreadObject.uiItem);
+				//spreadHide(index);
+
+				const localSpread = index;
+
+				spreadObject.uiThumb.addEventListener('click', () => {
+					jumpToSpread(localSpread);
+				});
+				thumbStripInner.append(spreadObject.uiThumb);
+
+			});
+
+		}
+
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
+			readerViewer.classList.remove('webtoon');
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
@@ -3151,7 +3293,7 @@
 			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
-			thumbStripInner.style.flexDirection = !rd.ltr ? 'row-reverse' : 'row';
+			thumbStripInner.style.flexDirection = rd.rtl ? 'row-reverse' : 'row';
 
 			// Create pageData structure with the fields from fetched data
 			const pageData = komgaPageData.map(page => ({
@@ -3488,7 +3630,7 @@
 
 		function handleArrow(direction) {
 			const isDirectionLeft = (direction === 'left');
-			const delta = (rd.ltr === isDirectionLeft) ? -1 : 1;
+			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
 			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.pageTurning === direction) return;
@@ -3504,8 +3646,8 @@
 
 			if ((newSpread === 0 || newSpread === spreadsTotal() - 1) && rd.pageTurning) return;
 
-			const earlyTurnBlock = (isDirectionLeft === rd.ltr) && rd.currentSpreadIndex === spreadsTotal() - 2;
-			const lateTurnBlock = (isDirectionLeft !== rd.ltr) && rd.currentSpreadIndex === 1;
+			const earlyTurnBlock = (isDirectionLeft !== rd.rtl) && rd.currentSpreadIndex === spreadsTotal() - 2;
+			const lateTurnBlock = (isDirectionLeft === rd.rtl) && rd.currentSpreadIndex === 1;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
 
@@ -3527,11 +3669,11 @@
 		}
 
 		function handleLeftLimit() {
-			jumpToSpread(rd.ltr ? 0 : spreadsTotal() - 1);
+			jumpToSpread(!rd.rtl ? 0 : spreadsTotal() - 1);
 		}
 
 		function handleRightLimit() {
-			jumpToSpread(rd.ltr ? spreadsTotal() - 1 : 0);
+			jumpToSpread(!rd.rtl ? spreadsTotal() - 1 : 0);
 		}
 
 		function handleSmallThumbs() {
@@ -3549,7 +3691,6 @@
 			const twoPages = (rd.spreadsArray[index].spreadKind == 'two-pages');
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
-			//const currentPage = (lastSpread && rd.ltr) ? pageNumber + 1 : pageNumber;
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 			const pageNumText = spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
 
@@ -3564,7 +3705,7 @@
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
 			&book_id=${rd.bookId}
-			&dir=${rd.ltr ? 'ltr' : 'rtl'}
+			&dir=${rd.direction}
 			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
@@ -3666,13 +3807,16 @@
 		}
 
 		function pageTurn(index, oldindex, turnDirection, force = false) {
+
+			if (rd.webtoon) return;
+
 			//Z-index control
 			rd.spreadsArray[index].uiItem.style.zIndex = spreadsTotal() + 1;
 
 			if (turnDirection == 'turn-right') {
-				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? spreadsTotal() - oldindex : oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.rtl ? oldindex : spreadsTotal() - oldindex;
 			} else {
-				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.ltr ? oldindex : spreadsTotal() - oldindex;
+				rd.spreadsArray[oldindex].uiItem.style.zIndex = rd.rtl ? spreadsTotal() - oldindex : oldindex;
 			}
 
 			rd.dropShadowL.style.zIndex = rd.dropShadowR.style.zIndex = 0;
@@ -3897,15 +4041,15 @@
 		function getSpreadFocus(spreadIndex) {
 			const spreadKind = rd.spreadsArray[spreadIndex].spreadKind;
 			if (spreadKind === 'cover-page') {
-				return rd.ltr ? 'focus-right-page' : 'focus-left-page';
+				return rd.rtl ? 'focus-left-page' : 'focus-right-page';
 			}
 			if (spreadKind === 'back-cover') {
-				return rd.ltr ? 'focus-left-page' : 'focus-right-page';
+				return rd.rtl ? 'focus-right-page' : 'focus-left-page';
 			}
 			if (mb.readerHorizontal) {
 				return 'focus-center';
 			}
-			return rd.ltr ? 'focus-left-page' : 'focus-right-page';
+			return rd.rtl ? 'focus-right-page' : 'focus-left-page';
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
@@ -3938,11 +4082,11 @@
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
 			// This adds a slight delay when jumping cover to cover
-			spreadSetFocusSmoothDelay(targetSpreadFocus);
+			if (!rd.webtoon) spreadSetFocusSmoothDelay(targetSpreadFocus);
 
 			spreadShow(localNewSpreadIndex);
 
-			const turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) === rd.ltr ? 'turn-left' : 'turn-right';
+			const turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) === rd.rtl ? 'turn-right' : 'turn-left';
 			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
 			centerThumb();
@@ -3980,7 +4124,7 @@
 
 			const progressBarWidth = readerProgressBar.offsetWidth;
 			const clickX = event.clientX - readerProgressBar.getBoundingClientRect().left;
-			const newProgressPercent = Math.min(1, Math.max(0, rd.ltr ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
+			const newProgressPercent = Math.min(1, Math.max(0, !rd.rtl ? clickX / progressBarWidth : (progressBarWidth - clickX) / progressBarWidth));
 
 			jumpToSpread(Math.floor(newProgressPercent * (spreadsTotal() - 1)));
 		}
