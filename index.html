@@ -158,7 +158,13 @@
 				<div id="openMenu"></div>
 				<div id="toRightPage"></div>
 			</div>
-
+			<!--
+			<div id="touchPanelWebtoon">
+				<div id="toTopPage"></div>
+				<div id="openWebtoonMenu"></div>
+				<div id="toBottomPage"></div>
+			</div>
+		-->
 			<div id="controlPanel" class="hidden">
 				<div id="topControls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
@@ -2672,7 +2678,7 @@
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
-			preloadCount: 15,			// Image preload count
+			preloadCount: 5,			// TODO SET BACK TO 15 Image preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
 			jumpTimeout: null,		// Timeout counter for jumping to spreads
@@ -3014,7 +3020,9 @@
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
-
+ 
+			touchPanel.style.display = rd.webtoon ? 'none' : '';
+			
 			initReaderUI(pagesData, bookData)
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
@@ -3178,6 +3186,7 @@
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
 
 			//TODO ADD THE OPPOSITE CODE IN THE OTHER fetchPages function
+			//TODO MAYBE NOT USED ANYMORE?
 			if (!readerViewer.classList.contains('webtoon')) {
 				readerContainer.classList.add('webtoon');
 				readerViewer.classList.add('webtoon');
@@ -3185,11 +3194,13 @@
 
 			const webtoonScale = 0.5;
 
+			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
 				.reduce((sum, width) => sum + width, 0) / komgaPageData.length) + 'px';
 
 			readerViewer.style.height = webtoonScale * (komgaPageData.map(item => ((item.height)))
 				.reduce((sum, width) => sum + width, 0)) + 'px';
+			*/
 
 			const pageData = komgaPageData.map(page => ({
 				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
@@ -3212,6 +3223,13 @@
 
 			rd.realFirstPage = '1';
 
+			//TODO Place this in a larger scope?
+			let webtoonContainer = addItem('div', {
+				id: 'webtoonContainer'
+			});
+			webtoonContainer.addEventListener('click', () =>{
+				toggleMenu();
+			})
 			while (i_page < pageData.length) {
 				let spreadObject = null;
 
@@ -3222,7 +3240,10 @@
 
 				page1.uiPage.style.width = webtoonScale * pageData[i_page].width + "px";
 				page1.uiPage.style.height = webtoonScale * pageData[i_page].height + "px";
-
+				
+				page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
+				addLazyLoading(page1.uiPage);
+				
 				spreadObject = buildSpreadObject('webtoon-page', page1, pageData[i_page].pageNum, pageNum1);
 				rd.realLastPage = pageNum1;
 
@@ -3235,7 +3256,7 @@
 			rd.spreadsArray.forEach((spreadObject, index) => {
 
 				let pageObjectL = spreadObject.pageObjL;
-console.log(pageObjectL)
+
 				spreadObject.uiThumb.append(
 					pageObjectL.uiThumb,
 				);
@@ -3263,7 +3284,7 @@ console.log(pageObjectL)
 				//spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
 				//spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
 
-				readerViewer.append(spreadObject.uiItem);
+				webtoonContainer.append(spreadObject.uiItem);
 				//spreadHide(index);
 
 				const localSpread = index;
@@ -3275,6 +3296,7 @@ console.log(pageObjectL)
 
 			});
 
+			readerViewer.append(webtoonContainer);
 		}
 
 		// Master function that builds all the pages slots for the book spreads
@@ -4054,6 +4076,8 @@ console.log(pageObjectL)
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
 
+			console.log(rd.spreadsArray[targetSpreadIndex])
+
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4429,7 +4453,22 @@ console.log(pageObjectL)
 
 		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
 		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
+/*
+let startY = 0;
 
+touchPanelWebtoon.addEventListener('touchstart', (e) => {
+	console.log("A")
+  startY = e.touches[0].clientY;
+}, { passive: true });
+
+touchPanelWebtoon.addEventListener('touchmove', (e) => {
+	console.log("B")
+  const deltaY = e.touches[0].clientY - startY;
+  webtoonContainer.scrollTop -= deltaY;
+  startY = e.touches[0].clientY;
+  e.preventDefault(); // prevent browser scroll behavior
+}, { passive: false });
+*/
 	</script>
 </body>
 

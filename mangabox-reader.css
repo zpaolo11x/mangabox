@@ -130,6 +130,15 @@
 	transition: opacity 0.3s ease;
 }
 
+#webtoonContainer {
+	position:absolute;
+	top:0px;
+	overflow:scroll;
+	height:100vh;
+	border: 10px solid blue;
+	box-sizing: border-box;
+}
+
 #readerContainer {
 	position: fixed;
 	left: 0;
@@ -142,21 +151,13 @@
 	margin: 0;
 	padding: 0;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	background-color: var(--mb-page-color);
 	height: 100vh;
+	overflow: hidden;
 
 	background: none;
-}
-
-#readerContainer:not(.webtoon) {
-	flex-direction: column;
-	overflow: hidden;
-}
-
-#readerContainer.webtoon{
-	flex-direction: column;
-	overflow: scroll;
 }
 
 #readerContainer.hidden {
@@ -267,7 +268,7 @@ img.page:not(.hidden) {
 	position: relative;
 	overflow: hidden;
 	background: white;
-	border: green 5px solid!important;
+	border: green 15px solid!important;
 }
 
 .page-container.left-page {
@@ -508,32 +509,25 @@ div.single-page {
 */
 
 #readerViewer {
-	box-sizing: content-box;
-
-	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-
-	background: none;
-	gap: 0px;
-}
-
-#readerViewer:not(.webtoon) {
 	position: absolute;
-	align-items: center;
-	justify-content: center;
 
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 
+	box-sizing: content-box;
+
+	margin: 0;
+	padding: 0;
+	display: flex;
+
+	align-items: center;
+	justify-content: center;
+
 	height: 100vh;
 
-}
-
-#readerViewer.webtoon {
-
+	background: none;
+	gap: 0px;
 }
 
 #readerContainer.hidden #readerViewer {
@@ -867,6 +861,8 @@ div.single-page {
 	opacity: 0;
 }
 
+/*//TODO Maybe this is not needed, it was not used before*/
+/*
 #readerOverlay {
 	position: fixed;
 	left: 0px;
@@ -874,6 +870,7 @@ div.single-page {
 	top: 0px;
 	bottom:0px;
 }
+*/
 
 #touchPanel {
 	position: absolute;
@@ -892,7 +889,7 @@ div.single-page {
 
 	transition: border 0.3s;
 
-	border:10px red solid;
+	border:5px red solid;
 }
 
 #touchPanel.shrink {
@@ -901,11 +898,28 @@ div.single-page {
 	height: calc(100vh - 60px - 180px);
 }
 
-/*
-#touchPanel.incognito{
-	border-bottom: 5px solid rgba(196, 48, 212, 0.74);
+
+#touchPanelWebtoon {
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	display: grid;
+	width: 100vw;
+	height: 100vh;
+
+	grid-template-rows: 1fr 1.5fr 1fr;
+	/*z-index: 1002;*/
+
+	box-sizing: border-box;
+	border-bottom: 5px solid transparent;
+
+	transition: border 0.3s;
+
+	border:5px fuchsia solid;
+
+	
 }
-*/
 
 #incognitoMark {
 	content: "";
