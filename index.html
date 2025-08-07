@@ -2913,15 +2913,15 @@
 		})
 
 		function setThumbZoom(status) {
-			clientSize = rd.webtoon ? 'clientWidth' : 'clientHeight';
+			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 			
 			rd.thumbZoom = status;
 			rd.thumbSize = thumbStripInner[clientSize];
-			console.log("SIZE: "+rd.thumbSize);
+
 			thumbStripScrollContent.style.overflow = 'hidden';
 
-			const oldSize = thumbStripInner[clientSize] - 10;
+			const oldSize = thumbStripInner[clientSize];
 
 			let thumbSize = rd.webtoon ? (status ? 150 : 100) : (status ? 300 : 150);
 
@@ -2933,7 +2933,7 @@
 			
 			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbSize + 'px');
 
-			const newSize = thumbStripInner[clientSize] - 10;
+			const newSize = thumbStripInner[clientSize];
 			const scrollScaler = newSize / oldSize;
 			thumbStripScrollContent[scrollRef] = thumbStripScrollContent[scrollRef] * scrollScaler;
 		}
@@ -2944,7 +2944,7 @@
 		addPressEvents(thumbStripButton, scaleDown, scaleUp);
 
 		const resizeObserver = new ResizeObserver(entries => {
-			clientSize = rd.webtoon ? 'clientWidth' : 'clientHeight';
+			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 			
 			for (let entry of entries) {
