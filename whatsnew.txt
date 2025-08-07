@@ -5,7 +5,7 @@ Redaer UI
 - 
 
 Build
-- Fix release builder
+- Fix Android release builder
 
 Fixes
-- 
+- Fix spacing on compact view

@@ -1850,7 +1850,7 @@ body.sticky-small #stripGridHeaderContainer {
 }
 
 body.sticky-small #mainUI:has(.extra-bar:not(.hidden)) {
-	grid-template-rows: 166px auto;
+	grid-template-rows: 156px auto;
 }
 
 body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.search-field) {
