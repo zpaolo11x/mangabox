@@ -2918,7 +2918,7 @@
 			thumbStripScrollContent.style.overflow = 'hidden';
 			const oldWidth = thumbStripInner.clientWidth;
 
-			let thumbHeight = status ? 300 : 150;
+			let thumbHeight = status ? 150 : 100;
 			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
 				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
@@ -3137,7 +3137,7 @@
 					src: 'transparent.png',
 					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
 					style: {
-						height: 'var(--mb-thumb-height-px)',
+						width: 'var(--mb-thumb-height-px)',
 						aspectRatio: isHidden ? '0.001' : pageData.AR,
 					}
 				}),
