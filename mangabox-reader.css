@@ -135,7 +135,6 @@
 	top:0px;
 	overflow:scroll;
 	height:100vh;
-	border: 10px solid blue;
 	box-sizing: border-box;
 }
 
@@ -268,7 +267,6 @@ img.page:not(.hidden) {
 	position: relative;
 	overflow: hidden;
 	background: white;
-	border: green 15px solid!important;
 }
 
 .page-container.left-page {
@@ -889,7 +887,6 @@ div.single-page {
 
 	transition: border 0.3s;
 
-	border:5px red solid;
 }
 
 #touchPanel.shrink {
