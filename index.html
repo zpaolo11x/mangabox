@@ -2688,6 +2688,7 @@
 
 			direction: null,
 			webtoon: null,
+			webtoonScroll: false,
 			rtl: null,
 			currentPage: 0,
 			pagesDataArray: [],		// this is the array of pages data in the form url, iscover etc
@@ -2766,6 +2767,7 @@
 
 			rd.direction = dir;
 			rd.webtoon = (dir == 'WEBTOON');
+			rd.webtoonScroll = false;
 			rd.rtl = (dir == 'RIGHT_TO_LEFT');
 
 			rd.currentPage = pag;
@@ -4116,9 +4118,13 @@
 			centerThumb();
 
 			if (rd.webtoon) {
+				rd.webtoonScroll = true;
 				rd.spreadsArray[targetSpreadIndex].uiItem.scrollIntoView({
 					behavior: 'smooth',
 				});
+				setTimeout(() => {
+					rd.webtoonScroll = false;
+				}, 500);
 			}
 
 			updateProgressBar();
@@ -4354,6 +4360,7 @@
 
 		const webtoonPageNumberObserver = new IntersectionObserver(async (entries, observer) => {
 			entries.forEach(async (entry) => {
+				if (rd.webtoonScroll) return;
 				if (entry.isIntersecting) {
 					rd.oldSpreadIndex = rd.currentSpreadIndex;
 					rd.currentSpreadIndex = entry.target.alt - 1;
