@@ -3020,9 +3020,9 @@
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
- 
+
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
-			
+
 			initReaderUI(pagesData, bookData)
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
@@ -3227,7 +3227,7 @@
 			let webtoonContainer = addItem('div', {
 				id: 'webtoonContainer'
 			});
-			webtoonContainer.addEventListener('click', () =>{
+			webtoonContainer.addEventListener('click', () => {
 				toggleMenu();
 			})
 			while (i_page < pageData.length) {
@@ -3240,10 +3240,11 @@
 
 				page1.uiPage.style.width = webtoonScale * pageData[i_page].width + "px";
 				page1.uiPage.style.height = webtoonScale * pageData[i_page].height + "px";
-				
+
 				page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
 				addLazyLoading(page1.uiPage);
-				
+				webtoonPageNumberObserver.observe(page1.uiPage);
+
 				spreadObject = buildSpreadObject('webtoon-page', page1, pageData[i_page].pageNum, pageNum1);
 				rd.realLastPage = pageNum1;
 
@@ -3714,7 +3715,7 @@
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			const pageNumText = spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			const pageNumText = rd.webtoon ? spreadObject.pageNumL : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
 
 			const out = [currentPage, pageNumText];
 
@@ -4076,8 +4077,6 @@
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
 
-			console.log(rd.spreadsArray[targetSpreadIndex])
-
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4114,6 +4113,13 @@
 			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
 			centerThumb();
+
+			if (rd.webtoon) {
+				rd.spreadsArray[targetSpreadIndex].uiItem.scrollIntoView({
+					behavior: 'smooth',
+				});
+			}
+
 			updateProgressBar();
 
 			if (!skipHistory) history.replaceState(null, '', jumpString());
@@ -4223,13 +4229,18 @@
 
 			switch (event.key) {
 				case 'ArrowLeft':
-					if (readerVisible) handleLeftArrow();
+					if (readerVisible) !rd.webtoon ? handleLeftArrow() : handleCloseReader();
 					break;
 				case 'ArrowRight':
-					if (readerVisible) handleRightArrow();
+					if (readerVisible && !rd.webtoon) handleRightArrow();
+					break;
+				case 'ArrowDown':
+					if (readerVisible) !rd.webtoon ? handleCloseReader() : handleRightArrow();
+					break;
+				case 'ArrowUp':
+					if (readerVisible && rd.webtoon) handleLeftArrow();
 					break;
 				case 'Escape':
-				case 'ArrowDown':
 					if (readerVisible) handleCloseReader();
 					break;
 				case ' ':
@@ -4339,6 +4350,19 @@
 			history.pushState(null, '', mb.basePath + path);
 			loadContent();
 		}
+
+		const webtoonPageNumberObserver = new IntersectionObserver(async (entries, observer) => {
+			entries.forEach(async (entry) => {
+				if (entry.isIntersecting) {
+					rd.oldSpreadIndex = rd.currentSpreadIndex;
+					rd.currentSpreadIndex = entry.target.alt - 1;
+					updateProgressBar();
+					centerThumb();
+					history.replaceState(null, '', jumpString());
+					console.log(entry.target.alt);
+				}
+			});
+		});
 
 		// Lazy-loading setup with Intersection Observer
 		const lazyLoadingObserver = new IntersectionObserver(async (entries, observer) => {
@@ -4453,22 +4477,22 @@
 
 		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
 		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
-/*
-let startY = 0;
-
-touchPanelWebtoon.addEventListener('touchstart', (e) => {
-	console.log("A")
-  startY = e.touches[0].clientY;
-}, { passive: true });
-
-touchPanelWebtoon.addEventListener('touchmove', (e) => {
-	console.log("B")
-  const deltaY = e.touches[0].clientY - startY;
-  webtoonContainer.scrollTop -= deltaY;
-  startY = e.touches[0].clientY;
-  e.preventDefault(); // prevent browser scroll behavior
-}, { passive: false });
-*/
+		/*
+		let startY = 0;
+		
+		touchPanelWebtoon.addEventListener('touchstart', (e) => {
+			console.log("A")
+		  startY = e.touches[0].clientY;
+		}, { passive: true });
+		
+		touchPanelWebtoon.addEventListener('touchmove', (e) => {
+			console.log("B")
+		  const deltaY = e.touches[0].clientY - startY;
+		  webtoonContainer.scrollTop -= deltaY;
+		  startY = e.touches[0].clientY;
+		  e.preventDefault(); // prevent browser scroll behavior
+		}, { passive: false });
+		*/
 	</script>
 </body>
 
