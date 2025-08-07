@@ -166,14 +166,6 @@
 			</div>
 		-->
 			<div id="controlPanel" class="hidden">
-				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
-					<span></span>
-					<span id="bookName"></span>
-					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
-				</div>
-
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
 					<div id="thumbStripScrollContent" class="scrollbox-content">
 						<div id="thumbStripInner"></div>
@@ -186,6 +178,14 @@
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				</div>
+				
+				<div id="topControls">
+					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
+					<span></span>
+					<span id="bookName"></span>
+					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
+					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
 
 				<div id="bottomControls">
@@ -746,7 +746,7 @@
 				}, 1000);
 			}
 
-			function updateThumb() {
+			function updateScrollbarThumb() {
 				const total = isHorizontal ? content.scrollWidth : content.scrollHeight;
 				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
 				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
@@ -763,28 +763,28 @@
 
 				const margin = 10;
 
-				let thumbSize = Math.max((visible / total) * visible, 30);
+				let scrollbarThumbSize = Math.max((visible / total) * visible, 30);
 				let midBoxRate = (scroll / (total - visible));
-				let thumbPos = margin + midBoxRate * (visible - 2 * margin - thumbSize);
+				let scrollbarThumbPos = margin + midBoxRate * (visible - 2 * margin - scrollbarThumbSize);
 
 				if (isHorizontal) {
-					thumb.style.width = thumbSize + 'px';
-					thumb.style.left = thumbPos + 'px';
+					thumb.style.width = scrollbarThumbSize + 'px';
+					thumb.style.left = scrollbarThumbPos + 'px';
 				} else {
-					thumb.style.height = thumbSize + 'px';
-					thumb.style.top = thumbPos + 'px';
+					thumb.style.height = scrollbarThumbSize + 'px';
+					thumb.style.top = scrollbarThumbPos + 'px';
 				}
 			}
 
 
 			content.addEventListener('scroll', () => {
-				updateThumb();
+				updateScrollbarThumb();
 				showScrollbarTemporarily();
 			});
 
 			//TODO Verifica bene che mouseenter al posto di pointerenter non dia problemi!
 			scrollbox.addEventListener('mouseenter', () => {
-				updateThumb();
+				updateScrollbarThumb();
 				showScrollbarTemporarily();
 			});
 
@@ -822,7 +822,7 @@
 				}
 			});
 
-			const observer = new MutationObserver(updateThumb);
+			const observer = new MutationObserver(updateScrollbarThumb);
 			observer.observe(content, {
 				childList: true,
 				subtree: true,
@@ -830,8 +830,8 @@
 				attributes: true,
 			});
 
-			scrollbox.refreshScrollbar = updateThumb;
-			updateThumb();
+			scrollbox.refreshScrollbar = updateScrollbarThumb;
+			updateScrollbarThumb();
 		}
 
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
@@ -1240,9 +1240,9 @@
 				item.scrollInput.style.display = isOverflowing ? 'block' : 'none';
 
 				const visibleRatio = item.homeStrip.clientWidth / item.homeStrip.scrollWidth;
-				const thumbWidth = (100 * visibleRatio);
+				const sliderThumbWidth = (100 * visibleRatio);
 
-				item.scrollInput.style.setProperty('--thumb-width', `${thumbWidth}%`);
+				item.scrollInput.style.setProperty('--thumb-width', `${sliderThumbWidth}%`);
 			});
 		};
 
@@ -2700,7 +2700,7 @@
 			isDraggingProgressBar: false,
 
 			thumbZoom: false,
-			thumbWidth: 0,
+			thumbSize: 0,
 
 			libraryId: 0,
 			seriesId: 0,
@@ -2913,21 +2913,28 @@
 		})
 
 		function setThumbZoom(status) {
+			clientSize = rd.webtoon ? 'clientWidth' : 'clientHeight';
+			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
+			
 			rd.thumbZoom = status;
-			rd.thumbWidth = thumbStripInner.clientWidth;
+			rd.thumbSize = thumbStripInner[clientSize];
 			thumbStripScrollContent.style.overflow = 'hidden';
-			const oldWidth = thumbStripInner.clientWidth;
 
-			let thumbHeight = status ? 150 : 100;
-			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
-				thumbHeight = window.innerHeight - 60 - 60 - 30;
+			const oldSize = thumbStripInner[clientSize] - 10;
+
+			let thumbSize = rd.webtoon ? (status ? 150 : 100) : (status ? 300 : 150);
+			if (!rd.webtoon) {
+				if (window.innerHeight - thumbSize - 60 - 60 - 30 < 0) {
+					thumbSize = window.innerHeight - 60 - 60 - 30;
+				}
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
+			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbSize + 'px');
 
-			const newWidth = thumbStripInner.clientWidth;
+			const newSize = thumbStripInner[clientSize] - 10;
 
-			const scrollScaler = newWidth / oldWidth;
-			thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
+			const scrollScaler = newSize / oldSize;
+			
+			thumbStripScrollContent[scrollRef] = thumbStripScrollContent[scrollRef] * scrollScaler;
 		}
 
 		thumbStripButton.addEventListener('click', () => {
@@ -2937,11 +2944,11 @@
 
 		const resizeObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
-				const oldWidth = rd.thumbWidth;
+				const oldWidth = rd.thumbSize;
 				const newWidth = thumbStripInner.clientWidth;
 				const scrollScaler = newWidth / oldWidth;
 				thumbStripScrollContent.scrollLeft = thumbStripScrollContent.scrollLeft * scrollScaler;
-				rd.thumbWidth = newWidth;
+				rd.thumbSize = newWidth;
 			}
 		});
 
@@ -3753,6 +3760,31 @@
 			clearAllTimeouts();
 		}
 
+				// Thumbnail scrolling functions
+		function thumbSmoothScrollWebtoon(container, targetScrollTop, duration = 500) {
+			const start = container.scrollTop;
+			const change = targetScrollTop - start;
+			const startTime = performance.now();
+
+			function animateScroll(currentTime) {
+				const elapsedTime = currentTime - startTime;
+				const progress = Math.min(elapsedTime / duration, 1); // Ensure progress doesn't exceed 1
+
+				// Easing function (easeInOutQuad for smooth effect)
+				const ease = progress < 0.5
+					? 2 * progress * progress
+					: -1 + (4 - 2 * progress) * progress;
+
+				container.scrollTop = start + change * ease;
+
+				if (progress < 1) {
+					requestAnimationFrame(animateScroll);
+				}
+			}
+			requestAnimationFrame(animateScroll);
+		}
+
+
 		// Thumbnail scrolling functions
 		function thumbSmoothScroll(container, targetScrollLeft, duration = 500) {
 			const start = container.scrollLeft;
@@ -3775,6 +3807,30 @@
 				}
 			}
 			requestAnimationFrame(animateScroll);
+		}
+
+		function centerThumbWebtoon(fast = false) {
+			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
+			// maybe each time the old and current spreads are updated I could call this function with old and current to
+			// remove one class and add the other...
+
+			Array.from(thumbStripInner.children).forEach(element => {
+				element.classList.remove('current');
+			});
+
+			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
+
+			if (targetElement) {
+				const targetScrollTop = -thumbStripScrollContent.clientHeight / 2 + targetElement.offsetTop - thumbStripScrollContent.offsetTop + targetElement.clientHeight / 2;
+
+				if (!fast) {
+					thumbSmoothScrollWebtoon(thumbStripScrollContent, targetScrollTop, 300);
+				} else {
+					thumbStripScrollContent.scrollTop = targetScrollTop;
+				};
+
+				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
+			}
 		}
 
 		function centerThumb(fast = false) {
@@ -4115,7 +4171,7 @@
 			const turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) === rd.rtl ? 'turn-right' : 'turn-left';
 			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
-			centerThumb();
+			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 
 			if (rd.webtoon) {
 				rd.webtoonScroll = true;
@@ -4365,7 +4421,7 @@
 					rd.oldSpreadIndex = rd.currentSpreadIndex;
 					rd.currentSpreadIndex = entry.target.alt - 1;
 					updateProgressBar();
-					centerThumb();
+					centerThumbWebtoon();
 					history.replaceState(null, '', jumpString());
 				}
 			});
