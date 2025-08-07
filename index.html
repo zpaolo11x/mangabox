@@ -2818,6 +2818,7 @@
 				item.uiLightR = null;
 				['pageObjL', 'pageObjR'].forEach(key => {
 					if (item[key] != null) {
+						if (rd.webtoon) webtoonPageNumberObserver.unobserve(item[key].uiPage)
 						item[key].uiPage.remove();
 						item[key].uiContainer.remove();
 						item[key].uiThumb.remove();
@@ -3243,7 +3244,7 @@
 
 				page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
 				addLazyLoading(page1.uiPage);
-				webtoonPageNumberObserver.observe(page1.uiPage);
+				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
 				spreadObject = buildSpreadObject('webtoon-page', page1, pageData[i_page].pageNum, pageNum1);
 				rd.realLastPage = pageNum1;
@@ -4359,7 +4360,6 @@
 					updateProgressBar();
 					centerThumb();
 					history.replaceState(null, '', jumpString());
-					console.log(entry.target.alt);
 				}
 			});
 		});
