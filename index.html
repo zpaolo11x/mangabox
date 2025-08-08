@@ -158,13 +158,7 @@
 				<div id="openMenu"></div>
 				<div id="toRightPage"></div>
 			</div>
-			<!--
-			<div id="touchPanelWebtoon">
-				<div id="toTopPage"></div>
-				<div id="openWebtoonMenu"></div>
-				<div id="toBottomPage"></div>
-			</div>
-		-->
+
 			<div id="controlPanel" class="hidden">
 				<div id="topControls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
@@ -172,6 +166,12 @@
 					<span id="bookName"></span>
 					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
+				</div>
+			
+				<div id="zoomControls">
+					<span id="scale_1" title="1x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
+					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
+					<span id="scale_3" title="3x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
 				</div>
 
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
@@ -3198,7 +3198,6 @@
 				readerViewer.classList.add('webtoon');
 			}
 
-			const webtoonScale = 0.5;
 
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
@@ -3219,6 +3218,14 @@
 				isCurrent: page.number == rd.currentPage,
 				size: page.sizeBytes
 			}));
+
+			let imageWidth = pageData[0].width;
+			let screenWidth = readerContainer.clientWidth;
+
+			console.log(imageWidth+" "+screenWidth);
+
+			let webtoonScale = 1.0;
+			if (screenWidth < imageWidth) webtoonScale = screenWidth/imageWidth;
 
 			let i_page = 0; 		// Index of komga page data
 			let realPage = 1;		// Index of real page
@@ -3309,6 +3316,7 @@
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
 			readerViewer.classList.remove('webtoon');
+			readerContainer.classList.remove('webtoon');
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);

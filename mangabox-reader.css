@@ -539,7 +539,8 @@ div.single-page {
 }
 
 #bottomControls,
-#topControls {
+#topControls,
+#zoomControls {
 	display: grid;
 	align-items: center;
 	justify-content: center;
@@ -697,6 +698,15 @@ div.single-page {
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 }
 
+#zoomControls {
+	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) var(--mb-pill-width);
+	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
+	width:auto;
+	left:50%;
+	bottom:50%;
+	transform: translate(-50%, -50%);
+}
+
 #topControls {
 	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) 1fr var(--mb-pill-width) var(--mb-pill-width);
 	top: 0px;
@@ -717,7 +727,9 @@ div.single-page {
 }
 
 #controlPanel.hidden #bottomControls,
-#readerContainer.hidden #bottomControls {
+#readerContainer.hidden #bottomControls,
+#controlPanel.hidden #zoomControls,
+#readerContainer.hidden #zoomControls {
 	bottom: -100px;
 }
 
