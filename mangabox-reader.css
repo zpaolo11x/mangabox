@@ -576,6 +576,10 @@ div.single-page {
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
 }
 
+#thumbStrip.webtoon {
+	display:none;
+}
+
 #thumbStripButton {
 	height: 20px;
 	position: fixed;

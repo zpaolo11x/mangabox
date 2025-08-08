@@ -3027,6 +3027,9 @@
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
 
 			initReaderUI(pagesData, bookData)
+			
+			thumbStrip.style.display = rd.webtoon ? 'none' : '';
+			thumbStripButton.style.display = rd.webtoon ? 'none' : '';
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 		}
