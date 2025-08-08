@@ -4,24 +4,25 @@
 	<style>
 		#thumbStrip {
 			position: fixed;
-			left:0;
-			top:0;
-			right:0;
+			left: 0;
+			top: 0;
+			right: 0;
 			box-sizing: border-box;
 			width: 100vw;
 			border: 4px solid green;
-			overflow-x :auto;
+			overflow-x: auto;
 		}
 
-		#thumbStripInner{
+		#thumbStripInner {
 			display: flex;
 			box-sizing: border-box;
 			width: max-content;
 			border: 1px solid red;
-			margin-left: 50%; /*THIS IS THE SECRET*/
+			margin-left: 50%;
+			/*THIS IS THE SECRET*/
 			margin-right: 50%;
 		}
-		
+
 		.thumb {
 			box-sizing: border-box;
 			width: 200px;
@@ -50,5 +51,27 @@
 		</div>
 	</div>
 </body>
+
+<script>
+	const strip = document.getElementById('thumbStrip');
+	const inner = document.getElementById('thumbStripInner');
+
+	strip.scrollLeft = strip.clientWidth / 2
+	
+	strip.addEventListener('scroll', () => {
+		const minScroll = strip.clientWidth / 2;
+		const maxScroll = inner.scrollWidth - (strip.clientWidth / 2);
+
+		if (strip.scrollLeft < minScroll) {
+			strip.scrollLeft = minScroll;
+		}
+		if (strip.scrollLeft > maxScroll) {
+			strip.scrollLeft = maxScroll;
+		}
+
+	});
+
+
+</script>
 
 </html>
