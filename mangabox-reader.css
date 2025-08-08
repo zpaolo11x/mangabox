@@ -565,8 +565,8 @@ div.single-page {
 	position: fixed;
 
 	width: calc(var(--mb-thumb-height-px) + 30px);
-	top: 60px;
-	bottom: 60px;
+	top: 0px;
+	bottom: 0px;
 	left: 0px;
 	display: flex;
 	justify-content: left;
@@ -604,8 +604,8 @@ div.single-page {
 	padding: 0;
 	margin: 0;
 	width: calc(var(--mb-thumb-height-px) + 10px);
-	margin-top: 50%;
-	margin-bottom: 50%;
+	margin-top: 50vh;
+	margin-bottom: 50vh;
 	height: max-content;
 	/* Important! lets it grow as needed */
 
