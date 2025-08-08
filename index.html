@@ -167,7 +167,7 @@
 					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
-			
+
 				<div id="zoomControls">
 					<span id="scale_1" title="1x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
 					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
@@ -2689,6 +2689,8 @@
 			direction: null,
 			webtoon: null,
 			webtoonScroll: false,
+			webtoonScrollRatio: 0,
+			webtoonResizeTimeout: null,
 			rtl: null,
 			currentPage: 0,
 			pagesDataArray: [],		// this is the array of pages data in the form url, iscover etc
@@ -2768,6 +2770,7 @@
 			rd.direction = dir;
 			rd.webtoon = (dir == 'WEBTOON');
 			rd.webtoonScroll = false;
+			rd.webtoonScrollRatio = 0;
 			rd.rtl = (dir == 'RIGHT_TO_LEFT');
 
 			rd.currentPage = pag;
@@ -2912,9 +2915,33 @@
 			setIncognito(!rd.incognito);
 		})
 
+		//TODO Maybe change this to a resize observer?
+		window.addEventListener('resize', () => {
+			if (!rd.webtoon) return
+
+			clearTimeout(rd.webtoonResizeTimeout);
+			if (!rd.webtoonResizeTimeout) {
+				rd.webtoonScrollRatio = webtoonContainer.scrollTop / (webtoonContainer.scrollHeight - webtoonContainer.clientHeight);
+			}
+
+			// save ratio before DOM reflow
+			console.log("webtoonContainer.scrollTop:" + webtoonContainer.scrollTop)
+			console.log("webtoonContainer.scrollHeight:" + webtoonContainer.scrollHeight)
+			console.log("webtoonContainer.clientHeight:" + webtoonContainer.clientHeight)
+			console.log("")
+
+			console.log(rd.webtoonScrollRatio)
+			// Let the layout finish resizing, then restore scroll
+			webtoonContainer.scrollTop = rd.webtoonScrollRatio * (webtoonContainer.scrollHeight - webtoonContainer.clientHeight);
+			rd.webtoonResizeTimeout = setTimeout(() => {
+				rd.webtoonResizeTimeout = null;
+			}, 500);
+		});
+
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
 			rd.thumbWidth = thumbStripInner.clientWidth;
+
 			thumbStripScrollContent.style.overflow = 'hidden';
 			const oldWidth = thumbStripInner.clientWidth;
 
@@ -3027,7 +3054,7 @@
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
 
 			initReaderUI(pagesData, bookData)
-			
+
 			thumbStrip.style.display = rd.webtoon ? 'none' : '';
 			thumbStripButton.style.display = rd.webtoon ? 'none' : '';
 
@@ -3222,10 +3249,10 @@
 			let imageWidth = pageData[0].width;
 			let screenWidth = readerContainer.clientWidth;
 
-			console.log(imageWidth+" "+screenWidth);
+			console.log(imageWidth + " " + screenWidth);
 
 			let webtoonScale = 1.0;
-			if (screenWidth < imageWidth) webtoonScale = screenWidth/imageWidth;
+			if (screenWidth < imageWidth) webtoonScale = screenWidth / imageWidth;
 
 			let i_page = 0; 		// Index of komga page data
 			let realPage = 1;		// Index of real page
@@ -3238,11 +3265,13 @@
 
 			//TODO Place this in a larger scope?
 			let webtoonContainer = addItem('div', {
-				id: 'webtoonContainer'
+				id: 'webtoonContainer',
+				classList: 'hide-scrollbar'
 			});
 			webtoonContainer.addEventListener('click', () => {
 				toggleMenu();
 			})
+
 			while (i_page < pageData.length) {
 				let spreadObject = null;
 
@@ -3251,8 +3280,8 @@
 				// these are two normal pages
 				const page1 = buildPageObject(pageData[i_page]);
 
-				page1.uiPage.style.width = webtoonScale * pageData[i_page].width + "px";
-				page1.uiPage.style.height = webtoonScale * pageData[i_page].height + "px";
+				page1.uiPage.style.width = `calc(min(${pageData[i_page].width}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
+				page1.uiPage.style.height = `calc(min(${pageData[i_page].width / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
 
 				page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
 				addLazyLoading(page1.uiPage);

@@ -70,6 +70,19 @@
 	--color2: black;
 }
 
+.hide-scrollbar {
+  /* Works in Firefox */
+  scrollbar-width: none;
+
+  /* Works in IE, Edge (legacy) */
+  -ms-overflow-style: none;
+
+  /* Works in Chrome, Safari, Edge (Chromium), Opera */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 #readerBackground {
 	position: fixed;
 	left: 0;
