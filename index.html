@@ -2916,6 +2916,7 @@
 		})
 
 		//TODO Maybe change this to a resize observer?
+		/*
 		window.addEventListener('resize', () => {
 			if (!rd.webtoon) return
 
@@ -2937,7 +2938,7 @@
 				rd.webtoonResizeTimeout = null;
 			}, 500);
 		});
-
+		*/
 		function setThumbZoom(status) {
 			rd.thumbZoom = status;
 			rd.thumbWidth = thumbStripInner.clientWidth;
@@ -3270,7 +3271,11 @@
 			});
 			webtoonContainer.addEventListener('click', () => {
 				toggleMenu();
-			})
+			});
+			
+			let webtoonInner = addItem('div', {
+				id: 'webtoonInner'
+			});
 
 			while (i_page < pageData.length) {
 				let spreadObject = null;
@@ -3327,7 +3332,7 @@
 				//spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
 				//spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
 
-				webtoonContainer.append(spreadObject.uiItem);
+				webtoonInner.append(spreadObject.uiItem);
 				//spreadHide(index);
 
 				const localSpread = index;
@@ -3340,6 +3345,7 @@
 			});
 
 			readerViewer.append(webtoonContainer);
+			webtoonContainer.append(webtoonInner);
 		}
 
 		// Master function that builds all the pages slots for the book spreads

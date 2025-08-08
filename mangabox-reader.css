@@ -71,16 +71,17 @@
 }
 
 .hide-scrollbar {
-  /* Works in Firefox */
-  scrollbar-width: none;
+	/* Works in Firefox */
+	scrollbar-width: none;
 
-  /* Works in IE, Edge (legacy) */
-  -ms-overflow-style: none;
+	/* Works in IE, Edge (legacy) */
+	-ms-overflow-style: none;
 
-  /* Works in Chrome, Safari, Edge (Chromium), Opera */
+	/* Works in Chrome, Safari, Edge (Chromium), Opera */
 }
+
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 #readerBackground {
@@ -144,11 +145,21 @@
 }
 
 #webtoonContainer {
-	position:absolute;
-	top:0px;
-	overflow:scroll;
-	height:100vh;
+	position: absolute;
+	top: 0px;
+	overflow: scroll;
+	height: 100vh;
 	box-sizing: border-box;
+}
+
+#webtoonInner {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	height: max-content;
+	margin-top: 50vh;
+	/*THIS IS THE SECRET*/
+	margin-bottom: 50vh;
 }
 
 #readerContainer {
@@ -196,7 +207,7 @@ img.page:not([src]) {
 */
 
 .webtoon-layout img.page {
-		display: block;
+	display: block;
 }
 
 .spread-layout img.page {
@@ -714,9 +725,9 @@ div.single-page {
 #zoomControls {
 	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) var(--mb-pill-width);
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
-	width:auto;
-	left:50%;
-	bottom:50%;
+	width: auto;
+	left: 50%;
+	bottom: 50%;
 	transform: translate(-50%, -50%);
 }
 
@@ -805,7 +816,7 @@ div.single-page {
 	transition: left 0.05s;
 	text-align: center;
 	white-space: nowrap;
-	transition:width 0.3s ease;
+	transition: width 0.3s ease;
 	/*TODO RIVEDERE box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 6px;*/
 }
 
@@ -938,9 +949,9 @@ div.single-page {
 
 	transition: border 0.3s;
 
-	border:5px fuchsia solid;
+	border: 5px fuchsia solid;
 
-	
+
 }
 
 #incognitoMark {
