@@ -166,7 +166,7 @@
 			</div>
 		-->
 			<div id="controlPanel" class="hidden">
-				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
+				<div id="thumbStrip" class="scrollbox" data-scroll-direction="vertical">
 					<div id="thumbStripScrollContent" class="scrollbox-content">
 						<div id="thumbStripInner"></div>
 					</div>
@@ -2913,6 +2913,7 @@
 		})
 
 		function setThumbZoom(status) {
+			//TODO Because of the observer maybe not all these changes is needed
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 			
