@@ -2691,6 +2691,7 @@
 			webtoonScroll: false,
 			webtoonScrollRatio: 0,
 			webtoonResizeTimeout: null,
+
 			rtl: null,
 			currentPage: 0,
 			pagesDataArray: [],		// this is the array of pages data in the form url, iscover etc
@@ -2917,25 +2918,7 @@
 
 		//TODO Maybe change this to a resize observer?
 		window.addEventListener('resize', () => {
-			if (!rd.webtoon) return
-
-			clearTimeout(rd.webtoonResizeTimeout);
-			if (!rd.webtoonResizeTimeout) {
-				rd.webtoonScrollRatio = webtoonContainer.scrollTop / (webtoonContainer.scrollHeight - webtoonContainer.clientHeight);
-			}
-
-			// save ratio before DOM reflow
-			console.log("webtoonContainer.scrollTop:" + webtoonContainer.scrollTop)
-			console.log("webtoonContainer.scrollHeight:" + webtoonContainer.scrollHeight)
-			console.log("webtoonContainer.clientHeight:" + webtoonContainer.clientHeight)
-			console.log("")
-
-			console.log(rd.webtoonScrollRatio)
-			// Let the layout finish resizing, then restore scroll
-			webtoonContainer.scrollTop = rd.webtoonScrollRatio * (webtoonContainer.scrollHeight - webtoonContainer.clientHeight);
-			rd.webtoonResizeTimeout = setTimeout(() => {
-				rd.webtoonResizeTimeout = null;
-			}, 500);
+			if (rd.webtoon) webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 		});
 
 		function setThumbZoom(status) {
@@ -3034,6 +3017,10 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 		}
 
+		function webtoonRatio(){
+			return (webtoonContainer.scrollTop + webtoonContainer.clientHeight * 0.5) / webtoonContainer.scrollHeight
+		}
+
 		// Initialize viewer with page data
 		async function initViewer() {
 			updatePWABar('black');
@@ -3059,6 +3046,10 @@
 			thumbStripButton.style.display = rd.webtoon ? 'none' : '';
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
+
+			if (rd.webtoon){
+				rd.webtoonScrollRatio = webtoonRatio()
+			}
 		}
 
 		function buildSize(item, ratio) {
@@ -3270,6 +3261,9 @@
 			});
 			webtoonContainer.addEventListener('click', () => {
 				toggleMenu();
+			})
+			webtoonContainer.addEventListener('scroll', () => {
+				rd.webtoonScrollRatio = webtoonRatio();
 			})
 
 			while (i_page < pageData.length) {
