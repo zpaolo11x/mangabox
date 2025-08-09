@@ -160,20 +160,6 @@
 			</div>
 
 			<div id="controlPanel" class="hidden">
-				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
-					<span></span>
-					<span id="bookName"></span>
-					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
-				</div>
-<!--
-				<div id="zoomControls">
-					<span id="scale_1" title="1x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_3" title="3x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-				</div>
--->
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
 					<div id="thumbStripScrollContent" class="scrollbox-content">
 						<div id="thumbStripInner"></div>
@@ -187,6 +173,21 @@
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 				</div>
+
+				<div id="topControls">
+					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
+					<span></span>
+					<span id="bookName"></span>
+					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
+					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
+				</div>
+				<!--
+				<div id="zoomControls">
+					<span id="scale_1" title="1x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
+					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
+					<span id="scale_3" title="3x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
+				</div>
+-->
 
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -3017,7 +3018,7 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 		}
 
-		function webtoonRatio(){
+		function webtoonRatio() {
 			return (webtoonContainer.scrollTop + webtoonContainer.clientHeight * 0.5) / webtoonContainer.scrollHeight
 		}
 
@@ -3042,12 +3043,13 @@
 
 			initReaderUI(pagesData, bookData)
 
-			thumbStrip.style.display = rd.webtoon ? 'none' : '';
-			thumbStripButton.style.display = rd.webtoon ? 'none' : '';
+			thumbStrip.classList = rd.webtoon ? 'scrollbox webtoon' : 'scrollbox';
+			thumbStripInner.classList = rd.webtoon ? 'webtoon' : '';
+			thumbStripButton.classList = rd.webtoon ? 'webtoon' : '';
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 
-			if (rd.webtoon){
+			if (rd.webtoon) {
 				rd.webtoonScrollRatio = webtoonRatio()
 			}
 		}
@@ -3122,7 +3124,7 @@
 					//uiShadowR: addItem('div', { className: 'page-shadow-right' }),
 					//uiLightL: addItem('div', { className: 'page-light-left' }),
 					//uiLightR: addItem('div', { className: 'page-light-right' }),
-					uiThumb: addItem('div', { className: 'spread-thumb' }),
+					uiThumb: addItem('div', { className: 'webtoon spread-thumb' }),
 					pageObjL: spreadPages ?? null,
 					//pageObjR: spreadPages['right'] ?? null,
 

@@ -577,34 +577,61 @@ div.single-page {
 
 #thumbStrip {
 	position: fixed;
-	height: calc(var(--mb-thumb-height-px) + 30px);
-	left: 0px;
-	right: 0px;
+
 	display: flex;
 	justify-content: left;
 	/*change to center*/
 	background-color: var(--mb-card-color);
-	bottom: 60px;
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
+}
+
+#thumbStrip:not(.webtoon){
+	height: calc(var(--mb-thumb-height-px) + 30px);
+	left: 0px;
+	right: 0px;
+	bottom: 60px;
 	overflow-x: auto;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
 }
 
+#thumbStrip.webtoon{
+	width: calc(var(--mb-thumb-height-px) + 30px);
+	top: 60px;
+	bottom: 60px;
+	left: 0px;
+	overflow-y: auto;
+	transition: opacity 0.3s, top 0.3s, left 0.3s, width 0.3s;
+}
+
+
 #thumbStripButton {
-	height: 20px;
 	position: fixed;
-	width: 150px;
-	/*background-color: red;*/
-	left: 0;
-	right: 0;
+
+
 	margin: auto;
 	/* Center it horizontally */
-	bottom: calc(var(--mb-thumb-height-px) + 60px + 10px);
 	z-index: 10;
-	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 	text-align: center;
 	cursor: pointer;
 
+}
+
+#thumbStripButton:not(.webtoon){
+	height: 20px;
+	width: 150px;
+	left: 0;
+	right: 0;
+	bottom: calc(var(--mb-thumb-height-px) + 60px + 10px);
+	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
+}
+
+#thumbStripButton.webtoon{
+	width: 20px;
+	height: 65px;
+	top: 60px;
+	bottom: 60px;
+	left: calc(var(--mb-thumb-height-px) + 10px);
+	transition: opacity 0.3s, left 0.3s, bottom 0.3s;
 }
 
 .thumb-arrow {
@@ -615,13 +642,26 @@ div.single-page {
 	display: flex;
 	padding: 0;
 	margin: 0;
+	/* Important! lets it grow as needed */
+
+	/*flex-direction: row-reverse;*/
+}
+
+#thumbStripInner:not(.webtoon){
+	flex-direction: row;
 	height: calc(var(--mb-thumb-height-px) + 10px);
 	margin-left: 50%;
 	margin-right: 50%;
 	width: max-content;
-	/* Important! lets it grow as needed */
 
-	/*flex-direction: row-reverse;*/
+}
+
+#thumbStripInner.webtoon{
+	flex-direction: column;
+	width: calc(var(--mb-thumb-height-px) + 10px);
+	margin-top: calc(50vh - 60px);
+	margin-bottom: calc(50vh - 60px);
+	height: max-content;
 }
 
 .spread-thumb {
@@ -629,8 +669,7 @@ div.single-page {
 	display: flex;
 	padding: 0;
 	margin: 0;
-	top: 20px;
-	height: var(--mb-thumb-height-px);
+
 	margin: 5px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -638,7 +677,18 @@ div.single-page {
 	background: white;
 	box-shadow: inset rgba(0, 0, 0, 0.1) 0px 0px 15px, rgba(0, 0, 0, 0.45) 0px 0px 8px;
 	border-radius: 3px;
+}
+
+.spread-thumb:not(.webtoon){
+	top: 20px;
+	height: var(--mb-thumb-height-px);
 	transition: height 0.3s;
+}
+
+.spread-thumb.webtoon{
+	/*top: 20px;//TODO RIMETTERE?*/
+	width: var(--mb-thumb-height-px);
+	transition: width 0.3s;
 }
 
 .spread-thumb.current {
@@ -653,7 +703,7 @@ div.single-page {
 	/*position:absolute;*/
 	display: inline-block;
 	/*object-fit: contain;*/
-	transition: opacity 0.3s, height 0.3s;
+	transition: opacity 0.3s, height 0.3s, width 0.3s;
 }
 
 .page-thumb.hidden {
@@ -746,14 +796,24 @@ div.single-page {
 	bottom: -100px;
 }
 
-#controlPanel.hidden #thumbStrip,
-#readerContainer.hidden #thumbStrip {
+#controlPanel.hidden #thumbStrip:not(.webtoon),
+#readerContainer.hidden #thumbStrip:not(.webtoon) {
 	bottom: -600px;
 }
 
-#controlPanel.hidden #thumbStripButton,
-#readerContainer.hidden #thumbStripButton {
+#controlPanel.hidden #thumbStrip.webtoon,
+#readerContainer.hidden #thumbStrip.webtoon {
+	left: -600px;
+}
+
+#controlPanel.hidden #thumbStripButton:not(.webtoon),
+#readerContainer.hidden #thumbStripButton:not(.webtoon) {
 	bottom: calc(var(--mb-thumb-height-px) - 600px + 50px - 20px);
+}
+
+#controlPanel.hidden #thumbStripButton.webtoon,
+#readerContainer.hidden #thumbStripButton.webtoon {
+	left: calc(var(--mb-thumb-height-px) - 600px + 50px - 20px);
 }
 
 #bookName {

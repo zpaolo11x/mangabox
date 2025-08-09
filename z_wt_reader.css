@@ -564,31 +564,22 @@ div.single-page {
 #thumbStrip {
 	position: fixed;
 
-	width: calc(var(--mb-thumb-height-px) + 30px);
-	top: 60px;
-	bottom: 60px;
-	left: 0px;
 	display: flex;
 	justify-content: left;
 	/*change to center*/
 	background-color: var(--mb-card-color);
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
-	overflow-y: auto;
-	transition: opacity 0.3s, top 0.3s, left 0.3s, width 0.3s;
 }
 
-#thumbStripButton {
-	width: 20px;
-	position: fixed;
-	height: 65px;
 
-	top: 60px;
-	bottom: 60px;
+
+#thumbStripButton {
+	position: fixed;
+
+
 	margin: auto;
 	/* Center it horizontally */
-	left: calc(var(--mb-thumb-height-px) + 10px);
 	z-index: 10;
-	transition: opacity 0.3s, left 0.3s, bottom 0.3s;
 	text-align: center;
 	cursor: pointer;
 
@@ -600,13 +591,9 @@ div.single-page {
 
 #thumbStripInner {
 	display: flex;
-	flex-direction: column;
 	padding: 0;
 	margin: 0;
-	width: calc(var(--mb-thumb-height-px) + 10px);
-	margin-top: calc(50vh - 60px);
-	margin-bottom: calc(50vh - 60px);
-	height: max-content;
+
 	/* Important! lets it grow as needed */
 
 	/*flex-direction: row-reverse;*/
@@ -617,8 +604,7 @@ div.single-page {
 	display: flex;
 	padding: 0;
 	margin: 0;
-	/*top: 20px;//TODO RIMETTERE?*/
-	width: var(--mb-thumb-height-px);
+
 	margin: 5px;
 	margin-left: 5px;
 	margin-right: 5px;
@@ -626,7 +612,6 @@ div.single-page {
 	background: white;
 	box-shadow: inset rgba(0, 0, 0, 0.1) 0px 0px 15px, rgba(0, 0, 0, 0.45) 0px 0px 8px;
 	border-radius: 3px;
-	transition: width 0.3s;
 }
 
 .spread-thumb.current {
