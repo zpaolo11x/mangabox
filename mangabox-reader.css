@@ -565,8 +565,8 @@ div.single-page {
 	position: fixed;
 
 	width: calc(var(--mb-thumb-height-px) + 30px);
-	top: 0px;
-	bottom: 0px;
+	top: 60px;
+	bottom: 60px;
 	left: 0px;
 	display: flex;
 	justify-content: left;
@@ -581,7 +581,7 @@ div.single-page {
 	width: 20px;
 	position: fixed;
 	height: 65px;
-	background-color: red;
+
 	top: 60px;
 	bottom: 60px;
 	margin: auto;
@@ -604,8 +604,8 @@ div.single-page {
 	padding: 0;
 	margin: 0;
 	width: calc(var(--mb-thumb-height-px) + 10px);
-	margin-top: 50vh;
-	margin-bottom: 50vh;
+	margin-top: calc(50vh - 60px);
+	margin-bottom: calc(50vh - 60px);
 	height: max-content;
 	/* Important! lets it grow as needed */
 
