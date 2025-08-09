@@ -2,10 +2,10 @@ Main UI
 - 
 
 Redaer UI
-- 
+- Support for webtoons reading
 
 Build
-- Fix Android release builder
+- Improve Android release builder
 
 Fixes
 - Fix spacing on compact view
