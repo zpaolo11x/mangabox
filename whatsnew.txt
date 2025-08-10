@@ -1,8 +1,9 @@
 Main UI
-- 
+- Add webtoon direction icon
 
 Redaer UI
 - Support for webtoons reading
+- Add vertical thumb strip for webtoons
 
 Build
 - Improve Android release builder
