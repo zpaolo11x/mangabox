@@ -4593,8 +4593,14 @@
 			item.addEventListener('touchmove', handleTouchMove);
 		}
 
+		//TODO Forse si può rimettere il touchpanel per webtoon modulando questo...
 		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
-		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
+		enableTouchResponse(thumbStrip, 20, 
+			() => {rd.webtoon ? handleSmallThumbs() : null},
+			() => {rd.webtoon ? handleLargeThumbs() : null},
+			() => {rd.webtoon ? null : handleLargeThumbs},
+			() => {rd.webtoon ? null : handleSmallThumbs}
+		)
 		/*
 		let startY = 0;
 		
