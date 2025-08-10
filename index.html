@@ -3252,13 +3252,10 @@
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
 
-			//TODO ADD THE OPPOSITE CODE IN THE OTHER fetchPages function
-			//TODO MAYBE NOT USED ANYMORE?
 			if (!readerViewer.classList.contains('webtoon')) {
 				readerContainer.classList.add('webtoon');
 				readerViewer.classList.add('webtoon');
 			}
-
 
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
@@ -3382,9 +3379,6 @@
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
-			//TODO TOGLIERE webtoon DA TUTTI
-			readerViewer.classList.remove('webtoon');
-			readerContainer.classList.remove('webtoon');
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
