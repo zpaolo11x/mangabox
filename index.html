@@ -2854,6 +2854,9 @@
 			thumbStrip.classList.remove('webtoon');
 			thumbStripInner.classList.remove('webtoon');
 			thumbStripButton.classList.remove('webtoon');
+			
+			thumbStripButton.style.display='none';
+			thumbStrip.style.display='none';
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -3068,6 +3071,9 @@
 			thumbStrip.dataset.scrollDirection = rd.webtoon ? 'vertical' : 'horizontal';
 
 			webtoonContainer.style.display = rd.webtoon ? '' : 'none';
+
+			thumbStripButton.style.display='';
+			thumbStrip.style.display='';
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
