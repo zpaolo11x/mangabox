@@ -34,8 +34,8 @@
 		hsl(35, 15%, 100%)42%,
 		hsl(35, 15%, 100%)100%;
 
-	--mb-thumb-height: 100;
-	--mb-thumb-height-px: 100px;
+	--mb-thumb-size: 100;
+	--mb-thumb-size-px: 100px;
 
 	--mb-gradient-1: 30;
 	--mb-gradient-2: 40;
@@ -715,7 +715,7 @@ div.single-page {
 
 #controlPanel.hidden #thumbStripButton,
 #readerContainer.hidden #thumbStripButton {
-	left: calc(var(--mb-thumb-height-px) - 600px + 50px - 20px);
+	left: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
 }
 
 #bookName {

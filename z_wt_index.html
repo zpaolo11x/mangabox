@@ -2937,7 +2937,7 @@
 				}
 			}
 
-			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbSize + 'px');
+			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbSize + 'px');
 
 			const newSize = thumbStripInner[clientSize];
 			const scrollScaler = newSize / oldSize;
@@ -3154,7 +3154,7 @@
 					src: 'transparent.png',
 					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
 					style: {
-						width: 'var(--mb-thumb-height-px)',
+						width: 'var(--mb-thumb-size-px)',
 						aspectRatio: isHidden ? '0.001' : pageData.AR,
 					}
 				}),

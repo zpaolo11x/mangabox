@@ -34,8 +34,8 @@
 		hsl(35, 15%, 100%)42%,
 		hsl(35, 15%, 100%)100%;
 
-	--mb-thumb-height: 150;
-	--mb-thumb-height-px: 150px;
+	--mb-thumb-size: 150;
+	--mb-thumb-size-px: 150px;
 
 	--mb-gradient-1: 30;
 	--mb-gradient-2: 40;
@@ -586,7 +586,7 @@ div.single-page {
 }
 
 #thumbStrip:not(.webtoon){
-	height: calc(var(--mb-thumb-height-px) + 30px);
+	height: calc(var(--mb-thumb-size-px) + 30px);
 	left: 0px;
 	right: 0px;
 	bottom: 60px;
@@ -596,7 +596,7 @@ div.single-page {
 }
 
 #thumbStrip.webtoon{
-	width: calc(var(--mb-thumb-height-px) + 30px);
+	width: calc(var(--mb-thumb-size-px) + 30px);
 	top: 60px;
 	bottom: 60px;
 	right: 0px;
@@ -623,7 +623,7 @@ div.single-page {
 	width: 150px;
 	left: 0;
 	right: 0;
-	bottom: calc(var(--mb-thumb-height-px) + 60px + 10px);
+	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px);
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 }
 
@@ -632,7 +632,7 @@ div.single-page {
 	height: 65px;
 	top: 60px;
 	bottom: 60px;
-	right: calc(var(--mb-thumb-height-px) + 10px);
+	right: calc(var(--mb-thumb-size-px) + 10px);
 	transition: opacity 0.3s, left 0.3s, right 0.3s, bottom 0.3s;
 }
 
@@ -651,7 +651,7 @@ div.single-page {
 
 #thumbStripInner:not(.webtoon){
 	flex-direction: row;
-	height: calc(var(--mb-thumb-height-px) + 10px);
+	height: calc(var(--mb-thumb-size-px) + 10px);
 	margin-left: 50%;
 	margin-right: 50%;
 	width: max-content;
@@ -659,7 +659,7 @@ div.single-page {
 
 #thumbStripInner.webtoon{
 	flex-direction: column;
-	width: calc(var(--mb-thumb-height-px) + 10px);
+	width: calc(var(--mb-thumb-size-px) + 10px);
 	margin-top: calc(50vh - 60px);
 	margin-bottom: calc(50vh - 60px);
 	height: max-content;
@@ -682,13 +682,13 @@ div.single-page {
 
 .spread-thumb:not(.webtoon){
 	top: 20px;
-	height: var(--mb-thumb-height-px);
+	height: var(--mb-thumb-size-px);
 	transition: height 0.3s;
 }
 
 .spread-thumb.webtoon{
 	left: 20px;
-	width: var(--mb-thumb-height-px);
+	width: var(--mb-thumb-size-px);
 	transition: width 0.3s;
 }
 
@@ -809,12 +809,12 @@ div.single-page {
 
 #controlPanel.hidden #thumbStripButton:not(.webtoon),
 #readerContainer.hidden #thumbStripButton:not(.webtoon) {
-	bottom: calc(var(--mb-thumb-height-px) - 600px + 50px - 20px);
+	bottom: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
 }
 
 #controlPanel.hidden #thumbStripButton.webtoon,
 #readerContainer.hidden #thumbStripButton.webtoon {
-	right: calc(var(--mb-thumb-height-px) - 600px + 50px - 20px);
+	right: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
 }
 
 #bookName {

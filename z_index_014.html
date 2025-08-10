@@ -2330,7 +2330,7 @@
 			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
 				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
+			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbHeight + 'px');
 
 			const newWidth = thumbStripInner.clientWidth;
 
@@ -2559,7 +2559,7 @@
 					src: 'transparent.png',
 					lazySrc: pageData[i_image].thumb,
 				});
-				imgThumb.style.height = 'var(--mb-thumb-height-px)';
+				imgThumb.style.height = 'var(--mb-thumb-size-px)';
 				imgThumb.style.aspectRatio = pageData[i_image].AR;
 
 				addLazyLoading(imgThumb);
@@ -2627,7 +2627,7 @@
 							alt: '',
 							src: 'transparent.png',
 						});
-						imgThumbBlank.style.height = 'var(--mb-thumb-height-px)';
+						imgThumbBlank.style.height = 'var(--mb-thumb-size-px)';
 						imgThumbBlank.style.aspectRatio = pageData[i_image].AR;
 
 						rd.uiPagesThumbs.push(imgThumbBlank);

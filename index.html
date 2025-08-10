@@ -2712,7 +2712,6 @@
 			isDraggingProgressBar: false,
 
 			thumbZoom: false,
-			thumbSize: 0,
 			thumbPosRatio: 0,
 
 			libraryId: 0,
@@ -2934,7 +2933,7 @@
 		});
 
 		function setThumbZoom(status, init = false) {
-console.log("SETZOOM")
+
 			if ((!init) && (rd.thumbZoom == status)) return;
 
 			//TODO Because of the observer maybe not all these changes is needed
@@ -2942,13 +2941,10 @@ console.log("SETZOOM")
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 
 			rd.thumbZoom = status;
-			rd.thumbSize = thumbStripInner[clientSize] - thumbStrip[clientSize];
-			console.log(thumbStripInner[clientSize]);
-			console.log(thumbStripScrollContent[scrollRef]);
 			rd.thumbPosRatio = thumbStripScrollContent[scrollRef] / thumbStripInner[clientSize]
-			console.log(rd.thumbPosRatio)
 
-			thumbStripScrollContent.style.overflowX = 'hidden';
+
+			thumbStripScrcleanupollContent.style.overflowX = 'hidden';
 			thumbStripScrollContent.style.overflowY = 'hidden';
 
 			const oldSize = thumbStripInner[clientSize];
@@ -2960,7 +2956,7 @@ console.log("SETZOOM")
 					thumbSize = window.innerHeight - 60 - 60 - 30;
 				}
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbSize + 'px');
+			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbSize + 'px');
 
 			//TODO Seems to work fine even without this!
 			/*
@@ -2982,14 +2978,7 @@ console.log("SETZOOM")
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 
 			for (let entry of entries) {
-				thumbStripScrollContent[scrollRef] = rd.thumbPosRatio * (thumbStripInner[clientSize])
-				/*
-				const oldSize = rd.thumbSize;
-				const newSize = thumbStripInner[clientSize] - thumbStrip[clientSide];
-				const scrollScaler = newSize / oldSize;
-				thumbStripScrollContent[scrollRef] = thumbStripScrollContent[scrollRef] * scrollScaler;
-				rd.thumbSize = newSize;
-				*/			
+				thumbStripScrollContent[scrollRef] = rd.thumbPosRatio * (thumbStripInner[clientSize])		
 			}
 		});
 
@@ -3200,10 +3189,10 @@ console.log("SETZOOM")
 					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
 					style: rd.webtoon ?
 						{
-							width: 'var(--mb-thumb-height-px)',
+							width: 'var(--mb-thumb-size-px)',
 							aspectRatio: isHidden ? '0.001' : pageData.AR,
 						} : {
-							height: 'var(--mb-thumb-height-px)',
+							height: 'var(--mb-thumb-size-px)',
 							aspectRatio: isHidden ? '0.001' : pageData.AR,
 						}
 				}),
