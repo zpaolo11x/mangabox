@@ -148,7 +148,9 @@
 	<div id="readerContainer" class="section hidden">
 		<div id="readerBackground" class="hidden"></div>
 
-		<div id="readerViewer"></div>
+		<div id="readerViewer">
+			<div id="webtoonContainer" class="hide-scrollbar" style="display:none"></div>
+		</div>
 
 		<div id="readerOverlay">
 			<div id="incognitoMark"></div>
@@ -2798,7 +2800,7 @@
 
 			rd.spreadFocus = 'focus-center';
 
-			readerViewer.innerHTML = '';
+			//readerViewer.innerHTML = '';
 
 			setThumbZoom(false, true);
 
@@ -2845,15 +2847,13 @@
 				});
 			});
 			rd.spreadsArray = [];
-			if (rd.webtoon) {
-				webtoonContainer?.remove();
-				webtoonContainer = null;
-				readerContainer.classList.remove('webtoon');
-				readerViewer.classList.remove('webtoon');
-				thumbStrip.classList.remove('webtoon');
-				thumbStripInner.classList.remove('webtoon');
-				thumbStripButton.classList.remove('webtoon');
-			}
+
+			webtoonContainer.style.display = 'none';
+			readerContainer.classList.remove('webtoon');
+			readerViewer.classList.remove('webtoon');
+			thumbStrip.classList.remove('webtoon');
+			thumbStripInner.classList.remove('webtoon');
+			thumbStripButton.classList.remove('webtoon');
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -2987,7 +2987,7 @@
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 
 			for (let entry of entries) {
-				thumbStripScrollContent[scrollRef] = rd.thumbPosRatio * (thumbStripInner[clientSize])		
+				thumbStripScrollContent[scrollRef] = rd.thumbPosRatio * (thumbStripInner[clientSize])
 			}
 		});
 
@@ -3064,8 +3064,10 @@
 			thumbStrip.classList = rd.webtoon ? 'scrollbox webtoon' : 'scrollbox';
 			thumbStripInner.classList = rd.webtoon ? 'webtoon' : '';
 			thumbStripButton.classList = rd.webtoon ? 'webtoon' : '';
-
+			
 			thumbStrip.dataset.scrollDirection = rd.webtoon ? 'vertical' : 'horizontal';
+
+			webtoonContainer.style.display = rd.webtoon ? '' : 'none';
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
@@ -3294,19 +3296,6 @@
 
 			rd.realFirstPage = '1';
 
-			//TODO Place this in a larger scope?
-			let webtoonContainer = addItem('div', {
-				id: 'webtoonContainer',
-				classList: 'hide-scrollbar'
-			});
-			webtoonContainer.addEventListener('click', () => {
-				toggleMenu();
-			})
-			webtoonContainer.addEventListener('scroll', () => {
-				rd.webtoonScrollRatio = webtoonRatio();
-			})
-			enableTouchResponse(webtoonContainer, 30, handleCloseReader, null, null, null);
-
 			while (i_page < pageData.length) {
 				let spreadObject = null;
 
@@ -3373,8 +3362,6 @@
 				thumbStripInner.append(spreadObject.uiThumb);
 
 			});
-
-			readerViewer.append(webtoonContainer);
 		}
 
 		// Master function that builds all the pages slots for the book spreads
@@ -4617,7 +4604,16 @@
 			() => { rd.webtoon ? handleSmallThumbs() : null },
 			() => { rd.webtoon ? null : handleLargeThumbs() },
 			() => { rd.webtoon ? null : handleSmallThumbs() }
-		)
+		);
+
+		webtoonContainer.addEventListener('click', () => {
+			toggleMenu();
+		})
+		webtoonContainer.addEventListener('scroll', () => {
+			rd.webtoonScrollRatio = webtoonRatio();
+		})
+		enableTouchResponse(webtoonContainer, 30, handleCloseReader, null, null, null);
+
 		/*
 		let startY = 0;
 		
