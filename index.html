@@ -2845,6 +2845,15 @@
 				});
 			});
 			rd.spreadsArray = [];
+			if (rd.webtoon) {
+				webtoonContainer.remove();
+				webtoonContainer = null;
+				readerContainer.classList.remove('webtoon');
+				readerViewer.classList.remove('webtoon');
+				thumbStrip.classList.remove('webtoon');
+				thumbStripInner.classList.remove('webtoon');
+				thumbStripButton.classList.remove('webtoon');
+			}
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -2944,7 +2953,7 @@
 			rd.thumbPosRatio = thumbStripScrollContent[scrollRef] / thumbStripInner[clientSize]
 
 
-			thumbStripScrcleanupollContent.style.overflowX = 'hidden';
+			thumbStripScrollContent.style.overflowX = 'hidden';
 			thumbStripScrollContent.style.overflowY = 'hidden';
 
 			const oldSize = thumbStripInner[clientSize];
@@ -3299,6 +3308,7 @@
 			webtoonContainer.addEventListener('scroll', () => {
 				rd.webtoonScrollRatio = webtoonRatio();
 			})
+			enableTouchResponse(webtoonContainer, 30, handleCloseReader, null, null, null);
 
 			while (i_page < pageData.length) {
 				let spreadObject = null;
