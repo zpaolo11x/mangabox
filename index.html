@@ -2800,7 +2800,7 @@
 
 			readerViewer.innerHTML = '';
 
-			setThumbZoom(false);
+			setThumbZoom(false, true);
 
 			dragbarOnReader();
 			sectionShow(readerContainer);
@@ -2848,6 +2848,8 @@
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
+			if (rd.webtoon) return
+
 			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.turnScrollTime, rd.turnScrollDelay] : [rd.scrollSpeed, 0]);
 
 			readerViewer.animate(
@@ -2930,7 +2932,10 @@
 			if (rd.webtoon) webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 		});
 
-		function setThumbZoom(status) {
+		function setThumbZoom(status, init = false) {
+console.log("SETZOOM")
+			if ((!init) && (rd.thumbZoom == status)) return;
+
 			//TODO Because of the observer maybe not all these changes is needed
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
@@ -2938,23 +2943,28 @@
 			rd.thumbZoom = status;
 			rd.thumbSize = thumbStripInner[clientSize];
 
-			thumbStripScrollContent.style.overflow = 'hidden';
+			thumbStripScrollContent.style.overflowX = 'hidden';
+			thumbStripScrollContent.style.overflowY = 'hidden';
 
 			const oldSize = thumbStripInner[clientSize];
 
-			let thumbSize = rd.webtoon ? (status ? 150 : 100) : (status ? 300 : 150);
+			let thumbSize = rd.webtoon ? (status ? 120 : 80) : (status ? 300 : 150);
 
 			if (!rd.webtoon) {
 				if (window.innerHeight - thumbSize - 60 - 60 - 30 < 0) {
 					thumbSize = window.innerHeight - 60 - 60 - 30;
 				}
 			}
-
 			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbSize + 'px');
 
+			//TODO Seems to work fine even without this!
+			/*
 			const newSize = thumbStripInner[clientSize];
+			if (newSize == oldSize) return;
+
 			const scrollScaler = newSize / oldSize;
 			thumbStripScrollContent[scrollRef] = thumbStripScrollContent[scrollRef] * scrollScaler;
+			*/
 		}
 
 		thumbStripButton.addEventListener('click', () => {
@@ -2965,7 +2975,7 @@
 		const resizeObserver = new ResizeObserver(entries => {
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
-			
+
 			for (let entry of entries) {
 				const oldSize = rd.thumbSize;
 				const newSize = thumbStripInner[clientSize];
@@ -2978,7 +2988,8 @@
 		resizeObserver.observe(thumbStripInner);
 
 		thumbStripInner.addEventListener('transitionend', () => {
-			thumbStripScrollContent.style.overflow = 'auto';
+			thumbStripScrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
+			thumbStripScrollContent.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
 		});
 
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
@@ -3044,6 +3055,11 @@
 		// Initialize viewer with page data
 		async function initViewer() {
 			updatePWABar('black');
+			thumbStrip.classList = rd.webtoon ? 'scrollbox webtoon' : 'scrollbox';
+			thumbStripInner.classList = rd.webtoon ? 'webtoon' : '';
+			thumbStripButton.classList = rd.webtoon ? 'webtoon' : '';
+
+			thumbStrip.dataset.scrollDirection = rd.webtoon ? 'vertical' : 'horizontal';
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
@@ -3061,12 +3077,6 @@
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
 
 			initReaderUI(pagesData, bookData)
-
-			thumbStrip.classList = rd.webtoon ? 'scrollbox webtoon' : 'scrollbox';
-			thumbStripInner.classList = rd.webtoon ? 'webtoon' : '';
-			thumbStripButton.classList = rd.webtoon ? 'webtoon' : '';
-
-			thumbStrip.dataset.scrollDirection = rd.webtoon ? 'vertical' : 'horizontal';
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 
@@ -3180,14 +3190,14 @@
 					alt: (isBlank || isHidden) ? '' : pageData.pageNum,
 					src: 'transparent.png',
 					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
-					style: rd.webtoon ? 
-					{
-						width: 'var(--mb-thumb-height-px)',
-						aspectRatio: isHidden ? '0.001' : pageData.AR,
-					} : {
-						height: 'var(--mb-thumb-height-px)',
-						aspectRatio: isHidden ? '0.001' : pageData.AR,
-					}
+					style: rd.webtoon ?
+						{
+							width: 'var(--mb-thumb-height-px)',
+							aspectRatio: isHidden ? '0.001' : pageData.AR,
+						} : {
+							height: 'var(--mb-thumb-height-px)',
+							aspectRatio: isHidden ? '0.001' : pageData.AR,
+						}
 				}),
 				hasSrc: (isBlank || isHidden) ? true : false,
 				lazySrc: (isBlank || isHidden) ? '' : pageData.url,
@@ -3368,7 +3378,7 @@
 			//TODO TOGLIERE webtoon DA TUTTI
 			readerViewer.classList.remove('webtoon');
 			readerContainer.classList.remove('webtoon');
-			
+
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
 
@@ -3815,7 +3825,7 @@
 			clearAllTimeouts();
 		}
 
-					// Thumbnail scrolling functions
+		// Thumbnail scrolling functions
 		function thumbSmoothScrollWebtoon(container, targetScrollTop, duration = 500) {
 			const start = container.scrollTop;
 			const change = targetScrollTop - start;
@@ -3863,7 +3873,7 @@
 			}
 			requestAnimationFrame(animateScroll);
 		}
-		
+
 		function centerThumbWebtoon(fast = false) {
 			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
 			// maybe each time the old and current spreads are updated I could call this function with old and current to
@@ -4190,7 +4200,6 @@
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
-
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4219,7 +4228,7 @@
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
 			// This adds a slight delay when jumping cover to cover
-			if (!rd.webtoon) spreadSetFocusSmoothDelay(targetSpreadFocus);
+			spreadSetFocusSmoothDelay(targetSpreadFocus);
 
 			spreadShow(localNewSpreadIndex);
 
@@ -4230,13 +4239,21 @@
 
 			if (rd.webtoon) {
 				rd.webtoonScroll = true;
-				rd.spreadsArray[targetSpreadIndex].uiItem.scrollIntoView({
-					behavior: 'smooth',
+
+				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
+				const parent = el.parentElement;
+				const offsetTop = el.offsetTop + 1; // 1px extra upwards
+
+				parent.scrollTo({
+					top: offsetTop,
+					behavior: 'smooth'
 				});
+
 				setTimeout(() => {
 					rd.webtoonScroll = false;
 				}, 500);
 			}
+
 
 			updateProgressBar();
 
@@ -4594,11 +4611,11 @@
 		}
 
 		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
-		enableTouchResponse(thumbStrip, 20, 
-			() => {rd.webtoon ? handleSmallThumbs() : null},
-			() => {rd.webtoon ? handleLargeThumbs() : null},
-			() => {rd.webtoon ? null : handleLargeThumbs()},
-			() => {rd.webtoon ? null : handleSmallThumbs()}
+		enableTouchResponse(thumbStrip, 20,
+			() => { rd.webtoon ? handleLargeThumbs() : null },
+			() => { rd.webtoon ? handleSmallThumbs() : null },
+			() => { rd.webtoon ? null : handleLargeThumbs() },
+			() => { rd.webtoon ? null : handleSmallThumbs() }
 		)
 		/*
 		let startY = 0;
