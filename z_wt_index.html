@@ -2912,11 +2912,16 @@
 			setIncognito(!rd.incognito);
 		})
 
+		//TODO Maybe change this to a resize observer?
+		window.addEventListener('resize', () => {
+			if (rd.webtoon) webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+		});
+
 		function setThumbZoom(status) {
 			//TODO Because of the observer maybe not all these changes is needed
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
-			
+
 			rd.thumbZoom = status;
 			rd.thumbSize = thumbStripInner[clientSize];
 
@@ -2931,7 +2936,7 @@
 					thumbSize = window.innerHeight - 60 - 60 - 30;
 				}
 			}
-			
+
 			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbSize + 'px');
 
 			const newSize = thumbStripInner[clientSize];
