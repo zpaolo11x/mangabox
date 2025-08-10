@@ -2713,6 +2713,7 @@
 
 			thumbZoom: false,
 			thumbSize: 0,
+			thumbPosRatio: 0,
 
 			libraryId: 0,
 			seriesId: 0,
@@ -2941,7 +2942,11 @@ console.log("SETZOOM")
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 
 			rd.thumbZoom = status;
-			rd.thumbSize = thumbStripInner[clientSize];
+			rd.thumbSize = thumbStripInner[clientSize] - thumbStrip[clientSize];
+			console.log(thumbStripInner[clientSize]);
+			console.log(thumbStripScrollContent[scrollRef]);
+			rd.thumbPosRatio = thumbStripScrollContent[scrollRef] / thumbStripInner[clientSize]
+			console.log(rd.thumbPosRatio)
 
 			thumbStripScrollContent.style.overflowX = 'hidden';
 			thumbStripScrollContent.style.overflowY = 'hidden';
@@ -2977,11 +2982,14 @@ console.log("SETZOOM")
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
 
 			for (let entry of entries) {
+				thumbStripScrollContent[scrollRef] = rd.thumbPosRatio * (thumbStripInner[clientSize])
+				/*
 				const oldSize = rd.thumbSize;
-				const newSize = thumbStripInner[clientSize];
+				const newSize = thumbStripInner[clientSize] - thumbStrip[clientSide];
 				const scrollScaler = newSize / oldSize;
 				thumbStripScrollContent[scrollRef] = thumbStripScrollContent[scrollRef] * scrollScaler;
 				rd.thumbSize = newSize;
+				*/			
 			}
 		});
 
