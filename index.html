@@ -634,6 +634,7 @@
 			if (!item.classList.contains('hidden')) item.classList.add('hidden');
 		}
 		function sectionShow(item) {
+			console.log("X")
 			item.classList.remove('hidden');
 		}
 		function sectionToggle(item) {
@@ -2801,13 +2802,19 @@
 			rd.spreadFocus = 'focus-center';
 
 			//readerViewer.innerHTML = '';
+			readerWebtoonUpdate();
+
+
+			dragbarOnReader();
 
 			setThumbZoom(false, true);
 
-			dragbarOnReader();
-			sectionShow(readerContainer);
+			console.log("A")
+			setTimeout(() => {
+				sectionShow(readerContainer);
+				initViewer();
+			}, 200);
 
-			initViewer();
 
 		}
 
@@ -2855,9 +2862,9 @@
 			thumbStrip.classList.remove('webtoon');
 			thumbStripInner.classList.remove('webtoon');
 			thumbStripButton.classList.remove('webtoon');
-			
-			thumbStripButton.style.display='none';
-			thumbStrip.style.display='none';
+
+			thumbStripButton.style.display = 'none';
+			thumbStrip.style.display = 'none';
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -3062,24 +3069,29 @@
 			return (webtoonContainer.scrollTop + webtoonContainer.clientHeight * 0.5) / webtoonContainer.scrollHeight
 		}
 
-		// Initialize viewer with page data
-		async function initViewer() {
-			updatePWABar('black');
+		function readerWebtoonUpdate() {
+			if (rd.webtoon) {
+				readerViewer.classList.add('webtoon');
+				readerContainer.classList.add('webtoon');
+			}
+
 			thumbStrip.classList = rd.webtoon ? 'scrollbox webtoon' : 'scrollbox';
 			thumbStripInner.classList = rd.webtoon ? 'webtoon' : '';
 			thumbStripButton.classList = rd.webtoon ? 'webtoon' : '';
-			
+
 			thumbStrip.dataset.scrollDirection = rd.webtoon ? 'vertical' : 'horizontal';
 
 			webtoonContainer.style.display = rd.webtoon ? '' : 'none';
 
-			thumbStripButton.style.display='';
-			thumbStrip.style.display='';
-			
-			if (rd.webtoon) {
-				readerContainer.classList.add('webtoon');
-				readerViewer.classList.add('webtoon');
-			}
+			thumbStripButton.style.display = '';
+			thumbStrip.style.display = '';
+
+		}
+
+		// Initialize viewer with page data
+		async function initViewer() {
+			updatePWABar('black');
+
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');

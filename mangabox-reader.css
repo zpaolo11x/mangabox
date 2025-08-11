@@ -522,8 +522,6 @@ div.single-page {
 #readerViewer {
 	position: absolute;
 
-	top: 50%;
-	left: 50%;
 	transform: translate(-50%, -50%);
 
 	box-sizing: content-box;
@@ -543,17 +541,26 @@ div.single-page {
 
 #readerContainer.hidden #readerViewer:not(.webtoon) {
 	top: 200%;
+	left: 50%;
 	transition: top 0.3s ease;
 }
 
 #readerContainer.hidden #readerViewer.webtoon {
-	left: -200%;
+	top: 50%;
+	left: -100%;
 	transition: left 0.3s ease;
 }
 
-#readerContainer:not(.hidden) #readerViewer {
+#readerContainer:not(.hidden) #readerViewer:not(.webtoon) {
 	top: 50%;
-	transition: top 0.3s ease 0.5s, left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease;
+	left: 50%;
+	transition: top 0.3s ease 0.5s, left 0.3s, border-width 0.3s ease, border-image-slice 0.3s ease;
+}
+
+#readerContainer:not(.hidden) #readerViewer.webtoon {
+	top: 50%;
+	left: 50%;
+	transition: top 0.3s, left 0.3s ease 0.5s, border-width 0.3s ease, border-image-slice 0.3s ease;
 }
 
 #bottomControls,
