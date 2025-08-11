@@ -3075,6 +3075,11 @@
 
 			thumbStripButton.style.display='';
 			thumbStrip.style.display='';
+			
+			if (rd.webtoon) {
+				readerContainer.classList.add('webtoon');
+				readerViewer.classList.add('webtoon');
+			}
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 			const noCover = bookData.metadata.tags.includes('no-cover');
@@ -3260,11 +3265,6 @@
 		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne) {
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
-
-			if (!readerViewer.classList.contains('webtoon')) {
-				readerContainer.classList.add('webtoon');
-				readerViewer.classList.add('webtoon');
-			}
 
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))

@@ -541,9 +541,14 @@ div.single-page {
 	gap: 0px;
 }
 
-#readerContainer.hidden #readerViewer {
+#readerContainer.hidden #readerViewer:not(.webtoon) {
 	top: 200%;
 	transition: top 0.3s ease;
+}
+
+#readerContainer.hidden #readerViewer.webtoon {
+	left: -200%;
+	transition: left 0.3s ease;
 }
 
 #readerContainer:not(.hidden) #readerViewer {
