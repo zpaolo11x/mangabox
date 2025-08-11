@@ -149,6 +149,9 @@
 		<div id="readerBackground" class="hidden"></div>
 
 		<div id="readerViewer">
+		</div>
+		
+		<div id="readerViewerWebtoon">
 			<div id="webtoonContainer" class="hide-scrollbar" style="display:none"></div>
 		</div>
 
@@ -2809,12 +2812,8 @@
 
 			setThumbZoom(false, true);
 
-			console.log("A")
-			setTimeout(() => {
-				sectionShow(readerContainer);
-				initViewer();
-			}, 200);
-
+			sectionShow(readerContainer);
+			initViewer();
 
 		}
 
@@ -2857,8 +2856,8 @@
 
 			webtoonContainer.style.display = 'none';
 			readerContainer.classList.remove('webtoon');
-			readerViewer.classList.remove('webtoon');
-			readerViewer.removeAttribute('style');
+			//readerViewer.classList.remove('webtoon');
+			//readerViewer.removeAttribute('style');
 			thumbStrip.classList.remove('webtoon');
 			thumbStripInner.classList.remove('webtoon');
 			thumbStripButton.classList.remove('webtoon');
@@ -3071,7 +3070,7 @@
 
 		function readerWebtoonUpdate() {
 			if (rd.webtoon) {
-				readerViewer.classList.add('webtoon');
+				//readerViewer.classList.add('webtoon');
 				readerContainer.classList.add('webtoon');
 			}
 
@@ -4371,10 +4370,10 @@
 
 			switch (event.key) {
 				case 'ArrowLeft':
-					if (readerVisible) !rd.webtoon ? handleLeftArrow() : handleCloseReader();
+					if (readerVisible && !rd.webtoon) handleLeftArrow();
 					break;
 				case 'ArrowRight':
-					if (readerVisible && !rd.webtoon) handleRightArrow();
+					if (readerVisible) !rd.webtoon ? handleRightArrow() : handleCloseReader();
 					break;
 				case 'ArrowDown':
 					if (readerVisible) !rd.webtoon ? handleCloseReader() : handleRightArrow();

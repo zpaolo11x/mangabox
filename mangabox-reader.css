@@ -459,7 +459,8 @@ div.two-pages {
 
 }
 
-#readerViewer {
+#readerViewer,
+#readerViewerWebtoon {
 	background-position: center;
 	background-size: 10% 10%, 100% 100%, 100% 100%;
 
@@ -519,7 +520,8 @@ div.single-page {
 }
 */
 
-#readerViewer {
+#readerViewer,
+#readerViewerWebtoon {
 	position: absolute;
 
 	transform: translate(-50%, -50%);
@@ -539,25 +541,25 @@ div.single-page {
 	gap: 0px;
 }
 
-#readerContainer.hidden #readerViewer:not(.webtoon) {
+#readerContainer.hidden #readerViewer {
 	top: 200%;
 	left: 50%;
 	transition: top 0.3s ease;
 }
 
-#readerContainer.hidden #readerViewer.webtoon {
+#readerContainer.hidden #readerViewerWebtoon {
 	top: 50%;
 	left: 200%;
 	transition: left 0.3s ease;
 }
 
-#readerContainer:not(.hidden) #readerViewer:not(.webtoon) {
+#readerContainer:not(.hidden) #readerViewer {
 	top: 50%;
 	left: 50%;
 	transition: top 0.3s ease 0.5s, left 0.3s, border-width 0.3s ease, border-image-slice 0.3s ease;
 }
 
-#readerContainer:not(.hidden) #readerViewer.webtoon {
+#readerContainer:not(.hidden) #readerViewerWebtoon {
 	top: 50%;
 	left: 50%;
 	transition: top 0.3s, left 0.3s ease 0.5s, border-width 0.3s ease, border-image-slice 0.3s ease;
