@@ -547,7 +547,7 @@ div.single-page {
 
 #readerContainer.hidden #readerViewer.webtoon {
 	top: 50%;
-	left: -100%;
+	left: 200%;
 	transition: left 0.3s ease;
 }
 
