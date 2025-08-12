@@ -152,7 +152,7 @@
 		</div>
 		
 		<div id="readerViewerWebtoon">
-			<div id="webtoonContainer" class="hide-scrollbar" style="display:none"></div>
+			<div id="webtoonContainer" class="hide-scrollbar"></div>
 		</div>
 
 		<div id="readerOverlay">
@@ -165,6 +165,7 @@
 			</div>
 
 			<div id="controlPanel" class="hidden">
+
 				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
 					<div id="thumbStripScrollContent" class="scrollbox-content">
 						<div id="thumbStripInner"></div>
@@ -174,6 +175,20 @@
 					</div>
 				</div>
 				<div id="thumbStripButton">
+					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				</div>
+
+				<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
+					<div id="thumbStripScrollContentWT" class="scrollbox-content">
+						<div id="thumbStripInnerWT"></div>
+					</div>
+					<div class="scrollbox-scrollbar">
+						<div class="scrollbox-thumb"></div>
+					</div>
+				</div>
+				<div id="thumbStripButtonWT">
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
@@ -2853,17 +2868,18 @@
 				});
 			});
 			rd.spreadsArray = [];
-
-			webtoonContainer.style.display = 'none';
-			readerContainer.classList.remove('webtoon');
+//TODO RIVEDERE COSA SERVE DAVVERO
+			//webtoonContainer.style.display = 'none';
+			//thumbStrip.style.display='none';
+			//thumbStripWT.style.display='none';
 			//readerViewer.classList.remove('webtoon');
 			//readerViewer.removeAttribute('style');
-			thumbStrip.classList.remove('webtoon');
-			thumbStripInner.classList.remove('webtoon');
-			thumbStripButton.classList.remove('webtoon');
+			//thumbStrip.classList.remove('webtoon');
+			//thumbStripInner.classList.remove('webtoon');
+			//thumbStripButton.classList.remove('webtoon');
 
-			thumbStripButton.style.display = 'none';
-			thumbStrip.style.display = 'none';
+			//thumbStripButton.style.display = 'none';
+			//thumbStrip.style.display = 'none';
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -2958,15 +2974,18 @@
 			//TODO Because of the observer maybe not all these changes is needed
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
+			scrollContent = rd.webtoon ? thumbStripScrollContentWT : thumbStripScrollContent;
+			inner = rd.webtoon ? thumbStripInnerWT : thumbStripInner
+
 
 			rd.thumbZoom = status;
-			rd.thumbPosRatio = thumbStripScrollContent[scrollRef] / thumbStripInner[clientSize]
+			rd.thumbPosRatio = scrollContent[scrollRef] / inner[clientSize]
 
 
-			thumbStripScrollContent.style.overflowX = 'hidden';
-			thumbStripScrollContent.style.overflowY = 'hidden';
+			scrollContent.style.overflowX = 'hidden';
+			scrollContent.style.overflowY = 'hidden';
 
-			const oldSize = thumbStripInner[clientSize];
+			const oldSize = inner[clientSize];
 
 			let thumbSize = rd.webtoon ? (status ? 120 : 80) : (status ? 300 : 150);
 
@@ -2992,22 +3011,37 @@
 		});
 		addPressEvents(thumbStripButton, scaleDown, scaleUp);
 
+		thumbStripButtonWT.addEventListener('click', () => {
+			setThumbZoom(!rd.thumbZoom);
+		});
+		addPressEvents(thumbStripButtonWT, scaleDown, scaleUp);
+
+//TODO This code is flexible and usable for both, an alternative is splitting all the code for the two WT and !WT
+
 		const resizeObserver = new ResizeObserver(entries => {
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
+			scrollContent = rd.webtoon ? thumbStripScrollContentWT : thumbStripScrollContent;
+			inner = rd.webtoon ? thumbStripInnerWT : thumbStripInner
 
 			for (let entry of entries) {
-				thumbStripScrollContent[scrollRef] = rd.thumbPosRatio * (thumbStripInner[clientSize])
+				scrollContent[scrollRef] = rd.thumbPosRatio * (inner[clientSize])
 			}
 		});
 
 		resizeObserver.observe(thumbStripInner);
+		resizeObserver.observe(thumbStripInnerWT);
 
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStripScrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
 			thumbStripScrollContent.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
 		});
+		thumbStripInnerWT.addEventListener('transitionend', () => {
+			thumbStripScrollContentWT.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
+			thumbStripScrollContentWT.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
+		});
 
+		
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
 			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
@@ -3069,22 +3103,8 @@
 		}
 
 		function readerWebtoonUpdate() {
-			if (rd.webtoon) {
-				//readerViewer.classList.add('webtoon');
-				readerContainer.classList.add('webtoon');
-			}
-
-			thumbStrip.classList = rd.webtoon ? 'scrollbox webtoon' : 'scrollbox';
-			thumbStripInner.classList = rd.webtoon ? 'webtoon' : '';
-			thumbStripButton.classList = rd.webtoon ? 'webtoon' : '';
-
-			thumbStrip.dataset.scrollDirection = rd.webtoon ? 'vertical' : 'horizontal';
-
-			webtoonContainer.style.display = rd.webtoon ? '' : 'none';
-
-			thumbStripButton.style.display = '';
-			thumbStrip.style.display = '';
-
+				thumbStrip.style.display = thumbStripButton.style.display = rd.webtoon ? 'none' : '';
+				thumbStripWT.style.display = thumbStripButtonWT.style.display = rd.webtoon ? '' : 'none';
 		}
 
 		// Initialize viewer with page data
@@ -3285,7 +3305,6 @@
 				.reduce((sum, width) => sum + width, 0)) + 'px';
 			*/
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
-			thumbStripInner.style.flexDirection = 'column';
 
 			const pageData = komgaPageData.map(page => ({
 				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
@@ -3377,7 +3396,7 @@
 				spreadObject.uiThumb.addEventListener('click', () => {
 					jumpToSpread(localSpread);
 				});
-				thumbStripInner.append(spreadObject.uiThumb);
+				thumbStripInnerWT.append(spreadObject.uiThumb);
 
 			});
 		}
@@ -3885,22 +3904,22 @@
 			// maybe each time the old and current spreads are updated I could call this function with old and current to
 			// remove one class and add the other...
 
-			Array.from(thumbStripInner.children).forEach(element => {
+			Array.from(thumbStripInnerWT.children).forEach(element => {
 				element.classList.remove('current');
 			});
 
-			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
+			const targetElement = thumbStripInnerWT.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 
 			if (targetElement) {
-				const targetScrollTop = -thumbStripScrollContent.clientHeight / 2 + targetElement.offsetTop - thumbStripScrollContent.offsetTop + targetElement.clientHeight / 2;
+				const targetScrollTop = -thumbStripScrollContentWT.clientHeight / 2 + targetElement.offsetTop - thumbStripScrollContentWT.offsetTop + targetElement.clientHeight / 2;
 
 				if (!fast) {
-					thumbSmoothScrollWebtoon(thumbStripScrollContent, targetScrollTop, 300);
+					thumbSmoothScrollWebtoon(thumbStripScrollContentWT, targetScrollTop, 300);
 				} else {
-					thumbStripScrollContent.scrollTop = targetScrollTop;
+					thumbStripScrollContentWT.scrollTop = targetScrollTop;
 				};
 
-				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
+				thumbStripInnerWT.children[rd.currentSpreadIndex].classList.add('current');
 			}
 		}
 
@@ -4617,12 +4636,8 @@
 		}
 
 		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
-		enableTouchResponse(thumbStrip, 20,
-			() => { rd.webtoon ? handleLargeThumbs() : null },
-			() => { rd.webtoon ? handleSmallThumbs() : null },
-			() => { rd.webtoon ? null : handleLargeThumbs() },
-			() => { rd.webtoon ? null : handleSmallThumbs() }
-		);
+		enableTouchResponse(thumbStripWT, 20, handleLargeThumbs, handleSmallThumbs, null, null);
+		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
 
 		webtoonContainer.addEventListener('click', () => {
 			toggleMenu();
