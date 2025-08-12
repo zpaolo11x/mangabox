@@ -150,7 +150,7 @@
 
 		<div id="readerViewer">
 		</div>
-		
+
 		<div id="readerViewerWebtoon">
 			<div id="webtoonContainer" class="hide-scrollbar"></div>
 		</div>
@@ -2871,7 +2871,7 @@
 			webtoonContainer.removeAttribute('style');
 
 
-//TODO RIVEDERE COSA SERVE DAVVERO
+			//TODO RIVEDERE COSA SERVE DAVVERO
 			//webtoonContainer.style.display = 'none';
 			//thumbStrip.style.display='none';
 			//thumbStripWT.style.display='none';
@@ -2996,6 +2996,12 @@
 				}
 			}
 			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbSize + 'px');
+
+			setTimeout(() => {
+				scrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
+				scrollContent.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
+			}, 500);
+
 		}
 
 		thumbStripButton.addEventListener('click', () => {
@@ -3008,7 +3014,7 @@
 		});
 		addPressEvents(thumbStripButtonWT, scaleDown, scaleUp);
 
-//TODO This code is flexible and usable for both, an alternative is splitting all the code for the two WT and !WT
+		//TODO This code is flexible and usable for both, an alternative is splitting all the code for the two WT and !WT
 
 		const resizeObserver = new ResizeObserver(entries => {
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
@@ -3023,7 +3029,19 @@
 
 		resizeObserver.observe(thumbStripInner);
 		resizeObserver.observe(thumbStripInnerWT);
-		
+
+		/*
+		//TODO a bit overkill, moved to the thumb scaling code
+		thumbStripInner.addEventListener('transitionend', () => {
+			thumbStripScrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
+			thumbStripScrollContent.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
+		});
+		thumbStripInnerWT.addEventListener('transitionend', () => {
+			thumbStripScrollContentWT.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
+			thumbStripScrollContentWT.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
+		});
+		*/
+
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
 			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
 			readerProgress.style.width = `${progressPercent}%`;
@@ -3085,8 +3103,8 @@
 		}
 
 		function thumbStripShowHide() {
-				thumbStrip.style.display = thumbStripButton.style.display = rd.webtoon ? 'none' : '';
-				thumbStripWT.style.display = thumbStripButtonWT.style.display = rd.webtoon ? '' : 'none';
+			thumbStrip.style.display = thumbStripButton.style.display = rd.webtoon ? 'none' : '';
+			thumbStripWT.style.display = thumbStripButtonWT.style.display = rd.webtoon ? '' : 'none';
 		}
 
 		// Initialize viewer with page data

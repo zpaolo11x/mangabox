@@ -588,7 +588,7 @@ div.single-page {
 #topControls {
 	padding-top: var(--mb-drag-bar-height)
 }
-
+/*
 #thumbStripScrollContent {
 	overflow-x: auto !important;
 	overflow-y: hidden !important;
@@ -598,7 +598,7 @@ div.single-page {
 	overflow-x: hidden !important;
 	overflow-y: auto !important;
 }
-
+*/
 
 #thumbStrip,
 #thumbStripWT {
