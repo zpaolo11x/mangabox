@@ -3766,6 +3766,11 @@
 			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
 			const newSpread = rd.currentSpreadIndex + delta;
 
+			if (rd.webtoon) {
+				jumpToSpread(newSpread);
+				return
+			}
+
 			if (rd.pageTurning === direction) return;
 			if (newSpread < 0 || newSpread > spreadsTotal()) return;
 			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
