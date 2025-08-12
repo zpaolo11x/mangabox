@@ -2868,6 +2868,10 @@
 				});
 			});
 			rd.spreadsArray = [];
+
+			webtoonContainer.removeAttribute('style');
+
+
 //TODO RIVEDERE COSA SERVE DAVVERO
 			//webtoonContainer.style.display = 'none';
 			//thumbStrip.style.display='none';
@@ -3031,7 +3035,7 @@
 
 		resizeObserver.observe(thumbStripInner);
 		resizeObserver.observe(thumbStripInnerWT);
-
+/*
 		thumbStripInner.addEventListener('transitionend', () => {
 			thumbStripScrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
 			thumbStripScrollContent.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
@@ -3040,7 +3044,7 @@
 			thumbStripScrollContentWT.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
 			thumbStripScrollContentWT.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
 		});
-
+*/
 		
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
 			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
@@ -3134,6 +3138,16 @@
 			if (rd.webtoon) {
 				rd.webtoonScrollRatio = webtoonRatio()
 			}
+
+			setTimeout(() => {
+				webtoonContainer.style.overflow = 'auto';
+				//thumbStripScrollContent.style.overflowX = 'auto';
+				//thumbStripScrollContent.style.overflowY = 'hidden';
+				//thumbStripScrollContentWT.style.overflowX = 'hidden';
+				//thumbStripScrollContentWT.style.overflowY = 'auto';
+
+			}, 500);
+
 		}
 
 		function buildSize(item, ratio) {

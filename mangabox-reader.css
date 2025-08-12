@@ -146,7 +146,7 @@
 #webtoonContainer {
 	position:absolute;
 	top:0px;
-	overflow:scroll;
+	overflow:hidden;
 	height:100vh;
 	box-sizing: border-box;
 }
@@ -588,6 +588,17 @@ div.single-page {
 #topControls {
 	padding-top: var(--mb-drag-bar-height)
 }
+
+#thumbStripScrollContent {
+	overflow-x: auto !important;
+	overflow-y: hidden !important;
+}
+
+#thumbStripScrollContentWT {
+	overflow-x: hidden !important;
+	overflow-y: auto !important;
+}
+
 
 #thumbStrip,
 #thumbStripWT {
