@@ -1,5 +1,6 @@
 Main UI
 - Add webtoon direction icon
+- Change naming from "Volume" to "Book"
 
 Redaer UI
 - Support for webtoons reading

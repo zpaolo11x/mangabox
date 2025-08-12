@@ -2190,7 +2190,7 @@
 				${serie.metadata.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
+					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "book" : "books"}) - ${creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
@@ -2288,7 +2288,7 @@
 			if (format == 'longname') {
 				mainRow.classList.add('book-row');
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Volume ${book.metadata.number}`,
+					innerHTML: `Book ${book.metadata.number}`,
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
@@ -2313,7 +2313,7 @@
 				secondRow.textContent = book.metadata.title;
 			} else if (format == 'compact') {
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Volume ${book.metadata.number}`
+					innerHTML: `Book ${book.metadata.number}`
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
@@ -2329,7 +2329,7 @@
 					: '';
 
 				const volumeNumberLabelShort = addItem('span', {
-					innerHTML: `Vol.${book.metadata.number}`
+					innerHTML: `Bk.${book.metadata.number}`
 				});
 				const timeLabel = addItem('span', {
 					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
