@@ -4277,12 +4277,14 @@
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 
 			if (rd.webtoon) {
+				console.log("WT SCROLL")
 				rd.webtoonScroll = true;
 
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
 				const parent = el.parentElement;
 				const offsetTop = el.offsetTop + 1; // 1px extra upwards
-
+				console.log(offsetTop);
+				console.log(parent);
 				parent.scrollTo({
 					top: offsetTop,
 					behavior: 'smooth'
@@ -4403,22 +4405,40 @@
 
 			switch (event.key) {
 				case 'ArrowLeft':
-					if (readerVisible && !rd.webtoon) handleLeftArrow();
+					if (readerVisible && !rd.webtoon) {
+						event.preventDefault();
+						handleLeftArrow();
+					}
 					break;
 				case 'ArrowRight':
-					if (readerVisible) !rd.webtoon ? handleRightArrow() : handleCloseReader();
+					if (readerVisible) {
+						event.preventDefault();
+						!rd.webtoon ? handleRightArrow() : handleCloseReader();
+					}
 					break;
 				case 'ArrowDown':
-					if (readerVisible) !rd.webtoon ? handleCloseReader() : handleRightArrow();
+					if (readerVisible) {
+						event.preventDefault();
+						!rd.webtoon ? handleCloseReader() : handleRightArrow();
+					}
 					break;
 				case 'ArrowUp':
-					if (readerVisible && rd.webtoon) handleLeftArrow();
+					if (readerVisible && rd.webtoon) {
+						event.preventDefault();
+						handleLeftArrow();
+					}
 					break;
 				case 'Escape':
-					if (readerVisible) handleCloseReader();
+					if (readerVisible) {
+						event.preventDefault();
+						handleCloseReader();
+					}
 					break;
 				case ' ':
-					if (readerVisible) toggleMenu();
+					if (readerVisible) {
+						event.preventDefault();
+						toggleMenu();
+					}
 					break;
 				default:
 					break;
