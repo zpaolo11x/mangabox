@@ -4277,14 +4277,12 @@
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 
 			if (rd.webtoon) {
-				console.log("WT SCROLL")
 				rd.webtoonScroll = true;
 
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
 				const parent = el.parentElement;
 				const offsetTop = el.offsetTop + 1; // 1px extra upwards
-				console.log(offsetTop);
-				console.log(parent);
+
 				parent.scrollTo({
 					top: offsetTop,
 					behavior: 'smooth'
