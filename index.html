@@ -3683,6 +3683,7 @@
 		// triggered by a preload, so it doesn't trigger further preloads
 
 		async function populateSpread(spreadIndex, isPreload = false) {
+			console.log("populatespread "+spreadIndex+" preload?"+isPreload)
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
 
 			let uiPageArray = [
@@ -4238,7 +4239,7 @@
 			return rd.rtl ? 'focus-right-page' : 'focus-left-page';
 		}
 
-		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
+		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4260,7 +4261,6 @@
 
 			if (isSectionHidden(readerContainer)) return;
 
-
 			populateSpread(localNewSpreadIndex);
 
 			// TODO
@@ -4276,7 +4276,7 @@
 
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 
-			if (rd.webtoon) {
+			if (rd.webtoon && !smoothWebtoon) {
 				rd.webtoonScroll = true;
 
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
@@ -4300,7 +4300,11 @@
 		}
 
 		function jumpToSpreadSkipHistory(targetSpreadIndex) {
-			jumpToSpread(targetSpreadIndex, null, true)
+			jumpToSpread(targetSpreadIndex, null, true, false)
+		}
+
+		function jumpToSpreadSmoothWebtoon(targetSpreadIndex) {
+			jumpToSpread(targetSpreadIndex, null, false, true)
 		}
 
 		// Reader UI Control Buttons
@@ -4547,11 +4551,14 @@
 			entries.forEach(async (entry) => {
 				if (rd.webtoonScroll) return;
 				if (entry.isIntersecting) {
+					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
+					/*
 					rd.oldSpreadIndex = rd.currentSpreadIndex;
 					rd.currentSpreadIndex = entry.target.alt - 1;
 					updateProgressBar();
 					centerThumbWebtoon(); //TODO CHECK
 					history.replaceState(null, '', jumpString());
+					*/
 				}
 			});
 		});
