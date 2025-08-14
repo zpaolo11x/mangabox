@@ -854,6 +854,33 @@ div.single-page {
 	right: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
 }
 
+#controlPanel.hidden #nextBookPanel,
+#readerContainer.hidden #nextBookPanel,
+#controlPanel.hidden #prevBookPanel,
+#readerContainer.hidden #prevBookPanel{
+	opacity:0;
+	pointer-events: none;
+}
+
+#nextBookPanel,
+#prevBookPanel{
+	position: absolute;
+	left:50%;
+	top:50%;
+	transform: translate(-50%, -50%);
+	opacity:1;
+	transition: opacity 0.5s ease;
+}
+
+#nextBookButton, #prevBookButton {
+	margin-top:0px;
+}
+
+#nextBookPanel.hidden, #prevBookPanel.hidden{
+	opacity:0;
+	pointer-events: none;
+}
+
 #bookName {
 	text-align: center;
 	font-size: 20px;

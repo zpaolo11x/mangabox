@@ -207,7 +207,7 @@
 					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
 					<span id="scale_3" title="3x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
 				</div>
--->
+				-->
 
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -219,6 +219,15 @@
 					<span id="rightLimit" class="bar-note press-button corner-left"></span>
 					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 				</div>
+
+				<div id="nextBookPanel" class="modal-content hidden">
+					<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
+				</div>
+
+				<div id="prevBookPanel" class="modal-content hidden">
+					<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
+				</div>
+
 			</div>
 		</div>
 	</div>
@@ -2782,17 +2791,19 @@
 			realFirstPage: 0,
 			realLastPage: 0,
 
+			nextBook: null,
+			prevBook: null,
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
-		function navigateToReadBook(book, readingDirection) {
+		function navigateToReadBook(book, readingDirection, force = false) {
 			setIncognito(false);
 			navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
 						&book_id=${book.id}
 						&dir=${readingDirection}
-						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
+						&pag=${force ? 1 : (book.readProgress ? book.readProgress.page : 1)}`);
 		}
 
 		// Function that setups the reader for a specific book, this is not run directly
@@ -3093,8 +3104,17 @@
 		async function initViewer() {
 			updatePWABar('black');
 
-
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			
+			rd.prevBook = await callAPI(`/api/v1/books/${rd.bookId}/previous`) || null;
+			rd.nextBook = await callAPI(`/api/v1/books/${rd.bookId}/next`) || null;
+			
+			if(!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
+			if(!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
+
+			console.log(rd.prevBook);
+			console.log(rd.nextBook);
+
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
 			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
@@ -4220,6 +4240,7 @@
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
+			console.log("JumpToSpread:"+targetSpreadIndex)
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4227,6 +4248,21 @@
 
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
+
+			if (rd.nextBook != null){
+				if (targetSpreadIndex == spreadsTotal() - 1) {
+					nextBookPanel.classList.remove('hidden')
+				} else {
+					if(!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden')
+				}
+			}
+			if (rd.prevBook != null){
+				if (targetSpreadIndex == 0) {
+					prevBookPanel.classList.remove('hidden')
+				} else {
+					if(!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden')
+				}
+			}
 
 			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
 
