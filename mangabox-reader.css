@@ -751,8 +751,7 @@ div.single-page {
 	top: 50%;
 	left: 50%;
 
-	width: 80px;
-	height: 80px;
+	aspect-ratio: 1 / 1;
 	transform: translate(-50%, -50%);
 
 	opacity: 0;
@@ -760,10 +759,19 @@ div.single-page {
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
-	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
-	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
+	mask-image: radial-gradient(circle, transparent 45%, white 45%, white 100%);
+	-webkit-mask-image: radial-gradient(circle, transparent 45%, white 45%, white 100%);
 	transition: opacity 0.5s;
 }
+
+.spread-thumb:not(.webtoon):has(.page-thumb)::before {
+	height: 60%;
+}
+
+.spread-thumb.webtoon:has(.page-thumb)::before {
+	width: 80%;
+}
+
 
 .spread-thumb:has(.page-thumb.loading)::before {
 	opacity: 1;

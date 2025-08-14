@@ -1085,13 +1085,18 @@
 						name: 'l_to_r',
 						caption: 'L to R',
 						iconClass: 'fa-solid fa-arrow-right glyph-dark',
-						filterFunction: (a) => (a.mbSeriesLTR == true)
+						filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
 					}, {
 						name: 'r_to_l',
 						caption: 'R to L',
 						iconClass: 'fa-solid fa-arrow-left glyph-dark',
-						filterFunction: (a) => (a.mbSeriesLTR == false)
+						filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
+					}, {
+						name: 'webtoon',
+						caption: 'WToon',
+						iconClass: 'fa-solid fa-arrow-down glyph-dark',
+						filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
 					}
 				],
 			},
@@ -1746,7 +1751,7 @@
 
 			item.mbSeriesRead = (unreadCount == 0);
 			//TODO This is for filtering purposes, to fix
-			item.mbSeriesLTR = (serie.metadata.readingDirection == 'LEFT_TO_RIGHT');
+			item.mbSeriesDirection = (serie.metadata.readingDirection);
 			item.mbSeriesLanguage = serie.metadata.language;
 
 			seriesItem.append(
@@ -2707,7 +2712,7 @@
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
-			preloadCount: 5,			// TODO SET BACK TO 15 Image preload count
+			preloadCount: 15,			// TODO SET BACK TO 15 Image preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
 			jumpTimeout: null,		// Timeout counter for jumping to spreads
@@ -2868,20 +2873,6 @@
 			rd.spreadsArray = [];
 
 			webtoonContainer.removeAttribute('style');
-
-
-			//TODO RIVEDERE COSA SERVE DAVVERO
-			//webtoonContainer.style.display = 'none';
-			//thumbStrip.style.display='none';
-			//thumbStripWT.style.display='none';
-			//readerViewer.classList.remove('webtoon');
-			//readerViewer.removeAttribute('style');
-			//thumbStrip.classList.remove('webtoon');
-			//thumbStripInner.classList.remove('webtoon');
-			//thumbStripButton.classList.remove('webtoon');
-
-			//thumbStripButton.style.display = 'none';
-			//thumbStrip.style.display = 'none';
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -3028,18 +3019,6 @@
 
 		resizeObserver.observe(thumbStripInner);
 		resizeObserver.observe(thumbStripInnerWT);
-
-		/*
-		//TODO a bit overkill, moved to the thumb scaling code
-		thumbStripInner.addEventListener('transitionend', () => {
-			thumbStripScrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
-			thumbStripScrollContent.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
-		});
-		thumbStripInnerWT.addEventListener('transitionend', () => {
-			thumbStripScrollContentWT.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
-			thumbStripScrollContentWT.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
-		});
-		*/
 
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
 			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
@@ -3353,10 +3332,6 @@
 				page1.uiPage.style.width = `calc(min(${pageData[i_page].width}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
 				page1.uiPage.style.height = `calc(min(${pageData[i_page].width / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
 
-				//page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
-				
-				//TODO TEST REMOVED CHECK WEBTOON PAGE LOADING addLazyLoading(page1.uiPage);
-				
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
 				spreadObject = buildSpreadObject('webtoon-page', page1, pageData[i_page].pageNum, pageNum1);
@@ -4554,13 +4529,6 @@
 				if (rd.webtoonScroll) return;
 				if (entry.isIntersecting) {
 					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
-					/*
-					rd.oldSpreadIndex = rd.currentSpreadIndex;
-					rd.currentSpreadIndex = entry.target.alt - 1;
-					updateProgressBar();
-					centerThumbWebtoon(); //TODO CHECK
-					history.replaceState(null, '', jumpString());
-					*/
 				}
 			});
 		});
