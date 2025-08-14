@@ -2256,22 +2256,26 @@
 			bookDetailsSummary.style.opacity = 1;
 
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
+			/*
 			const seriesBooks = await callAPI(
 				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
 			);
+			*/
 
 			mb.seriesData = seriesData;
 			mb.currentBook = book;
-			mb.prevBook = null;
-			mb.nextBook = null;
+			mb.prevBook = await callAPI(`/api/v1/books/${book.id}/previous`) || null;
+			mb.nextBook = await callAPI(`/api/v1/books/${book.id}/next`) || null;
 
+/*
 			if (book.number > 1) {
 				mb.prevBook = seriesBooks.content[book.number - 2];
 			}
 			if (book.number < seriesData.booksCount) {
 				mb.nextBook = seriesBooks.content[book.number];
 			}
+*/
 		}
 
 		//MB Book Item Creation
