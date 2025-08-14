@@ -3353,8 +3353,10 @@
 				page1.uiPage.style.width = `calc(min(${pageData[i_page].width}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
 				page1.uiPage.style.height = `calc(min(${pageData[i_page].width / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
 
-				page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
-				addLazyLoading(page1.uiPage);
+				//page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
+				
+				//TODO TEST REMOVED CHECK WEBTOON PAGE LOADING addLazyLoading(page1.uiPage);
+				
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
 				spreadObject = buildSpreadObject('webtoon-page', page1, pageData[i_page].pageNum, pageNum1);
