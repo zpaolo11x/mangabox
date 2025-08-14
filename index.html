@@ -3664,7 +3664,6 @@
 		// triggered by a preload, so it doesn't trigger further preloads
 
 		async function populateSpread(spreadIndex, isPreload = false) {
-			console.log("populatespread "+spreadIndex+" preload?"+isPreload)
 			if (isSectionHidden(readerContainer)) return; //XXX THIS IS PROBABLY THE BEST
 
 			let uiPageArray = [
