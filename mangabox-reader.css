@@ -870,6 +870,7 @@ div.single-page {
 	transform: translate(-50%, -50%);
 	opacity:1;
 	transition: opacity 0.5s ease;
+	z-index:15;
 }
 
 #nextBookButton, #prevBookButton {
