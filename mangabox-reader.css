@@ -581,8 +581,8 @@ div.single-page {
 	/* rgba(250, 250, 250, 0.8);*/
 	/*z-index: 1003;*/
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
-	padding-left: var(--mb-bar-safe-padding-left);
-	padding-right: var(--mb-bar-safe-padding-right);
+	padding-left: calc(max(10px, var(--mb-button-safe-left)));
+	padding-right: calc(max(10px, var(--mb-button-safe-right)));
 	/*backdrop-filter: blur(15px);*/
 }
 

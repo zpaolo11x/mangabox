@@ -36,6 +36,9 @@
 	--mb-dialog-box-radius: calc(var(--mb-dialog-padding) + var(--mb-dialog-button-radius));
 	--mb-dialog-font-size: 18px;
 	
+	--mb-button-safe-left: calc((env(safe-area-inset-left) - 0.5 * var(--mb-dialog-button-height) - 10px));
+	--mb-button-safe-right: calc((env(safe-area-inset-right) - 0.5 * var(--mb-dialog-button-height) - 10px));
+
 	--mb-pill-width: 37px;
 	--mb-pill-pad: calc(var(--mb-dialog-button-height) - var(--mb-pill-width));
 
