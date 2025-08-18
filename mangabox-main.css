@@ -11,6 +11,14 @@
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
 	--mb-accent-dark: hsl(var(--mb-h), var(--mb-s), 40%);
 
+	--mb-area-padding: 20px;
+	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), env(safe-area-inset-left)));
+	--mb-area-safe-padding-right: calc(max(var(--mb-area-padding),env(safe-area-inset-right)));
+
+	--mb-bar-padding: 10px;
+	--mb-bar-safe-padding-left: calc(max(var(--mb-bar-padding), calc(env(safe-area-inset-left) - var(--mb-bar-padding))));
+	--mb-bar-safe-padding-right: calc(max(var(--mb-bar-padding), calc(env(safe-area-inset-right) - var(--mb-bar-padding))));
+
 	--mb-library-gap: 8px;
 	--mb-button-size: 44px;
 	--mb-span-size: 40px;
@@ -330,11 +338,11 @@ body {
 }
 
 .color-swatch:first-child {
-	margin-left: 10px;
+	margin-left: calc(max(10px, env(safe-area-inset-left)));
 }
 
 .color-swatch:last-child {
-	margin-right: 10px;
+	margin-right: calc(max(10px, env(safe-area-inset-right)));
 }
 
 #debuggerObj {
@@ -402,8 +410,8 @@ a {
 #mainUI {
 	position: fixed;
 	top: var(--mb-drag-bar-height);
-	left: env(safe-area-inset-left);
-	right: env(safe-area-inset-right);
+	left: 0;
+	right: 0;
 	bottom: 0;
 	display: grid;
 	grid-template-columns: auto;
@@ -522,7 +530,9 @@ a {
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	padding: var(--mb-library-gap) 10px;
+	padding: var(--mb-library-gap) var(--mb-bar-padding);
+	padding-left: var(--mb-bar-safe-padding-left);
+	padding-right: var(--mb-bar-safe-padding-right);
 	z-index: 1000;
 	transition: all 0.3s ease;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
@@ -617,7 +627,9 @@ a {
 	display: flex;
 	align-items: center;
 
-	padding: 0px 10px 0px 10px;
+	padding: 0px var(--mb-bar-padding);
+	padding-left: var(--mb-bar-safe-padding-left);
+	padding-right: var(--mb-bar-safe-padding-right);
 
 	width: 100vw;
 	height: calc(var(--mb-filter-button-size) + var(--mb-library-gap));
@@ -1117,7 +1129,10 @@ a {
 
 .home-strip {
 	gap: 16px;
-	padding: 10px 20px 30px 20px;
+	padding: 10px var(--mb-area-padding) 30px var(--mb-area-padding);
+	padding-left: var(--mb-area-safe-padding-left);
+	padding-right: var(--mb-area-safe-padding-right);
+
 	transition: opacity 0.3s ease;
 	/*flex-wrap:wrap;*/
 	display: flex;
@@ -1181,7 +1196,7 @@ a {
 .strip-header-container {
 	margin-top: 0px;
 	display: grid;
-	grid-template-columns: auto minmax(auto, 300px) 54px;
+	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + env(safe-area-inset-right))));
 	gap: 10px;
 }
 
@@ -1210,7 +1225,7 @@ a {
 
 .stripgrid-all {
 	font-size: 20px;
-	margin-right: 20px;
+	margin-right: var(--mb-area-safe-padding-right);
 }
 
 @media (max-width: 600px) {
@@ -1226,7 +1241,7 @@ a {
 }
 
 .strip-header {
-	margin-left: 25px;
+	margin-left: calc(max(25px, env(safe-area-inset-left)));
 	padding: 0px;
 	font-size: 20px;
 	font-weight: 500;
@@ -1278,7 +1293,9 @@ a {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(var(--mb-card-min-width), max-content));
 	gap: 16px;
-	padding: 20px 20px;
+	padding: 20px var(--mb-area-padding);
+	padding-left: var(--mb-area-safe-padding-left);
+	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
 }
 
@@ -1591,7 +1608,9 @@ book-item {
 }
 
 #seriesHeader {
-	padding: 20px;
+	padding: 20px var(--mb-area-padding);
+	padding-left: var(--mb-area-safe-padding-left);
+	padding-right: var(--mb-area-safe-padding-right);
 	max-height: 175px;
 	display: grid;
 	grid-template-columns: auto 1fr;
