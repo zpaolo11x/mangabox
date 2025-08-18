@@ -3317,6 +3317,7 @@
 				.reduce((sum, width) => sum + width, 0)) + 'px';
 			*/
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
+			thumbStripInnerWT.style.flexDirection = 'column';
 
 			const pageData = komgaPageData.map(page => ({
 				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
