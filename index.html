@@ -300,16 +300,20 @@
 	<script src="auth.js"></script>
 
 	<script>
+
 		function getInset(name) {
 			return parseInt(
 				getComputedStyle(document.documentElement).getPropertyValue(name)
 			) || 0;
 		}
 
-		const sharpCornerUI = 	(getInset("--safe-area-top") == 0) 
-									&& (getInset("--safe-area-bottom") == 0)
-									&& (getInset("--safe-area-left") == 0)
-									&& (getInset("--safe-area-right") == 0);
+		function sharpCornerUI() {
+			return ((getInset("--safe-area-top") == 0)
+				&& (getInset("--safe-area-bottom") == 0)
+				&& (getInset("--safe-area-left") == 0)
+				&& (getInset("--safe-area-right") == 0)
+			)
+		}
 
 		//MB Manage Electron titlebar
 
@@ -1355,13 +1359,13 @@
 			if (!metaViewport) return;
 
 			// Disable zoom temporarily
-			metaViewport.content = `width=device-width, ${sharpCornerUI ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`;
+			metaViewport.content = `width=device-width, ${sharpCornerUI() ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`;
 
 			// Wait for two animation frames to ensure the change takes effect
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
 					// Now restore zoom capability
-					metaViewport.content = `width=device-width, ${sharpCornerUI ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=5, minimum-scale=1`;
+					metaViewport.content = `width=device-width, ${sharpCornerUI() ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=5, minimum-scale=1`;
 				});
 			});
 		}
