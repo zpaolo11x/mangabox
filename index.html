@@ -300,7 +300,7 @@
 	<script src="auth.js"></script>
 
 	<script>
-		function isSharpCornerIphone() {
+		function getSharpCornerIphone() {
 			if (!/iPhone/.test(navigator.userAgent)) return false;
 
 			const ratio = window.devicePixelRatio || 1;
@@ -327,9 +327,7 @@
 			|| window.navigator.standalone === true;
 		*/
 		
-		function sharpCornerUI() {
-			return (isSharpCornerIphone() ? '' : 'viewport-fit=cover, ');
-		}
+		const isSharpCornerIphone = getSharpCornerIphone();
 
 		//MB Manage Electron titlebar
 
@@ -1375,13 +1373,13 @@
 			if (!metaViewport) return;
 
 			// Disable zoom temporarily
-			metaViewport.content = `width=device-width, ${sharpCornerUI()}initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`;
+			metaViewport.content = `width=device-width, ${isSharpCornerIphone ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`;
 
 			// Wait for two animation frames to ensure the change takes effect
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
 					// Now restore zoom capability
-					metaViewport.content = `width=device-width, ${sharpCornerUI()}initial-scale=1, maximum-scale=5, minimum-scale=1`;
+					metaViewport.content = `width=device-width, ${isSharpCornerIphone ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=5, minimum-scale=1`;
 				});
 			});
 		}
