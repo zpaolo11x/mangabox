@@ -145,11 +145,13 @@
 
 #webtoonContainer {
 	position:absolute;
-	top:0px;
+	top:0;
 	overflow:hidden;
-	height:100vh;
+	bottom:0;
+	/*height:100vh;*/
 	box-sizing: border-box;
 	background: white;
+	box-shadow: inset blue 0px 0px 15px;
 }
 
 #readerContainer {
@@ -167,9 +169,9 @@
 	flex-direction: column;
 	align-items: center;
 	background-color: var(--mb-page-color);
-	height: 100vh;
+	/*height: 100vh;*/
 	overflow: hidden;
-
+	/*box-shadow: inset green 0px 0px 15px;*/
 	background: none;
 }
 
@@ -197,7 +199,7 @@ img.page:not([src]) {
 */
 
 .webtoon-layout img.page {
-		display: block;
+	display: block;
 }
 
 .spread-layout img.page {
@@ -536,7 +538,7 @@ div.single-page {
 	align-items: center;
 	justify-content: center;
 
-	height: 100vh;
+	height: 100dvh;
 
 	background: none;
 	gap: 0px;
@@ -1031,9 +1033,8 @@ div.single-page {
 	right: 0px;
 	top: 0px;
 	display: grid;
-	width: 100vw;
-	height: 100vh;
-
+	bottom: 0px;
+	/*box-shadow: inset green 0px 0px 15px;*/
 	grid-template-columns: 1fr 1.5fr 1fr;
 	/*z-index: 1002;*/
 
@@ -1047,10 +1048,9 @@ div.single-page {
 #touchPanel.shrink {
 	top: 60px;
 	bottom: 180px;
-	height: calc(100vh - 60px - 180px);
 }
 
-
+/*
 #touchPanelWebtoon {
 	position: absolute;
 	left: 0px;
@@ -1061,7 +1061,6 @@ div.single-page {
 	height: 100vh;
 
 	grid-template-rows: 1fr 1.5fr 1fr;
-	/*z-index: 1002;*/
 
 	box-sizing: border-box;
 	border-bottom: 5px solid transparent;
@@ -1069,10 +1068,8 @@ div.single-page {
 	transition: border 0.3s;
 
 	border:5px fuchsia solid;
-
-	
 }
-
+*/
 #incognitoMark {
 	content: "";
 	position: fixed;

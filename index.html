@@ -4355,6 +4355,12 @@
 
 		// Reader UI Control Buttons
 		function toggleMenu() {
+			if (isSectionHidden(controlPanel)) {
+				updatePWABar();
+			} else {
+				updatePWABar('black');
+			}
+
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
 		}
