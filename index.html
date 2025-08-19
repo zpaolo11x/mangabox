@@ -300,7 +300,16 @@
 	<script src="auth.js"></script>
 
 	<script>
+		function getInset(name) {
+			return parseInt(
+				getComputedStyle(document.documentElement).getPropertyValue(name)
+			) || 0;
+		}
 
+		const sharpCornerUI = (getInset("--safe-area-top") == 0);
+
+		console.log("top inset:", getInset("--safe-area-top"));
+		console.log("bottom inset:", getInset("--safe-area-bottom"));
 
 		//MB Manage Electron titlebar
 
@@ -1346,13 +1355,13 @@
 			if (!metaViewport) return;
 
 			// Disable zoom temporarily
-			metaViewport.content = 'width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
+			metaViewport.content = `width=device-width, ${sharpCornerUI ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`;
 
 			// Wait for two animation frames to ensure the change takes effect
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
 					// Now restore zoom capability
-					metaViewport.content = 'width=device-width, viewport-fit=cover, initial-scale=1, maximum-scale=5, minimum-scale=1';
+					metaViewport.content = `width=device-width, ${sharpCornerUI ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=5, minimum-scale=1`;
 				});
 			});
 		}
@@ -2277,14 +2286,14 @@
 			mb.prevBook = await callAPI(`/api/v1/books/${book.id}/previous`) || null;
 			mb.nextBook = await callAPI(`/api/v1/books/${book.id}/next`) || null;
 
-/*
-			if (book.number > 1) {
-				mb.prevBook = seriesBooks.content[book.number - 2];
-			}
-			if (book.number < seriesData.booksCount) {
-				mb.nextBook = seriesBooks.content[book.number];
-			}
-*/
+			/*
+						if (book.number > 1) {
+							mb.prevBook = seriesBooks.content[book.number - 2];
+						}
+						if (book.number < seriesData.booksCount) {
+							mb.nextBook = seriesBooks.content[book.number];
+						}
+			*/
 		}
 
 		//MB Book Item Creation
@@ -3105,12 +3114,12 @@
 			updatePWABar('black');
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
-			
+
 			rd.prevBook = await callAPI(`/api/v1/books/${rd.bookId}/previous`) || null;
 			rd.nextBook = await callAPI(`/api/v1/books/${rd.bookId}/next`) || null;
-			
-			if(!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
-			if(!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
+
+			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
+			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
 
 			console.log(rd.prevBook);
 			console.log(rd.nextBook);
@@ -3916,7 +3925,7 @@
 		}
 
 		function centerThumbWebtoon(fast = false) {
-		
+
 			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
 			// maybe each time the old and current spreads are updated I could call this function with old and current to
 			// remove one class and add the other...
@@ -4242,7 +4251,7 @@
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
-			console.log("JumpToSpread:"+targetSpreadIndex)
+			console.log("JumpToSpread:" + targetSpreadIndex)
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4251,18 +4260,18 @@
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
 
-			if (rd.nextBook != null){
+			if (rd.nextBook != null) {
 				if (targetSpreadIndex == spreadsTotal() - 1) {
 					nextBookPanel.classList.remove('hidden')
 				} else {
-					if(!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden')
+					if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden')
 				}
 			}
-			if (rd.prevBook != null){
+			if (rd.prevBook != null) {
 				if (targetSpreadIndex == 0) {
 					prevBookPanel.classList.remove('hidden')
 				} else {
-					if(!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden')
+					if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden')
 				}
 			}
 
