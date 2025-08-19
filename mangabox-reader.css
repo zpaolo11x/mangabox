@@ -586,6 +586,11 @@ div.single-page {
 	/*backdrop-filter: blur(15px);*/
 }
 
+#bottomControls {
+	border-bottom: var(--mb-card-color) solid env(safe-area-inset-bottom);
+	box-sizing: content-box;
+}
+
 #topControls {
 	padding-top: var(--mb-drag-bar-height)
 }
@@ -616,7 +621,7 @@ div.single-page {
 	height: calc(var(--mb-thumb-size-px) + 30px);
 	left: 0px;
 	right: 0px;
-	bottom: 60px;
+	bottom: calc(60px + env(safe-area-inset-bottom));
 	overflow-x: auto;
 	overflow-y: hidden;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
@@ -651,7 +656,7 @@ div.single-page {
 	width: 150px;
 	left: 0;
 	right: 0;
-	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px);
+	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px + env(safe-area-inset-bottom));
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 }
 

@@ -1,10 +1,5 @@
 :root {
 
-	--safe-area-top: env(safe-area-max-inset-top);
-	--safe-area-left: env(safe-area-max-inset-left);
-	--safe-area-right: env(safe-area-max-inset-right);
-	--safe-area-bottom: env(safe-area-max-inset-bottom);
-
 	--mb-h: 348;
 	--mb-s: 92%;
 	--mb-l: 38%;
