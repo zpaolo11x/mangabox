@@ -306,10 +306,10 @@
 			) || 0;
 		}
 
-		const sharpCornerUI = (getInset("--safe-area-top") == 0);
-
-		console.log("top inset:", getInset("--safe-area-top"));
-		console.log("bottom inset:", getInset("--safe-area-bottom"));
+		const sharpCornerUI = 	(getInset("--safe-area-top") == 0) 
+									&& (getInset("--safe-area-bottom") == 0)
+									&& (getInset("--safe-area-left") == 0)
+									&& (getInset("--safe-area-right") == 0);
 
 		//MB Manage Electron titlebar
 
