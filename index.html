@@ -300,19 +300,35 @@
 	<script src="auth.js"></script>
 
 	<script>
+		function isSharpCornerIphone() {
+			if (!/iPhone/.test(navigator.userAgent)) return false;
 
-		function getInset(name) {
-			return parseInt(
-				getComputedStyle(document.documentElement).getPropertyValue(name)
-			) || 0;
+			const ratio = window.devicePixelRatio || 1;
+			const width = Math.min(screen.width, screen.height) * ratio;
+			const height = Math.max(screen.width, screen.height) * ratio;
+
+			// List of iPhones with sharp corners (non-notch models)
+			const sharpCornerModels = [
+				// iPhone SE 2020 / SE 2022 / 8 / 7 / 6s / 6
+				{ w: 750, h: 1334 },
+				// iPhone SE (1st gen)
+				{ w: 640, h: 1136 },
+				// iPhone 8 Plus / 7 Plus / 6s Plus / 6 Plus
+				{ w: 1242, h: 2208 },
+			];
+
+			return sharpCornerModels.some(m =>
+				(m.w === width && m.h === height) || (m.h === width && m.w === height)
+			);
 		}
 
+		/*
+		const isPWA = window.matchMedia('(display-mode: standalone)').matches
+			|| window.navigator.standalone === true;
+		*/
+		
 		function sharpCornerUI() {
-			const cornerCheck = ((getInset("--safe-area-top") == 0) && (getInset("--safe-area-bottom") == 0) && (getInset("--safe-area-left") == 0) && (getInset("--safe-area-right") == 0))
-			//alert(getInset("--safe-area-top") +' '+ getInset("--safe-area-bottom") +' '+ getInset("--safe-area-left") +' '+ getInset("--safe-area-right"))
-			//alert(cornerCheck)
-			return (cornerCheck ? '' : 'viewport-fit=cover, '
-			);
+			return (isSharpCornerIphone() ? '' : 'viewport-fit=cover, ');
 		}
 
 		//MB Manage Electron titlebar
