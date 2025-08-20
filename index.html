@@ -251,17 +251,17 @@
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
+				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 			</div>
 
 			<div class="input-wrapper" title="Username">
 				<i class="fas fa-user"></i> <!-- Icon for username -->
-				<input type="text" class="login-input" id="loginUsername" placeholder="Username">
+				<input type="email" class="login-input" id="loginUsername" placeholder="Username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 			</div>
 
 			<div class="input-wrapper" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
-				<input type="password" class="login-input" id="loginPassword" placeholder="Password">
+				<input type="password" class="login-input" id="loginPassword" placeholder="Password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 			</div>
 
 			<div class="login-buttons">
@@ -326,7 +326,7 @@
 		const isPWA = window.matchMedia('(display-mode: standalone)').matches
 			|| window.navigator.standalone === true;
 		*/
-		
+
 		const isSharpCornerIphone = getSharpCornerIphone();
 
 		//MB Manage Electron titlebar

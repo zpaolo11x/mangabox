@@ -1,6 +1,8 @@
 Main UI
 - Add webtoon direction icon
 - Change naming from "Volume" to "Book"
+- Add support for safe areas on mobile devices
+- Improve login input fields
 
 Redaer UI
 - Support for webtoons reading
