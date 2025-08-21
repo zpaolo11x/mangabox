@@ -2878,7 +2878,7 @@
 			changeReaderTheme();
 
 			sectionShow(readerContainer);
-			
+
 			initViewer();
 
 		}
@@ -3146,9 +3146,6 @@
 
 			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
 			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
-
-			console.log(rd.prevBook);
-			console.log(rd.nextBook);
 
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
@@ -4277,7 +4274,6 @@
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
-			console.log("JumpToSpread:" + targetSpreadIndex)
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
