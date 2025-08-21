@@ -2733,7 +2733,7 @@
 			applyAccent();
 			// Apply first theme change
 			changeTheme();
-			changeReaderTheme();
+			//changeReaderTheme();
 			setIncognito(false);
 
 			buildLanguageList();
@@ -2821,6 +2821,8 @@
 
 			nextBook: null,
 			prevBook: null,
+
+			titleBarColor: 'black',
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
@@ -2873,7 +2875,10 @@
 
 			setThumbZoom(false, true);
 
+			changeReaderTheme();
+
 			sectionShow(readerContainer);
+			
 			initViewer();
 
 		}
@@ -2971,6 +2976,8 @@
 			readerTheme.title = mb.readerThemeControl[mb.readerThemePrefs].label;
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
+
+			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -3130,7 +3137,7 @@
 
 		// Initialize viewer with page data
 		async function initViewer() {
-			updatePWABar('black');
+			updatePWABar(rd.titleBarColor);
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
 
@@ -4358,7 +4365,7 @@
 			if (isSectionHidden(controlPanel)) {
 				updatePWABar();
 			} else {
-				updatePWABar('black');
+				updatePWABar(rd.titleBarColor);
 			}
 
 			sectionToggle(controlPanel);
