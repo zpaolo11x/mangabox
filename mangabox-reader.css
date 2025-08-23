@@ -860,7 +860,8 @@ div.single-page {
 }
 
 #nextBookPanel.blankstart,
-#prevBookPanel.blankstart{
+#prevBookPanel.blankstart,
+#incognitoMark.blankstart{
 	opacity:0;
 	transition: opacity 0.01s ease;
 }

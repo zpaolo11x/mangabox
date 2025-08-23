@@ -305,12 +305,6 @@ body {
 	gap: 5px;
 }
 
-#colorSwatchBar.blankstart,
-#filtersBar.blankstart,
-#bookDetailsContainer.blankstart {
-	opacity:0;
-	transition: opacity 0.01s ease;
-}
 
 #modalImage {
 	width: 100px;

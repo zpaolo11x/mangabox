@@ -1,0 +1,9 @@
+#nextBookPanel.blankstart,
+#prevBookPanel.blankstart,
+#incognitoMark.blankstart,
+#colorSwatchBar.blankstart,
+#filtersBar.blankstart,
+#bookDetailsContainer.blankstart{
+	opacity:0;
+	transition: opacity 0.01s ease;
+}
