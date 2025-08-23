@@ -308,7 +308,7 @@
 					.catch(err => console.error("Service Worker registration failed:", err));
 			});
 		}
-		
+
 		executeFade(1);
 
 		function getSharpCornerIphone() {
@@ -2675,10 +2675,10 @@
 		dashEntries.forEach(([name, item], index) => {
 			const isLast = dashEntries.length - 1 === index;
 
-			item.element = addItem('div', { className: 'home-strip-parent' });
-			const headerContainer = addItem('div', { className: 'strip-header-container' });
+			item.element = addItem('div', { className: 'home-strip-parent hidestrip' });
+			const headerContainer = addItem('div', { className: 'strip-header-container hidestrip' });
 			const stripHeader = addItem('div', {
-				className: 'strip-header',
+				className: 'strip-header hidestrip',
 				innerHTML: item.headerCode,
 			});
 			item.scrollBar = addItem('div', {
@@ -2718,6 +2718,7 @@
 			headerContainer.append(stripHeader, item.scrollBar, item.gridButton);
 			item.element.append(headerContainer, item.homeStrip);
 			homeStripsContainer.append(item.element);
+
 		});
 
 		// Open a whole series fetching all its books and showing them with the correct header
@@ -2758,6 +2759,10 @@
 			let series_data = null;
 			await fetchLibraries();
 			await loadContent();
+
+			document.querySelectorAll('.hidestrip').forEach(el => {
+				el.classList.remove('hidestrip');
+			});
 		}
 
 		//MB Reader Functions and Data

@@ -17,3 +17,4 @@ Fixes
 - Fix spacing on compact view
 - Fix thumbnails center jumps when zooming
 - Fix reader background showing at startup
+- Cleaner building of dashboard

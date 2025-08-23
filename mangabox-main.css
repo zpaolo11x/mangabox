@@ -1817,6 +1817,10 @@ span.mini-title {
 	transition: color 0.3s;
 }
 
+.hidestrip{
+	opacity: 0;
+}
+
 #blanker {
 	background: var(--mb-page-color);
 	position: fixed;
