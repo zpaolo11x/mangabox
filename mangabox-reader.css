@@ -39,9 +39,8 @@
 
 	--mb-gradient-1: 30;
 	--mb-gradient-2: 40;
-	--color1: rgba(140, 130, 120, 1);
-	--color2: rgba(30, 20, 0, 1);
-
+	--color1: transparent;
+	--color2: transparent;
 }
 
 
@@ -858,6 +857,12 @@ div.single-page {
 #controlPanel.hidden #thumbStripButtonWT,
 #readerContainer.hidden #thumbStripButtonWT {
 	right: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
+}
+
+#nextBookPanel.blankstart,
+#prevBookPanel.blankstart{
+	opacity:0;
+	transition: opacity 0.01s ease;
 }
 
 #nextBookPanel,

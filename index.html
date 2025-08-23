@@ -220,11 +220,11 @@
 					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 				</div>
 
-				<div id="nextBookPanel" class="modal-content hidden">
+				<div id="nextBookPanel" class="modal-content hidden blankstart">
 					<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
 				</div>
 
-				<div id="prevBookPanel" class="modal-content hidden">
+				<div id="prevBookPanel" class="modal-content hidden blankstart">
 					<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
 				</div>
 
@@ -2743,6 +2743,9 @@
 			changeTheme();
 			//changeReaderTheme();
 			setIncognito(false);
+
+			prevBookPanel.classList.remove('blankstart')
+			nextBookPanel.classList.remove('blankstart')
 
 			buildLanguageList();
 
