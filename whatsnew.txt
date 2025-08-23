@@ -1,5 +1,6 @@
 Main UI
 - Add webtoon direction icon
+- Add webtoon filtering direction
 - Change naming from "Volume" to "Book"
 - Add support for safe areas on mobile devices
 - Improve login input fields
