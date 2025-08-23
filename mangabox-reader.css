@@ -859,11 +859,13 @@ div.single-page {
 	right: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
 }
 
+/*
 #nextBookPanel.blankstart,
 #prevBookPanel.blankstart{
 	opacity:0;
 	transition: opacity 0.01s ease;
 }
+*/
 
 #nextBookPanel,
 #prevBookPanel{

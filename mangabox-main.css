@@ -1828,6 +1828,23 @@ span.mini-title {
 	pointer-events: none;
 }
 
+#blankerFull {
+	z-index: 15000;
+	background: var(--mb-card-color);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	opacity: 1;
+	pointer-events: none;
+}
+
+#blankerFull.hidden{
+	opacity: 0;
+	transition: opacity 0.5s ease 5s;
+}
+
 /* First reduction: only selected library is enlarged */
 body.sticky-medium #librariesRightBlock {
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 200px) var(--mb-button-size);

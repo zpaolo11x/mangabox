@@ -29,6 +29,8 @@
 </head>
 
 <body>
+	<div id="blankerFull"></div>
+
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -220,18 +222,18 @@
 					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 				</div>
 
-				<div id="nextBookPanel" class="modal-content hidden blankstart">
+				<div id="nextBookPanel" class="modal-content hidden">
 					<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
 				</div>
 
-				<div id="prevBookPanel" class="modal-content hidden blankstart">
+				<div id="prevBookPanel" class="modal-content hidden">
 					<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
 				</div>
 
 			</div>
 		</div>
 	</div>
-
+	
 	<div id="dragbar" class="draggable">
 		<img id="barLogo" src="mangabox-logo-16.svg">
 
@@ -2744,8 +2746,7 @@
 			//changeReaderTheme();
 			setIncognito(false);
 
-			prevBookPanel.classList.remove('blankstart')
-			nextBookPanel.classList.remove('blankstart')
+			blankerFull.classList.add('hidden');
 
 			buildLanguageList();
 
@@ -2833,7 +2834,7 @@
 			nextBook: null,
 			prevBook: null,
 
-			titleBarColor: 'black',
+			titleBarColor: 'red',
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
@@ -2989,7 +2990,7 @@
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
-			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
+			rd.titleBarColor = rd.webtoon ? 'red' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
