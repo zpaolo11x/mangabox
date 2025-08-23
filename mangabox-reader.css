@@ -860,14 +860,6 @@ div.single-page {
 	right: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
 }
 
-#controlPanel.hidden #nextBookPanel,
-#readerContainer.hidden #nextBookPanel,
-#controlPanel.hidden #prevBookPanel,
-#readerContainer.hidden #prevBookPanel{
-	opacity:0;
-	pointer-events: none;
-}
-
 #nextBookPanel,
 #prevBookPanel{
 	position: absolute;
@@ -876,6 +868,14 @@ div.single-page {
 	transform: translate(-50%, -50%);
 	transition: opacity 0.5s ease;
 	z-index:15;
+}
+
+#controlPanel.hidden #nextBookPanel,
+#readerContainer.hidden #nextBookPanel,
+#controlPanel.hidden #prevBookPanel,
+#readerContainer.hidden #prevBookPanel{
+	opacity:0;
+	pointer-events: none;
 }
 
 #nextBookButton, #prevBookButton {
