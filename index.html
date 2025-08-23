@@ -63,11 +63,11 @@
 				</ul>
 			</div>
 
-			<div id="filtersBar" class="extra-bar hidden">
+			<div id="filtersBar" class="extra-bar hidden blankstart">
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
 
-			<div id="colorSwatchBar" class="extra-bar hidden">
+			<div id="colorSwatchBar" class="extra-bar hidden blankstart">
 			</div>
 
 		</div>
@@ -108,7 +108,7 @@
 					<div id="homeStripBooksResults" class="books-results search-results"></div>
 				</div>
 
-				<div id="bookDetailsContainer" class="section hidden">
+				<div id="bookDetailsContainer" class="section hidden blankstart">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
 							<div class="mini-buttons-2 press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
@@ -137,7 +137,7 @@
 					</div>
 				</div>
 
-				<div id="blanker"></div>
+				<div id="blanker" style="opacity:1"></div>
 			</div>
 			<div class="scrollbox-scrollbar">
 				<div class="scrollbox-thumb"></div>
@@ -307,6 +307,8 @@
 					.catch(err => console.error("Service Worker registration failed:", err));
 			});
 		}
+		
+		executeFade(1);
 
 		function getSharpCornerIphone() {
 			if (!/iPhone/.test(navigator.userAgent)) return false;
@@ -2744,8 +2746,9 @@
 			//changeReaderTheme();
 			setIncognito(false);
 
-			prevBookPanel.classList.remove('blankstart')
-			nextBookPanel.classList.remove('blankstart')
+			document.querySelectorAll('.blankstart').forEach(el => {
+				el.classList.remove('blankstart');
+			});
 
 			buildLanguageList();
 
