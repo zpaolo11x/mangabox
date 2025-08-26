@@ -1,20 +1,11 @@
 Main UI
-- Add webtoon direction icon
-- Add webtoon filtering direction
-- Change naming from "Volume" to "Book"
-- Add support for safe areas on mobile devices
-- Improve login input fields
+- 
 
 Redaer UI
-- Support for webtoons reading
-- Add vertical thumb strip for webtoons
-- Add buttons to jump to previous or next book
+- 
 
 Build
-- Improve Android release builder
+- 
 
 Fixes
-- Fix spacing on compact view
-- Fix thumbnails center jumps when zooming
-- Fix reader background showing at startup
-- Cleaner building of dashboard
+- 
