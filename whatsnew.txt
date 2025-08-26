@@ -1,12 +1,20 @@
 Main UI
-- Improve touch events management
-- Redesign book details dialog
+- Add webtoon direction icon
+- Add webtoon filtering direction
+- Change naming from "Volume" to "Book"
+- Add support for safe areas on mobile devices
+- Improve login input fields
+
+Redaer UI
+- Support for webtoons reading
+- Add vertical thumb strip for webtoons
+- Add buttons to jump to previous or next book
 
 Build
-- Add Android build
-- Cleanup build workflow
-- Update documentation
+- Improve Android release builder
 
 Fixes
-- Fix unread books marker on Chrome for Android
-- Fix mini button triggering when invisible
+- Fix spacing on compact view
+- Fix thumbnails center jumps when zooming
+- Fix reader background showing at startup
+- Cleaner building of dashboard

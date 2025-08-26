@@ -154,13 +154,13 @@ jobs:
         run: |
           VERSION=$(jq -r .version capacitor.config.json)
           mv android/app/build/outputs/apk/debug/app-debug.apk \
-            android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-debug.apk
+            android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-Android-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: MangaBox-Android-${{ env.version }}
-          path: android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-debug.apk
+          path: android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-Android-debug.apk
 
   release:
     needs: [electron, web, android, version]
@@ -234,7 +234,6 @@ jobs:
           files: |
             dist/*/*
             webdeploy/MangaBox-${{ env.version }}-Web.zip
-            android/mangabox-${{ env.version }}-debug.apk
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
 

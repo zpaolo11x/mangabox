@@ -34,13 +34,14 @@
 		hsl(35, 15%, 100%)42%,
 		hsl(35, 15%, 100%)100%;
 
-	--mb-thumb-size: 150;
-	--mb-thumb-size-px: 150px;
+	--mb-thumb-size: 100;
+	--mb-thumb-size-px: 100px;
 
 	--mb-gradient-1: 30;
 	--mb-gradient-2: 40;
-	--color1: transparent;
-	--color2: transparent;
+	--color1: rgba(140, 130, 120, 1);
+	--color2: rgba(30, 20, 0, 1);
+
 }
 
 
@@ -67,19 +68,6 @@
 [data-theme-reader="black"] {
 	--color1: black;
 	--color2: black;
-}
-
-.hide-scrollbar {
-  /* Works in Firefox */
-  scrollbar-width: none;
-
-  /* Works in IE, Edge (legacy) */
-  -ms-overflow-style: none;
-
-  /* Works in Chrome, Safari, Edge (Chromium), Opera */
-}
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
 }
 
 #readerBackground {
@@ -144,12 +132,10 @@
 
 #webtoonContainer {
 	position:absolute;
-	top:0;
-	overflow:hidden;
-	bottom:0;
-	/*height:100vh;*/
+	top:0px;
+	overflow:scroll;
+	height:100vh;
 	box-sizing: border-box;
-	background: white;
 }
 
 #readerContainer {
@@ -167,9 +153,9 @@
 	flex-direction: column;
 	align-items: center;
 	background-color: var(--mb-page-color);
-	/*height: 100vh;*/
+	height: 100vh;
 	overflow: hidden;
-	/*box-shadow: inset green 0px 0px 15px;*/
+
 	background: none;
 }
 
@@ -197,7 +183,7 @@ img.page:not([src]) {
 */
 
 .webtoon-layout img.page {
-	display: block;
+		display: block;
 }
 
 .spread-layout img.page {
@@ -460,8 +446,7 @@ div.two-pages {
 
 }
 
-#readerViewer,
-#readerViewerWebtoon {
+#readerViewer {
 	background-position: center;
 	background-size: 10% 10%, 100% 100%, 100% 100%;
 
@@ -521,10 +506,11 @@ div.single-page {
 }
 */
 
-#readerViewer,
-#readerViewerWebtoon {
+#readerViewer {
 	position: absolute;
 
+	top: 50%;
+	left: 50%;
 	transform: translate(-50%, -50%);
 
 	box-sizing: content-box;
@@ -536,7 +522,7 @@ div.single-page {
 	align-items: center;
 	justify-content: center;
 
-	height: 100dvh;
+	height: 100vh;
 
 	background: none;
 	gap: 0px;
@@ -544,31 +530,16 @@ div.single-page {
 
 #readerContainer.hidden #readerViewer {
 	top: 200%;
-	left: 50%;
 	transition: top 0.3s ease;
-}
-
-#readerContainer.hidden #readerViewerWebtoon {
-	top: 50%;
-	left: 200%;
-	transition: left 0.3s ease;
 }
 
 #readerContainer:not(.hidden) #readerViewer {
 	top: 50%;
-	left: 50%;
-	transition: top 0.3s ease 0.5s, left 0.3s, border-width 0.3s ease, border-image-slice 0.3s ease;
-}
-
-#readerContainer:not(.hidden) #readerViewerWebtoon {
-	top: 50%;
-	left: 50%;
-	transition: top 0.3s, left 0.3s ease 0.5s, border-width 0.3s ease, border-image-slice 0.3s ease;
+	transition: top 0.3s ease 0.5s, left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease;
 }
 
 #bottomControls,
-#topControls,
-#zoomControls {
+#topControls {
 	display: grid;
 	align-items: center;
 	justify-content: center;
@@ -581,65 +552,28 @@ div.single-page {
 	/* rgba(250, 250, 250, 0.8);*/
 	/*z-index: 1003;*/
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
-	padding-left: calc(max(10px, var(--mb-button-safe-left)));
-	padding-right: calc(max(10px, var(--mb-button-safe-right)));
+	padding-left: 10px;
+	padding-right: 10px;
 	/*backdrop-filter: blur(15px);*/
-}
-
-#bottomControls {
-	border-bottom: var(--mb-card-color) solid env(safe-area-inset-bottom);
-	box-sizing: content-box;
 }
 
 #topControls {
 	padding-top: var(--mb-drag-bar-height)
 }
-/*
-#thumbStripScrollContent {
-	overflow-x: auto !important;
-	overflow-y: hidden !important;
-}
 
-#thumbStripScrollContentWT {
-	overflow-x: hidden !important;
-	overflow-y: auto !important;
-}
-*/
-
-#thumbStrip,
-#thumbStripWT {
+#thumbStrip {
 	position: fixed;
 
 	display: flex;
 	justify-content: left;
-
+	/*change to center*/
 	background-color: var(--mb-card-color);
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 }
 
-#thumbStrip{
-	height: calc(var(--mb-thumb-size-px) + 30px);
-	left: 0px;
-	right: 0px;
-	bottom: calc(60px + env(safe-area-inset-bottom));
-	overflow-x: auto;
-	overflow-y: hidden;
-	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
-}
-
-#thumbStripWT{
-	width: calc(var(--mb-thumb-size-px) + 30px);
-	top: 60px;
-	bottom: 60px;
-	right: 0px;
-	overflow-x: hidden;
-	overflow-y: auto;
-	transition: opacity 0.3s, top 0.3s, left 0.3s, right 0.3s, width 0.3s;
-}
 
 
-#thumbStripButton,
-#thumbStripButtonWT {
+#thumbStripButton {
 	position: fixed;
 
 
@@ -651,52 +585,18 @@ div.single-page {
 
 }
 
-#thumbStripButton{
-	height: 20px;
-	width: 150px;
-	left: 0;
-	right: 0;
-	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px + env(safe-area-inset-bottom));
-	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
-}
-
-#thumbStripButtonWT{
-	width: 20px;
-	height: 65px;
-	top: 60px;
-	bottom: 60px;
-	right: calc(var(--mb-thumb-size-px) + 10px);
-	transition: opacity 0.3s, left 0.3s, right 0.3s, bottom 0.3s;
-}
-
 .thumb-arrow {
 	font-size: 10px;
 }
 
-#thumbStripInner,
-#thumbStripInnerWT {
+#thumbStripInner {
 	display: flex;
 	padding: 0;
 	margin: 0;
+
 	/* Important! lets it grow as needed */
 
 	/*flex-direction: row-reverse;*/
-}
-
-#thumbStripInner{
-	flex-direction: row;
-	height: calc(var(--mb-thumb-size-px) + 10px);
-	margin-left: 50%;
-	margin-right: 50%;
-	width: max-content;
-}
-
-#thumbStripInnerWT{
-	flex-direction: column;
-	width: calc(var(--mb-thumb-size-px) + 10px);
-	margin-top: calc(50vh - 60px);
-	margin-bottom: calc(50vh - 60px);
-	height: max-content;
 }
 
 .spread-thumb {
@@ -714,18 +614,6 @@ div.single-page {
 	border-radius: 3px;
 }
 
-.spread-thumb:not(.webtoon){
-	top: 20px;
-	height: var(--mb-thumb-size-px);
-	transition: height 0.3s;
-}
-
-.spread-thumb.webtoon{
-	left: 20px;
-	width: var(--mb-thumb-size-px);
-	transition: width 0.3s;
-}
-
 .spread-thumb.current {
 	/*
 	margin-left:10px;
@@ -738,7 +626,7 @@ div.single-page {
 	/*position:absolute;*/
 	display: inline-block;
 	/*object-fit: contain;*/
-	transition: opacity 0.3s, height 0.3s, width 0.3s;
+	transition: opacity 0.3s, width 0.3s;
 }
 
 .page-thumb.hidden {
@@ -756,7 +644,8 @@ div.single-page {
 	top: 50%;
 	left: 50%;
 
-	aspect-ratio: 1 / 1;
+	width: 80px;
+	height: 80px;
 	transform: translate(-50%, -50%);
 
 	opacity: 0;
@@ -764,19 +653,10 @@ div.single-page {
 	border-radius: 50%;
 	border-top-color: var(--mb-accent);
 	background: conic-gradient(transparent 0deg, var(--mb-accent-a30) 180deg, var(--mb-accent) 300deg, transparent 360deg);
-	mask-image: radial-gradient(circle, transparent 45%, white 45%, white 100%);
-	-webkit-mask-image: radial-gradient(circle, transparent 45%, white 45%, white 100%);
+	mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
+	-webkit-mask-image: radial-gradient(circle, transparent 30px, white 30px, white 40px);
 	transition: opacity 0.5s;
 }
-
-.spread-thumb:not(.webtoon):has(.page-thumb)::before {
-	height: 60%;
-}
-
-.spread-thumb.webtoon:has(.page-thumb)::before {
-	width: 80%;
-}
-
 
 .spread-thumb:has(.page-thumb.loading)::before {
 	opacity: 1;
@@ -804,15 +684,6 @@ div.single-page {
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 }
 
-#zoomControls {
-	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) var(--mb-pill-width);
-	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
-	width:auto;
-	left:50%;
-	bottom:50%;
-	transform: translate(-50%, -50%);
-}
-
 #topControls {
 	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) 1fr var(--mb-pill-width) var(--mb-pill-width);
 	top: 0px;
@@ -833,64 +704,18 @@ div.single-page {
 }
 
 #controlPanel.hidden #bottomControls,
-#readerContainer.hidden #bottomControls,
-#controlPanel.hidden #zoomControls,
-#readerContainer.hidden #zoomControls {
+#readerContainer.hidden #bottomControls {
 	bottom: -100px;
 }
 
 #controlPanel.hidden #thumbStrip,
 #readerContainer.hidden #thumbStrip {
-	bottom: -600px;
-}
-
-#controlPanel.hidden #thumbStripWT,
-#readerContainer.hidden #thumbStripWT {
-	right: -600px;
+	left: -600px;
 }
 
 #controlPanel.hidden #thumbStripButton,
 #readerContainer.hidden #thumbStripButton {
-	bottom: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
-}
-
-#controlPanel.hidden #thumbStripButtonWT,
-#readerContainer.hidden #thumbStripButtonWT {
-	right: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
-}
-
-#nextBookPanel.blankstart,
-#prevBookPanel.blankstart,
-#incognitoMark.blankstart{
-	opacity:0;
-	transition: opacity 0.01s ease;
-}
-
-#nextBookPanel,
-#prevBookPanel{
-	position: absolute;
-	left:50%;
-	top:50%;
-	transform: translate(-50%, -50%);
-	transition: opacity 0.5s ease;
-	z-index:15;
-}
-
-#controlPanel.hidden #nextBookPanel,
-#readerContainer.hidden #nextBookPanel,
-#controlPanel.hidden #prevBookPanel,
-#readerContainer.hidden #prevBookPanel{
-	opacity:0;
-	pointer-events: none;
-}
-
-#nextBookButton, #prevBookButton {
-	margin-top:0px;
-}
-
-#nextBookPanel.hidden, #prevBookPanel.hidden{
-	opacity:0;
-	pointer-events: none;
+	left: calc(var(--mb-thumb-size-px) - 600px + 50px - 20px);
 }
 
 #bookName {
@@ -1038,8 +863,9 @@ div.single-page {
 	right: 0px;
 	top: 0px;
 	display: grid;
-	bottom: 0px;
-	/*box-shadow: inset green 0px 0px 15px;*/
+	width: 100vw;
+	height: 100vh;
+
 	grid-template-columns: 1fr 1.5fr 1fr;
 	/*z-index: 1002;*/
 
@@ -1053,9 +879,10 @@ div.single-page {
 #touchPanel.shrink {
 	top: 60px;
 	bottom: 180px;
+	height: calc(100vh - 60px - 180px);
 }
 
-/*
+
 #touchPanelWebtoon {
 	position: absolute;
 	left: 0px;
@@ -1066,6 +893,7 @@ div.single-page {
 	height: 100vh;
 
 	grid-template-rows: 1fr 1.5fr 1fr;
+	/*z-index: 1002;*/
 
 	box-sizing: border-box;
 	border-bottom: 5px solid transparent;
@@ -1073,8 +901,10 @@ div.single-page {
 	transition: border 0.3s;
 
 	border:5px fuchsia solid;
+
+	
 }
-*/
+
 #incognitoMark {
 	content: "";
 	position: fixed;

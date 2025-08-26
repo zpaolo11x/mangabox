@@ -1,0 +1,77 @@
+<html>
+
+<head>
+	<style>
+		#thumbStrip {
+			position: fixed;
+			left: 0;
+			top: 0;
+			right: 0;
+			box-sizing: border-box;
+			width: 100vw;
+			border: 4px solid green;
+			overflow-x: auto;
+		}
+
+		#thumbStripInner {
+			display: flex;
+			box-sizing: border-box;
+			width: max-content;
+			border: 1px solid red;
+			margin-left: 50%;
+			/*THIS IS THE SECRET*/
+			margin-right: 50%;
+		}
+
+		.thumb {
+			box-sizing: border-box;
+			width: 200px;
+			height: 200px;
+			border: 1px solid blue;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="thumbStrip">
+		<div id="thumbStripInner">
+			<div class="thumb">1</div>
+			<div class="thumb">2</div>
+			<div class="thumb">3</div>
+			<div class="thumb">4</div>
+			<div class="thumb">5</div>
+			<div class="thumb">6</div>
+			<div class="thumb">7</div>
+			<div class="thumb">8</div>
+			<div class="thumb">9</div>
+			<div class="thumb">10</div>
+		</div>
+	</div>
+</body>
+
+<script>
+	const strip = document.getElementById('thumbStrip');
+	const inner = document.getElementById('thumbStripInner');
+
+	strip.scrollLeft = strip.clientWidth / 2
+	
+	strip.addEventListener('scroll', () => {
+		const minScroll = strip.clientWidth / 2;
+		const maxScroll = inner.scrollWidth - (strip.clientWidth / 2);
+
+		if (strip.scrollLeft < minScroll) {
+			strip.scrollLeft = minScroll;
+		}
+		if (strip.scrollLeft > maxScroll) {
+			strip.scrollLeft = maxScroll;
+		}
+
+	});
+
+
+</script>
+
+</html>

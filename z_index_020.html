@@ -2844,7 +2844,7 @@
 			if (window.innerHeight - thumbHeight - 60 - 60 - 30 < 0) {
 				thumbHeight = window.innerHeight - 60 - 60 - 30;
 			}
-			document.documentElement.style.setProperty('--mb-thumb-height-px', thumbHeight + 'px');
+			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbHeight + 'px');
 
 			const newWidth = thumbStripInner.clientWidth;
 
@@ -3027,7 +3027,7 @@
 					src: 'transparent.png',
 					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
 					style: {
-						height: 'var(--mb-thumb-height-px)',
+						height: 'var(--mb-thumb-size-px)',
 						aspectRatio: isHidden ? '0.001' : pageData.AR,
 					}
 				}),

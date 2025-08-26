@@ -1,7 +1,7 @@
 {
 	"name": "MangaBox",
 	"short_name": "MangaBox",
-	"scope": "/",
+	"scope": "/mangabox/",
 	"start_url": "/mangabox/",
 	"display": "standalone",
 	"capture_links": "new-client",

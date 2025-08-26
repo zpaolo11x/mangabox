@@ -4,7 +4,7 @@
 <head>
 	<title>MangaBox</title>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="theme-color" content="black">
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
@@ -23,7 +23,6 @@
 
 	<link rel="stylesheet" href="fontawesome/all.min.css">
 
-	<link rel="stylesheet" href="mangabox-blankstart.css">
 	<link rel="stylesheet" href="mangabox-main.css">
 	<link rel="stylesheet" href="mangabox-reader.css">
 
@@ -64,11 +63,11 @@
 				</ul>
 			</div>
 
-			<div id="filtersBar" class="extra-bar hidden blankstart">
+			<div id="filtersBar" class="extra-bar hidden">
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
 
-			<div id="colorSwatchBar" class="extra-bar hidden blankstart">
+			<div id="colorSwatchBar" class="extra-bar hidden">
 			</div>
 
 		</div>
@@ -109,7 +108,7 @@
 					<div id="homeStripBooksResults" class="books-results search-results"></div>
 				</div>
 
-				<div id="bookDetailsContainer" class="section hidden blankstart">
+				<div id="bookDetailsContainer" class="section hidden">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
 							<div class="mini-buttons-2 press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
@@ -138,7 +137,7 @@
 					</div>
 				</div>
 
-				<div id="blanker" style="opacity:1"></div>
+				<div id="blanker"></div>
 			</div>
 			<div class="scrollbox-scrollbar">
 				<div class="scrollbox-thumb"></div>
@@ -149,25 +148,25 @@
 	<div id="readerContainer" class="section hidden">
 		<div id="readerBackground" class="hidden"></div>
 
-		<div id="readerViewer">
-		</div>
-
-		<div id="readerViewerWebtoon">
-			<div id="webtoonContainer" class="hide-scrollbar"></div>
-		</div>
+		<div id="readerViewer"></div>
 
 		<div id="readerOverlay">
-			<div id="incognitoMark" class="blankstart"></div>
+			<div id="incognitoMark"></div>
 
 			<div id="touchPanel">
 				<div id="toLeftPage"></div>
 				<div id="openMenu"></div>
 				<div id="toRightPage"></div>
 			</div>
-
+			<!--
+			<div id="touchPanelWebtoon">
+				<div id="toTopPage"></div>
+				<div id="openWebtoonMenu"></div>
+				<div id="toBottomPage"></div>
+			</div>
+		-->
 			<div id="controlPanel" class="hidden">
-
-				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
+				<div id="thumbStrip" class="scrollbox" data-scroll-direction="vertical">
 					<div id="thumbStripScrollContent" class="scrollbox-content">
 						<div id="thumbStripInner"></div>
 					</div>
@@ -181,20 +180,6 @@
 					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 				</div>
 
-				<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
-					<div id="thumbStripScrollContentWT" class="scrollbox-content">
-						<div id="thumbStripInnerWT"></div>
-					</div>
-					<div class="scrollbox-scrollbar">
-						<div class="scrollbox-thumb"></div>
-					</div>
-				</div>
-				<div id="thumbStripButtonWT">
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-				</div>
-
 				<div id="topControls">
 					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
 					<span></span>
@@ -202,13 +187,6 @@
 					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
-				<!--
-				<div id="zoomControls">
-					<span id="scale_1" title="1x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_3" title="3x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-				</div>
-				-->
 
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -220,15 +198,6 @@
 					<span id="rightLimit" class="bar-note press-button corner-left"></span>
 					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 				</div>
-
-				<div id="nextBookPanel" class="modal-content hidden blankstart">
-					<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
-				</div>
-
-				<div id="prevBookPanel" class="modal-content hidden blankstart">
-					<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
-				</div>
-
 			</div>
 		</div>
 	</div>
@@ -252,17 +221,17 @@
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
+				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Base URL (e.g., https://komga.example.com)">
 			</div>
 
 			<div class="input-wrapper" title="Username">
 				<i class="fas fa-user"></i> <!-- Icon for username -->
-				<input type="email" class="login-input" id="loginUsername" placeholder="Username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
+				<input type="text" class="login-input" id="loginUsername" placeholder="Username">
 			</div>
 
 			<div class="input-wrapper" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
-				<input type="password" class="login-input" id="loginPassword" placeholder="Password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+				<input type="password" class="login-input" id="loginPassword" placeholder="Password">
 			</div>
 
 			<div class="login-buttons">
@@ -301,44 +270,7 @@
 	<script src="auth.js"></script>
 
 	<script>
-		if ("serviceWorker" in navigator) {
-			window.addEventListener("load", () => {
-				navigator.serviceWorker.register("/sw.js")
-					.then(reg => console.log("Service Worker registered:", reg.scope))
-					.catch(err => console.error("Service Worker registration failed:", err));
-			});
-		}
 
-		executeFade(1);
-
-		function getSharpCornerIphone() {
-			if (!/iPhone/.test(navigator.userAgent)) return false;
-
-			const ratio = window.devicePixelRatio || 1;
-			const width = Math.min(screen.width, screen.height) * ratio;
-			const height = Math.max(screen.width, screen.height) * ratio;
-
-			// List of iPhones with sharp corners (non-notch models)
-			const sharpCornerModels = [
-				// iPhone SE 2020 / SE 2022 / 8 / 7 / 6s / 6
-				{ w: 750, h: 1334 },
-				// iPhone SE (1st gen)
-				{ w: 640, h: 1136 },
-				// iPhone 8 Plus / 7 Plus / 6s Plus / 6 Plus
-				{ w: 1242, h: 2208 },
-			];
-
-			return sharpCornerModels.some(m =>
-				(m.w === width && m.h === height) || (m.h === width && m.w === height)
-			);
-		}
-
-		/*
-		const isPWA = window.matchMedia('(display-mode: standalone)').matches
-			|| window.navigator.standalone === true;
-		*/
-
-		const isSharpCornerIphone = getSharpCornerIphone();
 
 		//MB Manage Electron titlebar
 
@@ -797,10 +729,8 @@
 			if (scrollbox.dataset.scrollbarInitialized) return;
 			scrollbox.dataset.scrollbarInitialized = 'true';
 
-			// Get direction dynamically
-			function isHorizontal() {
-				return (scrollbox.dataset.scrollDirection || 'vertical') === 'horizontal';
-			}
+			const direction = scrollbox.dataset.scrollDirection || 'vertical';
+			const isHorizontal = direction === 'horizontal';
 
 			const content = scrollbox.querySelector('.scrollbox-content');
 			const scrollbar = scrollbox.querySelector('.scrollbox-scrollbar');
@@ -817,10 +747,9 @@
 			}
 
 			function updateScrollbarThumb() {
-				const horizontal = isHorizontal();
-				const total = horizontal ? content.scrollWidth : content.scrollHeight;
-				const visible = horizontal ? content.clientWidth : content.clientHeight;
-				const scroll = horizontal ? content.scrollLeft : content.scrollTop;
+				const total = isHorizontal ? content.scrollWidth : content.scrollHeight;
+				const visible = isHorizontal ? content.clientWidth : content.clientHeight;
+				const scroll = isHorizontal ? content.scrollLeft : content.scrollTop;
 
 				const scrollable = total > visible;
 
@@ -834,28 +763,26 @@
 
 				const margin = 10;
 
-				let thumbSize = Math.max((visible / total) * visible, 30);
+				let scrollbarThumbSize = Math.max((visible / total) * visible, 30);
 				let midBoxRate = (scroll / (total - visible));
-				let thumbPos = margin + midBoxRate * (visible - 2 * margin - thumbSize);
+				let scrollbarThumbPos = margin + midBoxRate * (visible - 2 * margin - scrollbarThumbSize);
 
-				if (horizontal) {
-					thumb.style.width = thumbSize + 'px';
-					thumb.style.left = thumbPos + 'px';
-					thumb.style.height = ''; // reset opposite axis
-					thumb.style.top = '';
+				if (isHorizontal) {
+					thumb.style.width = scrollbarThumbSize + 'px';
+					thumb.style.left = scrollbarThumbPos + 'px';
 				} else {
-					thumb.style.height = thumbSize + 'px';
-					thumb.style.top = thumbPos + 'px';
-					thumb.style.width = ''; // reset opposite axis
-					thumb.style.left = '';
+					thumb.style.height = scrollbarThumbSize + 'px';
+					thumb.style.top = scrollbarThumbPos + 'px';
 				}
 			}
+
 
 			content.addEventListener('scroll', () => {
 				updateScrollbarThumb();
 				showScrollbarTemporarily();
 			});
 
+			//TODO Verifica bene che mouseenter al posto di pointerenter non dia problemi!
 			scrollbox.addEventListener('mouseenter', () => {
 				updateScrollbarThumb();
 				showScrollbarTemporarily();
@@ -867,9 +794,8 @@
 
 			thumb.addEventListener('mousedown', (e) => {
 				isDragging = true;
-				const horizontal = isHorizontal();
-				startPos = horizontal ? e.clientX : e.clientY;
-				startThumbPos = parseInt(thumb.style[horizontal ? 'left' : 'top']) || 0;
+				startPos = isHorizontal ? e.clientX : e.clientY;
+				startThumbPos = parseInt(thumb.style[isHorizontal ? 'left' : 'top']) || 0;
 				document.body.style.userSelect = 'none';
 				scrollbar.classList.add('visible');
 				clearTimeout(fadeTimeout);
@@ -877,12 +803,11 @@
 
 			document.addEventListener('mousemove', (e) => {
 				if (!isDragging) return;
-				const horizontal = isHorizontal();
-				const delta = (horizontal ? e.clientX : e.clientY) - startPos;
-				const trackSize = horizontal ? content.clientWidth : content.clientHeight;
-				const newThumbPos = Math.min(trackSize - (horizontal ? thumb.offsetWidth : thumb.offsetHeight), Math.max(0, startThumbPos + delta));
+				const delta = (isHorizontal ? e.clientX : e.clientY) - startPos;
+				const trackSize = isHorizontal ? content.clientWidth : content.clientHeight;
+				const newThumbPos = Math.min(trackSize - (isHorizontal ? thumb.offsetWidth : thumb.offsetHeight), Math.max(0, startThumbPos + delta));
 				const scrollRatio = newThumbPos / trackSize;
-				if (horizontal) {
+				if (isHorizontal) {
 					content.scrollLeft = scrollRatio * content.scrollWidth;
 				} else {
 					content.scrollTop = scrollRatio * content.scrollHeight;
@@ -908,7 +833,6 @@
 			scrollbox.refreshScrollbar = updateScrollbarThumb;
 			updateScrollbarThumb();
 		}
-
 
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
@@ -1132,18 +1056,13 @@
 						name: 'l_to_r',
 						caption: 'L to R',
 						iconClass: 'fa-solid fa-arrow-right glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
+						filterFunction: (a) => (a.mbSeriesLTR == true)
 
 					}, {
 						name: 'r_to_l',
 						caption: 'R to L',
 						iconClass: 'fa-solid fa-arrow-left glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
-					}, {
-						name: 'webtoon',
-						caption: 'WToon',
-						iconClass: 'fa-solid fa-arrow-down glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
+						filterFunction: (a) => (a.mbSeriesLTR == false)
 					}
 				],
 			},
@@ -1384,18 +1303,17 @@
 			if (!metaViewport) return;
 
 			// Disable zoom temporarily
-			metaViewport.content = `width=device-width, ${isSharpCornerIphone ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no`;
+			metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no';
 
 			// Wait for two animation frames to ensure the change takes effect
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
 					// Now restore zoom capability
-					metaViewport.content = `width=device-width, ${isSharpCornerIphone ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=5, minimum-scale=1`;
+					metaViewport.content = 'width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1';
 				});
 			});
 		}
 
-		fixZoomOnPWA()
 
 		window.addEventListener('orientationchange', fixZoomOnPWA);
 		document.addEventListener('visibilitychange', fixZoomOnPWA);
@@ -1799,7 +1717,7 @@
 
 			item.mbSeriesRead = (unreadCount == 0);
 			//TODO This is for filtering purposes, to fix
-			item.mbSeriesDirection = (serie.metadata.readingDirection);
+			item.mbSeriesLTR = (serie.metadata.readingDirection == 'LEFT_TO_RIGHT');
 			item.mbSeriesLanguage = serie.metadata.language;
 
 			seriesItem.append(
@@ -2242,7 +2160,7 @@
 				${serie.metadata.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "book" : "books"}) - ${creditString}</span>
+					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "volume" : "volumes"}) - ${creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
@@ -2304,26 +2222,22 @@
 			bookDetailsSummary.style.opacity = 1;
 
 			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
-			/*
 			const seriesBooks = await callAPI(
 				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
 			);
-			*/
 
 			mb.seriesData = seriesData;
 			mb.currentBook = book;
-			mb.prevBook = await callAPI(`/api/v1/books/${book.id}/previous`) || null;
-			mb.nextBook = await callAPI(`/api/v1/books/${book.id}/next`) || null;
+			mb.prevBook = null;
+			mb.nextBook = null;
 
-			/*
-						if (book.number > 1) {
-							mb.prevBook = seriesBooks.content[book.number - 2];
-						}
-						if (book.number < seriesData.booksCount) {
-							mb.nextBook = seriesBooks.content[book.number];
-						}
-			*/
+			if (book.number > 1) {
+				mb.prevBook = seriesBooks.content[book.number - 2];
+			}
+			if (book.number < seriesData.booksCount) {
+				mb.nextBook = seriesBooks.content[book.number];
+			}
 		}
 
 		//MB Book Item Creation
@@ -2344,7 +2258,7 @@
 			if (format == 'longname') {
 				mainRow.classList.add('book-row');
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Book ${book.metadata.number}`,
+					innerHTML: `Volume ${book.metadata.number}`,
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
@@ -2369,7 +2283,7 @@
 				secondRow.textContent = book.metadata.title;
 			} else if (format == 'compact') {
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Book ${book.metadata.number}`
+					innerHTML: `Volume ${book.metadata.number}`
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
@@ -2385,7 +2299,7 @@
 					: '';
 
 				const volumeNumberLabelShort = addItem('span', {
-					innerHTML: `Bk.${book.metadata.number}`
+					innerHTML: `Vol.${book.metadata.number}`
 				});
 				const timeLabel = addItem('span', {
 					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
@@ -2675,10 +2589,10 @@
 		dashEntries.forEach(([name, item], index) => {
 			const isLast = dashEntries.length - 1 === index;
 
-			item.element = addItem('div', { className: 'home-strip-parent hidestrip' });
-			const headerContainer = addItem('div', { className: 'strip-header-container hidestrip' });
+			item.element = addItem('div', { className: 'home-strip-parent' });
+			const headerContainer = addItem('div', { className: 'strip-header-container' });
 			const stripHeader = addItem('div', {
-				className: 'strip-header hidestrip',
+				className: 'strip-header',
 				innerHTML: item.headerCode,
 			});
 			item.scrollBar = addItem('div', {
@@ -2718,7 +2632,6 @@
 			headerContainer.append(stripHeader, item.scrollBar, item.gridButton);
 			item.element.append(headerContainer, item.homeStrip);
 			homeStripsContainer.append(item.element);
-
 		});
 
 		// Open a whole series fetching all its books and showing them with the correct header
@@ -2745,12 +2658,8 @@
 			applyAccent();
 			// Apply first theme change
 			changeTheme();
-			//changeReaderTheme();
+			changeReaderTheme();
 			setIncognito(false);
-
-			document.querySelectorAll('.blankstart').forEach(el => {
-				el.classList.remove('blankstart');
-			});
 
 			buildLanguageList();
 
@@ -2759,10 +2668,6 @@
 			let series_data = null;
 			await fetchLibraries();
 			await loadContent();
-
-			document.querySelectorAll('.hidestrip').forEach(el => {
-				el.classList.remove('hidestrip');
-			});
 		}
 
 		//MB Reader Functions and Data
@@ -2773,7 +2678,7 @@
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
-			preloadCount: 15,			// TODO SET BACK TO 15 Image preload count
+			preloadCount: 5,			// TODO SET BACK TO 15 Image preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
 			jumpTimeout: null,		// Timeout counter for jumping to spreads
@@ -2784,9 +2689,6 @@
 			direction: null,
 			webtoon: null,
 			webtoonScroll: false,
-			webtoonScrollRatio: 0,
-			webtoonResizeTimeout: null,
-
 			rtl: null,
 			currentPage: 0,
 			pagesDataArray: [],		// this is the array of pages data in the form url, iscover etc
@@ -2798,7 +2700,7 @@
 			isDraggingProgressBar: false,
 
 			thumbZoom: false,
-			thumbPosRatio: 0,
+			thumbSize: 0,
 
 			libraryId: 0,
 			seriesId: 0,
@@ -2839,21 +2741,17 @@
 			realFirstPage: 0,
 			realLastPage: 0,
 
-			nextBook: null,
-			prevBook: null,
-
-			titleBarColor: 'black',
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
-		function navigateToReadBook(book, readingDirection, force = false) {
+		function navigateToReadBook(book, readingDirection) {
 			setIncognito(false);
 			navigateTo(`#bookread
 						?library_id=${book.libraryId}
 						&series_id=${book.seriesId}
 						&book_id=${book.id}
 						&dir=${readingDirection}
-						&pag=${force ? 1 : (book.readProgress ? book.readProgress.page : 1)}`);
+						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
 		}
 
 		// Function that setups the reader for a specific book, this is not run directly
@@ -2870,7 +2768,6 @@
 			rd.direction = dir;
 			rd.webtoon = (dir == 'WEBTOON');
 			rd.webtoonScroll = false;
-			rd.webtoonScrollRatio = 0;
 			rd.rtl = (dir == 'RIGHT_TO_LEFT');
 
 			rd.currentPage = pag;
@@ -2888,15 +2785,11 @@
 
 			rd.spreadFocus = 'focus-center';
 
-			//readerViewer.innerHTML = '';
-			thumbStripShowHide();
+			readerViewer.innerHTML = '';
+
+			setThumbZoom(false);
 
 			dragbarOnReader();
-
-			setThumbZoom(false, true);
-
-			changeReaderTheme();
-
 			sectionShow(readerContainer);
 
 			initViewer();
@@ -2939,14 +2832,9 @@
 				});
 			});
 			rd.spreadsArray = [];
-
-			webtoonContainer.removeAttribute('style');
-			sectionHide(readerContainer);
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
-			if (rd.webtoon) return
-
 			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.turnScrollTime, rd.turnScrollDelay] : [rd.scrollSpeed, 0]);
 
 			readerViewer.animate(
@@ -2998,8 +2886,6 @@
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
-			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
-
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
 		}
@@ -3026,43 +2912,36 @@
 			setIncognito(!rd.incognito);
 		})
 
+		//TODO Maybe change this to a resize observer?
 		window.addEventListener('resize', () => {
 			if (rd.webtoon) webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 		});
 
-		function setThumbZoom(status, init = false) {
-
-			if ((!init) && (rd.thumbZoom == status)) return;
-
+		function setThumbZoom(status) {
+			//TODO Because of the observer maybe not all these changes is needed
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
-			scrollContent = rd.webtoon ? thumbStripScrollContentWT : thumbStripScrollContent;
-			inner = rd.webtoon ? thumbStripInnerWT : thumbStripInner
-
 
 			rd.thumbZoom = status;
-			rd.thumbPosRatio = scrollContent[scrollRef] / inner[clientSize]
+			rd.thumbSize = thumbStripInner[clientSize];
 
+			thumbStripScrollContent.style.overflow = 'hidden';
 
-			scrollContent.style.overflowX = 'hidden';
-			scrollContent.style.overflowY = 'hidden';
+			const oldSize = thumbStripInner[clientSize];
 
-			const oldSize = inner[clientSize];
-
-			let thumbSize = rd.webtoon ? (status ? 120 : 80) : (status ? 300 : 150);
+			let thumbSize = rd.webtoon ? (status ? 150 : 100) : (status ? 300 : 150);
 
 			if (!rd.webtoon) {
 				if (window.innerHeight - thumbSize - 60 - 60 - 30 < 0) {
 					thumbSize = window.innerHeight - 60 - 60 - 30;
 				}
 			}
+
 			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbSize + 'px');
 
-			setTimeout(() => {
-				scrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
-				scrollContent.style.overflowY = rd.webtoon ? 'auto' : 'hidden';
-			}, 500);
-
+			const newSize = thumbStripInner[clientSize];
+			const scrollScaler = newSize / oldSize;
+			thumbStripScrollContent[scrollRef] = thumbStripScrollContent[scrollRef] * scrollScaler;
 		}
 
 		thumbStripButton.addEventListener('click', () => {
@@ -3070,26 +2949,24 @@
 		});
 		addPressEvents(thumbStripButton, scaleDown, scaleUp);
 
-		thumbStripButtonWT.addEventListener('click', () => {
-			setThumbZoom(!rd.thumbZoom);
-		});
-		addPressEvents(thumbStripButtonWT, scaleDown, scaleUp);
-
-		//TODO This code is flexible and usable for both, an alternative is splitting all the code for the two WT and !WT
-
 		const resizeObserver = new ResizeObserver(entries => {
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
 			scrollRef = rd.webtoon ? 'scrollTop' : 'scrollLeft';
-			scrollContent = rd.webtoon ? thumbStripScrollContentWT : thumbStripScrollContent;
-			inner = rd.webtoon ? thumbStripInnerWT : thumbStripInner
-
+			
 			for (let entry of entries) {
-				scrollContent[scrollRef] = rd.thumbPosRatio * (inner[clientSize])
+				const oldSize = rd.thumbSize;
+				const newSize = thumbStripInner[clientSize];
+				const scrollScaler = newSize / oldSize;
+				thumbStripScrollContent[scrollRef] = thumbStripScrollContent[scrollRef] * scrollScaler;
+				rd.thumbSize = newSize;
 			}
 		});
 
 		resizeObserver.observe(thumbStripInner);
-		resizeObserver.observe(thumbStripInnerWT);
+
+		thumbStripInner.addEventListener('transitionend', () => {
+			thumbStripScrollContent.style.overflow = 'auto';
+		});
 
 		function updateProgressBar(currentSpreadIndex = rd.currentSpreadIndex) {
 			const progressPercent = (currentSpreadIndex / (spreadsTotal() - 1)) * 100;
@@ -3147,27 +3024,11 @@
 			bookName.innerText = `${bookData.seriesTitle} Vol.${bookData.metadata.number} (${bookData.metadata.title})`
 		}
 
-		function webtoonRatio() {
-			return (webtoonContainer.scrollTop + webtoonContainer.clientHeight * 0.5) / webtoonContainer.scrollHeight
-		}
-
-		function thumbStripShowHide() {
-			thumbStrip.style.display = thumbStripButton.style.display = rd.webtoon ? 'none' : '';
-			thumbStripWT.style.display = thumbStripButtonWT.style.display = rd.webtoon ? '' : 'none';
-		}
-
 		// Initialize viewer with page data
 		async function initViewer() {
-			updatePWABar(rd.titleBarColor);
+			updatePWABar('black');
 
 			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
-
-			rd.prevBook = await callAPI(`/api/v1/books/${rd.bookId}/previous`) || null;
-			rd.nextBook = await callAPI(`/api/v1/books/${rd.bookId}/next`) || null;
-
-			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
-			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
-
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
 			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
@@ -3185,20 +3046,6 @@
 			initReaderUI(pagesData, bookData)
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
-
-			if (rd.webtoon) {
-				rd.webtoonScrollRatio = webtoonRatio()
-			}
-
-			setTimeout(() => {
-				webtoonContainer.style.overflow = 'auto';
-				//thumbStripScrollContent.style.overflowX = 'auto';
-				//thumbStripScrollContent.style.overflowY = 'hidden';
-				//thumbStripScrollContentWT.style.overflowX = 'hidden';
-				//thumbStripScrollContentWT.style.overflowY = 'auto';
-
-			}, 500);
-
 		}
 
 		function buildSize(item, ratio) {
@@ -3271,7 +3118,7 @@
 					//uiShadowR: addItem('div', { className: 'page-shadow-right' }),
 					//uiLightL: addItem('div', { className: 'page-light-left' }),
 					//uiLightR: addItem('div', { className: 'page-light-right' }),
-					uiThumb: addItem('div', { className: 'webtoon spread-thumb' }),
+					uiThumb: addItem('div', { className: 'spread-thumb' }),
 					pageObjL: spreadPages ?? null,
 					//pageObjR: spreadPages['right'] ?? null,
 
@@ -3306,14 +3153,10 @@
 					alt: (isBlank || isHidden) ? '' : pageData.pageNum,
 					src: 'transparent.png',
 					lazySrc: (isBlank || isHidden) ? '' : pageData.thumb,
-					style: rd.webtoon ?
-						{
-							width: 'var(--mb-thumb-size-px)',
-							aspectRatio: isHidden ? '0.001' : pageData.AR,
-						} : {
-							height: 'var(--mb-thumb-size-px)',
-							aspectRatio: isHidden ? '0.001' : pageData.AR,
-						}
+					style: {
+						width: 'var(--mb-thumb-size-px)',
+						aspectRatio: isHidden ? '0.001' : pageData.AR,
+					}
 				}),
 				hasSrc: (isBlank || isHidden) ? true : false,
 				lazySrc: (isBlank || isHidden) ? '' : pageData.url,
@@ -3362,6 +3205,15 @@
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
 
+			//TODO ADD THE OPPOSITE CODE IN THE OTHER fetchPages function
+			//TODO MAYBE NOT USED ANYMORE?
+			if (!readerViewer.classList.contains('webtoon')) {
+				readerContainer.classList.add('webtoon');
+				readerViewer.classList.add('webtoon');
+			}
+
+			const webtoonScale = 0.5;
+
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
 				.reduce((sum, width) => sum + width, 0) / komgaPageData.length) + 'px';
@@ -3369,8 +3221,6 @@
 			readerViewer.style.height = webtoonScale * (komgaPageData.map(item => ((item.height)))
 				.reduce((sum, width) => sum + width, 0)) + 'px';
 			*/
-			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
-			thumbStripInnerWT.style.flexDirection = 'column';
 
 			const pageData = komgaPageData.map(page => ({
 				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
@@ -3384,12 +3234,6 @@
 				size: page.sizeBytes
 			}));
 
-			let imageWidth = pageData[0].width;
-			let screenWidth = readerContainer.clientWidth;
-
-			let webtoonScale = 1.0;
-			if (screenWidth < imageWidth) webtoonScale = screenWidth / imageWidth;
-
 			let i_page = 0; 		// Index of komga page data
 			let realPage = 1;		// Index of real page
 
@@ -3399,6 +3243,13 @@
 
 			rd.realFirstPage = '1';
 
+			//TODO Place this in a larger scope?
+			let webtoonContainer = addItem('div', {
+				id: 'webtoonContainer'
+			});
+			webtoonContainer.addEventListener('click', () => {
+				toggleMenu();
+			})
 			while (i_page < pageData.length) {
 				let spreadObject = null;
 
@@ -3407,9 +3258,11 @@
 				// these are two normal pages
 				const page1 = buildPageObject(pageData[i_page]);
 
-				page1.uiPage.style.width = `calc(min(${pageData[i_page].width}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
-				page1.uiPage.style.height = `calc(min(${pageData[i_page].width / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
+				page1.uiPage.style.width = webtoonScale * pageData[i_page].width + "px";
+				page1.uiPage.style.height = webtoonScale * pageData[i_page].height + "px";
 
+				page1.uiPage.lazySrc = page1.lazySrc; //TODO ADD LAZYSRC FOR WEBTOON PAGES WHILE WE IMPLEMENT BACKLOADING
+				addLazyLoading(page1.uiPage);
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
 				spreadObject = buildSpreadObject('webtoon-page', page1, pageData[i_page].pageNum, pageNum1);
@@ -3457,16 +3310,19 @@
 
 				const localSpread = index;
 
-				spreadObject.uiThumb.addEventListener('pointerup', () => {
+				spreadObject.uiThumb.addEventListener('click', () => {
 					jumpToSpread(localSpread);
 				});
-				thumbStripInnerWT.append(spreadObject.uiThumb);
+				thumbStripInner.append(spreadObject.uiThumb);
 
 			});
+
+			readerViewer.append(webtoonContainer);
 		}
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
+			readerViewer.classList.remove('webtoon');
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
@@ -3681,7 +3537,7 @@
 
 				const localSpread = index;
 
-				spreadObject.uiThumb.addEventListener('pointerup', () => {
+				spreadObject.uiThumb.addEventListener('click', () => {
 					jumpToSpread(localSpread);
 				});
 				thumbStripInner.append(spreadObject.uiThumb);
@@ -3820,11 +3676,6 @@
 			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
 			const newSpread = rd.currentSpreadIndex + delta;
 
-			if (rd.webtoon) {
-				jumpToSpread(newSpread);
-				return
-			}
-
 			if (rd.pageTurning === direction) return;
 			if (newSpread < 0 || newSpread > spreadsTotal()) return;
 			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
@@ -3919,7 +3770,7 @@
 			clearAllTimeouts();
 		}
 
-		// Thumbnail scrolling functions
+				// Thumbnail scrolling functions
 		function thumbSmoothScrollWebtoon(container, targetScrollTop, duration = 500) {
 			const start = container.scrollTop;
 			const change = targetScrollTop - start;
@@ -3969,27 +3820,26 @@
 		}
 
 		function centerThumbWebtoon(fast = false) {
-
 			//TODO this is a bit overkill, maybe simplify this as it was before? but it wasn't working on seek
 			// maybe each time the old and current spreads are updated I could call this function with old and current to
 			// remove one class and add the other...
 
-			Array.from(thumbStripInnerWT.children).forEach(element => {
+			Array.from(thumbStripInner.children).forEach(element => {
 				element.classList.remove('current');
 			});
 
-			const targetElement = thumbStripInnerWT.children[rd.currentSpreadIndex]; // n-th element (0-based index)
+			const targetElement = thumbStripInner.children[rd.currentSpreadIndex]; // n-th element (0-based index)
 
 			if (targetElement) {
-				const targetScrollTop = -thumbStripScrollContentWT.clientHeight / 2 + targetElement.offsetTop - thumbStripScrollContentWT.offsetTop + targetElement.clientHeight / 2;
+				const targetScrollTop = -thumbStripScrollContent.clientHeight / 2 + targetElement.offsetTop - thumbStripScrollContent.offsetTop + targetElement.clientHeight / 2;
 
 				if (!fast) {
-					thumbSmoothScrollWebtoon(thumbStripScrollContentWT, targetScrollTop, 300);
+					thumbSmoothScrollWebtoon(thumbStripScrollContent, targetScrollTop, 300);
 				} else {
-					thumbStripScrollContentWT.scrollTop = targetScrollTop;
+					thumbStripScrollContent.scrollTop = targetScrollTop;
 				};
 
-				thumbStripInnerWT.children[rd.currentSpreadIndex].classList.add('current');
+				thumbStripInner.children[rd.currentSpreadIndex].classList.add('current');
 			}
 		}
 
@@ -4294,7 +4144,8 @@
 			return rd.rtl ? 'focus-right-page' : 'focus-left-page';
 		}
 
-		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
+		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false) {
+
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4302,21 +4153,6 @@
 
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
-
-			if (rd.nextBook != null) {
-				if (targetSpreadIndex == spreadsTotal() - 1) {
-					nextBookPanel.classList.remove('hidden')
-				} else {
-					if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden')
-				}
-			}
-			if (rd.prevBook != null) {
-				if (targetSpreadIndex == 0) {
-					prevBookPanel.classList.remove('hidden')
-				} else {
-					if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden')
-				}
-			}
 
 			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
 
@@ -4331,13 +4167,14 @@
 
 			if (isSectionHidden(readerContainer)) return;
 
+
 			populateSpread(localNewSpreadIndex);
 
 			// TODO
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
 			// This adds a slight delay when jumping cover to cover
-			spreadSetFocusSmoothDelay(targetSpreadFocus);
+			if (!rd.webtoon) spreadSetFocusSmoothDelay(targetSpreadFocus);
 
 			spreadShow(localNewSpreadIndex);
 
@@ -4346,23 +4183,15 @@
 
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 
-			if (rd.webtoon && !smoothWebtoon) {
+			if (rd.webtoon) {
 				rd.webtoonScroll = true;
-
-				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
-				const parent = el.parentElement;
-				const offsetTop = el.offsetTop + 1; // 1px extra upwards
-
-				parent.scrollTo({
-					top: offsetTop,
-					behavior: 'smooth'
+				rd.spreadsArray[targetSpreadIndex].uiItem.scrollIntoView({
+					behavior: 'smooth',
 				});
-
 				setTimeout(() => {
 					rd.webtoonScroll = false;
 				}, 500);
 			}
-
 
 			updateProgressBar();
 
@@ -4370,21 +4199,11 @@
 		}
 
 		function jumpToSpreadSkipHistory(targetSpreadIndex) {
-			jumpToSpread(targetSpreadIndex, null, true, false)
-		}
-
-		function jumpToSpreadSmoothWebtoon(targetSpreadIndex) {
-			jumpToSpread(targetSpreadIndex, null, false, true)
+			jumpToSpread(targetSpreadIndex, null, true)
 		}
 
 		// Reader UI Control Buttons
 		function toggleMenu() {
-			if (isSectionHidden(controlPanel)) {
-				updatePWABar();
-			} else {
-				updatePWABar(rd.titleBarColor);
-			}
-
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
 		}
@@ -4483,40 +4302,22 @@
 
 			switch (event.key) {
 				case 'ArrowLeft':
-					if (readerVisible && !rd.webtoon) {
-						event.preventDefault();
-						handleLeftArrow();
-					}
+					if (readerVisible) !rd.webtoon ? handleLeftArrow() : handleCloseReader();
 					break;
 				case 'ArrowRight':
-					if (readerVisible) {
-						event.preventDefault();
-						!rd.webtoon ? handleRightArrow() : handleCloseReader();
-					}
+					if (readerVisible && !rd.webtoon) handleRightArrow();
 					break;
 				case 'ArrowDown':
-					if (readerVisible) {
-						event.preventDefault();
-						!rd.webtoon ? handleCloseReader() : handleRightArrow();
-					}
+					if (readerVisible) !rd.webtoon ? handleCloseReader() : handleRightArrow();
 					break;
 				case 'ArrowUp':
-					if (readerVisible && rd.webtoon) {
-						event.preventDefault();
-						handleLeftArrow();
-					}
+					if (readerVisible && rd.webtoon) handleLeftArrow();
 					break;
 				case 'Escape':
-					if (readerVisible) {
-						event.preventDefault();
-						handleCloseReader();
-					}
+					if (readerVisible) handleCloseReader();
 					break;
 				case ' ':
-					if (readerVisible) {
-						event.preventDefault();
-						toggleMenu();
-					}
+					if (readerVisible) toggleMenu();
 					break;
 				default:
 					break;
@@ -4627,7 +4428,11 @@
 			entries.forEach(async (entry) => {
 				if (rd.webtoonScroll) return;
 				if (entry.isIntersecting) {
-					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
+					rd.oldSpreadIndex = rd.currentSpreadIndex;
+					rd.currentSpreadIndex = entry.target.alt - 1;
+					updateProgressBar();
+					centerThumbWebtoon();
+					history.replaceState(null, '', jumpString());
 				}
 			});
 		});
@@ -4744,17 +4549,7 @@
 		}
 
 		enableTouchResponse(touchPanel, 30, handleRightArrow, handleLeftArrow, null, handleCloseReader);
-		enableTouchResponse(thumbStripWT, 20, handleLargeThumbs, handleSmallThumbs, null, null);
 		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
-
-		webtoonContainer.addEventListener('click', () => {
-			toggleMenu();
-		})
-		webtoonContainer.addEventListener('scroll', () => {
-			rd.webtoonScrollRatio = webtoonRatio();
-		})
-		enableTouchResponse(webtoonContainer, 30, null, handleCloseReader, null, null);
-
 		/*
 		let startY = 0;
 		
