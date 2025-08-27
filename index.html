@@ -3384,7 +3384,9 @@
 				size: page.sizeBytes
 			}));
 
-			let imageWidth = pageData[0].width;
+			//let imageWidth = pageData[0].width;
+			let imageWidth = Math.max(...pageData.map(p => p.width));
+
 			let screenWidth = readerContainer.clientWidth;
 
 			let webtoonScale = 1.0;
@@ -3407,8 +3409,8 @@
 				// these are two normal pages
 				const page1 = buildPageObject(pageData[i_page]);
 
-				page1.uiPage.style.width = `calc(min(${pageData[i_page].width}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
-				page1.uiPage.style.height = `calc(min(${pageData[i_page].width / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
+				page1.uiPage.style.width = `calc(min(${imageWidth}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
+				page1.uiPage.style.height = `calc(min(${imageWidth / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
 
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
