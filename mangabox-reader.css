@@ -41,6 +41,8 @@
 	--mb-gradient-2: 40;
 	--color1: transparent;
 	--color2: transparent;
+
+	--webtoon-scale: 100;
 }
 
 
@@ -805,12 +807,16 @@ div.single-page {
 }
 
 #zoomControls {
-	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) var(--mb-pill-width);
+	grid-template-columns: var(--mb-pill-width) 70px var(--mb-pill-width);
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
-	width:auto;
-	left:50%;
-	bottom:50%;
-	transform: translate(-50%, -50%);
+	width: calc(var(--mb-pill-width) + 70px + var(--mb-pill-width));
+	left:20px;
+	bottom:80px;
+	border-radius: var(--mb-dialog-box-radius);
+}
+
+#scaleVal{
+	width: 70px;
 }
 
 #topControls {

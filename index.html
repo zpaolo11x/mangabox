@@ -202,13 +202,13 @@
 					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
-				<!--
+				
 				<div id="zoomControls">
-					<span id="scale_1" title="1x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_3" title="3x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
+					<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
+					<span id="scaleVal" class="reader-buttons">100%</span>
+					<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
 				</div>
-				-->
+				
 
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -2786,6 +2786,7 @@
 			webtoonScroll: false,
 			webtoonScrollRatio: 0,
 			webtoonResizeTimeout: null,
+			webtoonScale: 100,
 
 			rtl: null,
 			currentPage: 0,
@@ -3181,6 +3182,7 @@
 			}
 
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
+			zoomControls.style.display = rd.webtoon ? '' : 'none';
 
 			initReaderUI(pagesData, bookData)
 
@@ -3337,6 +3339,13 @@
 			)
 		}
 
+		function scaleWebtoon(inc){
+  			rd.webtoonScale = Math.min(100, Math.max(20, rd.webtoonScale + inc));
+			scaleVal.innerText = rd.webtoonScale + "%";
+			document.documentElement.style.setProperty('--webtoon-scale', rd.webtoonScale);
+			webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+		}
+
 		function addCoverSpine(pageObjectL, pageObjectR) {
 			const coverlayR = addItem('div', {
 				id: 'coverlayer',
@@ -3389,8 +3398,8 @@
 
 			let screenWidth = readerContainer.clientWidth;
 
-			let webtoonScale = 1.0;
-			if (screenWidth < imageWidth) webtoonScale = screenWidth / imageWidth;
+			//let webtoonScale = 1.0;
+			//if (screenWidth < imageWidth) webtoonScale = screenWidth / imageWidth;
 
 			let i_page = 0; 		// Index of komga page data
 			let realPage = 1;		// Index of real page
@@ -3409,8 +3418,8 @@
 				// these are two normal pages
 				const page1 = buildPageObject(pageData[i_page]);
 
-				page1.uiPage.style.width = `calc(min(${imageWidth}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
-				page1.uiPage.style.height = `calc(min(${imageWidth / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
+				page1.uiPage.style.width = `calc(var(--webtoon-scale) * 1vw)`
+				page1.uiPage.style.height = `calc(var(--webtoon-scale) * 1vw / ${pageData[i_page].AR})`
 
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
