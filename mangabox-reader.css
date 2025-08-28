@@ -72,16 +72,17 @@
 }
 
 .hide-scrollbar {
-  /* Works in Firefox */
-  scrollbar-width: none;
+	/* Works in Firefox */
+	scrollbar-width: none;
 
-  /* Works in IE, Edge (legacy) */
-  -ms-overflow-style: none;
+	/* Works in IE, Edge (legacy) */
+	-ms-overflow-style: none;
 
-  /* Works in Chrome, Safari, Edge (Chromium), Opera */
+	/* Works in Chrome, Safari, Edge (Chromium), Opera */
 }
+
 .hide-scrollbar::-webkit-scrollbar {
-  display: none;
+	display: none;
 }
 
 #readerBackground {
@@ -145,10 +146,10 @@
 }
 
 #webtoonContainer {
-	position:absolute;
-	top:0;
-	overflow:hidden;
-	bottom:0;
+	position: absolute;
+	top: 0;
+	overflow: hidden;
+	bottom: 0;
 	/*height:100vh;*/
 	box-sizing: border-box;
 	background: white;
@@ -596,6 +597,7 @@ div.single-page {
 #topControls {
 	padding-top: var(--mb-drag-bar-height)
 }
+
 /*
 #thumbStripScrollContent {
 	overflow-x: auto !important;
@@ -619,7 +621,7 @@ div.single-page {
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 }
 
-#thumbStrip{
+#thumbStrip {
 	height: calc(var(--mb-thumb-size-px) + 30px);
 	left: 0px;
 	right: 0px;
@@ -629,7 +631,7 @@ div.single-page {
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
 }
 
-#thumbStripWT{
+#thumbStripWT {
 	width: calc(var(--mb-thumb-size-px) + 30px);
 	top: 60px;
 	bottom: 60px;
@@ -653,7 +655,7 @@ div.single-page {
 
 }
 
-#thumbStripButton{
+#thumbStripButton {
 	height: 20px;
 	width: 150px;
 	left: 0;
@@ -662,7 +664,7 @@ div.single-page {
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 }
 
-#thumbStripButtonWT{
+#thumbStripButtonWT {
 	width: 20px;
 	height: 65px;
 	top: 60px;
@@ -685,7 +687,7 @@ div.single-page {
 	/*flex-direction: row-reverse;*/
 }
 
-#thumbStripInner{
+#thumbStripInner {
 	flex-direction: row;
 	height: calc(var(--mb-thumb-size-px) + 10px);
 	margin-left: 50%;
@@ -693,7 +695,7 @@ div.single-page {
 	width: max-content;
 }
 
-#thumbStripInnerWT{
+#thumbStripInnerWT {
 	flex-direction: column;
 	width: calc(var(--mb-thumb-size-px) + 10px);
 	margin-top: calc(50vh - 60px);
@@ -716,13 +718,13 @@ div.single-page {
 	border-radius: 3px;
 }
 
-.spread-thumb:not(.webtoon){
+.spread-thumb:not(.webtoon) {
 	top: 20px;
 	height: var(--mb-thumb-size-px);
 	transition: height 0.3s;
 }
 
-.spread-thumb.webtoon{
+.spread-thumb.webtoon {
 	left: 20px;
 	width: var(--mb-thumb-size-px);
 	transition: width 0.3s;
@@ -807,16 +809,17 @@ div.single-page {
 }
 
 #zoomControls {
-	grid-template-columns: var(--mb-pill-width) 70px var(--mb-pill-width);
+	grid-template-columns: var(--mb-pill-width) 50px var(--mb-pill-width);
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
-	width: calc(var(--mb-pill-width) + 70px + var(--mb-pill-width));
-	left:20px;
-	bottom:80px;
+	width: calc(var(--mb-pill-width) + 50px + var(--mb-pill-width));
+	left: 20px;
+	bottom: calc(80px + env(safe-area-inset-bottom));;
 	border-radius: var(--mb-dialog-box-radius);
 }
 
-#scaleVal{
-	width: 70px;
+#scaleVal {
+	width: 50px;
+	font-size: 20px;
 }
 
 #topControls {
@@ -867,35 +870,37 @@ div.single-page {
 
 #nextBookPanel.blankstart,
 #prevBookPanel.blankstart,
-#incognitoMark.blankstart{
-	opacity:0;
+#incognitoMark.blankstart {
+	opacity: 0;
 	transition: opacity 0.01s ease;
 }
 
 #nextBookPanel,
-#prevBookPanel{
+#prevBookPanel {
 	position: absolute;
-	left:50%;
-	top:50%;
+	left: 50%;
+	top: 50%;
 	transform: translate(-50%, -50%);
 	transition: opacity 0.5s ease;
-	z-index:15;
+	z-index: 15;
 }
 
 #controlPanel.hidden #nextBookPanel,
 #readerContainer.hidden #nextBookPanel,
 #controlPanel.hidden #prevBookPanel,
-#readerContainer.hidden #prevBookPanel{
-	opacity:0;
+#readerContainer.hidden #prevBookPanel {
+	opacity: 0;
 	pointer-events: none;
 }
 
-#nextBookButton, #prevBookButton {
-	margin-top:0px;
+#nextBookButton,
+#prevBookButton {
+	margin-top: 0px;
 }
 
-#nextBookPanel.hidden, #prevBookPanel.hidden{
-	opacity:0;
+#nextBookPanel.hidden,
+#prevBookPanel.hidden {
+	opacity: 0;
 	pointer-events: none;
 }
 
@@ -948,7 +953,7 @@ div.single-page {
 	transition: left 0.05s;
 	text-align: center;
 	white-space: nowrap;
-	transition:width 0.3s ease;
+	transition: width 0.3s ease;
 	/*TODO RIVEDERE box-shadow: rgba(0, 0, 0, 0.25) 0px 2px 6px;*/
 }
 
