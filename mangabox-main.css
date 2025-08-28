@@ -421,7 +421,7 @@ a {
 	bottom: 0;
 	display: grid;
 	grid-template-columns: auto;
-	grid-template-rows: 60px auto;
+	grid-template-rows: auto;
 	transition: grid-template-rows 0.2s;
 	background: var(--mb-page-color);
 }
@@ -518,19 +518,17 @@ a {
 }
 
 #mainContainer {
-	position: relative;
-	grid-row: 2;
+	position: fixed;
+	top: 0;
 	overflow-y: auto;
-	/*
-	background-color:pink;
-	border:2px solid red;
-	*/
+	padding-top:120px;
+
+	
 }
 
 /* Sticky container for libraries */
 #stickyContainer {
-	grid-row: 1;
-	display: flex;
+	display: fixed;
 	align-items: center;
 	top: 0;
 	left: 0;
@@ -543,6 +541,8 @@ a {
 	transition: all 0.3s ease;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 	flex-wrap: nowrap;
+	border-radius: 30px;
+	margin: 10px 10px 10px 10px;
 }
 
 #librariesList {
