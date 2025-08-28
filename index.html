@@ -202,13 +202,13 @@
 					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
-				
+
 				<div id="zoomControls">
 					<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
 					<span id="scaleVal" class="reader-buttons">100%</span>
 					<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
 				</div>
-				
+
 
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -2893,7 +2893,7 @@
 			rd.spreadFocus = 'focus-center';
 
 			scaleWebtoon(0);
-			
+
 			//readerViewer.innerHTML = '';
 			thumbStripShowHide();
 
@@ -3344,11 +3344,35 @@
 			)
 		}
 
-		function scaleWebtoon(inc){
-  			mb.webtoonScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
-			setUserSettings('mangabox.ui.webtoonscale', mb.webtoonScale);
+		function animateWebtoonScale(from, to, duration = 300, easing = t => t) {
+			let start;
+			function frame(ts) {
+				if (!start) start = ts;
+				const t = Math.min(1, (ts - start) / duration);
+				const v = from + (to - from) * easing(t);
+				document.documentElement.style.setProperty('--webtoon-scale', v);
+				webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+				if (t < 1) requestAnimationFrame(frame);
+			}
+			requestAnimationFrame(frame);
+		}
 
+		function scaleWebtoon(inc) {
+			const oldScale = mb.webtoonScale;
+			const newScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
+			mb.webtoonScale = newScale;
+
+			setUserSettings('mangabox.ui.webtoonscale', newScale);
+			scaleVal.innerText = newScale + "%";
+
+			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
+		}
+
+		function scaleWebtoonOLD(inc) {
+			mb.webtoonScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
+			setUserSettings('mangabox.ui.webtoonscale', mb.webtoonScale);
 			scaleVal.innerText = mb.webtoonScale + "%";
+
 			document.documentElement.style.setProperty('--webtoon-scale', mb.webtoonScale);
 			webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 		}
