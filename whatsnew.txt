@@ -2,7 +2,7 @@ Main UI
 - 
 
 Redaer UI
-- 
+- Set webtoon scaling with respect to screen size
 
 Build
 - 

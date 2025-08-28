@@ -526,6 +526,8 @@
 
 			clickingTile: null,
 			pointerItem: null,
+
+			webtoonScale: 100,
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
@@ -589,6 +591,7 @@
 					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
+			console.log(mangaboxFlat)
 			return mangaboxFlat
 		}
 
@@ -620,6 +623,7 @@
 			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
+			mb.webtoonScale = Number(userSettings['mangabox.ui.webtoonscale'] ?? 100);
 		}
 
 
@@ -2786,7 +2790,6 @@
 			webtoonScroll: false,
 			webtoonScrollRatio: 0,
 			webtoonResizeTimeout: null,
-			webtoonScale: 100,
 
 			rtl: null,
 			currentPage: 0,
@@ -2889,6 +2892,8 @@
 
 			rd.spreadFocus = 'focus-center';
 
+			scaleWebtoon(0);
+			
 			//readerViewer.innerHTML = '';
 			thumbStripShowHide();
 
@@ -3340,9 +3345,11 @@
 		}
 
 		function scaleWebtoon(inc){
-  			rd.webtoonScale = Math.min(100, Math.max(20, rd.webtoonScale + inc));
-			scaleVal.innerText = rd.webtoonScale + "%";
-			document.documentElement.style.setProperty('--webtoon-scale', rd.webtoonScale);
+  			mb.webtoonScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
+			setUserSettings('mangabox.ui.webtoonscale', mb.webtoonScale);
+
+			scaleVal.innerText = mb.webtoonScale + "%";
+			document.documentElement.style.setProperty('--webtoon-scale', mb.webtoonScale);
 			webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 		}
 
