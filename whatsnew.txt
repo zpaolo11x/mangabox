@@ -8,4 +8,4 @@ Build
 - 
 
 Fixes
-- Size webtoon as per larger image
+- Uniform webtoon width sizing
