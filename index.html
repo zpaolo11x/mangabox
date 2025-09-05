@@ -3004,7 +3004,9 @@
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
-			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
+			//rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
+
+			rd.titleBarColor = "black";
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 

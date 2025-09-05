@@ -1,5 +1,5 @@
 Main UI
-- 
+- White title bar on mobile for login screen
 
 Redaer UI
 - Set webtoon scaling with respect to screen size
@@ -8,4 +8,4 @@ Build
 - 
 
 Fixes
-- Uniform webtoon width sizing
+- Uniform webtoon sizing when pages have different resolution
