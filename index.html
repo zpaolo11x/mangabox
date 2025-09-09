@@ -19,13 +19,13 @@
 
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="manifest" href="manifest.json">
-	<link rel="stylesheet" type="text/css" href="auth.css">
+	<link rel="stylesheet" type="text/css" href="style-auth.css">
 
 	<link rel="stylesheet" href="fontawesome/all.min.css">
 
-	<link rel="stylesheet" href="mangabox-blankstart.css">
-	<link rel="stylesheet" href="mangabox-main.css">
-	<link rel="stylesheet" href="mangabox-reader.css">
+	<link rel="stylesheet" href="style-mangabox-blankstart.css">
+	<link rel="stylesheet" href="style-mangabox-main.css">
+	<link rel="stylesheet" href="style-mangabox-reader.css">
 
 </head>
 
@@ -298,12 +298,12 @@
 
 	</script>
 
-	<script src="auth.js"></script>
+	<script src="script-auth.js"></script>
 
 	<script>
 		if ("serviceWorker" in navigator) {
 			window.addEventListener("load", () => {
-				navigator.serviceWorker.register("/sw.js")
+				navigator.serviceWorker.register("/script-sw.js")
 					.then(reg => console.log("Service Worker registered:", reg.scope))
 					.catch(err => console.error("Service Worker registration failed:", err));
 			});
