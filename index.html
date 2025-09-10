@@ -8,8 +8,8 @@
 	<meta name="theme-color" content="black">
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
-	<link rel="icon" href="mangabox-logo-16.svg" type="image/svg+xml">
-	<link rel="apple-touch-icon" href="mangabox-logo-new-red.png">
+	<link rel="icon" href="logo/mangabox-logo-16.svg" type="image/svg+xml">
+	<link rel="apple-touch-icon" href="logo/mangabox-logo-new-red.png">
 
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -234,9 +234,9 @@
 	</div>
 
 	<div id="dragbar" class="draggable">
-		<img id="barLogo" src="mangabox-logo-16.svg">
+		<img id="barLogo" src="logo/mangabox-logo-16.svg">
 
-		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
+		<!--<img id="barLogo" src="logo/mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
 		<div id="windowControls" , class="window-controls no-drag">
 			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
@@ -247,8 +247,8 @@
 
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
-			<img src="mangabox-logo-new.svg" width="90px" height="90px">
-			<img src="mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
+			<img src="logo/mangabox-logo-new.svg" width="90px" height="90px">
+			<img src="logo/mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
@@ -2127,7 +2127,7 @@
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'mangabox-logo-new.svg')
+			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'logo/mangabox-logo-new.svg')
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
