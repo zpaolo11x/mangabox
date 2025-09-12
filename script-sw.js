@@ -1,4 +1,4 @@
-// sw.js — Minimal Service Worker
+// script-sw.js — Minimal Service Worker
 self.addEventListener("install", (event) => {
   console.log("Service Worker installed");
   self.skipWaiting();

@@ -8,8 +8,8 @@
 	<meta name="theme-color" content="black">
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
-	<link rel="icon" href="mangabox-logo-16.svg" type="image/svg+xml">
-	<link rel="apple-touch-icon" href="mangabox-logo-new-red.png">
+	<link rel="icon" href="logo/mangabox-logo-16.svg" type="image/svg+xml">
+	<link rel="apple-touch-icon" href="logo/mangabox-logo-new-red.png">
 
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,13 +19,13 @@
 
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="manifest" href="manifest.json">
-	<link rel="stylesheet" type="text/css" href="auth.css">
+	<link rel="stylesheet" type="text/css" href="style-auth.css">
 
 	<link rel="stylesheet" href="fontawesome/all.min.css">
 
-	<link rel="stylesheet" href="mangabox-blankstart.css">
-	<link rel="stylesheet" href="mangabox-main.css">
-	<link rel="stylesheet" href="mangabox-reader.css">
+	<link rel="stylesheet" href="style-mangabox-blankstart.css">
+	<link rel="stylesheet" href="style-mangabox-main.css">
+	<link rel="stylesheet" href="style-mangabox-reader.css">
 
 </head>
 
@@ -202,13 +202,13 @@
 					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
 					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 				</div>
-				<!--
+
 				<div id="zoomControls">
-					<span id="scale_1" title="1x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_2" title="2x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
-					<span id="scale_3" title="3x" class="reader-buttons press-button corner-circle fa-solid fa-book"></span>
+					<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
+					<span id="scaleVal" class="reader-buttons">100%</span>
+					<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
 				</div>
-				-->
+
 
 				<div id="bottomControls">
 					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -234,9 +234,9 @@
 	</div>
 
 	<div id="dragbar" class="draggable">
-		<img id="barLogo" src="mangabox-logo-16.svg">
+		<img id="barLogo" src="logo/mangabox-logo-16.svg">
 
-		<!--<img id="barLogo" src="mangabox-logo-new.svg">-->
+		<!--<img id="barLogo" src="logo/mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
 		<div id="windowControls" , class="window-controls no-drag">
 			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
@@ -247,8 +247,8 @@
 
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
-			<img src="mangabox-logo-new.svg" width="90px" height="90px">
-			<img src="mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
+			<img src="logo/mangabox-logo-new.svg" width="90px" height="90px">
+			<img src="logo/mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
@@ -298,12 +298,12 @@
 
 	</script>
 
-	<script src="auth.js"></script>
+	<script src="script-auth.js"></script>
 
 	<script>
 		if ("serviceWorker" in navigator) {
 			window.addEventListener("load", () => {
-				navigator.serviceWorker.register("/sw.js")
+				navigator.serviceWorker.register("/script-sw.js")
 					.then(reg => console.log("Service Worker registered:", reg.scope))
 					.catch(err => console.error("Service Worker registration failed:", err));
 			});
@@ -526,6 +526,8 @@
 
 			clickingTile: null,
 			pointerItem: null,
+
+			webtoonScale: 100,
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
@@ -589,6 +591,7 @@
 					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
+			console.log(mangaboxFlat)
 			return mangaboxFlat
 		}
 
@@ -620,6 +623,7 @@
 			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
+			mb.webtoonScale = Number(userSettings['mangabox.ui.webtoonscale'] ?? 100);
 		}
 
 
@@ -2123,7 +2127,7 @@
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'mangabox-logo-new.svg')
+			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'logo/mangabox-logo-new.svg')
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
@@ -2888,6 +2892,8 @@
 
 			rd.spreadFocus = 'focus-center';
 
+			scaleWebtoon(0);
+
 			//readerViewer.innerHTML = '';
 			thumbStripShowHide();
 
@@ -2999,6 +3005,8 @@
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
+
+			//rd.titleBarColor = "black";
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -3181,6 +3189,7 @@
 			}
 
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
+			zoomControls.style.display = rd.webtoon ? '' : 'none';
 
 			initReaderUI(pagesData, bookData)
 
@@ -3337,6 +3346,39 @@
 			)
 		}
 
+		function animateWebtoonScale(from, to, duration = 300, easing = t => t) {
+			let start;
+			function frame(ts) {
+				if (!start) start = ts;
+				const t = Math.min(1, (ts - start) / duration);
+				const v = from + (to - from) * easing(t);
+				document.documentElement.style.setProperty('--webtoon-scale', v);
+				webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+				if (t < 1) requestAnimationFrame(frame);
+			}
+			requestAnimationFrame(frame);
+		}
+
+		function scaleWebtoon(inc) {
+			const oldScale = mb.webtoonScale;
+			const newScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
+			mb.webtoonScale = newScale;
+
+			setUserSettings('mangabox.ui.webtoonscale', newScale);
+			scaleVal.innerText = newScale + "%";
+
+			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
+		}
+
+		function scaleWebtoonOLD(inc) {
+			mb.webtoonScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
+			setUserSettings('mangabox.ui.webtoonscale', mb.webtoonScale);
+			scaleVal.innerText = mb.webtoonScale + "%";
+
+			document.documentElement.style.setProperty('--webtoon-scale', mb.webtoonScale);
+			webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+		}
+
 		function addCoverSpine(pageObjectL, pageObjectR) {
 			const coverlayR = addItem('div', {
 				id: 'coverlayer',
@@ -3384,11 +3426,13 @@
 				size: page.sizeBytes
 			}));
 
-			let imageWidth = pageData[0].width;
+			//let imageWidth = pageData[0].width;
+			let imageWidth = Math.max(...pageData.map(p => p.width));
+
 			let screenWidth = readerContainer.clientWidth;
 
-			let webtoonScale = 1.0;
-			if (screenWidth < imageWidth) webtoonScale = screenWidth / imageWidth;
+			//let webtoonScale = 1.0;
+			//if (screenWidth < imageWidth) webtoonScale = screenWidth / imageWidth;
 
 			let i_page = 0; 		// Index of komga page data
 			let realPage = 1;		// Index of real page
@@ -3407,8 +3451,8 @@
 				// these are two normal pages
 				const page1 = buildPageObject(pageData[i_page]);
 
-				page1.uiPage.style.width = `calc(min(${pageData[i_page].width}px, 100vw))` //webtoonScale * pageData[i_page].width + "px";
-				page1.uiPage.style.height = `calc(min(${pageData[i_page].width / pageData[i_page].AR}px, ${100 / pageData[i_page].AR}vw))`;
+				page1.uiPage.style.width = `calc(var(--webtoon-scale) * 1vw)`
+				page1.uiPage.style.height = `calc(var(--webtoon-scale) * 1vw / ${pageData[i_page].AR})`
 
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
