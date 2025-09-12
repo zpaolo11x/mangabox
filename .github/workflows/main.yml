@@ -232,7 +232,7 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath build/App.xcarchive \
             -exportPath export \
-            -exportOptionsPlist ../exportOptions.plist
+            -exportOptionsPlist ../../exportOptions.plist
 
 
       - name: Upload .ipa artifact (Device)
