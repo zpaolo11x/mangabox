@@ -195,11 +195,6 @@ jobs:
         run: |
           rm -rf ios/App/App/Assets.xcassets/AppIcon.appiconset
           cp -R assets/icons/AppIcon.appiconset ios/App/App/Assets.xcassets/
-          
-      - name: Hide Home Indicator in Info.plist
-        run: |
-          /usr/libexec/PlistBuddy -c "Set :prefersHomeIndicatorAutoHidden true" ios/App/App/Info.plist || \
-          /usr/libexec/PlistBuddy -c "Add :prefersHomeIndicatorAutoHidden bool true" ios/App/App/Info.plist
 
       - name: Clean previous build
         run: |
@@ -212,6 +207,11 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :UIStatusBarHidden bool true" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :UIViewControllerBasedStatusBarAppearance false" ios/App/App/Info.plist || \
           /usr/libexec/PlistBuddy -c "Add :UIViewControllerBasedStatusBarAppearance bool false" ios/App/App/Info.plist
+          
+      - name: Hide Home Indicator in Info.plist
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :prefersHomeIndicatorAutoHidden true" ios/App/App/Info.plist || \
+          /usr/libexec/PlistBuddy -c "Add :prefersHomeIndicatorAutoHidden bool true" ios/App/App/Info.plist
 
       # ---- Build for iOS Simulator (universal x86_64 + arm64) ----
       - name: Build .app for Simulator (universal)
