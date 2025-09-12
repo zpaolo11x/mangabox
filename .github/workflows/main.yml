@@ -228,9 +228,10 @@ jobs:
 
       - name: Package unsigned .ipa
         run: |
-          cd ios/App/build/Build/Products/Release-iphoneos
+          cd ios/App/build/App.xcarchive/Products/Applications
           mkdir -p ../../export
           zip -r ../../export/mangabox-${{ env.version }}.ipa App.app
+
 
 #      - name: Build for device
 #        run: |
