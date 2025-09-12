@@ -201,17 +201,22 @@ jobs:
           cd ios/App
           xcodebuild clean -workspace App.xcworkspace -scheme App
 
+      - name: Patch ViewController.swift to hide home indicator
+        run: |
+          FILE="ios/App/App/ViewController.swift"
+          if ! grep -q "prefersHomeIndicatorAutoHidden" "$FILE"; then
+            echo "" >> "$FILE"
+            echo "    override var prefersHomeIndicatorAutoHidden: Bool {" >> "$FILE"
+            echo "        return true" >> "$FILE"
+            echo "    }" >> "$FILE"
+          fi
+
       - name: Hide status bar in Info.plist
         run: |
           /usr/libexec/PlistBuddy -c "Set :UIStatusBarHidden true" ios/App/App/Info.plist || \
           /usr/libexec/PlistBuddy -c "Add :UIStatusBarHidden bool true" ios/App/App/Info.plist
           /usr/libexec/PlistBuddy -c "Set :UIViewControllerBasedStatusBarAppearance false" ios/App/App/Info.plist || \
           /usr/libexec/PlistBuddy -c "Add :UIViewControllerBasedStatusBarAppearance bool false" ios/App/App/Info.plist
-          
-      - name: Hide Home Indicator in Info.plist
-        run: |
-          /usr/libexec/PlistBuddy -c "Set :prefersHomeIndicatorAutoHidden true" ios/App/App/Info.plist || \
-          /usr/libexec/PlistBuddy -c "Add :prefersHomeIndicatorAutoHidden bool true" ios/App/App/Info.plist
 
       # ---- Build for iOS Simulator (universal x86_64 + arm64) ----
       - name: Build .app for Simulator (universal)
