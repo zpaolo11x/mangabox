@@ -199,7 +199,6 @@ body {
 	overflow-y: visible;
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
-	padding-top: env(safe-area-inset-top);
 }
 
 .fa-apple {
