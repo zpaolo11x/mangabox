@@ -339,7 +339,6 @@
 		*/
 
 		const isSharpCornerIphone = getSharpCornerIphone();
-		document.documentElement.style.setProperty('--mb-sharp-iphone-spacer', isSharpCornerIphone ? '20px' : '0px');
 
 		//MB Manage Electron titlebar
 
@@ -3212,15 +3211,15 @@
 		}
 
 		function buildSize(item, ratio) {
-			item.style.width = `calc(min(100vw, ${100 * ratio}vh - ${ratio} * var(--mb-top-spacer)))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh - var(--mb-top-spacer)) )`;
+			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
-			item.style.width = `calc(min(100vw, ${100 * ratio}vh - ${ratio} * var(--mb-top-spacer)))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh - var(--mb-top-spacer)) )`;
+			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
@@ -3228,8 +3227,8 @@
 			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
-			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh - 2 * ${ratio} * var(--mb-top-spacer)))`;
-			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh - var(--mb-top-spacer)) )`;
+			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
+			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh) )`;
 		}
 
 		// Add this once when initializing the viewer
@@ -3523,9 +3522,9 @@
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
 			// readerViewer.style.height='100vh';
-			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, 100vh - var(--mb-top-spacer)))`;
+			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, 100vh))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
-			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh - ${mb.readerMaxRatio} * var(--mb-top-spacer)))`;
+			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInner.style.flexDirection = rd.rtl ? 'row-reverse' : 'row';
@@ -3660,7 +3659,7 @@
 
 				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
-				spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh - ${mb.readerMaxRatio} * var(--mb-top-spacer)))`;
+				spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
 
 				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
