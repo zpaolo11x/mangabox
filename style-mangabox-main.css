@@ -1891,7 +1891,7 @@ body.sticky-small #mainUI {
 }
 
 body.sticky-small #stripGridHeaderContainer {
-	top: calc(114px + var(--mb-top-spacer));
+	top: calc(114px + var(--mb-drag-bar-height) + var(--mb-top-spacer));
 }
 
 body.sticky-small #mainUI:has(.extra-bar:not(.hidden)) {
