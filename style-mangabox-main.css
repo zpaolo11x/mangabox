@@ -61,7 +61,9 @@
 
 	--mb-num-buttons: 1;
 
-	--mb-top-spacer: env(safe-area-inset-top);
+	--mb-sharp-iphone-spacer: 20px;
+
+	--mb-top-spacer: calc(env(safe-area-inset-top) + var(--mb-sharp-iphone-spacer));
 
 	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
 	--mb-button-transition:
