@@ -203,12 +203,27 @@ jobs:
 
       - name: Patch ViewController.swift to hide home indicator
         run: |
-          FILE="ios/App/App/ViewController.swift"
-          if ! grep -q "prefersHomeIndicatorAutoHidden" "$FILE"; then
-            echo "" >> "$FILE"
-            echo "    override var prefersHomeIndicatorAutoHidden: Bool {" >> "$FILE"
-            echo "        return true" >> "$FILE"
-            echo "    }" >> "$FILE"
+          FILE=$(find ios/App -name "ViewController.swift" | head -n 1)
+          if [ -n "$FILE" ]; then
+            if ! grep -q "prefersHomeIndicatorAutoHidden" "$FILE"; then
+              echo "🔧 Patching $FILE to hide home indicator..."
+              tmpfile=$(mktemp)
+              awk '
+                /class ViewController/ { inside=1 }
+                inside && /\}/ && !found {
+                  print "    override var prefersHomeIndicatorAutoHidden: Bool {"
+                  print "        return true"
+                  print "    }"
+                  found=1
+                }
+                { print }
+              ' "$FILE" > "$tmpfile" && mv "$tmpfile" "$FILE"
+            else
+              echo "✅ prefersHomeIndicatorAutoHidden already present"
+            fi
+          else
+            echo "❌ ViewController.swift not found!"
+            exit 1
           fi
 
       - name: Hide status bar in Info.plist
