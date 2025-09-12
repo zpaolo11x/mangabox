@@ -161,70 +161,70 @@ jobs:
         with:
           name: MangaBox-Android-${{ env.version }}
           path: android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-Android-debug.apk
-ios:
-  needs: [version, web]
-  runs-on: macos-latest
-  env:
-    version: ${{ needs.version.outputs.version }}
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+  ios:
+    needs: [version, web]
+    runs-on: macos-latest
+    env:
+      version: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Download webdeploy artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: MangaBox-Web-${{ env.version }}
-        path: dist
+      - name: Download webdeploy artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: dist
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Add iOS platform
-      run: npx cap add ios
+      - name: Add iOS platform
+        run: npx cap add ios
 
-    - name: Capacitor sync
-      run: npx cap sync ios
+      - name: Capacitor sync
+        run: npx cap sync ios
 
-    # ---- Build for iOS Simulator ----
-    - name: Build .app for Simulator
-      run: |
-        cd ios/App
-        xcodebuild \
-          -scheme App \
-          -configuration Debug \
-          -sdk iphonesimulator \
-          -derivedDataPath build
+      # ---- Build for iOS Simulator ----
+      - name: Build .app for Simulator
+        run: |
+          cd ios/App
+          xcodebuild \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath build
 
-    - name: Upload .app artifact (for simulator)
-      uses: actions/upload-artifact@v4
-      with:
-        name: MangaBox-iOS-${{ env.version }}-app
-        path: ios/App/build/Build/Products/Debug-iphonesimulator/*.app
+      - name: Upload .app artifact (for simulator)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-iOS-${{ env.version }}-app
+          path: ios/App/build/Build/Products/Debug-iphonesimulator/*.app
 
-    # ---- Build for Real Device (.ipa, unsigned) ----
-    - name: Build for device
-      run: |
-        cd ios/App
-        xcodebuild \
-          -scheme App \
-          -configuration Release \
-          -sdk iphoneos \
-          -derivedDataPath build \
-          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+      # ---- Build for Real Device (.ipa, unsigned) ----
+      - name: Build for device
+        run: |
+          cd ios/App
+          xcodebuild \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
-    - name: Package .ipa
-      run: |
-        cd ios/App
-        mkdir -p export
-        xcrun -sdk iphoneos PackageApplication \
-          -v build/Build/Products/Release-iphoneos/App.app \
-          -o $PWD/export/mangabox-${{ env.version }}.ipa
+      - name: Package .ipa
+        run: |
+          cd ios/App
+          mkdir -p export
+          xcrun -sdk iphoneos PackageApplication \
+            -v build/Build/Products/Release-iphoneos/App.app \
+            -o $PWD/export/mangabox-${{ env.version }}.ipa
 
-    - name: Upload .ipa artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: MangaBox-iOS-${{ env.version }}-ipa
-        path: ios/App/export/mangabox-${{ env.version }}.ipa
+      - name: Upload .ipa artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-iOS-${{ env.version }}-ipa
+          path: ios/App/export/mangabox-${{ env.version }}.ipa
 
   release:
     needs: [electron, web, android, version]
