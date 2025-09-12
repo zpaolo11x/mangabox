@@ -230,7 +230,10 @@ jobs:
         run: |
           cd ios/App/build/App.xcarchive/Products/Applications
           mkdir -p ../../export
-          zip -r ../../export/mangabox-${{ env.version }}.ipa App.app
+          mkdir -p Payload
+          cp -R App.app Payload/
+          zip -r ../../export/mangabox-${{ env.version }}.ipa Payload
+
 
 
 #      - name: Build for device
