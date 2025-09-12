@@ -185,21 +185,25 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync ios
 
-      # ---- Build for iOS Simulator ----
+      - name: Install CocoaPods dependencies
+        run: |
+          cd ios/App
+          pod install --repo-update
+
+      # ---- Build for iOS Simulator (universal x86_64 + arm64) ----
       - name: Build .app for Simulator (universal)
         run: |
           cd ios/App
           xcodebuild \
+            -workspace App.xcworkspace \
             -scheme App \
             -configuration Debug \
             -sdk iphonesimulator \
-            -arch x86_64 \
-            -arch arm64 \
-            -derivedDataPath build
+            -arch x86_64 -arch arm64 \
+            -derivedDataPath build \
+            ONLY_ACTIVE_ARCH=NO
 
-
-
-      - name: Upload .app artifact (for simulator)
+      - name: Upload .app artifact (Simulator)
         uses: actions/upload-artifact@v4
         with:
           name: MangaBox-iOS-${{ env.version }}-app
@@ -210,11 +214,14 @@ jobs:
         run: |
           cd ios/App
           xcodebuild \
+            -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath build \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=NO
 
       - name: Package .ipa
         run: |
@@ -224,7 +231,7 @@ jobs:
             -v build/Build/Products/Release-iphoneos/App.app \
             -o $PWD/export/mangabox-${{ env.version }}.ipa
 
-      - name: Upload .ipa artifact
+      - name: Upload .ipa artifact (Device)
         uses: actions/upload-artifact@v4
         with:
           name: MangaBox-iOS-${{ env.version }}-ipa
