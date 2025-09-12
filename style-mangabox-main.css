@@ -399,7 +399,6 @@ body {
 	font-family: 'Roboto Flex', sans-serif;
 	margin: 0;
 	padding: 0;
-
 	background: var(--mb-page-color);
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
@@ -415,7 +414,7 @@ a {
 
 #mainUI {
 	position: fixed;
-	top: var(--mb-drag-bar-height);
+	top: calc(var(--mb-drag-bar-height) + env(safe-area-inset-top));
 	left: 0;
 	right: 0;
 	bottom: 0;
