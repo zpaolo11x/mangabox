@@ -195,6 +195,11 @@ jobs:
         run: |
           rm -rf ios/App/App/Assets.xcassets/AppIcon.appiconset
           cp -R assets/icons/AppIcon.appiconset ios/App/App/Assets.xcassets/
+          
+      - name: Hide Home Indicator in Info.plist
+        run: |
+          /usr/libexec/PlistBuddy -c "Set :prefersHomeIndicatorAutoHidden true" ios/App/App/Info.plist || \
+          /usr/libexec/PlistBuddy -c "Add :prefersHomeIndicatorAutoHidden bool true" ios/App/App/Info.plist
 
       - name: Clean previous build
         run: |
