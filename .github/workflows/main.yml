@@ -201,15 +201,16 @@ jobs:
           cd ios/App
           xcodebuild clean -workspace App.xcworkspace -scheme App
 
-      - name: Patch ViewController.swift to hide home indicator
+      - name: Patch Capacitor view controller to hide Home Indicator
         run: |
-          FILE=$(find ios/App -name "ViewController.swift" | head -n 1)
+          # Find the main Capacitor view controller
+          FILE=$(find ios/App -name "CAPBridgeViewController.swift" | head -n 1)
           if [ -n "$FILE" ]; then
             if ! grep -q "prefersHomeIndicatorAutoHidden" "$FILE"; then
               echo "🔧 Patching $FILE to hide home indicator..."
               tmpfile=$(mktemp)
               awk '
-                /class ViewController/ { inside=1 }
+                /class .*CAPBridgeViewController/ { inside=1 }
                 inside && /\}/ && !found {
                   print "    override var prefersHomeIndicatorAutoHidden: Bool {"
                   print "        return true"
@@ -222,9 +223,10 @@ jobs:
               echo "✅ prefersHomeIndicatorAutoHidden already present"
             fi
           else
-            echo "❌ ViewController.swift not found!"
+            echo "❌ CAPBridgeViewController.swift not found!"
             exit 1
           fi
+        shell: /bin/bash -e
 
       - name: Hide status bar in Info.plist
         run: |
