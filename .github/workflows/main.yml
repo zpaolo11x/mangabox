@@ -210,7 +210,8 @@ jobs:
           path: ios/App/build/Build/Products/Debug-iphonesimulator/*.app
 
       # ---- Build for Real Device (.ipa, unsigned) ----
-      - name: Build for device
+ 
+      - name: Build for device (.app)
         run: |
           cd ios/App
           xcodebuild \
@@ -222,17 +223,38 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             ONLY_ACTIVE_ARCH=NO \
-            -archivePath $PWD/build/App.xcarchive \
-            archive
+            archive \
+            -archivePath $PWD/build/App.xcarchive
 
-      - name: Export .ipa
+      - name: Package unsigned .ipa
         run: |
-          cd ios/App
-          mkdir -p export
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportPath export \
-            -exportOptionsPlist ../../exportOptions.plist
+          cd ios/App/build/Build/Products/Release-iphoneos
+          mkdir -p ../../export
+          zip -r ../../export/mangabox-${{ env.version }}.ipa App.app
+
+#      - name: Build for device
+#        run: |
+#          cd ios/App
+#          xcodebuild \
+#            -workspace App.xcworkspace \
+#            -scheme App \
+#            -configuration Release \
+#            -sdk iphoneos \
+#            -derivedDataPath build \
+#            CODE_SIGN_IDENTITY="" \
+#            CODE_SIGNING_REQUIRED=NO \
+#            ONLY_ACTIVE_ARCH=NO \
+#            -archivePath $PWD/build/App.xcarchive \
+#            archive
+
+#      - name: Export .ipa
+#        run: |
+#          cd ios/App
+#          mkdir -p export
+#          xcodebuild -exportArchive \
+#            -archivePath build/App.xcarchive \
+#            -exportPath export \
+#            -exportOptionsPlist ../../exportOptions.plist
 
 
       - name: Upload .ipa artifact (Device)
