@@ -190,11 +190,16 @@ jobs:
           cd ios/App
           pod install --repo-update
 
+      # ---- Copy AppIcon and clean build ----
       - name: Copy AppIcon set to iOS project
         run: |
-          mkdir -p ios/App/App/App/Assets.xcassets
-          rm -rf ios/App/App/App/Assets.xcassets/AppIcon.appiconset
-          cp -R assets/icons/AppIcon.appiconset ios/App/App/App/Assets.xcassets/
+          rm -rf ios/App/App/Assets.xcassets/AppIcon.appiconset
+          cp -R assets/icons/AppIcon.appiconset ios/App/App/Assets.xcassets/
+
+      - name: Clean previous build
+        run: |
+          cd ios/App
+          xcodebuild clean -workspace App.xcworkspace -scheme App
 
       # ---- Build for iOS Simulator (universal x86_64 + arm64) ----
       - name: Build .app for Simulator (universal)
