@@ -202,8 +202,8 @@ jobs:
           xcodebuild clean -workspace App.xcworkspace -scheme App
 
       - name: Patch Capacitor view controller to hide Home Indicator
+        shell: bash
         run: |
-          # Find the main Capacitor view controller
           FILE=$(find ios/App -name "CAPBridgeViewController.swift" | head -n 1)
           if [ -n "$FILE" ]; then
             if ! grep -q "prefersHomeIndicatorAutoHidden" "$FILE"; then
@@ -226,7 +226,6 @@ jobs:
             echo "❌ CAPBridgeViewController.swift not found!"
             exit 1
           fi
-        shell: /bin/bash -e
 
       - name: Hide status bar in Info.plist
         run: |
