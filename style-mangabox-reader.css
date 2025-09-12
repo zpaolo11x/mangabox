@@ -595,7 +595,7 @@ div.single-page {
 }
 
 #topControls {
-	padding-top: var(--mb-drag-bar-height)
+	padding-top: calc(var(--mb-drag-bar-height) + var(--mb-top-spacer))
 }
 
 /*
@@ -838,7 +838,7 @@ div.single-page {
 
 #controlPanel.hidden #topControls,
 #readerContainer.hidden #topControls {
-	top: -100px;
+	top: calc(-100px - var(--mb-top-spacer));
 }
 
 #controlPanel.hidden #bottomControls,
