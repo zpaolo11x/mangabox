@@ -177,7 +177,7 @@ jobs:
           path: dist
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Add iOS platform
         run: npx cap add ios
