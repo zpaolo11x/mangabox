@@ -592,7 +592,7 @@ div.single-page {
 }
 
 #bottomControls {
-	border-bottom: var(--mb-card-color) solid env(safe-area-inset-bottom);
+	border-bottom: var(--mb-card-color) solid var(--mb-bottom-spacer);
 	box-sizing: content-box;
 }
 
@@ -627,7 +627,7 @@ div.single-page {
 	height: calc(var(--mb-thumb-size-px) + 30px);
 	left: 0px;
 	right: 0px;
-	bottom: calc(60px + env(safe-area-inset-bottom));
+	bottom: calc(60px + var(--mb-bottom-spacer));
 	overflow-x: auto;
 	overflow-y: hidden;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
@@ -662,7 +662,7 @@ div.single-page {
 	width: 150px;
 	left: 0;
 	right: 0;
-	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px + env(safe-area-inset-bottom));
+	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px + var(--mb-bottom-spacer));
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 }
 
@@ -815,7 +815,7 @@ div.single-page {
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 	width: calc(var(--mb-pill-width) + 50px + var(--mb-pill-width));
 	left: 20px;
-	bottom: calc(80px + env(safe-area-inset-bottom));;
+	bottom: calc(80px + var(--mb-bottom-spacer));;
 	border-radius: var(--mb-dialog-box-radius);
 }
 
