@@ -5,7 +5,7 @@ Redaer UI
 - Set webtoon scaling with respect to screen size
 
 Build
-- Restructure files in web client
+- Reorganize files in web client
 
 Fixes
 - Uniform webtoon sizing when pages have different resolution
