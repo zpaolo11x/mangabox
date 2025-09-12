@@ -194,7 +194,7 @@ jobs:
         run: |
           mkdir -p ios/App/App/App/Assets.xcassets
           rm -rf ios/App/App/App/Assets.xcassets/AppIcon.appiconset
-          cp -R assets/AppIcons/AppIcon.appiconset ios/App/App/App/Assets.xcassets/
+          cp -R assets/icons/AppIcon.appiconset ios/App/App/App/Assets.xcassets/
 
       # ---- Build for iOS Simulator (universal x86_64 + arm64) ----
       - name: Build .app for Simulator (universal)
