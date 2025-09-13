@@ -363,10 +363,14 @@
 			};
 		}
 
+		let toggler = false;
+
 		function createPinchResponse(page, pageTarget) {
 
 			page.addEventListener("touchstart", e => {
 				if (e.touches.length === 2) {
+					toggler = false;
+
 					startDist = getDistance(e.touches);
 					const mid = getMidpoint(e.touches);
 
@@ -380,6 +384,7 @@
 			}, { passive: true });
 
 			page.addEventListener("touchmove", e => {
+				toggler = false;
 				if (e.touches.length === 2) {
 					const newDist = getDistance(e.touches);
 					const factor = newDist / startDist;
@@ -390,6 +395,7 @@
 			}, { passive: true });
 
 			page.addEventListener("touchend", e => {
+				toggler = false;
 				if (e.touches.length < 2) {
 					const matrix = new WebKitCSSMatrix(getComputedStyle(pageTarget).transform);
 					scale = matrix.a;
@@ -4515,7 +4521,15 @@
 
 		toLeftPage.addEventListener('click', handleLeftArrow);
 		toRightPage.addEventListener('click', handleRightArrow);
-		openMenu.addEventListener('pointerup', toggleMenu);
+		
+		openMenu.addEventListener('pointerdown', () => {
+			toggler = true;
+		});
+		openMenu.addEventListener('pointerup', () => {
+			if (!toggler) return;
+			toggler = false;
+			toggleMenu();
+		});
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {
