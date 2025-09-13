@@ -156,6 +156,23 @@
 	background: white;
 }
 
+/* reader overlay is just a placeholder, a virtual coordinate to move all together */
+#readerOverlay {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 1px;
+	z-index: 1002;
+	transition: top 0.3s;
+
+	margin: 0;
+	padding: 0;
+
+		box-shadow: inset rgba(200,0,0,0.5) 0px 0px 25px;
+}
+
+
 #readerContainer {
 	position: fixed;
 	left: 0;
@@ -881,7 +898,7 @@ div.single-page {
 #prevBookPanel {
 	position: absolute;
 	left: 50%;
-	top: 50%;
+	top: 50vh;
 	transform: translate(-50%, -50%);
 	transition: opacity 0.5s ease;
 	z-index: 15;
@@ -1051,20 +1068,23 @@ div.single-page {
 	top: 0px;
 	display: grid;
 	bottom: 0px;
-	/*box-shadow: inset green 0px 0px 15px;*/
+	box-shadow: inset green 0px 0px 15px;
 	grid-template-columns: 1fr 1.5fr 1fr;
 	/*z-index: 1002;*/
-
+z-index:1004;
 	box-sizing: border-box;
 	border-bottom: 5px solid transparent;
 
 	transition: border 0.3s;
+}
 
+#touchPanel.hidden{
+	pointer-events: none;
 }
 
 #touchPanel.shrink {
 	top: 60px;
-	bottom: 180px;
+	bottom: calc(60px + var(--mb-bottom-spacer) + var(--mb-thumb-size-px) + 30px);
 }
 
 /*

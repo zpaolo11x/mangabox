@@ -156,82 +156,82 @@
 		<div id="readerViewerWebtoon">
 			<div id="webtoonContainer" class="hide-scrollbar"></div>
 		</div>
+	</div>
 
-		<div id="readerOverlay">
-			<div id="incognitoMark" class="blankstart"></div>
+	<div id="readerOverlay" class="section hidden">
+		<div id="incognitoMark" class="blankstart"></div>
 
-			<div id="touchPanel">
-				<div id="toLeftPage"></div>
-				<div id="openMenu"></div>
-				<div id="toRightPage"></div>
+		<div id="controlPanel" class="hidden">
+
+			<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
+				<div id="thumbStripScrollContent" class="scrollbox-content">
+					<div id="thumbStripInner"></div>
+				</div>
+				<div class="scrollbox-scrollbar">
+					<div class="scrollbox-thumb"></div>
+				</div>
+			</div>
+			<div id="thumbStripButton">
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 			</div>
 
-			<div id="controlPanel" class="hidden">
-
-				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
-					<div id="thumbStripScrollContent" class="scrollbox-content">
-						<div id="thumbStripInner"></div>
-					</div>
-					<div class="scrollbox-scrollbar">
-						<div class="scrollbox-thumb"></div>
-					</div>
+			<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
+				<div id="thumbStripScrollContentWT" class="scrollbox-content">
+					<div id="thumbStripInnerWT"></div>
 				</div>
-				<div id="thumbStripButton">
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<div class="scrollbox-scrollbar">
+					<div class="scrollbox-thumb"></div>
 				</div>
-
-				<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
-					<div id="thumbStripScrollContentWT" class="scrollbox-content">
-						<div id="thumbStripInnerWT"></div>
-					</div>
-					<div class="scrollbox-scrollbar">
-						<div class="scrollbox-thumb"></div>
-					</div>
-				</div>
-				<div id="thumbStripButtonWT">
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-				</div>
-
-				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
-					<span></span>
-					<span id="bookName"></span>
-					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
-				</div>
-
-				<div id="zoomControls">
-					<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
-					<span id="scaleVal" class="reader-buttons">100%</span>
-					<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
-				</div>
-
-
-				<div id="bottomControls">
-					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
-					<span id="leftLimit" class="bar-note press-button corner-right"></span>
-					<div id="readerProgressBar" onclick="seek(event)">
-						<div id="readerProgress"></div>
-						<div id="readerPage"></div>
-					</div>
-					<span id="rightLimit" class="bar-note press-button corner-left"></span>
-					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
-				</div>
-
-				<div id="nextBookPanel" class="modal-content hidden blankstart">
-					<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
-				</div>
-
-				<div id="prevBookPanel" class="modal-content hidden blankstart">
-					<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
-				</div>
-
 			</div>
+			<div id="thumbStripButtonWT">
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+			</div>
+
+			<div id="topControls">
+				<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
+				<span></span>
+				<span id="bookName"></span>
+				<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
+				<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
+			</div>
+
+			<div id="zoomControls">
+				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
+				<span id="scaleVal" class="reader-buttons">100%</span>
+				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
+			</div>
+
+
+			<div id="bottomControls">
+				<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
+				<span id="leftLimit" class="bar-note press-button corner-right"></span>
+				<div id="readerProgressBar" onclick="seek(event)">
+					<div id="readerProgress"></div>
+					<div id="readerPage"></div>
+				</div>
+				<span id="rightLimit" class="bar-note press-button corner-left"></span>
+				<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
+			</div>
+
+			<div id="nextBookPanel" class="modal-content hidden blankstart">
+				<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
+			</div>
+
+			<div id="prevBookPanel" class="modal-content hidden blankstart">
+				<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
+			</div>
+
 		</div>
+	</div>
+
+	<div id="touchPanel" class="section hidden">
+		<div id="toLeftPage"></div>
+		<div id="openMenu"></div>
+		<div id="toRightPage"></div>
 	</div>
 
 	<div id="dragbar" class="draggable">
@@ -341,58 +341,64 @@
 
 		const isSharpCornerIphone = getSharpCornerIphone();
 
-//MB Pinch To Zoom
+		//MB Pinch To Zoom
 
-const page = document.getElementById("readerContainer");
+		const page = document.getElementById("touchPanel");
+		const pageTarget = document.getElementById("readerContainer");
 
-let scale = 1;
-let startDist = 0;
-let originX = 0, originY = 0;
+		let scale = 1;
+		let startDist = 0;
+		let originX = 0, originY = 0;
 
-function getDistance(touches) {
-  const dx = touches[0].clientX - touches[1].clientX;
-  const dy = touches[0].clientY - touches[1].clientY;
-  return Math.sqrt(dx * dx + dy * dy);
-}
+		function getDistance(touches) {
+			const dx = touches[0].clientX - touches[1].clientX;
+			const dy = touches[0].clientY - touches[1].clientY;
+			return Math.sqrt(dx * dx + dy * dy);
+		}
 
-function getMidpoint(touches) {
-  return {
-    x: (touches[0].clientX + touches[1].clientX) / 2,
-    y: (touches[0].clientY + touches[1].clientY) / 2,
-  };
-}
+		function getMidpoint(touches) {
+			return {
+				x: (touches[0].clientX + touches[1].clientX) / 2,
+				y: (touches[0].clientY + touches[1].clientY) / 2,
+			};
+		}
 
-page.addEventListener("touchstart", e => {
-  if (e.touches.length === 2) {
-    startDist = getDistance(e.touches);
-    const mid = getMidpoint(e.touches);
+		function createPinchResponse(page, pageTarget) {
 
-    // convert screen coords into element coords
-    const rect = page.getBoundingClientRect();
-    originX = ((mid.x - rect.left) / rect.width) * 100;
-    originY = ((mid.y - rect.top) / rect.height) * 100;
+			page.addEventListener("touchstart", e => {
+				if (e.touches.length === 2) {
+					startDist = getDistance(e.touches);
+					const mid = getMidpoint(e.touches);
 
-    page.style.transformOrigin = `${originX}% ${originY}%`;
-  }
-}, { passive: true });
+					// convert screen coords into element coords
+					const rect = page.getBoundingClientRect();
+					originX = ((mid.x - rect.left) / rect.width) * 100;
+					originY = ((mid.y - rect.top) / rect.height) * 100;
 
-page.addEventListener("touchmove", e => {
-  if (e.touches.length === 2) {
-    const newDist = getDistance(e.touches);
-    const factor = newDist / startDist;
-    const newScale = Math.min(Math.max(1, scale * factor), 4);
+					pageTarget.style.transformOrigin = `${originX}% ${originY}%`;
+				}
+			}, { passive: true });
 
-    page.style.transform = `scale(${newScale})`;
-  }
-}, { passive: true });
+			page.addEventListener("touchmove", e => {
+				if (e.touches.length === 2) {
+					const newDist = getDistance(e.touches);
+					const factor = newDist / startDist;
+					const newScale = Math.min(Math.max(1, scale * factor), 4);
 
-page.addEventListener("touchend", e => {
-  if (e.touches.length < 2) {
-    const matrix = new WebKitCSSMatrix(getComputedStyle(page).transform);
-    scale = matrix.a;
-  }
-});
+					pageTarget.style.transform = `scale(${newScale})`;
+				}
+			}, { passive: true });
 
+			page.addEventListener("touchend", e => {
+				if (e.touches.length < 2) {
+					const matrix = new WebKitCSSMatrix(getComputedStyle(pageTarget).transform);
+					scale = matrix.a;
+				}
+			});
+		}
+
+		createPinchResponse(touchPanel, readerContainer);
+		createPinchResponse(webtoonContainer, readerContainer);
 
 
 		//MB Manage Electron titlebar
@@ -2959,6 +2965,8 @@ page.addEventListener("touchend", e => {
 			changeReaderTheme();
 
 			sectionShow(readerContainer);
+			sectionShow(readerOverlay);
+			sectionShow(touchPanel);
 
 			initViewer();
 
@@ -3003,6 +3011,8 @@ page.addEventListener("touchend", e => {
 
 			webtoonContainer.removeAttribute('style');
 			sectionHide(readerContainer);
+			sectionHide(readerOverlay);
+			sectionHide(touchPanel);
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -3120,6 +3130,8 @@ page.addEventListener("touchend", e => {
 				}
 			}
 			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbSize + 'px');
+
+
 
 			setTimeout(() => {
 				scrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
