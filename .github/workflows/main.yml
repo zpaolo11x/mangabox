@@ -181,7 +181,7 @@ jobs:
       
       - name: Install Capacitor StatusBar plugin
         run: |
-          npm install @capacitor/status-bar
+          npm install @capacitor/status-bar@6
           npx cap sync ios
 
       #- name: Add iOS platform
