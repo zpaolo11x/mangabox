@@ -310,7 +310,7 @@
 			});
 		}
 
-		Capacitor.Plugins.StatusBar.hide();
+		if (isCapacitor) Capacitor.Plugins.StatusBar.show();
 
 
 		executeFade(1);
@@ -2977,6 +2977,8 @@
 			sectionShow(readerOverlay);
 			sectionShow(touchPanel);
 
+			if (isCapacitor) Capacitor.Plugins.StatusBar.hide();
+
 			initViewer();
 
 		}
@@ -3063,6 +3065,8 @@
 			//dragbarOffReader();
 
 			updatePWABar();
+			if (isCapacitor) Capacitor.Plugins.StatusBar.show();
+
 		}
 
 		readerClose.addEventListener('click', () => {
