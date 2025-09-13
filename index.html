@@ -4519,9 +4519,24 @@
 		leftLimit.addEventListener('click', handleLeftLimit);
 		rightLimit.addEventListener('click', handleRightLimit);
 
-		toLeftPage.addEventListener('click', handleLeftArrow);
-		toRightPage.addEventListener('click', handleRightArrow);
+		toLeftPage.addEventListener('pointerdown', () => {
+			toggler = true;
+		});
+		toLeftPage.addEventListener('pointerup', () => {
+			if (!toggler) return;
+			toggler = false;
+			handleLeftArrow();
+		});
 		
+		toRightPage.addEventListener('pointerdown', () => {
+			toggler = true;
+		});
+		toRightPage.addEventListener('pointerup', () => {
+			if (!toggler) return;
+			toggler = false;
+			handleRightArrow();
+		});
+
 		openMenu.addEventListener('pointerdown', () => {
 			toggler = true;
 		});
