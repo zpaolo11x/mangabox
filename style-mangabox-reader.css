@@ -168,8 +168,6 @@
 
 	margin: 0;
 	padding: 0;
-
-		box-shadow: inset rgba(200,0,0,0.5) 0px 0px 25px;
 }
 
 
@@ -1068,7 +1066,7 @@ div.single-page {
 	top: 0px;
 	display: grid;
 	bottom: 0px;
-	box-shadow: inset green 0px 0px 15px;
+	/*box-shadow: inset green 0px 0px 15px;*/
 	grid-template-columns: 1fr 1.5fr 1fr;
 	/*z-index: 1002;*/
 z-index:1004;
