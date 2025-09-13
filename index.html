@@ -4890,9 +4890,21 @@
 		enableTouchResponse(thumbStripWT, 20, handleLargeThumbs, handleSmallThumbs, null, null);
 		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
 
+		/*
 		webtoonContainer.addEventListener('click', () => {
 			toggleMenu();
 		})
+		*/
+		
+		webtoonContainer.addEventListener('pointerdown', () => {
+			toggler = true;
+		});
+		webtoonContainer.addEventListener('pointerup', () => {
+			if (!toggler) return;
+			toggler = false;
+			toggleMenu();
+		});
+
 		webtoonContainer.addEventListener('scroll', () => {
 			rd.webtoonScrollRatio = webtoonRatio();
 		})
