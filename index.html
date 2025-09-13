@@ -343,9 +343,11 @@
 
 //MB Pinch To Zoom
 
-		const page = document.getElementById("readerContainer");
+const page = document.getElementById("readerContainer");
+
 let scale = 1;
 let startDist = 0;
+let originX = 0, originY = 0;
 
 function getDistance(touches) {
   const dx = touches[0].clientX - touches[1].clientX;
@@ -353,9 +355,24 @@ function getDistance(touches) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+function getMidpoint(touches) {
+  return {
+    x: (touches[0].clientX + touches[1].clientX) / 2,
+    y: (touches[0].clientY + touches[1].clientY) / 2,
+  };
+}
+
 page.addEventListener("touchstart", e => {
   if (e.touches.length === 2) {
     startDist = getDistance(e.touches);
+    const mid = getMidpoint(e.touches);
+
+    // convert screen coords into element coords
+    const rect = page.getBoundingClientRect();
+    originX = ((mid.x - rect.left) / rect.width) * 100;
+    originY = ((mid.y - rect.top) / rect.height) * 100;
+
+    page.style.transformOrigin = `${originX}% ${originY}%`;
   }
 }, { passive: true });
 
@@ -363,18 +380,19 @@ page.addEventListener("touchmove", e => {
   if (e.touches.length === 2) {
     const newDist = getDistance(e.touches);
     const factor = newDist / startDist;
-    const newScale = Math.min(Math.max(1, scale * factor), 4); // clamp 1–4
+    const newScale = Math.min(Math.max(1, scale * factor), 4);
+
     page.style.transform = `scale(${newScale})`;
   }
 }, { passive: true });
 
 page.addEventListener("touchend", e => {
   if (e.touches.length < 2) {
-    // save the scale after pinch
     const matrix = new WebKitCSSMatrix(getComputedStyle(page).transform);
     scale = matrix.a;
   }
 });
+
 
 
 		//MB Manage Electron titlebar
