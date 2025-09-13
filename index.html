@@ -363,13 +363,13 @@
 			};
 		}
 
-		let toggler = false;
+		let touchLock = false;
 
 		function createPinchResponse(page, pageTarget) {
 
 			page.addEventListener("touchstart", e => {
 				if (e.touches.length === 2) {
-					toggler = false;
+					touchLock = false;
 
 					startDist = getDistance(e.touches);
 					const mid = getMidpoint(e.touches);
@@ -384,7 +384,7 @@
 			}, { passive: true });
 
 			page.addEventListener("touchmove", e => {
-				toggler = false;
+				touchLock = false;
 				if (e.touches.length === 2) {
 					const newDist = getDistance(e.touches);
 					const factor = newDist / startDist;
@@ -395,7 +395,7 @@
 			}, { passive: true });
 
 			page.addEventListener("touchend", e => {
-				toggler = false;
+				touchLock = false;
 				if (e.touches.length < 2) {
 					const matrix = new WebKitCSSMatrix(getComputedStyle(pageTarget).transform);
 					scale = matrix.a;
@@ -4520,29 +4520,29 @@
 		rightLimit.addEventListener('click', handleRightLimit);
 
 		toLeftPage.addEventListener('pointerdown', () => {
-			toggler = true;
+			touchLock = true;
 		});
 		toLeftPage.addEventListener('pointerup', () => {
-			if (!toggler) return;
-			toggler = false;
+			if (!touchLock) return;
+			touchLock = false;
 			handleLeftArrow();
 		});
 		
 		toRightPage.addEventListener('pointerdown', () => {
-			toggler = true;
+			touchLock = true;
 		});
 		toRightPage.addEventListener('pointerup', () => {
-			if (!toggler) return;
-			toggler = false;
+			if (!touchLock) return;
+			touchLock = false;
 			handleRightArrow();
 		});
 
 		openMenu.addEventListener('pointerdown', () => {
-			toggler = true;
+			touchLock = true;
 		});
 		openMenu.addEventListener('pointerup', () => {
-			if (!toggler) return;
-			toggler = false;
+			if (!touchLock) return;
+			touchLock = false;
 			toggleMenu();
 		});
 
@@ -4897,11 +4897,11 @@
 		*/
 		
 		webtoonContainer.addEventListener('pointerdown', () => {
-			toggler = true;
+			touchLock = true;
 		});
 		webtoonContainer.addEventListener('pointerup', () => {
-			if (!toggler) return;
-			toggler = false;
+			if (!touchLock) return;
+			touchLock = false;
 			toggleMenu();
 		});
 
