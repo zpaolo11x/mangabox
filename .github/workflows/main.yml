@@ -178,9 +178,14 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+      
+      - name: Install Capacitor StatusBar plugin
+        run: |
+          npm install @capacitor/status-bar
+          npx cap sync ios
 
-      - name: Add iOS platform
-        run: npx cap add ios
+      #- name: Add iOS platform
+      #  run: npx cap add ios
 
       - name: Capacitor sync
         run: npx cap sync ios
@@ -201,12 +206,12 @@ jobs:
           cd ios/App
           xcodebuild clean -workspace App.xcworkspace -scheme App
 
-      - name: Hide status bar in Info.plist
-        run: |
-          /usr/libexec/PlistBuddy -c "Set :UIStatusBarHidden true" ios/App/App/Info.plist || \
-          /usr/libexec/PlistBuddy -c "Add :UIStatusBarHidden bool true" ios/App/App/Info.plist
-          /usr/libexec/PlistBuddy -c "Set :UIViewControllerBasedStatusBarAppearance false" ios/App/App/Info.plist || \
-          /usr/libexec/PlistBuddy -c "Add :UIViewControllerBasedStatusBarAppearance bool false" ios/App/App/Info.plist
+#      - name: Hide status bar in Info.plist
+#        run: |
+#          /usr/libexec/PlistBuddy -c "Add :UIStatusBarHidden bool true" ios/App/App/Info.plist
+#          /usr/libexec/PlistBuddy -c "Set :UIStatusBarHidden true" ios/App/App/Info.plist || \
+#          /usr/libexec/PlistBuddy -c "Set :UIViewControllerBasedStatusBarAppearance false" ios/App/App/Info.plist || \
+#          /usr/libexec/PlistBuddy -c "Add :UIViewControllerBasedStatusBarAppearance bool false" ios/App/App/Info.plist
 
       # ---- Build for iOS Simulator (universal x86_64 + arm64) ----
       - name: Build .app for Simulator (universal)
