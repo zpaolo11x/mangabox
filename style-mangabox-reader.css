@@ -832,6 +832,8 @@ div.single-page {
 	left: 20px;
 	bottom: calc(80px + var(--mb-bottom-spacer));;
 	border-radius: var(--mb-dialog-box-radius);
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #scaleVal {
@@ -904,8 +906,10 @@ div.single-page {
 
 #controlPanel.hidden #nextBookPanel,
 #readerContainer.hidden #nextBookPanel,
+#readerOverlay.hidden #nextBookPanel,
 #controlPanel.hidden #prevBookPanel,
-#readerContainer.hidden #prevBookPanel {
+#readerContainer.hidden #prevBookPanel,
+#readerOverlay.hidden #prevBookPanel {
 	opacity: 0;
 	pointer-events: none;
 }
