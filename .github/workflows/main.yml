@@ -48,7 +48,7 @@ jobs:
         run: |
           mkdir -p build/icons
           # Windows ico and macOS icns
-          png2icons ./assets/icon_quircle.png ./build/icons/mangabox -icns -i
+          png2icons ./assets/icon_squircle.png ./build/icons/mangabox -icns -i
           png2icons ./assets/icon_transparent.png ./build/icons/mangabox -ico -i
           # iOS AppIcon set
           app-iconset-generator -i ./assets/icon_red.png -o ./build/icons
