@@ -42,7 +42,7 @@ jobs:
         run: |
           mkdir -p build/icons
           # Windows ico
-          png-to-ico ./assets/base/icon_transparent.png > build/icons/mangabox.ico
+          png-to-ico ./assets/icon_transparent.png > build/icons/mangabox.ico
           # macOS icns
           # app-icon generate ./assets/base/icon-bg.png --type=icns --out build/icons
           # Linux pngs
