@@ -234,6 +234,9 @@ jobs:
           cd ios/App
           pod install --repo-update
 
+      - name: Install Capacitor Assets
+        run: npm install --save-dev @capacitor/assets@latest
+
       # ---- Copy AppIcon and clean build ----
       - name: Copy AppIcon set to iOS project
         run: |
