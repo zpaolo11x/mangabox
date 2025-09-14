@@ -47,9 +47,9 @@ jobs:
       - name: Generate icons
         run: |
           mkdir -p build/icons
-          png2icons ./assets/icon_squircle.png ./build/icons/mangabox -icns -i
-          png2icons ./assets/icon_transparent.png ./build/icons/mangabox -ico -i
-          app-iconset-generator -i ./assets/icon_red.png -o ./build/icons
+          png2icons ./assets/icon_squircle/icon.png ./build/icons/mangabox -icns -i
+          png2icons ./assets/icon_transparent/icon.png ./build/icons/mangabox -ico -i
+          app-iconset-generator -i ./assets/icon_red/icon.png -o ./build/icons
       
       - name: List icon files
         run: ls build/icons -lRa
@@ -103,8 +103,8 @@ jobs:
       - name: Generate icons
         run: |
           mkdir -p build/icons
-          npx png2icons ./assets/icon_squircle.png ./build/icons/mangabox -icns -i
-          npx png2icons ./assets/icon_transparent.png ./build/icons/mangabox -ico -i
+          npx png2icons ./assets/icon_squircle/icon.png ./build/icons/mangabox -icns -i
+          npx png2icons ./assets/icon_transparent/icon.png ./build/icons/mangabox -ico -i
 
       - name: Rebuild native modules for Electron
         run: npx electron-rebuild -f -w keytar
@@ -242,7 +242,7 @@ jobs:
           # cp -R assets/icons/AppIcon.appiconset ios/App/App/Assets.xcassets/
           # npx app-iconset-generator -i ./assets/icon_red.png -o ios/App/App/Assets.xcassets/ -p ios
           # mv ios/App/App/Assets.xcassets/ios ios/App/App/Assets.xcassets/AppIcon.appiconset
-          npx @capacitor/assets generate --ios
+          npx @capacitor/assets generate --assetPath assets/icon-red --ios
           # npx rn-app-icon-generator ./assets/icon_red.png --background "#FFFFFF" --platform ios --output ios/App/App/Assets.xcassets/AppIcon.appiconset
           ls -lRa ios/App/App/Assets.xcassets/
           
