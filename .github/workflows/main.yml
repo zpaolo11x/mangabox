@@ -173,7 +173,7 @@ jobs:
         run: npx cap add android
       
       - name: Generate Android assets
-        run: npx @capacitor/assets generate
+        run: npx @capacitor/assets generate --assetPath assets/icon-red --android
             
       - name: Capacitor sync
         run: npx cap sync android
