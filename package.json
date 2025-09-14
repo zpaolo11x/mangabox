@@ -40,7 +40,7 @@
 		"mac": {
 			"target": "dmg",
 			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
-			"icon": "assets/icons/mangabox.icns",
+			"icon": "build/icons/mangabox.icns",
 			"category": "public.app-category.utilities"
 		},
 		"dmg": {
@@ -49,7 +49,7 @@
 		"win": {
 			"target": "portable",
 			"artifactName": "MangaBox-${version}-Windows-${arch}.exe",
-			"icon": "assets/icons/mangabox.ico"
+			"icon": "build/icons/mangabox.ico"
 		},
 		"linux": {
 			"target": "AppImage",
