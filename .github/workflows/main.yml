@@ -41,6 +41,12 @@ jobs:
       - name: Install ImageMagick
         run: sudo apt-get update && sudo apt-get install -y imagemagick
 
+      - name: Check current directory
+        run: pwd
+
+      - name: List files
+        run: ls -la
+
       - name: Generate icons
         run: |
           mkdir -p build/icons
