@@ -43,12 +43,12 @@ jobs:
           mkdir -p build/icons
           # Windows ico
           png-to-ico ./assets/icon_transparent.png > build/icons/mangabox.ico
+          # iOS AppIcon set
+          app-icon generate ./assets/icon_red.png build/icons/AppIcon.appiconset
           # macOS icns
           # app-icon generate ./assets/base/icon-bg.png --type=icns --out build/icons
           # Linux pngs
           # app-icon generate ./assets/base/icon-transparent.png --type=png --out build/icons
-          # iOS AppIcon set
-          # app-icon generate ./assets/base/icon-bg.png --type=ios --out build/icons/AppIcon.appiconset
           # Android mipmaps
           # app-icon generate ./assets/base/icon-transparent.png --type=android --out build/icons/android
 
