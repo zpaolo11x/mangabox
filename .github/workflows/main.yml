@@ -26,6 +26,35 @@ jobs:
         run: |
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+ 
+  icons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install icon generator
+        run: npm install -g app-icon
+
+      - name: Generate icons
+        run: |
+          mkdir -p build/icons
+          # macOS icns
+          app-icon generate ./assets/base/icon-bg.svg --type=icns --out build/icons
+          # Windows ico
+          app-icon generate ./assets/base/icon-transparent.svg --type=ico --out build/icons
+          # Linux pngs
+          app-icon generate ./assets/base/icon-transparent.svg --type=png --out build/icons
+          # iOS AppIcon set
+          app-icon generate ./assets/base/icon-bg.svg --type=ios --out build/icons/AppIcon.appiconset
+          # Android mipmaps
+          app-icon generate ./assets/base/icon-transparent.svg --type=android --out build/icons/android
+
+      - name: Upload icons artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-icons
+          path: build/icons
 
   electron:
     needs: version
