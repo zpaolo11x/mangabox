@@ -35,7 +35,7 @@ jobs:
 
       - name: Install icon generator
         run: |
-          npm install -g app-icon
+          npm install -g app-iconset-generator
           npm install -g png2icons
 
       - name: Check current directory
@@ -47,10 +47,10 @@ jobs:
       - name: Generate icons
         run: |
           mkdir -p build/icons
+          # Windows ico and macOS icns
           png2icons ./assets/icon_red.png ./build/icons/mangabox -all -i
-          # Windows ico
-          # png-to-ico ./assets/icon_transparent.png > build/icons/mangabox.ico
           # iOS AppIcon set
+          app-iconset-generator -i .assets/icon_transparent.png -o .build/icons
           # app-icon --help
           # app-icon generate -i ./assets/icon_red.png -s ./build/icons --platforms ios        
           # macOS icns
