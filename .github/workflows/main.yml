@@ -47,9 +47,9 @@ jobs:
       - name: Generate icons
         run: |
           mkdir -p build/icons
-          png2icons ./assets/icon_squircle/icon.png ./build/icons/mangabox -icns -i
-          png2icons ./assets/icon_transparent/icon.png ./build/icons/mangabox -ico -i
-          app-iconset-generator -i ./assets/icon_red/icon.png -o ./build/icons
+          png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
+          png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
+          app-iconset-generator -i ./assets/icon-red/icon.png -o ./build/icons
       
       - name: List icon files
         run: ls build/icons -lRa
@@ -103,8 +103,8 @@ jobs:
       - name: Generate icons
         run: |
           mkdir -p build/icons
-          npx png2icons ./assets/icon_squircle/icon.png ./build/icons/mangabox -icns -i
-          npx png2icons ./assets/icon_transparent/icon.png ./build/icons/mangabox -ico -i
+          npx png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
+          npx png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
 
       - name: Rebuild native modules for Electron
         run: npx electron-rebuild -f -w keytar
