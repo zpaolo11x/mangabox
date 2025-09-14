@@ -62,6 +62,9 @@ jobs:
           # app-icon generate ./assets/base/icon-transparent.png --type=png --out build/icons
           # Android mipmaps
           # app-icon generate ./assets/base/icon-transparent.png --type=android --out build/icons/android
+      
+      - name: List icon files
+        run: ls build/icons -la
 
       - name: Upload icons artifact
         uses: actions/upload-artifact@v4
