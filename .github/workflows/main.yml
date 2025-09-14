@@ -36,10 +36,7 @@ jobs:
       - name: Install icon generator
         run: |
           npm install -g app-icon
-          npm install -g png-to-ico
-
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
+          npm install -g png2icons
 
       - name: Check current directory
         run: pwd
@@ -50,11 +47,12 @@ jobs:
       - name: Generate icons
         run: |
           mkdir -p build/icons
+          png2icons ./assets/icon_red.png ./build/icons/mangabox.icns --icns -i
           # Windows ico
-          png-to-ico ./assets/icon_transparent.png > build/icons/mangabox.ico
+          # png-to-ico ./assets/icon_transparent.png > build/icons/mangabox.ico
           # iOS AppIcon set
-          app-icon --help
-          app-icon generate -i ./assets/icon_red.png -s ./build/icons --platforms ios        
+          # app-icon --help
+          # app-icon generate -i ./assets/icon_red.png -s ./build/icons --platforms ios        
           # macOS icns
           # app-icon generate ./assets/base/icon-bg.png --type=icns --out build/icons
           # Linux pngs
