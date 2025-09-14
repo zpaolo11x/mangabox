@@ -54,7 +54,8 @@ jobs:
           png-to-ico ./assets/icon_transparent.png > build/icons/mangabox.ico
           # iOS AppIcon set
           app-icon --help
-          app-icon generate --input=./assets/icon_red.png --output=./build/icons/AppIcon.appiconset --platforms=ios          # macOS icns
+          app-icon generate -i ./assets/icon_red.png -o ./build/icons/AppIcon.appiconset         
+          # macOS icns
           # app-icon generate ./assets/base/icon-bg.png --type=icns --out build/icons
           # Linux pngs
           # app-icon generate ./assets/base/icon-transparent.png --type=png --out build/icons
