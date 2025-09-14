@@ -47,7 +47,7 @@ jobs:
       - name: Generate icons
         run: |
           mkdir -p build/icons
-          png2icons-cli ./assets/icon_red.png ./build/icons/mangabox -icns -i
+          png2icons ./assets/icon_red.png ./build/icons/mangabox -all -i
           # Windows ico
           # png-to-ico ./assets/icon_transparent.png > build/icons/mangabox.ico
           # iOS AppIcon set
