@@ -310,9 +310,6 @@
 			});
 		}
 
-		if (isCapacitor) Capacitor.Plugins.StatusBar.show();
-
-
 		executeFade(1);
 
 		function getSharpCornerIphone() {
@@ -343,6 +340,14 @@
 		*/
 
 		const isSharpCornerIphone = getSharpCornerIphone();
+
+		if (isCapacitor) {
+			if (isSharpCornerIphone) {
+				Capacitor.Plugins.StatusBar.hide();
+			} else {
+				Capacitor.Plugins.StatusBar.show();
+			}
+		}
 
 		//MB Pinch To Zoom
 
@@ -3065,7 +3070,7 @@
 			//dragbarOffReader();
 
 			updatePWABar();
-			if (isCapacitor) Capacitor.Plugins.StatusBar.show();
+			if (isCapacitor && !isSharpCornerIphone) Capacitor.Plugins.StatusBar.show();
 
 		}
 
@@ -4507,8 +4512,10 @@
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
+				if (isCapacitor && !isSharpCornerIphone) Capacitor.Plugins.StatusBar.show();
 				updatePWABar();
 			} else {
+				if (isCapacitor) Capacitor.Plugins.StatusBar.hide();
 				updatePWABar(rd.titleBarColor);
 			}
 
@@ -4534,7 +4541,7 @@
 			touchLock = false;
 			handleLeftArrow();
 		});
-		
+
 		toRightPage.addEventListener('pointerdown', () => {
 			touchLock = true;
 		});
@@ -4902,7 +4909,7 @@
 			toggleMenu();
 		})
 		*/
-		
+
 		webtoonContainer.addEventListener('pointerdown', () => {
 			touchLock = true;
 		});
