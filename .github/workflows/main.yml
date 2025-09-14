@@ -38,6 +38,9 @@ jobs:
           npm install -g app-icon
           npm install -g png-to-ico
 
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
       - name: Generate icons
         run: |
           mkdir -p build/icons
