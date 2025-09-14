@@ -239,10 +239,9 @@ jobs:
         run: |
           rm -rf ios/App/App/Assets.xcassets/AppIcon.appiconset
           # cp -R assets/icons/AppIcon.appiconset ios/App/App/Assets.xcassets/
-          npx app-iconset-generator -i ./assets/icon_red.png -o ios/App/App/Assets.xcassets/
-          mv ios/App/App/Assets.xcassets/ios ios/App/App/Assets.xcassets/AppIcon.appiconset
+          npx app-iconset-generator -i ./assets/icon_red.png -o ios/App/App/Assets.xcassets/ -n AppIcon
           ls -lRa ios/App/App/Assets.xcassets/
-          
+
       - name: Clean previous build
         run: |
           cd ios/App
