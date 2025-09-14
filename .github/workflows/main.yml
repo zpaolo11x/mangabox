@@ -242,7 +242,7 @@ jobs:
           # npx app-iconset-generator -i ./assets/icon_red.png -o ios/App/App/Assets.xcassets/ -p ios
           # mv ios/App/App/Assets.xcassets/ios ios/App/App/Assets.xcassets/AppIcon.appiconset
           # npx @capacitor/assets generate --icon ./assets/icon_red.png --ios
-          npx rn-app-icon-generator ./assets/icon_red.png --platform ios --background "#FFFFFF" --output ios/App/App/Assets.xcassets/AppIcon.appiconset
+          npx rn-app-icon-generator ./assets/icon_red.png --background "#FFFFFF" --platform ios --output ios/App/App/Assets.xcassets/AppIcon.appiconset
           ls -lRa ios/App/App/Assets.xcassets/
           
       - name: Clean previous build
