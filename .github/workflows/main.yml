@@ -42,15 +42,15 @@ jobs:
         run: |
           mkdir -p build/icons
           # Windows ico
-          png-to-ico ./assets/base/icon_transparent.svg > build/icons/app.ico
+          png-to-ico ./assets/base/icon_transparent.png > build/icons/mangabox.ico
           # macOS icns
-          # app-icon generate ./assets/base/icon-bg.svg --type=icns --out build/icons
+          # app-icon generate ./assets/base/icon-bg.png --type=icns --out build/icons
           # Linux pngs
-          # app-icon generate ./assets/base/icon-transparent.svg --type=png --out build/icons
+          # app-icon generate ./assets/base/icon-transparent.png --type=png --out build/icons
           # iOS AppIcon set
-          # app-icon generate ./assets/base/icon-bg.svg --type=ios --out build/icons/AppIcon.appiconset
+          # app-icon generate ./assets/base/icon-bg.png --type=ios --out build/icons/AppIcon.appiconset
           # Android mipmaps
-          # app-icon generate ./assets/base/icon-transparent.svg --type=android --out build/icons/android
+          # app-icon generate ./assets/base/icon-transparent.png --type=android --out build/icons/android
 
       - name: Upload icons artifact
         uses: actions/upload-artifact@v4
