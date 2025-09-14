@@ -237,8 +237,8 @@ jobs:
       # ---- Copy AppIcon and clean build ----
       - name: Copy AppIcon set to iOS project
         run: |
-          rm -rf ios/App/App/Assets.xcassets/AppIcon.appiconset
-          mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset
+          # rm -rf ios/App/App/Assets.xcassets/AppIcon.appiconset
+          # mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset
           # cp -R assets/icons/AppIcon.appiconset ios/App/App/Assets.xcassets/
           # npx app-iconset-generator -i ./assets/icon_red.png -o ios/App/App/Assets.xcassets/ -p ios
           # mv ios/App/App/Assets.xcassets/ios ios/App/App/Assets.xcassets/AppIcon.appiconset
