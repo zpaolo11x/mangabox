@@ -27,30 +27,40 @@ jobs:
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
  
-  icons:
+  generate-icons:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install icon generator
-        run: npm install -g app-icon
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install app-icon-cli
+        run: npm install -g app-icon-cli
 
       - name: Generate icons
         run: |
           mkdir -p build/icons
-          # macOS icns
-          app-icon generate ./assets/base/icon-bg.svg --type=icns --out build/icons
-          # Windows ico
-          app-icon generate ./assets/base/icon-transparent.svg --type=ico --out build/icons
-          # Linux pngs
-          app-icon generate ./assets/base/icon-transparent.svg --type=png --out build/icons
-          # iOS AppIcon set
-          app-icon generate ./assets/base/icon-bg.svg --type=ios --out build/icons/AppIcon.appiconset
-          # Android mipmaps
-          app-icon generate ./assets/base/icon-transparent.svg --type=android --out build/icons/android
 
-      - name: Upload icons artifact
+          # macOS icns
+          app-icon-cli icns ./assets/base/icon-bg.svg ./build/icons/icon.icns
+
+          # Windows ico
+          app-icon-cli ico ./assets/base/icon-transparent.svg ./build/icons/icon.ico
+
+          # Linux png set
+          app-icon-cli png ./assets/base/icon-transparent.svg ./build/icons/png
+
+          # iOS AppIcon.appiconset (images + Contents.json)
+          app-icon-cli ios ./assets/base/icon-bg.svg ./build/icons/AppIcon.appiconset
+
+          # Android mipmap directories
+          app-icon-cli android ./assets/base/icon-transparent.svg ./build/icons/android
+
+      - name: Upload icons
         uses: actions/upload-artifact@v4
         with:
           name: generated-icons
