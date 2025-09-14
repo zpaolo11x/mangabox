@@ -50,7 +50,7 @@ jobs:
           # Windows ico and macOS icns
           png2icons ./assets/icon_red.png ./build/icons/mangabox -all -i
           # iOS AppIcon set
-          app-iconset-generator -i .assets/icon_transparent.png -o .build/icons
+          app-iconset-generator -i ./assets/icon_transparent.png -o .build/icons
           # app-icon --help
           # app-icon generate -i ./assets/icon_red.png -s ./build/icons --platforms ios        
           # macOS icns
