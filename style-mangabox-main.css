@@ -197,6 +197,11 @@
 	-webkit-app-region: drag;
 }
 
+.disabled {
+	opacity: 0.3;
+	pointer-events: none;
+}
+
 html,
 body {
 	overscroll-behavior: none;
