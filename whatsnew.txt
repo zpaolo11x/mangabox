@@ -1,9 +1,10 @@
 Main UI
 - Improve title bar management for iOS PWA and app
-- Disable fullscreen button on iOS and Android
+- Disable fullscreen button on iOS and Android app
 
 Redaer UI
 - Pinch to zoom pages in PWA and app without affecting the UI
+- Automatically hide the title bar on iOS app when reading
 
 Build
 - Add iOS/ipadOS build in .app and .ipa unsigned format.
