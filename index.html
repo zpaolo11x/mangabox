@@ -3285,6 +3285,14 @@
 				rd.webtoonScrollRatio = webtoonRatio()
 			}
 
+			readerContainer.style.transform = `scale(100%)`;
+			readerContainer.style.transformOrigin = `50% 50%`;
+
+					 scale = 1;
+		 startDist = 0;
+		 originX = 0;
+		 originY = 0;
+		 
 			setTimeout(() => {
 				webtoonContainer.style.overflow = 'auto';
 				//thumbStripScrollContent.style.overflowX = 'auto';
