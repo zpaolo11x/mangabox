@@ -355,10 +355,6 @@
 		const page = document.getElementById("touchPanel");
 		const pageTarget = document.getElementById("readerContainer");
 
-		let scale = 1;
-		let startDist = 0;
-		let originX = 0, originY = 0;
-
 		function getDistance(touches) {
 			const dx = touches[0].clientX - touches[1].clientX;
 			const dy = touches[0].clientY - touches[1].clientY;
@@ -372,42 +368,40 @@
 			};
 		}
 
-		let touchLock = false;
-
 		function createPinchResponse(page, pageTarget) {
 
 			page.addEventListener("touchstart", e => {
 				if (e.touches.length === 2) {
-					touchLock = false;
+					rd.touchLock = false;
 
-					startDist = getDistance(e.touches);
+					rd.startDist = getDistance(e.touches);
 					const mid = getMidpoint(e.touches);
 
 					// convert screen coords into element coords
 					const rect = page.getBoundingClientRect();
-					originX = ((mid.x - rect.left) / rect.width) * 100;
-					originY = ((mid.y - rect.top) / rect.height) * 100;
+					rd.originX = ((mid.x - rect.left) / rect.width) * 100;
+					rd.originY = ((mid.y - rect.top) / rect.height) * 100;
 
-					pageTarget.style.transformOrigin = `${originX}% ${originY}%`;
+					pageTarget.style.transformOrigin = `${rd.originX}% ${rd.originY}%`;
 				}
 			}, { passive: true });
 
 			page.addEventListener("touchmove", e => {
-				touchLock = false;
+				rd.touchLock = false;
 				if (e.touches.length === 2) {
 					const newDist = getDistance(e.touches);
-					const factor = newDist / startDist;
-					const newScale = Math.min(Math.max(1, scale * factor), 4);
+					const factor = newDist / rd.startDist;
+					const newScale = Math.min(Math.max(1, rd.scale * factor), 4);
 
 					pageTarget.style.transform = `scale(${newScale})`;
 				}
 			}, { passive: true });
 
 			page.addEventListener("touchend", e => {
-				touchLock = false;
+				rd.touchLock = false;
 				if (e.touches.length < 2) {
 					const matrix = new WebKitCSSMatrix(getComputedStyle(pageTarget).transform);
-					scale = matrix.a;
+					rd.scale = matrix.a;
 				}
 			});
 		}
@@ -2923,6 +2917,12 @@
 			prevBook: null,
 
 			titleBarColor: 'black',
+
+			scale: 1,
+			startDist: 0,
+			originX: 0,
+			originY: 0,
+			touchLock: 0
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
@@ -2967,6 +2967,12 @@
 			rd.bookId = bookId;
 
 			rd.spreadFocus = 'focus-center';
+
+			rd.scale = 1;
+			rd.startDist = 0;
+			rd.originX = 0;
+			rd.originY = 0;
+			rd.touchLock = 0;
 
 			scaleWebtoon(0);
 
@@ -3288,11 +3294,6 @@
 			readerContainer.style.transform = `scale(100%)`;
 			readerContainer.style.transformOrigin = `50% 50%`;
 
-					 scale = 1;
-		 startDist = 0;
-		 originX = 0;
-		 originY = 0;
-		 
 			setTimeout(() => {
 				webtoonContainer.style.overflow = 'auto';
 				//thumbStripScrollContent.style.overflowX = 'auto';
@@ -4543,29 +4544,29 @@
 		rightLimit.addEventListener('click', handleRightLimit);
 
 		toLeftPage.addEventListener('pointerdown', () => {
-			touchLock = true;
+			rd.touchLock = true;
 		});
 		toLeftPage.addEventListener('pointerup', () => {
-			if (!touchLock) return;
-			touchLock = false;
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
 			handleLeftArrow();
 		});
 
 		toRightPage.addEventListener('pointerdown', () => {
-			touchLock = true;
+			rd.touchLock = true;
 		});
 		toRightPage.addEventListener('pointerup', () => {
-			if (!touchLock) return;
-			touchLock = false;
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
 			handleRightArrow();
 		});
 
 		openMenu.addEventListener('pointerdown', () => {
-			touchLock = true;
+			rd.touchLock = true;
 		});
 		openMenu.addEventListener('pointerup', () => {
-			if (!touchLock) return;
-			touchLock = false;
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
 			toggleMenu();
 		});
 
@@ -4920,11 +4921,11 @@
 		*/
 
 		webtoonContainer.addEventListener('pointerdown', () => {
-			touchLock = true;
+			rd.touchLock = true;
 		});
 		webtoonContainer.addEventListener('pointerup', () => {
-			if (!touchLock) return;
-			touchLock = false;
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
 			toggleMenu();
 		});
 
