@@ -163,7 +163,7 @@
 	right: 0;
 	top: 0;
 	height: 1px;
-	z-index: 1002;
+	z-index: 1004;
 	transition: top 0.3s;
 
 	margin: 0;
@@ -925,6 +925,11 @@ div.single-page {
 	pointer-events: none;
 }
 
+#nextBookPanel.hidden #nextBookButton,
+#prevBookPanel.hidden #prevBookButton{
+	pointer-events: none;
+}
+
 #bookName {
 	text-align: center;
 	font-size: 20px;
@@ -1073,7 +1078,7 @@ div.single-page {
 	/*box-shadow: inset green 0px 0px 15px;*/
 	grid-template-columns: 1fr 1.5fr 1fr;
 	/*z-index: 1002;*/
-	z-index:1004;
+	z-index:1003;
 	box-sizing: border-box;
 	border-bottom: 5px solid transparent;
 
