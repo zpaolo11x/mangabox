@@ -369,7 +369,7 @@ jobs:
           cd android
           ./gradlew assembleDebug
           cd $GITHUB_WORKSPACE
-          mv android/app/build/outputs/apk/debug/app-debug.apk \
+          mv android/app/build/output/apk/debug/app-debug.apk \
             output/mangabox-${{ env.version }}-Android-debug.apk
 
       - name: Build for iOS Simulator
