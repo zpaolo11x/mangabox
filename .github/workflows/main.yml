@@ -314,15 +314,12 @@ jobs:
         include:
           - os: macos-latest
             sys: ios
-            #arch: x64
             name: iOS-APP
           - os: macos-latest
             sys: ios
-            #arch: x64
             name: iOS-IPA
           - os: ubuntu-latest
             sys: android
-            #arch: arm64
             name: Android
     steps:
       - name: Checkout code
@@ -374,7 +371,7 @@ jobs:
         run: | 
           pwd
           ls
-          mv android/app/build/output/apk/debug/app-debug.apk output/mangabox-${{ env.version }}.apk
+          mv android/app/build/outputs/apk/debug/app-debug.apk output/mangabox-${{ env.version }}.apk
 
       - name: Build for iOS Simulator
         if: ${{ matrix.name == 'iOS-APP'}}
