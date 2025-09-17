@@ -209,9 +209,7 @@ jobs:
 
       - name: Android - Build app
         if: ${{ matrix.sys == 'android' }}
-        run: |
-          cd android
-          ./gradlew assembleDebug
+        run: npx cap build android --debug
 
       - name: Android - Move app to target
         if: ${{ matrix.sys == 'android' }}
