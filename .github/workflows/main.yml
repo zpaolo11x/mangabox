@@ -251,20 +251,10 @@ jobs:
             archive \
             -archivePath build/App.xcarchive
 
-          # Export the .ipa directly (unsigned)
-          xcodebuild \
-            -exportArchive \
+          xcodebuild -exportArchive \
             -archivePath build/App.xcarchive \
             -exportPath build/export \
-            -exportOptionsPlist <(cat <<EOF
-          {
-            "method": "ad-hoc",
-            "signingStyle": "manual",
-            "compileBitcode": false,
-            "stripSwiftSymbols": true
-          }
-          EOF
-          )
+            -exportOptionsPlist ../../exportOptions.plist
 
       - name: iOS - Package unsigned .ipa
         if: ${{ matrix.name == 'iOS-ipa'}}
