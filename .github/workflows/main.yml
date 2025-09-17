@@ -181,6 +181,7 @@ jobs:
       - name: Copy custom styles.xml
         run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
 
+# WE ARE HERE
       - name: Build APK
         run: |
           cd android
@@ -237,15 +238,10 @@ jobs:
       # ---- Copy AppIcon and clean build ----
       - name: Copy AppIcon set to iOS project
         run: |
-          # rm -rf ios/App/App/Assets.xcassets/AppIcon.appiconset
-          # mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset
-          # cp -R assets/icons/AppIcon.appiconset ios/App/App/Assets.xcassets/
-          # npx app-iconset-generator -i ./assets/icon_red.png -o ios/App/App/Assets.xcassets/ -p ios
-          # mv ios/App/App/Assets.xcassets/ios ios/App/App/Assets.xcassets/AppIcon.appiconset
           npx @capacitor/assets generate --assetPath assets/icon-red --ios
-          # npx rn-app-icon-generator ./assets/icon_red.png --background "#FFFFFF" --platform ios --output ios/App/App/Assets.xcassets/AppIcon.appiconset
           ls -lRa ios/App/App/Assets.xcassets/
           
+# WE ARE HERE
       - name: Clean previous build
         run: |
           cd ios/App
@@ -279,7 +275,7 @@ jobs:
 
       # ---- Build for Real Device (.ipa, unsigned) ----
  
-      - name: Build for device (.app)
+      - name: Build .ipa for device
         run: |
           cd ios/App
           xcodebuild \
@@ -302,8 +298,131 @@ jobs:
           cp -R App.app Payload/
           zip -r ../../export/mangabox-${{ env.version }}.ipa Payload
 
+      - name: Upload .ipa artifact (Device)
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-iOS-${{ env.version }}-ipa
+          path: ios/App/build/App.xcarchive/export/*.ipa
 
+  capacitor:
+    needs: [version, web]
+    runs-on: ${{ matrix.os }}
+    env:
+      version: ${{ needs.version.outputs.version }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            sys: ios
+            #arch: x64
+            name: iOS-APP
+          - os: macos-latest
+            sys: ios
+            #arch: x64
+            name: iOS-IPA
+          - os: ubuntu-latest
+            sys: android
+            #arch: arm64
+            name: Android
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Download webdeploy artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: MangaBox-Web-${{ env.version }}
+          path: dist
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Add System platform
+        run: npx cap add ${{ matrix.sys }}
+      
+      - name: Generate icon assets
+        run: npx @capacitor/assets generate --assetPath assets/icon-red --${{ matrix.sys }}
+
+      - name: iOS - Install Capacitor StatusBar plugin
+        if: ${{ matrix.sys == 'ios' }}
+        run: npm install @capacitor/status-bar@6
+
+      - name: Capacitor sync
+        run: npx cap sync ${{ matrix.sys }}
+
+      - name: iOS - Install CocoaPods dependencies
+        if: ${{ matrix.sys == 'ios' }}
+        run: |
+          cd ios/App
+          pod install --repo-update
+
+      - name: Android - Copy custom styles.xml
+        if: ${{ matrix.sys == 'android' }}
+        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
+
+      - name: Prepare output folder
+        run: mkdir output
+
+      - name: Build for Android
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          cd android
+          ./gradlew assembleDebug
+          mv android/app/build/outputs/apk/debug/app-debug.apk \
+            output/mangabox-${{ env.version }}-Android-debug.apk
+
+      - name: Build for iOS Simulator
+        if: ${{ matrix.name == 'iOS-APP'}}
+        run: |
+          cd ios/App
+            xcodebuild \
+              -workspace App.xcworkspace \
+              -scheme App \
+              -configuration Debug \
+              -sdk iphonesimulator \
+              -arch x86_64 -arch arm64 \
+              -derivedDataPath build \
+              ONLY_ACTIVE_ARCH=NO
+
+      - name: Move app to target
+        if: ${{ matrix.name == 'iOS-APP' }}
+        run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}.app
+
+      - name: Build for device
+        if: ${{ matrix.name == 'iOS-IPA'}}
+        run: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=NO \
+            archive \
+            -archivePath $PWD/build/App.xcarchive
+
+      - name: Package unsigned .ipa
+        if: ${{ matrix.name == 'iOS-IPA'}}
+        run: |
+          mkdir -p ios/App/build/export/Payload
+          cp -R ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
+          cd ios/App/build/export
+          zip -r output.ipa Payload
+          cd
+          mv ios/App/build/export/output.ipa output/MangaBox-${{ env.version }}.ipa
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MangaBox-${{ matrix.name }}-${{ env.version }}
+          path: |
+            output/*.apk
+            output/*.app
+            output/*.ipa
+          
 #      - name: Build for device
 #        run: |
 #          cd ios/App
@@ -327,13 +446,6 @@ jobs:
 #            -archivePath build/App.xcarchive \
 #            -exportPath export \
 #            -exportOptionsPlist ../../exportOptions.plist
-
-
-      - name: Upload .ipa artifact (Device)
-        uses: actions/upload-artifact@v4
-        with:
-          name: MangaBox-iOS-${{ env.version }}-ipa
-          path: ios/App/build/App.xcarchive/export/*.ipa
 
 
 
