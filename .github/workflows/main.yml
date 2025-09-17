@@ -411,7 +411,7 @@ jobs:
           cp -R ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
           cd ios/App/build/export
           zip -r output.ipa Payload
-          cd
+          cd $GITHUB_WORKSPACE
           mv ios/App/build/export/output.ipa output/MangaBox-${{ env.version }}.ipa
 
       - name: Upload artifacts
