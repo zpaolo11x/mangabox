@@ -364,13 +364,17 @@ jobs:
         run: mkdir output
 
       - name: Build for Android
-        if: ${{ matrix.sys == 'android' }}
+        if: ${{ matrix.name == 'Android' }}
         run: |
           cd android
           ./gradlew assembleDebug
-          cd $GITHUB_WORKSPACE
-          mv android/app/build/output/apk/debug/app-debug.apk \
-            output/mangabox-${{ env.version }}-Android-debug.apk
+ 
+      - name: Move app to target
+        if: ${{ matrix.name == 'Android' }}
+        run: | 
+          pwd
+          ls
+          mv android/app/build/output/apk/debug/app-debug.apk output/mangabox-${{ env.version }}.apk
 
       - name: Build for iOS Simulator
         if: ${{ matrix.name == 'iOS-APP'}}
