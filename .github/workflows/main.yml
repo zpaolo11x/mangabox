@@ -7,7 +7,7 @@ on:
       - devtest
       - devtest_*
     paths-ignore:
-      - 'docs/**'
+      - "docs/**"
 
 jobs:
   version:
@@ -26,7 +26,7 @@ jobs:
         run: |
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
- 
+
   icons:
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +50,7 @@ jobs:
           png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
           png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
           app-iconset-generator -i ./assets/icon-red/icon.png -o ./build/icons
-      
+
       - name: List icon files
         run: ls build/icons -lRa
 
@@ -63,7 +63,7 @@ jobs:
   electron:
     needs: version
     runs-on: ${{ matrix.os }}
-    env: 
+    env:
       version: ${{ needs.version.outputs.version }}
     strategy:
       matrix:
@@ -126,7 +126,7 @@ jobs:
   web:
     needs: version
     runs-on: ubuntu-latest
-    env: 
+    env:
       version: ${{ needs.version.outputs.version }}
     steps:
       - name: Checkout code
@@ -150,159 +150,6 @@ jobs:
         with:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
-
-  android:
-    needs: [version, web]
-    runs-on: ubuntu-latest
-    env:
-      version: ${{ needs.version.outputs.version }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download webdeploy artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MangaBox-Web-${{ env.version }}
-          path: dist
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Add Android platform
-        run: npx cap add android
-      
-      - name: Generate Android assets
-        run: npx @capacitor/assets generate --assetPath assets/icon-red --android
-            
-      - name: Capacitor sync
-        run: npx cap sync android
-
-      - name: Copy custom styles.xml
-        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
-
-# WE ARE HERE
-      - name: Build APK
-        run: |
-          cd android
-          ./gradlew assembleDebug
-
-      - name: Check for APK output
-        run: find android/app/build/outputs/ -type f
-
-      - name: Rename APK with version
-        run: |
-          VERSION=$(jq -r .version capacitor.config.json)
-          mv android/app/build/outputs/apk/debug/app-debug.apk \
-            android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-Android-debug.apk
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: MangaBox-Android-${{ env.version }}
-          path: android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-Android-debug.apk
-  ios:
-    needs: [version, web]
-    runs-on: macos-latest
-    env:
-      version: ${{ needs.version.outputs.version }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download webdeploy artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MangaBox-Web-${{ env.version }}
-          path: dist
-
-      - name: Install dependencies
-        run: npm install
-      
-      - name: Add iOS platform
-        run: npx cap add ios
-
-      - name: Install Capacitor StatusBar plugin
-        run: |
-          npm install @capacitor/status-bar@6
-          npx cap sync ios
-
-      #- name: Capacitor sync
-      #  run: npx cap sync ios
-
-      - name: Install CocoaPods dependencies
-        run: |
-          cd ios/App
-          pod install --repo-update
-
-      # ---- Copy AppIcon and clean build ----
-      - name: Copy AppIcon set to iOS project
-        run: |
-          npx @capacitor/assets generate --assetPath assets/icon-red --ios
-          ls -lRa ios/App/App/Assets.xcassets/
-          
-# WE ARE HERE
-      - name: Clean previous build
-        run: |
-          cd ios/App
-          xcodebuild clean -workspace App.xcworkspace -scheme App
-
-#      - name: Hide status bar in Info.plist
-#        run: |
-#          /usr/libexec/PlistBuddy -c "Add :UIStatusBarHidden bool true" ios/App/App/Info.plist
-#          /usr/libexec/PlistBuddy -c "Set :UIStatusBarHidden true" ios/App/App/Info.plist || \
-#          /usr/libexec/PlistBuddy -c "Set :UIViewControllerBasedStatusBarAppearance false" ios/App/App/Info.plist || \
-#          /usr/libexec/PlistBuddy -c "Add :UIViewControllerBasedStatusBarAppearance bool false" ios/App/App/Info.plist
-
-      # ---- Build for iOS Simulator (universal x86_64 + arm64) ----
-      - name: Build .app for Simulator (universal)
-        run: |
-          cd ios/App
-          xcodebuild \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Debug \
-            -sdk iphonesimulator \
-            -arch x86_64 -arch arm64 \
-            -derivedDataPath build \
-            ONLY_ACTIVE_ARCH=NO
-
-      - name: Upload .app artifact (Simulator)
-        uses: actions/upload-artifact@v4
-        with:
-          name: MangaBox-iOS-${{ env.version }}-app
-          path: ios/App/build/Build/Products/Debug-iphonesimulator/*.app
-
-      # ---- Build for Real Device (.ipa, unsigned) ----
- 
-      - name: Build .ipa for device
-        run: |
-          cd ios/App
-          xcodebuild \
-            -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -derivedDataPath build \
-            CODE_SIGN_IDENTITY="" \
-            CODE_SIGNING_REQUIRED=NO \
-            ONLY_ACTIVE_ARCH=NO \
-            archive \
-            -archivePath $PWD/build/App.xcarchive
-
-      - name: Package unsigned .ipa
-        run: |
-          cd ios/App/build/App.xcarchive/Products/Applications
-          mkdir -p ../../export
-          mkdir -p Payload
-          cp -R App.app Payload/
-          zip -r ../../export/mangabox-${{ env.version }}.ipa Payload
-
-      - name: Upload .ipa artifact (Device)
-        uses: actions/upload-artifact@v4
-        with:
-          name: MangaBox-iOS-${{ env.version }}-ipa
-          path: ios/App/build/App.xcarchive/export/*.ipa
 
   capacitor:
     needs: [version, web]
@@ -336,7 +183,7 @@ jobs:
 
       - name: Add System platform
         run: npx cap add ${{ matrix.sys }}
-      
+
       - name: Generate icon assets
         run: npx @capacitor/assets generate --assetPath assets/icon-red --${{ matrix.sys }}
 
@@ -365,10 +212,10 @@ jobs:
         run: |
           cd android
           ./gradlew assembleDebug
- 
+
       - name: Move app to target
         if: ${{ matrix.name == 'Android' }}
-        run: | 
+        run: |
           pwd
           ls
           mv android/app/build/outputs/apk/debug/app-debug.apk output/mangabox-${{ env.version }}.apk
@@ -377,14 +224,14 @@ jobs:
         if: ${{ matrix.name == 'iOS-APP'}}
         run: |
           cd ios/App
-            xcodebuild \
-              -workspace App.xcworkspace \
-              -scheme App \
-              -configuration Debug \
-              -sdk iphonesimulator \
-              -arch x86_64 -arch arm64 \
-              -derivedDataPath build \
-              ONLY_ACTIVE_ARCH=NO
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -arch x86_64 -arch arm64 \
+            -derivedDataPath build \
+            ONLY_ACTIVE_ARCH=NO
 
       - name: Move app to target
         if: ${{ matrix.name == 'iOS-APP' }}
@@ -424,32 +271,6 @@ jobs:
             output/*.apk
             output/*.app
             output/*.ipa
-          
-#      - name: Build for device
-#        run: |
-#          cd ios/App
-#          xcodebuild \
-#            -workspace App.xcworkspace \
-#            -scheme App \
-#            -configuration Release \
-#            -sdk iphoneos \
-#            -derivedDataPath build \
-#            CODE_SIGN_IDENTITY="" \
-#            CODE_SIGNING_REQUIRED=NO \
-#            ONLY_ACTIVE_ARCH=NO \
-#            -archivePath $PWD/build/App.xcarchive \
-#            archive
-
-#      - name: Export .ipa
-#        run: |
-#          cd ios/App
-#          mkdir -p export
-#          xcodebuild -exportArchive \
-#            -archivePath build/App.xcarchive \
-#            -exportPath export \
-#            -exportOptionsPlist ../../exportOptions.plist
-
-
 
   release:
     needs: [electron, web, android, version]
@@ -525,4 +346,3 @@ jobs:
             webdeploy/MangaBox-${{ env.version }}-Web.zip
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
