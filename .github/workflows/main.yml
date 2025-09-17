@@ -27,38 +27,38 @@ jobs:
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-  icons:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install icon generator
-        run: |
-          npm install -g app-iconset-generator
-          npm install -g png2icons
-
-      - name: Check current directory
-        run: pwd
-
-      - name: List files
-        run: ls -la
-
-      - name: Generate icons
-        run: |
-          mkdir -p build/icons
-          png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
-          png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
-          app-iconset-generator -i ./assets/icon-red/icon.png -o ./build/icons
-
-      - name: List icon files
-        run: ls build/icons -lRa
-
-      - name: Upload icons artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-icons
-          path: build/icons
+#  icons:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Install icon generator
+#        run: |
+#          npm install -g app-iconset-generator
+#          npm install -g png2icons
+#
+#      - name: Check current directory
+#        run: pwd
+#
+#      - name: List files
+#        run: ls -la
+#
+#      - name: Generate icons
+#        run: |
+#          mkdir -p build/icons
+#          png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
+#          png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
+#          app-iconset-generator -i ./assets/icon-red/icon.png -o ./build/icons
+#
+#      - name: List icon files
+#        run: ls build/icons -lRa
+#
+#      - name: Upload icons artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: generated-icons
+#          path: build/icons
 
   electron:
     needs: version
