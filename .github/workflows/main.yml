@@ -273,7 +273,7 @@ jobs:
             output/*.ipa
 
   release:
-    needs: [electron, web, android, version]
+    needs: [electron, web, capacitor, version]
     env:
       version: ${{ needs.version.outputs.version }}
     if: github.ref_name == 'main' # Run this job only for the 'main' branch
@@ -313,11 +313,10 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy
 
-      - name: Download Android APK artifact
+      - name: Download Capacitor artifacts
         uses: actions/download-artifact@v4
         with:
-          name: MangaBox-Android-${{ env.version }}
-          path: android
+          path: output
 
       - name: List release contents
         run: |
@@ -325,8 +324,8 @@ jobs:
           ls -lR dist/
           echo "== webdeploy =="
           ls -lR webdeploy/
-          echo "== android =="
-          ls -lR android/
+          echo "== output =="
+          ls -lR output/
 
       - name: Zip web folder
         run: |
@@ -343,6 +342,7 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
+            output/*/*
             webdeploy/MangaBox-${{ env.version }}-Web.zip
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
