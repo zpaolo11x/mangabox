@@ -251,15 +251,12 @@ jobs:
             archive \
             -archivePath build/App.xcarchive
 
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportPath build/export \
-            -exportOptionsPlist ../../exportOptions.plist
-
       - name: iOS - Package unsigned .ipa
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
-          mv ios/App/build/export/*.ipa output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa
+          cp -R ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
+          cd ios/App/build/export
+          zip -r $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa Payload
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
