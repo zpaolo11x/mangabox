@@ -254,7 +254,7 @@ jobs:
       - name: iOS - Package unsigned .ipa
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
-          cp -R ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
+          rsync -a ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
           cd ios/App/build/export
           zip -r $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa Payload
 
