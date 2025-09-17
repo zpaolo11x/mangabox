@@ -368,6 +368,7 @@ jobs:
         run: |
           cd android
           ./gradlew assembleDebug
+          cd $GITHUB_WORKSPACE
           mv android/app/build/outputs/apk/debug/app-debug.apk \
             output/mangabox-${{ env.version }}-Android-debug.apk
 
