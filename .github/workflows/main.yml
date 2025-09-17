@@ -331,6 +331,7 @@ jobs:
         run: |
           cd webdeploy
           zip -r MangaBox-${{ env.version }}-Web.zip mangabox
+          rm -R mangabox
 
       - name: Create GitHub Release
         id: create-release
@@ -342,7 +343,7 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
-            output/*/*
+            output/*
             webdeploy/MangaBox-${{ env.version }}-Web.zip
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
