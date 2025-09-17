@@ -208,13 +208,13 @@ jobs:
         run: mkdir output
 
       - name: Android - Build app
-        if: ${{ matrix.name == 'Android' }}
+        if: ${{ matrix.sys == 'android' }}
         run: |
           cd android
           ./gradlew assembleDebug
 
       - name: Android - Move app to target
-        if: ${{ matrix.name == 'Android' }}
+        if: ${{ matrix.sys == 'android' }}
         run: |
           mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
