@@ -161,10 +161,10 @@ jobs:
         include:
           - os: macos-latest
             sys: ios
-            name: iOS-APP
+            name: iOS-app
           - os: macos-latest
             sys: ios
-            name: iOS-IPA
+            name: iOS-ipa
           - os: ubuntu-latest
             sys: android
             name: Android
@@ -216,12 +216,10 @@ jobs:
       - name: Move app to target
         if: ${{ matrix.name == 'Android' }}
         run: |
-          pwd
-          ls
           mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
       - name: Build for iOS Simulator
-        if: ${{ matrix.name == 'iOS-APP'}}
+        if: ${{ matrix.name == 'iOS-app'}}
         run: |
           cd ios/App
           xcodebuild \
@@ -234,11 +232,11 @@ jobs:
             ONLY_ACTIVE_ARCH=NO
 
       - name: Move app to target
-        if: ${{ matrix.name == 'iOS-APP' }}
+        if: ${{ matrix.name == 'iOS-app' }}
         run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}-${{ matrix.name }}.app
 
       - name: Build for device
-        if: ${{ matrix.name == 'iOS-IPA'}}
+        if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           cd ios/App
           xcodebuild \
@@ -254,7 +252,7 @@ jobs:
             -archivePath $PWD/build/App.xcarchive
 
       - name: Package unsigned .ipa
-        if: ${{ matrix.name == 'iOS-IPA'}}
+        if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           mkdir -p ios/App/build/export/Payload
           cp -R ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
