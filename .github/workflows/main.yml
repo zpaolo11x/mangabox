@@ -218,7 +218,7 @@ jobs:
         run: |
           pwd
           ls
-          mv android/app/build/outputs/apk/debug/app-debug.apk output/mangabox-${{ env.version }}.apk
+          mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
       - name: Build for iOS Simulator
         if: ${{ matrix.name == 'iOS-APP'}}
@@ -235,7 +235,7 @@ jobs:
 
       - name: Move app to target
         if: ${{ matrix.name == 'iOS-APP' }}
-        run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}.app
+        run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}-${{ matrix.name }}.app
 
       - name: Build for device
         if: ${{ matrix.name == 'iOS-IPA'}}
@@ -261,7 +261,7 @@ jobs:
           cd ios/App/build/export
           zip -r output.ipa Payload
           cd $GITHUB_WORKSPACE
-          mv ios/App/build/export/output.ipa output/MangaBox-${{ env.version }}.ipa
+          mv ios/App/build/export/output.ipa output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -276,7 +276,7 @@ jobs:
     needs: [electron, web, capacitor, version]
     env:
       version: ${{ needs.version.outputs.version }}
-    #if: github.ref_name == 'main' # Run this job only for the 'main' branch
+    if: github.ref_name == 'main' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
