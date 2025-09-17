@@ -1,6 +1,6 @@
 {
 	"name": "mangabox",
-	"version": "0.2.5 TEST",
+	"version": "0.2.5.X",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Komga desktop client using Electron",
 	"main": "package-main.js",
