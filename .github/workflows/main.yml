@@ -192,7 +192,7 @@ jobs:
         run: npm install @capacitor/status-bar@6
 
       - name: Install Capacitor Camera plugin
-        run: npm install @capacitor/camera@latest
+        run: npm install @capacitor/camera@6
 
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
