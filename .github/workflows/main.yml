@@ -194,6 +194,13 @@ jobs:
       - name: Install Capacitor Camera plugin
         run: npm install @capacitor/camera@6
 
+      - name: Add iOS Info.plist permissions
+        if: ${{ matrix.sys == 'ios' }}
+        run: |
+          PLIST="ios/App/App/Info.plist"
+          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'We need access to your camera to let you take photos.'" $PLIST
+          /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryUsageDescription string 'We need access to your photo library to let you pick images.'" $PLIST
+
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
 
