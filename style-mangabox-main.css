@@ -555,7 +555,7 @@ a {
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	padding: calc(var(--mb-library-gap) + var(--mb-top-spacer)) var(--mb-bar-padding) var(--mb-library-gap) var(--mb-bar-padding);
+	padding: calc(var(--mb-library-gap) + var(--mb-top-spacer)) var(--mb-bar-padding) 0 var(--mb-bar-padding);
 	padding-left: var(--mb-bar-safe-padding-left);
 	padding-right: var(--mb-bar-safe-padding-right);
 	z-index: 1000;
@@ -571,8 +571,8 @@ a {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
-	height: var(--mb-button-size);
-	overflow: scroll;
+	height: calc(var(--mb-button-size) + var(--mb-library-gap));
+	overflow:scroll;
 	/*background-color: lightblue;*/
 }
 
@@ -594,7 +594,7 @@ a {
 	list-style-type: none;
 	padding: 0 0 0 var(--mb-library-gap);
 	margin: 0 0 0 auto;
-	height: var(--mb-button-size);
+	height: calc(var(--mb-button-size) + var(--mb-library-gap));
 
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 210px) var(--mb-button-size);
 
