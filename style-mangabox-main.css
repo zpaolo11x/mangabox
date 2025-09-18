@@ -1897,6 +1897,7 @@ body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 body.sticky-small #stickyContainer {
 	/*	height: 105px; */
 	max-width: calc(100vw - 2 * var(--mb-bar-padding));
+	min-width: 350px;
 	flex-wrap: wrap;
 }
 
