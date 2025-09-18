@@ -198,8 +198,14 @@ jobs:
         if: ${{ matrix.sys == 'ios' }}
         run: |
           PLIST="ios/App/App/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :NSCameraUsageDescription 'We need access to your camera to let you take photos.'" $PLIST 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'We need access to your camera to let you take photos.'" $PLIST
+
+          /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryUsageDescription 'We need access to your photo library to let you pick images.'" $PLIST 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryUsageDescription string 'We need access to your photo library to let you pick images.'" $PLIST
+
+          /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryAddUsageDescription 'We need access to save images to your photo library.'" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryAddUsageDescription string 'We need access to save images to your photo library.'" $PLIST
 
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
