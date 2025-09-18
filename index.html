@@ -2203,8 +2203,8 @@
 				const image = await Capacitor.Plugins.Camera.getPhoto({
 					quality: 90,
 					allowEditing: false,
-					resultType: CameraResultType.Uri,
-					source: CameraSource.Photos, // try CameraSource.Prompt for camera/gallery choice
+					resultType: 'uri',
+					source: 'PHOTOS', // try CameraSource.Prompt for camera/gallery choice
 				});
 
 				debugPrint("Picked");
