@@ -2198,6 +2198,7 @@
 		}
 
 async function pickImage() {
+debugPrint("PickImage");
   try {
     const image = await Camera.getPhoto({
       quality: 90,
@@ -2231,7 +2232,7 @@ async function pickImage() {
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							pickimage();
+							await pickimage();
 						} else {
 							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
 						}
