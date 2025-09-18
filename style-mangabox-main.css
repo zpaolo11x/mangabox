@@ -572,8 +572,18 @@ a {
 	padding: 0;
 	margin: 0;
 	height: var(--mb-button-size);
-
+	overflow: scroll;
 	/*background-color: lightblue;*/
+}
+
+#librariesList::-webkit-scrollbar {
+	display: none;
+}
+
+#librariesList {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	-webkit-overflow-scrolling: touch;
 }
 
 #librariesRightBlock {
@@ -1886,7 +1896,12 @@ body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 
 body.sticky-small #stickyContainer {
 	/*	height: 105px; */
+	max-width: calc(100vw - 2 * var(--mb-bar-padding));
 	flex-wrap: wrap;
+}
+
+body.sticky-small #librariesList {
+	max-width: calc(100vw - 2 * var(--mb-bar-padding));/*reduce to add space for buttons?*/
 }
 
 body.sticky-small #librariesRightBlock {
