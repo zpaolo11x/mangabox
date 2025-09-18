@@ -2206,10 +2206,10 @@ async function pickImage() {
       source: CameraSource.Photos, // try CameraSource.Prompt for camera/gallery choice
     });
 
-    alert("Picked");
+    debugPrint("Picked");
     //document.querySelector("#preview").src = image.webPath;
   } catch (err) {
-    alert("Image picking failed");
+    debugPrint("Image picking failed");
   }
 }
 
