@@ -2197,22 +2197,22 @@
 			bootSequence();
 		}
 
-async function pickImage() {
-debugPrint("PickImage");
-  try {
-    const image = await Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Uri,
-      source: CameraSource.Photos, // try CameraSource.Prompt for camera/gallery choice
-    });
+		async function pickImage() {
+			debugPrint("PickImage");
+			try {
+				const image = await Camera.getPhoto({
+					quality: 90,
+					allowEditing: false,
+					resultType: CameraResultType.Uri,
+					source: CameraSource.Photos, // try CameraSource.Prompt for camera/gallery choice
+				});
 
-    debugPrint("Picked");
-    //document.querySelector("#preview").src = image.webPath;
-  } catch (err) {
-    debugPrint("Image picking failed");
-  }
-}
+				debugPrint("Picked");
+				//document.querySelector("#preview").src = image.webPath;
+			} catch (err) {
+				debugPrint("Image picking failed");
+			}
+		}
 
 
 		function displayLibraries(libraries) {
@@ -2232,7 +2232,7 @@ debugPrint("PickImage");
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							await pickimage();
+							await pickImage();
 						} else {
 							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
 						}
