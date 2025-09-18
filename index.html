@@ -2197,6 +2197,16 @@
 			bootSequence();
 		}
 
+		async function pickImage() {
+			const image = await Camera.getPhoto({
+				quality: 90,
+				allowEditing: false,
+				resultType: CameraResultType.Uri,
+				source: CameraSource.Photos, // or CameraSource.Prompt to let the user choose
+			});
+			return image.webPath; // usable in an <img> tag
+		}
+
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -2213,7 +2223,11 @@
 
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
-						showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
+						if (isCapacitor) {
+							alert(pickImage());
+						} else {
+							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
+						}
 					} else {
 						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
 							await delete mb.libraryIcons[libraryId];
