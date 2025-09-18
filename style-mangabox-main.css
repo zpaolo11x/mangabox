@@ -885,6 +885,9 @@ a {
 
 .library-thumbnail {
 	border-radius: 50%;
+	-webkit-touch-callout: none; /* disables the callout menu on long press */
+  	-webkit-user-select: none;   /* prevents text/image selection */
+  	user-select: none;
 }
 
 .series-status,
