@@ -2197,16 +2197,22 @@
 			bootSequence();
 		}
 
-		async function pickImage() {
-			const image = await Camera.getPhoto({
-				quality: 90,
-				allowEditing: false,
-				resultType: CameraResultType.Uri,
-				source: CameraSource.Photos, // or CameraSource.Prompt to let the user choose
-			});
-			alert(image.webPath);
-			return image.webPath; // usable in an <img> tag
-		}
+async function pickImage() {
+  try {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Photos, // try CameraSource.Prompt for camera/gallery choice
+    });
+
+    alert("Picked");
+    //document.querySelector("#preview").src = image.webPath;
+  } catch (err) {
+    alert("Image picking failed");
+  }
+}
+
 
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
