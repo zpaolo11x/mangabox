@@ -1905,7 +1905,7 @@ body.sticky-small #librariesList {
 }
 
 body.sticky-small #librariesRightBlock {
-	margin-top: 10px;
+	margin-top: calc(10px - var(--mb-library-gap));
 }
 
 body.sticky-small #mainUI {
