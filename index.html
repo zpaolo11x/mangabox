@@ -992,9 +992,9 @@
 		let modalGlobal = [];
 
 		function showModal(image, bg, message, itemsArray) {
-				document.querySelectorAll('.modal-button').forEach(el => {
-					el.remove();
-				});			//modalFunctionsGlobal = functionArray;
+			document.querySelectorAll('.modal-button').forEach(el => {
+				el.remove();
+			});			//modalFunctionsGlobal = functionArray;
 			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
 			modalMessage.textContent = message;
@@ -2270,7 +2270,11 @@
 		async function pickFile(libraryId) {
 			debugPrint("PickFile");
 			try {
-				const result = await Capacitor.Plugins.FilePicker.pickFiles({ types: ['image/*'], multiple: false });
+				const result = await Capacitor.Plugins.FilePicker.pickFiles({
+					types: ['public.image'], // accepts all image formats
+					multiple: false,
+					readData: true,
+				});
 				if (result.files.length > 0) {
 					const file = result.files[0];
 
