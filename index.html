@@ -2208,13 +2208,29 @@
 				});
 
 				debugPrint("Picked");
+				applyLibraryImage(libraryId, image.webPath);
+
+				//return (image.webPath);
 				//document.querySelector("#preview").src = image.webPath;
 			} catch (err) {
-				debugPrint("Image picking failed:\n"+err);
+				debugPrint("Image picking failed:\n" + err);
 			}
 		}
 
+		async function applyLibraryImage(libraryId, file) {
+			if (!file || !file.type.startsWith('image/')) {
+				showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
+			} else {
+				const base64 = await readFileAsBase64(file);
+				showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
+					mb.libraryIcons[libraryId] = base64;
+					await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+					closeModal();
+					bootSequence();
+				}, cancelUpdate);
+			}
+		}
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -2232,7 +2248,8 @@
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							await pickImage();
+							await pickImage(libraryId);
+							
 						} else {
 							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
 						}
@@ -2262,18 +2279,8 @@
 					const libraryId = listItem.id
 					const file = event.dataTransfer.files[0];
 
-					if (!file || !file.type.startsWith('image/')) {
-						showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+					applyLibraryImage(libraryId, file);
 
-					} else {
-						const base64 = await readFileAsBase64(file);
-						showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
-							mb.libraryIcons[libraryId] = base64;
-							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-							closeModal();
-							bootSequence();
-						}, cancelUpdate);
-					}
 				})
 
 				listItem.addEventListener('click', () => {
