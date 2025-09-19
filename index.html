@@ -2197,20 +2197,38 @@
 			bootSequence();
 		}
 
-		async function applyLibraryImage(libraryId, file) {
-			if (!file || !file.type.startsWith('image/')) {
-				showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+async function applyLibraryImage(libraryId, fileOrBase64) {
+	let base64 = null;
 
-			} else {
-				const base64 = await readFileAsBase64(file);
-				showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
-					mb.libraryIcons[libraryId] = base64;
-					await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-					closeModal();
-					bootSequence();
-				}, cancelUpdate);
-			}
-		}		
+	// Case 1: It's a File
+	if (fileOrBase64 instanceof File) {
+		if (!fileOrBase64.type.startsWith('image/')) {
+			showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+			return;
+		}
+		base64 = await readFileAsBase64(fileOrBase64);
+	}
+
+	// Case 2: It's already a base64 string
+	else if (typeof fileOrBase64 === 'string' && fileOrBase64.startsWith('data:image/')) {
+		base64 = fileOrBase64;
+	}
+
+	// Case 3: Not valid
+	else {
+		showModal('circle-mark-svg.svg', true, 'Please provide a valid image.', 'Ok', null, cancelUpdate, cancelUpdate);
+		return;
+	}
+
+	// Show confirmation modal
+	showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
+		mb.libraryIcons[libraryId] = base64;
+		await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
+		closeModal();
+		bootSequence();
+	}, cancelUpdate);
+}
+
 
 		async function pickImage(libraryId) {
 			debugPrint("PickImage");
@@ -2218,7 +2236,7 @@
 				const image = await Capacitor.Plugins.Camera.getPhoto({
 					quality: 90,
 					allowEditing: false,
-					resultType: 'uri',
+					resultType: 'base64',
 					source: 'PHOTOS', // try CameraSource.Prompt for camera/gallery choice
 				});
 
