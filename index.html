@@ -2283,11 +2283,10 @@
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							await pickImage(libraryId);
 							showModal('circle-info-svg.svg', true, 'Open an image from gallery or files.',
 								[{
 									label: 'Gallery',
-									runfunction: () => { alert("A") },
+									runfunction: async () => { await pickImage(libraryId); },
 									high: true
 								}, {
 									label: 'Files',
