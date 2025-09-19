@@ -663,7 +663,7 @@
 					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
-			console.log(mangaboxFlat)
+			//console.log(mangaboxFlat)
 			return mangaboxFlat
 		}
 
@@ -1014,8 +1014,6 @@
 		}
 
 		function closeModal() {
-			console.log("CLOSING")
-
 			myModal.classList.add('unfade');
 			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
