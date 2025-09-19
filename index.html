@@ -2197,37 +2197,42 @@
 			bootSequence();
 		}
 
-async function applyLibraryImage(libraryId, fileOrBase64) {
-	let base64 = null;
+		async function applyLibraryImage(libraryId, fileOrBase64) {
+			let base64 = null;
 
-	// Case 1: It's a File
-	if (fileOrBase64 instanceof File) {
-		if (!fileOrBase64.type.startsWith('image/')) {
-			showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
-			return;
+			// Case 1: It's a File
+			if (fileOrBase64 instanceof File) {
+				debugPrint("----Input is a file")
+				if (!fileOrBase64.type.startsWith('image/')) {
+					debugPrint("----But it's not a valid image file")
+					showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+					return;
+				}
+				base64 = await readFileAsBase64(fileOrBase64);
+			}
+
+			// Case 2: It's already a base64 string
+			else if (typeof fileOrBase64 === 'string' && fileOrBase64.startsWith('data:image/')) {
+				debugPrint("----Input is a string")
+				base64 = fileOrBase64;
+			}
+
+			// Case 3: Not valid
+			else {
+				debugPrint("----Input is not valid")
+				debugPrint(fileOrBase64);
+				showModal('circle-mark-svg.svg', true, 'Please provide a valid image.', 'Ok', null, cancelUpdate, cancelUpdate);
+				return;
+			}
+
+			// Show confirmation modal
+			showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
+				mb.libraryIcons[libraryId] = base64;
+				await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
+				closeModal();
+				bootSequence();
+			}, cancelUpdate);
 		}
-		base64 = await readFileAsBase64(fileOrBase64);
-	}
-
-	// Case 2: It's already a base64 string
-	else if (typeof fileOrBase64 === 'string' && fileOrBase64.startsWith('data:image/')) {
-		base64 = fileOrBase64;
-	}
-
-	// Case 3: Not valid
-	else {
-		showModal('circle-mark-svg.svg', true, 'Please provide a valid image.', 'Ok', null, cancelUpdate, cancelUpdate);
-		return;
-	}
-
-	// Show confirmation modal
-	showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
-		mb.libraryIcons[libraryId] = base64;
-		await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
-		closeModal();
-		bootSequence();
-	}, cancelUpdate);
-}
 
 
 		async function pickImage(libraryId) {
@@ -2269,7 +2274,7 @@ async function applyLibraryImage(libraryId, fileOrBase64) {
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
 							await pickImage(libraryId);
-							
+
 						} else {
 							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
 						}
