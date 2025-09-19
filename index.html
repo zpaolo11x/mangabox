@@ -2197,6 +2197,21 @@
 			bootSequence();
 		}
 
+		async function applyLibraryImage(libraryId, file) {
+			if (!file || !file.type.startsWith('image/')) {
+				showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+
+			} else {
+				const base64 = await readFileAsBase64(file);
+				showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
+					mb.libraryIcons[libraryId] = base64;
+					await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+					closeModal();
+					bootSequence();
+				}, cancelUpdate);
+			}
+		}		
+
 		async function pickImage() {
 			debugPrint("PickImage");
 			try {
@@ -2217,20 +2232,7 @@
 			}
 		}
 
-		async function applyLibraryImage(libraryId, file) {
-			if (!file || !file.type.startsWith('image/')) {
-				showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
 
-			} else {
-				const base64 = await readFileAsBase64(file);
-				showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
-					mb.libraryIcons[libraryId] = base64;
-					await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-					closeModal();
-					bootSequence();
-				}, cancelUpdate);
-			}
-		}
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
