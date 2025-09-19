@@ -279,11 +279,10 @@
 	</div>
 
 	<div id="myModal" class="modal">
-		<div class="modal-content">
+		<div id="modalContent" class="modal-content">
 			<div id="modalWrapper"><img id="modalImage"></div>
 			<p id="modalMessage">This is the message content.</p>
-			<button id="modalOk" class="ok dialog-button press-button">OK</button>
-			<button id="modalCancel" class="cancel dialog-button press-button">Cancel</button>
+
 		</div>
 	</div>
 
@@ -990,31 +989,31 @@
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
 		//MB Modal Dialog
-		let modalOkGlobal = null;
-		let modalCancelGlobal = null;
+		let modalGlobal = [];
 
-		function showModal(image, bg, message, okText, cancelText, okFunction, cancelFunction) {
-			modalOkGlobal = okFunction;
-			modalCancelGlobal = cancelFunction;
+		function showModal(image, bg, message, itemsArray) {
+			//modalFunctionsGlobal = functionArray;
 			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
 			modalMessage.textContent = message;
 			//myModal.style.display = 'flex';
 
-			myModal.classList.add('visible');
+			itemsArray.forEach(item => {
+				let uiButton = addItem('button', {
+					innerText: item.label,
+					className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
+				})
+				addPressEvents(uiButton, pressDown, pressUp);
+				uiButton.addEventListener('click', item.runfunction);
+				modalContent.append(uiButton);
+			});
 
-			modalOk.addEventListener('click', modalOkGlobal);
-			if (cancelText != null) {
-				myModal.classList.remove('ok-only');
-				modalCancel.addEventListener('click', modalCancelGlobal);
-			} else {
-				myModal.classList.add('ok-only');
-			}
+			myModal.classList.add('visible');
 		}
 
 		function closeModal() {
-			modalOk.removeEventListener('click', modalOkGlobal);
-			modalCancel.removeEventListener('click', modalCancelGlobal);
+			console.log("CLOSING")
+
 			myModal.classList.add('unfade');
 			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
@@ -1022,8 +1021,9 @@
 				// Optional: if you still want to hide it completely from screen readers / tab order
 				myModal.classList.remove('visible');
 				myModal.classList.remove('unfade');
-				workOk = null;
-				workCancel = null;
+				document.querySelectorAll('.modal-button').forEach(el => {
+					el.remove();
+				});
 			}, 300);
 		}
 
@@ -2205,7 +2205,8 @@
 				debugPrint("----Input is a file")
 				if (!fileOrBase64.type.startsWith('image/')) {
 					debugPrint("----But it's not a valid image file")
-					showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+					showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
+						[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
 					return;
 				}
 				base64 = await readFileAsBase64(fileOrBase64);
@@ -2221,39 +2222,48 @@
 			else {
 				debugPrint("----Input is not valid")
 				debugPrint(fileOrBase64);
-				showModal('circle-mark-svg.svg', true, 'Please provide a valid image.', 'Ok', null, cancelUpdate, cancelUpdate);
+				showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
+					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
 				return;
 			}
 
 			// Show confirmation modal
-			showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
-				mb.libraryIcons[libraryId] = base64;
-				await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
-				closeModal();
-				bootSequence();
-			}, cancelUpdate);
+			showModal(base64, false, 'Set this image as library thumbnail?',
+				[{
+					label: 'Ok',
+					runfunction: async () => {
+						mb.libraryIcons[libraryId] = base64;
+						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
+						closeModal();
+						bootSequence();
+					},
+					high: true,
+				}, {
+					label: 'Cancel', runfunction: cancelUpdate, high: false
+				}
+				]);
 		}
 
 
-async function pickImage(libraryId) {
-  debugPrint("PickImage");
-  try {
-    const image = await Capacitor.Plugins.Camera.getPhoto({
-      quality: 90,
-      allowEditing: false,
-      resultType: 'base64',  // get base64 directly
-      source: 'PHOTOS',
-    });
-	 debugPrint(image);
-	 debugPrint(image.base64String);
-    debugPrint("Picked");
-    const base64 = `data:image/${image.format};base64,${image.base64String}`;
-    applyLibraryImage(libraryId, base64);
+		async function pickImage(libraryId) {
+			debugPrint("PickImage");
+			try {
+				const image = await Capacitor.Plugins.Camera.getPhoto({
+					quality: 90,
+					allowEditing: false,
+					resultType: 'base64',  // get base64 directly
+					source: 'PHOTOS',
+				});
+				debugPrint(image);
+				debugPrint(image.base64String);
+				debugPrint("Picked");
+				const base64 = `data:image/${image.format};base64,${image.base64String}`;
+				applyLibraryImage(libraryId, base64);
 
-  } catch (err) {
-    debugPrint("Image picking failed:\n" + err);
-  }
-}
+			} catch (err) {
+				debugPrint("Image picking failed:\n" + err);
+			}
+		}
 
 
 		function displayLibraries(libraries) {
@@ -2274,18 +2284,42 @@ async function pickImage(libraryId) {
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
 							await pickImage(libraryId);
+							showModal('circle-info-svg.svg', true, 'Open an image from gallery or files.',
+								[{
+									label: 'Gallery',
+									runfunction: () => { alert("A") },
+									high: true
+								}, {
+									label: 'Files',
+									runfunction: () => { alert("B") },
+									high: true
+								}, {
+									label: 'Cancel',
+									runfunction: closeModal,
+									high: false
+								}]);
 
 						} else {
-							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
+							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 
+								[{label:'Ok', runfunction:closeModal, high:true}]
+							);
 						}
 					} else {
-						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
-							await delete mb.libraryIcons[libraryId];
-							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', [
+							{
+								label: 'Ok',
+								runfunction: async () => {
+									await delete mb.libraryIcons[libraryId];
+									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 
-							closeModal();
-							bootSequence();
-						}, cancelUpdate);
+									closeModal();
+									bootSequence();
+								},
+								high: true
+							},
+							{ label: 'Cancel', runfrunction: cancelUpdate, high: false }
+						]);
+
 					}
 				});
 
