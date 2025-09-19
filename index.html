@@ -992,7 +992,9 @@
 		let modalGlobal = [];
 
 		function showModal(image, bg, message, itemsArray) {
-			//modalFunctionsGlobal = functionArray;
+				document.querySelectorAll('.modal-button').forEach(el => {
+					el.remove();
+				});			//modalFunctionsGlobal = functionArray;
 			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
 			modalMessage.textContent = message;
@@ -2258,7 +2260,6 @@
 				debugPrint(image.base64String);
 				debugPrint("Picked");
 				const base64 = `data:image/${image.format};base64,${image.base64String}`;
-				closeModal();
 				applyLibraryImage(libraryId, base64);
 
 			} catch (err) {
@@ -2276,14 +2277,12 @@
 					if (file.data) {
 						// Pass as base64 string (Case 2 of your function)
 						const base64 = `data:${file.mimeType};base64,${file.data}`;
-						closeModal();
 						applyLibraryImage(libraryId, base64);
 					} else if (file.path) {
 						// As a fallback: fetch from file system and build a File
 						const response = await fetch(file.path);
 						const blob = await response.blob();
 						const pseudoFile = new File([blob], file.name, { type: file.mimeType });
-						closeModal();
 						applyLibraryImage(libraryId, pseudoFile);
 					}
 				}
