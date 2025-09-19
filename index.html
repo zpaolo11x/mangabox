@@ -2265,6 +2265,30 @@
 			}
 		}
 
+		async function pickFile(libraryId) {
+			debugPrint("PickFile");
+			try {
+				const result = await Capacitor.Plugins.FilePicker.pickFiles({ types: ['image/*'], multiple: false });
+				if (result.files.length > 0) {
+					const file = result.files[0];
+
+					if (file.data) {
+						// Pass as base64 string (Case 2 of your function)
+						const base64 = `data:${file.mimeType};base64,${file.data}`;
+						applyLibraryImage(libraryId, base64);
+					} else if (file.path) {
+						// As a fallback: fetch from file system and build a File
+						const response = await fetch(file.path);
+						const blob = await response.blob();
+						const pseudoFile = new File([blob], file.name, { type: file.mimeType });
+						applyLibraryImage(libraryId, pseudoFile);
+					}
+				}
+
+			} catch (err) {
+				debugPrint("Image picking failed:\n" + err);
+			}
+		}
 
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
@@ -2290,7 +2314,7 @@
 									high: true
 								}, {
 									label: 'Files',
-									runfunction: () => { alert("B") },
+									runfunction: async () => { await pickFile(libraryId); },
 									high: true
 								}, {
 									label: 'Cancel',
@@ -2299,8 +2323,8 @@
 								}]);
 
 						} else {
-							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 
-								[{label:'Ok', runfunction:closeModal, high:true}]
+							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.',
+								[{ label: 'Ok', runfunction: closeModal, high: true }]
 							);
 						}
 					} else {
