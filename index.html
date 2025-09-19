@@ -2212,7 +2212,7 @@
 			}
 		}		
 
-		async function pickImage() {
+		async function pickImage(libraryId) {
 			debugPrint("PickImage");
 			try {
 				const image = await Capacitor.Plugins.Camera.getPhoto({
