@@ -2271,7 +2271,7 @@
 			debugPrint("PickFile");
 			try {
 				const result = await Capacitor.Plugins.FilePicker.pickFiles({
-  extensions: ['png', 'jpg', 'jpeg', 'heic'], // common formats on iOS
+					extensions: ['png', 'jpg', 'jpeg', 'heic'], // common formats on iOS
 					multiple: false,
 					readData: true,
 				});
@@ -2346,7 +2346,7 @@
 								},
 								high: true
 							},
-							{ label: 'Cancel', runfrunction: cancelUpdate, high: false }
+							{ label: 'Cancel', runfunction: cancelUpdate, high: false }
 						]);
 
 					}
