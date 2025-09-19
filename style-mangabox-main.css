@@ -885,9 +885,14 @@ a {
 
 .library-thumbnail {
 	border-radius: 50%;
+
 	-webkit-touch-callout: none; /* disables the callout menu on long press */
   	-webkit-user-select: none;   /* prevents text/image selection */
   	user-select: none;
+
+	-webkit-user-drag: none; /* for iOS Safari */
+  user-drag: none;         /* non-standard but supported */
+  pointer-events: auto;    /* ensure clicks/touches still work */
 }
 
 .series-status,
