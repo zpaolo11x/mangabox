@@ -2235,25 +2235,25 @@
 		}
 
 
-		async function pickImage(libraryId) {
-			debugPrint("PickImage");
-			try {
-				const image = await Capacitor.Plugins.Camera.getPhoto({
-					quality: 90,
-					allowEditing: false,
-					resultType: 'base64',
-					source: 'PHOTOS', // try CameraSource.Prompt for camera/gallery choice
-				});
+async function pickImage(libraryId) {
+  debugPrint("PickImage");
+  try {
+    const image = await Capacitor.Plugins.Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: 'base64',  // get base64 directly
+      source: 'PHOTOS',
+    });
+	 debugPrint(image);
+	 debugPrint(image.base64String);
+    debugPrint("Picked");
+    const base64 = `data:image/${image.format};base64,${image.base64String}`;
+    applyLibraryImage(libraryId, base64);
 
-				debugPrint("Picked");
-				applyLibraryImage(libraryId, image.webPath);
-
-				//return (image.webPath);
-				//document.querySelector("#preview").src = image.webPath;
-			} catch (err) {
-				debugPrint("Image picking failed:\n" + err);
-			}
-		}
+  } catch (err) {
+    debugPrint("Image picking failed:\n" + err);
+  }
+}
 
 
 		function displayLibraries(libraries) {
