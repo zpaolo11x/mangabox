@@ -195,7 +195,7 @@ jobs:
         run: npm install @capacitor/camera@6
 
       - name: Install File Picker plugin
-        run: npm install @capacitor-community/file-picker
+        run: npm install @capawesome/capacitor-file-picker
 
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
