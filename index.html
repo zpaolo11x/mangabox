@@ -2271,7 +2271,7 @@
 			debugPrint("PickFile");
 			try {
 				const result = await Capacitor.Plugins.FilePicker.pickFiles({
-					types: ['public.image'], // accepts all image formats
+  extensions: ['png', 'jpg', 'jpeg', 'heic'], // common formats on iOS
 					multiple: false,
 					readData: true,
 				});
