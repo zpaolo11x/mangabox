@@ -296,8 +296,10 @@
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
+		const capacitorPlatform = null;
 
 		if (isCapacitor) {
+			capacitorPlatform = Capacitor.getPlatform();
 			fullscreenChanger.classList.add('disabled');
 		}
 	</script>
