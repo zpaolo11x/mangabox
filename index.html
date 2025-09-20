@@ -318,10 +318,7 @@
 		executeFade(1);
 
 		function isOrientationLandscape() {
-			let status = window.matchMedia("(orientation: portrait)").matches
-				? "portrait"
-				: "landscape";
-			return (status == 'landscape');
+			  return window.matchMedia("(orientation: landscape)").matches;
 		}
 
 		function getSharpCornerIphone() {
