@@ -355,8 +355,10 @@
 		if (isStatusBar) {
 			if (isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.hide();
+				hideAndroidTitleBar();
 			} else {
 				Capacitor.Plugins.StatusBar.show();
+				showAndroidTitleBar();
 			}
 		}
 
@@ -3115,8 +3117,10 @@
 			sectionShow(readerOverlay);
 			sectionShow(touchPanel);
 
-			if (isStatusBar) Capacitor.Plugins.StatusBar.hide();
-
+			if (isStatusBar) {
+				Capacitor.Plugins.StatusBar.hide();
+				hideAndroidTitleBar();
+			}
 			initViewer();
 
 		}
@@ -3203,7 +3207,10 @@
 			//dragbarOffReader();
 
 			updatePWABar();
-			if (isStatusBar && !isSharpCornerIphone) Capacitor.Plugins.StatusBar.show();
+			if (isStatusBar && !isSharpCornerIphone) {
+				Capacitor.Plugins.StatusBar.show();
+				showAndroidTitleBar();
+			}
 
 		}
 
@@ -4645,21 +4652,30 @@
 			jumpToSpread(targetSpreadIndex, null, false, true)
 		}
 
+		function showAndroidTitleBar() {
+			if ((capacitorPlatform == 'android') && (getOrientation() == 'landscape')) {
+				document.documentElement.style.setProperty('--mb-android-top-bar', '20px');
+			} else {
+				document.documentElement.style.setProperty('--mb-android-top-bar', '0px');
+			}
+		}
+		function hideAndroidTitleBar() {
+			document.documentElement.style.setProperty('--mb-android-top-bar', '0px');
+		}
+
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
 				if (isStatusBar && !isSharpCornerIphone) {
 					Capacitor.Plugins.StatusBar.show();
-					if ((capacitorPlatform == 'android') && (getOrientation() == 'landscape')){
-						document.documentElement.style.setProperty('--mb-android-top-bar', '80px');
-					} else {
-						document.documentElement.style.setProperty('--mb-android-top-bar', '0px');
-					}
-
+					showAndroidTitleBar();
 				}
 				updatePWABar();
 			} else {
-				if (isStatusBar) Capacitor.Plugins.StatusBar.hide();
+				if (isStatusBar) {
+					Capacitor.Plugins.StatusBar.hide();
+					hideAndroidtitleBar();
+				}
 				updatePWABar(rd.titleBarColor);
 			}
 
