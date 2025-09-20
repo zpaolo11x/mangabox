@@ -354,7 +354,7 @@
 		const isSharpCornerIphone = getSharpCornerIphone();
 
 		if (isStatusBar) {
-			if (isSharpCornerIphone || isOrientationLandscape()) {
+			if (isSharpCornerIphone || (capacitorPlatform == 'android' && isOrientationLandscape())) {
 				Capacitor.Plugins.StatusBar.hide();
 				//hideAndroidTitleBar();
 			} else {
@@ -1486,8 +1486,10 @@
 		fixZoomOnPWA()
 
 		window.addEventListener('orientationchange', () => {
-			if ((capacitorPlatform == 'android') && isOrientationLandscape()) {
+			if (isCapacitor){
+				if ((capacitorPlatform == 'android') && !isOrientationLandscape()) {
 					Capacitor.Plugins.StatusBar.hide();
+				}
 			}
 			fixZoomOnPWA
 		});
@@ -3213,7 +3215,7 @@
 			//dragbarOffReader();
 
 			updatePWABar();
-			if (isStatusBar && !isSharpCornerIphone && !isOrientationLandscape()) {
+			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 				Capacitor.Plugins.StatusBar.show();
 				//showAndroidTitleBar();
 			}
@@ -4673,7 +4675,7 @@
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
-				if (isStatusBar && !isSharpCornerIphone && !isOrientationLandscape()) {
+				if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 					Capacitor.Plugins.StatusBar.show();
 					//showAndroidTitleBar();
 				}
