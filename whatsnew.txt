@@ -2,6 +2,7 @@ Main UI
 - Improve title bar management for iOS PWA and app
 - Disable fullscreen button on iOS and Android app
 - Library bar can be scrolled when libraries are overflowing
+- Library icons can be imported from photo library or files on Android and iOS
 
 Redaer UI
 - Pinch to zoom pages in PWA and app without affecting the UI

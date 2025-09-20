@@ -361,7 +361,7 @@ body {
 }
 
 #debuggerObj {
-	display:none;
+	display: none;
 	pointer-events: none;
 	position: fixed;
 	z-index: 10000;
@@ -424,12 +424,12 @@ a {
 #blankTitle {
 	position: fixed;
 	background-color: var(--mb-card-color);
-	left:0;
-	right:0;
-	top:-1;
+	left: 0;
+	right: 0;
+	top: -1;
 	z-index: 1001;
 	height: 100px;
-	transition: background-color 0.3s ;
+	transition: background-color 0.3s;
 }
 
 #mainUI {
@@ -572,7 +572,7 @@ a {
 	padding: 0;
 	margin: 0;
 	height: calc(var(--mb-button-size) + var(--mb-library-gap));
-	overflow:scroll;
+	overflow: scroll;
 	/*background-color: lightblue;*/
 }
 
@@ -654,8 +654,8 @@ a {
 	opacity: 1;
 }
 
-#mainScrollBox{
-	margin-top:var(--mb-top-spacer);
+#mainScrollBox {
+	margin-top: var(--mb-top-spacer);
 }
 
 #menuBars {
@@ -887,13 +887,18 @@ a {
 .library-thumbnail {
 	border-radius: 50%;
 
-	-webkit-touch-callout: none; /* disables the callout menu on long press */
-  	-webkit-user-select: none;   /* prevents text/image selection */
-  	user-select: none;
+	-webkit-touch-callout: none;
+	/* disables the callout menu on long press */
+	-webkit-user-select: none;
+	/* prevents text/image selection */
+	user-select: none;
 
-	-webkit-user-drag: none; /* for iOS Safari */
-  user-drag: none;         /* non-standard but supported */
-  pointer-events: auto;    /* ensure clicks/touches still work */
+	-webkit-user-drag: none;
+	/* for iOS Safari */
+	user-drag: none;
+	/* non-standard but supported */
+	pointer-events: auto;
+	/* ensure clicks/touches still work */
 }
 
 .series-status,
@@ -1858,7 +1863,7 @@ span.mini-title {
 	transition: color 0.3s;
 }
 
-.hidestrip{
+.hidestrip {
 	opacity: 0;
 }
 
@@ -1910,7 +1915,8 @@ body.sticky-small #stickyContainer {
 }
 
 body.sticky-small #librariesList {
-	max-width: calc(100vw - 2 * var(--mb-bar-padding));/*reduce to add space for buttons?*/
+	max-width: calc(100vw - 2 * var(--mb-bar-padding));
+	/*reduce to add space for buttons?*/
 }
 
 body.sticky-small #librariesRightBlock {
