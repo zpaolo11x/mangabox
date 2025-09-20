@@ -1486,15 +1486,16 @@
 		fixZoomOnPWA()
 
 		window.addEventListener('orientationchange', () => {
-			if (isCapacitor){
-				alert(isOrientationLandscape());
-				if ((capacitorPlatform == 'android') && !isOrientationLandscape()) {
-					Capacitor.Plugins.StatusBar.hide();
-				} else {
-					Capacitor.Plugins.StatusBar.show();
-				}
+			if (isCapacitor && (capacitorPlatform == 'android')) {
+				setTimeout(() => {
+					if (!isOrientationLandscape()) {
+						Capacitor.Plugins.StatusBar.hide();
+					} else {
+						Capacitor.Plugins.StatusBar.show();
+					}
+				}, 100)
 			}
-			fixZoomOnPWA
+			fixZoomOnPWA();
 		});
 		document.addEventListener('visibilitychange', fixZoomOnPWA);
 		window.addEventListener('pageshow', (event) => {
