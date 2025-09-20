@@ -1487,8 +1487,11 @@
 
 		window.addEventListener('orientationchange', () => {
 			if (isCapacitor){
+				alert(isOrientationLandscape());
 				if ((capacitorPlatform == 'android') && !isOrientationLandscape()) {
 					Capacitor.Plugins.StatusBar.hide();
+				} else {
+					Capacitor.Plugins.StatusBar.show();
 				}
 			}
 			fixZoomOnPWA
