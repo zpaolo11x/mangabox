@@ -189,13 +189,13 @@ jobs:
 
       - name: iOS - Install Capacitor StatusBar plugin
         if: ${{ matrix.sys == 'ios' }}
-        run: npm install @capacitor/status-bar@6
+        run: npm install @capacitor/status-bar@7
 
       - name: Install Capacitor Camera plugin
-        run: npm install @capacitor/camera@6
+        run: npm install @capacitor/camera@7
 
       - name: Install File Picker plugin
-        run: npm install @capawesome/capacitor-file-picker@6
+        run: npm install @capawesome/capacitor-file-picker@7
 
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
