@@ -60,8 +60,10 @@
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
-
-	--mb-top-spacer: env(safe-area-inset-top);
+	
+	--mb-android-top-bar: 0px;
+	
+	--mb-top-spacer: calc(env(safe-area-inset-top) + var(--mb-android-top-bar));
 
 	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
 

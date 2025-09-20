@@ -300,7 +300,6 @@
 
 		if (isCapacitor) {
 			capacitorPlatform = Capacitor.getPlatform();
-			alert(capacitorPlatform);
 			fullscreenChanger.classList.add('disabled');
 		}
 	</script>
@@ -317,6 +316,12 @@
 		}
 
 		executeFade(1);
+
+		function getOrientation() {
+			return window.matchMedia("(orientation: portrait)").matches
+				? "portrait"
+				: "landscape";
+		}
 
 		function getSharpCornerIphone() {
 			if (!/iPhone/.test(navigator.userAgent)) return false;
@@ -4643,7 +4648,15 @@
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
-				if (isStatusBar && !isSharpCornerIphone) Capacitor.Plugins.StatusBar.show();
+				if (isStatusBar && !isSharpCornerIphone) {
+					Capacitor.Plugins.StatusBar.show();
+					if ((capacitorPlatform == 'android') && (getOrientation() == 'landscape')){
+						document.documentElement.style.setProperty('--mb-android-top-bar', '80px');
+					} else {
+						document.documentElement.style.setProperty('--mb-android-top-bar', '0px');
+					}
+
+				}
 				updatePWABar();
 			} else {
 				if (isStatusBar) Capacitor.Plugins.StatusBar.hide();
