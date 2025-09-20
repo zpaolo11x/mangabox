@@ -1485,7 +1485,12 @@
 
 		fixZoomOnPWA()
 
-		window.addEventListener('orientationchange', fixZoomOnPWA);
+		window.addEventListener('orientationchange', () => {
+			if ((capacitorPlatform == 'android') && isOrientationLandscape()) {
+					Capacitor.Plugins.StatusBar.hide();
+			}
+			fixZoomOnPWA
+		});
 		document.addEventListener('visibilitychange', fixZoomOnPWA);
 		window.addEventListener('pageshow', (event) => {
 			if (event.persisted) fixZoomOnPWA();
@@ -4670,14 +4675,12 @@
 			if (isSectionHidden(controlPanel)) {
 				if (isStatusBar && !isSharpCornerIphone && !isOrientationLandscape()) {
 					Capacitor.Plugins.StatusBar.show();
-					alert("A")
 					//showAndroidTitleBar();
 				}
 				updatePWABar();
 			} else {
 				if (isStatusBar) {
 					Capacitor.Plugins.StatusBar.hide();
-					alert("B")
 					//hideAndroidTitleBar();
 				}
 				updatePWABar(rd.titleBarColor);
