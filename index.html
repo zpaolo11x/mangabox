@@ -4654,11 +4654,12 @@
 
 		function showAndroidTitleBar() {
 			if ((capacitorPlatform == 'android') && (getOrientation() == 'landscape')) {
-				document.documentElement.style.setProperty('--mb-android-top-bar', '20px');
+				document.documentElement.style.setProperty('--mb-android-top-bar', '30px');
 			} else {
 				document.documentElement.style.setProperty('--mb-android-top-bar', '0px');
 			}
 		}
+
 		function hideAndroidTitleBar() {
 			document.documentElement.style.setProperty('--mb-android-top-bar', '0px');
 		}
@@ -4674,7 +4675,7 @@
 			} else {
 				if (isStatusBar) {
 					Capacitor.Plugins.StatusBar.hide();
-					hideAndroidtitleBar();
+					hideAndroidTitleBar();
 				}
 				updatePWABar(rd.titleBarColor);
 			}
