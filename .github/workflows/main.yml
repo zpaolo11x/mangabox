@@ -201,7 +201,6 @@ jobs:
         run: npx @capacitor/assets generate --assetPath assets/icon-red --${{ matrix.sys }}
 
       - name: iOS - Install Capacitor StatusBar plugin
-        if: ${{ matrix.sys == 'ios' }}
         run: npm install @capacitor/status-bar@7
 
       - name: Install Capacitor Camera plugin
