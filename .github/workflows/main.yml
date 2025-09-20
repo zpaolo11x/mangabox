@@ -231,9 +231,9 @@ jobs:
           cd ios/App
           pod install --repo-update
 
-      - name: Android - Copy custom styles.xml
-        if: ${{ matrix.sys == 'android' }}
-        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
+#      - name: Android - Copy custom styles.xml
+#        if: ${{ matrix.sys == 'android' }}
+#        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
 
       - name: Prepare output folder
         run: mkdir output
