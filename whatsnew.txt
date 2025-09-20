@@ -10,6 +10,8 @@ Redaer UI
 
 Build
 - Add iOS/ipadOS build in .app and .ipa unsigned format.
+- Upgrade Capacitor from v6 to v7
+- Better safe area management for Android app
 
 Fixes
 - Fix webtoon zooming UI when safe areas are present
