@@ -1489,9 +1489,9 @@
 			if (isCapacitor && (capacitorPlatform == 'android')) {
 				setTimeout(() => {
 					if (!isOrientationLandscape()) {
-						Capacitor.Plugins.StatusBar.hide();
-					} else {
 						Capacitor.Plugins.StatusBar.show();
+					} else {
+						Capacitor.Plugins.StatusBar.hide();
 					}
 				}, 100)
 			}
