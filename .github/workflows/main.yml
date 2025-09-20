@@ -172,6 +172,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # 👇 New step: make sure Android build uses JDK 21
+      - name: Set up JDK 21
+        if: ${{ matrix.sys == 'android' }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          
       - name: Download webdeploy artifact
         uses: actions/download-artifact@v4
         with:
