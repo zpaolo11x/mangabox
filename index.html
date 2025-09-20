@@ -355,10 +355,10 @@
 		if (isStatusBar) {
 			if (isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.hide();
-				hideAndroidTitleBar();
+				//hideAndroidTitleBar();
 			} else {
 				Capacitor.Plugins.StatusBar.show();
-				showAndroidTitleBar();
+				//showAndroidTitleBar();
 			}
 		}
 
@@ -3209,7 +3209,7 @@
 			updatePWABar();
 			if (isStatusBar && !isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.show();
-				showAndroidTitleBar();
+				//showAndroidTitleBar();
 			}
 
 		}
@@ -4669,13 +4669,13 @@
 			if (isSectionHidden(controlPanel)) {
 				if (isStatusBar && !isSharpCornerIphone) {
 					Capacitor.Plugins.StatusBar.show();
-					showAndroidTitleBar();
+					//showAndroidTitleBar();
 				}
 				updatePWABar();
 			} else {
 				if (isStatusBar) {
 					Capacitor.Plugins.StatusBar.hide();
-					hideAndroidTitleBar();
+					//hideAndroidTitleBar();
 				}
 				updatePWABar(rd.titleBarColor);
 			}
