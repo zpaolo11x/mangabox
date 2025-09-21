@@ -199,7 +199,7 @@ jobs:
 
       - name: Generate icon assets (iOS)
         if: ${{ matrix.sys == 'ios' }}
-        run: npx @capacitor/assets generate --assetPath assets/icon-gradient --ios
+        run: npx @capacitor/assets generate --assetPath assets/icon-mono --ios
 
       - name: Generate icon assets (Android)
         if: ${{ matrix.sys == 'android' }}
