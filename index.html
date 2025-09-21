@@ -400,7 +400,7 @@
 					const newDist = getDistance(e.touches);
 					const factor = newDist / rd.startDist;
 					const newScale = Math.min(Math.max(1, rd.scale * factor), 4);
-
+					alert(newScale);
 					pageTarget.style.transform = `scale(${newScale})`;
 				}
 			}, { passive: true });
