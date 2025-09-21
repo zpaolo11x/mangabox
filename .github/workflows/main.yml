@@ -292,17 +292,17 @@ jobs:
             archive \
             -archivePath build/App.xcarchive
 
+      - name: Replace icons for iOS26
+        if: ${{ matrix.name == 'iOS-ipa' }}
+        run: |
+          cp assets/icon-ios26/* ios/App/build/export/Payload/App.app/
+
       - name: iOS - Package unsigned .ipa
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           rsync -a ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
           cd ios/App/build/export
           zip -r $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa Payload
-
-      - name: Replace icons for iOS26
-        if: ${{ matrix.name == 'iOS-ipa' }}
-        run: |
-          cp assets/icon-ios26/* output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa/Deploy/App.app/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
