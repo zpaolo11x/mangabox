@@ -230,12 +230,6 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
 
-      - name: Replace Assets.car with iOS26 icons
-        if: ${{ matrix.sys == 'ios' }}
-        run: |
-          mkdir -p ios/App/App/Assets.xcassets
-          cp assets/icon-ios26/Assets.car ios/App/App/Assets.xcassets/Assets.car
-
       - name: iOS - Install CocoaPods dependencies
         if: ${{ matrix.sys == 'ios' }}
         run: |
@@ -277,6 +271,11 @@ jobs:
         if: ${{ matrix.name == 'iOS-app' }}
         run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}-${{ matrix.name }}.app
 
+      - name: Replace icons for iOS26
+        if: ${{ matrix.name == 'iOS-app' }}
+        run: |
+          cp assets/icon-ios26/* output/MangaBox-${{ env.version }}-${{ matrix.name }}.app/
+
       - name: iOS - Build app for device
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
@@ -299,6 +298,11 @@ jobs:
           rsync -a ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
           cd ios/App/build/export
           zip -r $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa Payload
+
+      - name: Replace icons for iOS26
+        if: ${{ matrix.name == 'iOS-ipa' }}
+        run: |
+          cp assets/icon-ios26/* output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa/Deploy/App.app/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
