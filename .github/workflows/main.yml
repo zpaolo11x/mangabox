@@ -230,10 +230,11 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
 
-      - name: Copy iOS26 icons files
+      - name: Replace Assets.car with iOS26 icons
         if: ${{ matrix.sys == 'ios' }}
         run: |
-          cp assets/icon-ios26/* ios/App/App/
+          mkdir -p ios/App/App/Assets.xcassets
+          cp assets/icon-ios26/Assets.car ios/App/App/Assets.xcassets/Assets.car
 
       - name: iOS - Install CocoaPods dependencies
         if: ${{ matrix.sys == 'ios' }}
