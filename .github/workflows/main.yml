@@ -118,7 +118,7 @@ jobs:
       - name: zip the macOS artifacts
         if: ${{ matrix.sys == 'mac' }}
         run: |
-          ls build/
+          ls dist/
           mv MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}/MangaBox.app MangaBox-${{ matrix.name }}-${{ env.version }}.app
 
       - name: Upload artifacts
