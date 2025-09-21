@@ -119,8 +119,9 @@ jobs:
         if: ${{ matrix.sys == 'mac' }}
         run: |
           ls dist/
-          mv MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}/MangaBox.app MangaBox-${{ matrix.name }}-${{ env.version }}.app
-
+          cp dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app MangaBox-${{ matrix.name }}-${{ env.version }}.app
+          ls
+          
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
