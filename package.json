@@ -38,7 +38,7 @@
 			"package.json"
 		],
 		"mac": {
-			"target": "dmg",
+			"target": "dir",
 			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
 			"icon": "build/icons/mangabox.icns",
 			"category": "public.app-category.utilities"
