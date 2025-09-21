@@ -119,7 +119,7 @@ jobs:
         if: ${{ matrix.name == 'macOS-arm64' }}
         run: |
           ls dist/
-          cp -R dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app MangaBox-${{ matrix.name }}-${{ env.version }}.app
+          cp -R dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app dist/MangaBox-${{ matrix.name }}-${{ env.version }}.app
           ls
 
       - name: Upload artifacts
