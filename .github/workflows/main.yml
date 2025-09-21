@@ -230,7 +230,7 @@ jobs:
       - name: Copy iOS26 icons files
         if: ${{ matrix.sys == 'ios' }}
         run: |
-          cp icon-ios26/* ios/App/App/
+          cp assets/icon-ios26/* ios/App/App/
 
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
