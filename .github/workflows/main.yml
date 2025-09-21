@@ -116,12 +116,12 @@ jobs:
         shell: bash
 
       - name: zip the macOS artifacts
-        if: ${{ matrix.sys == 'mac' }}
+        if: ${{ matrix.name == 'macOS-arm64' }}
         run: |
           ls dist/
           cp dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app MangaBox-${{ matrix.name }}-${{ env.version }}.app
           ls
-          
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
