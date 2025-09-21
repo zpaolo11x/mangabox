@@ -115,12 +115,17 @@ jobs:
         run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
+      - name: zip the macOS artifacts
+        if: ${{ sys == 'mac' }}
+        run: |
+          mv MangaBox-$${ env.version }}-macOS-${{ matrix.arch }}/MangaBox.app MangaBox-${{ matrix.name }}-${{ env.version }}.app
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
-            dist/*.dmg
+            dist/*.app
             dist/*.AppImage
             dist/*.exe
   web:

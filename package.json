@@ -39,7 +39,7 @@
 		],
 		"mac": {
 			"target": "dir",
-			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
+			"artifactName": "MangaBox-${version}-macOS-${arch}",
 			"icon": "build/icons/mangabox.icns",
 			"category": "public.app-category.utilities"
 		},
