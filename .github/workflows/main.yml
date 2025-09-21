@@ -116,7 +116,7 @@ jobs:
         shell: bash
 
       - name: zip the macOS artifacts
-        if: ${{ sys == 'mac' }}
+        if: ${{ matrix.sys == 'mac' }}
         run: |
           mv MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}/MangaBox.app MangaBox-${{ matrix.name }}-${{ env.version }}.app
 
