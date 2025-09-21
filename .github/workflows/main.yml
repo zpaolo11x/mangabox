@@ -197,8 +197,13 @@ jobs:
       - name: Add System platform
         run: npx cap add ${{ matrix.sys }}
 
-      - name: Generate icon assets
-        run: npx @capacitor/assets generate --assetPath assets/icon-red --${{ matrix.sys }}
+      - name: Generate icon assets (iOS)
+        if: ${{ matrix.sys == 'ios' }}
+        run: npx @capacitor/assets generate --assetPath assets/icon-gradient --ios
+
+      - name: Generate icon assets (Android)
+        if: ${{ matrix.sys == 'android' }}
+        run: npx @capacitor/assets generate --assetPath assets/icon-red --android
 
       - name: iOS - Install Capacitor StatusBar plugin
         run: npm install @capacitor/status-bar@7
