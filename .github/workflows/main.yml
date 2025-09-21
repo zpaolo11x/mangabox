@@ -295,7 +295,7 @@ jobs:
       - name: Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
-          cp assets/icon-ios26/* ios/App/build/export/Payload/App.app/
+          cp assets/icon-ios26/* ios/App/build/App.xcarchive/Products/Applications/App.app/
 
       - name: iOS - Package unsigned .ipa
         if: ${{ matrix.name == 'iOS-ipa'}}
