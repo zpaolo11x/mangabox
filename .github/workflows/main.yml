@@ -227,6 +227,11 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryAddUsageDescription 'We need access to save images to your photo library.'" $PLIST 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryAddUsageDescription string 'We need access to save images to your photo library.'" $PLIST
 
+      - name: Copy iOS26 icons files
+        if: ${{ matrix.sys == 'ios' }}
+        run: |
+          cp icon-ios26/* ios/App/App/
+
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
 
