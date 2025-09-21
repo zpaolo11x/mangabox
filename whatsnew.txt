@@ -6,6 +6,7 @@ Main UI
 
 Redaer UI
 - Pinch to zoom pages in PWA and app without affecting the UI
+- Drag zoomed page with one finger to pan in PWA and app
 - Automatically hide the title bar on iOS app when reading
 
 Build
