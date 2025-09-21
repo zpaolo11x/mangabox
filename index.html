@@ -318,7 +318,7 @@
 		executeFade(1);
 
 		function isOrientationLandscape() {
-			  return window.matchMedia("(orientation: landscape)").matches;
+			return window.matchMedia("(orientation: landscape)").matches;
 		}
 
 		function getSharpCornerIphone() {
@@ -376,6 +376,53 @@
 			};
 		}
 
+		function createPanResponse(page, pageTarget) {
+			let isDragging = false;
+			let lastX = 0, lastY = 0;
+			let offsetX = 0, offsetY = 0; // accumulated pan
+
+			page.addEventListener("touchstart", (e) => {
+				if (rd.scale > 1 && e.touches.length === 1) {
+					isDragging = true;
+					lastX = e.touches[0].clientX;
+					lastY = e.touches[0].clientY;
+				}
+			});
+
+			page.addEventListener("touchmove", (e) => {
+				if (isDragging && e.touches.length === 1) {
+					e.preventDefault(); // stop native scrolling
+					const dx = e.touches[0].clientX - lastX;
+					const dy = e.touches[0].clientY - lastY;
+
+					offsetX += dx;
+					offsetY += dy;
+
+					lastX = e.touches[0].clientX;
+					lastY = e.touches[0].clientY;
+
+					updateTransform();
+				}
+			});
+
+			page.addEventListener("touchend", (e) => {
+				if (e.touches.length === 0) {
+					isDragging = false;
+				}
+			});
+
+			function updateTransform() {
+				// clamp offsets so you can’t drag past edges
+				const maxX = (rd.scale - 1) * page.clientWidth / 2;
+				const maxY = (rd.scale - 1) * page.clientHeight / 2;
+
+				offsetX = Math.min(maxX, Math.max(-maxX, offsetX));
+				offsetY = Math.min(maxY, Math.max(-maxY, offsetY));
+
+				pageTarget.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${rd.scale})`;
+			}
+
+		}
 		function createPinchResponse(page, pageTarget) {
 
 			page.addEventListener("touchstart", e => {
@@ -416,6 +463,8 @@
 		createPinchResponse(touchPanel, readerContainer);
 		createPinchResponse(webtoonContainer, readerContainer);
 
+		createPanResponse(touchPanel, readerContainer);
+		createPanResponse(webtoonContainer, readerContainer);
 
 		//MB Manage Electron titlebar
 
@@ -5030,7 +5079,7 @@
 
 				const diffX = touchEndX - item.TouchStartX;
 				const diffY = touchEndY - item.TouchStartY;
-				
+
 				if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
 					if (diffX > 0) {
 						onSwipeRight?.(); // Call custom right swipe function
