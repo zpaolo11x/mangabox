@@ -13,7 +13,7 @@ Build
 - Add iOS/ipadOS build in .app and .ipa unsigned format.
 - Upgrade Capacitor from v6 to v7
 - Better safe area management for Android app
-- Liquid Glass icon for iOS/ipadOS 26
+- Liquid Glass icon for macOS, iOS and ipadOS 26
 
 Fixes
 - Fix webtoon zooming UI when safe areas are present
