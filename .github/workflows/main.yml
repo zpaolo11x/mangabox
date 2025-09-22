@@ -118,9 +118,9 @@ jobs:
       - name: Package macOS app into DMG
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        if: ${{ matrix.name == 'macOS-arm64' }}
+        if: ${{ matrix.sys == 'mac' }}
         run: |
-          APP="dist/mac-arm64/MangaBox.app"
+          APP="dist/${{ matrix.mac }}-${{ matrix.arch }}/MangaBox.app"
           RESOURCES="$APP/Contents/Resources"
           PLIST="$APP/Contents/Info.plist"
 
@@ -136,7 +136,7 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
 
           # Package into DMG using the containing folder
-          npx electron-builder --mac dmg --prepackaged "dist/mac-arm64"
+          npx electron-builder --mac dmg --prepackaged "dist/${{ matrix.sys }}-${{ matrix.arch }}"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
