@@ -44,6 +44,7 @@
 			"category": "public.app-category.utilities"
 		},
 		"dmg": {
+			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
 			"icon": "assets/icons/dmg_icon.icns"
 		},
 		"win": {
