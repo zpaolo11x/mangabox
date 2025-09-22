@@ -138,7 +138,6 @@ jobs:
           # Update Info.plist
           /usr/libexec/PlistBuddy -c "Delete :CFBundleIconFile" "$PLIST" || true
           /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string AppIcon" "$PLIST"
-
           /usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$PLIST" || true
           /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
 
