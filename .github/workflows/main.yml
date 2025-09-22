@@ -115,19 +115,18 @@ jobs:
         run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
-      - name: zip the macOS artifacts
+      - name: Package macOS app into DMG
         if: ${{ matrix.name == 'macOS-arm64' }}
         run: |
-          # ls dist/
-          # mv dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app dist/MangaBox-${{ matrix.name }}-${{ env.version }}.app
-          # Step 2: Patch icons
           APP="dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app"
           RESOURCES="$APP/Contents/Resources"
+
+          # Patch icons
           cp assets/icon-macos26/AppIcon.icns "$RESOURCES/AppIcon.icns"
           cp assets/icon-macos26/Assets.car "$RESOURCES/Assets.car"
 
-          # Step 3: Package into compressed DMG
-          npx electron-builder --${{ matrix.sys }} dmg --${{ matrix.arch }}
+          # Package into DMG using prepackaged .app
+          npx electron-builder --mac dmg --prepackaged "$APP"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
