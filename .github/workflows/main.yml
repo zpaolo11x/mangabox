@@ -118,15 +118,16 @@ jobs:
       - name: Package macOS app into DMG
         if: ${{ matrix.name == 'macOS-arm64' }}
         run: |
-          APP="dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app"
+          APP="dist/mac-arm64/MangaBox.app"
           RESOURCES="$APP/Contents/Resources"
 
           # Patch icons
           cp assets/icon-macos26/AppIcon.icns "$RESOURCES/AppIcon.icns"
           cp assets/icon-macos26/Assets.car "$RESOURCES/Assets.car"
 
-          # Package into DMG using prepackaged .app
-          npx electron-builder --mac dmg --prepackaged "$APP"
+          # Package into DMG using the containing folder
+          npx electron-builder --mac dmg --prepackaged "dist/mac-arm64"
+
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
