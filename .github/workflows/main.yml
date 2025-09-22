@@ -120,7 +120,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: ${{ matrix.sys == 'mac' }}
         run: |
-          APP="dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app"
+          if [ "${{ matrix.arch }}" = "x64" ]; then
+            APP="dist/mac/MangaBox.app"
+            PREPACKAGED="dist/mac"
+          else
+            APP="dist/mac-${{ matrix.arch }}/MangaBox.app"
+            PREPACKAGED="dist/mac-${{ matrix.arch }}"
+          fi
+
           RESOURCES="$APP/Contents/Resources"
           PLIST="$APP/Contents/Info.plist"
 
@@ -135,8 +142,8 @@ jobs:
           /usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$PLIST" || true
           /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
 
-          # Package into DMG using the containing folder
-          npx electron-builder --mac dmg --prepackaged "dist/${{ matrix.sys }}-${{ matrix.arch }}"
+          # Package into DMG
+          npx electron-builder --mac dmg --prepackaged "$PREPACKAGED"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
