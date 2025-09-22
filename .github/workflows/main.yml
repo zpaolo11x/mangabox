@@ -115,6 +115,36 @@ jobs:
         run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
+      - name: Package macOS app into DMG
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: ${{ matrix.sys == 'mac' }}
+        run: |
+          if [ "${{ matrix.arch }}" = "x64" ]; then
+            APP="dist/mac/MangaBox.app"
+            PREPACKAGED="dist/mac"
+          else
+            APP="dist/mac-${{ matrix.arch }}/MangaBox.app"
+            PREPACKAGED="dist/mac-${{ matrix.arch }}"
+          fi
+
+          RESOURCES="$APP/Contents/Resources"
+          PLIST="$APP/Contents/Info.plist"
+
+          # Patch icons
+          cp assets/icon-macos26/AppIcon.icns "$RESOURCES/AppIcon.icns"
+          cp assets/icon-macos26/Assets.car "$RESOURCES/Assets.car"
+          
+          # Update Info.plist
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconFile" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string AppIcon" "$PLIST"
+
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
+
+          # Package into DMG
+          npx electron-builder --mac dmg --prepackaged "$PREPACKAGED"
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
