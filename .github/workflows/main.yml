@@ -120,7 +120,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         if: ${{ matrix.sys == 'mac' }}
         run: |
-          APP="dist/${{ matrix.mac }}-${{ matrix.arch }}/MangaBox.app"
+          APP="dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app"
           RESOURCES="$APP/Contents/Resources"
           PLIST="$APP/Contents/Info.plist"
 
