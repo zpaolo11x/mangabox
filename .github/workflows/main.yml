@@ -72,7 +72,7 @@ jobs:
             sys: mac
             arch: x64
             name: macOS-x64
-          - os: macos-latest
+          - os: macos-26
             sys: mac
             arch: arm64
             name: macOS-arm64
@@ -118,15 +118,23 @@ jobs:
       - name: zip the macOS artifacts
         if: ${{ matrix.name == 'macOS-arm64' }}
         run: |
-          ls dist/
-          mv dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app dist/MangaBox-${{ matrix.name }}-${{ env.version }}.app
+          # ls dist/
+          # mv dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app dist/MangaBox-${{ matrix.name }}-${{ env.version }}.app
+          # Step 2: Patch icons
+          APP="dist/${{ matrix.sys }}-${{ matrix.arch }}/MangaBox.app"
+          RESOURCES="$APP/Contents/Resources"
+          cp assets/icon-macos26/AppIcon.icns "$RESOURCES/AppIcon.icns"
+          cp assets/icon-macos26/Assets.car "$RESOURCES/Assets.car"
+
+          # Step 3: Package into compressed DMG
+          npx electron-builder --${{ matrix.sys }} dmg --${{ matrix.arch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
-            dist/*.app
+            dist/*.dmg
             dist/*.AppImage
             dist/*.exe
   web:
