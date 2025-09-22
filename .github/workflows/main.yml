@@ -130,6 +130,12 @@ jobs:
           # Package into DMG using the containing folder
           npx electron-builder --mac dmg --prepackaged "dist/mac-arm64"
 
+          # Update Info.plist
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconFile" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string AppIcon" "$PLIST"
+
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
