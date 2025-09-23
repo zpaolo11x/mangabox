@@ -4,7 +4,8 @@
 <head>
 	<title>MangaBox</title>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+
 	<meta name="theme-color" content="black">
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
@@ -72,7 +73,7 @@
 			</div>
 
 		</div>
-		<div class="scrollbox" data-scroll-direction="vertical">
+		<div id="mainScrollBox" class="scrollbox" data-scroll-direction="vertical">
 			<div id="mainContainer" class="scrollbox-content">
 				<div id="seriesHeader" class="section hidden"></div>
 
@@ -155,82 +156,82 @@
 		<div id="readerViewerWebtoon">
 			<div id="webtoonContainer" class="hide-scrollbar"></div>
 		</div>
+	</div>
 
-		<div id="readerOverlay">
-			<div id="incognitoMark" class="blankstart"></div>
+	<div id="readerOverlay" class="section hidden">
+		<div id="incognitoMark" class="blankstart"></div>
 
-			<div id="touchPanel">
-				<div id="toLeftPage"></div>
-				<div id="openMenu"></div>
-				<div id="toRightPage"></div>
+		<div id="controlPanel" class="hidden">
+
+			<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
+				<div id="thumbStripScrollContent" class="scrollbox-content">
+					<div id="thumbStripInner"></div>
+				</div>
+				<div class="scrollbox-scrollbar">
+					<div class="scrollbox-thumb"></div>
+				</div>
+			</div>
+			<div id="thumbStripButton">
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
 			</div>
 
-			<div id="controlPanel" class="hidden">
-
-				<div id="thumbStrip" class="scrollbox" data-scroll-direction="horizontal">
-					<div id="thumbStripScrollContent" class="scrollbox-content">
-						<div id="thumbStripInner"></div>
-					</div>
-					<div class="scrollbox-scrollbar">
-						<div class="scrollbox-thumb"></div>
-					</div>
+			<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
+				<div id="thumbStripScrollContentWT" class="scrollbox-content">
+					<div id="thumbStripInnerWT"></div>
 				</div>
-				<div id="thumbStripButton">
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<div class="scrollbox-scrollbar">
+					<div class="scrollbox-thumb"></div>
 				</div>
-
-				<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
-					<div id="thumbStripScrollContentWT" class="scrollbox-content">
-						<div id="thumbStripInnerWT"></div>
-					</div>
-					<div class="scrollbox-scrollbar">
-						<div class="scrollbox-thumb"></div>
-					</div>
-				</div>
-				<div id="thumbStripButtonWT">
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-					<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-				</div>
-
-				<div id="topControls">
-					<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
-					<span></span>
-					<span id="bookName"></span>
-					<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
-					<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
-				</div>
-
-				<div id="zoomControls">
-					<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
-					<span id="scaleVal" class="reader-buttons">100%</span>
-					<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
-				</div>
-
-
-				<div id="bottomControls">
-					<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
-					<span id="leftLimit" class="bar-note press-button corner-right"></span>
-					<div id="readerProgressBar" onclick="seek(event)">
-						<div id="readerProgress"></div>
-						<div id="readerPage"></div>
-					</div>
-					<span id="rightLimit" class="bar-note press-button corner-left"></span>
-					<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
-				</div>
-
-				<div id="nextBookPanel" class="modal-content hidden blankstart">
-					<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
-				</div>
-
-				<div id="prevBookPanel" class="modal-content hidden blankstart">
-					<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
-				</div>
-
 			</div>
+			<div id="thumbStripButtonWT">
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+			</div>
+
+			<div id="topControls">
+				<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
+				<span></span>
+				<span id="bookName"></span>
+				<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
+				<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
+			</div>
+
+			<div id="zoomControls">
+				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
+				<span id="scaleVal" class="reader-buttons">100%</span>
+				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
+			</div>
+
+
+			<div id="bottomControls">
+				<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
+				<span id="leftLimit" class="bar-note press-button corner-right"></span>
+				<div id="readerProgressBar" onclick="seek(event)">
+					<div id="readerProgress"></div>
+					<div id="readerPage"></div>
+				</div>
+				<span id="rightLimit" class="bar-note press-button corner-left"></span>
+				<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
+			</div>
+
+			<div id="nextBookPanel" class="modal-content hidden blankstart">
+				<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
+			</div>
+
+			<div id="prevBookPanel" class="modal-content hidden blankstart">
+				<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
+			</div>
+
 		</div>
+	</div>
+
+	<div id="touchPanel" class="section hidden">
+		<div id="toLeftPage"></div>
+		<div id="openMenu"></div>
+		<div id="toRightPage"></div>
 	</div>
 
 	<div id="dragbar" class="draggable">
@@ -278,11 +279,10 @@
 	</div>
 
 	<div id="myModal" class="modal">
-		<div class="modal-content">
+		<div id="modalContent" class="modal-content">
 			<div id="modalWrapper"><img id="modalImage"></div>
 			<p id="modalMessage">This is the message content.</p>
-			<button id="modalOk" class="ok dialog-button press-button">OK</button>
-			<button id="modalCancel" class="cancel dialog-button press-button">Cancel</button>
+
 		</div>
 	</div>
 
@@ -295,7 +295,13 @@
 
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
+		let capacitorPlatform = null;
 
+		if (isCapacitor) {
+			capacitorPlatform = Capacitor.getPlatform();
+			fullscreenChanger.classList.add('disabled');
+		}
 	</script>
 
 	<script src="script-auth.js"></script>
@@ -310,6 +316,10 @@
 		}
 
 		executeFade(1);
+
+		function isOrientationLandscape() {
+			return window.matchMedia("(orientation: landscape)").matches;
+		}
 
 		function getSharpCornerIphone() {
 			if (!/iPhone/.test(navigator.userAgent)) return false;
@@ -339,6 +349,122 @@
 		*/
 
 		const isSharpCornerIphone = getSharpCornerIphone();
+
+		if (isStatusBar) {
+			if (isSharpCornerIphone || (capacitorPlatform == 'android' && isOrientationLandscape())) {
+				Capacitor.Plugins.StatusBar.hide();
+			} else {
+				Capacitor.Plugins.StatusBar.show();
+			}
+		}
+
+		//MB Pinch To Zoom
+
+		const page = document.getElementById("touchPanel");
+		const pageTarget = document.getElementById("readerContainer");
+
+		function getDistance(touches) {
+			const dx = touches[0].clientX - touches[1].clientX;
+			const dy = touches[0].clientY - touches[1].clientY;
+			return Math.sqrt(dx * dx + dy * dy);
+		}
+
+		function getMidpoint(touches) {
+			return {
+				x: (touches[0].clientX + touches[1].clientX) / 2,
+				y: (touches[0].clientY + touches[1].clientY) / 2,
+			};
+		}
+
+		function createPanResponse(page, pageTarget) {
+			let isDragging = false;
+			let lastX = 0, lastY = 0;
+			let offsetX = 0, offsetY = 0; // accumulated pan
+
+			page.addEventListener("touchstart", (e) => {
+				if (rd.scale > 1 && e.touches.length === 1) {
+					isDragging = true;
+					lastX = e.touches[0].clientX;
+					lastY = e.touches[0].clientY;
+				}
+			});
+
+			page.addEventListener("touchmove", (e) => {
+				if (isDragging && e.touches.length === 1) {
+					e.preventDefault(); // stop native scrolling
+					const dx = e.touches[0].clientX - lastX;
+					const dy = e.touches[0].clientY - lastY;
+
+					offsetX += dx;
+					offsetY += dy;
+
+					lastX = e.touches[0].clientX;
+					lastY = e.touches[0].clientY;
+
+					updateTransform();
+				}
+			});
+
+			page.addEventListener("touchend", (e) => {
+				if (e.touches.length === 0) {
+					isDragging = false;
+				}
+			});
+
+			function updateTransform() {
+				// clamp offsets so you can’t drag past edges
+				const maxX = (rd.scale - 1) * page.clientWidth / 2;
+				const maxY = (rd.scale - 1) * page.clientHeight / 2;
+
+				offsetX = Math.min(maxX, Math.max(-maxX, offsetX));
+				offsetY = Math.min(maxY, Math.max(-maxY, offsetY));
+
+				pageTarget.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${rd.scale})`;
+			}
+
+		}
+		function createPinchResponse(page, pageTarget) {
+
+			page.addEventListener("touchstart", e => {
+				if (e.touches.length === 2) {
+					rd.touchLock = false;
+
+					rd.startDist = getDistance(e.touches);
+					const mid = getMidpoint(e.touches);
+
+					// convert screen coords into element coords
+					const rect = page.getBoundingClientRect();
+					rd.originX = ((mid.x - rect.left) / rect.width) * 100;
+					rd.originY = ((mid.y - rect.top) / rect.height) * 100;
+
+					pageTarget.style.transformOrigin = `${rd.originX}% ${rd.originY}%`;
+				}
+			}, { passive: true });
+
+			page.addEventListener("touchmove", e => {
+				rd.touchLock = false;
+				if (e.touches.length === 2) {
+					const newDist = getDistance(e.touches);
+					const factor = newDist / rd.startDist;
+					const newScale = Math.min(Math.max(1, rd.scale * factor), 4);
+					pageTarget.style.transform = `scale(${newScale})`;
+				}
+			}, { passive: true });
+
+			page.addEventListener("touchend", e => {
+				rd.touchLock = false;
+				if (e.touches.length < 2) {
+					const matrix = new WebKitCSSMatrix(getComputedStyle(pageTarget).transform);
+					rd.scale = matrix.a;
+				}
+			});
+		}
+
+		createPinchResponse(touchPanel, readerContainer);
+		createPinchResponse(webtoonContainer, readerContainer);
+
+		createPanResponse(touchPanel, readerContainer);
+		createPanResponse(webtoonContainer, readerContainer);
 
 		//MB Manage Electron titlebar
 
@@ -591,7 +717,7 @@
 					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
-			console.log(mangaboxFlat)
+			//console.log(mangaboxFlat)
 			return mangaboxFlat
 		}
 
@@ -917,31 +1043,31 @@
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
 		//MB Modal Dialog
-		let modalOkGlobal = null;
-		let modalCancelGlobal = null;
+		let modalGlobal = [];
 
-		function showModal(image, bg, message, okText, cancelText, okFunction, cancelFunction) {
-			modalOkGlobal = okFunction;
-			modalCancelGlobal = cancelFunction;
+		function showModal(image, bg, message, itemsArray) {
+			document.querySelectorAll('.modal-button').forEach(el => {
+				el.remove();
+			});			//modalFunctionsGlobal = functionArray;
 			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
 			modalMessage.textContent = message;
 			//myModal.style.display = 'flex';
 
-			myModal.classList.add('visible');
+			itemsArray.forEach(item => {
+				let uiButton = addItem('button', {
+					innerText: item.label,
+					className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
+				})
+				addPressEvents(uiButton, pressDown, pressUp);
+				uiButton.addEventListener('click', item.runfunction);
+				modalContent.append(uiButton);
+			});
 
-			modalOk.addEventListener('click', modalOkGlobal);
-			if (cancelText != null) {
-				myModal.classList.remove('ok-only');
-				modalCancel.addEventListener('click', modalCancelGlobal);
-			} else {
-				myModal.classList.add('ok-only');
-			}
+			myModal.classList.add('visible');
 		}
 
 		function closeModal() {
-			modalOk.removeEventListener('click', modalOkGlobal);
-			modalCancel.removeEventListener('click', modalCancelGlobal);
 			myModal.classList.add('unfade');
 			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
@@ -949,8 +1075,9 @@
 				// Optional: if you still want to hide it completely from screen readers / tab order
 				myModal.classList.remove('visible');
 				myModal.classList.remove('unfade');
-				workOk = null;
-				workCancel = null;
+				document.querySelectorAll('.modal-button').forEach(el => {
+					el.remove();
+				});
 			}, 300);
 		}
 
@@ -1394,14 +1521,25 @@
 			requestAnimationFrame(() => {
 				requestAnimationFrame(() => {
 					// Now restore zoom capability
-					metaViewport.content = `width=device-width, ${isSharpCornerIphone ? '' : 'viewport-fit=cover, '}initial-scale=1, maximum-scale=5, minimum-scale=1`;
+					metaViewport.content = `width=device-width, ${isSharpCornerIphone ? '' : 'viewport-fit=cover, '}initial-scale=1.0, user-scalable=no`;
 				});
 			});
 		}
 
 		fixZoomOnPWA()
 
-		window.addEventListener('orientationchange', fixZoomOnPWA);
+		window.addEventListener('orientationchange', () => {
+			if (isCapacitor && (capacitorPlatform == 'android')) {
+				setTimeout(() => {
+					if (isOrientationLandscape()) {
+						Capacitor.Plugins.StatusBar.hide();
+					} else {
+						Capacitor.Plugins.StatusBar.show();
+					}
+				}, 100)
+			}
+			fixZoomOnPWA();
+		});
 		document.addEventListener('visibilitychange', fixZoomOnPWA);
 		window.addEventListener('pageshow', (event) => {
 			if (event.persisted) fixZoomOnPWA();
@@ -2083,7 +2221,7 @@
 			});
 		}
 
-		function addLongPressListener(element, callback, duration = 600) {
+		function addLongPressListener(element, callback, duration = 1200) {
 			let pressTimer;
 			let wasLongPress = false;
 
@@ -2124,6 +2262,103 @@
 			bootSequence();
 		}
 
+		async function applyLibraryImage(libraryId, fileOrBase64) {
+			let base64 = null;
+
+			// Case 1: It's a File
+			if (fileOrBase64 instanceof File) {
+				debugPrint("----Input is a file")
+				if (!fileOrBase64.type.startsWith('image/')) {
+					debugPrint("----But it's not a valid image file")
+					showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
+						[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+					return;
+				}
+				base64 = await readFileAsBase64(fileOrBase64);
+			}
+
+			// Case 2: It's already a base64 string
+			else if (typeof fileOrBase64 === 'string' && fileOrBase64.startsWith('data:image/')) {
+				debugPrint("----Input is a string")
+				base64 = fileOrBase64;
+			}
+
+			// Case 3: Not valid
+			else {
+				debugPrint("----Input is not valid")
+				debugPrint(fileOrBase64);
+				showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
+					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+				return;
+			}
+
+			// Show confirmation modal
+			showModal(base64, false, 'Set this image as library thumbnail?',
+				[{
+					label: 'Ok',
+					runfunction: async () => {
+						mb.libraryIcons[libraryId] = base64;
+						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
+						closeModal();
+						bootSequence();
+					},
+					high: true,
+				}, {
+					label: 'Cancel', runfunction: cancelUpdate, high: false
+				}
+				]);
+		}
+
+
+		async function pickImage(libraryId) {
+			debugPrint("PickImage");
+			try {
+				const image = await Capacitor.Plugins.Camera.getPhoto({
+					quality: 90,
+					allowEditing: false,
+					resultType: 'base64',  // get base64 directly
+					source: 'PHOTOS',
+				});
+				debugPrint(image);
+				debugPrint(image.base64String);
+				debugPrint("Picked");
+				const base64 = `data:image/${image.format};base64,${image.base64String}`;
+				applyLibraryImage(libraryId, base64);
+
+			} catch (err) {
+				debugPrint("Image picking failed:\n" + err);
+			}
+		}
+
+		async function pickFile(libraryId) {
+			debugPrint("PickFile");
+			try {
+				const result = await Capacitor.Plugins.FilePicker.pickFiles({
+					extensions: ['png', 'jpg', 'jpeg', 'heic'], // common formats on iOS
+					multiple: false,
+					readData: true,
+				});
+				if (result.files.length > 0) {
+					const file = result.files[0];
+
+					if (file.data) {
+						// Pass as base64 string (Case 2 of your function)
+						const base64 = `data:${file.mimeType};base64,${file.data}`;
+						applyLibraryImage(libraryId, base64);
+					} else if (file.path) {
+						// As a fallback: fetch from file system and build a File
+						const response = await fetch(file.path);
+						const blob = await response.blob();
+						const pseudoFile = new File([blob], file.name, { type: file.mimeType });
+						applyLibraryImage(libraryId, pseudoFile);
+					}
+				}
+
+			} catch (err) {
+				debugPrint("Image picking failed:\n" + err);
+			}
+		}
+
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -2140,15 +2375,43 @@
 
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
-						showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.', 'Ok', null, closeModal);
-					} else {
-						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', 'Ok', 'Cancel', async () => {
-							await delete mb.libraryIcons[libraryId];
-							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+						if (isCapacitor) {
+							showModal('circle-info-svg.svg', true, 'Open an image from gallery or files.',
+								[{
+									label: 'Gallery',
+									runfunction: async () => { await pickImage(libraryId); },
+									high: true
+								}, {
+									label: 'Files',
+									runfunction: async () => { await pickFile(libraryId); },
+									high: true
+								}, {
+									label: 'Cancel',
+									runfunction: closeModal,
+									high: false
+								}]);
 
-							closeModal();
-							bootSequence();
-						}, cancelUpdate);
+						} else {
+							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.',
+								[{ label: 'Ok', runfunction: closeModal, high: true }]
+							);
+						}
+					} else {
+						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', [
+							{
+								label: 'Ok',
+								runfunction: async () => {
+									await delete mb.libraryIcons[libraryId];
+									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
+
+									closeModal();
+									bootSequence();
+								},
+								high: true
+							},
+							{ label: 'Cancel', runfunction: cancelUpdate, high: false }
+						]);
+
 					}
 				});
 
@@ -2167,18 +2430,8 @@
 					const libraryId = listItem.id
 					const file = event.dataTransfer.files[0];
 
-					if (!file || !file.type.startsWith('image/')) {
-						showModal('circle-mark-svg.svg', true, 'Please drop a valid image file.', 'Ok', null, cancelUpdate, cancelUpdate);
+					applyLibraryImage(libraryId, file);
 
-					} else {
-						const base64 = await readFileAsBase64(file);
-						showModal(base64, false, 'Set this image as library thumbnail?', 'Ok', 'Cancel', async () => {
-							mb.libraryIcons[libraryId] = base64;
-							await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
-							closeModal();
-							bootSequence();
-						}, cancelUpdate);
-					}
 				})
 
 				listItem.addEventListener('click', () => {
@@ -2847,6 +3100,12 @@
 			prevBook: null,
 
 			titleBarColor: 'black',
+
+			scale: 1,
+			startDist: 0,
+			originX: 0,
+			originY: 0,
+			touchLock: 0
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
@@ -2892,6 +3151,12 @@
 
 			rd.spreadFocus = 'focus-center';
 
+			rd.scale = 1;
+			rd.startDist = 0;
+			rd.originX = 0;
+			rd.originY = 0;
+			rd.touchLock = 0;
+
 			scaleWebtoon(0);
 
 			//readerViewer.innerHTML = '';
@@ -2904,7 +3169,12 @@
 			changeReaderTheme();
 
 			sectionShow(readerContainer);
+			sectionShow(readerOverlay);
+			sectionShow(touchPanel);
 
+			if (isStatusBar) {
+				Capacitor.Plugins.StatusBar.hide();
+			}
 			initViewer();
 
 		}
@@ -2948,6 +3218,8 @@
 
 			webtoonContainer.removeAttribute('style');
 			sectionHide(readerContainer);
+			sectionHide(readerOverlay);
+			sectionHide(touchPanel);
 		}
 
 		function spreadSetFocus(focusString, smoothMove = false, delayMove = false) {
@@ -2989,6 +3261,11 @@
 			//dragbarOffReader();
 
 			updatePWABar();
+			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
+				Capacitor.Plugins.StatusBar.show();
+				//showAndroidTitleBar();
+			}
+
 		}
 
 		readerClose.addEventListener('click', () => {
@@ -3065,6 +3342,8 @@
 				}
 			}
 			document.documentElement.style.setProperty('--mb-thumb-size-px', thumbSize + 'px');
+
+
 
 			setTimeout(() => {
 				scrollContent.style.overflowX = rd.webtoon ? 'hidden' : 'auto';
@@ -3199,6 +3478,9 @@
 				rd.webtoonScrollRatio = webtoonRatio()
 			}
 
+			readerContainer.style.transform = `scale(100%)`;
+			readerContainer.style.transformOrigin = `50% 50%`;
+
 			setTimeout(() => {
 				webtoonContainer.style.overflow = 'auto';
 				//thumbStripScrollContent.style.overflowX = 'auto';
@@ -3212,20 +3494,23 @@
 
 		function buildSize(item, ratio) {
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
 			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
 		function buildSize2P(item, ratio) {
+			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
+			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
+
 			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
-			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
+			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh) )`;
 		}
 
 		// Add this once when initializing the viewer
@@ -4424,8 +4709,14 @@
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
+				if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
+					Capacitor.Plugins.StatusBar.show();
+				}
 				updatePWABar();
 			} else {
+				if (isStatusBar) {
+					Capacitor.Plugins.StatusBar.hide();
+				}
 				updatePWABar(rd.titleBarColor);
 			}
 
@@ -4443,9 +4734,32 @@
 		leftLimit.addEventListener('click', handleLeftLimit);
 		rightLimit.addEventListener('click', handleRightLimit);
 
-		toLeftPage.addEventListener('click', handleLeftArrow);
-		toRightPage.addEventListener('click', handleRightArrow);
-		openMenu.addEventListener('click', toggleMenu);
+		toLeftPage.addEventListener('pointerdown', () => {
+			rd.touchLock = true;
+		});
+		toLeftPage.addEventListener('pointerup', () => {
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
+			handleLeftArrow();
+		});
+
+		toRightPage.addEventListener('pointerdown', () => {
+			rd.touchLock = true;
+		});
+		toRightPage.addEventListener('pointerup', () => {
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
+			handleRightArrow();
+		});
+
+		openMenu.addEventListener('pointerdown', () => {
+			rd.touchLock = true;
+		});
+		openMenu.addEventListener('pointerup', () => {
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
+			toggleMenu();
+		});
 
 		// Seek function to move to specific spread based on click or drag
 		function seek(event) {
@@ -4736,6 +5050,7 @@
 			return window.innerWidth / window.visualViewport.width;
 		}
 		function getDerivedScale() {
+			return rd.scale;
 			return document.documentElement.clientWidth / window.visualViewport.width;
 		}
 
@@ -4765,7 +5080,6 @@
 				const diffX = touchEndX - item.TouchStartX;
 				const diffY = touchEndY - item.TouchStartY;
 
-
 				if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
 					if (diffX > 0) {
 						onSwipeRight?.(); // Call custom right swipe function
@@ -4791,9 +5105,21 @@
 		enableTouchResponse(thumbStripWT, 20, handleLargeThumbs, handleSmallThumbs, null, null);
 		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
 
+		/*
 		webtoonContainer.addEventListener('click', () => {
 			toggleMenu();
 		})
+		*/
+
+		webtoonContainer.addEventListener('pointerdown', () => {
+			rd.touchLock = true;
+		});
+		webtoonContainer.addEventListener('pointerup', () => {
+			if (!rd.touchLock) return;
+			rd.touchLock = false;
+			toggleMenu();
+		});
+
 		webtoonContainer.addEventListener('scroll', () => {
 			rd.webtoonScrollRatio = webtoonRatio();
 		})

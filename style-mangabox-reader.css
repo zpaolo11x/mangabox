@@ -148,12 +148,28 @@
 #webtoonContainer {
 	position: absolute;
 	top: 0;
+	margin-top:var(--mb-top-spacer);
 	overflow: hidden;
 	bottom: 0;
 	/*height:100vh;*/
 	box-sizing: border-box;
 	background: white;
 }
+
+/* reader overlay is just a placeholder, a virtual coordinate to move all together */
+#readerOverlay {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 1px;
+	z-index: 1004;
+	transition: top 0.3s;
+
+	margin: 0;
+	padding: 0;
+}
+
 
 #readerContainer {
 	position: fixed;
@@ -166,6 +182,7 @@
 
 	margin: 0;
 	padding: 0;
+
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -539,7 +556,7 @@ div.single-page {
 	align-items: center;
 	justify-content: center;
 
-	height: 100dvh;
+	height: calc(100dvh);
 
 	background: none;
 	gap: 0px;
@@ -590,12 +607,12 @@ div.single-page {
 }
 
 #bottomControls {
-	border-bottom: var(--mb-card-color) solid env(safe-area-inset-bottom);
+	border-bottom: var(--mb-card-color) solid var(--mb-bottom-spacer);
 	box-sizing: content-box;
 }
 
 #topControls {
-	padding-top: var(--mb-drag-bar-height)
+	padding-top: calc(var(--mb-drag-bar-height) + var(--mb-top-spacer))
 }
 
 /*
@@ -625,7 +642,7 @@ div.single-page {
 	height: calc(var(--mb-thumb-size-px) + 30px);
 	left: 0px;
 	right: 0px;
-	bottom: calc(60px + env(safe-area-inset-bottom));
+	bottom: calc(60px + var(--mb-bottom-spacer));
 	overflow-x: auto;
 	overflow-y: hidden;
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s, height 0.3s;
@@ -660,7 +677,7 @@ div.single-page {
 	width: 150px;
 	left: 0;
 	right: 0;
-	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px + env(safe-area-inset-bottom));
+	bottom: calc(var(--mb-thumb-size-px) + 60px + 10px + var(--mb-bottom-spacer));
 	transition: opacity 0.3s, top 0.3s, bottom 0.3s;
 }
 
@@ -813,8 +830,10 @@ div.single-page {
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 	width: calc(var(--mb-pill-width) + 50px + var(--mb-pill-width));
 	left: 20px;
-	bottom: calc(80px + env(safe-area-inset-bottom));;
+	bottom: calc(80px + var(--mb-bottom-spacer));;
 	border-radius: var(--mb-dialog-box-radius);
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 #scaleVal {
@@ -838,7 +857,7 @@ div.single-page {
 
 #controlPanel.hidden #topControls,
 #readerContainer.hidden #topControls {
-	top: -100px;
+	top: calc(-100px - var(--mb-top-spacer));
 }
 
 #controlPanel.hidden #bottomControls,
@@ -879,7 +898,7 @@ div.single-page {
 #prevBookPanel {
 	position: absolute;
 	left: 50%;
-	top: 50%;
+	top: 50vh;
 	transform: translate(-50%, -50%);
 	transition: opacity 0.5s ease;
 	z-index: 15;
@@ -887,8 +906,10 @@ div.single-page {
 
 #controlPanel.hidden #nextBookPanel,
 #readerContainer.hidden #nextBookPanel,
+#readerOverlay.hidden #nextBookPanel,
 #controlPanel.hidden #prevBookPanel,
-#readerContainer.hidden #prevBookPanel {
+#readerContainer.hidden #prevBookPanel,
+#readerOverlay.hidden #prevBookPanel {
 	opacity: 0;
 	pointer-events: none;
 }
@@ -901,6 +922,11 @@ div.single-page {
 #nextBookPanel.hidden,
 #prevBookPanel.hidden {
 	opacity: 0;
+	pointer-events: none;
+}
+
+#nextBookPanel.hidden #nextBookButton,
+#prevBookPanel.hidden #prevBookButton{
 	pointer-events: none;
 }
 
@@ -1047,22 +1073,25 @@ div.single-page {
 	left: 0px;
 	right: 0px;
 	top: 0px;
-	display: grid;
 	bottom: 0px;
+	display: grid;
 	/*box-shadow: inset green 0px 0px 15px;*/
 	grid-template-columns: 1fr 1.5fr 1fr;
 	/*z-index: 1002;*/
-
+	z-index:1003;
 	box-sizing: border-box;
 	border-bottom: 5px solid transparent;
 
 	transition: border 0.3s;
+}
 
+#touchPanel.hidden{
+	pointer-events: none;
 }
 
 #touchPanel.shrink {
-	top: 60px;
-	bottom: 180px;
+	top: calc(60px + var(--mb-top-spacer));
+	bottom: calc(60px + var(--mb-bottom-spacer) + var(--mb-thumb-size-px) + 30px);
 }
 
 /*

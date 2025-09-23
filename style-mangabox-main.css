@@ -60,6 +60,12 @@
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
+	
+	--mb-android-top-bar: 0px;
+	
+	--mb-top-spacer: calc(env(safe-area-inset-top) + var(--mb-android-top-bar));
+
+	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
 
 	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
 	--mb-button-transition:
@@ -191,6 +197,11 @@
 
 .draggable {
 	-webkit-app-region: drag;
+}
+
+.disabled {
+	opacity: 0.3;
+	pointer-events: none;
 }
 
 html,
@@ -399,7 +410,6 @@ body {
 	font-family: 'Roboto Flex', sans-serif;
 	margin: 0;
 	padding: 0;
-
 	background: var(--mb-page-color);
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
@@ -413,9 +423,20 @@ a {
 	transition: color 0.3s ease;
 }
 
+#blankTitle {
+	position: fixed;
+	background-color: var(--mb-card-color);
+	left: 0;
+	right: 0;
+	top: -1;
+	z-index: 1001;
+	height: 100px;
+	transition: background-color 0.3s;
+}
+
 #mainUI {
 	position: fixed;
-	top: var(--mb-drag-bar-height);
+	top: calc(var(--mb-drag-bar-height));
 	left: 0;
 	right: 0;
 	bottom: 0;
@@ -536,7 +557,7 @@ a {
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	padding: var(--mb-library-gap) var(--mb-bar-padding);
+	padding: calc(var(--mb-library-gap) + var(--mb-top-spacer)) var(--mb-bar-padding) 0 var(--mb-bar-padding);
 	padding-left: var(--mb-bar-safe-padding-left);
 	padding-right: var(--mb-bar-safe-padding-right);
 	z-index: 1000;
@@ -552,9 +573,19 @@ a {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
-	height: var(--mb-button-size);
-
+	height: calc(var(--mb-button-size) + var(--mb-library-gap));
+	overflow: scroll;
 	/*background-color: lightblue;*/
+}
+
+#librariesList::-webkit-scrollbar {
+	display: none;
+}
+
+#librariesList {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+	-webkit-overflow-scrolling: touch;
 }
 
 #librariesRightBlock {
@@ -565,7 +596,7 @@ a {
 	list-style-type: none;
 	padding: 0 0 0 var(--mb-library-gap);
 	margin: 0 0 0 auto;
-	height: var(--mb-button-size);
+	height: calc(var(--mb-button-size) + var(--mb-library-gap));
 
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 210px) var(--mb-button-size);
 
@@ -623,6 +654,10 @@ a {
 
 #libraryMenu:not(.disabled) {
 	opacity: 1;
+}
+
+#mainScrollBox {
+	margin-top: var(--mb-top-spacer);
 }
 
 #menuBars {
@@ -853,6 +888,19 @@ a {
 
 .library-thumbnail {
 	border-radius: 50%;
+
+	-webkit-touch-callout: none;
+	/* disables the callout menu on long press */
+	-webkit-user-select: none;
+	/* prevents text/image selection */
+	user-select: none;
+
+	-webkit-user-drag: none;
+	/* for iOS Safari */
+	user-drag: none;
+	/* non-standard but supported */
+	pointer-events: auto;
+	/* ensure clicks/touches still work */
 }
 
 .series-status,
@@ -1208,7 +1256,7 @@ a {
 
 #stripGridHeaderContainer {
 	position: fixed;
-	top: calc(60px + var(--mb-drag-bar-height));
+	top: calc(60px + var(--mb-drag-bar-height) + var(--mb-top-spacer));
 	left: 0px;
 	right: 0px;
 	background: linear-gradient(180deg, var(--mb-page-color) 80%, transparent 81%);
@@ -1313,7 +1361,7 @@ a {
 	position: fixed;
 	/* Keeps the div centered and prevents scrolling */
 	left: 50%;
-	top: calc(100px + var(--mb-drag-bar-height));
+	top: calc(100px + var(--mb-drag-bar-height) + var(--mb-top-spacer));
 	transform: translate(-50%, 0);
 	/* Centers the div */
 	width: min(550px, 100vw);
@@ -1628,7 +1676,7 @@ book-item {
 
 #seriesMiniHeader {
 	position: fixed;
-	top: calc(60px + var(--mb-drag-bar-height));
+	top: calc(60px + var(--mb-drag-bar-height) + var(--mb-top-spacer));
 	left: 0px;
 	right: 0px;
 	background: var(--mb-page-color);
@@ -1817,7 +1865,7 @@ span.mini-title {
 	transition: color 0.3s;
 }
 
-.hidestrip{
+.hidestrip {
 	opacity: 0;
 }
 
@@ -1863,11 +1911,18 @@ body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 
 body.sticky-small #stickyContainer {
 	/*	height: 105px; */
+	max-width: calc(100vw - 2 * var(--mb-bar-padding));
+	min-width: 350px;
 	flex-wrap: wrap;
 }
 
+body.sticky-small #librariesList {
+	max-width: calc(100vw - 2 * var(--mb-bar-padding));
+	/*reduce to add space for buttons?*/
+}
+
 body.sticky-small #librariesRightBlock {
-	margin-top: 10px;
+	margin-top: calc(10px - var(--mb-library-gap));
 }
 
 body.sticky-small #mainUI {
@@ -1875,7 +1930,7 @@ body.sticky-small #mainUI {
 }
 
 body.sticky-small #stripGridHeaderContainer {
-	top: 114px;
+	top: calc(114px + var(--mb-drag-bar-height) + var(--mb-top-spacer));
 }
 
 body.sticky-small #mainUI:has(.extra-bar:not(.hidden)) {
@@ -1930,7 +1985,7 @@ body.sticky-small #librariesRightBlock {
 }
 
 body.sticky-small #seriesMiniHeader {
-	top: 114px;
+	top: calc(114px + var(--mb-top-spacer));
 }
 
 .scrollbox {

@@ -1,6 +1,6 @@
 {
 	"name": "mangabox",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Komga desktop client using Electron",
 	"main": "package-main.js",
@@ -9,12 +9,13 @@
 		"build": "electron-builder"
 	},
 	"dependencies": {
-		"@capacitor/core": "^6.0.0",
-	   "@capacitor/android": "^6.0.0",
+		"@capacitor/core": "^7.0.0",
+	   "@capacitor/android": "^7.0.0",
+	   "@capacitor/ios": "^7.0.0",
 		"keytar": "^7.9.0"
 	},
 	"devDependencies": {
-		"@capacitor/cli": "^6.0.0",
+		"@capacitor/cli": "^7.0.0",
 		"electron": "^34.1.0",
 		"electron-builder": "^26.0.5"
 	},
@@ -37,18 +38,19 @@
 			"package.json"
 		],
 		"mac": {
-			"target": "dmg",
-			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
-			"icon": "assets/icons/mangabox.icns",
+			"target": "dir",
+			"artifactName": "MangaBox-${version}-macOS-${arch}",
+			"icon": "build/icons/mangabox.icns",
 			"category": "public.app-category.utilities"
 		},
 		"dmg": {
+			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
 			"icon": "assets/icons/dmg_icon.icns"
 		},
 		"win": {
 			"target": "portable",
 			"artifactName": "MangaBox-${version}-Windows-${arch}.exe",
-			"icon": "assets/icons/mangabox.ico"
+			"icon": "build/icons/mangabox.ico"
 		},
 		"linux": {
 			"target": "AppImage",

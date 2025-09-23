@@ -1,4 +1,4 @@
-name: Build and Release Web, Electron, Android
+name: Build and Release Web, Electron, Capacitor
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - devtest
       - devtest_*
     paths-ignore:
-      - 'docs/**'
+      - "docs/**"
 
 jobs:
   version:
@@ -27,10 +27,43 @@ jobs:
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+#  icons:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v3
+#
+#      - name: Install icon generator
+#        run: |
+#          npm install -g app-iconset-generator
+#          npm install -g png2icons
+#
+#      - name: Check current directory
+#        run: pwd
+#
+#      - name: List files
+#        run: ls -la
+#
+#      - name: Generate icons
+#        run: |
+#          mkdir -p build/icons
+#          png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
+#          png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
+#          app-iconset-generator -i ./assets/icon-red/icon.png -o ./build/icons
+#
+#      - name: List icon files
+#        run: ls build/icons -lRa
+#
+#      - name: Upload icons artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: generated-icons
+#          path: build/icons
+
   electron:
     needs: version
     runs-on: ${{ matrix.os }}
-    env: 
+    env:
       version: ${{ needs.version.outputs.version }}
     strategy:
       matrix:
@@ -39,7 +72,7 @@ jobs:
             sys: mac
             arch: x64
             name: macOS-x64
-          - os: macos-latest
+          - os: macos-26
             sys: mac
             arch: arm64
             name: macOS-arm64
@@ -67,6 +100,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Generate icons
+        run: |
+          mkdir -p build/icons
+          npx png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
+          npx png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
+
       - name: Rebuild native modules for Electron
         run: npx electron-rebuild -f -w keytar
 
@@ -75,6 +114,35 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
+
+      - name: Package macOS app into DMG
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        if: ${{ matrix.sys == 'mac' }}
+        run: |
+          if [ "${{ matrix.arch }}" = "x64" ]; then
+            APP="dist/mac/MangaBox.app"
+            PREPACKAGED="dist/mac"
+          else
+            APP="dist/mac-${{ matrix.arch }}/MangaBox.app"
+            PREPACKAGED="dist/mac-${{ matrix.arch }}"
+          fi
+
+          RESOURCES="$APP/Contents/Resources"
+          PLIST="$APP/Contents/Info.plist"
+
+          # Patch icons
+          cp assets/icon-macos26/AppIcon.icns "$RESOURCES/AppIcon.icns"
+          cp assets/icon-macos26/Assets.car "$RESOURCES/Assets.car"
+          
+          # Update Info.plist
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconFile" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconFile string AppIcon" "$PLIST"
+          /usr/libexec/PlistBuddy -c "Delete :CFBundleIconName" "$PLIST" || true
+          /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
+
+          # Package into DMG
+          npx electron-builder --mac dmg --prepackaged "$PREPACKAGED"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -87,7 +155,7 @@ jobs:
   web:
     needs: version
     runs-on: ubuntu-latest
-    env: 
+    env:
       version: ${{ needs.version.outputs.version }}
     steps:
       - name: Checkout code
@@ -112,14 +180,39 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
 
-  android:
+  capacitor:
     needs: [version, web]
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     env:
       version: ${{ needs.version.outputs.version }}
+    strategy:
+      matrix:
+        include:
+          - os: macos-26
+            sys: ios
+            name: iOS-app
+          - os: macos-26
+            sys: ios
+            name: iOS-ipa
+          - os: ubuntu-latest
+            sys: android
+            name: Android
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # 👇 New step: make sure Android build uses JDK 21
+      - name: Set up JDK 21
+        if: ${{ matrix.sys == 'android' }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
 
       - name: Download webdeploy artifact
         uses: actions/download-artifact@v4
@@ -130,40 +223,127 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Add Android platform
-        run: npx cap add android
-      
-      - name: Generate Android assets
-        run: npx @capacitor/assets generate
-            
+      - name: Add System platform
+        run: npx cap add ${{ matrix.sys }}
+
+      - name: Generate icon assets (iOS)
+        if: ${{ matrix.sys == 'ios' }}
+        run: npx @capacitor/assets generate --assetPath assets/icon-red --ios
+
+      - name: Generate icon assets (Android)
+        if: ${{ matrix.sys == 'android' }}
+        run: npx @capacitor/assets generate --assetPath assets/icon-red --android
+
+      - name: iOS - Install Capacitor StatusBar plugin
+        run: npm install @capacitor/status-bar@7
+
+      - name: Install Capacitor Camera plugin
+        run: npm install @capacitor/camera@7
+
+      - name: Install File Picker plugin
+        run: npm install @capawesome/capacitor-file-picker@7
+
+      - name: Add iOS Info.plist permissions
+        if: ${{ matrix.sys == 'ios' }}
+        run: |
+          PLIST="ios/App/App/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :NSCameraUsageDescription 'We need access to your camera to let you take photos.'" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'We need access to your camera to let you take photos.'" $PLIST
+
+          /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryUsageDescription 'We need access to your photo library to let you pick images.'" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryUsageDescription string 'We need access to your photo library to let you pick images.'" $PLIST
+
+          /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryAddUsageDescription 'We need access to save images to your photo library.'" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryAddUsageDescription string 'We need access to save images to your photo library.'" $PLIST
+
       - name: Capacitor sync
-        run: npx cap sync android
+        run: npx cap sync ${{ matrix.sys }}
 
-      - name: Copy custom styles.xml
-        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
+      - name: iOS - Install CocoaPods dependencies
+        if: ${{ matrix.sys == 'ios' }}
+        run: |
+          cd ios/App
+          pod install --repo-update
 
-      - name: Build APK
+#      - name: Android - Copy custom styles.xml
+#        if: ${{ matrix.sys == 'android' }}
+#        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
+
+      - name: Prepare output folder
+        run: mkdir output
+
+      - name: Android - Build app
+        if: ${{ matrix.sys == 'android' }}
         run: |
           cd android
           ./gradlew assembleDebug
 
-      - name: Check for APK output
-        run: find android/app/build/outputs/ -type f
-
-      - name: Rename APK with version
+      - name: Android - Move app to target
+        if: ${{ matrix.sys == 'android' }}
         run: |
-          VERSION=$(jq -r .version capacitor.config.json)
-          mv android/app/build/outputs/apk/debug/app-debug.apk \
-            android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-Android-debug.apk
+          mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
-      - name: Upload APK
+      - name: iOS - Build app for simulator
+        if: ${{ matrix.name == 'iOS-app'}}
+        run: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -arch x86_64 -arch arm64 \
+            -derivedDataPath build \
+            ONLY_ACTIVE_ARCH=NO
+
+      - name: iOS - Move app to target
+        if: ${{ matrix.name == 'iOS-app' }}
+        run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}-${{ matrix.name }}.app
+
+      - name: Replace icons for iOS26
+        if: ${{ matrix.name == 'iOS-app' }}
+        run: |
+          cp assets/icon-ios26/* output/MangaBox-${{ env.version }}-${{ matrix.name }}.app/
+
+      - name: iOS - Build app for device
+        if: ${{ matrix.name == 'iOS-ipa'}}
+        run: |
+          cd ios/App
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=NO \
+            archive \
+            -archivePath build/App.xcarchive
+
+      - name: Replace icons for iOS26
+        if: ${{ matrix.name == 'iOS-ipa' }}
+        run: |
+          cp assets/icon-ios26/* ios/App/build/App.xcarchive/Products/Applications/App.app/
+
+      - name: iOS - Package unsigned .ipa
+        if: ${{ matrix.name == 'iOS-ipa'}}
+        run: |
+          rsync -a ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
+          cd ios/App/build/export
+          zip -r $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa Payload
+
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: MangaBox-Android-${{ env.version }}
-          path: android/app/build/outputs/apk/debug/mangabox-${{ env.version }}-Android-debug.apk
+          name: MangaBox-${{ matrix.name }}-${{ env.version }}
+          path: |
+            output/*.apk
+            output/*.app
+            output/*.ipa
 
   release:
-    needs: [electron, web, android, version]
+    needs: [electron, web, capacitor, version]
     env:
       version: ${{ needs.version.outputs.version }}
     if: github.ref_name == 'main' # Run this job only for the 'main' branch
@@ -203,11 +383,10 @@ jobs:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy
 
-      - name: Download Android APK artifact
+      - name: Download Capacitor artifacts
         uses: actions/download-artifact@v4
         with:
-          name: MangaBox-Android-${{ env.version }}
-          path: android
+          path: output
 
       - name: List release contents
         run: |
@@ -215,13 +394,14 @@ jobs:
           ls -lR dist/
           echo "== webdeploy =="
           ls -lR webdeploy/
-          echo "== android =="
-          ls -lR android/
+          echo "== output =="
+          ls -lR output/
 
       - name: Zip web folder
         run: |
           cd webdeploy
           zip -r MangaBox-${{ env.version }}-Web.zip mangabox
+          rm -R mangabox
 
       - name: Create GitHub Release
         id: create-release
@@ -233,7 +413,7 @@ jobs:
           prerelease: false
           files: |
             dist/*/*
+            output/*
             webdeploy/MangaBox-${{ env.version }}-Web.zip
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}
-
