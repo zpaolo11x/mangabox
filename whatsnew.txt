@@ -1,19 +1,11 @@
 Main UI
-- Improve title bar management for iOS PWA and app
-- Disable fullscreen button on iOS and Android app
-- Library bar can be scrolled when libraries are overflowing
-- Library icons can be imported from photo library or files on Android and iOS
+- 
 
 Redaer UI
-- Pinch to zoom pages in PWA and app without affecting the UI
-- Drag zoomed page with one finger to pan in PWA and app
-- Automatically hide the title bar on iOS app when reading
+- 
 
 Build
-- Add iOS/ipadOS build in .app and .ipa unsigned format.
-- Upgrade Capacitor from v6 to v7
-- Better safe area management for Android app
-- Liquid Glass icon for macOS, iOS and ipadOS 26
+- 
 
 Fixes
-- Fix webtoon zooming UI when safe areas are present
+- 
