@@ -142,7 +142,7 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
 
           # Package into DMG
-          npx electron-builder --mac dmg --prepackaged "$PREPACKAGED"
+          npx electron-builder --mac dmg --prepackaged "$PREPACKAGED" --${{ matrix.arch }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
