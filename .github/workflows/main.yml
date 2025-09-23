@@ -142,7 +142,12 @@ jobs:
           /usr/libexec/PlistBuddy -c "Add :CFBundleIconName string AppIcon" "$PLIST"
 
           # Package into DMG
-          npx electron-builder --mac dmg --prepackaged "$PREPACKAGED" --${{ matrix.arch }}
+          npx electron-builder --mac dmg --prepackaged "$PREPACKAGED"
+          if [ "${{ matrix.arch }}" = "x64" ]; then
+            mv dist/*.dmg dist/MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}.dmg
+          fi
+
+
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
