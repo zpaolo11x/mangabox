@@ -7,7 +7,10 @@ let rememberMe = false; // ✅ Track remember-me state
 
 app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
 
-app.on('ready', () => {
+app.on('ready', async () => {
+	const rememberFlag = await keytar.getPassword('MangaBox-settings', 'rememberMe');
+  rememberMe = rememberFlag === 'true';
+
 	mainWindow = new BrowserWindow({
 		width: 1200,
 		height: 760,
@@ -68,8 +71,13 @@ app.on('ready', () => {
 	});
 
 	// ✅ Receive rememberMe status from renderer
-	ipcMain.on('remember-me-state', (_, value) => {
+	ipcMain.on('remember-me-state', async (_, value) => {
 		rememberMe = value;
+		if (value) {
+			await keytar.setPassword('MangaBox-settings', 'rememberMe', 'true');
+		} else {
+			await keytar.deletePassword('MangaBox-settings', 'rememberMe');
+		}
 	});
 
 	// Check URL changes and enable zoom conditionally

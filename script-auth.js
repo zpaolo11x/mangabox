@@ -74,16 +74,12 @@ async function login() {
 
 	let baseUrlVal = loginBaseUrl.value;
 
-	// baseUrlVal = "https://aerobox.freeddns.it/komga"; //XXX
-
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
 	}
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
-
-	// mbAuthHeader = 'Basic ' + btoa(`testuser@test.com:test`); //XXX
 
 		// Regular fetch for web / Electron
 		fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
@@ -118,7 +114,7 @@ async function login() {
 
 
 function showLoginDialog() {
-		debugPrint("showLoginDialog...")
+	debugPrint("showLoginDialog...")
 
 	updatePWABar('white');
 	loginScreen.classList.remove('auth-hidden');
