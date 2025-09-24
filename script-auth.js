@@ -1,11 +1,14 @@
 // script.js
 
 async function saveToken(token) {
+	debugPrint("saveToken...")
 	await window.secureStore.setCredentials('auth', token);
 }
 
 async function loadToken() {
+	debugPrint("loadToken...")
 	const token = await window.secureStore.getCredentials('auth');
+	debugPrint("Retrieved Token:" + token);
 	if (token) {
 		return (token);
 	} else {
@@ -14,13 +17,15 @@ async function loadToken() {
 }
 
 async function deleteToken() {
+		debugPrint("deleteToken...")
+
 	await window.secureStore.deleteCredentials('auth');
 }
 
 async function sessionCheck() {
-	loginBaseUrl.value = mb.baseUrl;
+	debugPrint("sessionCheck...")
 
-	debugPrint("SESSION CHECK")
+	loginBaseUrl.value = mb.baseUrl;
 
 	mb.authToken = true;
 	if (isElectronApp) mb.authToken = await loadToken();
@@ -65,6 +70,8 @@ async function sessionCheck() {
 }
 
 async function login() {
+	debugPrint("login...")
+
 	let baseUrlVal = loginBaseUrl.value;
 
 	// baseUrlVal = "https://aerobox.freeddns.it/komga"; //XXX
@@ -111,10 +118,13 @@ async function login() {
 
 
 function showLoginDialog() {
+		debugPrint("showLoginDialog...")
+
 	updatePWABar('white');
 	loginScreen.classList.remove('auth-hidden');
 }
 
 function hideLoginDialog() {
+		debugPrint("hideLoginDialog...")
 	loginScreen.classList.add('auth-hidden');
 }
