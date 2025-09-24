@@ -5,7 +5,7 @@ Redaer UI
 - 
 
 Build
-- 
+- Updated Electron and Capacitor build revision
 
 Fixes
-- 
+- Fix remember me status not sticking for Electron apps
