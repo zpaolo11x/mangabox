@@ -410,7 +410,7 @@ body {
 	font-family: 'Roboto Flex', sans-serif;
 	margin: 0;
 	padding: 0;
-	background: var(--mb-page-color);
+	background: var(--mb-card-color);
 	text-rendering: optimizelegibility;
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--mb-text-color);
