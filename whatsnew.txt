@@ -9,3 +9,4 @@ Build
 
 Fixes
 - Fix remember me status not sticking for Electron apps
+- Fix series mark as read/unread

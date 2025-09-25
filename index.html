@@ -1724,6 +1724,7 @@
 					if (mb.currentlyScaled !== item) {
 						if (mb.currentlyScaled) {
 							mb.currentlyScaled.classList.remove('scaled');
+							console.log(mb.currentlyScaled);
 							mb.currentlyScaled.parentElement.classList.remove('top-pop');
 
 						}
@@ -1762,9 +1763,11 @@
 				// Added this to unselect pre-scaled book
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
+												console.log(mb.currentlyScaled);
+
 					mb.currentlyScaled.parentElement.classList.remove('top-pop');
 
-					// mb.currentlyScaled = null; //TODO check, This was removed but maybe it was needed?
+					mb.currentlyScaled = null; //TODO RIMESSO IN 0.2.6 check, This was removed but maybe it was needed?
 				}
 				item.classList.add('scaled');
 				item.parentElement.classList.add('top-pop');
@@ -1862,7 +1865,7 @@
 				title: 'Mark series as unread',
 				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
 			});
-			addClickPointerEvents(markAsRead, async () => {
+			addClickPointerEvents(markAsUnread, async () => {
 				await setSeriesReadStatus(serie.id, false, item);
 			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
@@ -4884,6 +4887,8 @@
 		document.addEventListener('pointerup', (event) => {
 			if (mb.currentlyScaled && !mb.currentlyScaled.contains(event.target)) {
 				mb.currentlyScaled.classList.remove('scaled');
+											console.log(mb.currentlyScaled);
+
 				mb.currentlyScaled.parentElement.classList.remove('top-pop');
 
 				mb.currentlyScaled = null;
