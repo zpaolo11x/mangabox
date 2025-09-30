@@ -557,7 +557,7 @@ a {
 	left: 0;
 	right: 0;
 	background-color: var(--mb-card-color);
-	padding: calc(var(--mb-library-gap) + var(--mb-top-spacer)) var(--mb-bar-padding) 0 var(--mb-bar-padding);
+	padding: calc(var(--mb-library-gap)*0 + var(--mb-top-spacer)) var(--mb-bar-padding) 0 var(--mb-bar-padding);
 	padding-left: var(--mb-bar-safe-padding-left);
 	padding-right: var(--mb-bar-safe-padding-right);
 	z-index: 1000;
@@ -573,6 +573,8 @@ a {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+	padding-top: var(--mb-library-gap);
+	padding-right: var(--mb-library-gap); /*Added to avoid clipping*/
 	height: calc(var(--mb-button-size) + var(--mb-library-gap));
 	overflow: scroll;
 	/*background-color: lightblue;*/
@@ -594,7 +596,7 @@ a {
 	grid-auto-columns: var(--mb-button-size);
 	gap: var(--mb-library-gap);
 	list-style-type: none;
-	padding: 0 0 0 var(--mb-library-gap);
+	padding: var(--mb-library-gap) 0 0 var(--mb-library-gap);
 	margin: 0 0 0 auto;
 	height: calc(var(--mb-button-size) + var(--mb-library-gap));
 
@@ -1923,6 +1925,7 @@ body.sticky-small #librariesList {
 
 body.sticky-small #librariesRightBlock {
 	margin-top: calc(10px - var(--mb-library-gap));
+	padding-top:0px;
 }
 
 body.sticky-small #mainUI {
