@@ -5,8 +5,8 @@ Redaer UI
 - 
 
 Build
-- Updated Electron and Capacitor build revision
+- Updated Electron and Capacitor build version
 
 Fixes
 - Fix remember me status not sticking for Electron apps
-- Fix series mark as read/unread
+- Fix issues when series are marked as read or unread
