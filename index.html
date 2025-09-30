@@ -1472,12 +1472,12 @@
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
-			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 0) {
+			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
 
-			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 0) {
+			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 60) {
 				document.body.classList.remove('sticky-medium');
 				document.body.classList.remove('sticky-hybrid');
 				document.body.classList.remove('sticky-small');
