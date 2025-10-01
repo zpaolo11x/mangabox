@@ -410,7 +410,7 @@ jobs:
 
       - name: Zip iOS app folder
         run: |
-          cd output/MangaBox-iOS-app-0.2.5
+          cd output/MangaBox-iOS-app-${{ env.version }}
           zip -r MangaBox-${{ env.version }}-iOS-app.zip MangaBox-${{ env.version }}-iOS-app.app
           rm -R MangaBox-${{ env.version }}-iOS-app.app
 
