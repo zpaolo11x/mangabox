@@ -38,17 +38,18 @@
 		}
 
 		h2 {
-			font-size:18px;
+			font-size: 18px;
 			border-bottom: 1px solid var(--highlight);
 		}
 
 		ul {
 			padding-left: 20px;
 		}
+
 		li {
 			line-height: 150%;
 		}
-		
+
 		.container {
 			position: relative;
 			/* ← Needed for absolute positioning inside */
@@ -235,8 +236,8 @@
 		.code-block-wrapper {
 			border-radius: 10px;
 			overflow: hidden;
-			margin-top:10px;
-			margin-bottom:10px;
+			margin-top: 10px;
+			margin-bottom: 10px;
 		}
 
 		/*
@@ -262,24 +263,24 @@
 		<p>
 			<a href="https://github.com/zpaolo11x/mangabox">MangaBox</a> is a multiplatform, web based client for <a href="https://komga.org">Komga</a>, the manga and comics media server.
 		</p>
-		
+
 		<h2>Supported platforms</h2>
 		<ul>
-			<li>Web/PWA - Deploy MangaBox on a personal web server, use it in the browser or as a PWA on your device.</li>
+			<li><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Web.zip">Web/PWA</a> - Deploy MangaBox on a personal web server, use it in the browser or as a PWA on your device.</li>
 			<li>Electron desktop application</li>
 			<ul>
-				<li>Windows (x86 and ARM)</li>
-				<li>macOS (Intel and Apple Silicon)</li>
-				<li>Linux (AppImage)</li>
+				<li>Windows (<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-x64.exe">x86</a> and <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-arm64.exe">ARM</a>)</li>
+				<li>macOS (<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Apple Silicon</a> and <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Intel</a>)</li>
+				<li>Linux (<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Linux-x86_64.AppImage">AppImage</a>)</li>
 			</ul>
 			<li>Capacitor mobile application</li>
 			<ul>
-				<li>Android APK - Debug APK, you can manually install on Android devices</li>
-				<li>iOS/ipadOS .ipa - Unsigned app for Apple devices, you can sideload it with AltStore or similar</li>
-				<li>iOS/ipadOS .app - App bundle for testing on XCode simulator (universal binary)</li>
+				<li>Android <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Android.apk">APK</a> - Debug APK, you can manually install on Android devices</li>
+				<li>iOS/ipadOS <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-iOS-ipa.ipa">.ipa</a> - Unsigned app for Apple devices, you can sideload it with AltStore or similar</li>
+				<li>iOS/ipadOS <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-iOS-app.zip">.app</a> - App bundle for testing on XCode simulator (universal binary)</li>
 			</ul>
 		</ul>
-		
+
 		<h2>Features gallery</h2>
 
 		<div class="grid">
@@ -392,6 +393,31 @@
 			});
 		</script>
 	</div>
+
+		<script>
+		async function getLatestVersion() {
+			const res = await fetch(`https://api.github.com/repos/zpaolo11x/mangabox/releases/latest`);
+			if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+
+			const release = await res.json();
+			return release.tag_name.replace(/^v/, ""); // remove leading 'v'
+		}
+
+		let latestVersion = 0
+
+		getLatestVersion()
+			.then(version => {
+				latestVersion = version
+				console.log(latestVersion)
+				document.querySelectorAll("a.artifact").forEach(link => {
+					console.log(link.href)
+					link.href = link.href.replace(/\*/g, latestVersion);
+				});
+			})
+			.catch(err => console.error(err));
+
+
+	</script>
 </body>
 
 </html>
