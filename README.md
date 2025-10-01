@@ -47,6 +47,7 @@ MangaBox is available in different formats:
 		Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
 	</td>
 </tr>
+<tr><td colspan=2></td></tr>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
@@ -57,6 +58,8 @@ MangaBox is available in different formats:
 		Reading mode supports two pages spreads, with "paper-like" effects and page animations.
 	</td>
 </tr>
+<tr><td colspan=2></td></tr>
+<tr>
 	<td valign=top width=50%>
 		<img alt="Reading thumbnails" src="docs/pics/thumbnails.png" width=100%><br>
 		Thumbnail view in reading mode for page preview.
@@ -66,6 +69,8 @@ MangaBox is available in different formats:
 		Light and dark theme are supported, and different color highlights.
 	</td>
 </tr>
+<tr><td colspan=2></td></tr>
+<tr>
 	<td valign=top width=50%>
 		<img alt="Library filter" src="docs/pics/filter.png" width=100%><br>
 		Sorting and filtering of libraries.
@@ -75,6 +80,8 @@ MangaBox is available in different formats:
 		Global search for series and books looks into metadata, summary etc.
 	</td>
 </tr>
+<tr><td colspan=2></td></tr>
+<tr>
 	<td valign=top width=50%>
 		<img alt="Series search" src="docs/pics/yearsearch.png" width=100%><br>
 		Search prefix "y:" allows to filter all the series that have volumes in that date range.
