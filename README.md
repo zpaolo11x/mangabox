@@ -39,8 +39,13 @@ MangaBox is available in different formats:
 
 | a | b |
 |-|-|
-|<img alt="Dashboard view" src="docs/pics/dashboard.png">|<img alt="Library view" src="docs/pics/library.png">|
+|<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%>|<img alt="Library view" src="docs/pics/library.png" width=100%>|
 |Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management. | Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time". |
+
+| | |
+|-|-|
+|<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%>Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.|<img alt="Library view" src="docs/pics/library.png" width=100%>Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".|
+| |  |
 
 <img alt="Dashboard view" src="docs/pics/dashboard.png" width=450px>
 Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
