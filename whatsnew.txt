@@ -12,3 +12,4 @@ Build
 Fixes
 - Fix remember me status not sticking for Electron apps
 - Fix issues when series are marked as read or unread
+- Fix buttons shdaow cropping
