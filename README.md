@@ -17,7 +17,8 @@ MangaBox is available in different formats:
 	- iOS/ipadOS .app - App bundle for testing on XCode simulator (universal binary)
 
 <br>
-<img alt="Dashboard view" src="docs/pics/dashboard.png" width=450px><br>Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
+<img alt="Dashboard view" src="docs/pics/dashboard.png" width=450px>
+Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
 <br>
 <br>
 <img alt="Library view" src="docs/pics/library.png" width=450px><br>Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
