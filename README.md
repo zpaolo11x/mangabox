@@ -38,35 +38,35 @@ MangaBox is available in different formats:
 ## Features gallery
 <table>
 <tr>
-	<td>
+	<td valign=top>
 		<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%><br>
 		Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
 	</td>
-	<td>
+	<td valign=top>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
 		Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
 	</td>
 </tr>
 <tr>
-	<td>
+	<td valign=top>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
 		Series view with all the volumes and series metadata. There's no book view (yet).
 	</td>
-	<td>
+	<td valign=top>
 		<img alt="Reading mode" src="docs/pics/reader.png" width=100%><br>
 		Reading mode supports two pages spreads, with "paper-like" effects and page animations.
 	</td>
 </tr>
-	<td>
+	<td valign=top>
 		<img alt="Reading thumbnails" src="docs/pics/thumbnails.png" width=100%><br>
 		Thumbnail view in reading mode for page preview.
 	</td>
-	<td>
+	<td valign=top>
 		<img alt="Light/dark mode" src="docs/pics/darktheme.png" width=100%><br>
 		Light and dark theme are supported, and different color highlights.
 	</td>
 </tr>
-	<td>
+	<td valign=top>
 		<img alt="Library filter" src="docs/pics/filter.png" width=100%><br>
 		Sorting and filtering of libraries.
 	</td>
@@ -75,11 +75,11 @@ MangaBox is available in different formats:
 		Global search for series and books looks into metadata, summary etc.
 	</td>
 </tr>
-	<td>
+	<td valign=top>
 		<img alt="Series search" src="docs/pics/yearsearch.png" width=100%><br>
 		Search prefix "y:" allows to filter all the series that have volumes in that date range.
 	</td>
-	<td>
+	<td valign=top>
 		<img alt="Series search" src="docs/pics/addblank.png" width=100%><br>
 		Set book tag "no-cover" to start the book with a page spread, or "no-blank-page" to add a fake back of the cover image.
 	</td>
