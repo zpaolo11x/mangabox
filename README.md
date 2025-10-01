@@ -2,7 +2,8 @@
 
 MangaBox is a multiplatform, web based client for <a href="https://komga.org">Komga</a>, the manga and comics media server.		
 
-*Supported formats*
+##Supported formats
+
 MangaBox is available in different formats:
 - Web/PWA - Deploy MangaBox on a personal web server, use it in the browser or as a PWA on your device.
 
@@ -16,7 +17,8 @@ MangaBox is available in different formats:
 	- iOS/ipadOS .ipa - Unsigned app for Apple devices, you can sideload it with AltStore or similar
 	- iOS/ipadOS .app - App bundle for testing on XCode simulator (universal binary)
 
-*Installation notes*
+##Installation notes
+
 To deploy the web verions just download the "web" release artifact and unpack it in a "mangabox" folder on your web server. Because of CORS limitation by default MangaBox will work only if it's on the same location as your komga server.
 
 Electron version is not limited by CORS and it will work with any Komga server.
@@ -33,7 +35,7 @@ Just chmod +x the script and run it with the .app file path as argument.
 
 Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.
 
-*Features*
+##Features
 
 <img alt="Dashboard view" src="docs/pics/dashboard.png" width=450px>
 Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
