@@ -41,6 +41,9 @@ MangaBox is available in different formats:
 |-|-|
 |Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management. | Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time". |
 
+|<img alt="Series view" src="docs/pics/series.png" width=300px>|<img alt="Reading mode" src="docs/pics/reader.png" width=300px>|
+|-|-|
+|Series view with all the volumes and series metadata. There's no book view (yet). | Reading mode supports two pages spreads, with "paper-like" effects and page animations. |
 
 <img alt="Dashboard view" src="docs/pics/dashboard.png" width=450px>
 Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
