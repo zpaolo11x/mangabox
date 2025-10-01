@@ -19,42 +19,31 @@ MangaBox is available in different formats:
 <br>
 <img alt="Dashboard view" src="docs/pics/dashboard.png" width=450px>
 Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
-<br>
-<br>
-<br>
+<br><br><br>
 <img alt="Library view" src="docs/pics/library.png" width=450px>
 Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
-<br>
-<br>
+<br><br><br>
 <img alt="Series view" src="docs/pics/series.png" width=450px>
 Series view with all the volumes and series metadata. There's no book view (yet).
-<br>
-<br>
+<br><br><br>
 <img alt="Reading mode" src="docs/pics/reader.png" width=450px>
 Reading mode supports two pages spreads, with "paper-like" effects and page animations.
-<br>
-<br>
+<br><br><br>
 <img alt="Reading thumbnails" src="docs/pics/thumbnails.png" width=450px>
 Thumbnail view in reading mode for page preview.
-<br>
-<br>
+<br><br><br>
 <img alt="Light/dark mode" src="docs/pics/darktheme.png" width=450px>
 Light and dark theme are supported, and different color highlights.
-<br>
-<br>
+<br><br><br>
 <img alt="Library filter" src="docs/pics/filter.png" width=450px>
 Sorting and filtering of libraries.
-<br>
-<br>
+<br><br><br>
 <img alt="Series search" src="docs/pics/search.png" width=450px>
 Global search for series and books looks into metadata, summary etc.
-<br>
-<br>
+<br><br><br>
 <img alt="Series search" src="docs/pics/yearsearch.png" width=450px>
 Search prefix "y:" allows to filter all the series that have volumes in that date range.
-<br>
-<br>
+<br><br><br>
 <img alt="Series search" src="docs/pics/addblank.png" width=450px>
 Set book tag "no-cover" to start the book with a page spread, or "no-blank-page" to add a fake back of the cover image.
-<br>
-<br>
+<br><br><br>
