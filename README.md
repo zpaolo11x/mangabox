@@ -36,7 +36,7 @@ MangaBox is available in different formats:
 - Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.
 
 ## Features gallery
-<table width=50% align=left>
+<table width=350px align=left>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%><br>
@@ -44,7 +44,7 @@ MangaBox is available in different formats:
 	</td>
 	</tr>
 	</table>
-	<table width=50%>
+	<table width=350px>
 	<td valign=top width=50%>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
 		Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
