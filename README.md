@@ -25,12 +25,14 @@ MangaBox is available in different formats:
 
 - The macOS binaries are not signed, so they won't run by default. You can allow them to run on Intel macs by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script that will do the hard work for you:
 
-		#!/bin/bash
-		app="$1"
-		xattr -d com.apple.quarantine "${app}"
-		find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;
-		codesign --force --timestamp --verify --verbose --sign - "${app}"
-				
+	```
+	#!/bin/bash
+	app="$1"
+	xattr -d com.apple.quarantine "${app}"
+	find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;
+	codesign --force --timestamp --verify --verbose --sign - "${app}"
+	```
+
 	Just chmod +x the script and run it with the .app file path as argument.
 
 - Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.
