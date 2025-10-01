@@ -36,19 +36,21 @@ MangaBox is available in different formats:
 - Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.
 
 ## Features gallery
-<table>
-<tr><td colspan=2></td></tr>
+<table width=50% align=left>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%><br>
 		Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
 	</td>
+	</tr>
+	</table>
+	<table width=50%>
 	<td valign=top width=50%>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
 		Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
 	</td>
 </tr>
-<tr><td colspan=2></td></tr>
+</table>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
@@ -59,7 +61,6 @@ MangaBox is available in different formats:
 		Reading mode supports two pages spreads, with "paper-like" effects and page animations.
 	</td>
 </tr>
-<tr><td colspan=2></td></tr>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Reading thumbnails" src="docs/pics/thumbnails.png" width=100%><br>
@@ -70,7 +71,6 @@ MangaBox is available in different formats:
 		Light and dark theme are supported, and different color highlights.
 	</td>
 </tr>
-<tr><td colspan=2></td></tr>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Library filter" src="docs/pics/filter.png" width=100%><br>
@@ -81,7 +81,6 @@ MangaBox is available in different formats:
 		Global search for series and books looks into metadata, summary etc.
 	</td>
 </tr>
-<tr><td colspan=2></td></tr>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Series search" src="docs/pics/yearsearch.png" width=100%><br>
