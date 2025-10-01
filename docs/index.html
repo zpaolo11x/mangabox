@@ -29,7 +29,7 @@
 		}
 
 		body {
-			font-family: Arial, sans-serif;
+			font-family: sans-serif;
 			line-height: 1.6;
 			margin: 0;
 			padding: 0;
@@ -46,8 +46,9 @@
 			padding-left: 20px;
 		}
 		li {
-			line-height: 120%;
+			line-height: 150%;
 		}
+		
 		.container {
 			position: relative;
 			/* ← Needed for absolute positioning inside */
@@ -69,7 +70,7 @@
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
 			gap: var(--padding-size);
-			margin-top: var(--padding-size);
+			/*margin-top: var(--padding-size);*/
 		}
 
 		.grid-item {
@@ -234,6 +235,8 @@
 		.code-block-wrapper {
 			border-radius: 10px;
 			overflow: hidden;
+			padding-top:10px;
+			padding-bottom:10px;
 		}
 
 		/*
@@ -282,7 +285,7 @@
 		<div class="grid">
 			<div class="grid-item">
 				<img alt="Dashboard view" src="pics/dashboard.png" class="clickable">
-				<p>MangaBox is a reader first, and doesn't feature library management. Clean design, touch and mouse driven interface. You can drag and drop an image to change the library icons.</p>
+				<p>MangaBox is a reader first, and doesn't feature library management. It features clean design, touch and mouse driven interface. You can drag and drop an image to change the library icons.</p>
 			</div>
 
 			<div class="grid-item">

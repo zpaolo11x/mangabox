@@ -4,7 +4,6 @@ MangaBox is a multiplatform, web based client for <a href="https://komga.org">Ko
 
 ## Supported platforms
 
-MangaBox is available on different platforms:
 - Web/PWA - Deploy MangaBox on a personal web server, use it in the browser or as a PWA on your device.
 
 - Electron desktop application
@@ -42,11 +41,11 @@ MangaBox is available on different platforms:
 <tr>
 	<td valign=top width=50%>
 		<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%><br>
-		Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
+		MangaBox is a reader first, and doesn't feature library management. It features clean design, touch and mouse driven interface. You can drag and drop an image to change the library icons.
 	</td>
 	<td valign=top width=50%>
-		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
-		Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
+		<img alt="Series view" src="docs/pics/library.png" width=100%><br>
+		Library view features series metadata. You can add alternate titles in Komga: "Story" and "Art" to set a series authors, "Time" for series dates.
 	</td>
 </tr>
 </table>
@@ -54,11 +53,11 @@ MangaBox is available on different platforms:
 <tr>
 	<td valign=top width=50%>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
-		Series view with all the volumes and series metadata. There's no book view (yet).
+		Series view with all the volumes and series metadata. Each book has read/unread controls and a summary view button.
 	</td>
 	<td valign=top width=50%>
 		<img alt="Reading mode" src="docs/pics/reader.png" width=100%><br>
-		Reading mode supports two pages spreads, with "paper-like" effects and page animations.
+		Reading mode replicates the look of a real manga or comic book. It is based on two pages spreads, with paper-like effects and page animations.
 	</td>
 </tr>
 </table>
@@ -66,7 +65,7 @@ MangaBox is available on different platforms:
 <tr>
 	<td valign=top width=50%>
 		<img alt="Reading thumbnails" src="docs/pics/thumbnails.png" width=100%><br>
-		Thumbnail view in reading mode for page preview.
+		Reading mode features thumbnails for page preview. Thumbnails can be enlarged using a gesture or a button.
 	</td>
 	<td valign=top width=50%>
 		<img alt="Light/dark mode" src="docs/pics/darktheme.png" width=100%><br>
@@ -78,11 +77,11 @@ MangaBox is available on different platforms:
 <tr>
 	<td valign=top width=50%>
 		<img alt="Library filter" src="docs/pics/filter.png" width=100%><br>
-		Sorting and filtering of libraries.
+		Libraries can be sorted on the fly or filtered by read/unread, reading direction, language.
 	</td>
 	<td>
 		<img alt="Series search" src="docs/pics/search.png" width=100%><br>
-		Global search for series and books looks into metadata, summary etc.
+		Search is global for both series and books, and looks into metadata, summary etc.
 	</td>
 </tr>
 </table>
@@ -90,11 +89,11 @@ MangaBox is available on different platforms:
 <tr>
 	<td valign=top width=50%>
 		<img alt="Series search" src="docs/pics/yearsearch.png" width=100%><br>
-		Search prefix "y:" allows to filter all the series that have volumes in that date range.
+		A special search prefix "y:" will show all the series that have volumes in that date range.
 	</td>
 	<td valign=top>
 		<img alt="Series search" src="docs/pics/addblank.png" width=100%><br>
-		Set book tag "no-cover" to start the book with a page spread, or "no-blank-page" to add a fake back of the cover image.
+		You can set special book tags in Komga: "no-cover" starts the book with a page spread, "no-blank-page" adds a fake back of the cover image.
 	</td>
 </tr>
 </table>
