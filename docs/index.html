@@ -24,6 +24,8 @@
 
 			--border-percent: 0.7%;
 			--image-ar: calc(1200/760);
+
+			--highlight: #880020;
 		}
 
 		body {
@@ -33,6 +35,11 @@
 			padding: 0;
 			background-color: var(--background-color);
 			color: var(--text-color-main);
+		}
+
+		h2 {
+			font-size:18px;
+			border-bottom: 1px solid var(--highlight);
 		}
 
 		ul {
@@ -147,7 +154,7 @@
 
 		a {
 			text-decoration: none;
-			color: #880020;
+			color: var(--highlight);
 			transition: all 0.3s ease;
 		}
 
@@ -253,7 +260,7 @@
 			<a href="https://github.com/zpaolo11x/mangabox">MangaBox</a> is a multiplatform, web based client for <a href="https://komga.org">Komga</a>, the manga and comics media server.
 		</p>
 		
-		<p>MangaBox is available in different formats: </p>
+		<h2>Supported platforms</h2>
 		<ul>
 			<li>Web/PWA - Deploy MangaBox on a personal web server, use it in the browser or as a PWA on your device.</li>
 			<li>Electron desktop application</li>
@@ -269,6 +276,9 @@
 				<li>iOS/ipadOS .app - App bundle for testing on XCode simulator (universal binary)</li>
 			</ul>
 		</ul>
+		
+		<h2>Features gallery</h2>
+
 		<div class="grid">
 			<div class="grid-item">
 				<img alt="Dashboard view" src="pics/dashboard.png" class="clickable">
@@ -322,7 +332,7 @@
 
 		</div>
 
-		<p>Installation notes:<br>
+		<h2>Installation notes</h2>
 		<ul>
 			<li>
 				To deploy the web verions just download the "web" release artifact and unpack it in a "mangabox"
