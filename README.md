@@ -1,8 +1,23 @@
 <picture><img alt="MangaBox Logo" src="logo/mangabox-logo-new-with-name.svg" width=450px></picture>
 
-MangaBox is a simple Electron client for Komga.<br>
-It is available for Windows (x86 and ARM), macOS (Intel and Apple Silicon) and Linux (as an AppImage).
-<br>
+			<a href="https://github.com/zpaolo11x/mangabox">MangaBox</a> is a multiplatform, web based client for <a href="https://komga.org">Komga</a>, the manga and comics media server.
+		</p>
+		
+		<p>MangaBox is available in different formats: </p>
+		<ul>
+			<li>Web/PWA - Deploy MangaBox on a personal web server, use it in the browser or as a PWA on your device.</li>
+			<li>Electron desktop application</li>
+			<ul>
+				<li>Windows (x86 and ARM)</li>
+				<li>macOS (Intel and Apple Silicon)</li>
+				<li>Linux (AppImage)</li>
+			</ul>
+			<li>Capacitor mobile application</li>
+			<ul>
+				<li>Android APK - Debug APK, you can manually install on Android devices</li>
+				<li>iOS/ipadOS .ipa - Unsigned app for Apple devices, you can sideload it with AltStore or similar</li>
+				<li>iOS/ipadOS .app - App bundle for testing on XCode simulator (universal binary)</li>
+			</ul><br>
 <br>
 <img alt="Dashboard view" src="docs/pics/dashboard.png" width=450px><br>Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
 <br>
