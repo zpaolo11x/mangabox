@@ -196,7 +196,7 @@
 
 		pre {
 			padding: 10px;
-			font-size: 13px;
+			font-size: 12px;
 			background-color: hsl(100, 65%, 18%);
 			color: white;
 			border-radius: 10px;
@@ -212,7 +212,7 @@
 			display: block;
 			/* This is the key change */
 			font-family: monospace;
-			font-size: 13px;
+			font-size: 12.2px;
 			padding-left: 10px;
 			padding-right: 10px;
 			color: white;
@@ -412,6 +412,7 @@
 				document.querySelectorAll("a.artifact").forEach(link => {
 					console.log(link.href)
 					link.href = link.href.replace(/\*/g, latestVersion);
+					link.title = link.href;
 				});
 			})
 			.catch(err => console.error(err));
