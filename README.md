@@ -36,7 +36,7 @@ MangaBox is available in different formats:
 - Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.
 
 ## Features gallery
-<table border=0>
+<table>
 <tr>
 	<td valign=top width=50%>
 		<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%><br>
