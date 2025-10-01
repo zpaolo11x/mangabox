@@ -1,4 +1,4 @@
-<picture><img alt="MangaBox Logo" src="logo/mangabox-logo-new-with-name.svg" width=100%></picture>
+<picture><img alt="MangaBox Logo" src="logo/mangabox-logo-new-with-name.svg" width=450px></picture>
 
 MangaBox is a multiplatform, web based client for <a href="https://komga.org">Komga</a>, the manga and comics media server.		
 
@@ -38,35 +38,35 @@ MangaBox is available in different formats:
 ## Features gallery
 <table>
 <tr>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Dashboard view" src="docs/pics/dashboard.png" width=100%><br>
 		Clean design, tailored for few libraries. MangaBox is a reader first, and doesn't feature library management.
 	</td>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
 		Rich library view with metadata taken from "alternate title" fields like "Story", "Art," and "Time".
 	</td>
 </tr>
 <tr>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Series view" src="docs/pics/series.png" width=100%><br>
 		Series view with all the volumes and series metadata. There's no book view (yet).
 	</td>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Reading mode" src="docs/pics/reader.png" width=100%><br>
 		Reading mode supports two pages spreads, with "paper-like" effects and page animations.
 	</td>
 </tr>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Reading thumbnails" src="docs/pics/thumbnails.png" width=100%><br>
 		Thumbnail view in reading mode for page preview.
 	</td>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Light/dark mode" src="docs/pics/darktheme.png" width=100%><br>
 		Light and dark theme are supported, and different color highlights.
 	</td>
 </tr>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Library filter" src="docs/pics/filter.png" width=100%><br>
 		Sorting and filtering of libraries.
 	</td>
@@ -75,7 +75,7 @@ MangaBox is available in different formats:
 		Global search for series and books looks into metadata, summary etc.
 	</td>
 </tr>
-	<td valign=top>
+	<td valign=top width=50%>
 		<img alt="Series search" src="docs/pics/yearsearch.png" width=100%><br>
 		Search prefix "y:" allows to filter all the series that have volumes in that date range.
 	</td>
