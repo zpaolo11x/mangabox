@@ -351,7 +351,7 @@ jobs:
     needs: [electron, web, capacitor, version]
     env:
       version: ${{ needs.version.outputs.version }}
-    if: github.ref_name == 'main' # Run this job only for the 'main' branch
+    #if: github.ref_name == 'main' # Run this job only for the 'main' branch
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -407,6 +407,12 @@ jobs:
           cd webdeploy
           zip -r MangaBox-${{ env.version }}-Web.zip mangabox
           rm -R mangabox
+
+      - name: Zip iOS app folder
+        run: |
+          cd output/MangaBox-iOS-app-0.2.5
+          zip -r MangaBox-${{ env.version }}-iOS-app.zip MangaBox-${{ env.version }}-iOS-app.app
+          rm -R MangaBox-${{ env.version }}-iOS-app.app
 
       - name: Create GitHub Release
         id: create-release
