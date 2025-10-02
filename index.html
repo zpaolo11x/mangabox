@@ -1094,6 +1094,7 @@
 			libraryHighlight('searchField', false);
 
 			if (searchString.includes('y:')) {
+
 				const unFilteredSeries = await callAPI(
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
@@ -1121,6 +1122,11 @@
 					filterArray[index]
 				);
 				displaySeries(filteredSeries, homeStripSeriesResults);
+
+				// Reset book results strip
+				//TODO Need to check also books for year?
+				displayBooks([], homeStripBooksResults, 'compact', 'top');
+
 				focusItem('top');
 				setTimeout(updateSliderProperties, 10);
 				sectionShow(searchStripsContainer);

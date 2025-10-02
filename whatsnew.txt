@@ -1,5 +1,5 @@
 Main UI
-- 
+- Reomove previous book search results when searching for series year
 
 Redaer UI
 - 
