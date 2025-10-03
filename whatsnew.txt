@@ -1,9 +1,6 @@
 Main UI
 - Reomove previous book search results when searching for series year
 
-Redaer UI
-- 
-
 Build
 - Updated Electron build to 38.2.0+
 - Updated Capacitor build to 7.0+
