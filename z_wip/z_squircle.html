@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>9-Patch with PNG border-image</title>
+	<style>
+		:root {
+			--border-color: #f00;
+			--npatch-red: url("data:image/svg+xml,%3Csvg width='440' height='440' viewBox='0 0 440 440' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50.25 13.8305C35.1241 22.5634 22.5634 35.1241 13.8305 50.25C3 69.01 -1.18169e-06 92.09 -1.18169e-06 120V320C-1.18169e-06 347.91 3 370.99 13.8305 389.75C22.5634 404.876 35.1241 417.437 50.25 426.17C69.0089 437 92.0914 440 119.677 440C176.429 440 220 440 220 440C220 440 263.571 440 320.323 440C347.909 440 370.991 437 389.75 426.17C404.876 417.437 417.437 404.876 426.17 389.75C437 370.99 440 347.91 440 320V120C440 92.09 437 69.01 426.17 50.25C417.437 35.1241 404.876 22.5634 389.75 13.8305C370.991 3.00001 347.909 -0.000210905 320.323 0C263.571 0.000433962 220 3.33612e-06 220 3.33612e-06C220 3.33612e-06 176.429 0.000433962 119.677 0C92.0914 -0.000210905 69.0089 3.00001 50.25 13.8305Z' fill='%23f00'/%3E%3C/svg%3E%0A");
+			--npatch-blue: url("data:image/svg+xml,%3Csvg width='440' height='440' viewBox='0 0 440 440' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50.25 13.8305C35.1241 22.5634 22.5634 35.1241 13.8305 50.25C3 69.01 -1.18169e-06 92.09 -1.18169e-06 120V320C-1.18169e-06 347.91 3 370.99 13.8305 389.75C22.5634 404.876 35.1241 417.437 50.25 426.17C69.0089 437 92.0914 440 119.677 440C176.429 440 220 440 220 440C220 440 263.571 440 320.323 440C347.909 440 370.991 437 389.75 426.17C404.876 417.437 417.437 404.876 426.17 389.75C437 370.99 440 347.91 440 320V120C440 92.09 437 69.01 426.17 50.25C417.437 35.1241 404.876 22.5634 389.75 13.8305C370.991 3.00001 347.909 -0.000210905 320.323 0C263.571 0.000433962 220 3.33612e-06 220 3.33612e-06C220 3.33612e-06 176.429 0.000433962 119.677 0C92.0914 -0.000210905 69.0089 3.00001 50.25 13.8305Z' fill='%2300F'/%3E%3C/svg%3E%0A");
+		}
+
+		.patch {
+			box-sizing: content-box;
+			width: 250px;
+			height: 300px;
+			margin: 0;
+			padding: 0;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			position: relative;
+
+			border: 0px solid transparent;
+			
+border-image: var(--npatch-red) 120 fill / 100px / 0px stretch;
+
+			filter:drop-shadow(5px 5px 10px black);
+		}
+
+		.patch:hover {
+			border-image-source: var(--npatch-blue);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="patch">
+		test
+	</div>
+</body>
+
+</html>

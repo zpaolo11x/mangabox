@@ -1,11 +1,14 @@
 // script.js
 
 async function saveToken(token) {
+	debugPrint("saveToken...")
 	await window.secureStore.setCredentials('auth', token);
 }
 
 async function loadToken() {
+	debugPrint("loadToken...")
 	const token = await window.secureStore.getCredentials('auth');
+	debugPrint("Retrieved Token:" + token);
 	if (token) {
 		return (token);
 	} else {
@@ -14,13 +17,15 @@ async function loadToken() {
 }
 
 async function deleteToken() {
+		debugPrint("deleteToken...")
+
 	await window.secureStore.deleteCredentials('auth');
 }
 
 async function sessionCheck() {
-	loginBaseUrl.value = mb.baseUrl;
+	debugPrint("sessionCheck...")
 
-	debugPrint("SESSION CHECK")
+	loginBaseUrl.value = mb.baseUrl;
 
 	mb.authToken = true;
 	if (isElectronApp) mb.authToken = await loadToken();
@@ -65,9 +70,9 @@ async function sessionCheck() {
 }
 
 async function login() {
-	let baseUrlVal = loginBaseUrl.value;
+	debugPrint("login...")
 
-	// baseUrlVal = "https://aerobox.freeddns.it/komga"; //XXX
+	let baseUrlVal = loginBaseUrl.value;
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
@@ -75,8 +80,6 @@ async function login() {
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
-
-	// mbAuthHeader = 'Basic ' + btoa(`testuser@test.com:test`); //XXX
 
 		// Regular fetch for web / Electron
 		fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
@@ -111,10 +114,13 @@ async function login() {
 
 
 function showLoginDialog() {
+	debugPrint("showLoginDialog...")
+
 	updatePWABar('white');
 	loginScreen.classList.remove('auth-hidden');
 }
 
 function hideLoginDialog() {
+		debugPrint("hideLoginDialog...")
 	loginScreen.classList.add('auth-hidden');
 }

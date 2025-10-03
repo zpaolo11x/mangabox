@@ -1,6 +1,6 @@
 {
 	"name": "mangabox",
-	"version": "0.2.5",
+	"version": "0.2.6",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Komga desktop client using Electron",
 	"main": "package-main.js",
@@ -16,8 +16,8 @@
 	},
 	"devDependencies": {
 		"@capacitor/cli": "^7.0.0",
-		"electron": "^34.1.0",
-		"electron-builder": "^26.0.5"
+		"electron": "^38.2.0",
+		"electron-builder": "^26.0.12"
 	},
 	"build": {
 		"appId": "com.mangabox.app",

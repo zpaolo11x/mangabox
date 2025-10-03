@@ -377,36 +377,42 @@ jobs:
           git tag -a v${{ env.version }} -m "Release v${{ env.version }}"
           git push origin v${{ env.version }}
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: dist
+ #     - name: Download build artifacts
+ #       uses: actions/download-artifact@v4
+ #       with:
+ #         path: dist
 
-      - name: Download web artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: MangaBox-Web-${{ env.version }}
-          path: webdeploy
+#      - name: Download web artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: MangaBox-Web-${{ env.version }}
+#          path: webdeploy
 
-      - name: Download Capacitor artifacts
+      - name: Download All artifacts
         uses: actions/download-artifact@v4
         with:
           path: output
 
       - name: List release contents
         run: |
-          echo "== dist =="
-          ls -lR dist/
-          echo "== webdeploy =="
-          ls -lR webdeploy/
-          echo "== output =="
           ls -lR output/
 
       - name: Zip web folder
         run: |
-          cd webdeploy
+          cd output/MangaBox-Web-${{ env.version }}
           zip -r MangaBox-${{ env.version }}-Web.zip mangabox
           rm -R mangabox
+
+      - name: Zip iOS app folder
+        run: |
+          cd output/MangaBox-iOS-app-${{ env.version }}
+          zip -r MangaBox-${{ env.version }}-iOS-app.zip MangaBox-${{ env.version }}-iOS-app.app
+          rm -R MangaBox-${{ env.version }}-iOS-app.app
+
+      - name: List release post files
+        run: |
+          echo "== output =="
+          ls -lR output/
 
       - name: Create GitHub Release
         id: create-release
@@ -417,8 +423,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            dist/*/*
-            output/*
-            webdeploy/MangaBox-${{ env.version }}-Web.zip
+            output/*/*
           body: ${{ env.whatsNew }}
           token: ${{ secrets.GITHUB_TOKEN }}

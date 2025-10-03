@@ -1,19 +1,13 @@
 Main UI
-- Improve title bar management for iOS PWA and app
-- Disable fullscreen button on iOS and Android app
-- Library bar can be scrolled when libraries are overflowing
-- Library icons can be imported from photo library or files on Android and iOS
-
-Redaer UI
-- Pinch to zoom pages in PWA and app without affecting the UI
-- Drag zoomed page with one finger to pan in PWA and app
-- Automatically hide the title bar on iOS app when reading
+- Reomove previous book search results when searching for series year
 
 Build
-- Add iOS/ipadOS build in .app and .ipa unsigned format.
-- Upgrade Capacitor from v6 to v7
-- Better safe area management for Android app
-- Liquid Glass icon for macOS, iOS and ipadOS 26
+- Updated Electron build to 38.2.0+
+- Updated Capacitor build to 7.0+
+- New dmg icon for macOS 26
+- Cleanup release workflow
 
 Fixes
-- Fix webtoon zooming UI when safe areas are present
+- Fix remember me status not sticking for Electron apps
+- Fix issues when series are marked as read or unread
+- Fix buttons shdaow cropping
