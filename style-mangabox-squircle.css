@@ -1,0 +1,30 @@
+:root {
+	--ninepatch-box: url("data:image/svg+xml,%3Csvg width='440' height='440' viewBox='0 0 440 440' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50.25 13.8305C35.1241 22.5634 22.5634 35.1241 13.8305 50.25C3 69.01 -1.18169e-06 92.09 -1.18169e-06 120V320C-1.18169e-06 347.91 3 370.99 13.8305 389.75C22.5634 404.876 35.1241 417.437 50.25 426.17C69.0089 437 92.0914 440 119.677 440C176.429 440 220 440 220 440C220 440 263.571 440 320.323 440C347.909 440 370.991 437 389.75 426.17C404.876 417.437 417.437 404.876 426.17 389.75C437 370.99 440 347.91 440 320V120C440 92.09 437 69.01 426.17 50.25C417.437 35.1241 404.876 22.5634 389.75 13.8305C370.991 3.00001 347.909 -0.000210905 320.323 0C263.571 0.000433962 220 3.33612e-06 220 3.33612e-06C220 3.33612e-06 176.429 0.000433962 119.677 0C92.0914 -0.000210905 69.0089 3.00001 50.25 13.8305Z' fill='white'/%3E%3C/svg%3E%0A");
+	--ninepatch-pill: url("data:image/svg+xml,%3Csvg width='440' height='200' viewBox='0 0 440 200' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M320 0C345 0 369 1.56148 390.25 13.8301C405.376 22.563 417.937 35.1241 426.67 50.25C435.403 65.3758 440 82.5342 440 100C440 117.466 435.403 134.624 426.67 149.75C417.937 164.876 405.376 177.437 390.25 186.17C369 198.439 345 200 320 200H120C95.0001 200 71 198.439 49.75 186.17C34.6241 177.437 22.063 164.876 13.3301 149.75C4.59721 134.624 1.51299e-05 117.466 0 100C-1.74124e-06 82.5342 4.59719 65.3759 13.3301 50.25C22.063 35.1241 34.6241 22.563 49.75 13.8301C71.0001 1.56147 95.0001 0 120 0H320Z' fill='white'/%3E%3C/svg%3E%0A");
+}
+
+		.patch-pill {
+			margin:0;
+			padding:0;
+			/*filter: drop-shadow(10px 10px 15px black);*/
+		}
+		.patch-pill::after {
+			content: "";
+			width: inherit;
+			height: inherit;
+			position: absolute;
+			/*box-shadow: inset 5px 5px 20px 5px white;*/
+			border-radius: calc(var(--mb-button-size)*0.5*0.8);
+			background-color: lightsteelblue;
+			-webkit-mask-box-image: var(--ninepatch-pill) 100 120 fill / calc(var(--mb-button-size)*0.5) calc(var(--mb-button-size)*0.5*1.2) / 0px stretch;
+			mask-border: var(--ninepatch-pill) 100 120 fill / calc(var(--mb-button-size)*0.5) calc(var(--mb-button-size)*0.5*1.2) / 0px stretch;
+			z-index: -1;
+			transition: all 0.3s;
+		}
+
+		.patch-pill:hover::after {
+			background-color: red;
+		}
+		.highlighted.patch-pill::after {
+			background-color: blue;
+		}

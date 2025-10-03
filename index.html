@@ -27,6 +27,7 @@
 	<link rel="stylesheet" href="style-mangabox-blankstart.css">
 	<link rel="stylesheet" href="style-mangabox-main.css">
 	<link rel="stylesheet" href="style-mangabox-reader.css">
+	<link rel="stylesheet" href="style-mangabox-squircle.css">
 
 </head>
 
@@ -2073,8 +2074,7 @@
 			const anim = item.animate(
 				{
 					transform: 'scale(0.975) translateY(1px)',
-					filter: 'brightness(0.98)',
-					boxShadow: 'var(--mb-button-press)'
+            	filter: `brightness(0.98) var(--mb-button-press-drop)`,
 				},
 				{ duration: 150, fill: 'forwards', easing: 'ease-out' }
 			);
@@ -2088,8 +2088,7 @@
 				item.animate(
 					{
 						transform: 'scale(1) translateY(0px)',
-						filter: 'brightness(1)',
-						boxShadow: 'var(--mb-button-unpress)'
+						filter: 'brightness(1) var(--mb-button-unpress-drop)',
 					},
 					{ duration: 50, fill: 'forwards', easing: 'ease-in' }
 				);
@@ -2139,7 +2138,7 @@
 
 			const listItem = addItem('li', {
 				id: itemId,
-				className: 'library-item press-button',
+				className: 'library-item patch-pill',
 				title: libraryName,
 			});
 

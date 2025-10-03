@@ -147,6 +147,12 @@
 		inset 0 3px 10px rgba(0, 0, 0, 0.0),
 		0 -2px 2px rgba(0, 0, 0, 0.0),
 		0 2px 2px rgba(255, 255, 255, 0.0);
+	--mb-button-press-drop:
+    drop-shadow(0px -2px 2px rgba(0,0,0,0.2))
+    drop-shadow(0px 2px 2px rgba(255,255,255,0.2));
+--mb-button-unpress-drop:
+    drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.0))
+    drop-shadow(0 2px 2px rgba(255, 255, 255, 0.0));
 }
 
 [data-theme="dark"] {
@@ -172,6 +178,13 @@
 		inset 0 3px 10px rgba(0, 0, 0, 0.0),
 		0 -2px 2px rgba(0, 0, 0, 0.0),
 		0 2px 2px rgba(255, 255, 255, 0.0);
+
+--mb-button-press-drop:
+    drop-shadow(0px -2px 2px rgba(0,0,0,0.2))
+    drop-shadow(0px 2px 2px rgba(255,255,255,0.2));
+--mb-button-unpress-drop:
+    drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.0))
+    drop-shadow(0 2px 2px rgba(255, 255, 255, 0.0));
 }
 
 
@@ -766,7 +779,7 @@ a {
 	padding: calc(0.5*(var(--mb-button-size) - var(--mb-span-size)));
 	width: var(--mb-library-large);
 	margin: 0px;
-	border-radius: calc(var(--mb-button-size)*0.5);
+	/*border-radius: calc(var(--mb-button-size)*0.5);*/
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -836,7 +849,7 @@ a {
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.library-item:hover,
+.library-item:not(.patch-pill):hover,
 .filter-item:hover {
 	background-color: var(--mb-hover-color);
 }
@@ -1645,9 +1658,9 @@ book-item {
 	/* Place above .home-strip */
 }
 
-.highlighted,
-.highlighted:hover,
-.highlighted:active {
+.highlighted:not(.patch-pill),
+.highlighted:not(.patch-pill):hover,
+.highlighted:not(.patch-pill):active {
 	background-color: var(--mb-accent);
 	color: white;
 }
