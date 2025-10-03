@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>9-Patch with PNG border-image</title>
+	<style>
+		:root {
+			--multiplier: 1;
+		}
+
+		@supports (corner-shape: squircle) {
+			:root {
+				--multiplier: 2;
+			}
+		}
+
+		.patch {
+			box-sizing: content-box;
+			width: 250px;
+			height: 300px;
+			margin: 0;
+			padding: 0;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: red;
+			position: relative;
+			border-radius: calc(var(--multiplier) * 40px);
+			corner-shape: superellipse(2.2);
+
+			box-shadow: inset 5px 5px 10px black;
+		}
+
+		.patch:hover{
+			border-radius: 40px;
+			corner-shape: round;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="patch">
+		test
+	</div>
+</body>
+
+</html>
