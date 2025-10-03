@@ -1,13 +1,11 @@
 Main UI
-- Reomove previous book search results when searching for series year
+- 
+
+Reader UI
+-
 
 Build
-- Updated Electron build to 38.2.0+
-- Updated Capacitor build to 7.0+
-- New dmg icon for macOS 26
-- Cleanup release workflow
+- 
 
 Fixes
-- Fix remember me status not sticking for Electron apps
-- Fix issues when series are marked as read or unread
-- Fix buttons shdaow cropping
+- 
