@@ -1612,10 +1612,14 @@
 				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData, null);
+				mb.currentlyScaled = item;
 			} else {
 				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
+				mb.currentlyScaled = item;
 				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
+					mb.currentlyScaled = null;
+					mb.clickingTile = null;
 					const oldTop = mainContainer.scrollTop;
 					await Promise.all(
 						Object.entries(dashboardElements).map(async ([name, item]) => {
@@ -1769,11 +1773,10 @@
 				// Added this to unselect pre-scaled book
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
-												console.log(mb.currentlyScaled);
 
 					mb.currentlyScaled.parentElement.classList.remove('top-pop');
 
-					mb.currentlyScaled = null; //TODO RIMESSO IN 0.2.6 check, This was removed but maybe it was needed?
+					// mb.currentlyScaled = null; //TODO RIMESSO IN 0.2.6 check, This was removed but maybe it was needed?
 				}
 				item.classList.add('scaled');
 				item.parentElement.classList.add('top-pop');
@@ -1783,7 +1786,6 @@
 				item.classList.remove('scaled');
 				item.parentElement.classList.remove('top-pop');
 				mb.clickingTile = null;
-
 			});
 		}
 

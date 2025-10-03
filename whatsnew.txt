@@ -8,4 +8,4 @@ Build
 - 
 
 Fixes
-- 
+- Fixed books not opening on touch devices
