@@ -46,7 +46,6 @@
 		"dmg": {
 			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
 			"icon": "assets/icons/dmg_icon.icns",
-			"backgroundColor": "#BC082B",
 			"background": "assets/dmg-background.png"
 		},
 		"win": {
