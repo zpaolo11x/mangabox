@@ -46,7 +46,7 @@
 		"dmg": {
 			"artifactName": "MangaBox-${version}-macOS-${arch}.dmg",
 			"icon": "assets/icons/dmg_icon.icns",
-			"background": "assets/dmg-background.tiff"
+			"background": "assets/dmg-background2x.tiff"
 		},
 		"win": {
 			"target": "portable",
