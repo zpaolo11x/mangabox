@@ -72,7 +72,7 @@ jobs:
             sys: mac
             arch: x64
             name: macOS-x64
-          - os: macos-26
+          - os: macos-latest
             sys: mac
             arch: arm64
             name: macOS-arm64
@@ -193,10 +193,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: macos-26
+          - os: macos-latest
             sys: ios
             name: iOS-app
-          - os: macos-26
+          - os: macos-latest
             sys: ios
             name: iOS-ipa
           - os: ubuntu-latest
