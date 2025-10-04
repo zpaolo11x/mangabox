@@ -5,7 +5,7 @@ Reader UI
 -
 
 Build
-- 
+- Rolled back macOS runner to avoid title bar issue on iOS
 
 Fixes
-- Fixed books not opening on touch devices
+- Fix books not opening after second tap on touch devices
