@@ -2,10 +2,11 @@ Main UI
 - 
 
 Reader UI
--
+- 
 
 Build
-- Rolled back macOS runner to avoid title bar issue on iOS
+- Roll back macOS runner to avoid title bar issue on iOS
+- New DMG background for macOS app
 
 Fixes
 - Fix books not opening after second tap on touch devices
