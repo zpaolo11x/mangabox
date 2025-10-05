@@ -865,12 +865,6 @@
 
 			mb.swatchMenuVisible = !mb.swatchMenuVisible
 
-			//sectionToggle(colorSwatchBar)
-
-			/*
-			mb.accentColor = (mb.accentColor + 1) % mb.swatchesHi.length;
-			applyAccent();
-			*/
 		});
 
 		themeChanger.addEventListener('click', () => {
@@ -1734,9 +1728,7 @@
 					if (mb.currentlyScaled !== item) {
 						if (mb.currentlyScaled) {
 							mb.currentlyScaled.classList.remove('scaled');
-							console.log(mb.currentlyScaled);
 							mb.currentlyScaled.parentElement.classList.remove('top-pop');
-
 						}
 						item.classList.add('scaled');
 						item.parentElement.classList.add('top-pop');
@@ -4895,8 +4887,6 @@
 		document.addEventListener('pointerup', (event) => {
 			if (mb.currentlyScaled && !mb.currentlyScaled.contains(event.target)) {
 				mb.currentlyScaled.classList.remove('scaled');
-											console.log(mb.currentlyScaled);
-
 				mb.currentlyScaled.parentElement.classList.remove('top-pop');
 
 				mb.currentlyScaled = null;
@@ -5138,22 +5128,6 @@
 		})
 		enableTouchResponse(webtoonContainer, 30, null, handleCloseReader, null, null);
 
-		/*
-		let startY = 0;
-		
-		touchPanelWebtoon.addEventListener('touchstart', (e) => {
-			console.log("A")
-		  startY = e.touches[0].clientY;
-		}, { passive: true });
-		
-		touchPanelWebtoon.addEventListener('touchmove', (e) => {
-			console.log("B")
-		  const deltaY = e.touches[0].clientY - startY;
-		  webtoonContainer.scrollTop -= deltaY;
-		  startY = e.touches[0].clientY;
-		  e.preventDefault(); // prevent browser scroll behavior
-		}, { passive: false });
-		*/
 	</script>
 </body>
 
