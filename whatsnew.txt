@@ -1,12 +1,13 @@
 Main UI
 - Changed library thumbnails to IP free artwork
+- Added version to the login dialog
 
 Reader UI
 - 
 
 Build
-- Roll back macOS runner to avoid title bar issue on iOS
+- Rolled back macOS runner to avoid title bar issue on iOS
 - New DMG background for macOS app
 
 Fixes
-- Fix books not opening after second tap on touch devices
+- Fixed books not opening after second tap on touch devices
