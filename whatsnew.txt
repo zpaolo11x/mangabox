@@ -1,5 +1,5 @@
 Main UI
-- 
+- Changed library thumbnails to IP free artwork
 
 Reader UI
 - 
