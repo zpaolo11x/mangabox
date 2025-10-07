@@ -1,6 +1,7 @@
 Main UI
 - Changed library thumbnails to IP free artwork
 - Added version to the login dialog
+- Libraries with no icon show the initial letter
 
 Reader UI
 - 
