@@ -17,7 +17,7 @@ async function loadToken() {
 }
 
 async function deleteToken() {
-		debugPrint("deleteToken...")
+	debugPrint("deleteToken...")
 
 	await window.secureStore.deleteCredentials('auth');
 }
@@ -81,35 +81,38 @@ async function login() {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-		// Regular fetch for web / Electron
-		fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
-			method: 'GET',
-			credentials: 'include', 
-			headers: {
-				'Authorization': mbAuthHeader,
-				'X-Requested-With': 'XMLHttpRequest',
-				'X-Auth-Token': '',
-				'skip_zrok_interstitial': '1'
+	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+		method: 'GET',
+		credentials: 'include',
+		headers: {
+			'Authorization': mbAuthHeader,
+			'X-Requested-With': 'XMLHttpRequest',
+			'X-Auth-Token': '',
+			'skip_zrok_interstitial': '1'
+		}
+	}).then(async response => {
+		const token = response.headers.get('X-Auth-Token');
+		if (response.ok && token) {
+			localStorage.setItem('mbBaseUrl', baseUrlVal);
+			if (isElectronApp) {
+				window.electronAPI.sendRememberMe(loginRememberMe.checked);
+				await saveToken(token);
 			}
-		}).then(async response => {
-			const token = response.headers.get('X-Auth-Token');
-			if (response.ok && token) {
-				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				if (isElectronApp) {
-					window.electronAPI.sendRememberMe(loginRememberMe.checked);
-					await saveToken(token);
-				}
-				hideLoginDialog();
-				location.reload(true);
-			} else {
-				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				loginError.classList.remove('auth-hidden');
-			}
-		}).catch(error => {
-			console.error('Login error:', error);
+			hideLoginDialog();
+			location.reload(true);
+		} else if (response.status === 401) {
+			loginError.textContent = 'Invalid username or password.';
 			loginError.classList.remove('auth-hidden');
-		});
-	
+		} else {
+			loginError.textContent = `Login failed (${response.status})`;
+			loginError.classList.remove('auth-hidden');
+		}
+	}).catch(error => {
+		console.error('Login error:', error);
+		loginError.textContent = 'Cannot reach server. Check the address or your connection.';
+		loginError.classList.remove('auth-hidden');
+	});
+
 }
 
 
@@ -121,6 +124,6 @@ function showLoginDialog() {
 }
 
 function hideLoginDialog() {
-		debugPrint("hideLoginDialog...")
+	debugPrint("hideLoginDialog...")
 	loginScreen.classList.add('auth-hidden');
 }
