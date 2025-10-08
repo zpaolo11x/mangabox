@@ -12,3 +12,4 @@ Build
 
 Fixes
 - Fixed books not opening after second tap on touch devices
+- Fixed language and direction glyphs when undefined
