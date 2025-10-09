@@ -3,9 +3,6 @@ Main UI
 - Added version to the login dialog
 - Libraries with no icon show the initial letter
 
-Reader UI
-- 
-
 Build
 - Rolled back macOS runner to avoid title bar issue on iOS
 - New DMG background for macOS app
