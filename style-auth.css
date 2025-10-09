@@ -8,6 +8,14 @@
 	z-index: 5000;
 }
 
+.version-note{
+	width:100%;
+	text-align:right;
+	font-size: 13px;
+	margin-right:5px;
+	color:#303030;
+}
+
 .dialog {
 	padding: 0px;
 	margin: 0px;

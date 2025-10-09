@@ -1,13 +1,12 @@
 Main UI
-- Reomove previous book search results when searching for series year
+- Changed library thumbnails to IP free artwork
+- Added version to the login dialog
+- Libraries with no icon show the initial letter
 
 Build
-- Updated Electron build to 38.2.0+
-- Updated Capacitor build to 7.0+
-- New dmg icon for macOS 26
-- Cleanup release workflow
+- Rolled back macOS runner to avoid title bar issue on iOS
+- New DMG background for macOS app
 
 Fixes
-- Fix remember me status not sticking for Electron apps
-- Fix issues when series are marked as read or unread
-- Fix buttons shdaow cropping
+- Fixed books not opening after second tap on touch devices
+- Fixed language and direction glyphs when undefined

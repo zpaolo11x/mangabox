@@ -408,9 +408,8 @@
 		getLatestVersion()
 			.then(version => {
 				latestVersion = version
-				console.log(latestVersion)
+
 				document.querySelectorAll("a.artifact").forEach(link => {
-					console.log(link.href)
 					link.href = link.href.replace(/\*/g, latestVersion);
 					link.title = link.href;
 				});
