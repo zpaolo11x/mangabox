@@ -1,12 +1,11 @@
 Main UI
-- Changed library thumbnails to IP free artwork
-- Added version to the login dialog
-- Libraries with no icon show the initial letter
+- 
+
+Reader UI
+- 
 
 Build
-- Rolled back macOS runner to avoid title bar issue on iOS
-- New DMG background for macOS app
+- 
 
 Fixes
-- Fixed books not opening after second tap on touch devices
-- Fixed language and direction glyphs when undefined
+- 
