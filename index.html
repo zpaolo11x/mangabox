@@ -2144,7 +2144,7 @@
 
 			const base64Image = mb.libraryIcons[itemId];
 			const imageSrc = base64Image || (isLib
-				? `library-thumbnails/${libraryName}.png`
+				? `library-thumbnails/${libraryName}.svg`
 				: imagePath);
 
 			const libraryThumbnail = addItem('img', {
@@ -2156,13 +2156,7 @@
 			if (isLib) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
-					libraryThumbnail.src = `library-thumbnails/${libraryName}.jpg`;
-					libraryThumbnail.onerror = () => {
-						libraryThumbnail.onerror = null;
-						console.log('Both PNG and JPG images failed to load');
-						//libraryThumbnail.src = 'library-thumbnails/blank.png';
-						libraryThumbnail.src = `library-letters/${libraryName.charAt(0).toUpperCase()}.png`
-					};
+					libraryThumbnail.src = `library-letters/${libraryName.charAt(0).toUpperCase()}.png`
 				};
 			}
 
