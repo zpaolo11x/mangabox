@@ -694,8 +694,19 @@
 			return requestTable
 		}
 
+		function cacheKeyFromUrl(url) {
+			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
+		}
+
 		//MB API Call Function 
-		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
+		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
+
+			console.log("-----");
+			console.log("API Url: " + API_url)
+			console.log("API body: " + body)
+
+			//let cacheKey = cacheKeyFromUrl(API_url);
+
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
 
@@ -703,20 +714,54 @@
 
 				if (returnval) {
 					const output = await response.json();
+					if (cacheKey != null) localStorage.setItem(cacheKey, JSON.stringify(output));
 					return output;
 				}
 			} catch (error) {
-				console.error('Fetch libraries error:', error);
+				console.error('Fetch error:', error);
+				if (cacheKey != null) {
+					const cached = localStorage.getItem(cacheKey);
+					console.log("PARSED")
+					console.log(JSON.parse(cached))
+					if (cached) return JSON.parse(cached);
+				}
+				throw error; // nothing cached → still fail
 			}
 		}
+		/*
+		async function fetchWithFallback(url, key) {
+		  try {
+			 const res = await fetch(url);
+			 if (!res.ok) throw new Error('HTTP error');
+			 const data = await res.json();
+		
+			 // cache for offline use
+			 localStorage.setItem(key, JSON.stringify(data));
+		
+			 return data;
+		  } catch (err) {
+			 console.warn('Fetch failed, using cached data:', err);
+			 const cached = localStorage.getItem(key);
+			 if (cached) return JSON.parse(cached);
+			 throw err; // nothing cached → still fail
+		  }
+		}
+		*/
 
 		async function getUserSettings() {
-			const settings = await callAPI('/api/v1/client-settings/user/list', 'GET');
-			const mangaboxFlat = Object.fromEntries(
+			let mangaboxFlat = null;
+			//try{
+			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
+
+			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
 					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
+			//} catch (error) {
+			//	console.log("Error in fetch, getting from cache")
+			//	mangaboxFlat = JSON.parse(localStorage.getItem('cache_userSettings'));
+			//}
 			return mangaboxFlat
 		}
 
@@ -724,11 +769,20 @@
 			const payload = {
 				[key]: { value: value },
 			};
-			await callAPI('/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
+			userSettings[key] = value;
+
+			// Ensure local cache mirrors the API structure
+			const cached = JSON.parse(localStorage.getItem('c_usersettings') || '{}');
+
+			cached[key] = { value }; // keep the nested shape
+			localStorage.setItem('c_usersettings', JSON.stringify(cached));
+
+
+			await callAPI(null, '/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
 		}
 
 		async function delUserSettings() {
-			await callAPI('/api/v1/client-settings/user', 'DELETE', JSON.stringify([
+			await callAPI(null, '/api/v1/client-settings/user', 'DELETE', JSON.stringify([
 				'mangabox.ui.accentcolor',
 				'mangabox.ui.themeprefs',
 				'mangabox.ui.readerthemeprefs',
@@ -1088,7 +1142,7 @@
 
 			if (searchString.includes('y:')) {
 
-				const unFilteredSeries = await callAPI(
+				const unFilteredSeries = await callAPI(null,
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
 				);
@@ -1127,7 +1181,7 @@
 				return
 			}
 
-			const unFilteredSeries = await callAPI(
+			const unFilteredSeries = await callAPI(null,
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -1142,7 +1196,7 @@
 			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
-			const unFilteredBooks = await callAPI(
+			const unFilteredBooks = await callAPI(null,
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -1297,7 +1351,7 @@
 		};
 
 		async function buildLanguageList() {
-			const languageList = await callAPI(`/api/v1/languages`);
+			const languageList = await callAPI('c_languages', `/api/v1/languages`);
 			languageList.forEach(item => {
 				mb.filterTable.filter_by_language.switches.push({
 					name: item,
@@ -1602,12 +1656,12 @@
 
 		async function setReadStatus(seriesId, bookId, read, item, format) {
 			if (bookId == null) {
-				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
+				await callAPI(null, `/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData, null);
 				mb.currentlyScaled = item;
 			} else {
-				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
+				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				mb.currentlyScaled = item;
 				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
@@ -1625,7 +1679,7 @@
 					setTimeout(updateSliderProperties, 100);
 					mainContainer.scrollTop = oldTop;
 				} else {
-					const bookData = await callAPI(`/api/v1/books/${bookId}`);
+					const bookData = await callAPI(null, `/api/v1/books/${bookId}`);
 					buildBookItem(item, bookData, format, null);
 				}
 			}
@@ -1648,7 +1702,7 @@
 			const searchFieldSize = libLargeSize;
 			const margin = 10;
 
-			const libraries = await callAPI('/api/v1/libraries');
+			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
 
@@ -1676,7 +1730,7 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
-			const unFilteredSeries = await callAPI(
+			const unFilteredSeries = await callAPI('c_serieslistall',
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -2000,7 +2054,7 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
-			const allSeriesPage = await callAPI(
+			const allSeriesPage = await callAPI(`c_serieslist${libraryId}`,
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
 			);
@@ -2256,7 +2310,7 @@
 
 		function cancelUpdate() {
 			closeModal();
-			bootSequence();
+			bootSequence(offlineSession ? 'offline' : 'online');
 		}
 
 		async function applyLibraryImage(libraryId, fileOrBase64) {
@@ -2297,7 +2351,7 @@
 						mb.libraryIcons[libraryId] = base64;
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
 						closeModal();
-						bootSequence();
+						bootSequence(offlineSession ? 'offline' : 'online');
 					},
 					high: true,
 				}, {
@@ -2402,7 +2456,7 @@
 									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 
 									closeModal();
-									bootSequence();
+									bootSequence(offlineSession ? 'offline' : 'online');
 								},
 								high: true
 							},
@@ -2557,7 +2611,7 @@
 			bookDetailsSummary.innerHTML = summaryArray.map(element => `<li>${element}</li>`).join('');
 			bookDetailsSummary.style.opacity = 1;
 
-			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
+			const seriesData = await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 			/*
 			const seriesBooks = await callAPI(
 				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
@@ -2567,8 +2621,8 @@
 
 			mb.seriesData = seriesData;
 			mb.currentBook = book;
-			mb.prevBook = await callAPI(`/api/v1/books/${book.id}/previous`) || null;
-			mb.nextBook = await callAPI(`/api/v1/books/${book.id}/next`) || null;
+			mb.prevBook = await callAPI(`c_books${book.id}prev`, `/api/v1/books/${book.id}/previous`) || null;
+			mb.nextBook = await callAPI(`c_books${book.id}next`, `/api/v1/books/${book.id}/next`) || null;
 
 			/*
 						if (book.number > 1) {
@@ -2740,7 +2794,7 @@
 			progressBar.append(progressGauge);
 
 			addTouchScaler(booksItem, async () => {
-				const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
+				const seriesData = await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
@@ -2828,7 +2882,7 @@
 			keepReading: {
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
 				getItems: async (page, size) => {
-					const out = await callAPI(
+					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
@@ -2847,7 +2901,7 @@
 			onDeck: {
 				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/books/ondeck`));
+					return (await callAPI(`c_ondeck`, `/api/v1/books/ondeck`));
 				},
 				showItems: async (input, target) => {
 					displayBooks(input, target, 'compact');
@@ -2857,7 +2911,7 @@
 			recentBooks: {
 				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
 				getItems: async (page, size) => {
-					return (await callAPI(
+					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
 						'POST', `{"condition":{"allOf":[]}}`
 					));
@@ -2870,7 +2924,7 @@
 			recentSeries: {
 				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/series/new?page=${page}&size=${size}`));
+					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
 					displaySeries(input, target);
@@ -2880,7 +2934,7 @@
 			updatedSeries: {
 				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/series/updated?page=${page}&size=${size}`));
+					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
 					displaySeries(input, target);
@@ -2890,7 +2944,7 @@
 			readBooks: {
 				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
 				getItems: async (page, size) => {
-					return (await callAPI(
+					return (await callAPI(`c_readbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"READ"}}}`
 					));
@@ -2979,9 +3033,9 @@
 		// if seriesdata is not available at the moment of the call, it fetches it from the server
 		async function openSeries(libraryId, seriesId, bookId) {
 
-			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
+			const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
 
-			const books = (await callAPI(
+			const books = (await callAPI(`c_bookslist${seriesId}`,
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
 			)).content;
@@ -2991,7 +3045,11 @@
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
 
-		async function bootSequence() {
+		async function bootSequence(netStatus = 'online') {
+			if (netStatus == 'offline') alert("you are in offline mode")
+
+			offlineSession = (netStatus == 'offline');
+
 			userSettings = await getUserSettings();
 
 			applyUserSettings();
@@ -3444,10 +3502,10 @@
 		async function initViewer() {
 			updatePWABar(rd.titleBarColor);
 
-			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			const bookData = await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 
-			rd.prevBook = await callAPI(`/api/v1/books/${rd.bookId}/previous`) || null;
-			rd.nextBook = await callAPI(`/api/v1/books/${rd.bookId}/next`) || null;
+			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
+			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
 
 			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
 			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
@@ -3684,7 +3742,7 @@
 
 		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne) {
 			// Get the pages data structure from komga for the current book
-			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+			const komgaPageData = await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
@@ -3795,7 +3853,7 @@
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
 
 			// Get the pages data structure from komga for the current book
-			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+			const komgaPageData = await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
@@ -4227,7 +4285,7 @@
 			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
-				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
+				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.catch(error => console.error('Error:', error));
 			}
 
@@ -5039,6 +5097,8 @@
 		searchInput.addEventListener('pointerdown', (event) => {
 			event.stopPropagation();
 		})
+
+		let offlineSession = false;
 
 		sessionCheck()
 
