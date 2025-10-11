@@ -8,4 +8,4 @@ Build
 - 
 
 Fixes
-- 
+- Fixed smooth theme transition

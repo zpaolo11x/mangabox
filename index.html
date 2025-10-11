@@ -63,6 +63,7 @@
 						</div>
 					</li>
 				</ul>
+				<div id="offlineLed">OFFLINE</div>
 			</div>
 
 			<div id="filtersBar" class="extra-bar hidden blankstart">
@@ -962,6 +963,15 @@
 			sectionShow(blanker);
 
 			history.pushState(null, '', mb.basePath);
+
+			Object.keys(localStorage).forEach(key => {
+				if (key.startsWith("c_")) {
+					localStorage.removeItem(key);
+				}
+			});
+
+			await clearMediaCache();
+			
 			location.reload(true);
 		})
 
@@ -1647,6 +1657,30 @@
 				req.onerror = () => reject(req.error);
 			});
 		}
+
+		async function clearMediaCache() {
+  try {
+    const db = await openMediaDB();
+    const tx = db.transaction('media', 'readwrite');
+    const store = tx.objectStore('media');
+    store.clear(); // removes all cached media
+
+    return new Promise((resolve, reject) => {
+      tx.oncomplete = () => {
+        console.log('Media cache cleared.');
+        resolve();
+      };
+      tx.onerror = () => {
+        console.error('Error clearing media cache:', tx.error);
+        reject(tx.error);
+      };
+    });
+  } catch (err) {
+    console.error('Failed to open media DB for clearing:', err);
+  }
+}
+
+
 		async function fetchMedia(url, offlineCache = true) {
 
 			const db = await openMediaDB();
@@ -3105,10 +3139,7 @@
 		}
 
 		async function bootSequence(netStatus = 'online') {
-			document.body.classList.remove('offline');
-			if (netStatus == 'offline') {
-				document.body.classList.add('offline');
-			}
+			offlineLed.style.opacity = (netStatus == 'offline') ? 1 : 0;
 
 			offlineSession = (netStatus == 'offline');
 

@@ -60,9 +60,9 @@
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
-	
+
 	--mb-android-top-bar: 0px;
-	
+
 	--mb-top-spacer: calc(env(safe-area-inset-top) + var(--mb-android-top-bar));
 
 	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
@@ -127,7 +127,6 @@
 [data-theme="light"] {
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
-	--mb-offline-color: #e7b7b7;
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
@@ -153,7 +152,6 @@
 [data-theme="dark"] {
 	--mb-page-color: #202020;
 	--mb-card-color: #353535;
-	--mb-offline-color: #572f2f;
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
@@ -364,6 +362,23 @@ body {
 	margin-right: calc(max(10px, env(safe-area-inset-right)));
 }
 
+#offlineLed {
+	pointer-events: none;
+	position: absolute;
+	z-index: 10000;
+	color: red;
+	font-size: 12px;
+	font-weight: bold;
+	bottom: 5px;
+	right: 10px;
+	/*
+	background-color: rgba(200, 0, 0, 0.85);
+	border-radius:50%;
+	*/
+	/*width: 10px;*/
+	height:10px;
+}
+
 #debuggerObj {
 	display: none;
 	pointer-events: none;
@@ -445,7 +460,7 @@ a {
 	display: grid;
 	grid-template-columns: auto;
 	grid-template-rows: 60px auto;
-	transition: grid-template-rows 0.2s;
+	transition: grid-template-rows 0.2s, background-color 0.3s ease;
 	background: var(--mb-page-color);
 }
 
@@ -552,6 +567,7 @@ a {
 
 /* Sticky container for libraries */
 #stickyContainer {
+	position:relative; /*added to fit offline to the bottom right*/
 	grid-row: 1;
 	display: flex;
 	align-items: center;
@@ -576,8 +592,9 @@ a {
 	padding: 0;
 	margin: 0;
 	padding-top: var(--mb-library-gap);
-	padding-right: var(--mb-library-gap); /*Added to avoid clipping*/
-	padding-left:var(--mb-bar-safe-padding-left);
+	padding-right: var(--mb-library-gap);
+	/*Added to avoid clipping*/
+	padding-left: var(--mb-bar-safe-padding-left);
 	height: calc(var(--mb-button-size) + var(--mb-library-gap));
 	overflow: scroll;
 	/*background: lightblue;*/
@@ -1494,7 +1511,7 @@ a {
 	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
 	border-radius: var(--mb-card-radius);
-	transition: scale 0.3s, box-shadow 0.3s;
+	transition: scale 0.3s, box-shadow 0.3s, background-color 0.3s ease;
 }
 
 .series-item.scaled,
@@ -1928,8 +1945,8 @@ body.sticky-small #librariesList {
 
 body.sticky-small #librariesRightBlock {
 	margin-top: calc(10px - var(--mb-library-gap));
-	padding-top:0px;
-	padding-left:var(--mb-bar-safe-padding-left);
+	padding-top: 0px;
+	padding-left: var(--mb-bar-safe-padding-left);
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) 1fr var(--mb-button-size);
 	width: 100%;
 }
@@ -1990,18 +2007,17 @@ body.sticky-small #bookDetailsContainer {
 body.sticky-small #seriesMiniHeader {
 	top: calc(114px + var(--mb-top-spacer));
 }
-
+/*
 body.offline #stickyContainer {
-background: repeating-linear-gradient(
-  125deg,                     /* diagonal direction */
-  var(--mb-card-color) 0%,    /* base color start */
-  var(--mb-card-color) 5%,    /* base color start */
-  var(--mb-offline-color) 5.1%,                    /* start of red band */
-  var(--mb-offline-color) 10%,                    /* end of red band */
-  var(--mb-card-color) 10.1%   /* back to base color */
-);
+	background: linear-gradient(115deg,
+			var(--mb-card-color) 0px,
+			var(--mb-card-color) calc(100% - 25px - 1px),
+			red calc(100% - 25px),
+			red calc(100% - 10px),
+			var(--mb-card-color) calc(100% - 10px + 1px)
+		)
 }
-
+*/
 .scrollbox {
 	position: relative;
 	/*width: 100%;*/
