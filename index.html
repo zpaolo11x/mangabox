@@ -709,7 +709,10 @@
 
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
-
+		if (response.status === 404 || response.status === 204) {
+			console.warn(`API ${API_url} returned ${response.status}`);
+			return null;
+		}
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
 				if (returnval) {
@@ -718,12 +721,17 @@
 					return output;
 				}
 			} catch (error) {
+				console.log("XXX")
 				console.error('Fetch error:', error);
 				if (cacheKey != null) {
+					console.log("YYY")
 					const cached = localStorage.getItem(cacheKey);
 					console.log("PARSED")
 					console.log(JSON.parse(cached))
-					if (cached) return JSON.parse(cached);
+					if (cached) {
+						console.log("ZZZ")
+						return JSON.parse(cached);
+					}
 				}
 				throw error; // nothing cached → still fail
 			}
@@ -1608,14 +1616,56 @@
 		}
 
 		//MB Media Cache 
+function openMediaDB() {
+	return new Promise((resolve, reject) => {
+		const request = indexedDB.open('MangaBoxMediaCache', 1);
+		request.onupgradeneeded = (event) => {
+			const db = event.target.result;
+			if (!db.objectStoreNames.contains('media')) {
+				db.createObjectStore('media');
+			}
+		};
+		request.onsuccess = () => resolve(request.result);
+		request.onerror = () => reject(request.error);
+	});
+}
 
+function cacheMedia(db, url, blob) {
+	return new Promise((resolve, reject) => {
+		const tx = db.transaction('media', 'readwrite');
+		tx.objectStore('media').put(blob, url);
+		tx.oncomplete = () => resolve();
+		tx.onerror = () => reject(tx.error);
+	});
+}
+
+function getCachedMedia(db, url) {
+	return new Promise((resolve, reject) => {
+		const tx = db.transaction('media', 'readonly');
+		const req = tx.objectStore('media').get(url);
+		req.onsuccess = () => resolve(req.result || null);
+		req.onerror = () => reject(req.error);
+	});
+}
 		async function fetchMedia(url) {
+
+			const db = await openMediaDB();
+
+			// 1️⃣ Check in-memory cache first
 			if (mb.mediaCache.has(url)) {
 				// Move the accessed item to the end to mark it as recently used
 				const value = mb.mediaCache.get(url);
 				mb.mediaCache.delete(url);
 				mb.mediaCache.set(url, value);
 				return value;
+			}
+
+			// 2️⃣ Check in IndexedDB
+			const cachedBlob = await getCachedMedia(db, url);
+			if (cachedBlob) {
+				const objectURL = URL.createObjectURL(cachedBlob);
+				mb.mediaCache.set(url, objectURL);
+				return objectURL;
 			}
 
 			try {
@@ -1634,14 +1684,21 @@
 						mb.mediaCache.delete(oldestKey);
 					}
 
+					await cacheMedia(db, url, blob);
+
 					return objectURL;
 				} else {
 					console.error(`Failed to load media from ${url}`, response.status);
-					return 'fallback-image.jpg';
+					return 'fallback-image.png';
 				}
 			} catch (error) {
-				console.error(`Error fetching media: ${error.message}`);
-				return 'fallback-image.jpg';
+				console.warn(`Offline? Loading cached media for ${url}`);
+				const fallbackBlob = await getCachedMedia(db, url);
+				if (fallbackBlob) {
+					return URL.createObjectURL(fallbackBlob);
+				}
+				return 'fallback-image.png';
+
 			}
 		}
 
