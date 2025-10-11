@@ -127,6 +127,7 @@
 [data-theme="light"] {
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
+	--mb-offline-color: #e7b7b7;
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
@@ -152,6 +153,7 @@
 [data-theme="dark"] {
 	--mb-page-color: #202020;
 	--mb-card-color: #353535;
+	--mb-offline-color: #572f2f;
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
@@ -1987,6 +1989,17 @@ body.sticky-small #bookDetailsContainer {
 
 body.sticky-small #seriesMiniHeader {
 	top: calc(114px + var(--mb-top-spacer));
+}
+
+body.offline #stickyContainer {
+background: repeating-linear-gradient(
+  125deg,                     /* diagonal direction */
+  var(--mb-card-color) 0%,    /* base color start */
+  var(--mb-card-color) 5%,    /* base color start */
+  var(--mb-offline-color) 5.1%,                    /* start of red band */
+  var(--mb-offline-color) 10%,                    /* end of red band */
+  var(--mb-card-color) 10.1%   /* back to base color */
+);
 }
 
 .scrollbox {
