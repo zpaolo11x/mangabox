@@ -5,7 +5,7 @@ Main UI
 - Visual indicator when the sessoin is valid but the server is not reachable
 
 Reader UI
-- 
+- New color scheme that keeps the theme page color as reader background
 
 Build
 - 

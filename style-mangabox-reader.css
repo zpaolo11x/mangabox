@@ -71,6 +71,11 @@
 	--color2: black;
 }
 
+[data-theme-reader="transparent"] {
+	--color1: var(--mb-page-color);
+	--color2: var(--mb-page-color);
+}
+
 .hide-scrollbar {
 	/* Works in Firefox */
 	scrollbar-width: none;
