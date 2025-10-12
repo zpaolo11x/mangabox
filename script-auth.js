@@ -48,7 +48,7 @@ async function sessionCheck() {
 		debugPrint("Offline mode detected.");
 		if (sessionWasValid) {
 			hideLoginDialog();
-			bootSequence();
+			bootSequence('offline');
 		} else {
 			showLoginDialog();
 		}
