@@ -702,6 +702,8 @@
 		//MB API Call Function 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 
+			const db = await openIndexedDB();
+
 			console.log("-----");
 			console.log("API Url: " + API_url)
 			console.log("API body: " + body)
@@ -710,8 +712,8 @@
 			if (offlineSession) {
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
-					const cached = localStorage.getItem(cacheKey);
-					if (cached) return JSON.parse(cached);
+					const cached = await getCachedData(db, cacheKey);
+					if (cached) return cached;
 				}
 				console.warn(`No cached data for ${API_url} while offline`);
 				return null; // or throw if needed
@@ -720,7 +722,7 @@
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
 				if (response.status === 404 || response.status === 204) {
-					console.warn(`API ${API_url} returned ${response.status}`);
+					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
 				}
 
@@ -728,7 +730,7 @@
 
 				if (returnval) {
 					const output = await response.json();
-					if (cacheKey != null) localStorage.setItem(cacheKey, JSON.stringify(output));
+					if (cacheKey != null) await cacheData(db, cacheKey, output);
 					return output;
 				}
 			} catch (error) {
@@ -774,17 +776,19 @@
 		}
 
 		async function setUserSettings(key, value) {
+
+			const db = await openIndexedDB();
+
 			const payload = {
 				[key]: { value: value },
 			};
 			userSettings[key] = value;
 
 			// Ensure local cache mirrors the API structure
-			const cached = JSON.parse(localStorage.getItem('c_usersettings') || '{}');
+			const cached = await getCachedData(db, 'c_usersettings') || '{}';
 
 			cached[key] = { value }; // keep the nested shape
-			localStorage.setItem('c_usersettings', JSON.stringify(cached));
-
+			cacheData(db, 'c_usersettings', cached);
 
 			await callAPI(null, '/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
 		}
@@ -940,7 +944,7 @@
 		})
 
 		logOut.addEventListener('click', async () => {
-	
+
 			try {
 				if (mb.baseUrl) {
 					await fetch(`${mb.baseUrl}/api/logout`, {
@@ -970,7 +974,7 @@
 				}
 			});
 
-			await clearMediaDB();
+			await clearIndexedDB();
 
 			location.reload(true);
 		})
@@ -1626,13 +1630,17 @@
 		}
 
 		//MB Media Cache 
-		function openMediaDB() {
+
+		function openIndexedDB() {
 			return new Promise((resolve, reject) => {
-				const request = indexedDB.open('MangaBoxMediaCache', 1);
+				const request = indexedDB.open('MangaBoxCache', 1);
 				request.onupgradeneeded = (event) => {
 					const db = event.target.result;
 					if (!db.objectStoreNames.contains('media')) {
 						db.createObjectStore('media');
+					}
+					if (!db.objectStoreNames.contains('data')) {
+						db.createObjectStore('data');
 					}
 				};
 				request.onsuccess = () => resolve(request.result);
@@ -1658,32 +1666,54 @@
 			});
 		}
 
-		async function clearMediaDB() {
+		function cacheData(db, key, content) {
+			return new Promise((resolve, reject) => {
+				const tx = db.transaction('data', 'readwrite');
+				tx.objectStore('data').put(content, key);
+				tx.oncomplete = () => resolve();
+				tx.onerror = () => reject(tx.error);
+			});
+		}
+
+		function getCachedData(db, key) {
+			return new Promise((resolve, reject) => {
+				const tx = db.transaction('data', 'readonly');
+				const req = tx.objectStore('data').get(key);
+				req.onsuccess = () => resolve(req.result || null);
+				req.onerror = () => reject(req.error);
+			});
+		}
+
+		async function clearIndexedDB() {
 			try {
-				const db = await openMediaDB();
-				const tx = db.transaction('media', 'readwrite');
-				const store = tx.objectStore('media');
-				store.clear(); // removes all cached media
+				const db = await openIndexedDB();
+
+				const tx = db.transaction(['media', 'data'], 'readwrite');
+				const mediaStore = tx.objectStore('media');
+				const dataStore = tx.objectStore('data');
+
+				mediaStore.clear();
+				dataStore.clear();
 
 				return new Promise((resolve, reject) => {
 					tx.oncomplete = () => {
-						console.log('Media cache cleared.');
+						console.log('Media and data caches cleared.');
 						resolve();
 					};
 					tx.onerror = () => {
-						console.error('Error clearing media cache:', tx.error);
+						console.error('Error clearing IndexedDB caches:', tx.error);
 						reject(tx.error);
 					};
 				});
 			} catch (err) {
-				console.error('Failed to open media DB for clearing:', err);
+				console.error('Failed to open IndexedDB for clearing:', err);
 			}
 		}
 
 
 		async function fetchMedia(url, offlineCache = true) {
 
-			const db = await openMediaDB();
+			const db = await openIndexedDB();
 
 			// 1️⃣ Check in-memory cache first
 			if (mb.mediaCache.has(url)) {
@@ -2130,17 +2160,17 @@
 				target.removeChild(target.firstChild);
 			}
 
-				series.forEach(async (serie) => {
+			series.forEach(async (serie) => {
 
-					const seriesContainer = addItem('div', {
-						className: 'series-container', //XXX was ending with , 'fade-in');
-						id: serie.id,
-					});
-
-					buildSeriesItem(seriesContainer, serie, target);
-
-					target.append(seriesContainer);
+				const seriesContainer = addItem('div', {
+					className: 'series-container', //XXX was ending with , 'fade-in');
+					id: serie.id,
 				});
+
+				buildSeriesItem(seriesContainer, serie, target);
+
+				target.append(seriesContainer);
+			});
 
 			sectionShow(target); //XXX serve un fade qui???
 		}
@@ -3179,7 +3209,7 @@
 				'POST', `{"condition": {"allOf": []}}`
 			);
 			const fakerBooks = callAPI('c_bookslistall',
-				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, 
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
 			);
 
