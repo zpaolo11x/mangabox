@@ -2918,6 +2918,8 @@
 			progressBar.append(progressGauge);
 
 			addTouchScaler(booksItem, async () => {
+				if (offlineSession) return;
+				
 				const seriesData = await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
