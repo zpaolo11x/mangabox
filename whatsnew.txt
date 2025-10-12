@@ -1,7 +1,7 @@
 Main UI
-- Local storage caching of web requests so the UI is consistent when offline
+- Caching of web requests so the UI is consistent when offline
 - Caching of viewed thumbnails for offline browsing
-- Clear cached media and local storage when logging out of server
+- Clear cached media and data storage when logging out of server
 - Visual indicator when the sessoin is valid but the server is not reachable
 
 Reader UI
