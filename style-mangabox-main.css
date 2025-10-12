@@ -370,7 +370,7 @@ body {
 	font-size: 12px;
 	font-weight: bold;
 	bottom: 5px;
-	right: calc(10px + env(safe-area-inset-right));
+	right: 10px;
 	/*
 	background-color: rgba(200, 0, 0, 0.85);
 	border-radius:50%;

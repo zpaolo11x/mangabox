@@ -707,6 +707,15 @@
 			console.log("API body: " + body)
 
 			//let cacheKey = cacheKeyFromUrl(API_url);
+			if (offlineSession) {
+				console.log(`Offline mode: using cache for ${API_url}`);
+				if (cacheKey != null) {
+					const cached = localStorage.getItem(cacheKey);
+					if (cached) return JSON.parse(cached);
+				}
+				console.warn(`No cached data for ${API_url} while offline`);
+				return null; // or throw if needed
+			}
 
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
@@ -714,6 +723,7 @@
 					console.warn(`API ${API_url} returned ${response.status}`);
 					return null;
 				}
+
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
 				if (returnval) {
@@ -722,19 +732,8 @@
 					return output;
 				}
 			} catch (error) {
-				console.log("XXX")
-				console.error('Fetch error:', error);
-				if (cacheKey != null) {
-					console.log("YYY")
-					const cached = localStorage.getItem(cacheKey);
-					console.log("PARSED")
-					console.log(JSON.parse(cached))
-					if (cached) {
-						console.log("ZZZ")
-						return JSON.parse(cached);
-					}
-				}
-				throw error; // nothing cached → still fail
+				console.error(`Fetch error for ${API_url}:`, error);
+				throw error;
 			}
 		}
 		/*
@@ -941,6 +940,7 @@
 		})
 
 		logOut.addEventListener('click', async () => {
+	
 			try {
 				if (mb.baseUrl) {
 					await fetch(`${mb.baseUrl}/api/logout`, {
@@ -970,8 +970,8 @@
 				}
 			});
 
-			await clearMediaCache();
-			
+			await clearMediaDB();
+
 			location.reload(true);
 		})
 
@@ -1160,7 +1160,7 @@
 
 			if (searchString.includes('y:')) {
 
-				const unFilteredSeries = await callAPI(null,
+				const unFilteredSeries = await callAPI('c_serieslistall',
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
 				);
@@ -1199,7 +1199,7 @@
 				return
 			}
 
-			const unFilteredSeries = await callAPI(null,
+			const unFilteredSeries = await callAPI('c_serieslistall',
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -1214,7 +1214,7 @@
 			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
-			const unFilteredBooks = await callAPI(null,
+			const unFilteredBooks = await callAPI('c_bookslistall',
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -1658,27 +1658,27 @@
 			});
 		}
 
-		async function clearMediaCache() {
-  try {
-    const db = await openMediaDB();
-    const tx = db.transaction('media', 'readwrite');
-    const store = tx.objectStore('media');
-    store.clear(); // removes all cached media
+		async function clearMediaDB() {
+			try {
+				const db = await openMediaDB();
+				const tx = db.transaction('media', 'readwrite');
+				const store = tx.objectStore('media');
+				store.clear(); // removes all cached media
 
-    return new Promise((resolve, reject) => {
-      tx.oncomplete = () => {
-        console.log('Media cache cleared.');
-        resolve();
-      };
-      tx.onerror = () => {
-        console.error('Error clearing media cache:', tx.error);
-        reject(tx.error);
-      };
-    });
-  } catch (err) {
-    console.error('Failed to open media DB for clearing:', err);
-  }
-}
+				return new Promise((resolve, reject) => {
+					tx.oncomplete = () => {
+						console.log('Media cache cleared.');
+						resolve();
+					};
+					tx.onerror = () => {
+						console.error('Error clearing media cache:', tx.error);
+						reject(tx.error);
+					};
+				});
+			} catch (err) {
+				console.error('Failed to open media DB for clearing:', err);
+			}
+		}
 
 
 		async function fetchMedia(url, offlineCache = true) {
@@ -1823,6 +1823,7 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
+			//TODO Launch this fetch at session load to pre-cache all series
 			const unFilteredSeries = await callAPI('c_serieslistall',
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
@@ -1885,7 +1886,7 @@
 						/*
 						item.classList.remove('scaled');
 						item.parentElement.classList.remove('top-pop');
-
+	
 						mb.currentlyScaled = null;
 						*/
 						execute();
@@ -2129,17 +2130,17 @@
 				target.removeChild(target.firstChild);
 			}
 
-			series.forEach(async (serie) => {
+				series.forEach(async (serie) => {
 
-				const seriesContainer = addItem('div', {
-					className: 'series-container', //XXX was ending with , 'fade-in');
-					id: serie.id,
+					const seriesContainer = addItem('div', {
+						className: 'series-container', //XXX was ending with , 'fade-in');
+						id: serie.id,
+					});
+
+					buildSeriesItem(seriesContainer, serie, target);
+
+					target.append(seriesContainer);
 				});
-
-				buildSeriesItem(seriesContainer, serie, target);
-
-				target.append(seriesContainer);
-			});
 
 			sectionShow(target); //XXX serve un fade qui???
 		}
@@ -2151,7 +2152,7 @@
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
 			);
-			allSeries = allSeriesPage.content;
+			allSeries = allSeriesPage?.content || [];
 			// now it gets the series sorted by name so no need to elaborate the sorting, but for custom sorting based for example on title time?
 			// allSeries.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
 			return (allSeries);
@@ -3126,15 +3127,18 @@
 		// if seriesdata is not available at the moment of the call, it fetches it from the server
 		async function openSeries(libraryId, seriesId, bookId) {
 
+			let books = [];
 			const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
 
-			const books = (await callAPI(`c_bookslist${seriesId}`,
+			const booksData = (await callAPI(`c_bookslist${seriesId}`,
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
-			)).content;
+			));
+
+			books = booksData?.content || [];
 
 			await libraryHighlight(libraryId, false);
-			displayHeader(seriesData);
+			if (seriesData != null) displayHeader(seriesData);
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
 
@@ -3168,6 +3172,17 @@
 			document.querySelectorAll('.hidestrip').forEach(el => {
 				el.classList.remove('hidestrip');
 			});
+
+			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
+			const fakerSeries = callAPI('c_serieslistall',
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'POST', `{"condition": {"allOf": []}}`
+			);
+			const fakerBooks = callAPI('c_bookslistall',
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, 
+				'POST', `{"condition": {"allOf": []}}`
+			);
+
 		}
 
 		//MB Reader Functions and Data
@@ -3840,7 +3855,7 @@
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
 				.reduce((sum, width) => sum + width, 0) / komgaPageData.length) + 'px';
-
+	
 			readerViewer.style.height = webtoonScale * (komgaPageData.map(item => ((item.height)))
 				.reduce((sum, width) => sum + width, 0)) + 'px';
 			*/
