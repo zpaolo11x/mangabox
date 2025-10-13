@@ -121,28 +121,9 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 		const bookFolder = path.join(baseDir, bookId);
 		await fs.mkdir(bookFolder, { recursive: true });
+		await fs.mkdir(path.join(bookFolder,pages), { recursive: true });
+		await fs.mkdir(path.join(bookFolder,thumbs), { recursive: true });
 
-		/*
-		const zipPath = path.join(bookFolder, `${bookId}.cbz`);
-
-		// ✅ Download CBZ file with Bearer token
-		console.log('🌐 Downloading CBZ for', bookId);
-		let res = await fetch(`${baseUrl}/api/v1/books/${bookId}/file`, requestData);
-		console.log('🌐 Fetch response status:', res.status);
-		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-
-		const buffer = Buffer.from(await res.arrayBuffer());
-		console.log('💾 Writing CBZ to disk...');
-		await fs.writeFile(zipPath, buffer);
-
-		// ✅ Extract CBZ
-		const zip = new StreamZip.async({ file: zipPath });
-		await zip.extract(null, bookFolder);
-		await zip.close();
-
-		// Optionally delete original CBZ to save space
-		await fs.unlink(zipPath);
-		*/
 
 		console.log('🌐 Downloading book metadata for', bookId);
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
