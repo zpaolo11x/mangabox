@@ -117,33 +117,46 @@ app.on('window-all-closed', () => {
 ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, downloadUrl }) => {
   try {
     const baseDir = path.join(app.getPath('userData'), 'offline-books');
+    console.log('📁 Base directory:', baseDir);
     await fs.mkdir(baseDir, { recursive: true });
 
     const bookFolder = path.join(baseDir, bookId);
+    console.log('📁 Book folder:', bookFolder);
     await fs.mkdir(bookFolder, { recursive: true });
 
     const zipPath = path.join(bookFolder, `${bookId}.cbz`);
+    console.log('⬇️ CBZ path:', zipPath);
 
     // ✅ Download CBZ file
+    console.log('🌐 Downloading CBZ from:', downloadUrl);
     const res = await fetch(downloadUrl);
+    console.log('🌐 Fetch response status:', res.status);
     if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+
     const buffer = Buffer.from(await res.arrayBuffer());
+    console.log('💾 Writing CBZ to disk...');
     await fs.writeFile(zipPath, buffer);
 
     // ✅ Extract CBZ
+    console.log('📦 Extracting CBZ...');
     const zip = new StreamZip.async({ file: zipPath });
     await zip.extract(null, bookFolder);
     await zip.close();
+    console.log('✅ Extraction complete');
 
     // Optionally delete original CBZ to save space
+    console.log('🗑️ Deleting CBZ file...');
     await fs.unlink(zipPath);
 
     // ✅ Save metadata
+    const metadataPath = path.join(bookFolder, 'metadata.json');
+    console.log('💾 Writing metadata to:', metadataPath);
     await fs.writeFile(
-      path.join(bookFolder, 'metadata.json'),
+      metadataPath,
       JSON.stringify({ id: bookId, title: bookTitle, downloadUrl, date: Date.now() }, null, 2)
     );
 
+    console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
     return { ok: true, path: bookFolder };
   } catch (err) {
     console.error('❌ Download failed:', err);
