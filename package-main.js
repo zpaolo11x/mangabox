@@ -117,10 +117,10 @@ app.on('window-all-closed', () => {
 ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData }) => {
 	try {
 		const mimeToExt = {
-			'image/jpeg': 'jpg',
-			'image/png': 'png',
-			'image/webp': 'webp',
-			'image/gif': 'gif',
+			'image/jpeg': '.jpg',
+			'image/png': '.png',
+			'image/webp': '.webp',
+			'image/gif': '.gif',
 		};
 
 		const baseDir = path.join(app.getPath('userData'), 'offline-books');
