@@ -148,14 +148,11 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
 		console.log('🌐 Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-
 		// ✅ Get JSON from Komga
 		const bookMeta = await res.json();
-
 		// ✅ Save the full metadata to the folder
 		const mbookMetaPath = path.join(bookFolder, 'metadata-book.json');
 		await fs.writeFile(mbookMetaPath, JSON.stringify(bookMeta, null, 2));
-
 		console.log('💾 Book metadata saved to', mbookMetaPath);
 
 
@@ -163,15 +160,19 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
 		console.log('🌐 Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-
 		// ✅ Get JSON from Komga
 		const pagesMeta = await res.json();
-
 		// ✅ Save the full metadata to the folder
 		const pagesMetaPath = path.join(bookFolder, 'metadata-pages.json');
 		await fs.writeFile(pagesMetaPath, JSON.stringify(pagesMeta, null, 2));
-
 		console.log('💾 Book metadata saved to', pagesMetaPath);
+
+		const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
+		console.log(`⬇️ Downloading book thumbnail`);
+		res = await fetch(thumbUrl, requestData);
+		if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
+		const buffer = Buffer.from(await res.arrayBuffer());
+		await fs.writeFile(path.join(bookFolder, 'thumbnail.jpg'), buffer);
 
 
 		for (const page of pagesMeta) {
@@ -180,7 +181,15 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			const res = await fetch(pageUrl, requestData);
 			if (!res.ok) throw new Error(`Failed to fetch page ${page.number}: ${res.status}`);
 			const buffer = Buffer.from(await res.arrayBuffer());
-			await fs.writeFile(path.join(bookFolder, page.fileName), buffer);
+			await fs.writeFile(path.join(bookFolder, 'pages', page.fileName), buffer);
+
+			const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
+			console.log(`⬇️ Downloading thumb ${page.number}...`);
+			const res2 = await fetch(thumbUrl, requestData);
+			if (!res2.ok) throw new Error(`Failed to fetch thumbnail ${page.number}: ${res.status}`);
+			const buffer2 = Buffer.from(await res2.arrayBuffer());
+			await fs.writeFile(path.join(bookFolder, 'thumbs', 't_' + page.number + '.jpg'), buffer2);
+
 		}
 
 		console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
