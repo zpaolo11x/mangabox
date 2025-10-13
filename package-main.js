@@ -121,8 +121,8 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 		const bookFolder = path.join(baseDir, bookId);
 		await fs.mkdir(bookFolder, { recursive: true });
-		await fs.mkdir(path.join(bookFolder,pages), { recursive: true });
-		await fs.mkdir(path.join(bookFolder,thumbs), { recursive: true });
+		await fs.mkdir(path.join(bookFolder, 'pages'), { recursive: true });
+		await fs.mkdir(path.join(bookFolder, 'thumbs'), { recursive: true });
 
 
 		console.log('🌐 Downloading book metadata for', bookId);
