@@ -1654,6 +1654,10 @@
 			await wait(100);
 		}
 
+		//MB Offline Download Functions
+
+		
+
 		//MB Media Cache 
 
 		function openIndexedDB() {
@@ -2900,10 +2904,11 @@
 			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
-			bookOverlay.append(markAsRead, markAsUnread);
 
 
-			if (book.metadata.summary != '') {
+			//TODO Verificare cosa succede se il titolo di book details è troppo lungo e sposta l'immagine thumb
+
+			//if (book.metadata.summary != '') {
 				const bookDetails = addItem('div', {
 					className: 'mini-buttons book-details',
 					title: 'Book Details',
@@ -2914,9 +2919,24 @@
 					showBookDetails(book);
 				})
 				addPressEvents(bookDetails, scaleDown, scaleUp)
-				bookOverlay.append(bookDetails);
-			}
+			//	bookOverlay.append(bookDetails);
+			//}
 
+			if (book.metadata.summary == '') {
+				bookDetails.classList.add('half-bright')
+			};
+
+			const downloadBook = addItem('div', {
+				className: 'mini-buttons download-book',
+				title: 'Download book',
+				innerHTML: `<span class="fa-solid fa-download"></span>`
+			});
+			addClickPointerEvents(downloadBook, () => {
+				
+			})
+			addPressEvents(downloadBook, scaleDown, scaleUp)
+
+			bookOverlay.append(markAsRead, downloadBook, bookDetails, markAsUnread);
 
 			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
 			const progressBar = addItem('div', { className: 'progress-bar' });

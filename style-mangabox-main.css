@@ -1072,23 +1072,40 @@ a {
 	text-shadow: 0px 0px 12px rgba(255, 255, 255, 1.0), 0px 0px 5px rgba(255, 255, 255, 0.8);
 }
 
-.mini-buttons.mark-as-read {
-	right: 10px;
-	bottom: 10px;
-}
 
-.mini-buttons.mark-as-unread {
+.mini-buttons.mark-as-read {
 	left: 10px;
 	bottom: 10px;
 }
 
-.mini-buttons.book-details {
+.mini-buttons.mark-as-unread {
+	bottom:10px;
+	left: calc((100% - 20px - 50px - 50px) / 3 + 10px + 25px);
+	/*
 	text-align: center;
 	left: 0;
 	right: 0;
 	margin: auto;
 	bottom: 10px;
-	/* Centers the div */
+	*/
+}
+
+.mini-buttons.book-details {
+	bottom:10px;
+	right: calc((100% - 20px - 50px - 50px) / 3 + 10px + 25px);
+	/*
+	left: 10px;
+	top: 10px;
+	*/
+}
+
+.mini-buttons.book-details.half-bright{
+	display:none;
+}
+
+.mini-buttons.download-book {
+	right: 10px;
+	bottom: 10px;
 }
 
 .mini-buttons-2 {
@@ -1451,6 +1468,7 @@ a {
 	margin-left: 20px;
 	height: var(--mb-dialog-button-height);
 	line-height: var(--mb-dialog-button-height);
+	padding-right: 50px;
 }
 
 .book-details-pic-container {
@@ -1458,6 +1476,8 @@ a {
 	justify-content: center;
 	/* Centers the child horizontally */
 	width: 150px;
+	min-width: 150px;
+	max-width: 150px;
 }
 
 
