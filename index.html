@@ -1661,7 +1661,7 @@
 			await window.offlineAPI.downloadBook({
 				bookId: bookId,
 				bookTitle: bookTitle,
-				downloadUrl: `${mb.baseUrl}/api/v1/books/${bookId}/file`,
+				baseUrl: `${mb.baseUrl}`,
 				requestData: request // e.g., "Basic xxxxx" from your login
 			});
 		}

@@ -12,7 +12,7 @@ app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
 
 app.on('ready', async () => {
 	const rememberFlag = await keytar.getPassword('MangaBox-settings', 'rememberMe');
-  rememberMe = rememberFlag === 'true';
+	rememberMe = rememberFlag === 'true';
 
 	mainWindow = new BrowserWindow({
 		width: 1200,
@@ -114,45 +114,53 @@ app.on('window-all-closed', () => {
 	app.quit();
 });
 
-ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, downloadUrl, requestData }) => {
-  try {
-    const baseDir = path.join(app.getPath('userData'), 'offline-books');
-    await fs.mkdir(baseDir, { recursive: true });
+ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData }) => {
+	try {
+		const baseDir = path.join(app.getPath('userData'), 'offline-books');
+		await fs.mkdir(baseDir, { recursive: true });
 
-    const bookFolder = path.join(baseDir, bookId);
-    await fs.mkdir(bookFolder, { recursive: true });
+		const bookFolder = path.join(baseDir, bookId);
+		await fs.mkdir(bookFolder, { recursive: true });
 
-    const zipPath = path.join(bookFolder, `${bookId}.cbz`);
+		const zipPath = path.join(bookFolder, `${bookId}.cbz`);
 
-    // ✅ Download CBZ file with Bearer token
-    console.log('🌐 Downloading CBZ from:', downloadUrl);
-    const res = await fetch(downloadUrl, requestData);
-    console.log('🌐 Fetch response status:', res.status);
-    if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+		// ✅ Download CBZ file with Bearer token
+		console.log('🌐 Downloading CBZ for', bookId);
+		let res = await fetch(`${baseUrl}/api/v1/books/${bookId}/file`, requestData);
+		console.log('🌐 Fetch response status:', res.status);
+		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
 
-    const buffer = Buffer.from(await res.arrayBuffer());
-    console.log('💾 Writing CBZ to disk...');
-    await fs.writeFile(zipPath, buffer);
+		const buffer = Buffer.from(await res.arrayBuffer());
+		console.log('💾 Writing CBZ to disk...');
+		await fs.writeFile(zipPath, buffer);
 
-    // ✅ Extract CBZ
-    const zip = new StreamZip.async({ file: zipPath });
-    await zip.extract(null, bookFolder);
-    await zip.close();
+		// ✅ Extract CBZ
+		const zip = new StreamZip.async({ file: zipPath });
+		await zip.extract(null, bookFolder);
+		await zip.close();
 
-    // Optionally delete original CBZ to save space
-    await fs.unlink(zipPath);
+		// Optionally delete original CBZ to save space
+		await fs.unlink(zipPath);
 
-    // ✅ Save metadata
-    await fs.writeFile(
-      path.join(bookFolder, 'metadata.json'),
-      JSON.stringify({ id: bookId, title: bookTitle, downloadUrl, date: Date.now() }, null, 2)
-    );
+		console.log('🌐 Downloading book metadata for', bookId);
+		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+		console.log('🌐 Fetch response status:', res.status);
+		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
 
-    console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
-    return { ok: true, path: bookFolder };
-  } catch (err) {
-    console.error('❌ Download failed:', err);
-    return { ok: false, error: err.message };
-  }
+		// ✅ Get JSON from Komga
+		const bookMeta = await res.json();
+
+		// ✅ Save the full metadata to the folder
+		const metadataPath = path.join(bookFolder, 'metadata.json');
+		await fs.writeFile(metadataPath, JSON.stringify(bookMeta, null, 2));
+
+		console.log('💾 Book metadata saved to', metadataPath);
+
+		console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
+		return { ok: true, path: bookFolder };
+	} catch (err) {
+		console.error('❌ Download failed:', err);
+		return { ok: false, error: err.message };
+	}
 });
 
