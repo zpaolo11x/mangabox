@@ -122,6 +122,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		const bookFolder = path.join(baseDir, bookId);
 		await fs.mkdir(bookFolder, { recursive: true });
 
+		/*
 		const zipPath = path.join(bookFolder, `${bookId}.cbz`);
 
 		// ✅ Download CBZ file with Bearer token
@@ -141,6 +142,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 		// Optionally delete original CBZ to save space
 		await fs.unlink(zipPath);
+		*/
 
 		console.log('🌐 Downloading book metadata for', bookId);
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
@@ -171,6 +173,15 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 		console.log('💾 Book metadata saved to', pagesMetaPath);
 
+
+		for (const page of pagesMeta) {
+			const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
+			console.log(`⬇️ Downloading page ${page.number}...`);
+			const res = await fetch(pageUrl, requestData);
+			if (!res.ok) throw new Error(`Failed to fetch page ${page.number}: ${res.status}`);
+			const buffer = Buffer.from(await res.arrayBuffer());
+			await fs.writeFile(path.join(bookFolder, page.fileName), buffer);
+		}
 
 		console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
 		return { ok: true, path: bookFolder };
