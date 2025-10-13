@@ -650,8 +650,8 @@
 				.map(swatch => swatch.match(/(\d+%?)/g)),
 
 			// Media Cache
-			mediaCache: new Map(), 	//Media cache table structure
-			cacheLimit: 250,			//Limit of items in media cache
+			mediaCacheRAM: new Map(), 	//Media cache table structure
+			cacheLimitRAM: 250,			//Limit of items in media cache
 
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
@@ -703,7 +703,23 @@
 			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
 		}
 
+		async function onlineCheck() {
+			let seed = Math.random();
+			console.log(seed + " ONLINE CHECK")
+			try {
+				const ping = await fetch(`${mb.baseUrl}/api/v1/version`, { method: 'HEAD', cache: 'no-store' });
+				if (ping.ok) {
+					console.log(seed + 'Server reachable again, back online');
+					setNetworkStatus('online');
+				}
+			} catch {
+					console.log(seed + 'Server still offline');
+				// still offline, ignore
+			}
+		}
+
 		//MB API Call Function 
+
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 
 			const db = await openIndexedDB();
@@ -714,6 +730,8 @@
 
 			//let cacheKey = cacheKeyFromUrl(API_url);
 			if (offlineSession) {
+				onlineCheck();
+
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
 					const cached = await getCachedData(db, cacheKey);
@@ -732,6 +750,8 @@
 
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
+				setNetworkStatus('online');
+
 				if (returnval) {
 					const output = await response.json();
 					if (cacheKey != null) await cacheData(db, cacheKey, output);
@@ -739,6 +759,7 @@
 				}
 			} catch (error) {
 				console.error(`Fetch error for ${API_url}:`, error);
+				setNetworkStatus('offline');
 				throw error;
 			}
 		}
@@ -1719,21 +1740,23 @@
 
 			const db = await openIndexedDB();
 
-			// 1️⃣ Check in-memory cache first
-			if (mb.mediaCache.has(url)) {
+			// 1️⃣ Check RAM cache first
+			if (mb.mediaCacheRAM.has(url)) {
 				// Move the accessed item to the end to mark it as recently used
-				const value = mb.mediaCache.get(url);
-				mb.mediaCache.delete(url);
-				mb.mediaCache.set(url, value);
+				const value = mb.mediaCacheRAM.get(url);
+				mb.mediaCacheRAM.delete(url);
+				mb.mediaCacheRAM.set(url, value);
 				return value;
 			}
 
-			// 2️⃣ Check in IndexedDB
-			const cachedBlob = await getCachedMedia(db, url);
-			if (cachedBlob) {
-				const objectURL = URL.createObjectURL(cachedBlob);
-				mb.mediaCache.set(url, objectURL);
-				return objectURL;
+			// 2️⃣ Check in IndexedDB only if in offline session and cache it in RAM too
+			if (offlineSession) {
+				const cachedBlob = await getCachedMedia(db, url);
+				if (cachedBlob) {
+					const objectURL = URL.createObjectURL(cachedBlob);
+					mb.mediaCacheRAM.set(url, objectURL);
+					return objectURL;
+				}
 			}
 
 			try {
@@ -1744,12 +1767,12 @@
 					const objectURL = URL.createObjectURL(blob);
 
 					// Add to cache and enforce size limit
-					mb.mediaCache.set(url, objectURL);
-					if (mb.mediaCache.size > mb.cacheLimit) {
+					mb.mediaCacheRAM.set(url, objectURL);
+					if (mb.mediaCacheRAM.size > mb.cacheLimitRAM) {
 						// Remove the oldest entry
-						const oldestKey = mb.mediaCache.keys().next().value;
-						URL.revokeObjectURL(mb.mediaCache.get(oldestKey)); // Revoke object URL
-						mb.mediaCache.delete(oldestKey);
+						const oldestKey = mb.mediaCacheRAM.keys().next().value;
+						URL.revokeObjectURL(mb.mediaCacheRAM.get(oldestKey)); // Revoke object URL
+						mb.mediaCacheRAM.delete(oldestKey);
 					}
 
 					if (offlineCache) {
@@ -1774,11 +1797,11 @@
 
 
 		// Function to clear the cache entirely
-		function clearMediaCache() {
-			for (const objectURL of mb.mediaCache.values()) {
+		function clearmediaCacheRAM() {
+			for (const objectURL of mb.mediaCacheRAM.values()) {
 				URL.revokeObjectURL(objectURL);
 			}
-			mb.mediaCache.clear();
+			mb.mediaCacheRAM.clear();
 		}
 
 		async function setReadStatus(seriesId, bookId, read, item, format) {
@@ -2923,7 +2946,7 @@
 
 			addTouchScaler(booksItem, async () => {
 				if (offlineSession) return;
-				
+
 				const seriesData = await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
@@ -3178,10 +3201,14 @@
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
 
-		async function bootSequence(netStatus = 'online') {
+		function setNetworkStatus(netStatus) {
 			offlineLed.style.opacity = (netStatus == 'offline') ? 1 : 0;
-
 			offlineSession = (netStatus == 'offline');
+		}
+
+		async function bootSequence(netStatus = 'online') {
+
+			setNetworkStatus(netStatus)
 
 			userSettings = await getUserSettings();
 
