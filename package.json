@@ -13,7 +13,7 @@
 	   "@capacitor/android": "^7.0.0",
 	   "@capacitor/ios": "^7.0.0",
 		"keytar": "^7.9.0",
-		"node-stream-zip": "^2.8.0"
+		"node-stream-zip": "^1.15.0"
 
 	},
 	"devDependencies": {
