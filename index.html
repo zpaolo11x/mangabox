@@ -2938,7 +2938,7 @@
 				innerHTML: `<span class="fa-solid fa-download"></span>`
 			});
 			addClickPointerEvents(downloadBook, () => {
-
+				electronDownloadBook(book.id, "temp_"+book.id)
 			})
 			addPressEvents(downloadBook, scaleDown, scaleUp)
 
