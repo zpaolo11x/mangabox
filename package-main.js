@@ -151,10 +151,26 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		const bookMeta = await res.json();
 
 		// ✅ Save the full metadata to the folder
-		const metadataPath = path.join(bookFolder, 'metadata.json');
-		await fs.writeFile(metadataPath, JSON.stringify(bookMeta, null, 2));
+		const mbookMetaPath = path.join(bookFolder, 'metadata-book.json');
+		await fs.writeFile(mbookMetaPath, JSON.stringify(bookMeta, null, 2));
 
-		console.log('💾 Book metadata saved to', metadataPath);
+		console.log('💾 Book metadata saved to', mbookMetaPath);
+
+
+		console.log('🌐 Downloading pages metadata for', bookId);
+		res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
+		console.log('🌐 Fetch response status:', res.status);
+		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+
+		// ✅ Get JSON from Komga
+		const pagesMeta = await res.json();
+
+		// ✅ Save the full metadata to the folder
+		const pagesMetaPath = path.join(bookFolder, 'metadata-pages.json');
+		await fs.writeFile(pagesMetaPath, JSON.stringify(pagesMeta, null, 2));
+
+		console.log('💾 Book metadata saved to', pagesMetaPath);
+
 
 		console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
 		return { ok: true, path: bookFolder };
