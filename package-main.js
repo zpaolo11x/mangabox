@@ -114,7 +114,7 @@ app.on('window-all-closed', () => {
 	app.quit();
 });
 
-ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, downloadUrl, authToken }) => {
+ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, downloadUrl, requestData }) => {
   try {
     const baseDir = path.join(app.getPath('userData'), 'offline-books');
     await fs.mkdir(baseDir, { recursive: true });
@@ -126,11 +126,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, downloa
 
     // ✅ Download CBZ file with Bearer token
     console.log('🌐 Downloading CBZ from:', downloadUrl);
-    const res = await fetch(downloadUrl, {
-      headers: {
-        'Authorization': `Bearer ${authToken}`
-      }
-    });
+    const res = await fetch(downloadUrl, requestData);
     console.log('🌐 Fetch response status:', res.status);
     if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
 

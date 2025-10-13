@@ -1657,11 +1657,12 @@
 		//MB Offline Download Functions
 
 		async function electronDownloadBook(bookId, bookTitle) {
+			let request = buildRequest(mb.authToken, 'GET', null)
 			await window.offlineAPI.downloadBook({
 				bookId: bookId,
 				bookTitle: bookTitle,
 				downloadUrl: `${mb.baseUrl}/api/v1/books/${bookId}/file`,
-				authToken: mb.authToken // e.g., "Basic xxxxx" from your login
+				requestData: request // e.g., "Basic xxxxx" from your login
 			});
 		}
 
