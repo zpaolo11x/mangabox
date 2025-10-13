@@ -713,7 +713,7 @@
 					setNetworkStatus('online');
 				}
 			} catch {
-					console.log(seed + 'Server still offline');
+				console.log(seed + 'Server still offline');
 				// still offline, ignore
 			}
 		}
@@ -1656,7 +1656,13 @@
 
 		//MB Offline Download Functions
 
-		
+		async function electronDownloadBook(bookId, bookTitle) {
+			await window.offlineAPI.downloadBook({
+				bookId: bookId,
+				bookTitle: bookTitle,
+				downloadUrl: `${mb.baseUrl}/api/v1/books/${bookId}/file`
+			});
+		}
 
 		//MB Media Cache 
 
@@ -2909,16 +2915,16 @@
 			//TODO Verificare cosa succede se il titolo di book details è troppo lungo e sposta l'immagine thumb
 
 			//if (book.metadata.summary != '') {
-				const bookDetails = addItem('div', {
-					className: 'mini-buttons book-details',
-					title: 'Book Details',
-					innerHTML: `<span class="fa-solid fa-align-justify"></span>`
-				});
+			const bookDetails = addItem('div', {
+				className: 'mini-buttons book-details',
+				title: 'Book Details',
+				innerHTML: `<span class="fa-solid fa-align-justify"></span>`
+			});
 
-				addClickPointerEvents(bookDetails, () => {
-					showBookDetails(book);
-				})
-				addPressEvents(bookDetails, scaleDown, scaleUp)
+			addClickPointerEvents(bookDetails, () => {
+				showBookDetails(book);
+			})
+			addPressEvents(bookDetails, scaleDown, scaleUp)
 			//	bookOverlay.append(bookDetails);
 			//}
 
@@ -2932,7 +2938,7 @@
 				innerHTML: `<span class="fa-solid fa-download"></span>`
 			});
 			addClickPointerEvents(downloadBook, () => {
-				
+
 			})
 			addPressEvents(downloadBook, scaleDown, scaleUp)
 

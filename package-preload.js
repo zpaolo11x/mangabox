@@ -24,3 +24,7 @@ contextBridge.exposeInMainWorld('secureStore', {
 		return await keytar.deletePassword('MangaBox', account);
 	}
 });
+
+contextBridge.exposeInMainWorld('offlineAPI', {
+	downloadBook: (info) => ipcRenderer.invoke('download-and-store-book', info),
+});

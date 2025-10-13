@@ -1,6 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const keytar = require('keytar'); // ✅ keytar used here for secure token deletion
+const fs = require('fs/promises');
+const os = require('os');
+const StreamZip = require('node-stream-zip');
 
 let mainWindow;
 let rememberMe = false; // ✅ Track remember-me state
@@ -80,6 +83,7 @@ app.on('ready', async () => {
 		}
 	});
 
+
 	// Check URL changes and enable zoom conditionally
 	/* 
 	 mainWindow.webContents.on('did-navigate', (_, url) => {
@@ -108,4 +112,41 @@ app.on('before-quit', async () => {
 
 app.on('window-all-closed', () => {
 	app.quit();
+});
+
+ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, downloadUrl }) => {
+  try {
+    const baseDir = path.join(app.getPath('userData'), 'offline-books');
+    await fs.mkdir(baseDir, { recursive: true });
+
+    const bookFolder = path.join(baseDir, bookId);
+    await fs.mkdir(bookFolder, { recursive: true });
+
+    const zipPath = path.join(bookFolder, `${bookId}.cbz`);
+
+    // ✅ Download CBZ file
+    const res = await fetch(downloadUrl);
+    if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+    const buffer = Buffer.from(await res.arrayBuffer());
+    await fs.writeFile(zipPath, buffer);
+
+    // ✅ Extract CBZ
+    const zip = new StreamZip.async({ file: zipPath });
+    await zip.extract(null, bookFolder);
+    await zip.close();
+
+    // Optionally delete original CBZ to save space
+    await fs.unlink(zipPath);
+
+    // ✅ Save metadata
+    await fs.writeFile(
+      path.join(bookFolder, 'metadata.json'),
+      JSON.stringify({ id: bookId, title: bookTitle, downloadUrl, date: Date.now() }, null, 2)
+    );
+
+    return { ok: true, path: bookFolder };
+  } catch (err) {
+    console.error('❌ Download failed:', err);
+    return { ok: false, error: err.message };
+  }
 });
