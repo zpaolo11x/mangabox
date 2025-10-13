@@ -116,6 +116,13 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData }) => {
 	try {
+		const mimeToExt = {
+			'image/jpeg': 'jpg',
+			'image/png': 'png',
+			'image/webp': 'webp',
+			'image/gif': 'gif',
+		};
+
 		const baseDir = path.join(app.getPath('userData'), 'offline-books');
 		await fs.mkdir(baseDir, { recursive: true });
 
@@ -162,7 +169,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			const res = await fetch(pageUrl, requestData);
 			if (!res.ok) throw new Error(`Failed to fetch page ${page.number}: ${res.status}`);
 			const buffer = Buffer.from(await res.arrayBuffer());
-			await fs.writeFile(path.join(bookFolder, 'pages', page.fileName), buffer);
+			await fs.writeFile(path.join(bookFolder, 'pages', page.number + mimeToExt[page.mediaType]), buffer);
 
 			const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
 			console.log(`⬇️ Downloading thumb ${page.number}...`);
