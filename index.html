@@ -519,6 +519,7 @@
 				let tempDiv = document.getElementById(bookId);
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				tempDivChild.style.bottom = percent + '%';
+				tempDivChild.innerText = percent + '%';
 
 				
 				console.log(`📖 Book ${bookId}: ${percent}%`);
@@ -5157,6 +5158,7 @@
 					let tempDivChild = tempDiv.querySelector('.book-downloader');
 
 					tempDivChild.style.bottom = '30%';
+					tempDivChild.innerText="DOWNLOADING";
 
 					break;
 				default:

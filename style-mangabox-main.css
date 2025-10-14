@@ -130,6 +130,7 @@
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
+	--mb-card-color-alpha: #ffffff40;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
@@ -155,6 +156,7 @@
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
+	--mb-card-color-alpha: #35353540;
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
@@ -1283,13 +1285,17 @@ a {
 }
 
 .book-downloader{
+	display: flex;
 	position:absolute;
 	left:0;
 	top:0;
 	right:0;
 	bottom:100%;
-	background:var(--mb-card-color);
-	opacity:50%;
+	background-color: var(--mb-card-color-alpha);
+	backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  justify-content: center; /* horizontal centering */
+  align-items: center;     /* vertical centering */
 }
 
 .strip-button:hover {
