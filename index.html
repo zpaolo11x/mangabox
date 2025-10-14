@@ -533,6 +533,8 @@
 				tempDivChild.innerText = '';
 				tempDivChild.classList.add('done');
 
+				offlineCompletedBook(bookId);
+
 				console.log(`📖 Book ${bookId}: 100%`);
 			});
 		}
@@ -685,6 +687,8 @@
 			pointerItem: null,
 
 			webtoonScale: 100,
+
+			offlineBooks: {}
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
@@ -1681,6 +1685,28 @@
 		}
 
 		//MB Offline Download Functions
+
+		function offlineSaveTable() {
+			localStorage.setItem('mbOfflineBooks', JSON.stringify(mb.offlineBooks));
+		}
+
+		function offlineAddBook(bookId) {
+			mb.offlineBooks[bookId] = {
+				status: 'requested'
+			};
+			offlineSaveTable();
+		}
+
+		function offlineCompletedBook(bookId) {
+			mb.offlineBooks[bookId].status = 'completed';
+			offlineSaveTable();
+		}
+
+		function offlineIsBookCompleted(bookId) {
+			if (!mb.offlineBooks) return false;
+			const book = mb.offlineBooks[bookId];
+			return book && book.status === 'completed';
+		}
 
 		async function electronDownloadBook(bookId, bookTitle) {
 			let request = buildRequest(mb.authToken, 'GET', null)
@@ -2834,9 +2860,13 @@
 				className: 'book-item'
 			});
 
-			const booksDownloader = addItem('div', {
+			const bookDownloadUI = addItem('div', {
 				className: 'book-downloader'
 			});
+
+			if (offlineIsBookCompleted(book.id)){
+				bookDownloadUI.classList.add('done');
+			}
 
 			const mainRow = addItem('div', {
 				className: 'data-row top-row'
@@ -2970,7 +3000,8 @@
 				innerHTML: `<span class="fa-solid fa-download"></span>`
 			});
 			addClickPointerEvents(downloadBook, () => {
-				booksDownloader.classList.remove('done');
+				bookDownloadUI.classList.remove('done');
+				offlineAddBook(book.id);
 				electronDownloadBook(book.id, "temp_" + book.id)
 			})
 			addPressEvents(downloadBook, scaleDown, scaleUp)
@@ -2996,7 +3027,7 @@
 
 			thumbnailWrapper.append(
 				bookThumbnail,
-				booksDownloader,
+				bookDownloadUI,
 				bookFader,
 				bookOverlay,
 				bookStatus,
@@ -5168,8 +5199,8 @@
 					let tempDiv = document.getElementById('0HA1NKKJSWAZ0');
 					let tempDivChild = tempDiv.querySelector('.book-downloader');
 					tempDivChild.classList.remove('done');
-					tempDivChild.style.bottom = '90%';
-					tempDivChild.innerText = "90%";
+					tempDivChild.style.bottom = '40%';
+					tempDivChild.innerText = "40%";
 
 					break;
 				case 'S':
@@ -5177,7 +5208,7 @@
 					console.log(document.getElementById('0HA1NKKJSWAZ0'));
 					let tempDiv2 = document.getElementById('0HA1NKKJSWAZ0');
 					let tempDivChild2 = tempDiv2.querySelector('.book-downloader');
-					
+
 					tempDivChild2.style.bottom = '';
 					tempDivChild2.classList.add('done');
 					tempDivChild2.innerText = "";

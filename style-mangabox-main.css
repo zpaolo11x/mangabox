@@ -130,7 +130,7 @@
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
-	--mb-card-color-alpha: #ffffff40;
+	--mb-card-color-alpha: #ffffff65;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
@@ -156,7 +156,7 @@
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
-	--mb-card-color-alpha: #35353540;
+	--mb-card-color-alpha: #35353565;
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
@@ -1293,8 +1293,8 @@ a {
 	right: 0;
 	bottom: 100%;
 	background-color: var(--mb-card-color-alpha);
-	backdrop-filter: blur(8px);
-	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
 	/* horizontal centering */
 	justify-content: center;
 	/* vertical centering */
@@ -1302,6 +1302,7 @@ a {
 	border-radius: inherit;
 	font-size: 40px;
 	transition: bottom 0.3s;
+	text-shadow: rgba(0,0,0,0.5) 0px 2px 6px
 }
 
 .book-downloader.done {
