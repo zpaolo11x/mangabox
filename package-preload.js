@@ -27,13 +27,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	sendRememberMe: (value) => 
 		ipcRenderer.send('remember-me-state', value),
 
-	// Manage offline download progress
-	onDownloadProgress: (callback) =>
-		ipcRenderer.on('download-progress', (_, data) => callback(data)),
-	onDownloadError: (callback) =>
-		ipcRenderer.on('download-error', (_, data) => callback(data)),
-	onDownloadComplete: (callback) =>
-		ipcRenderer.on('download-complete', (_, data) => callback(data)),
 });
 
 contextBridge.exposeInMainWorld('secureStore', {
@@ -49,5 +42,15 @@ contextBridge.exposeInMainWorld('secureStore', {
 });
 
 contextBridge.exposeInMainWorld('offlineAPI', {
-	downloadBook: (info) => ipcRenderer.invoke('download-and-store-book', info),
+	downloadBook: (info) =>
+		ipcRenderer.invoke('download-and-store-book', info),
+
+	onDownloadProgress: (callback) =>
+		ipcRenderer.on('download-progress', (_, data) => callback(data)),
+
+	onDownloadError: (callback) =>
+		ipcRenderer.on('download-error', (_, data) => callback(data)),
+	
+	onDownloadComplete: (callback) =>
+		ipcRenderer.on('download-complete', (_, data) => callback(data)),
 });

@@ -512,18 +512,28 @@
 			});
 
 			// Listen for progress updates from main
-			window.electronAPI.onDownloadProgress((data) => {
+			window.offlineAPI.onDownloadProgress((data) => {
 				const { bookId, completed, total } = data;
 				const percent = Math.round((completed / total) * 100);
-				
+
 				let tempDiv = document.getElementById(bookId);
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				tempDivChild.style.bottom = percent + '%';
 				tempDivChild.innerText = percent + '%';
 
-				
+
 				console.log(`📖 Book ${bookId}: ${percent}%`);
-				//document.querySelector('#progress-bar').value = percent;
+			});
+
+			window.offlineAPI.onDownloadComplete((data) => {
+				const { bookId, completed, total } = data;
+
+				let tempDiv = document.getElementById(bookId);
+				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				tempDivChild.innerText = '';
+				tempDivChild.classList.add('done');
+
+				console.log(`📖 Book ${bookId}: 100%`);
 			});
 		}
 
@@ -2960,6 +2970,7 @@
 				innerHTML: `<span class="fa-solid fa-download"></span>`
 			});
 			addClickPointerEvents(downloadBook, () => {
+				booksDownloader.classList.remove('done');
 				electronDownloadBook(book.id, "temp_" + book.id)
 			})
 			addPressEvents(downloadBook, scaleDown, scaleUp)
@@ -5156,9 +5167,20 @@
 					console.log(document.getElementById('0HA1NKKJSWAZ0'));
 					let tempDiv = document.getElementById('0HA1NKKJSWAZ0');
 					let tempDivChild = tempDiv.querySelector('.book-downloader');
-
+					tempDivChild.classList.remove('done');
 					tempDivChild.style.bottom = '30%';
-					tempDivChild.innerText="DOWNLOADING";
+					tempDivChild.innerText = "DOWNLOADING";
+
+					break;
+				case 'S':
+					console.log('pressed S')
+					console.log(document.getElementById('0HA1NKKJSWAZ0'));
+					let tempDiv2 = document.getElementById('0HA1NKKJSWAZ0');
+					let tempDivChild2 = tempDiv2.querySelector('.book-downloader');
+
+					tempDivChild2.classList.add('done');
+					tempDivChild2.innerText = "";
+					//tempDivChild2.innerHTML = "<span class='fa-circle fa-solid download-glyph'></span>";
 
 					break;
 				default:

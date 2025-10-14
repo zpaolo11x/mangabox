@@ -193,6 +193,12 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		}
 
 		console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
+		win.webContents.send('download-complete', {
+			bookId,
+			completed,
+			total: bookMeta.media.pagesCount,
+		});
+		
 		return { ok: true, path: bookFolder };
 	} catch (err) {
 		console.error('❌ Download failed:', err);

@@ -1296,6 +1296,35 @@ a {
   -webkit-backdrop-filter: blur(8px);
   justify-content: center; /* horizontal centering */
   align-items: center;     /* vertical centering */
+	border-radius:inherit;
+}
+
+.book-downloader.done{
+	position:relative;
+	top: 0px;
+	left:0px;
+	bottom:0px;
+	height:0px;
+	width:0px;
+	right:0px;
+
+	box-sizing: border-box;
+	border: none;
+	border-top: 10px solid green;
+	border-right: 10px solid transparent;
+	border-left: 10px solid green;
+	border-bottom: 10px solid transparent;
+
+	background:transparent;
+	backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.download-glyph{
+	position: absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
 }
 
 .strip-button:hover {
