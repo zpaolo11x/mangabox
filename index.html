@@ -5160,8 +5160,9 @@
 				rd.isDraggingProgressBar = false;
 			}
 		});
-
-		document.addEventListener('keydown', (event) => {
+		
+//TODO: RIMUOVERE ASYNC DA QUI
+		document.addEventListener('keydown', async (event) => {
 			const readerVisible = !isSectionHidden(readerContainer);
 
 			switch (event.key) {
@@ -5210,7 +5211,7 @@
 					tempDivChild.style.bottom = '40%';
 					tempDivChild.innerText = "40%";
 
-					const { json1, json2, path } = loadOfflineBook('0HA1NKKJSWAZ0');
+					const { json1, json2, path } = await loadOfflineBook('0HA1NKKJSWAZ0');
 					console.log(json1);
 					console.log(json2);
 
