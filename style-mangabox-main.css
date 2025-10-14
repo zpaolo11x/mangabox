@@ -1282,6 +1282,16 @@ a {
 	cursor: pointer;
 }
 
+.book-downloader{
+	position:absolute;
+	left:0;
+	top:0;
+	right:0;
+	bottom:100%;
+	background:var(--mb-card-color);
+	opacity:50%;
+}
+
 .strip-button:hover {
 	opacity: 0.7;
 }

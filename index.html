@@ -515,6 +515,12 @@
 			window.electronAPI.onDownloadProgress((data) => {
 				const { bookId, completed, total } = data;
 				const percent = Math.round((completed / total) * 100);
+				
+				let tempDiv = document.getElementById(bookId);
+				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				tempDivChild.style.bottom = percent + '%';
+
+				
 				console.log(`📖 Book ${bookId}: ${percent}%`);
 				//document.querySelector('#progress-bar').value = percent;
 			});
@@ -2817,6 +2823,10 @@
 				className: 'book-item'
 			});
 
+			const booksDownloader = addItem('div', {
+				className: 'book-downloader'
+			});
+
 			const mainRow = addItem('div', {
 				className: 'data-row top-row'
 			});
@@ -2974,9 +2984,10 @@
 
 			thumbnailWrapper.append(
 				bookThumbnail,
+				booksDownloader,
 				bookFader,
 				bookOverlay,
-				bookStatus
+				bookStatus,
 			);
 
 			progressBar.append(progressGauge);
@@ -5143,9 +5154,9 @@
 					console.log('pressed A')
 					console.log(document.getElementById('0HA1NKKJSWAZ0'));
 					let tempDiv = document.getElementById('0HA1NKKJSWAZ0');
-					let tempDivChild = tempDiv.querySelector('.book-item');
+					let tempDivChild = tempDiv.querySelector('.book-downloader');
 
-					tempDivChild.style.boxShadow = 'inset 0px 0px 20px 1px red';
+					tempDivChild.style.bottom = '30%';
 
 					break;
 				default:
