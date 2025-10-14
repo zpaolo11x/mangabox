@@ -5211,9 +5211,9 @@
 					tempDivChild.style.bottom = '40%';
 					tempDivChild.innerText = "40%";
 
-					const { json1, json2, path } = await loadOfflineBook('0HA1NKKJSWAZ0');
-					console.log(json1);
-					console.log(json2);
+					const { bookMetadata, pagesMetadata, bookPath } = await loadOfflineBook('0HA1NKKJSWAZ0');
+					console.log(bookMetadata);
+					console.log(pagesMetadata);
 
 
 					break;
