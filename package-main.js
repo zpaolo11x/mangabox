@@ -117,9 +117,13 @@ app.on('window-all-closed', () => {
 ipcMain.handle('get-offline-book-data', async (_, bookId) => {
   try {
     const bookPath = path.join(app.getPath('userData'), 'offline-books', bookId);
+	
+	 console.log("***"+bookPath);
 
     const bookMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-book.json'), 'utf-8'));
     const pagesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-pages.json'), 'utf-8'));
+	 console.log("***"+bookMetadata);
+	 console.log("***"+pagesMetadata);
 
     return { bookMetadata, pagesMetadata, bookPath };
   } catch (err) {
