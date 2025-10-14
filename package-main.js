@@ -188,7 +188,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			win.webContents.send('download-progress', {
 				bookId,
 				completed,
-				total: pages.length,
+				total: bookMeta.media.pagesCount,
 			});
 		}
 
