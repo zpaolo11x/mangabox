@@ -295,6 +295,7 @@
 		}
 
 		const isElectronApp = !!window.electronAPI;
+
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		let capacitorPlatform = null;
@@ -508,6 +509,14 @@
 
 			window.electronAPI.getAppVersion().then(version => {
 				dragbarAppTitle.textContent = 'MangaBox v' + version;
+			});
+
+			// Listen for progress updates from main
+			window.electronAPI.onDownloadProgress((data) => {
+				const { bookId, completed, total } = data;
+				const percent = Math.round((completed / total) * 100);
+				console.log(`📖 Book ${bookId}: ${percent}%`);
+				//document.querySelector('#progress-bar').value = percent;
 			});
 		}
 
@@ -1662,7 +1671,7 @@
 				bookId: bookId,
 				bookTitle: bookTitle,
 				baseUrl: `${mb.baseUrl}`,
-				requestData: request // e.g., "Basic xxxxx" from your login
+				requestData: request
 			});
 		}
 
@@ -2940,7 +2949,7 @@
 				innerHTML: `<span class="fa-solid fa-download"></span>`
 			});
 			addClickPointerEvents(downloadBook, () => {
-				electronDownloadBook(book.id, "temp_"+book.id)
+				electronDownloadBook(book.id, "temp_" + book.id)
 			})
 			addPressEvents(downloadBook, scaleDown, scaleUp)
 

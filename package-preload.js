@@ -3,14 +3,37 @@ const { contextBridge, ipcRenderer } = require('electron');
 const keytar = require('keytar');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-	minimize: () => ipcRenderer.send('window-minimize'),
-	maximize: () => ipcRenderer.send('window-maximize'),
-	close: () => ipcRenderer.send('window-close'),
-	onFullscreenChange: (callback) => ipcRenderer.on('fullscreen-changed', (_, isFullscreen) => callback(isFullscreen)),
-	onMaximize: (callback) => ipcRenderer.on('window-maximized', callback),
-	onUnmaximize: (callback) => ipcRenderer.on('window-unmaximized', callback),
-	getAppVersion: () => ipcRenderer.invoke('get-app-version'),
-	sendRememberMe: (value) => ipcRenderer.send('remember-me-state', value),
+	// Window functions
+	minimize: () => 
+		ipcRenderer.send('window-minimize'),
+	maximize: () => 
+		ipcRenderer.send('window-maximize'),
+	close: () => 
+		ipcRenderer.send('window-close'),
+
+	// Fullscreen management
+	onFullscreenChange: (callback) => 
+		ipcRenderer.on('fullscreen-changed', (_, isFullscreen) => callback(isFullscreen)),
+	onMaximize: (callback) => 
+		ipcRenderer.on('window-maximized', callback),
+	onUnmaximize: (callback) => 
+		ipcRenderer.on('window-unmaximized', callback),
+
+	// App version
+	getAppVersion: () => 
+		ipcRenderer.invoke('get-app-version'),
+
+	// Manage remember me
+	sendRememberMe: (value) => 
+		ipcRenderer.send('remember-me-state', value),
+
+	// Manage offline download progress
+	onDownloadProgress: (callback) =>
+		ipcRenderer.on('download-progress', (_, data) => callback(data)),
+	onDownloadError: (callback) =>
+		ipcRenderer.on('download-error', (_, data) => callback(data)),
+	onDownloadComplete: (callback) =>
+		ipcRenderer.on('download-complete', (_, data) => callback(data)),
 });
 
 contextBridge.exposeInMainWorld('secureStore', {

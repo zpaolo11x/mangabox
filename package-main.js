@@ -115,22 +115,26 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData }) => {
+	const win = BrowserWindow.getFocusedWindow(); // or keep a ref to your main window
+
+	const baseDir = path.join(app.getPath('userData'), 'offline-books');
+	await fs.mkdir(baseDir, { recursive: true });
+
+	const bookFolder = path.join(baseDir, bookId);
+	await fs.mkdir(bookFolder, { recursive: true });
+	await fs.mkdir(path.join(bookFolder, 'pages'), { recursive: true });
+	await fs.mkdir(path.join(bookFolder, 'thumbs'), { recursive: true });
+
+	const mimeToExt = {
+		'image/jpeg': '.jpg',
+		'image/png': '.png',
+		'image/webp': '.webp',
+		'image/gif': '.gif',
+	};
+
+	let completed = 0;
+
 	try {
-		const mimeToExt = {
-			'image/jpeg': '.jpg',
-			'image/png': '.png',
-			'image/webp': '.webp',
-			'image/gif': '.gif',
-		};
-
-		const baseDir = path.join(app.getPath('userData'), 'offline-books');
-		await fs.mkdir(baseDir, { recursive: true });
-
-		const bookFolder = path.join(baseDir, bookId);
-		await fs.mkdir(bookFolder, { recursive: true });
-		await fs.mkdir(path.join(bookFolder, 'pages'), { recursive: true });
-		await fs.mkdir(path.join(bookFolder, 'thumbs'), { recursive: true });
-
 
 		console.log('🌐 Downloading book metadata for', bookId);
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
@@ -164,6 +168,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 
 		for (const page of pagesMeta) {
+
 			const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
 			console.log(`⬇️ Downloading page ${page.number}...`);
 			const res = await fetch(pageUrl, requestData);
@@ -178,6 +183,13 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			const buffer2 = Buffer.from(await res2.arrayBuffer());
 			await fs.writeFile(path.join(bookFolder, 'thumbs', 't_' + page.number + '.jpg'), buffer2);
 
+			completed++;
+
+			win.webContents.send('download-progress', {
+				bookId,
+				completed,
+				total: pages.length,
+			});
 		}
 
 		console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
