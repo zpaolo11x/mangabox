@@ -4,27 +4,27 @@ const keytar = require('keytar');
 
 contextBridge.exposeInMainWorld('electronAPI', {
 	// Window functions
-	minimize: () => 
+	minimize: () =>
 		ipcRenderer.send('window-minimize'),
-	maximize: () => 
+	maximize: () =>
 		ipcRenderer.send('window-maximize'),
-	close: () => 
+	close: () =>
 		ipcRenderer.send('window-close'),
 
 	// Fullscreen management
-	onFullscreenChange: (callback) => 
+	onFullscreenChange: (callback) =>
 		ipcRenderer.on('fullscreen-changed', (_, isFullscreen) => callback(isFullscreen)),
-	onMaximize: (callback) => 
+	onMaximize: (callback) =>
 		ipcRenderer.on('window-maximized', callback),
-	onUnmaximize: (callback) => 
+	onUnmaximize: (callback) =>
 		ipcRenderer.on('window-unmaximized', callback),
 
 	// App version
-	getAppVersion: () => 
+	getAppVersion: () =>
 		ipcRenderer.invoke('get-app-version'),
 
 	// Manage remember me
-	sendRememberMe: (value) => 
+	sendRememberMe: (value) =>
 		ipcRenderer.send('remember-me-state', value),
 
 	// File access
@@ -53,10 +53,12 @@ contextBridge.exposeInMainWorld('offlineAPI', {
 
 	onDownloadError: (callback) =>
 		ipcRenderer.on('download-error', (_, data) => callback(data)),
-	
+
 	onDownloadComplete: (callback) =>
 		ipcRenderer.on('download-complete', (_, data) => callback(data)),
 
-	getOfflineBooksPath: () => ipcRenderer.invoke('get-offline-books-path'),
+	getOfflineBookData: async (bookId) => {
+		return await ipcRenderer.invoke('get-offline-book-data', bookId);
+	},
 
 });

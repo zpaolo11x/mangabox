@@ -1720,13 +1720,9 @@
 		}
 
 		async function loadOfflineBook(bookId) {
-			const path  = await window.offlineAPI.getOfflineBooksPath();
-			const bookPath = path.join(path, bookId);
+			const bookData = window.offlineAPI.getOfflineBookData(bookId)
 
-			const metadataBook = JSON.parse(await window.electronAPI.readFile(`${path}/metadata-book.json`));
-			const metadataPages = JSON.parse(await window.electronAPI.readFile(`${path}/metadata-pages.json`));
-
-			return { metadataBook, metadataPages };
+			return bookData;
 		}
 
 
@@ -5214,7 +5210,7 @@
 					tempDivChild.style.bottom = '40%';
 					tempDivChild.innerText = "40%";
 
-					const { json1, json2 } = loadOfflineBook('0HA1NKKJSWAZ0');
+					const { json1, json2, path } = loadOfflineBook('0HA1NKKJSWAZ0');
 					console.log(json1);
 					console.log(json2);
 

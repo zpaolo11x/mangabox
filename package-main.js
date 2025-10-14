@@ -114,9 +114,18 @@ app.on('window-all-closed', () => {
 	app.quit();
 });
 
-ipcMain.handle('get-offline-books-path', async () => {
-	const baseDir = path.join(app.getPath('userData'), 'offline-books');
-	return baseDir
+ipcMain.handle('get-offline-book-data', async (_, bookId) => {
+  try {
+    const bookPath = path.join(app.getPath('userData'), 'offline-books', bookId);
+
+    const bookMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-book.json'), 'utf-8'));
+    const pagesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-pages.json'), 'utf-8'));
+
+    return { bookMetadata, pagesMetadata, bookPath };
+  } catch (err) {
+    console.error('❌ Failed to read offline book data:', err);
+    throw err;
+  }
 });
 
 ipcMain.handle('read-file', async (_, filePath) => {
