@@ -1222,10 +1222,10 @@ a {
 
 .home-strip {
 	gap: 16px;
-	padding: 10px var(--mb-area-padding) 30px var(--mb-area-padding);
+	padding: 40px var(--mb-area-padding) 30px var(--mb-area-padding);
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
-padding-top:30px;
+
 	transition: opacity 0.3s ease;
 	/*flex-wrap:wrap;*/
 	display: flex;
