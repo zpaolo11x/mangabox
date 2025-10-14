@@ -5168,8 +5168,8 @@
 					let tempDiv = document.getElementById('0HA1NKKJSWAZ0');
 					let tempDivChild = tempDiv.querySelector('.book-downloader');
 					tempDivChild.classList.remove('done');
-					tempDivChild.style.bottom = '30%';
-					tempDivChild.innerText = "DOWNLOADING";
+					tempDivChild.style.bottom = '90%';
+					tempDivChild.innerText = "90%";
 
 					break;
 				case 'S':
@@ -5177,7 +5177,8 @@
 					console.log(document.getElementById('0HA1NKKJSWAZ0'));
 					let tempDiv2 = document.getElementById('0HA1NKKJSWAZ0');
 					let tempDivChild2 = tempDiv2.querySelector('.book-downloader');
-
+					
+					tempDivChild2.style.bottom = '';
 					tempDivChild2.classList.add('done');
 					tempDivChild2.innerText = "";
 					//tempDivChild2.innerHTML = "<span class='fa-circle fa-solid download-glyph'></span>";

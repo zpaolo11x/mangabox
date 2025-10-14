@@ -378,7 +378,7 @@ body {
 	border-radius:50%;
 	*/
 	/*width: 10px;*/
-	height:10px;
+	height: 10px;
 }
 
 #debuggerObj {
@@ -569,7 +569,8 @@ a {
 
 /* Sticky container for libraries */
 #stickyContainer {
-	position:relative; /*added to fit offline to the bottom right*/
+	position: relative;
+	/*added to fit offline to the bottom right*/
 	grid-row: 1;
 	display: flex;
 	align-items: center;
@@ -1081,7 +1082,7 @@ a {
 }
 
 .mini-buttons.mark-as-unread {
-	bottom:10px;
+	bottom: 10px;
 	left: calc((100% - 20px - 50px - 50px) / 3 + 10px + 25px);
 	/*
 	text-align: center;
@@ -1093,7 +1094,7 @@ a {
 }
 
 .mini-buttons.book-details {
-	bottom:10px;
+	bottom: 10px;
 	right: calc((100% - 20px - 50px - 50px) / 3 + 10px + 25px);
 	/*
 	left: 10px;
@@ -1101,8 +1102,8 @@ a {
 	*/
 }
 
-.mini-buttons.book-details.half-bright{
-	display:none;
+.mini-buttons.book-details.half-bright {
+	display: none;
 }
 
 .mini-buttons.download-book {
@@ -1284,29 +1285,33 @@ a {
 	cursor: pointer;
 }
 
-.book-downloader{
+.book-downloader {
 	display: flex;
-	position:absolute;
-	left:0;
-	top:0;
-	right:0;
-	bottom:100%;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 100%;
 	background-color: var(--mb-card-color-alpha);
 	backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  justify-content: center; /* horizontal centering */
-  align-items: center;     /* vertical centering */
-	border-radius:inherit;
+	-webkit-backdrop-filter: blur(8px);
+	/* horizontal centering */
+	justify-content: center;
+	/* vertical centering */
+	align-items: end;
+	border-radius: inherit;
+	font-size: 40px;
+	transition: bottom 0.3s;
 }
 
-.book-downloader.done{
-	position:relative;
+.book-downloader.done {
+	position: relative;
 	top: 0px;
-	left:0px;
-	bottom:0px;
-	height:0px;
-	width:0px;
-	right:0px;
+	left: 0px;
+	bottom: 0px;
+	height: 0px;
+	width: 0px;
+	right: 0px;
 
 	box-sizing: border-box;
 	border: none;
@@ -1315,15 +1320,15 @@ a {
 	border-left: 10px solid green;
 	border-bottom: 10px solid transparent;
 
-	background:transparent;
+	background: transparent;
 	backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+	-webkit-backdrop-filter: none;
 }
 
-.download-glyph{
+.download-glyph {
 	position: absolute;
-	top:50%;
-	left:50%;
+	top: 50%;
+	left: 50%;
 	transform: translate(-50%, -50%);
 }
 
@@ -1337,7 +1342,7 @@ a {
 	display: grid;
 	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + env(safe-area-inset-right))));
 	gap: 10px;
-	width:100%;
+	width: 100%;
 	height: 30px;
 }
 
@@ -2075,6 +2080,7 @@ body.sticky-small #bookDetailsContainer {
 body.sticky-small #seriesMiniHeader {
 	top: calc(114px + var(--mb-top-spacer));
 }
+
 /*
 body.offline #stickyContainer {
 	background: linear-gradient(115deg,
