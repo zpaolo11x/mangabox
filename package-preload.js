@@ -27,6 +27,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	sendRememberMe: (value) => 
 		ipcRenderer.send('remember-me-state', value),
 
+	// File access
+	readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
+
 });
 
 contextBridge.exposeInMainWorld('secureStore', {
@@ -53,4 +56,7 @@ contextBridge.exposeInMainWorld('offlineAPI', {
 	
 	onDownloadComplete: (callback) =>
 		ipcRenderer.on('download-complete', (_, data) => callback(data)),
+
+	getOfflineBooksPath: () => ipcRenderer.invoke('get-offline-book-path'),
+
 });

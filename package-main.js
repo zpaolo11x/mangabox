@@ -114,6 +114,21 @@ app.on('window-all-closed', () => {
 	app.quit();
 });
 
+ipcMain.handle('get-offline-books-path', async () => {
+	const baseDir = path.join(app.getPath('userData'), 'offline-books');
+	return baseDir
+});
+
+ipcMain.handle('read-file', async (_, filePath) => {
+	try {
+		const data = await fs.readFile(filePath, 'utf-8');
+		return data;
+	} catch (err) {
+		console.error('Failed to read file:', filePath, err);
+		throw err;
+	}
+});
+
 ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData }) => {
 	const win = BrowserWindow.getFocusedWindow(); // or keep a ref to your main window
 
