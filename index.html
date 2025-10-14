@@ -688,7 +688,8 @@
 
 			webtoonScale: 100,
 
-			offlineBooks: {}
+			offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
+
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
