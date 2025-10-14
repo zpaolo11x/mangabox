@@ -1225,7 +1225,7 @@ a {
 	padding: 10px var(--mb-area-padding) 30px var(--mb-area-padding);
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
-
+padding-top:30px;
 	transition: opacity 0.3s ease;
 	/*flex-wrap:wrap;*/
 	display: flex;
@@ -1287,10 +1287,13 @@ a {
 }
 
 .strip-header-container {
+	position: absolute;
 	margin-top: 0px;
 	display: grid;
 	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + env(safe-area-inset-right))));
 	gap: 10px;
+	width:100%;
+	height: 30px;
 }
 
 #stripGridHeaderContainer {
