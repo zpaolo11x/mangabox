@@ -4167,7 +4167,7 @@
 
 			// Create pageData structure with the fields from fetched data
 			const pageData = komgaPageData.map(page => ({
-				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.filename}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.fileName}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
