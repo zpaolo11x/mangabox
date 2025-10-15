@@ -1337,8 +1337,13 @@ a {
 	opacity: 0.7;
 }
 
+.home-strip-parent{
+	position:relative;
+}
+
 .strip-header-container {
 	position: absolute;
+	top:0;
 	margin-top: 0px;
 	display: grid;
 	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + env(safe-area-inset-right))));
