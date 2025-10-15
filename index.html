@@ -3782,9 +3782,17 @@
 
 		// Initialize viewer with page data
 		async function initViewer() {
-			updatePWABar(rd.titleBarColor);
+			//TODO questa si può estrarre come quella di buildbookitem
+			let offline = {};
+			let useOfflineCopy = offlineSession && offlineIsBookCompleted(rd.bookId);
+			if (useOfflineCopy) {
+				offline = await loadOfflineBook(book.id);
+			}
 
-			const bookData = await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
+
+			updatePWABar(rd.titleBarColor);
+			
+			const bookData = useOfflineCopy ? offline.bookMeta : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
 			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
@@ -3797,8 +3805,8 @@
 			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
 
 			const pagesData = !rd.webtoon ?
-				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne) :
-				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne);
+				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
+				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
@@ -4022,7 +4030,7 @@
 			pageObjectL.uiContainer.append(coverlayL);
 		}
 
-		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne) {
+		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
@@ -4132,10 +4140,12 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
+		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
+
+			let useOfflineCopy = !(offline == {});
 
 			// Get the pages data structure from komga for the current book
-			const komgaPageData = await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
+			const komgaPageData = useOfflineCopy ? offline.pageMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
