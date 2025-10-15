@@ -3788,7 +3788,8 @@
 		// Initialize viewer with page data
 		async function initViewer() {
 			//TODO questa si può estrarre come quella di buildbookitem
-			let offline = {};
+			let offline = null;
+
 			let useOfflineCopy = offlineSession && offlineIsBookCompleted(rd.bookId);
 			if (useOfflineCopy) {
 				offline = await loadOfflineBook(rd.bookId);
@@ -4157,8 +4158,10 @@
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
+console.log("offline:")
+console.log(offline);
 
-			let useOfflineCopy = !(offline == {});
+			let useOfflineCopy = !(offline == null);
 			console.log("FETCH - useOfflineCopy:" + useOfflineCopy);
 
 			// Get the pages data structure from komga for the current book
