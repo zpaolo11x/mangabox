@@ -1299,7 +1299,7 @@ a {
 	justify-content: center;
 	/* vertical centering */
 	align-items: end;
-	border-radius: inherit;
+	border-radius: var(--mb-cover-radius) var(--mb-cover-radius) 0px var(--mb-cover-radius);
 	font-size: 40px;
 	transition: bottom 0.3s;
 	text-shadow: rgba(0,0,0,0.5) 0px 2px 6px
