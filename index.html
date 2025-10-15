@@ -4147,9 +4147,12 @@
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
 
 			let useOfflineCopy = !(offline == {});
+			console.log("FETCH - useOfflineCopy:"+useOfflineCopy);
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = useOfflineCopy ? offline.pageMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
+			console.log("FETCH - komgaPageData:");
+			console.log(komgaPageData);
 
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
