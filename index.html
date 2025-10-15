@@ -100,17 +100,22 @@
 				<div id="homeStripsContainer" class="section hidden"></div>
 
 				<div id="searchStripsContainer" class="section hidden">
-					<div class="strip-header-container">
-						<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
-					</div>
-					<div id="homeStripSeriesResults" class="series-results search-results"></div>
 
-					<div class="strip-header-container">
-						<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+					<div class="home-strip-parent">
+						<div id="homeStripSeriesResults" class="series-results search-results"></div>
+						<div class="strip-header-container">
+							<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
+						</div>
 					</div>
-					<div id="homeStripBooksResults" class="books-results search-results"></div>
+
+					<div class="home-strip-parent">
+						<div id="homeStripBooksResults" class="books-results search-results"></div>
+						<div class="strip-header-container">
+							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+						</div>
+					</div>
+
 				</div>
-
 				<div id="bookDetailsContainer" class="section hidden blankstart">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
@@ -3288,7 +3293,7 @@
 
 			item.scrollBar.append(item.scrollInput);
 			headerContainer.append(stripHeader, item.scrollBar, item.gridButton);
-			item.element.append(item.homeStrip,headerContainer);
+			item.element.append(item.homeStrip, headerContainer);
 			homeStripsContainer.append(item.element);
 
 		});

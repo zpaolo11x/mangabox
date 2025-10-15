@@ -1439,13 +1439,22 @@ a {
 
 #seriesGrid,
 #booksGrid,
-#stripGrid,
+#stripGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(var(--mb-card-min-width), max-content));
+	gap: 16px;
+	padding: 20px var(--mb-area-padding);
+	padding-left: var(--mb-area-safe-padding-left);
+	padding-right: var(--mb-area-safe-padding-right);
+	transition: opacity 0.3s ease;
+}
+
 #homeStripSeriesResults,
 #homeStripBooksResults {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(var(--mb-card-min-width), max-content));
 	gap: 16px;
-	padding: 20px var(--mb-area-padding);
+	padding: 40px var(--mb-area-padding) 30px var(--mb-area-padding);
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
