@@ -2860,6 +2860,20 @@
 		//MB Book Item Creation
 
 		async function buildBookItem(item, book, format, target) {
+
+			// Check local proxy list if book is available and completed offline
+			// and tell the system to use this offline copy if we are offline
+
+			const bookIsOffline = offlineIsBookCompleted(book.id);
+			const useOfflineCopy = (offlineSession && bookIsOffline);
+			let offline = {};
+
+			if (useOfflineCopy) {
+				console.log("Fetching downloaded copy of book metadata")
+				offline = await loadOfflineBook(book.id);
+				book = offline.bookMetadata;
+			}
+
 			item.childNodes[0]?.remove();
 
 			item.title = 'Read book';
@@ -2872,9 +2886,7 @@
 				className: 'book-downloader'
 			});
 
-			if (offlineIsBookCompleted(book.id)){
-				bookDownloadUI.classList.add('done');
-			}
+			if (bookIsOffline) bookDownloadUI.classList.add('done');
 
 			const mainRow = addItem('div', {
 				className: 'data-row top-row'
@@ -2940,7 +2952,7 @@
 			const bookThumbnail = addItem('img', {
 				className: 'book-thumbnail hidden',
 				src: 'transparent.png',
-				lazySrc: `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`,
+				lazySrc: useOfflineCopy ? `${offline.bookPath}/thumbnail.jpg` : `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`,
 				alt: book.metadata.title
 			});
 
@@ -3044,9 +3056,9 @@
 			progressBar.append(progressGauge);
 
 			addTouchScaler(booksItem, async () => {
-				if (offlineSession) return;
+				if (offlineSession && !bookIsOffline) return;
 
-				const seriesData = await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
+				const seriesData = useOfflineCopy ? offline.seriesMetadata : await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
 				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
@@ -5211,7 +5223,7 @@
 					tempDivChild.style.bottom = '40%';
 					tempDivChild.innerText = "40%";
 
-					const { bookMetadata, pagesMetadata, bookPath } = await loadOfflineBook('0HA1NKKJSWAZ0');
+					const { bookMetadata, pagesMetadata, seriesMetadata, bookPath } = await loadOfflineBook('0HA1NKKJSWAZ0');
 					console.log(bookMetadata);
 					console.log(pagesMetadata);
 

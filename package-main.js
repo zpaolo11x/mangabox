@@ -122,10 +122,9 @@ ipcMain.handle('get-offline-book-data', async (_, bookId) => {
 
     const bookMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-book.json'), 'utf-8'));
     const pagesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-pages.json'), 'utf-8'));
-	 console.log("***"+bookMetadata);
-	 console.log("***"+pagesMetadata);
+    const seriesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-series.json'), 'utf-8'));
 
-    return { bookMetadata, pagesMetadata, bookPath };
+    return { bookMetadata, pagesMetadata, seriesMetadata, bookPath };
   } catch (err) {
     console.error('❌ Failed to read offline book data:', err);
     throw err;
@@ -171,9 +170,21 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		// ✅ Get JSON from Komga
 		const bookMeta = await res.json();
 		// ✅ Save the full metadata to the folder
-		const mbookMetaPath = path.join(bookFolder, 'metadata-book.json');
-		await fs.writeFile(mbookMetaPath, JSON.stringify(bookMeta, null, 2));
-		console.log('💾 Book metadata saved to', mbookMetaPath);
+		const bookMetaPath = path.join(bookFolder, 'metadata-book.json');
+		await fs.writeFile(bookMetaPath, JSON.stringify(bookMeta, null, 2));
+		console.log('💾 Book metadata saved to', bookMetaPath);
+
+
+		console.log('🌐 Downloading series metadata for', bookId);
+		res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
+		console.log('🌐 Fetch response status:', res.status);
+		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+		// ✅ Get JSON from Komga
+		const seriesMeta = await res.json();
+		// ✅ Save the full metadata to the folder
+		const seriesMetaPath = path.join(bookFolder, 'metadata-series.json');
+		await fs.writeFile(seriesMetaPath, JSON.stringify(seriesMeta, null, 2));
+		console.log('💾 Series metadata saved to', seriesMetaPath);
 
 
 		console.log('🌐 Downloading pages metadata for', bookId);
