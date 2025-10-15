@@ -743,7 +743,7 @@
 			let seed = Math.random();
 			console.log(seed + " ONLINE CHECK")
 			try {
-				const ping = await fetch(`${mb.baseUrl}/api/v1/version`, { method: 'HEAD', cache: 'no-store' });
+				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
 				if (ping.ok) {
 					console.log(seed + 'Server reachable again, back online');
 					setNetworkStatus('online');
@@ -766,7 +766,7 @@
 
 			//let cacheKey = cacheKeyFromUrl(API_url);
 			if (offlineSession) {
-				//onlineCheck();
+				onlineCheck();
 
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
