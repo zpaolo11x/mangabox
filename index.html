@@ -3788,11 +3788,15 @@
 			if (useOfflineCopy) {
 				offline = await loadOfflineBook(book.id);
 			}
-
-
+			console.log("READER--- Use Offline Copy?");
+			console.log(useOfflineCopy);
+			console.log("READER--- offline:");
+			console.log(offline);
 			updatePWABar(rd.titleBarColor);
 			
-			const bookData = useOfflineCopy ? offline.bookMeta : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
+			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
+			console.log("READER--- bookData:");
+			console.log(bookData);
 
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
 			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
