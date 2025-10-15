@@ -3793,7 +3793,7 @@
 			console.log("READER--- offline:");
 			console.log(offline);
 			updatePWABar(rd.titleBarColor);
-			
+
 			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 			console.log("READER--- bookData:");
 			console.log(bookData);
@@ -4143,11 +4143,18 @@
 			});
 		}
 
+		const mimeToExt = {
+			'image/jpeg': '.jpg',
+			'image/png': '.png',
+			'image/webp': '.webp',
+			'image/gif': '.gif',
+		};
+
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
 
 			let useOfflineCopy = !(offline == {});
-			console.log("FETCH - useOfflineCopy:"+useOfflineCopy);
+			console.log("FETCH - useOfflineCopy:" + useOfflineCopy);
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
@@ -4167,7 +4174,7 @@
 
 			// Create pageData structure with the fields from fetched data
 			const pageData = komgaPageData.map(page => ({
-				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.fileName}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt(page.mediaType)}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
@@ -5190,7 +5197,7 @@
 			}
 		});
 
-//TODO: RIMUOVERE ASYNC DA QUI
+		//TODO: RIMUOVERE ASYNC DA QUI
 		document.addEventListener('keydown', async (event) => {
 			const readerVisible = !isSectionHidden(readerContainer);
 
