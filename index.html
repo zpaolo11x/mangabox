@@ -4150,7 +4150,7 @@
 			console.log("FETCH - useOfflineCopy:"+useOfflineCopy);
 
 			// Get the pages data structure from komga for the current book
-			const komgaPageData = useOfflineCopy ? offline.pageMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
+			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 			console.log("FETCH - komgaPageData:");
 			console.log(komgaPageData);
 
