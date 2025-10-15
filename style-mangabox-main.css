@@ -1459,6 +1459,9 @@ a {
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
 }
+#homeStripBooksResults {
+	padding: 40px var(--mb-area-padding) 20px var(--mb-area-padding);
+}
 
 #stripGrid {
 	padding-top: 50px;
