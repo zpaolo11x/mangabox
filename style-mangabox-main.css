@@ -1291,7 +1291,7 @@ a {
 	left: 0;
 	top: 0;
 	right: 0;
-	bottom: 100%;
+	bottom: 0%;
 	background-color: var(--mb-card-color-alpha);
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
