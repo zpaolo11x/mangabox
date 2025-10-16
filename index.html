@@ -2952,6 +2952,7 @@
 
 			if (bookIsDownloading) {
 				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + "%";
+				bookDownloadUI.innerText = mb.offlineBooks[book.id].percent + "%";
 			}
 
 			const mainRow = addItem('div', {
@@ -3093,12 +3094,13 @@
 					// Book is finished, you can delete the book!
 					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '100%';
-					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 					obDeleteBook(book.id);
+					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 				} else if (obIsBookDownloading(book.id)) {
 					// Book is downloading, you can cancel the process
-					//TODO Add here code for cancelling the download, or resuming???
-
+					bookDownloadUI.style.bottom = '100%';
+					obDeleteBook(book.id);
+					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 				} else {
 					// Download the book!
 					bookDownloadUI.classList.remove('done');
