@@ -521,7 +521,7 @@
 				const { bookId, completed, total } = data;
 				const percent = Math.round((completed / total) * 100);
 
-				offlineProgressBook(bookId, percent);
+				obSetBookProgress(bookId, percent);
 
 				//TODO Extract this function part to use on capacitor too?
 				let tempDiv = document.getElementById(bookId);
@@ -530,7 +530,7 @@
 				tempDivChild.innerText = percent + '%';
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
-				tempDivChild2.innerHTML = refreshDownloadButton(bookId);
+				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 
 				console.log(`📖 Book ${bookId}: ${percent}%`);
 			});
@@ -540,15 +540,15 @@
 
 				//TODO Extract this function part to use on capacitor too
 				let tempDiv = document.getElementById(bookId);
-				
+
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				tempDivChild.innerText = '';
 				tempDivChild.classList.add('done');
 
-				offlineCompletedBook(bookId);
-				
+				obSetBookCompleted(bookId);
+
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
-				tempDivChild2.innerHTML = refreshDownloadButton(bookId);
+				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 
 				console.log(`📖 Book ${bookId}: 100%`);
 			});
@@ -1705,33 +1705,33 @@
 
 		//MB Offline Download Functions
 
-		function offlineSaveTable() {
+		function obSaveTable() {
 			localStorage.setItem('mbOfflineBooks', JSON.stringify(mb.offlineBooks));
 		}
 
-		function offlineAddBook(bookId) {
+		function obAddBookToTable(bookId) {
 			mb.offlineBooks[bookId] = {
 				status: 'downloading',
 				percent: 0,
 			};
-			offlineSaveTable();
+			obSaveTable();
 		}
 
-		function offlineCompletedBook(bookId) {
+		function obSetBookCompleted(bookId) {
 			mb.offlineBooks[bookId].status = 'completed';
 			mb.offlineBooks[bookId].percent = 100;
-			offlineSaveTable();
-		}
-		
-		function offlineProgressBook(bookId, progress) {
-			mb.offlineBooks[bookId].percent = progress;
-			offlineSaveTable();
+			obSaveTable();
 		}
 
-		function refreshDownloadButton(bookId) {
-			if (isOfflineBookCompleted(bookId)) {
-				return ('<span class="fa-solid fa-trash-can"></span>')
-			} else if (isOfflineBookDownloading(bookId)) {
+		function obSetBookProgress(bookId, progress) {
+			mb.offlineBooks[bookId].percent = progress;
+			obSaveTable();
+		}
+
+		function obRedrawDownloadButton(bookId) {
+			if (obIsBookCompleted(bookId)) {
+				return ('<span class="fa-regular fa-trash-can"></span>')
+			} else if (obIsBookDownloading(bookId)) {
 				return ('<span class="fa-solid fa-xmark"></span>')
 			}
 			else {
@@ -1739,19 +1739,20 @@
 			}
 		}
 
-		function isOfflineBookCompleted(bookId) {
+		function obIsBookCompleted(bookId) {
 			if (!mb.offlineBooks) return false;
 			const book = mb.offlineBooks[bookId];
 			return book && book.status === 'completed';
 		}
-		
-		function isOfflineBookDownloading(bookId) {
+
+		function obIsBookDownloading(bookId) {
 			if (!mb.offlineBooks) return false;
 			const book = mb.offlineBooks[bookId];
 			return book && book.status === 'downloading';
 		}
 
-		async function electronDownloadBook(bookId, bookTitle) {
+		async function obDownloadBook(bookId, bookTitle) {
+			//TODO Da modificare per supportare Capacitor
 			let request = buildRequest(mb.authToken, 'GET', null)
 
 			await window.offlineAPI.downloadBook({
@@ -1762,9 +1763,23 @@
 			});
 		}
 
-		async function loadOfflineBook(bookId) {
+		async function obDeleteBook(bookId) {
+			const result = await window.offlineAPI.deleteOfflineBookData(bookId)
+			if (result.success) {
+				// Remove entry from table if it exists
+				if (mb.offlineBooks && mb.offlineBooks[bookId]) {
+					delete mb.offlineBooks[bookId];
+					offlineSaveTable(); // your existing function to persist it
+				}
+				console.log(`Deleted offline book ${bookId} successfully.`);
+			} else {
+				console.warn(`Failed to delete offline book ${bookId}: ${result.message}`);
+			}
+		}
+
+		async function obLoadOfflineBook(bookId) {
+			//TODO Modificare poi per Capacitor
 			const bookData = await window.offlineAPI.getOfflineBookData(bookId)
-			console.log(bookData);
 			return bookData;
 		}
 
@@ -2907,15 +2922,15 @@
 			// Check local proxy list if book is available and completed offline
 			// and tell the system to use this offline copy if we are offline
 
-			const bookIsOffline = isOfflineBookCompleted(book.id);
-			const bookIsDownloading = isOfflineBookDownloading(book.id);
+			const bookIsOffline = obIsBookCompleted(book.id);
+			const bookIsDownloading = obIsBookDownloading(book.id);
 
 			const useOfflineCopy = (offlineSession && bookIsOffline);
 			let offline = {};
 
 			if (useOfflineCopy) {
 				console.log("Fetching downloaded copy of book metadata")
-				offline = await loadOfflineBook(book.id);
+				offline = await obLoadOfflineBook(book.id);
 				book = offline.bookMetadata;
 			}
 
@@ -2936,7 +2951,7 @@
 			}
 
 			if (bookIsDownloading) {
-				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent+"%";
+				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + "%";
 			}
 
 			const mainRow = addItem('div', {
@@ -3065,21 +3080,22 @@
 				bookDetails.classList.add('half-bright')
 			};
 
-			const downloadBook = addItem('div', {
+			const downloadButton = addItem('div', {
 				className: 'mini-buttons download-book',
 				title: 'Download book',
-				innerHTML: refreshDownloadButton(book.id),
+				innerHTML: obRedrawDownloadButton(book.id),
 			});
 
-			addClickPointerEvents(downloadBook, () => {
+			addClickPointerEvents(downloadButton, () => {
 				//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
 				//TODO Or even better don't show the button in web mode :O
-				if (isOfflineBookCompleted(book.id)){
+				if (obIsBookCompleted(book.id)) {
 					// Book is finished, you can delete the book!
 					bookDownloadUI.classList.remove('done');
-					downloadBook.innerHTML = refreshDownloadButton(book.id);
-					//TODO Add here code for deleting the book!
-				} else if (isOfflineBookDownloading(book.id)) {
+					bookDownloadUI.style.bottom = '100%';
+					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+					obDeleteBook(book.id);
+				} else if (obIsBookDownloading(book.id)) {
 					// Book is downloading, you can cancel the process
 					//TODO Add here code for cancelling the download, or resuming???
 
@@ -3087,15 +3103,15 @@
 					// Download the book!
 					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '0%';
-					offlineAddBook(book.id);
-					downloadBook.innerHTML = refreshDownloadButton(book.id);
-					electronDownloadBook(book.id, "temp_" + book.id)
+					obAddBookToTable(book.id);
+					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+					obDownloadBook(book.id, "temp_" + book.id)
 				}
 
 			})
-			addPressEvents(downloadBook, scaleDown, scaleUp)
+			addPressEvents(downloadButton, scaleDown, scaleUp)
 
-			bookOverlay.append(markAsRead, downloadBook, bookDetails, markAsUnread);
+			bookOverlay.append(markAsRead, downloadButton, bookDetails, markAsUnread);
 
 			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
 			const progressBar = addItem('div', { className: 'progress-bar' });
@@ -3854,9 +3870,9 @@
 			//TODO questa si può estrarre come quella di buildbookitem
 			let offline = null;
 
-			let useOfflineCopy = offlineSession && isOfflineBookCompleted(rd.bookId);
+			let useOfflineCopy = offlineSession && obIsBookCompleted(rd.bookId);
 			if (useOfflineCopy) {
-				offline = await loadOfflineBook(rd.bookId);
+				offline = await obLoadOfflineBook(rd.bookId);
 			}
 			console.log("READER--- Use Offline Copy?");
 			console.log(useOfflineCopy);

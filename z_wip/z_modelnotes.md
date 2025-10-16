@@ -8,6 +8,17 @@ buildBookItem creates the book object and assign its read triggers, it receives 
 
 Open point: when a book is downloaded, should it read progress be tracked? Saving the progress each time? Or saving it in the local storage book data structure?
 
+BOOK ICON
+
+- Se il libro non è mai stato scaricato, c'è il drive con freccia
+- Quando il libro inizia a scaricarsi viene passato in stato "downloading"
+- Versione easy: se il libro è in download, il gauge meter si riempie e l'icona è quella della "X" che serve a interrompere il download, l'interruzione porta anche a cancellare i file scaricati quindi non c'è pause/resume. 
+- Quando finsice l'icona diventa il cestino per cancellare il file
+
+Poi penseremo a un sistema di pause/resume vero!
+
+
+
 *API NOTES*
 
 /series/list

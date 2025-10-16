@@ -61,4 +61,8 @@ contextBridge.exposeInMainWorld('offlineAPI', {
 		return await ipcRenderer.invoke('get-offline-book-data', bookId);
 	},
 
+	deleteOfflineBookData: async (bookId) => {
+		return await ipcRenderer.invoke('delete-offline-book-data', bookId);
+	},
+
 });

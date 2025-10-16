@@ -114,6 +114,8 @@ app.on('window-all-closed', () => {
 	app.quit();
 });
 
+// OFFLINE BOOK FUNCTIONS
+
 ipcMain.handle('get-offline-book-data', async (_, bookId) => {
   try {
     const bookPath = path.join(app.getPath('userData'), 'offline-books', bookId);
@@ -129,6 +131,31 @@ ipcMain.handle('get-offline-book-data', async (_, bookId) => {
     console.error('❌ Failed to read offline book data:', err);
     throw err;
   }
+});
+
+ipcMain.handle('delete-offline-book-data', async (_, bookId) => {
+  try {
+    const bookPath = path.join(app.getPath('userData'), 'offline-books', bookId);
+
+    const bookMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-book.json'), 'utf-8'));
+    const pagesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-pages.json'), 'utf-8'));
+    const seriesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-series.json'), 'utf-8'));
+
+    try {
+      await fs.access(bookPath);
+    } catch {
+      return { success: false, message: 'Book folder does not exist' };
+    }
+
+    // Recursively delete the folder and its contents
+    await fs.rm(bookPath, { recursive: true, force: true });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting offline book data:', error);
+    return { success: false, message: error.message };
+  }
+
 });
 
 ipcMain.handle('read-file', async (_, filePath) => {
