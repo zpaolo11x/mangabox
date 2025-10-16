@@ -1736,6 +1736,11 @@
 			};
 			obSaveTable();
 		}
+		
+		function obRemoveBookFromTable(bookId) {
+			delete mb.offlineBooks[bookId];
+			obSaveTable();
+		}
 
 		function obSetBookCompleted(bookId) {
 			mb.offlineBooks[bookId].status = 'completed';
@@ -1783,21 +1788,14 @@
 			});
 		}
 
-		async function obDeleteBook(bookId) {
+		async function obDeleteBookData(bookId) {
 			const result = await window.offlineAPI.deleteOfflineBookData(bookId)
-			console.log("RESULT")
-			console.log(result)
 			if (result.success) {
-				// Remove entry from table if it exists
-				if (mb.offlineBooks && mb.offlineBooks[bookId]) {
-					console.log("delte "+bookId)
-					delete mb.offlineBooks[bookId];
-					obSaveTable(); // your existing function to persist it
-				}
 				console.log(`Deleted offline book ${bookId} successfully.`);
 			} else {
 				console.warn(`Failed to delete offline book ${bookId}: ${result.message}`);
 			}
+			return result;
 		}
 
 		async function obLoadOfflineBook(bookId) {
@@ -3117,14 +3115,16 @@
 					// Book is finished, you can delete the book!
 					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '100%';
-					obDeleteBook(book.id);
-					console.log(mb.offlineBooks);
+					obRemoveBookFromTable(book.id);
 					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+					obDeleteBookData(book.id);
 				} else if (obIsBookDownloading(book.id)) {
 					// Book is downloading, you can cancel the process
+					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '100%';
-					obDeleteBook(book.id);
+					obRemoveBookFromTable(book.id);
 					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+					obDeleteBookData(book.id);
 				} else {
 					// Download the book!
 					bookDownloadUI.classList.remove('done');
