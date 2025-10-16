@@ -1713,10 +1713,8 @@
 
 		function refreshDownloadButton(bookId) {
 			if (isOfflineBookCompleted(bookId)) {
-				console.log("RETURN A")
 				return ('<span class="fa-solid fa-trash-can"></span>')
 			} else {
-				console.log("RETURN B")
 				return ('<span class="fa-solid fa-download"></span>')
 			}
 		}
@@ -3033,9 +3031,6 @@
 				bookDetails.classList.add('half-bright')
 			};
 
-			//TODO: This creation should check the status of download book from the proxy and change icon accordingly
-			//TODO beter to create an external function that returns items liek the icon code based on the book status
-			//TODO so that it can be called from here or at runtime 
 			const downloadBook = addItem('div', {
 				className: 'mini-buttons download-book',
 				title: 'Download book',
@@ -3045,10 +3040,17 @@
 			addClickPointerEvents(downloadBook, () => {
 				//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
 				//TODO Or even better don't show the button in web mode :O
-				bookDownloadUI.classList.remove('done');
-				bookDownloadUI.style.bottom = '0%';
-				offlineAddBook(book.id);
-				electronDownloadBook(book.id, "temp_" + book.id)
+				if (isOfflineBookCompleted(book.id)){
+					bookDownloadUI.classList.remove('done');
+					//TODO Add here code for deleting the book!
+				} else {
+					bookDownloadUI.classList.remove('done');
+					bookDownloadUI.style.bottom = '0%';
+					downloadBook.innerHTML = refreshDownloadButton(book.id);
+					offlineAddBook(book.id);
+					electronDownloadBook(book.id, "temp_" + book.id)
+				}
+
 			})
 			addPressEvents(downloadBook, scaleDown, scaleUp)
 
