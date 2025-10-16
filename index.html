@@ -766,8 +766,11 @@
 
 			//let cacheKey = cacheKeyFromUrl(API_url);
 			if (offlineSession) {
-				onlineCheck();
+				onlineCheck()
+			};
 
+			if (offlineSession) {
+				
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
 					const cached = await getCachedData(db, cacheKey);
