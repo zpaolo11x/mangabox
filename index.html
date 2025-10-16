@@ -3118,6 +3118,7 @@
 					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '100%';
 					obDeleteBook(book.id);
+					console.log(mb.offlineBooks);
 					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 				} else if (obIsBookDownloading(book.id)) {
 					// Book is downloading, you can cancel the process
