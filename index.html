@@ -1236,6 +1236,26 @@
 		async function performSearch(searchString) {
 			libraryHighlight('searchField', false);
 
+			if (searchString.includes('d:')) {
+
+				const unFilteredBooks = await callAPI('c_bookslistall',
+					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
+					'POST', `{"condition": {"allOf": []}}`
+				);
+				unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
+
+				const filteredBooks = unFilteredBooks.content.filter(item =>
+					obIsBookDownloading(item.id) || obIsBookCompleted(item.id)
+				);
+				displayBooks(filteredBooks, homeStripBooksResults, 'compact', 'top');
+
+				focusItem('top');
+				setTimeout(updateSliderProperties, 10);
+				sectionShow(searchStripsContainer);
+
+				return
+			}
+
 			if (searchString.includes('y:')) {
 
 				const unFilteredSeries = await callAPI('c_serieslistall',
