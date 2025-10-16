@@ -770,7 +770,7 @@
 			};
 
 			if (offlineSession) {
-				
+
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
 					const cached = await getCachedData(db, cacheKey);
@@ -1711,7 +1711,17 @@
 			offlineSaveTable();
 		}
 
-		function offlineIsBookCompleted(bookId) {
+		function refreshDownloadButton(bookId) {
+			if (isOfflineBookCompleted(bookId)) {
+				console.log("RETURN A")
+				return ('<span class="fa-solid fa-trash-can"></span>')
+			} else {
+				console.log("RETURN B")
+				return ('<span class="fa-solid fa-download"></span>')
+			}
+		}
+
+		function isOfflineBookCompleted(bookId) {
 			if (!mb.offlineBooks) return false;
 			const book = mb.offlineBooks[bookId];
 			return book && book.status === 'completed';
@@ -1719,10 +1729,6 @@
 
 		async function electronDownloadBook(bookId, bookTitle) {
 			let request = buildRequest(mb.authToken, 'GET', null)
-
-			let tempDiv = document.getElementById(bookId);
-			let tempDivChild = tempDiv.querySelector('.book-downloader');
-			tempDivChild.style.bottom = '0%';
 
 			await window.offlineAPI.downloadBook({
 				bookId: bookId,
@@ -2877,7 +2883,7 @@
 			// Check local proxy list if book is available and completed offline
 			// and tell the system to use this offline copy if we are offline
 
-			const bookIsOffline = offlineIsBookCompleted(book.id);
+			const bookIsOffline = isOfflineBookCompleted(book.id);
 			const useOfflineCopy = (offlineSession && bookIsOffline);
 			let offline = {};
 
@@ -3027,13 +3033,20 @@
 				bookDetails.classList.add('half-bright')
 			};
 
+			//TODO: This creation should check the status of download book from the proxy and change icon accordingly
+			//TODO beter to create an external function that returns items liek the icon code based on the book status
+			//TODO so that it can be called from here or at runtime 
 			const downloadBook = addItem('div', {
 				className: 'mini-buttons download-book',
 				title: 'Download book',
-				innerHTML: `<span class="fa-solid fa-download"></span>`
+				innerHTML: refreshDownloadButton(book.id),
 			});
+
 			addClickPointerEvents(downloadBook, () => {
+				//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
+				//TODO Or even better don't show the button in web mode :O
 				bookDownloadUI.classList.remove('done');
+				bookDownloadUI.style.bottom = '0%';
 				offlineAddBook(book.id);
 				electronDownloadBook(book.id, "temp_" + book.id)
 			})
@@ -3798,7 +3811,7 @@
 			//TODO questa si può estrarre come quella di buildbookitem
 			let offline = null;
 
-			let useOfflineCopy = offlineSession && offlineIsBookCompleted(rd.bookId);
+			let useOfflineCopy = offlineSession && isOfflineBookCompleted(rd.bookId);
 			if (useOfflineCopy) {
 				offline = await loadOfflineBook(rd.bookId);
 			}
@@ -4166,8 +4179,8 @@
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
-console.log("offline:")
-console.log(offline);
+			console.log("offline:")
+			console.log(offline);
 
 			let useOfflineCopy = !(offline == null);
 			console.log("FETCH - useOfflineCopy:" + useOfflineCopy);
