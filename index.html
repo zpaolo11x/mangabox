@@ -521,11 +521,14 @@
 				const { bookId, completed, total } = data;
 				const percent = Math.round((completed / total) * 100);
 
+				//TODO Extract this function part to use on capacitor too?
 				let tempDiv = document.getElementById(bookId);
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				tempDivChild.style.bottom = percent + '%';
 				tempDivChild.innerText = percent + '%';
-
+				
+				let tempDivChild2 = tempDiv.querySelector('.download-book');
+				tempDivChild2.innerHTML = refreshDownloadButton(bookId);
 
 				console.log(`📖 Book ${bookId}: ${percent}%`);
 			});
@@ -533,12 +536,17 @@
 			window.offlineAPI.onDownloadComplete((data) => {
 				const { bookId, completed, total } = data;
 
+				//TODO Extract this function part to use on capacitor too
 				let tempDiv = document.getElementById(bookId);
+				
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				tempDivChild.innerText = '';
 				tempDivChild.classList.add('done');
 
 				offlineCompletedBook(bookId);
+				
+				let tempDivChild2 = tempDiv.querySelector('.download-book');
+				tempDivChild2.innerHTML = refreshDownloadButton(bookId);
 
 				console.log(`📖 Book ${bookId}: 100%`);
 			});
