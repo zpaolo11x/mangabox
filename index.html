@@ -2936,7 +2936,7 @@
 			}
 
 			if (bookIsDownloading) {
-				bookDownloadUI.style.bottom = mb.offlineBooks[bookId].percent+"%";
+				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent+"%";
 			}
 
 			const mainRow = addItem('div', {
@@ -3075,9 +3075,16 @@
 				//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
 				//TODO Or even better don't show the button in web mode :O
 				if (isOfflineBookCompleted(book.id)){
+					// Book is finished, you can delete the book!
 					bookDownloadUI.classList.remove('done');
+					downloadBook.innerHTML = refreshDownloadButton(book.id);
 					//TODO Add here code for deleting the book!
+				} else if (isOfflineBookDownloading(book.id)) {
+					// Book is downloading, you can cancel the process
+					//TODO Add here code for cancelling the download, or resuming???
+
 				} else {
+					// Download the book!
 					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '0%';
 					offlineAddBook(book.id);
