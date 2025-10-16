@@ -1785,11 +1785,14 @@
 
 		async function obDeleteBook(bookId) {
 			const result = await window.offlineAPI.deleteOfflineBookData(bookId)
+			console.log("RESULT")
+			console.log(result)
 			if (result.success) {
 				// Remove entry from table if it exists
 				if (mb.offlineBooks && mb.offlineBooks[bookId]) {
+					console.log("delte "+bookId)
 					delete mb.offlineBooks[bookId];
-					offlineSaveTable(); // your existing function to persist it
+					obSaveTable(); // your existing function to persist it
 				}
 				console.log(`Deleted offline book ${bookId} successfully.`);
 			} else {
