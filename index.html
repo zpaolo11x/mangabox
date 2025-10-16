@@ -1719,6 +1719,11 @@
 
 		async function electronDownloadBook(bookId, bookTitle) {
 			let request = buildRequest(mb.authToken, 'GET', null)
+
+			let tempDiv = document.getElementById(bookId);
+			let tempDivChild = tempDiv.querySelector('.book-downloader');
+			tempDivChild.style.bottom = '0%';
+
 			await window.offlineAPI.downloadBook({
 				bookId: bookId,
 				bookTitle: bookTitle,
