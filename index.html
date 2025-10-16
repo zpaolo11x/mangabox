@@ -521,12 +521,14 @@
 				const { bookId, completed, total } = data;
 				const percent = Math.round((completed / total) * 100);
 
+				offlineProgressBook(bookId, percent);
+
 				//TODO Extract this function part to use on capacitor too?
 				let tempDiv = document.getElementById(bookId);
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				tempDivChild.style.bottom = percent + '%';
 				tempDivChild.innerText = percent + '%';
-				
+
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = refreshDownloadButton(bookId);
 
@@ -1709,13 +1711,20 @@
 
 		function offlineAddBook(bookId) {
 			mb.offlineBooks[bookId] = {
-				status: 'requested'
+				status: 'downloading',
+				percent: 0,
 			};
 			offlineSaveTable();
 		}
 
 		function offlineCompletedBook(bookId) {
 			mb.offlineBooks[bookId].status = 'completed';
+			mb.offlineBooks[bookId].percent = 100;
+			offlineSaveTable();
+		}
+		
+		function offlineProgressBook(bookId, progress) {
+			mb.offlineBooks[bookId].percent = progress;
 			offlineSaveTable();
 		}
 
@@ -1739,7 +1748,7 @@
 		function isOfflineBookDownloading(bookId) {
 			if (!mb.offlineBooks) return false;
 			const book = mb.offlineBooks[bookId];
-			return book && book.status === 'requested';
+			return book && book.status === 'downloading';
 		}
 
 		async function electronDownloadBook(bookId, bookTitle) {
@@ -2899,6 +2908,8 @@
 			// and tell the system to use this offline copy if we are offline
 
 			const bookIsOffline = isOfflineBookCompleted(book.id);
+			const bookIsDownloading = isOfflineBookDownloading(book.id);
+
 			const useOfflineCopy = (offlineSession && bookIsOffline);
 			let offline = {};
 
@@ -2920,7 +2931,13 @@
 				className: 'book-downloader'
 			});
 
-			if (bookIsOffline) bookDownloadUI.classList.add('done');
+			if (bookIsOffline) {
+				bookDownloadUI.classList.add('done');
+			}
+
+			if (bookIsDownloading) {
+				bookDownloadUI.style.bottom = mb.offlineBooks[bookId].percent+"%";
+			}
 
 			const mainRow = addItem('div', {
 				className: 'data-row top-row'
