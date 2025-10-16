@@ -1714,7 +1714,10 @@
 		function refreshDownloadButton(bookId) {
 			if (isOfflineBookCompleted(bookId)) {
 				return ('<span class="fa-solid fa-trash-can"></span>')
-			} else {
+			} else if (isOfflineBookDownloading(bookId)) {
+				return ('<span class="fa-solid fa-xmark"></span>')
+			}
+			else {
 				return ('<span class="fa-solid fa-download"></span>')
 			}
 		}
@@ -1723,6 +1726,12 @@
 			if (!mb.offlineBooks) return false;
 			const book = mb.offlineBooks[bookId];
 			return book && book.status === 'completed';
+		}
+		
+		function isOfflineBookDownloading(bookId) {
+			if (!mb.offlineBooks) return false;
+			const book = mb.offlineBooks[bookId];
+			return book && book.status === 'requested';
 		}
 
 		async function electronDownloadBook(bookId, bookTitle) {
@@ -3046,8 +3055,8 @@
 				} else {
 					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '0%';
-					downloadBook.innerHTML = refreshDownloadButton(book.id);
 					offlineAddBook(book.id);
+					downloadBook.innerHTML = refreshDownloadButton(book.id);
 					electronDownloadBook(book.id, "temp_" + book.id)
 				}
 
