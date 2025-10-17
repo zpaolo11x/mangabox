@@ -1,4 +1,7 @@
 Main UI
+- Desktop version can download books for offline reading
+- Added new Offline Books toolbar button
+- Automatically resume book downloads
 - Caching of web requests so the UI is consistent when offline
 - Caching of viewed thumbnails for offline browsing
 - Clear cached media and data storage when logging out of server
