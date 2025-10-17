@@ -88,6 +88,8 @@
 
 				<div id="booksGrid" class="section hidden"></div>
 
+				<div id="offlineGrid" class="section hidden"></div>
+
 				<div id="stripGridContainer" class="section hidden">
 					<div id="stripGrid" class="strip-grid"></div>
 					<div id="stripGridHeaderContainer" class="stripgrid-header-container">
@@ -334,7 +336,7 @@
 			//fullscreenChanger.classList.add('disabled');
 		}
 
-		if (!isElectronApp) {
+		if (!isElectronApp && !fullDebugMode) {
 			offlineLibrary.remove();
 		console.log("--------------------------- DISABLE DNLD")
 			enableDownload = false;
@@ -3251,7 +3253,7 @@
 				const seriesData = useOfflineCopy ? offline.seriesMetadata : await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
-				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
+				rd.historyPath = window.location.hash.split('&book_id=')[0] + ((target == booksGrid || target == offlineGrid) ? '&book_id=' + book.id : '');
 				setIncognito(false);
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#bookread
@@ -3301,9 +3303,11 @@
 				sectionShow(seriesHeader);
 				sectionShow(seriesMiniHeader);
 				seriesMiniHeader.classList.add('collapse');
-
 				focusItem(focus);
+			}
 
+			if (target == offlineGrid) {
+				sectionShow(offlineGrid);
 			}
 		}
 
@@ -3316,6 +3320,7 @@
 
 			seriesGrid.innerHTML = '';
 			booksGrid.innerHTML = '';
+			offlineGrid.innerHTML = '';
 			stripGrid.innerHTML = '';
 
 			sectionShow(homeStripsContainer);
@@ -3414,6 +3419,7 @@
 
 			seriesGrid.innerHTML = ''; // Clear the series grid
 			booksGrid.innerHTML = ''; // Clear the series grid
+			offlineGrid.innerHTML = ''; // Clear the series grid
 			stripGrid.innerHTML = '';
 
 			sectionShow(stripGridContainer);
@@ -3518,7 +3524,7 @@
 
 			//TODO await libraryHighlight(libraryId, false);
 
-			displayBooks(filteredBooks, booksGrid, 'compact', 'top');
+			displayBooks(filteredBooks, offlineGrid, 'compact', 'top');
 		}
 
 		function setNetworkStatus(netStatus) {

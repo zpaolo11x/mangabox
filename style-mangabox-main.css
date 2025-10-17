@@ -1489,6 +1489,7 @@ a {
 
 #seriesGrid,
 #booksGrid,
+#offlineGrid,
 #stripGrid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(var(--mb-card-min-width), max-content));
@@ -1623,6 +1624,7 @@ a {
 
 #seriesGrid.hidden,
 #booksGrid.hidden,
+#offlineGrid.hidden,
 #homeStripsContainer.hidden,
 #searchStripsContainer.hidden,
 #stripGridContainer.hidden,
