@@ -3162,6 +3162,7 @@
 					obRemoveBookFromTable(book.id);
 					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 					obDeleteBookData(book.id);
+					obSetSpinner(false);
 				} else {
 					// Download the book!
 					bookDownloadUI.classList.remove('done');
