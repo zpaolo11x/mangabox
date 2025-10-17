@@ -305,23 +305,41 @@
 	<div id="debuggerObj"></div>
 
 	<script>
+		const fullDebugMode = false;
+
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
 		}
 
 		const isElectronApp = !!window.electronAPI;
-
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
+
+		console.log("----------------");
+		console.log("PLATFORM SUMMARY");
+		console.log("Capacitor: "+isCapacitor);
+		console.log("Electron : "+isElectronApp);
+
+
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		let capacitorPlatform = null;
 
-		const enableFullscreen = false;
-		fullscreenChanger.remove();
+		let enableFullscreen = true;
+		let enableDownload = true;
 
 		if (isCapacitor) {
 			capacitorPlatform = Capacitor.getPlatform();
-			fullscreenChanger.classList.add('disabled');
+			fullscreenChanger.remove();
+			enableFullscreen = false;
+			//fullscreenChanger.classList.add('disabled');
 		}
+
+		if (!isElectronApp) {
+			offlineLibrary.remove();
+		console.log("--------------------------- DISABLE DNLD")
+			enableDownload = false;
+		}
+
 	</script>
 
 	<script src="script-auth.js"></script>
@@ -1034,9 +1052,11 @@
 			});
 		}
 
-		offlineLibrary.addEventListener('click', () => {
-			navigateTo(`#offlinebooks`);
-		});
+		if (enableDownload) {
+			offlineLibrary.addEventListener('click', () => {
+				navigateTo(`#offlinebooks`);
+			});
+		}
 
 		logOut.addEventListener('click', async () => {
 
@@ -1846,12 +1866,12 @@
 			return bookData;
 		}
 
-		function obRestoreDownloadOnBoot(){
+		function obRestoreDownloadOnBoot() {
 			console.log(mb.offlineBooks)
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				console.log("X:"+bookId)
+				console.log("X:" + bookId)
 				console.log(item.status)
-				if (item.status == 'downloading'){
+				if (item.status == 'downloading') {
 					obSetSpinner(true);
 					obDownloadBook(bookId, bookId);
 				}
@@ -3155,44 +3175,48 @@
 				bookDetails.classList.add('half-bright')
 			};
 
-			const downloadButton = addItem('div', {
-				className: 'mini-buttons download-book',
-				title: 'Download book',
-				innerHTML: obRedrawDownloadButton(book.id),
-			});
+			if (isElectronApp || fullDebugMode) {
+				const downloadButton = addItem('div', {
+					className: 'mini-buttons download-book',
+					title: 'Download book',
+					innerHTML: obRedrawDownloadButton(book.id),
+				});
 
-			addClickPointerEvents(downloadButton, () => {
-				//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
-				//TODO Or even better don't show the button in web mode :O
-				if (obIsBookCompleted(book.id)) {
-					// Book is finished, you can delete the book!
-					bookDownloadUI.classList.remove('done');
-					bookDownloadUI.style.bottom = '100%';
-					obRemoveBookFromTable(book.id);
-					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
-					obDeleteBookData(book.id);
-				} else if (obIsBookDownloading(book.id)) {
-					// Book is downloading, you can cancel the process
-					bookDownloadUI.classList.remove('done');
-					bookDownloadUI.style.bottom = '100%';
-					obRemoveBookFromTable(book.id);
-					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
-					obDeleteBookData(book.id);
-					obSetSpinner(false);
-				} else {
-					// Download the book!
-					bookDownloadUI.classList.remove('done');
-					bookDownloadUI.style.bottom = '0%';
-					obAddBookToTable(book.id);
-					obSetSpinner(true);
-					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
-					obDownloadBook(book.id, "temp_" + book.id)
-				}
+				addClickPointerEvents(downloadButton, () => {
+					//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
+					//TODO Or even better don't show the button in web mode :O
+					if (obIsBookCompleted(book.id)) {
+						// Book is finished, you can delete the book!
+						bookDownloadUI.classList.remove('done');
+						bookDownloadUI.style.bottom = '100%';
+						obRemoveBookFromTable(book.id);
+						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+						obDeleteBookData(book.id);
+					} else if (obIsBookDownloading(book.id)) {
+						// Book is downloading, you can cancel the process
+						bookDownloadUI.classList.remove('done');
+						bookDownloadUI.style.bottom = '100%';
+						obRemoveBookFromTable(book.id);
+						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+						obDeleteBookData(book.id);
+						obSetSpinner(false);
+					} else {
+						// Download the book!
+						bookDownloadUI.classList.remove('done');
+						bookDownloadUI.style.bottom = '0%';
+						obAddBookToTable(book.id);
+						obSetSpinner(true);
+						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+						obDownloadBook(book.id, "temp_" + book.id)
+					}
 
-			})
-			addPressEvents(downloadButton, scaleDown, scaleUp)
+				})
+				addPressEvents(downloadButton, scaleDown, scaleUp)
 
-			bookOverlay.append(markAsRead, downloadButton, bookDetails, markAsUnread);
+				bookOverlay.append(markAsRead, downloadButton, bookDetails, markAsUnread);
+			} else {
+				bookOverlay.append(markAsRead, bookDetails, markAsUnread);
+			}
 
 			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
 			const progressBar = addItem('div', { className: 'progress-bar' });
@@ -3239,7 +3263,6 @@
 			});
 
 			item.append(booksItem);
-
 		}
 
 		function displayBooks(books, target, format, focus = null) {
@@ -3543,7 +3566,7 @@
 				'POST', `{"condition": {"allOf": []}}`
 			);
 
-			obRestoreDownloadOnBoot();
+			if (enableDownload) obRestoreDownloadOnBoot();
 		}
 
 		//MB Reader Functions and Data
