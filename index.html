@@ -315,6 +315,9 @@
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		let capacitorPlatform = null;
 
+		const enableFullscreen = false;
+		fullscreenChanger.remove();
+
 		if (isCapacitor) {
 			capacitorPlatform = Capacitor.getPlatform();
 			fullscreenChanger.classList.add('disabled');
@@ -1023,11 +1026,13 @@
 			changeTheme();
 		});
 
-		fullscreenChanger.addEventListener('click', () => {
-			//mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
-			//changeTheme();
-			toggleFullscreen();
-		});
+		if (enableFullscreen) {
+			fullscreenChanger.addEventListener('click', () => {
+				// mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
+				//changeTheme();
+				toggleFullscreen();
+			});
+		}
 
 		offlineLibrary.addEventListener('click', () => {
 			navigateTo(`#offlinebooks`);
@@ -1745,12 +1750,12 @@
 			localStorage.setItem('mbOfflineBooks', JSON.stringify(mb.offlineBooks));
 		}
 
-		function obSetSpinner(status){
-			console.log("SET SPINNER TO:"+status)
+		function obSetSpinner(status) {
+			console.log("SET SPINNER TO:" + status)
 			let oldStatus = downloadSpinner.classList.contains('spin');
 			console.log("OLD STATUS:" + oldStatus)
 			if (oldStatus == status) return;
-			
+
 			downloadSpinner.classList.remove('spin');
 			if (status) downloadSpinner.classList.add('spin')
 		}
@@ -1841,6 +1846,17 @@
 			return bookData;
 		}
 
+		function obRestoreDownloadOnBoot(){
+			console.log(mb.offlineBooks)
+			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
+				console.log("X:"+bookId)
+				console.log(item.status)
+				if (item.status == 'downloading'){
+					obSetSpinner(true);
+					obDownloadBook(bookId, bookId);
+				}
+			});
+		}
 
 		//MB Media Cache 
 
@@ -3527,6 +3543,7 @@
 				'POST', `{"condition": {"allOf": []}}`
 			);
 
+			obRestoreDownloadOnBoot();
 		}
 
 		//MB Reader Functions and Data
