@@ -1746,7 +1746,9 @@
 		}
 
 		function obSetSpinner(status){
+			console.log("SET SPINNER TO:"+status)
 			let oldStatus = downloadSpinner.classList.contains('spin');
+			console.log("OLD STATUS:" + oldStatus)
 			if (oldStatus == status) return;
 			
 			downloadSpinner.classList.remove('spin');
@@ -3165,6 +3167,7 @@
 					bookDownloadUI.classList.remove('done');
 					bookDownloadUI.style.bottom = '0%';
 					obAddBookToTable(book.id);
+					obSetSpinner(true);
 					downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 					obDownloadBook(book.id, "temp_" + book.id)
 				}

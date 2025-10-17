@@ -847,7 +847,7 @@ a {
 	transition: border-color 0.3s;
 }
 
-.spin {
+#downloadSpinner.spin {
 	display: flex;
 	animation: spin 10s linear infinite, cycle 1s ease infinite alternate;
 }
