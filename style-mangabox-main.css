@@ -831,7 +831,57 @@ a {
 	border-radius: 50%;
 }
 
+#downloadSpinner {
+	display: none;
+	position: absolute;
+	box-sizing: border-box;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border: 5px solid var(--mb-accent);
+	min-width: calc(var(--mb-button-size) - 2px);
+	height: calc(var(--mb-button-size) - 2px);
+	z-index: 10;
+	border-radius: 50%;
+	border-style: dotted;
+	transition: border-color 0.3s;
+}
 
+.spin {
+	display: flex;
+	animation: spin 10s linear infinite, cycle 1s ease infinite alternate;
+}
+
+@keyframes spin {
+	from {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+
+	to {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
+}
+
+@keyframes cycle {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+
+#offlineLibrary.highlighted #downloadSpinner {
+	border-color: white;
+}
+
+#offlineLibrary {
+	position: relative;
+}
+
+#offlineLibrary.highlighted span.fa-solid,
 .library-item.search-field.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-regular {
@@ -1302,7 +1352,7 @@ a {
 	border-radius: var(--mb-cover-radius) var(--mb-cover-radius) 0px var(--mb-cover-radius);
 	font-size: 40px;
 	transition: bottom 0.3s;
-	text-shadow: rgba(0,0,0,0.5) 0px 2px 6px
+	text-shadow: rgba(0, 0, 0, 0.5) 0px 2px 6px
 }
 
 .book-downloader.done {
@@ -1337,13 +1387,13 @@ a {
 	opacity: 0.7;
 }
 
-.home-strip-parent{
-	position:relative;
+.home-strip-parent {
+	position: relative;
 }
 
 .strip-header-container {
 	position: absolute;
-	top:0;
+	top: 0;
 	margin-top: 0px;
 	display: grid;
 	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + env(safe-area-inset-right))));
@@ -1459,6 +1509,7 @@ a {
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
 }
+
 #homeStripBooksResults {
 	padding: 40px var(--mb-area-padding) 20px var(--mb-area-padding);
 }
@@ -1999,15 +2050,15 @@ body.sticky-medium #librariesRightBlock {
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 200px) var(--mb-button-size);
 }
 
-body.sticky-medium #stickyContainer .library-item:not(.search-field) {
+body.sticky-medium #stickyContainer .library-item:not(.no-grow) {
 	width: var(--mb-button-size);
 }
 
-body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted {
+body.sticky-medium #stickyContainer .library-item:not(.no-grow).highlighted {
 	width: var(--mb-library-large);
 }
 
-body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+body.sticky-medium #stickyContainer .library-item:not(.no-grow).highlighted.with-menu {
 	width: var(--mb-library-large-with-menu);
 }
 
@@ -2054,7 +2105,7 @@ body.sticky-small #mainUI:has(.extra-bar:not(.hidden)) {
 	grid-template-rows: 156px auto;
 }
 
-body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.search-field) {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.no-grow) {
 	width: var(--mb-button-size);
 }
 
@@ -2074,11 +2125,11 @@ body.sticky-small #filtersBar .library-item {
 }
 */
 
-body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
+body.sticky-small #stickyContainer .library-item:not(.no-grow).highlighted {
 	width: var(--mb-library-large);
 }
 
-body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+body.sticky-small #stickyContainer .library-item:not(.no-grow).highlighted.with-menu {
 	width: var(--mb-library-large-with-menu);
 }
 

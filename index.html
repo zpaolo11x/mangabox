@@ -51,7 +51,13 @@
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
-					<li id="searchField" title="Search" class="library-item search-field press-button">
+					<li id="offlineLibrary" title="Offline Books" class="library-item no-grow press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-download glyph-dark"></span>
+						</div>
+						<div id="downloadSpinner" class="download-overlay"></div>
+					</li>
+					<li id="searchField" title="Search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
@@ -114,8 +120,12 @@
 							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
 						</div>
 					</div>
-
 				</div>
+
+				<!--
+					<div id="offlineBooksGrid" class="section hidden"></div>
+				-->
+
 				<div id="bookDetailsContainer" class="section hidden blankstart">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
@@ -522,6 +532,7 @@
 				const percent = Math.round((completed / total) * 100);
 
 				obSetBookProgress(bookId, percent);
+				obSetSpinner(true);
 
 				//TODO Extract this function part to use on capacitor too?
 				let tempDiv = document.getElementById(bookId);
@@ -546,7 +557,8 @@
 				tempDivChild.classList.add('done');
 
 				obSetBookCompleted(bookId);
-
+				obSetSpinner(false);
+				
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 
@@ -1009,13 +1021,17 @@
 		themeChanger.addEventListener('click', () => {
 			mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
 			changeTheme();
-		})
+		});
 
 		fullscreenChanger.addEventListener('click', () => {
 			//mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
 			//changeTheme();
 			toggleFullscreen();
-		})
+		});
+
+		offlineLibrary.addEventListener('click', () => {
+			navigateTo(`#offlinebooks`);
+		});
 
 		logOut.addEventListener('click', async () => {
 
@@ -1051,7 +1067,7 @@
 			await clearIndexedDB();
 
 			location.reload(true);
-		})
+		});
 
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
@@ -1729,6 +1745,14 @@
 			localStorage.setItem('mbOfflineBooks', JSON.stringify(mb.offlineBooks));
 		}
 
+		function obSetSpinner(status){
+			let oldStatus = downloadSpinner.clasSList.contains(spin);
+			if (oldStatus == status) return;
+			
+			downloadSpinner.classList.remove('spin');
+			if (status) downloadSpinner.classList.add('spin')
+		}
+
 		function obAddBookToTable(bookId) {
 			mb.offlineBooks[bookId] = {
 				status: 'downloading',
@@ -1736,7 +1760,7 @@
 			};
 			obSaveTable();
 		}
-		
+
 		function obRemoveBookFromTable(bookId) {
 			delete mb.offlineBooks[bookId];
 			obSaveTable();
@@ -1771,6 +1795,17 @@
 		}
 
 		function obIsBookDownloading(bookId) {
+			if (!mb.offlineBooks) return false;
+			const book = mb.offlineBooks[bookId];
+			return book && book.status === 'downloading';
+		}
+
+		function obIsAnyBookDownloading() {
+			if (!mb.offlineBooks) return false;
+			return Object.values(mb.offlineBooks).some(book => book.status === 'downloading');
+		}
+
+		function obDownloadsInProgress() {
 			if (!mb.offlineBooks) return false;
 			const book = mb.offlineBooks[bookId];
 			return book && book.status === 'downloading';
@@ -3421,6 +3456,26 @@
 			await libraryHighlight(libraryId, false);
 			if (seriesData != null) displayHeader(seriesData);
 			displayBooks(books, booksGrid, 'longname', bookId);
+		}
+
+		async function openOfflineBooks() {
+			libraryHighlight('offlineLibrary', false);
+
+			const unFilteredBooks = await callAPI('c_bookslistall',
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+				'POST', `{"condition": {"allOf": []}}`
+			);
+			unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
+
+			const filteredBooks = unFilteredBooks.content.filter(item =>
+				obIsBookDownloading(item.id) || obIsBookCompleted(item.id)
+			);
+
+			//books = booksData?.content || [];
+
+			//TODO await libraryHighlight(libraryId, false);
+
+			displayBooks(filteredBooks, booksGrid, 'compact', 'top');
 		}
 
 		function setNetworkStatus(netStatus) {
@@ -5466,6 +5521,11 @@
 					break;
 				case 'bookread':
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
+					break;
+				case 'offlinebooks':
+					searchInput.value = '';
+					setIncognito(false);
+					await openOfflineBooks();
 					break;
 				default:
 					console.log('no selection');
