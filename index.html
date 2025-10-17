@@ -3306,9 +3306,6 @@
 				focusItem(focus);
 			}
 
-			if (target == offlineGrid) {
-				sectionShow(offlineGrid);
-			}
 		}
 
 		//MB Dashboard Management
@@ -3525,6 +3522,9 @@
 			//TODO await libraryHighlight(libraryId, false);
 
 			displayBooks(filteredBooks, offlineGrid, 'compact', 'top');
+			focusItem('top');
+			setTimeout(updateSliderProperties, 10);
+			sectionShow(offlineGrid);
 		}
 
 		function setNetworkStatus(netStatus) {
