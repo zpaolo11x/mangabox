@@ -316,13 +316,6 @@
 		const isElectronApp = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
-
-		console.log("----------------");
-		console.log("PLATFORM SUMMARY");
-		console.log("Capacitor: "+isCapacitor);
-		console.log("Electron : "+isElectronApp);
-
-
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		let capacitorPlatform = null;
 
@@ -333,12 +326,10 @@
 			capacitorPlatform = Capacitor.getPlatform();
 			fullscreenChanger.remove();
 			enableFullscreen = false;
-			//fullscreenChanger.classList.add('disabled');
 		}
 
 		if (!isElectronApp && !fullDebugMode) {
 			offlineLibrary.remove();
-		console.log("--------------------------- DISABLE DNLD")
 			enableDownload = false;
 		}
 
@@ -565,8 +556,6 @@
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
-
-				console.log(`📖 Book ${bookId}: ${percent}%`);
 			});
 
 			window.offlineAPI.onDownloadComplete((data) => {
@@ -584,8 +573,6 @@
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
-
-				console.log(`📖 Book ${bookId}: 100%`);
 			});
 		}
 
@@ -786,15 +773,12 @@
 
 		async function onlineCheck() {
 			let seed = Math.random();
-			console.log(seed + " ONLINE CHECK")
 			try {
 				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
 				if (ping.ok) {
-					console.log(seed + 'Server reachable again, back online');
 					setNetworkStatus('online');
 				}
 			} catch {
-				console.log(seed + 'Server still offline');
 				// still offline, ignore
 			}
 		}
@@ -805,11 +789,6 @@
 
 			const db = await openIndexedDB();
 
-			console.log("-----");
-			console.log("API Url: " + API_url)
-			console.log("API body: " + body)
-
-			//let cacheKey = cacheKeyFromUrl(API_url);
 			if (offlineSession) {
 				onlineCheck()
 			};
@@ -1775,11 +1754,8 @@
 		}
 
 		function obSetSpinner(status) {
-			console.log("SET SPINNER TO:" + status)
 			let oldStatus = downloadSpinner.classList.contains('spin');
-			console.log("OLD STATUS:" + oldStatus)
 			if (oldStatus == status) return;
-
 			downloadSpinner.classList.remove('spin');
 			if (status) downloadSpinner.classList.add('spin')
 		}
@@ -1871,10 +1847,7 @@
 		}
 
 		function obRestoreDownloadOnBoot() {
-			console.log(mb.offlineBooks)
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				console.log("X:" + bookId)
-				console.log(item.status)
 				if (item.status == 'downloading') {
 					obSetSpinner(true);
 					obDownloadBook(bookId, bookId);
@@ -3027,7 +3000,6 @@
 			let offline = {};
 
 			if (useOfflineCopy) {
-				console.log("Fetching downloaded copy of book metadata")
 				offline = await obLoadOfflineBook(book.id);
 				book = offline.bookMetadata;
 			}
@@ -3818,14 +3790,12 @@
 
 			purgeLoading();
 			clearAllTimeouts();
-console.log("GOING BACK TO: "+rd.historyPath);
+
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-			//dragbarOffReader();
 
 			updatePWABar();
 			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 				Capacitor.Plugins.StatusBar.show();
-				//showAndroidTitleBar();
 			}
 
 		}
@@ -4014,15 +3984,9 @@ console.log("GOING BACK TO: "+rd.historyPath);
 			if (useOfflineCopy) {
 				offline = await obLoadOfflineBook(rd.bookId);
 			}
-			console.log("READER--- Use Offline Copy?");
-			console.log(useOfflineCopy);
-			console.log("READER--- offline:");
-			console.log(offline);
 			updatePWABar(rd.titleBarColor);
 
 			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
-			console.log("READER--- bookData:");
-			console.log(bookData);
 
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
 			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
@@ -4261,8 +4225,11 @@ console.log("GOING BACK TO: "+rd.historyPath);
 		}
 
 		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
+
+			let useOfflineCopy = !(offline == null);
+
 			// Get the pages data structure from komga for the current book
-			const komgaPageData = await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
+			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
@@ -4275,8 +4242,8 @@ console.log("GOING BACK TO: "+rd.historyPath);
 			thumbStripInnerWT.style.flexDirection = 'column';
 
 			const pageData = komgaPageData.map(page => ({
-				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
-				thumb: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
+				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
 				height: page.height,
@@ -4378,16 +4345,11 @@ console.log("GOING BACK TO: "+rd.historyPath);
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
-			console.log("offline:")
-			console.log(offline);
 
 			let useOfflineCopy = !(offline == null);
-			console.log("FETCH - useOfflineCopy:" + useOfflineCopy);
 
 			// Get the pages data structure from komga for the current book
 			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
-			console.log("FETCH - komgaPageData:");
-			console.log(komgaPageData);
 
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
@@ -5466,29 +5428,6 @@ console.log("GOING BACK TO: "+rd.historyPath);
 						toggleMenu();
 					}
 					break;
-				case 'A':
-					console.log('pressed A')
-					console.log(document.getElementById('0HA1NKKJSWAZ0'));
-					let tempDiv = document.getElementById('0HA1NKKJSWAZ0');
-					let tempDivChild = tempDiv.querySelector('.book-downloader');
-					tempDivChild.classList.remove('done');
-					tempDivChild.style.bottom = '40%';
-					tempDivChild.innerText = "40%";
-
-
-					break;
-				case 'S':
-					console.log('pressed S')
-					console.log(document.getElementById('0HA1NKKJSWAZ0'));
-					let tempDiv2 = document.getElementById('0HA1NKKJSWAZ0');
-					let tempDivChild2 = tempDiv2.querySelector('.book-downloader');
-
-					tempDivChild2.style.bottom = '';
-					tempDivChild2.classList.add('done');
-					tempDivChild2.innerText = "";
-					//tempDivChild2.innerHTML = "<span class='fa-circle fa-solid download-glyph'></span>";
-
-					break;
 				default:
 					break;
 			}
@@ -5523,18 +5462,14 @@ console.log("GOING BACK TO: "+rd.historyPath);
 		function getHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
-			console.log(path);
-			console.log(paramString);
+
 			const params = paramString == undefined ? null : new URLSearchParams(paramString ?? '');
 			return { path, params };
 		}
 
 		async function loadContent() {
 			const { path, params } = getHashAndParams();
-			console.log("xxxxxxxxxxxxxxxxxxxx")
-console.log(path);
-console.log(params);
-			console.log("xxxxxxxxxxxxxxxxxxxx")
+
 			await executeFade(1);
 			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
