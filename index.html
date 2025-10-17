@@ -307,7 +307,7 @@
 	<div id="debuggerObj"></div>
 
 	<script>
-		const fullDebugMode = false;
+		const fullDebugMode = true;
 
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
@@ -3255,7 +3255,14 @@
 				const seriesData = useOfflineCopy ? offline.seriesMetadata : await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
-				rd.historyPath = window.location.hash.split('&book_id=')[0] + ((target == booksGrid || target == offlineGrid) ? '&book_id=' + book.id : '');
+				if (target == booksGrid) {
+					rd.historyPath = window.location.hash.split('&book_id=')[0] + '&book_id=' + book.id;
+				} else if (target == offlineGrid) {
+					rd.historyPath = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
+				} else {
+					rd.historyPath = window.location.hash.split('&book_id=')[0];
+				}
+
 				setIncognito(false);
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#bookread
@@ -3506,7 +3513,7 @@
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
 
-		async function openOfflineBooks() {
+		async function openOfflineBooks(bookId) {
 			libraryHighlight('offlineLibrary', false);
 
 			const unFilteredBooks = await callAPI('c_bookslistall',
@@ -3523,8 +3530,8 @@
 
 			//TODO await libraryHighlight(libraryId, false);
 
-			displayBooks(filteredBooks, offlineGrid, 'compact', 'top');
-			focusItem('top');
+			displayBooks(filteredBooks, offlineGrid, 'compact', bookId);
+			focusItem(bookId);//TODO ERA 'top'
 			setTimeout(updateSliderProperties, 10);
 			sectionShow(offlineGrid);
 		}
@@ -3811,7 +3818,7 @@
 
 			purgeLoading();
 			clearAllTimeouts();
-
+console.log("GOING BACK TO: "+rd.historyPath);
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 			//dragbarOffReader();
 
@@ -5516,13 +5523,18 @@
 		function getHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
+			console.log(path);
+			console.log(paramString);
 			const params = paramString == undefined ? null : new URLSearchParams(paramString ?? '');
 			return { path, params };
 		}
 
 		async function loadContent() {
 			const { path, params } = getHashAndParams();
-
+			console.log("xxxxxxxxxxxxxxxxxxxx")
+console.log(path);
+console.log(params);
+			console.log("xxxxxxxxxxxxxxxxxxxx")
 			await executeFade(1);
 			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
@@ -5577,7 +5589,7 @@
 				case 'offlinebooks':
 					searchInput.value = '';
 					setIncognito(false);
-					await openOfflineBooks();
+					await openOfflineBooks(params?.get('book_id'));
 					break;
 				default:
 					console.log('no selection');
