@@ -1746,7 +1746,7 @@
 		}
 
 		function obSetSpinner(status){
-			let oldStatus = downloadSpinner.classList.contains(spin);
+			let oldStatus = downloadSpinner.classList.contains('spin');
 			if (oldStatus == status) return;
 			
 			downloadSpinner.classList.remove('spin');
