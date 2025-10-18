@@ -1858,6 +1858,15 @@
 			});
 		}
 
+		async function obRefreshReadStatus() {
+			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
+				if (item.updated) {
+					callAPI(null, `/api/v1/books/${bookId}/read-progress`, 'PATCH', JSON.stringify({ page: item.page }), false)
+					item.updated = false;
+				}
+			});			
+		}
+
 		//MB Media Cache 
 
 		function openIndexedDB() {
@@ -3557,6 +3566,8 @@
 			document.querySelectorAll('.hidestrip').forEach(el => {
 				el.classList.remove('hidestrip');
 			});
+
+			if (enabledownload) await obRefreshReadStatus();
 
 			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
 			const fakerSeries = callAPI('c_serieslistall',
