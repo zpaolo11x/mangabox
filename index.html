@@ -3586,6 +3586,7 @@
 			webtoonScroll: false,
 			webtoonScrollRatio: 0,
 			webtoonResizeTimeout: null,
+			webtoonBoot: true,
 
 			rtl: null,
 			currentPage: 0,
@@ -3678,6 +3679,7 @@
 			rd.webtoonScroll = false;
 			rd.webtoonScrollRatio = 0;
 			rd.rtl = (dir == 'RIGHT_TO_LEFT');
+			rd.webtoonBoot = true;
 
 			rd.currentPage = pag;
 
@@ -5269,6 +5271,7 @@ console.log("-----B-----")
 
 				setTimeout(() => {
 					rd.webtoonScroll = false;
+					rd.webtoonBoot = false;
 				}, 500);
 			}
 
@@ -5572,6 +5575,7 @@ console.log("-----B-----")
 		const webtoonPageNumberObserver = new IntersectionObserver(async (entries, observer) => {
 			entries.forEach(async (entry) => {
 				if (rd.webtoonScroll) return;
+				if (rd.webtoonBoot) return;
 				if (entry.isIntersecting) {
 					console.log("X-A:"+(entry.target.alt - 1))
 					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
