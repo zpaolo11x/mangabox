@@ -3567,7 +3567,7 @@
 				el.classList.remove('hidestrip');
 			});
 
-			if (enabledownload) await obRefreshReadStatus();
+			if (enableDownload) await obRefreshReadStatus();
 
 			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
 			const fakerSeries = callAPI('c_serieslistall',
