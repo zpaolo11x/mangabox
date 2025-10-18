@@ -5550,6 +5550,7 @@ console.log("jumpstring currentpage:"+rd.currentPage)
 		// This is the most important function, it updates the history and then passes the path to the loadContent function that does all the work
 		// In MB the navigateTo function with a proper path form will open the different sections and activate various states.
 		function navigateTo(path) {
+		console.log("navigate to:"+path)
 			history.pushState(null, '', mb.basePath + path);
 			loadContent();
 		}
