@@ -307,7 +307,7 @@
 	<div id="debuggerObj"></div>
 
 	<script>
-		const fullDebugMode = true;
+		const fullDebugMode = false;
 
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
@@ -794,7 +794,6 @@
 			};
 
 			if (offlineSession) {
-
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
 					const cached = await getCachedData(db, cacheKey);
