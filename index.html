@@ -4010,16 +4010,18 @@
 			const pagesData = !rd.webtoon ?
 				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
 				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
-
+console.log("A:"+rd.currentSpreadIndex)
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				console.log("current spread index set to zero")
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
+console.log("B:"+rd.currentSpreadIndex)
 
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
 			zoomControls.style.display = rd.webtoon ? '' : 'none';
 
 			initReaderUI(pagesData, bookData)
+console.log("C:"+rd.currentSpreadIndex)
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 
@@ -4336,6 +4338,7 @@ console.log("fetch pages current page" + rd.currentPage)
 				pageObjectL.uiPage.style.objectPosition = 'left';
 
 				if ((pageObjectL.isCurrent)) rd.currentSpreadIndex = index;
+console.log("D:"+rd.currentSpreadIndex)
 
 				//spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
 				//spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
@@ -4517,6 +4520,7 @@ console.log("fetch pages current page" + rd.currentPage)
 				pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 				if ((pageObjectL.isCurrent) || (pageObjectR.isCurrent)) rd.currentSpreadIndex = index;
+console.log("E:"+rd.currentSpreadIndex)
 
 				if ((spreadObject.spreadKind == 'cover-page') || (spreadObject.spreadKind == 'back-cover')) {
 					spreadObject.uiItem.classList.add('cover-page')
