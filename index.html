@@ -5205,7 +5205,12 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
 			
-			console.log("jump to target:"+targetSpreadIndex)
+			console.log("--JUMP TO SPREAD--:")
+			console.log("  targetSpreadIndex:" + targetSpreadIndex);
+			console.log("  targetSpreadFocus:" + targetSpreadFocus);
+			console.log("  skipHistory:" + skipHistory);
+			console.log("  smoothWebtoon:" + smoothWebtoon);
+
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -5229,9 +5234,13 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 				}
 			}
 
-			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
-console.log("-----B-----")
+			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
+				console.log ("--JUMP TO SPREAD RETURN")
+				return;
+			}
+
 			if (targetSpreadFocus == null) {
+				console.log ("--TARGET SPREAD FOCUS = NULL")
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
 			}
 
@@ -5257,8 +5266,8 @@ console.log("-----B-----")
 
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 			
-console.log("smoothWebtoon:"+smoothWebtoon)
 			if (rd.webtoon && !smoothWebtoon) {
+				console.log ("--WEBTOON LOOP--")
 				rd.webtoonScroll = true;
 
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
