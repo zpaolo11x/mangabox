@@ -5202,6 +5202,8 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
+			
+			console.log("jump to target:"+targetSpreadIndex)
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -5226,7 +5228,7 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 			}
 
 			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
-
+console.log("-----B-----")
 			if (targetSpreadFocus == null) {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
 			}
