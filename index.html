@@ -5256,7 +5256,7 @@ console.log("-----B-----")
 			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
-
+console.log("smoothWebtoon:"+smoothWebtoon)
 			if (rd.webtoon && !smoothWebtoon) {
 				rd.webtoonScroll = true;
 
@@ -5574,6 +5574,8 @@ console.log("-----B-----")
 
 		const webtoonPageNumberObserver = new IntersectionObserver(async (entries, observer) => {
 			entries.forEach(async (entry) => {
+				console.log("rd.webtoonScroll:"+rd.webtoonScroll)
+				console.log("rd.webtoonBoot:"+rd.webtoonBoot)
 				if (rd.webtoonScroll) return;
 				if (rd.webtoonBoot) return;
 				if (entry.isIntersecting) {
