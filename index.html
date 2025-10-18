@@ -4795,6 +4795,7 @@ console.log("jumpstring currentpage:"+rd.currentPage)
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.catch(error => console.error('Error:', error));
 			}
+console.log("jumpstring currentpage 2:"+rd.currentPage)
 
 			if (obIsBookCompleted(rd.bookId)){
 				mb.offlineBooks[rd.bookId].page = rd.currentPage;
