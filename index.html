@@ -307,7 +307,7 @@
 	<div id="debuggerObj"></div>
 
 	<script>
-		const fullDebugMode = false;
+		const fullDebugMode = true;
 
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
@@ -1760,9 +1760,11 @@
 			if (status) downloadSpinner.classList.add('spin')
 		}
 
-		function obAddBookToTable(bookId) {
-			mb.offlineBooks[bookId] = {
+		function obAddBookToTable(book) {
+			mb.offlineBooks[book.id] = {
 				status: 'downloading',
+				page: book.readProgress.page,
+				pages: book.media.pagesCount,
 				percent: 0,
 			};
 			obSaveTable();
@@ -3000,8 +3002,16 @@
 			let offline = {};
 
 			if (useOfflineCopy) {
+				//TODO Alternative way: when read status change, and the book 
+				// is offline, update the saved metadata so it will always be in sync
+				// but will this sync with the reading offline? No
+				 
+				// Load saved metadata
 				offline = await obLoadOfflineBook(book.id);
+				// Apply saved metadata to book
 				book = offline.bookMetadata;
+				// Pipe read progress into saved metadata
+				book.readProgress.page = mb.offlineBooks[book.id].page;
 			}
 
 			item.childNodes[0]?.remove();
@@ -3180,7 +3190,7 @@
 						// Download the book!
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '0%';
-						obAddBookToTable(book.id);
+						obAddBookToTable(book);
 						obSetSpinner(true);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 						obDownloadBook(book.id, "temp_" + book.id)
@@ -4783,6 +4793,10 @@
 			if (!rd.incognito) {
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.catch(error => console.error('Error:', error));
+			}
+
+			if (obIsBookCompleted(rd.bookId)){
+				mb.offlineBooks[rd.bookId].page = rd.currentPage;
 			}
 
 			return (stringOut);
