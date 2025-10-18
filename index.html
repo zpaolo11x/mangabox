@@ -4012,6 +4012,7 @@
 				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
+				console.log("current spread index set to zero")
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
@@ -4233,6 +4234,13 @@
 			pageObjectL.uiContainer.append(coverlayL);
 		}
 
+		const mimeToExt = {
+			'image/jpeg': '.jpg',
+			'image/png': '.png',
+			'image/webp': '.webp',
+			'image/gif': '.gif',
+		};
+
 		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
 
 			let useOfflineCopy = !(offline == null);
@@ -4249,7 +4257,7 @@
 			*/
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInnerWT.style.flexDirection = 'column';
-console.log(rd.currentPage)
+console.log("fetch pages current page" + rd.currentPage)
 			const pageData = komgaPageData.map(page => ({
 				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
@@ -4344,13 +4352,6 @@ console.log(rd.currentPage)
 
 			});
 		}
-
-		const mimeToExt = {
-			'image/jpeg': '.jpg',
-			'image/png': '.png',
-			'image/webp': '.webp',
-			'image/gif': '.gif',
-		};
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
