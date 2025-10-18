@@ -5256,6 +5256,7 @@ console.log("-----B-----")
 			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
+			
 console.log("smoothWebtoon:"+smoothWebtoon)
 			if (rd.webtoon && !smoothWebtoon) {
 				rd.webtoonScroll = true;
@@ -5271,8 +5272,11 @@ console.log("smoothWebtoon:"+smoothWebtoon)
 
 				setTimeout(() => {
 					rd.webtoonScroll = false;
-					rd.webtoonBoot = false;
 				}, 500);
+				setTimeout(() => {
+					console.log("SE WEBTOONBOOT TO FALSE")
+					rd.webtoonBoot = false;
+				}, 1000);
 			}
 
 
