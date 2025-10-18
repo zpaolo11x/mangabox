@@ -786,7 +786,7 @@
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
-
+			console.log(cacheKey+" "+API_url)
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
@@ -1762,9 +1762,11 @@
 		function obAddBookToTable(book) {
 			mb.offlineBooks[book.id] = {
 				status: 'downloading',
+				percent: 0,
+
+				updated: false,
 				page: book.readProgress.page,
 				pages: book.media.pagesCount,
-				percent: 0,
 			};
 			obSaveTable();
 		}
@@ -2007,9 +2009,10 @@
 		}
 
 		async function setReadStatus(seriesId, bookId, read, item, format) {
+			console.log("bookid"+bookId+" seriesid"+seriesId);
 			if (bookId == null) {
 				await callAPI(null, `/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
-				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
+				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData, null);
 				mb.currentlyScaled = item;
 			} else {
@@ -2038,10 +2041,12 @@
 		}
 
 		async function setSeriesReadStatus(seriesId, read, item) {
+			console.log("serSeriesreadStatus for series "+seriesId);
 			setReadStatus(seriesId, null, read, item, null);
 		}
 
 		async function setBookReadStatus(bookId, read, item, format) {
+			console.log("serBookReadStatus for book "+bookId);
 			setReadStatus(null, bookId, read, item, format);
 		}
 
@@ -2262,6 +2267,7 @@
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
 			addClickPointerEvents(markAsRead, async () => {
+				console.log(serie.id);
 				await setSeriesReadStatus(serie.id, true, item);
 			})
 			addPressEvents(markAsRead, scaleDown, scaleUp)
@@ -4349,8 +4355,7 @@ console.log("D:"+rd.currentSpreadIndex)
 				const localSpread = index;
 
 				spreadObject.uiThumb.addEventListener('pointerup', () => {
-										console.log("X-B:"+localSpread)
-
+					console.log("X-B:"+localSpread)
 					jumpToSpread(localSpread);
 				});
 				thumbStripInnerWT.append(spreadObject.uiThumb);
@@ -4793,7 +4798,9 @@ console.log("E:"+rd.currentSpreadIndex)
 
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-console.log("jumpstring currentpage:"+rd.currentPage)
+			
+			console.log("jumpstring currentpage:"+rd.currentPage)
+			
 			const stringOut = `${mb.basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
@@ -4805,10 +4812,12 @@ console.log("jumpstring currentpage:"+rd.currentPage)
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.catch(error => console.error('Error:', error));
 			}
-console.log("jumpstring currentpage 2:"+rd.currentPage)
+			
+			console.log("jumpstring currentpage 2:"+rd.currentPage)
 
 			if (obIsBookCompleted(rd.bookId)){
 				mb.offlineBooks[rd.bookId].page = rd.currentPage;
+				if (offlineSession) mb.offlineBooks[rd.bookId].updated = true;
 				obSaveTable();
 			}
 
