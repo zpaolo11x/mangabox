@@ -5273,6 +5273,8 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
 				const parent = el.parentElement;
 				const offsetTop = el.offsetTop + 1; // 1px extra upwards
+				
+				console.log ("--OFFSET TOP: " + offsetTop);
 
 				parent.scrollTo({
 					top: offsetTop,
