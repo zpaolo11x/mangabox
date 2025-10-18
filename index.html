@@ -4349,6 +4349,8 @@ console.log("D:"+rd.currentSpreadIndex)
 				const localSpread = index;
 
 				spreadObject.uiThumb.addEventListener('pointerup', () => {
+										console.log("X-B:"+localSpread)
+
 					jumpToSpread(localSpread);
 				});
 				thumbStripInnerWT.append(spreadObject.uiThumb);
@@ -4576,6 +4578,8 @@ console.log("E:"+rd.currentSpreadIndex)
 				const localSpread = index;
 
 				spreadObject.uiThumb.addEventListener('pointerup', () => {
+															console.log("X-C:"+localSpread)
+
 					jumpToSpread(localSpread);
 				});
 				thumbStripInner.append(spreadObject.uiThumb);
@@ -4715,6 +4719,8 @@ console.log("E:"+rd.currentSpreadIndex)
 			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.webtoon) {
+														console.log("X-C:"+newSpread)
+
 				jumpToSpread(newSpread);
 				return
 			}
@@ -5565,6 +5571,7 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 			entries.forEach(async (entry) => {
 				if (rd.webtoonScroll) return;
 				if (entry.isIntersecting) {
+					console.log("X-A:"+(entry.target.alt - 1))
 					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
 				}
 			});
