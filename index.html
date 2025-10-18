@@ -4783,6 +4783,7 @@
 
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
+
 			const stringOut = `${mb.basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
@@ -4797,6 +4798,7 @@
 
 			if (obIsBookCompleted(rd.bookId)){
 				mb.offlineBooks[rd.bookId].page = rd.currentPage;
+				obSaveTable();
 			}
 
 			return (stringOut);
