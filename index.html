@@ -3586,7 +3586,6 @@
 			webtoonScroll: false,
 			webtoonScrollRatio: 0,
 			webtoonResizeTimeout: null,
-			webtoonBoot: true,
 
 			rtl: null,
 			currentPage: 0,
@@ -3679,7 +3678,6 @@
 			rd.webtoonScroll = false;
 			rd.webtoonScrollRatio = 0;
 			rd.rtl = (dir == 'RIGHT_TO_LEFT');
-			rd.webtoonBoot = true;
 
 			rd.currentPage = pag;
 
@@ -5267,7 +5265,7 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 			
 			if (rd.webtoon && !smoothWebtoon) {
-				console.log ("--WEBTOON LOOP--")
+				console.log ("--WEBTOON BLOCK--")
 				rd.webtoonScroll = true;
 
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
@@ -5283,13 +5281,8 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 
 				setTimeout(() => {
 					rd.webtoonScroll = false;
-				}, 500);
-				setTimeout(() => {
-					console.log("SE WEBTOONBOOT TO FALSE")
-					rd.webtoonBoot = false;
 				}, 1000);
 			}
-
 
 			updateProgressBar();
 
@@ -5590,9 +5583,7 @@ console.log("jumpstring currentpage 2:"+rd.currentPage)
 		const webtoonPageNumberObserver = new IntersectionObserver(async (entries, observer) => {
 			entries.forEach(async (entry) => {
 				console.log("rd.webtoonScroll:"+rd.webtoonScroll)
-				console.log("rd.webtoonBoot:"+rd.webtoonBoot)
 				if (rd.webtoonScroll) return;
-				if (rd.webtoonBoot) return;
 				if (entry.isIntersecting) {
 					console.log("X-A:"+(entry.target.alt - 1))
 					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
