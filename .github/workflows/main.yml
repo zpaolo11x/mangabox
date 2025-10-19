@@ -264,6 +264,12 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryAddUsageDescription 'We need access to save images to your photo library.'" $PLIST 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryAddUsageDescription string 'We need access to save images to your photo library.'" $PLIST
 
+          /usr/libexec/PlistBuddy -c "Set :UIFileSharingEnabled true" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :UIFileSharingEnabled bool true" $PLIST
+
+          /usr/libexec/PlistBuddy -c "Set :LSSupportsOpeningDocumentsInPlace true" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :LSSupportsOpeningDocumentsInPlace bool true" $PLIST
+
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
 
