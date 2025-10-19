@@ -1771,6 +1771,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
     try {
       await Filesystem.mkdir({ path, directory: Directory.Documents, recursive: true });
     } catch (err) {
+		debugPrint("Error creating "+path);
       if (!err.message.includes('exists')) throw err;
     }
   }
@@ -1783,9 +1784,10 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
   let completed = 0;
 
   try {
-    console.log(`🌐 Downloading metadata for ${bookId}`);
+    debugPrint(`🌐 Downloading metadata for ${bookId}`);
 
-    // Book metadata
+    debugPrint("Get Book Data")
+	 // Book metadata
     let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
     if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
     const bookMeta = await res.json();
@@ -1796,6 +1798,8 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
       encoding: Encoding.UTF8
     });
 
+
+    debugPrint("Get Series Data")
     // Series metadata
     res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
     if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
@@ -1807,6 +1811,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
       encoding: Encoding.UTF8
     });
 
+	debugPrint("Get Pages Data")
     // Pages metadata
     res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
     if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
@@ -1863,7 +1868,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
       }));
     }
 
-    console.log(`📕 Downloaded book "${bookTitle}" (${bookId})`);
+    debugPrint(`📕 Downloaded book "${bookTitle}" (${bookId})`);
     window.dispatchEvent(new CustomEvent('download-complete', {
       detail: { bookId, completed, total: bookMeta.media.pagesCount }
     }));
