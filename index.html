@@ -596,6 +596,22 @@
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 			});
 
+			window.addEventListener('download-complete', (event) => {
+				const { bookId, completed, total } = event.detail;
+
+				//TODO Extract this function part to use on capacitor too
+				let tempDiv = document.getElementById(bookId);
+
+				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				tempDivChild.innerText = '';
+				tempDivChild.classList.add('done');
+
+				obSetBookCompleted(bookId);
+				obSetSpinner(false);
+
+				let tempDivChild2 = tempDiv.querySelector('.download-book');
+				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+			});
 		}
 
 		// Hide dragbar in PWA mode
