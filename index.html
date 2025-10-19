@@ -1928,7 +1928,7 @@
 					const pageBuffer = await pageRes.arrayBuffer();
 					await Capacitor.Plugins.Filesystem.writeFile({
 						path: pageFile,
-						data: btoa(String.fromCharCode(...new Uint8Array(pageBuffer))),
+						data: arrayBufferToBase64(pageBuffer),
 						directory: 'DOCUMENTS'
 					});
 
@@ -1939,7 +1939,7 @@
 					const thumbPageBuffer = await thumbRes.arrayBuffer();
 					await Capacitor.Plugins.Filesystem.writeFile({
 						path: thumbFile,
-						data: btoa(String.fromCharCode(...new Uint8Array(thumbPageBuffer))),
+						data: arrayBufferToBase64(thumbPageBuffer),
 						directory: 'DOCUMENTS'
 					});
 
