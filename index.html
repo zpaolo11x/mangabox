@@ -328,7 +328,7 @@
 			enableFullscreen = false;
 		}
 
-		if (!isElectronApp && !fullDebugMode) {
+		if (!isElectronApp && !fullDebugMode && !isCapacitor) {
 			offlineLibrary.remove();
 			enableDownload = false;
 		}
@@ -786,7 +786,7 @@
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
-			console.log(cacheKey+" "+API_url)
+			console.log(cacheKey + " " + API_url)
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
@@ -805,7 +805,7 @@
 
 			if (!offlineSession) {
 				await obRefreshReadStatus();
-			} 	
+			}
 
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
@@ -1752,6 +1752,129 @@
 
 		//MB Offline Download Functions
 
+
+async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
+  const mimeToExt = {
+    'image/jpeg': '.jpg',
+    'image/png': '.png',
+    'image/webp': '.webp',
+    'image/gif': '.gif',
+  };
+
+  const baseDir = 'offline-books';
+  const bookFolder = `${baseDir}/${bookId}`;
+  const pagesFolder = `${bookFolder}/pages`;
+  const thumbsFolder = `${bookFolder}/thumbs`;
+
+  // Helper to make directories recursively
+  async function ensureDir(path) {
+    try {
+      await Filesystem.mkdir({ path, directory: Directory.Data, recursive: true });
+    } catch (err) {
+      if (!err.message.includes('exists')) throw err;
+    }
+  }
+
+  await ensureDir(baseDir);
+  await ensureDir(bookFolder);
+  await ensureDir(pagesFolder);
+  await ensureDir(thumbsFolder);
+
+  let completed = 0;
+
+  try {
+    console.log(`🌐 Downloading metadata for ${bookId}`);
+
+    // Book metadata
+    let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+    if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
+    const bookMeta = await res.json();
+    await Filesystem.writeFile({
+      path: `${bookFolder}/metadata-book.json`,
+      data: JSON.stringify(bookMeta, null, 2),
+      directory: Directory.Data,
+      encoding: Encoding.UTF8
+    });
+
+    // Series metadata
+    res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
+    if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
+    const seriesMeta = await res.json();
+    await Filesystem.writeFile({
+      path: `${bookFolder}/metadata-series.json`,
+      data: JSON.stringify(seriesMeta, null, 2),
+      directory: Directory.Data,
+      encoding: Encoding.UTF8
+    });
+
+    // Pages metadata
+    res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
+    if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
+    const pagesMeta = await res.json();
+    await Filesystem.writeFile({
+      path: `${bookFolder}/metadata-pages.json`,
+      data: JSON.stringify(pagesMeta, null, 2),
+      directory: Directory.Data,
+      encoding: Encoding.UTF8
+    });
+
+    // Book thumbnail
+    const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
+    res = await fetch(thumbUrl, requestData);
+    if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
+    const thumbBuffer = await res.arrayBuffer();
+    await Filesystem.writeFile({
+      path: `${bookFolder}/thumbnail.jpg`,
+      data: btoa(String.fromCharCode(...new Uint8Array(thumbBuffer))),
+      directory: Directory.Data
+    });
+
+    // Download all pages
+    for (const page of pagesMeta) {
+      const pageFile = `${pagesFolder}/${page.number}${mimeToExt[page.mediaType]}`;
+      const thumbFile = `${thumbsFolder}/t_${page.number}.jpg`;
+
+      // Page
+      const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
+      const pageRes = await fetch(pageUrl, requestData);
+      if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
+      const pageBuffer = await pageRes.arrayBuffer();
+      await Filesystem.writeFile({
+        path: pageFile,
+        data: btoa(String.fromCharCode(...new Uint8Array(pageBuffer))),
+        directory: Directory.Data
+      });
+
+      // Thumbnail
+      const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
+      const thumbRes = await fetch(thumbPageUrl, requestData);
+      if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
+      const thumbPageBuffer = await thumbRes.arrayBuffer();
+      await Filesystem.writeFile({
+        path: thumbFile,
+        data: btoa(String.fromCharCode(...new Uint8Array(thumbPageBuffer))),
+        directory: Directory.Data
+      });
+
+      completed++;
+      // You can dispatch a custom event to your UI
+      window.dispatchEvent(new CustomEvent('download-progress', {
+        detail: { bookId, completed, total: bookMeta.media.pagesCount }
+      }));
+    }
+
+    console.log(`📕 Downloaded book "${bookTitle}" (${bookId})`);
+    window.dispatchEvent(new CustomEvent('download-complete', {
+      detail: { bookId, completed, total: bookMeta.media.pagesCount }
+    }));
+
+    return { ok: true, path: bookFolder };
+  } catch (err) {
+    console.error('❌ Download failed:', err);
+    return { ok: false, error: err.message };
+  }
+}
+
 		function obSaveTable() {
 			localStorage.setItem('mbOfflineBooks', JSON.stringify(mb.offlineBooks));
 		}
@@ -1829,12 +1952,21 @@
 			//TODO Da modificare per supportare Capacitor
 			let request = buildRequest(mb.authToken, 'GET', null)
 
-			await window.offlineAPI.downloadBook({
-				bookId: bookId,
-				bookTitle: bookTitle,
-				baseUrl: `${mb.baseUrl}`,
-				requestData: request
-			});
+			if (isElectronApp){
+				await window.offlineAPI.downloadBook({
+					bookId: bookId,
+					bookTitle: bookTitle,
+					baseUrl: `${mb.baseUrl}`,
+					requestData: request
+				});
+			} else {
+				await capacitorDownloadBook({
+					bookId: bookId,
+					bookTitle: bookTitle,
+					baseUrl: `${mb.baseUrl}`,
+					requestData: request
+				});
+			}
 		}
 
 		async function obDeleteBookData(bookId) {
@@ -1868,7 +2000,7 @@
 					callAPI(null, `/api/v1/books/${bookId}/read-progress`, 'PATCH', JSON.stringify({ page: item.page }), false)
 					item.updated = false;
 				}
-			});			
+			});
 		}
 
 		//MB Media Cache 
@@ -2022,7 +2154,7 @@
 		}
 
 		async function setReadStatus(seriesId, bookId, read, item, format) {
-			console.log("bookid"+bookId+" seriesid"+seriesId);
+			console.log("bookid" + bookId + " seriesid" + seriesId);
 			if (bookId == null) {
 				await callAPI(null, `/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
@@ -2054,12 +2186,12 @@
 		}
 
 		async function setSeriesReadStatus(seriesId, read, item) {
-			console.log("serSeriesreadStatus for series "+seriesId);
+			console.log("serSeriesreadStatus for series " + seriesId);
 			setReadStatus(seriesId, null, read, item, null);
 		}
 
 		async function setBookReadStatus(bookId, read, item, format) {
-			console.log("serBookReadStatus for book "+bookId);
+			console.log("serBookReadStatus for book " + bookId);
 			setReadStatus(null, bookId, read, item, format);
 		}
 
@@ -2443,7 +2575,7 @@
 				var item = document.getElementById(focus);
 				console.log("item:")
 				console.log(item);
-				
+
 				if (item == null) {
 					mainContainer.scrollTo({ top: 0 });
 					return;
@@ -2459,10 +2591,9 @@
 				console.log(item);
 				console.log("item firstchild:")
 				console.log(item.firstChild);
-if (item.firstChild != null) {
-				item.firstChild.classList.add('scaled');
-
-}
+				if (item.firstChild != null) {
+					item.firstChild.classList.add('scaled');
+				}
 				item.classList.add('top-pop');
 
 			}
@@ -3038,7 +3169,7 @@ if (item.firstChild != null) {
 				//TODO Alternative way: when read status change, and the book 
 				// is offline, update the saved metadata so it will always be in sync
 				// but will this sync with the reading offline? No
-				 
+
 				// Load saved metadata
 				offline = await obLoadOfflineBook(book.id);
 				// Apply saved metadata to book
@@ -4046,18 +4177,18 @@ if (item.firstChild != null) {
 			const pagesData = !rd.webtoon ?
 				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
 				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
-console.log("A:"+rd.currentSpreadIndex)
+			console.log("A:" + rd.currentSpreadIndex)
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				console.log("current spread index set to zero")
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
-console.log("B:"+rd.currentSpreadIndex)
+			console.log("B:" + rd.currentSpreadIndex)
 
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
 			zoomControls.style.display = rd.webtoon ? '' : 'none';
 
 			initReaderUI(pagesData, bookData)
-console.log("C:"+rd.currentSpreadIndex)
+			console.log("C:" + rd.currentSpreadIndex)
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 
@@ -4295,7 +4426,7 @@ console.log("C:"+rd.currentSpreadIndex)
 			*/
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInnerWT.style.flexDirection = 'column';
-console.log("fetch pages current page" + rd.currentPage)
+			console.log("fetch pages current page" + rd.currentPage)
 			const pageData = komgaPageData.map(page => ({
 				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
@@ -4374,7 +4505,7 @@ console.log("fetch pages current page" + rd.currentPage)
 				pageObjectL.uiPage.style.objectPosition = 'left';
 
 				if ((pageObjectL.isCurrent)) rd.currentSpreadIndex = index;
-console.log("D:"+rd.currentSpreadIndex)
+				console.log("D:" + rd.currentSpreadIndex)
 
 				//spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
 				//spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
@@ -4385,7 +4516,7 @@ console.log("D:"+rd.currentSpreadIndex)
 				const localSpread = index;
 
 				spreadObject.uiThumb.addEventListener('pointerup', () => {
-					console.log("X-B:"+localSpread)
+					console.log("X-B:" + localSpread)
 					jumpToSpread(localSpread);
 				});
 				thumbStripInnerWT.append(spreadObject.uiThumb);
@@ -4557,7 +4688,7 @@ console.log("D:"+rd.currentSpreadIndex)
 				pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 				if ((pageObjectL.isCurrent) || (pageObjectR.isCurrent)) rd.currentSpreadIndex = index;
-console.log("E:"+rd.currentSpreadIndex)
+				console.log("E:" + rd.currentSpreadIndex)
 
 				if ((spreadObject.spreadKind == 'cover-page') || (spreadObject.spreadKind == 'back-cover')) {
 					spreadObject.uiItem.classList.add('cover-page')
@@ -4613,7 +4744,7 @@ console.log("E:"+rd.currentSpreadIndex)
 				const localSpread = index;
 
 				spreadObject.uiThumb.addEventListener('pointerup', () => {
-															console.log("X-C:"+localSpread)
+					console.log("X-C:" + localSpread)
 
 					jumpToSpread(localSpread);
 				});
@@ -4754,7 +4885,7 @@ console.log("E:"+rd.currentSpreadIndex)
 			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.webtoon) {
-														console.log("X-C:"+newSpread)
+				console.log("X-C:" + newSpread)
 
 				jumpToSpread(newSpread);
 				return
@@ -4828,9 +4959,9 @@ console.log("E:"+rd.currentSpreadIndex)
 
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-			
-			console.log("jumpstring currentpage:"+rd.currentPage)
-			
+
+			console.log("jumpstring currentpage:" + rd.currentPage)
+
 			const stringOut = `${mb.basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
@@ -4842,10 +4973,10 @@ console.log("E:"+rd.currentSpreadIndex)
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.catch(error => console.error('Error:', error));
 			}
-			
-			console.log("jumpstring currentpage 2:"+rd.currentPage)
 
-			if (obIsBookCompleted(rd.bookId)){
+			console.log("jumpstring currentpage 2:" + rd.currentPage)
+
+			if (obIsBookCompleted(rd.bookId)) {
 				mb.offlineBooks[rd.bookId].page = rd.currentPage;
 				if (offlineSession) mb.offlineBooks[rd.bookId].updated = true;
 				obSaveTable();
@@ -5241,7 +5372,7 @@ console.log("E:"+rd.currentSpreadIndex)
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
-			
+
 			console.log("--JUMP TO SPREAD--:")
 			console.log("  targetSpreadIndex:" + targetSpreadIndex);
 			console.log("  targetSpreadFocus:" + targetSpreadFocus);
@@ -5272,12 +5403,12 @@ console.log("E:"+rd.currentSpreadIndex)
 			}
 
 			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
-				console.log ("--JUMP TO SPREAD RETURN")
+				console.log("--JUMP TO SPREAD RETURN")
 				return;
 			}
 
 			if (targetSpreadFocus == null) {
-				console.log ("--TARGET SPREAD FOCUS = NULL")
+				console.log("--TARGET SPREAD FOCUS = NULL")
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
 			}
 
@@ -5302,16 +5433,16 @@ console.log("E:"+rd.currentSpreadIndex)
 			pageTurn(localNewSpreadIndex, localOldSpreadIndex, turnDirectionCalc, skipHistory)
 
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
-			
+
 			if (rd.webtoon && !smoothWebtoon) {
-				console.log ("--WEBTOON BLOCK--")
+				console.log("--WEBTOON BLOCK--")
 				rd.webtoonScroll = true;
 
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
 				const parent = el.parentElement;
 				const offsetTop = el.offsetTop + 1; // 1px extra upwards
-				
-				console.log ("--OFFSET TOP: " + offsetTop);
+
+				console.log("--OFFSET TOP: " + offsetTop);
 
 				parent.scrollTo({
 					top: offsetTop,
@@ -5614,17 +5745,17 @@ console.log("E:"+rd.currentSpreadIndex)
 		// This is the most important function, it updates the history and then passes the path to the loadContent function that does all the work
 		// In MB the navigateTo function with a proper path form will open the different sections and activate various states.
 		function navigateTo(path) {
-		console.log("navigate to:"+path)
+			console.log("navigate to:" + path)
 			history.pushState(null, '', mb.basePath + path);
 			loadContent();
 		}
 
 		const webtoonPageNumberObserver = new IntersectionObserver(async (entries, observer) => {
 			entries.forEach(async (entry) => {
-				console.log("rd.webtoonScroll:"+rd.webtoonScroll)
+				console.log("rd.webtoonScroll:" + rd.webtoonScroll)
 				if (rd.webtoonScroll) return;
 				if (entry.isIntersecting) {
-					console.log("X-A:"+(entry.target.alt - 1))
+					console.log("X-A:" + (entry.target.alt - 1))
 					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
 				}
 			});
