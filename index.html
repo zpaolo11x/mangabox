@@ -576,6 +576,28 @@
 			});
 		}
 
+		if (idCapacitor) {
+			window.addEventListener('download-progress', (event) => {
+				const { bookId, completed, total } = event.detail;
+				console.log(`Downloading book ${bookId}: ${completed}/${total} pages`);
+
+				const percent = Math.round((completed / total) * 100);
+
+				obSetBookProgress(bookId, percent);
+				obSetSpinner(true);
+
+				//TODO Extract this function part to use on capacitor too?
+				let tempDiv = document.getElementById(bookId);
+				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				tempDivChild.style.bottom = percent + '%';
+				tempDivChild.innerText = percent + '%';
+
+				let tempDivChild2 = tempDiv.querySelector('.download-book');
+				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+			});
+
+		}
+
 		// Hide dragbar in PWA mode
 		(function () {
 			enableDragbar(isElectronApp);
@@ -1883,8 +1905,8 @@
 
 				return { ok: true, path: bookFolder };
 			} catch (err) {
-				    debugPrint('❌ Error in safeWriteFile:');
-    debugPrint(err);
+				debugPrint('❌ Error in safeWriteFile:');
+				debugPrint(err);
 				console.error('❌ Download failed:', err);
 				return { ok: false, error: err.message };
 			}
