@@ -1798,7 +1798,7 @@
 				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
 				const bookMeta = await res.json();
 				debugPrint("bookMeta");
-				debugPrint(JSON.stringify(bookMeta));
+				debugPrint(bookMeta);
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/metadata-book.json`,
 					data: JSON.stringify(bookMeta, null, 2),
