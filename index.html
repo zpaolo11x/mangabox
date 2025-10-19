@@ -2441,6 +2441,12 @@
 				mainContainer.scrollTo({ top: 0 });
 			} else if (focus) {
 				var item = document.getElementById(focus);
+				
+				if (item == null) {
+					mainContainer.scrollTo({ top: 0 });
+					return;
+				}
+
 				const yOffset = -150;
 				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
 
