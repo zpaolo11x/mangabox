@@ -313,7 +313,7 @@
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
 		}
 
-		const isElectronApp = !!window.electronAPI;
+		const isElectron = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
@@ -328,10 +328,11 @@
 			enableFullscreen = false;
 		}
 
-		if (!isElectronApp && !fullDebugMode && !isCapacitor) {
+		if (!isElectron && !isCapacitor && !fullDebugMode) {
 			offlineLibrary.remove();
 			enableDownload = false;
 		}
+
 		debugPrint("enabledownload" + enableDownload)
 	</script>
 
@@ -510,7 +511,7 @@
 		}
 
 
-		if (isElectronApp) {
+		if (isElectron) {
 			dragbarMinBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
 			});
@@ -544,7 +545,7 @@
 
 		// Hide dragbar in PWA mode
 		(function () {
-			enableDragbar(isElectronApp);
+			enableDragbar(isElectron);
 		})();
 
 		//MB Offline Events Response
@@ -581,7 +582,7 @@
 		//TODO Is it possible to generate download-progress events in electron too
 		//TODO instead of using the other layer for functions?
 
-		if (isElectronApp) {
+		if (isElectron) {
 			window.offlineAPI.onDownloadProgress((data) => {
 				const { bookId, completed, total } = data;
 				obUpdateProgressResponse(bookId, completed, total);
@@ -779,12 +780,12 @@
 		function buildRequest(authToken, method, body) {
 			const requestTable = {
 				method: method,
-				...(!isElectronApp && { credentials: 'include' }),
+				...(!isElectron && { credentials: 'include' }),
 				headers: {
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectronApp && { 'X-Auth-Token': authToken })
+					...(isElectron && { 'X-Auth-Token': authToken })
 				},
 				...(body && { body }),
 			}
@@ -1084,7 +1085,7 @@
 				// We continue cleanup anyway
 			}
 
-			if (isElectronApp) await deleteToken();
+			if (isElectron) await deleteToken();
 
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
@@ -1778,10 +1779,8 @@
 
 		async function capacitorGetOfflineBookData(bookId) {
 			const baseFolder = `offline-books/${bookId}`;
-
 			try {
 				console.log(`📖 Reading offline book data for ${bookId}`);
-
 				// Read and parse each metadata file
 				const bookFile = await Capacitor.Plugins.Filesystem.readFile({
 					path: `${baseFolder}/metadata-book.json`,
@@ -1804,11 +1803,12 @@
 				const bookMetadata = JSON.parse(bookFile.data);
 				const pagesMetadata = JSON.parse(pagesFile.data);
 				const seriesMetadata = JSON.parse(seriesFile.data);
-
+				debugPrint(`✅ Successfully loaded offline book data for ${bookId}`)
 				console.log(`✅ Successfully loaded offline book data for ${bookId}`);
 				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath: baseFolder };
 
 			} catch (err) {
+				debugPrint('❌ Failed to read offline book data:', err);
 				console.error('❌ Failed to read offline book data:', err);
 				throw err;
 			}
@@ -2034,7 +2034,7 @@
 				requestData: request
 			};
 
-			if (isElectronApp) await window.offlineAPI.downloadBook(bookData);
+			if (isElectron) await window.offlineAPI.downloadBook(bookData);
 			if (isCapacitor) await capacitorDownloadBook(bookData);
 
 		}
@@ -2052,7 +2052,7 @@
 
 		async function obLoadOfflineBook(bookId) {
 			let bookData = null;
-			if (isElectronApp) bookData = await window.offlineAPI.getOfflineBookData(bookId)
+			if (isElectron) bookData = await window.offlineAPI.getOfflineBookData(bookId)
 			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
 			return bookData;
 		}
@@ -3397,7 +3397,7 @@
 				bookDetails.classList.add('half-bright')
 			};
 
-			if (isElectronApp || fullDebugMode || isCapacitor) {
+			if (isElectron || isCapacitor || fullDebugMode) {
 				const downloadButton = addItem('div', {
 					className: 'mini-buttons download-book',
 					title: 'Download book',
