@@ -1794,8 +1794,10 @@
 				debugPrint("Get Book Data")
 				// Book metadata
 				let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+				if (!res.ok) debugPrint(res.status)
 				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
 				const bookMeta = await res.json();
+				debugPrint(bookMeta);
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/metadata-book.json`,
 					data: JSON.stringify(bookMeta, null, 2),
