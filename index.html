@@ -1803,7 +1803,7 @@
 					path: `${bookFolder}/metadata-book.json`,
 					data: JSON.stringify(bookMeta, null, 2),
 					directory: 'DOCUMENTS',
-					encoding: Encoding.UTF8
+					encoding: Capacitor.Plugins.Filesystem.Encoding.UTF8
 				});
 
 
@@ -1816,7 +1816,7 @@
 					path: `${bookFolder}/metadata-series.json`,
 					data: JSON.stringify(seriesMeta, null, 2),
 					directory: 'DOCUMENTS',
-					encoding: Encoding.UTF8
+					encoding: Capacitor.Plugins.Filesystem.Encoding.UTF8
 				});
 
 				debugPrint("Get Pages Data")
@@ -1828,7 +1828,7 @@
 					path: `${bookFolder}/metadata-pages.json`,
 					data: JSON.stringify(pagesMeta, null, 2),
 					directory: 'DOCUMENTS',
-					encoding: Encoding.UTF8
+					encoding: Capacitor.Plugins.Filesystem.Encoding.UTF8
 				});
 
 				// Book thumbnail
