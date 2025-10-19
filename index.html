@@ -789,8 +789,10 @@
 			console.log(cacheKey+" "+API_url)
 			const db = await openIndexedDB();
 
-			if (offlineSession) {
-				onlineCheck()
+			if (!offlineSession) {
+				await obRefreshReadStatus();
+			} else {
+				onlineCheck() //TODO forse qui await?
 			};
 
 			if (offlineSession) {
