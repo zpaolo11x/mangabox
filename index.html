@@ -1797,7 +1797,8 @@
 				if (!res.ok) debugPrint(res.status)
 				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
 				const bookMeta = await res.json();
-				debugPrint(bookMeta);
+				debugPrint("bookMeta");
+				debugPrint(JSON.stringify(bookMeta));
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/metadata-book.json`,
 					data: JSON.stringify(bookMeta, null, 2),
@@ -1882,6 +1883,8 @@
 
 				return { ok: true, path: bookFolder };
 			} catch (err) {
+				    debugPrint('❌ Error in safeWriteFile:');
+    debugPrint(JSON.stringify(err));
 				console.error('❌ Download failed:', err);
 				return { ok: false, error: err.message };
 			}
