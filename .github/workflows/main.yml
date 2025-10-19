@@ -245,6 +245,9 @@ jobs:
       - name: Install Capacitor Camera plugin
         run: npm install @capacitor/camera@7
 
+      - name: Install Capacitor Filesystem plugin
+        run: npm install @capacitor/filesystem@7
+
       - name: Install File Picker plugin
         run: npm install @capawesome/capacitor-file-picker@7
 

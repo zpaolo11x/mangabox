@@ -3,7 +3,6 @@ const path = require('path');
 const keytar = require('keytar'); // ✅ keytar used here for secure token deletion
 const fs = require('fs/promises');
 const os = require('os');
-const StreamZip = require('node-stream-zip');
 
 let mainWindow;
 let rememberMe = false; // ✅ Track remember-me state

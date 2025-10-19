@@ -1769,7 +1769,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
   // Helper to make directories recursively
   async function ensureDir(path) {
     try {
-      await Filesystem.mkdir({ path, directory: Directory.Documents, recursive: true });
+      await Capacitor.Plugins.Filesystem.mkdir({ path, directory: Directory.Documents, recursive: true });
     } catch (err) {
 		debugPrint("Error creating "+path);
       if (!err.message.includes('exists')) throw err;
