@@ -1769,7 +1769,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
   // Helper to make directories recursively
   async function ensureDir(path) {
     try {
-      await Filesystem.mkdir({ path, directory: Directory.Data, recursive: true });
+      await Filesystem.mkdir({ path, directory: Directory.Documents, recursive: true });
     } catch (err) {
       if (!err.message.includes('exists')) throw err;
     }
@@ -1792,7 +1792,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
     await Filesystem.writeFile({
       path: `${bookFolder}/metadata-book.json`,
       data: JSON.stringify(bookMeta, null, 2),
-      directory: Directory.Data,
+      directory: Directory.Documents,
       encoding: Encoding.UTF8
     });
 
@@ -1803,7 +1803,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
     await Filesystem.writeFile({
       path: `${bookFolder}/metadata-series.json`,
       data: JSON.stringify(seriesMeta, null, 2),
-      directory: Directory.Data,
+      directory: Directory.Documents,
       encoding: Encoding.UTF8
     });
 
@@ -1814,7 +1814,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
     await Filesystem.writeFile({
       path: `${bookFolder}/metadata-pages.json`,
       data: JSON.stringify(pagesMeta, null, 2),
-      directory: Directory.Data,
+      directory: Directory.Documents,
       encoding: Encoding.UTF8
     });
 
@@ -1826,7 +1826,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
     await Filesystem.writeFile({
       path: `${bookFolder}/thumbnail.jpg`,
       data: btoa(String.fromCharCode(...new Uint8Array(thumbBuffer))),
-      directory: Directory.Data
+      directory: Directory.Documents
     });
 
     // Download all pages
@@ -1842,7 +1842,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
       await Filesystem.writeFile({
         path: pageFile,
         data: btoa(String.fromCharCode(...new Uint8Array(pageBuffer))),
-        directory: Directory.Data
+        directory: Directory.Documents
       });
 
       // Thumbnail
@@ -1853,7 +1853,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
       await Filesystem.writeFile({
         path: thumbFile,
         data: btoa(String.fromCharCode(...new Uint8Array(thumbPageBuffer))),
-        directory: Directory.Data
+        directory: Directory.Documents
       });
 
       completed++;
