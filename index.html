@@ -1753,138 +1753,137 @@
 		//MB Offline Download Functions
 
 
-async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
-  const mimeToExt = {
-    'image/jpeg': '.jpg',
-    'image/png': '.png',
-    'image/webp': '.webp',
-    'image/gif': '.gif',
-  };
+		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
+			const mimeToExt = {
+				'image/jpeg': '.jpg',
+				'image/png': '.png',
+				'image/webp': '.webp',
+				'image/gif': '.gif',
+			};
 
-  const baseDir = 'offline-books';
-  const bookFolder = `${baseDir}/${bookId}`;
-  const pagesFolder = `${bookFolder}/pages`;
-  const thumbsFolder = `${bookFolder}/thumbs`;
+			const baseDir = 'offline-books';
+			const bookFolder = `${baseDir}/${bookId}`;
+			const pagesFolder = `${bookFolder}/pages`;
+			const thumbsFolder = `${bookFolder}/thumbs`;
 
-  // Helper to make directories recursively
-async function ensureDir(path) {
-  try {
-    await Capacitor.Plugins.Filesystem.mkdir({
-      path,
-      directory: 'DOCUMENTS',
-      recursive: true
-    });
-  } catch (err) {
-    debugPrint("Error creating " + path);
-    debugPrint(err);
-    if (!String(err.message).includes('exists')) throw err;
-  }
-}
-
-
-  await ensureDir(baseDir);
-  await ensureDir(bookFolder);
-  await ensureDir(pagesFolder);
-  await ensureDir(thumbsFolder);
-
-  let completed = 0;
-
-  try {
-    debugPrint(`🌐 Downloading metadata for ${bookId}`);
-
-    debugPrint("Get Book Data")
-	 // Book metadata
-    let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
-    if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
-    const bookMeta = await res.json();
-    await Filesystem.writeFile({
-      path: `${bookFolder}/metadata-book.json`,
-      data: JSON.stringify(bookMeta, null, 2),
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8
-    });
+			// Helper to make directories recursively
+			async function ensureDir(path) {
+				try {
+					await Capacitor.Plugins.Filesystem.mkdir({
+						path,
+						directory: 'DOCUMENTS',
+						recursive: true
+					});
+				} catch (err) {
+					debugPrint("Error creating " + path);
+					//if (!String(err.message).includes('exists')) throw err;
+				}
+			}
 
 
-    debugPrint("Get Series Data")
-    // Series metadata
-    res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
-    if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
-    const seriesMeta = await res.json();
-    await Filesystem.writeFile({
-      path: `${bookFolder}/metadata-series.json`,
-      data: JSON.stringify(seriesMeta, null, 2),
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8
-    });
+			await ensureDir(baseDir);
+			await ensureDir(bookFolder);
+			await ensureDir(pagesFolder);
+			await ensureDir(thumbsFolder);
 
-	debugPrint("Get Pages Data")
-    // Pages metadata
-    res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
-    if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
-    const pagesMeta = await res.json();
-    await Filesystem.writeFile({
-      path: `${bookFolder}/metadata-pages.json`,
-      data: JSON.stringify(pagesMeta, null, 2),
-      directory: Directory.Documents,
-      encoding: Encoding.UTF8
-    });
+			let completed = 0;
 
-    // Book thumbnail
-    const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
-    res = await fetch(thumbUrl, requestData);
-    if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
-    const thumbBuffer = await res.arrayBuffer();
-    await Filesystem.writeFile({
-      path: `${bookFolder}/thumbnail.jpg`,
-      data: btoa(String.fromCharCode(...new Uint8Array(thumbBuffer))),
-      directory: Directory.Documents
-    });
+			try {
+				debugPrint(`🌐 Downloading metadata for ${bookId}`);
 
-    // Download all pages
-    for (const page of pagesMeta) {
-      const pageFile = `${pagesFolder}/${page.number}${mimeToExt[page.mediaType]}`;
-      const thumbFile = `${thumbsFolder}/t_${page.number}.jpg`;
+				debugPrint("Get Book Data")
+				// Book metadata
+				let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
+				const bookMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-book.json`,
+					data: JSON.stringify(bookMeta, null, 2),
+					directory: 'DOCUMENTS',
+					encoding: Encoding.UTF8
+				});
 
-      // Page
-      const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
-      const pageRes = await fetch(pageUrl, requestData);
-      if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
-      const pageBuffer = await pageRes.arrayBuffer();
-      await Filesystem.writeFile({
-        path: pageFile,
-        data: btoa(String.fromCharCode(...new Uint8Array(pageBuffer))),
-        directory: Directory.Documents
-      });
 
-      // Thumbnail
-      const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
-      const thumbRes = await fetch(thumbPageUrl, requestData);
-      if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
-      const thumbPageBuffer = await thumbRes.arrayBuffer();
-      await Filesystem.writeFile({
-        path: thumbFile,
-        data: btoa(String.fromCharCode(...new Uint8Array(thumbPageBuffer))),
-        directory: Directory.Documents
-      });
+				debugPrint("Get Series Data")
+				// Series metadata
+				res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
+				if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
+				const seriesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-series.json`,
+					data: JSON.stringify(seriesMeta, null, 2),
+					directory: 'DOCUMENTS',
+					encoding: Encoding.UTF8
+				});
 
-      completed++;
-      // You can dispatch a custom event to your UI
-      window.dispatchEvent(new CustomEvent('download-progress', {
-        detail: { bookId, completed, total: bookMeta.media.pagesCount }
-      }));
-    }
+				debugPrint("Get Pages Data")
+				// Pages metadata
+				res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
+				if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
+				const pagesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-pages.json`,
+					data: JSON.stringify(pagesMeta, null, 2),
+					directory: 'DOCUMENTS',
+					encoding: Encoding.UTF8
+				});
 
-    debugPrint(`📕 Downloaded book "${bookTitle}" (${bookId})`);
-    window.dispatchEvent(new CustomEvent('download-complete', {
-      detail: { bookId, completed, total: bookMeta.media.pagesCount }
-    }));
+				// Book thumbnail
+				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
+				res = await fetch(thumbUrl, requestData);
+				if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
+				const thumbBuffer = await res.arrayBuffer();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/thumbnail.jpg`,
+					data: btoa(String.fromCharCode(...new Uint8Array(thumbBuffer))),
+					directory: 'DOCUMENTS'
+				});
 
-    return { ok: true, path: bookFolder };
-  } catch (err) {
-    console.error('❌ Download failed:', err);
-    return { ok: false, error: err.message };
-  }
-}
+				// Download all pages
+				for (const page of pagesMeta) {
+					const pageFile = `${pagesFolder}/${page.number}${mimeToExt[page.mediaType]}`;
+					const thumbFile = `${thumbsFolder}/t_${page.number}.jpg`;
+
+					// Page
+					const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
+					const pageRes = await fetch(pageUrl, requestData);
+					if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
+					const pageBuffer = await pageRes.arrayBuffer();
+					await Capacitor.Plugins.Filesystem.writeFile({
+						path: pageFile,
+						data: btoa(String.fromCharCode(...new Uint8Array(pageBuffer))),
+						directory: 'DOCUMENTS'
+					});
+
+					// Thumbnail
+					const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
+					const thumbRes = await fetch(thumbPageUrl, requestData);
+					if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
+					const thumbPageBuffer = await thumbRes.arrayBuffer();
+					await Capacitor.Plugins.Filesystem.writeFile({
+						path: thumbFile,
+						data: btoa(String.fromCharCode(...new Uint8Array(thumbPageBuffer))),
+						directory: 'DOCUMENTS'
+					});
+
+					completed++;
+					// You can dispatch a custom event to your UI
+					window.dispatchEvent(new CustomEvent('download-progress', {
+						detail: { bookId, completed, total: bookMeta.media.pagesCount }
+					}));
+				}
+
+				debugPrint(`📕 Downloaded book "${bookTitle}" (${bookId})`);
+				window.dispatchEvent(new CustomEvent('download-complete', {
+					detail: { bookId, completed, total: bookMeta.media.pagesCount }
+				}));
+
+				return { ok: true, path: bookFolder };
+			} catch (err) {
+				console.error('❌ Download failed:', err);
+				return { ok: false, error: err.message };
+			}
+		}
 
 		function obSaveTable() {
 			localStorage.setItem('mbOfflineBooks', JSON.stringify(mb.offlineBooks));
@@ -1963,7 +1962,7 @@ async function ensureDir(path) {
 			//TODO Da modificare per supportare Capacitor
 			let request = buildRequest(mb.authToken, 'GET', null)
 
-			if (isElectronApp){
+			if (isElectronApp) {
 				await window.offlineAPI.downloadBook({
 					bookId: bookId,
 					bookTitle: bookTitle,
