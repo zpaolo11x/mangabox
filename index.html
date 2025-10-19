@@ -1772,6 +1772,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
       await Capacitor.Plugins.Filesystem.mkdir({ path, directory: Directory.Documents, recursive: true });
     } catch (err) {
 		debugPrint("Error creating "+path);
+		debugPrint(err);
       if (!err.message.includes('exists')) throw err;
     }
   }
