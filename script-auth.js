@@ -34,7 +34,7 @@ async function sessionCheck() {
 
 	// Load stored token (e.g. from Electron storage)
 	mb.authToken = true;
-	if (isElectronApp) mb.authToken = await loadToken();
+	if (isElectron) mb.authToken = await loadToken();
 	debugPrint("CURRENT TOKEN:\n" + mb.authToken);
 	console.log("CURRENT TOKEN:\n" + mb.authToken);
 
@@ -62,7 +62,7 @@ async function sessionCheck() {
 	}
 
 	// --- 3. Try validating the token
-	let fetchPayload = (isElectronApp)
+	let fetchPayload = (isElectron)
 		? {
 			method: 'GET',
 			headers: {
@@ -145,7 +145,7 @@ async function login() {
 		const token = response.headers.get('X-Auth-Token');
 		if (response.ok && token) {
 			localStorage.setItem('mbBaseUrl', baseUrlVal);
-			if (isElectronApp) {
+			if (isElectron) {
 				window.electronAPI.sendRememberMe(loginRememberMe.checked);
 				await saveToken(token);
 			}
