@@ -1813,9 +1813,19 @@
 				const bookMetadata = JSON.parse(bookFile.data);
 				const pagesMetadata = JSON.parse(pagesFile.data);
 				const seriesMetadata = JSON.parse(seriesFile.data);
+
+
+				    // Convert base folder to a WebView-friendly URL
+    const uriResult = await Capacitor.Plugins.Filesystem.getUri({
+      path: baseFolder,
+      directory: 'DOCUMENTS'
+    });
+    const baseUrl = Capacitor.convertFileSrc(uriResult.uri);
+	 const bookPath = baseUrl;
+
 				debugPrint(`✅ Successfully loaded offline book data for ${bookId}`)
 				console.log(`✅ Successfully loaded offline book data for ${bookId}`);
-				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath: baseFolder };
+				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath};
 
 			} catch (err) {
 				debugPrint('❌ Failed to read offline book data:', err);
