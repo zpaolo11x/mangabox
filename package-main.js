@@ -136,10 +136,6 @@ ipcMain.handle('delete-offline-book-data', async (_, bookId) => {
 	try {
 		const bookPath = path.join(app.getPath('userData'), 'offline-books', bookId);
 
-		const bookMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-book.json'), 'utf-8'));
-		const pagesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-pages.json'), 'utf-8'));
-		const seriesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-series.json'), 'utf-8'));
-
 		try {
 			await fs.access(bookPath);
 		} catch {
@@ -154,7 +150,6 @@ ipcMain.handle('delete-offline-book-data', async (_, bookId) => {
 		console.error('Error deleting offline book data:', error);
 		return { success: false, message: error.message };
 	}
-
 });
 
 ipcMain.handle('read-file', async (_, filePath) => {

@@ -509,6 +509,7 @@
 			}
 		}
 
+
 		if (isElectronApp) {
 			dragbarMinBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
@@ -539,85 +540,70 @@
 			window.electronAPI.getAppVersion().then(version => {
 				dragbarAppTitle.textContent = 'MangaBox v' + version;
 			});
-
-			// Listen for progress updates from main
-			window.offlineAPI.onDownloadProgress((data) => {
-				const { bookId, completed, total } = data;
-				const percent = Math.round((completed / total) * 100);
-
-				obSetBookProgress(bookId, percent);
-				obSetSpinner(true);
-
-				//TODO Extract this function part to use on capacitor too?
-				let tempDiv = document.getElementById(bookId);
-				let tempDivChild = tempDiv.querySelector('.book-downloader');
-				tempDivChild.style.bottom = percent + '%';
-				tempDivChild.innerText = percent + '%';
-
-				let tempDivChild2 = tempDiv.querySelector('.download-book');
-				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
-			});
-
-			window.offlineAPI.onDownloadComplete((data) => {
-				const { bookId, completed, total } = data;
-
-				//TODO Extract this function part to use on capacitor too
-				let tempDiv = document.getElementById(bookId);
-
-				let tempDivChild = tempDiv.querySelector('.book-downloader');
-				tempDivChild.innerText = '';
-				tempDivChild.classList.add('done');
-
-				obSetBookCompleted(bookId);
-				obSetSpinner(false);
-
-				let tempDivChild2 = tempDiv.querySelector('.download-book');
-				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
-			});
-		}
-
-		if (isCapacitor) {
-			window.addEventListener('download-progress', (event) => {
-				const { bookId, completed, total } = event.detail;
-				console.log(`Downloading book ${bookId}: ${completed}/${total} pages`);
-
-				const percent = Math.round((completed / total) * 100);
-
-				obSetBookProgress(bookId, percent);
-				obSetSpinner(true);
-
-				//TODO Extract this function part to use on capacitor too?
-				let tempDiv = document.getElementById(bookId);
-				let tempDivChild = tempDiv.querySelector('.book-downloader');
-				tempDivChild.style.bottom = percent + '%';
-				tempDivChild.innerText = percent + '%';
-
-				let tempDivChild2 = tempDiv.querySelector('.download-book');
-				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
-			});
-
-			window.addEventListener('download-complete', (event) => {
-				const { bookId, completed, total } = event.detail;
-
-				//TODO Extract this function part to use on capacitor too
-				let tempDiv = document.getElementById(bookId);
-
-				let tempDivChild = tempDiv.querySelector('.book-downloader');
-				tempDivChild.innerText = '';
-				tempDivChild.classList.add('done');
-
-				obSetBookCompleted(bookId);
-				obSetSpinner(false);
-
-				let tempDivChild2 = tempDiv.querySelector('.download-book');
-				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
-			});
 		}
 
 		// Hide dragbar in PWA mode
 		(function () {
 			enableDragbar(isElectronApp);
 		})();
+
+		//MB Offline Events Response
+
+		function obUpdateProgressResponse(bookId, completed, total) {
+			const percent = Math.round((completed / total) * 100);
+
+			obSetBookProgress(bookId, percent);
+			obSetSpinner(true);
+
+			let tempDiv = document.getElementById(bookId);
+			let tempDivChild = tempDiv.querySelector('.book-downloader');
+			tempDivChild.style.bottom = percent + '%';
+			tempDivChild.innerText = percent + '%';
+
+			let tempDivChild2 = tempDiv.querySelector('.download-book');
+			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+		}
+
+		function obDownloaDcompleteResponse(bookId, completed, total) {
+			let tempDiv = document.getElementById(bookId);
+
+			let tempDivChild = tempDiv.querySelector('.book-downloader');
+			tempDivChild.innerText = '';
+			tempDivChild.classList.add('done');
+
+			obSetBookCompleted(bookId);
+			obSetSpinner(false);
+
+			let tempDivChild2 = tempDiv.querySelector('.download-book');
+			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+		}
+
+		//TODO Is it possible to generate download-progress events in electron too
+		//TODO instead of using the other layer for functions?
+
+		if (isElectronApp) {
+			window.offlineAPI.onDownloadProgress((data) => {
+				const { bookId, completed, total } = data;
+				obUpdateProgressResponse(bookId, completed, total);
+			});
+
+			window.offlineAPI.onDownloadComplete((data) => {
+				const { bookId, completed, total } = data;
+				obDownloaDcompleteResponse(bookId, completed, total)
+			});
+		}
+
+		if (isCapacitor) {
+			window.addEventListener('download-progress', (event) => {
+				const { bookId, completed, total } = event.detail;
+				obUpdateProgressResponse(bookId, completed, total);
+			});
+
+			window.addEventListener('download-complete', (event) => {
+				const { bookId, completed, total } = event.detail;
+				obDownloaDcompleteResponse(bookId, completed, total)
+			});
+		}
 
 
 		//MB General Functions 
@@ -1790,6 +1776,43 @@
 
 		//MB Offline Download Functions
 
+		async function capacitorGetOfflineBookData(bookId) {
+			const baseFolder = `offline-books/${bookId}`;
+
+			try {
+				console.log(`📖 Reading offline book data for ${bookId}`);
+
+				// Read and parse each metadata file
+				const bookFile = await Capacitor.Plugins.Filesystem.readFile({
+					path: `${baseFolder}/metadata-book.json`,
+					directory: 'DOCUMENTS',
+					encoding: 'utf8'
+				});
+
+				const pagesFile = await Capacitor.Plugins.Filesystem.readFile({
+					path: `${baseFolder}/metadata-pages.json`,
+					directory: 'DOCUMENTS',
+					encoding: 'utf8'
+				});
+
+				const seriesFile = await Capacitor.Plugins.Filesystem.readFile({
+					path: `${baseFolder}/metadata-series.json`,
+					directory: 'DOCUMENTS',
+					encoding: 'utf8'
+				});
+
+				const bookMetadata = JSON.parse(bookFile.data);
+				const pagesMetadata = JSON.parse(pagesFile.data);
+				const seriesMetadata = JSON.parse(seriesFile.data);
+
+				console.log(`✅ Successfully loaded offline book data for ${bookId}`);
+				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath: baseFolder };
+
+			} catch (err) {
+				console.error('❌ Failed to read offline book data:', err);
+				throw err;
+			}
+		}
 
 		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
 			const mimeToExt = {
@@ -2002,28 +2025,23 @@
 		}
 
 		async function obDownloadBook(bookId, bookTitle) {
-			//TODO Da modificare per supportare Capacitor
 			let request = buildRequest(mb.authToken, 'GET', null)
 
-			if (isElectronApp) {
-				await window.offlineAPI.downloadBook({
-					bookId: bookId,
-					bookTitle: bookTitle,
-					baseUrl: `${mb.baseUrl}`,
-					requestData: request
-				});
-			} else {
-				await capacitorDownloadBook({
-					bookId: bookId,
-					bookTitle: bookTitle,
-					baseUrl: `${mb.baseUrl}`,
-					requestData: request
-				});
-			}
+			let bookData = {
+				bookId: bookId,
+				bookTitle: bookTitle,
+				baseUrl: `${mb.baseUrl}`,
+				requestData: request
+			};
+
+			if (isElectronApp) await window.offlineAPI.downloadBook(bookData);
+			if (isCapacitor) await capacitorDownloadBook(bookData);
+
 		}
 
 		async function obDeleteBookData(bookId) {
 			const result = await window.offlineAPI.deleteOfflineBookData(bookId)
+
 			if (result.success) {
 				console.log(`Deleted offline book ${bookId} successfully.`);
 			} else {
@@ -2033,8 +2051,9 @@
 		}
 
 		async function obLoadOfflineBook(bookId) {
-			//TODO Modificare poi per Capacitor
-			const bookData = await window.offlineAPI.getOfflineBookData(bookId)
+			let bookData = null;
+			if (isElectronApp) bookData = await window.offlineAPI.getOfflineBookData(bookId)
+			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
 			return bookData;
 		}
 
