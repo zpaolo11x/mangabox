@@ -3257,7 +3257,6 @@
 
 				// Load saved metadata
 				offline = await obLoadOfflineBook(book.id);
-				debugPrint(JSON.stringify(offline));
 				// Apply saved metadata to book
 				book = offline.bookMetadata;
 				// Pipe read progress into saved metadata
@@ -3345,6 +3344,8 @@
 			const thumbnailWrapper = addItem('div', {
 				className: 'thumbnail-wrapper',
 			});
+
+			if(useOfflineCopy) debugPrint(`${offline.bookPath}/thumbnail.jpg`)
 
 			const bookThumbnail = addItem('img', {
 				className: 'book-thumbnail hidden',
