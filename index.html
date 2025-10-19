@@ -1776,6 +1776,16 @@
 		}
 
 		//MB Offline Download Functions
+		function arrayBufferToBase64(buffer) {
+			let binary = '';
+			const bytes = new Uint8Array(buffer);
+			const chunkSize = 0x8000; // 32 KB chunks
+			for (let i = 0; i < bytes.length; i += chunkSize) {
+				const chunk = bytes.subarray(i, i + chunkSize);
+				binary += String.fromCharCode.apply(null, chunk);
+			}
+			return btoa(binary);
+		}
 
 		async function capacitorGetOfflineBookData(bookId) {
 			const baseFolder = `offline-books/${bookId}`;
@@ -1896,10 +1906,13 @@
 				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
 				res = await fetch(thumbUrl, requestData);
 				if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
+
 				const thumbBuffer = await res.arrayBuffer();
+				const base64Thumb = arrayBufferToBase64(thumbBuffer);
+
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/thumbnail.jpg`,
-					data: btoa(String.fromCharCode(...new Uint8Array(thumbBuffer))),
+					data: base64Thumb,
 					directory: 'DOCUMENTS'
 				});
 
