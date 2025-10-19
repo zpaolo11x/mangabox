@@ -576,7 +576,7 @@
 			});
 		}
 
-		if (idCapacitor) {
+		if (isCapacitor) {
 			window.addEventListener('download-progress', (event) => {
 				const { bookId, completed, total } = event.detail;
 				console.log(`Downloading book ${bookId}: ${completed}/${total} pages`);
