@@ -3325,7 +3325,7 @@ async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }
 				bookDetails.classList.add('half-bright')
 			};
 
-			if (isElectronApp || fullDebugMode) {
+			if (isElectronApp || fullDebugMode || isCapacitor) {
 				const downloadButton = addItem('div', {
 					className: 'mini-buttons download-book',
 					title: 'Download book',
