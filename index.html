@@ -1884,7 +1884,7 @@
 				return { ok: true, path: bookFolder };
 			} catch (err) {
 				    debugPrint('❌ Error in safeWriteFile:');
-    debugPrint(JSON.stringify(err));
+    debugPrint(err);
 				console.error('❌ Download failed:', err);
 				return { ok: false, error: err.message };
 			}
