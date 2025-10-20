@@ -850,7 +850,7 @@
 			} catch (error) {
 				console.error(`Fetch error for ${API_url}:`, error);
 				setNetworkStatus('offline');
-								console.log(`Offline mode: using cache for ${API_url}`);
+				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
 					const cached = await getCachedData(db, cacheKey);
 					if (cached) return cached;
@@ -1840,28 +1840,28 @@
 			}
 		}
 
-async function capacitorDeleteBookData(bookId) {
-  try {
-    const baseFolder = `offline-books/${bookId}`;
+		async function capacitorDeleteBookData(bookId) {
+			try {
+				const baseFolder = `offline-books/${bookId}`;
 
-    debugPrint(`🗑️ Deleting offline book data for ${bookId}...`);
-    console.log(`🗑️ Deleting offline book data for ${bookId}...`);
+				debugPrint(`🗑️ Deleting offline book data for ${bookId}...`);
+				console.log(`🗑️ Deleting offline book data for ${bookId}...`);
 
-    await Capacitor.Plugins.Filesystem.rmdir({
-      path: baseFolder,
-      directory: 'DOCUMENTS',
-      recursive: true
-    });
+				await Capacitor.Plugins.Filesystem.rmdir({
+					path: baseFolder,
+					directory: 'DOCUMENTS',
+					recursive: true
+				});
 
-    debugPrint(`✅ Deleted offline book ${bookId} successfully.`);
-    console.log(`✅ Deleted offline book ${bookId} successfully.`);
-    return { success: true };
-  } catch (err) {
-    debugPrint(`❌ Failed to delete offline book ${bookId}:`, err);
-    console.error(`❌ Failed to delete offline book ${bookId}:`, err);
-    return { success: false, message: err.message };
-  }
-}
+				debugPrint(`✅ Deleted offline book ${bookId} successfully.`);
+				console.log(`✅ Deleted offline book ${bookId} successfully.`);
+				return { success: true };
+			} catch (err) {
+				debugPrint(`❌ Failed to delete offline book ${bookId}:`, err);
+				console.error(`❌ Failed to delete offline book ${bookId}:`, err);
+				return { success: false, message: err.message };
+			}
+		}
 
 
 		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
