@@ -44,18 +44,22 @@ contextBridge.exposeInMainWorld('secureStore', {
 	}
 });
 
+
+ipcRenderer.on('download-complete', (_, data) => {
+	window.dispatchEvent(new CustomEvent('download-complete', { detail: data }));
+});
+
+
+ipcRenderer.on('download-progress', (_, data) => {
+	ipcwindow.dispatchEvent(new CustomEvent('download-progress', { detail: data }));
+});
+
 contextBridge.exposeInMainWorld('offlineAPI', {
 	downloadBook: (info) =>
 		ipcRenderer.invoke('download-and-store-book', info),
 
-	onDownloadProgress: (callback) =>
-		ipcRenderer.on('download-progress', (_, data) => callback(data)),
-
 	onDownloadError: (callback) =>
 		ipcRenderer.on('download-error', (_, data) => callback(data)),
-
-	onDownloadComplete: (callback) =>
-		ipcRenderer.on('download-complete', (_, data) => callback(data)),
 
 	getOfflineBookData: async (bookId) => {
 		return await ipcRenderer.invoke('get-offline-book-data', bookId);

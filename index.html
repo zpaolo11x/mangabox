@@ -582,19 +582,7 @@
 		//TODO Is it possible to generate download-progress events in electron too
 		//TODO instead of using the other layer for functions?
 
-		if (isElectron) {
-			window.offlineAPI.onDownloadProgress((data) => {
-				const { bookId, completed, total } = data;
-				obUpdateProgressResponse(bookId, completed, total);
-			});
-
-			window.offlineAPI.onDownloadComplete((data) => {
-				const { bookId, completed, total } = data;
-				obDownloaDcompleteResponse(bookId, completed, total)
-			});
-		}
-
-		if (isCapacitor) {
+		if (isCapacitor || isElectron) {
 			window.addEventListener('download-progress', (event) => {
 				const { bookId, completed, total } = event.detail;
 				obUpdateProgressResponse(bookId, completed, total);
