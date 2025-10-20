@@ -51,7 +51,7 @@ ipcRenderer.on('download-complete', (_, data) => {
 
 
 ipcRenderer.on('download-progress', (_, data) => {
-	ipcwindow.dispatchEvent(new CustomEvent('download-progress', { detail: data }));
+	window.dispatchEvent(new CustomEvent('download-progress', { detail: data }));
 });
 
 contextBridge.exposeInMainWorld('offlineAPI', {
