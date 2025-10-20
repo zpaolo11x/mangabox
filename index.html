@@ -3331,7 +3331,7 @@
 			});
 
 			if (bookIsOffline) {
-				tempDivChild.innerText = '100%';
+				bookDownloadUI.innerText = '100%';
 				bookDownloadUI.classList.add('done');
 			}
 
@@ -3482,7 +3482,7 @@
 						// Book is finished, you can delete the book!
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '100%';
-						tempDivChild.innerText = '0%';
+						bookDownloadUI.innerText = '0%';
 						obRemoveBookFromTable(book.id);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 						obDeleteBookData(book.id);
@@ -3490,7 +3490,7 @@
 						// Book is downloading, you can cancel the process
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '100%';
-						tempDivChild.innerText = '0%';
+						bookDownloadUI.innerText = '0%';
 						obRemoveBookFromTable(book.id);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 						obDeleteBookData(book.id);
@@ -3499,7 +3499,7 @@
 						// Download the book!
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '0%';
-						tempDivChild.innerText = '0%';
+						bookDownloadUI.innerText = '0%';
 						obAddBookToTable(book);
 						obSetSpinner(true);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
