@@ -839,9 +839,9 @@
 			} catch (error) {
 				console.error(`Fetch error for ${API_url}:`, error);
 				setNetworkStatus('offline');
-				
-				return(callAPI(cacheKey, API_url, method, body, returnval));
-				
+
+				return (callAPI(cacheKey, API_url, method, body, returnval));
+
 				throw error;
 			}
 		}
@@ -1946,28 +1946,51 @@
 					const pageFile = `${pagesFolder}/${page.number}${mimeToExt[page.mediaType]}`;
 					const thumbFile = `${thumbsFolder}/t_${page.number}.jpg`;
 
-					// Page
-					const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
-					const pageRes = await fetch(pageUrl, requestData);
-					if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
-					const pageBuffer = await pageRes.arrayBuffer();
-					await Capacitor.Plugins.Filesystem.writeFile({
-						path: pageFile,
-						data: arrayBufferToBase64(pageBuffer),
-						directory: 'DOCUMENTS'
-					});
+					let pageExists = false;
+					try {
+						await Capacitor.Plugins.Filesystem.stat({
+							path: pageFile,
+							directory: 'DOCUMENTS',
+						});
+						pageExists = true;
+					} catch { }
 
-					// Thumbnail
-					const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
-					const thumbRes = await fetch(thumbPageUrl, requestData);
-					if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
-					const thumbPageBuffer = await thumbRes.arrayBuffer();
-					await Capacitor.Plugins.Filesystem.writeFile({
-						path: thumbFile,
-						data: arrayBufferToBase64(thumbPageBuffer),
-						directory: 'DOCUMENTS'
-					});
+					if (!pageExists) {
+						const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
+						const pageRes = await fetch(pageUrl, requestData);
+						if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
+						const pageBuffer = await pageRes.arrayBuffer();
+						await Capacitor.Plugins.Filesystem.writeFile({
+							path: pageFile,
+							data: arrayBufferToBase64(pageBuffer),
+							directory: 'DOCUMENTS'
+						});
+					} else {
+						console.log(`✅ Page ${page.number} already exists, skipping.`);
+					}
 
+					let thumbExists = false;
+					try {
+						await Capacitor.Plugins.Filesystem.stat({
+							path: thumbFile,
+							directory: 'DOCUMENTS',
+						});
+						thumbExists = true;
+					} catch { }
+
+					if (!thumbExists) {
+						const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
+						const thumbRes = await fetch(thumbPageUrl, requestData);
+						if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
+						const thumbPageBuffer = await thumbRes.arrayBuffer();
+						await Capacitor.Plugins.Filesystem.writeFile({
+							path: thumbFile,
+							data: arrayBufferToBase64(thumbPageBuffer),
+							directory: 'DOCUMENTS'
+						});
+					} else {
+						console.log(`✅ Thumb ${page.number} already exists, skipping.`);
+					}
 					completed++;
 					// You can dispatch a custom event to your UI
 					window.dispatchEvent(new CustomEvent('download-progress', {
@@ -2062,12 +2085,11 @@
 			return book && book.status === 'downloading';
 		}
 
-		async function obDownloadBook(bookId, bookTitle) {
+		async function obDownloadBook(bookId) {
 			let request = buildRequest(mb.authToken, 'GET', null)
 
 			let bookData = {
 				bookId: bookId,
-				bookTitle: bookTitle,
 				baseUrl: `${mb.baseUrl}`,
 				requestData: request
 			};
@@ -2101,7 +2123,7 @@
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
 				if (item.status == 'downloading') {
 					obSetSpinner(true);
-					obDownloadBook(bookId, bookId);
+					obDownloadBook(bookId);
 				}
 			});
 		}
@@ -3471,7 +3493,7 @@
 						obAddBookToTable(book);
 						obSetSpinner(true);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
-						obDownloadBook(book.id, "temp_" + book.id)
+						obDownloadBook(book.id)
 					}
 
 				})
