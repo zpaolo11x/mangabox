@@ -807,6 +807,7 @@
 			}
 		}
 
+
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
@@ -850,13 +851,9 @@
 			} catch (error) {
 				console.error(`Fetch error for ${API_url}:`, error);
 				setNetworkStatus('offline');
-				console.log(`Offline mode: using cache for ${API_url}`);
-				if (cacheKey != null) {
-					const cached = await getCachedData(db, cacheKey);
-					if (cached) return cached;
-				}
-				console.warn(`No cached data for ${API_url} while offline`);
-				return null; // or throw if needed
+				
+				return(callAPI(cacheKey, API_url, method, body, returnval));
+				
 				throw error;
 			}
 		}
