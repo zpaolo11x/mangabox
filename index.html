@@ -1815,17 +1815,17 @@
 				const seriesMetadata = JSON.parse(seriesFile.data);
 
 
-				    // Convert base folder to a WebView-friendly URL
-    const uriResult = await Capacitor.Plugins.Filesystem.getUri({
-      path: baseFolder,
-      directory: 'DOCUMENTS'
-    });
-    const baseUrl = Capacitor.convertFileSrc(uriResult.uri);
-	 const bookPath = baseUrl;
+				// Convert base folder to a WebView-friendly URL
+				const uriResult = await Capacitor.Plugins.Filesystem.getUri({
+					path: baseFolder,
+					directory: 'DOCUMENTS'
+				});
+				const baseUrl = Capacitor.convertFileSrc(uriResult.uri);
+				const bookPath = baseUrl;
 
 				debugPrint(`✅ Successfully loaded offline book data for ${bookId}`)
 				console.log(`✅ Successfully loaded offline book data for ${bookId}`);
-				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath};
+				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath };
 
 			} catch (err) {
 				debugPrint('❌ Failed to read offline book data:', err);
@@ -1833,6 +1833,30 @@
 				throw err;
 			}
 		}
+
+async function capacitorDeleteBookData(bookId) {
+  try {
+    const baseFolder = `offline-books/${bookId}`;
+
+    debugPrint(`🗑️ Deleting offline book data for ${bookId}...`);
+    console.log(`🗑️ Deleting offline book data for ${bookId}...`);
+
+    await Capacitor.Plugins.Filesystem.rmdir({
+      path: baseFolder,
+      directory: 'DOCUMENTS',
+      recursive: true
+    });
+
+    debugPrint(`✅ Deleted offline book ${bookId} successfully.`);
+    console.log(`✅ Deleted offline book ${bookId} successfully.`);
+    return { success: true };
+  } catch (err) {
+    debugPrint(`❌ Failed to delete offline book ${bookId}:`, err);
+    console.error(`❌ Failed to delete offline book ${bookId}:`, err);
+    return { success: false, message: err.message };
+  }
+}
+
 
 		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
 			const mimeToExt = {
@@ -2063,7 +2087,9 @@
 		}
 
 		async function obDeleteBookData(bookId) {
-			const result = await window.offlineAPI.deleteOfflineBookData(bookId)
+			let result = null
+			if (isElectron) result = await window.offlineAPI.deleteOfflineBookData(bookId)
+			if (isCapacitor) result = await capacitorDeleteBookData(bookId)
 
 			if (result.success) {
 				console.log(`Deleted offline book ${bookId} successfully.`);
@@ -3355,7 +3381,7 @@
 				className: 'thumbnail-wrapper',
 			});
 
-			if(useOfflineCopy) debugPrint(`${offline.bookPath}/thumbnail.jpg`)
+			if (useOfflineCopy) debugPrint(`${offline.bookPath}/thumbnail.jpg`)
 
 			const bookThumbnail = addItem('img', {
 				className: 'book-thumbnail hidden',
