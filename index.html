@@ -307,7 +307,7 @@
 	<div id="debuggerObj"></div>
 
 	<script>
-		const fullDebugMode = true;
+		const fullDebugMode = false;
 
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
@@ -574,7 +574,7 @@
 			let tempDiv = document.getElementById(bookId);
 
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
-			tempDivChild.innerText = '';
+			tempDivChild.innerText = '100%';
 			tempDivChild.classList.add('done');
 
 			obSetBookCompleted(bookId);
@@ -3326,7 +3326,8 @@
 			});
 
 			const bookDownloadUI = addItem('div', {
-				className: 'book-downloader'
+				className: 'book-downloader',
+				//innerText: '100%'
 			});
 
 			if (bookIsOffline) {

@@ -1357,16 +1357,20 @@ a {
 
 .book-downloader.done {
 	position: absolute;
-	top: 10px;
-	left: 50px;
-	width: 150px;
+	top: 20px;
+	left: calc(100% - 20px);
+	width: 80px;
 	height: 20px;
 	background: rgba(255, 218, 33, 0.645);
 	color: white;
 	text-align: center;
-	line-height: 15px;
+	line-height: 20px;
+	font-size: 17px;
 	font-weight: bold;
-	transform: rotate(45deg);
+	transform: translate(-50%, -50%) rotate(45deg);
+		box-shadow: 0 0px 3px rgba(0,0,0,0.2);
+	text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px
+
 }
 
 .download-glyph {
