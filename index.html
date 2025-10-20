@@ -797,7 +797,6 @@
 		}
 
 		async function onlineCheck() {
-			let seed = Math.random();
 			try {
 				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
 				if (ping.ok) {
@@ -815,7 +814,7 @@
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
-				onlineCheck() //TODO forse qui await?
+				await onlineCheck() //TODO forse qui await?
 			};
 
 			if (offlineSession) {
