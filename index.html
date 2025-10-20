@@ -322,10 +322,15 @@
 		let enableFullscreen = true;
 		let enableDownload = true;
 
+		let filesFolder = 'DOCUMENTS';
+
 		if (isCapacitor) {
 			capacitorPlatform = Capacitor.getPlatform();
 			fullscreenChanger.remove();
 			enableFullscreen = false;
+			if (capacitorPlatform == 'android'){
+				filesFolder = 'DATA';
+			}
 		}
 
 		if (!isElectron && !isCapacitor && !fullDebugMode) {
@@ -1785,19 +1790,19 @@
 				// Read and parse each metadata file
 				const bookFile = await Capacitor.Plugins.Filesystem.readFile({
 					path: `${baseFolder}/metadata-book.json`,
-					directory: 'DOCUMENTS',
+					directory: filesFolder,
 					encoding: 'utf8'
 				});
 
 				const pagesFile = await Capacitor.Plugins.Filesystem.readFile({
 					path: `${baseFolder}/metadata-pages.json`,
-					directory: 'DOCUMENTS',
+					directory: filesFolder,
 					encoding: 'utf8'
 				});
 
 				const seriesFile = await Capacitor.Plugins.Filesystem.readFile({
 					path: `${baseFolder}/metadata-series.json`,
-					directory: 'DOCUMENTS',
+					directory: filesFolder,
 					encoding: 'utf8'
 				});
 
@@ -1809,7 +1814,7 @@
 				// Convert base folder to a WebView-friendly URL
 				const uriResult = await Capacitor.Plugins.Filesystem.getUri({
 					path: baseFolder,
-					directory: 'DOCUMENTS'
+					directory: filesFolder
 				});
 				const baseUrl = Capacitor.convertFileSrc(uriResult.uri);
 				const bookPath = baseUrl;
@@ -1834,7 +1839,7 @@
 
 				await Capacitor.Plugins.Filesystem.rmdir({
 					path: baseFolder,
-					directory: 'DOCUMENTS',
+					directory: filesFolder,
 					recursive: true
 				});
 
@@ -1867,7 +1872,7 @@
 				try {
 					await Capacitor.Plugins.Filesystem.mkdir({
 						path,
-						directory: 'DOCUMENTS',
+						directory: filesFolder,
 						recursive: true
 					});
 				} catch (err) {
@@ -1898,7 +1903,7 @@
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/metadata-book.json`,
 					data: JSON.stringify(bookMeta, null, 2),
-					directory: 'DOCUMENTS',
+					directory: filesFolder,
 					encoding: 'utf8'
 				});
 
@@ -1911,7 +1916,7 @@
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/metadata-series.json`,
 					data: JSON.stringify(seriesMeta, null, 2),
-					directory: 'DOCUMENTS',
+					directory: filesFolder,
 					encoding: 'utf8'
 				});
 
@@ -1923,7 +1928,7 @@
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/metadata-pages.json`,
 					data: JSON.stringify(pagesMeta, null, 2),
-					directory: 'DOCUMENTS',
+					directory: filesFolder,
 					encoding: 'utf8'
 				});
 
@@ -1938,7 +1943,7 @@
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/thumbnail.jpg`,
 					data: base64Thumb,
-					directory: 'DOCUMENTS'
+					directory: filesFolder
 				});
 
 				// Download all pages
@@ -1950,7 +1955,7 @@
 					try {
 						await Capacitor.Plugins.Filesystem.stat({
 							path: pageFile,
-							directory: 'DOCUMENTS',
+							directory: filesFolder,
 						});
 						pageExists = true;
 					} catch { }
@@ -1963,7 +1968,7 @@
 						await Capacitor.Plugins.Filesystem.writeFile({
 							path: pageFile,
 							data: arrayBufferToBase64(pageBuffer),
-							directory: 'DOCUMENTS'
+							directory: filesFolder
 						});
 					} else {
 						console.log(`✅ Page ${page.number} already exists, skipping.`);
@@ -1973,7 +1978,7 @@
 					try {
 						await Capacitor.Plugins.Filesystem.stat({
 							path: thumbFile,
-							directory: 'DOCUMENTS',
+							directory: filesFolder,
 						});
 						thumbExists = true;
 					} catch { }
@@ -1986,7 +1991,7 @@
 						await Capacitor.Plugins.Filesystem.writeFile({
 							path: thumbFile,
 							data: arrayBufferToBase64(thumbPageBuffer),
-							directory: 'DOCUMENTS'
+							directory: filesFolder
 						});
 					} else {
 						console.log(`✅ Thumb ${page.number} already exists, skipping.`);
