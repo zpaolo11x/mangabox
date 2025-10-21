@@ -283,9 +283,6 @@ jobs:
 #        if: ${{ matrix.sys == 'android' }}
 #        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
 
-      - name: Prepare output folder
-        run: mkdir output
-
       - name: Android - Version injection
         if: ${{ matrix.sys == 'android' }}
         run: |
@@ -297,6 +294,8 @@ jobs:
           sed -i "s/versionName \".*\"/versionName \"$VERSION\"/" android/app/build.gradle
           sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" android/app/build.gradle
 
+      - name: Prepare output folder
+        run: mkdir output
 
       - name: Android - Build app
         if: ${{ matrix.sys == 'android' }}
@@ -309,7 +308,7 @@ jobs:
         run: |
           mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
-      - name: iOS - Build app for simulator
+      - name: iOS app - Build app for simulator
         if: ${{ matrix.name == 'iOS-app'}}
         run: |
           cd ios/App
@@ -322,16 +321,16 @@ jobs:
             -derivedDataPath build \
             ONLY_ACTIVE_ARCH=NO
 
-      - name: iOS - Move app to target
+      - name: iOS app - Move app to target
         if: ${{ matrix.name == 'iOS-app' }}
         run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}-${{ matrix.name }}.app
 
-      - name: Replace icons for iOS26
+      - name: iOS app - Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-app' }}
         run: |
           cp assets/icon-ios26/* output/MangaBox-${{ env.version }}-${{ matrix.name }}.app/
 
-      - name: iOS - Build app for device
+      - name: iOS ipa - Build app for device
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           cd ios/App
@@ -347,12 +346,12 @@ jobs:
             archive \
             -archivePath build/App.xcarchive
 
-      - name: Replace icons for iOS26
+      - name: iOS ipa - Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cp assets/icon-ios26/* ios/App/build/App.xcarchive/Products/Applications/App.app/
 
-      - name: iOS - Package unsigned .ipa
+      - name: iOS ipa - Package unsigned .ipa
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           rsync -a ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
