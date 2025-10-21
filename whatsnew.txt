@@ -1,7 +1,7 @@
 Main UI
-- Desktop version can download books for offline reading
-- Added new Offline Books toolbar button
-- Automatically resume book downloads
+- Enabled download books functionality for offline reading
+- Added new Offline Books toolbar button to see all downloaded books
+- Automatically resume interrupted book downloads at startup
 - Caching of web requests so the UI is consistent when offline
 - Caching of viewed thumbnails for offline browsing
 - Clear cached media and data storage when logging out of server
@@ -11,7 +11,7 @@ Reader UI
 - New color scheme that keeps the theme page color as reader background
 
 Build
-- 
+- Added privacy policy to web documentation
 
 Fixes
 - Fixed smooth theme transition from light to dark
