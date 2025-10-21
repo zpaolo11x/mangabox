@@ -1,10 +1,6 @@
 {
 	"appId": "com.mangabox.app",
 	"appName": "MangaBox",
-	"version": "0.2.7",
-	"android": {
-		"versionCode": 27
-	},
 	"webDir": "dist/mangabox",
 	"bundledWebRuntime": true,
 	"plugins": {

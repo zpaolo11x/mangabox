@@ -286,6 +286,18 @@ jobs:
       - name: Prepare output folder
         run: mkdir output
 
+      - name: Android - Version injection
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          VERSION="${{ env.version }}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          VERSION_CODE=$((MAJOR*100 + MINOR*10 + PATCH))
+
+          # Update Gradle
+          sed -i "s/versionName \".*\"/versionName \"$VERSION\"/" android/app/build.gradle
+          sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" android/app/build.gradle
+
+
       - name: Android - Build app
         if: ${{ matrix.sys == 'android' }}
         run: |
