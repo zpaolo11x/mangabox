@@ -574,14 +574,17 @@
 			obSetSpinner(true);
 
 			let tempDiv = document.getElementById(bookId);
-			let tempDivChild = tempDiv.querySelector('.book-downloader');
-			tempDivChild.style.bottom = percent + '%';
-			tempDivChild.innerText = percent + '%';
-			console.log(tempDiv);
-			console.log(tempDivChild.innerText);
+			if (tempDiv) {
+				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				tempDivChild.style.bottom = percent + '%';
+				tempDivChild.innerText = percent + '%';
+				console.log(tempDiv);
+				console.log(tempDivChild.innerText);
 
-			let tempDivChild2 = tempDiv.querySelector('.download-book');
-			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+				let tempDivChild2 = tempDiv.querySelector('.download-book');
+				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+			}
+
 		}
 
 		function obDownloaDcompleteResponse(bookId, completed, total) {
@@ -2695,7 +2698,7 @@
 			}
 
 			series.forEach(async (serie) => {
-				
+
 				/*
 				const existing = document.getElementById(serie.id);
 				if (existing) {
