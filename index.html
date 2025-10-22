@@ -2696,14 +2696,16 @@
 
 			series.forEach(async (serie) => {
 				
+				/*
 				const existing = document.getElementById(serie.id);
 				if (existing) {
 					console.log ("EMERGENCY CLEAN:"+existing);
 					existing.remove(); // Remove the old one to avoid duplicates
 				}
+				*/
 
 				const seriesContainer = addItem('div', {
-					className: 'series-container', //XXX was ending with , 'fade-in');
+					className: 'series-container collector', //XXX was ending with , 'fade-in');
 					id: serie.id,
 				});
 
@@ -3594,7 +3596,7 @@
 			// focus is the book id to focus on
 
 			while (target.firstChild) {
-				console.log("removing: " + target.firstChild)
+				console.log("removing book: " + target.firstChild)
 				target.removeChild(target.firstChild);
 			}
 
@@ -3606,14 +3608,15 @@
 			}
 
 			books.forEach(book => {
+				/*
 				const existing = document.getElementById(book.id);
 				if (existing) {
 					console.log ("EMERGENCY CLEAN:"+existing);
 					existing.remove(); // Remove the old one to avoid duplicates
 				}
-
+				*/
 				const bookContainer = addItem('div', {
-					className: 'book-container',
+					className: 'book-container collector',
 					id: book.id
 				});
 
@@ -5852,6 +5855,7 @@
 			await executeFade(1);
 			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+			document.querySelectorAll('.collector').forEach(item => item.remove());
 
 			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
