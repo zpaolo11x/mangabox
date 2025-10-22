@@ -556,8 +556,20 @@
 		//MB Offline Events Response
 
 		function obUpdateProgressResponse(bookId, completed, total) {
+			//DEBUG THIS IS CHECK FOR DOUBLE ELEMENTS
+			let duplicates = document.querySelectorAll(`#${CSS.escape(bookId)}`);
+
+			if (duplicates.length > 1) {
+				console.warn(`Duplicate ID found for ${bookId}:`, duplicates);
+			} else if (duplicates.length === 1) {
+				console.log(`Only one element found for ${bookId}.`);
+			} else {
+				console.log(`No element found for ${bookId}.`);
+			}
+
+
 			const percent = Math.round((completed / total) * 100);
-			debugPrint(percent);
+			console.log("percent:"+percent);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
 
@@ -565,8 +577,8 @@
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
 			tempDivChild.style.bottom = percent + '%';
 			tempDivChild.innerText = percent + '%';
-			
-			debugPrint(tempDivChild.innerText);
+			console.log(tempDiv);
+			console.log(tempDivChild.innerText);
 
 			let tempDivChild2 = tempDiv.querySelector('.download-book');
 			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
