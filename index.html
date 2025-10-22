@@ -589,6 +589,7 @@
 
 		if (isCapacitor || isElectron) {
 			window.addEventListener('download-progress', (event) => {
+				debugPrint("EV");
 				const { bookId, completed, total } = event.detail;
 				obUpdateProgressResponse(bookId, completed, total);
 			});
