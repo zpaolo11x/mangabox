@@ -328,7 +328,7 @@
 			capacitorPlatform = Capacitor.getPlatform();
 			fullscreenChanger.remove();
 			enableFullscreen = false;
-			if (capacitorPlatform == 'android'){
+			if (capacitorPlatform == 'android') {
 				filesFolder = 'DATA';
 			}
 		}
@@ -2034,7 +2034,7 @@
 				percent: 0,
 
 				updated: false,
-				page: book.readProgress.page,
+				page: book.readProgress?.page ?? 1,
 				pages: book.media.pagesCount,
 			};
 			obSaveTable();
