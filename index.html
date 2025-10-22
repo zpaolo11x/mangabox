@@ -2695,6 +2695,12 @@
 			}
 
 			series.forEach(async (serie) => {
+				
+				const existing = document.getElementById(serie.id);
+				if (existing) {
+					console.log ("EMERGENCY CLEAN:"+existing);
+					existing.remove(); // Remove the old one to avoid duplicates
+				}
 
 				const seriesContainer = addItem('div', {
 					className: 'series-container', //XXX was ending with , 'fade-in');
