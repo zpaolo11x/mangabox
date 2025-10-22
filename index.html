@@ -307,7 +307,7 @@
 	<div id="debuggerObj"></div>
 
 	<script>
-		const fullDebugMode = false;
+		const fullDebugMode = true;
 
 		function debugPrint(text) {
 			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
@@ -569,7 +569,7 @@
 
 
 			const percent = Math.round((completed / total) * 100);
-			console.log("percent:"+percent);
+			console.log("percent:" + percent);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
 
@@ -2727,8 +2727,6 @@
 				mainContainer.scrollTo({ top: 0 });
 			} else if (focus) {
 				var item = document.getElementById(focus);
-				console.log("item:")
-				console.log(item);
 
 				if (item == null) {
 					mainContainer.scrollTo({ top: 0 });
@@ -2741,10 +2739,7 @@
 				mainContainer.scrollTo({ top: y });
 
 				mb.currentlyScaled = item.firstChild;
-				console.log("item2:")
-				console.log(item);
-				console.log("item firstchild:")
-				console.log(item.firstChild);
+
 				if (item.firstChild != null) {
 					item.firstChild.classList.add('scaled');
 				}
@@ -3593,6 +3588,7 @@
 			// focus is the book id to focus on
 
 			while (target.firstChild) {
+				console.log("removing: " + target.firstChild)
 				target.removeChild(target.firstChild);
 			}
 
@@ -3604,6 +3600,12 @@
 			}
 
 			books.forEach(book => {
+				const existing = document.getElementById(book.id);
+				if (existing) {
+					console.log ("EMERGENCY CLEAN:"+existing);
+					existing.remove(); // Remove the old one to avoid duplicates
+				}
+
 				const bookContainer = addItem('div', {
 					className: 'book-container',
 					id: book.id
