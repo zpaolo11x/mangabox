@@ -557,15 +557,16 @@
 
 		function obUpdateProgressResponse(bookId, completed, total) {
 			const percent = Math.round((completed / total) * 100);
-debugPrint(percent);
+			debugPrint(percent);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
 
 			let tempDiv = document.getElementById(bookId);
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
-			debugPrint(tempDivChild);
 			tempDivChild.style.bottom = percent + '%';
 			tempDivChild.innerText = percent + '%';
+			
+			debugPrint(tempDivChild.innerText);
 
 			let tempDivChild2 = tempDiv.querySelector('.download-book');
 			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);

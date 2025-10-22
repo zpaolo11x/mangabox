@@ -386,7 +386,7 @@ body {
 	pointer-events: none;
 	position: fixed;
 	z-index: 10000;
-	font-size: 17px;
+	font-size: 15px;
 	color: white;
 	font-family: 'Courier New', Courier, monospace;
 	font-weight: bold;
