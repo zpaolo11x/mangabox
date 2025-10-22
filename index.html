@@ -557,12 +557,13 @@
 
 		function obUpdateProgressResponse(bookId, completed, total) {
 			const percent = Math.round((completed / total) * 100);
-
+debugPrint(percent);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
 
 			let tempDiv = document.getElementById(bookId);
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
+			debugPrint(tempDivChild);
 			tempDivChild.style.bottom = percent + '%';
 			tempDivChild.innerText = percent + '%';
 
@@ -589,7 +590,7 @@
 
 		if (isCapacitor || isElectron) {
 			window.addEventListener('download-progress', (event) => {
-				debugPrint("EV");
+				debugPrint("EV1");
 				const { bookId, completed, total } = event.detail;
 				obUpdateProgressResponse(bookId, completed, total);
 			});
