@@ -630,7 +630,7 @@
 		}
 
 		function getScreenAR() {
-			return (window.innerWidth / (window.innerHeight * (globalScaler / 100)));
+			return (window.innerWidth / window.innerHeight);
 		}
 
 		function toggleFullscreen() {
@@ -1658,7 +1658,7 @@
 		}));
 
 		function isReaderHorizontal(screenAR) {
-			return (screenAR / mb.readerMaxRatio > rd.orientationThresholdRatio);
+			return (screenAR / (mb.readerMaxRatio * globalScaler / 100) > rd.orientationThresholdRatio);
 		}
 
 		function updateReaderOrientation() {
@@ -1668,6 +1668,14 @@
 				mb.screenAR = newScreenAR;
 				mb.readerHorizontal = isReaderHorizontal(newScreenAR);
 			} else {
+				//TODO THIS FORCES HORIZONTAL FIT
+				/*
+				mb.screenAR = newScreenAR;
+				globalScaler = Math.min(mb.screenAR / mb.readerMaxRatio * 100, 100);
+				document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
+
+				return;
+*/
 				let newReaderHorizontal = isReaderHorizontal(newScreenAR);
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
@@ -3961,7 +3969,7 @@
 			turnTimeout: null,
 			pageTurning: null,
 
-			turnTime: 500,				// Duration of turning page animation
+			turnTime: 3500,				// Duration of turning page animation
 			scrollSpeed: 500,			// Duration of spread page scrolling
 			turnScrollDelay: 300,	// Delay of spread page scrolling during page turn
 			turnScrollTime: 500,		// Duration of spread page scrolling during page turn
@@ -5279,7 +5287,7 @@
 				{ duration: duration, easing: ease }
 			]);
 		}
-//TODO Tutta quella stringa complicata col calc potrebbe essere sostituita conoscendo larghezza e altezza in pixel? boh
+		//TODO Tutta quella stringa complicata col calc potrebbe essere sostituita conoscendo larghezza e altezza in pixel? boh
 		function animShadowBWD(align, duration, ease) {
 			return ([
 				[{ [align]: `calc(50% + ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0', opacity: '0' },
@@ -5810,8 +5818,19 @@
 					}
 					break;
 				case 'A':
-					globalScaler = 40;
-					document.documentElement.style.setProperty('--mb-global-scaler', 40);
+					globalScaler = Math.max(globalScaler - 5, 50);
+					document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
+					updateReaderOrientation()
+					break;
+				case 'S':
+					globalScaler = Math.min(globalScaler + 5, 100);
+					document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
+					updateReaderOrientation()
+					break;
+				case 'D':
+					mb.screenAR = getScreenAR();
+					globalScaler = mb.screenAR / mb.readerMaxRatio * 100 - 1;
+					document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
 					updateReaderOrientation()
 					break;
 				case ' ':
