@@ -320,7 +320,7 @@ jobs:
       - name: Android-aab - Move aab to target
         if: ${{ matrix.name == 'Android-aab' }}
         run: |
-          mv android/app/build/outputs/bubdle/release/app-debug.aab output/MangaBox-${{ env.version }}-${{ matrix.name }}.aab
+          mv android/app/build/outputs/bubdle/release/app-release.aab output/MangaBox-${{ env.version }}-${{ matrix.name }}.aab
 
       - name: iOS app - Build app for simulator
         if: ${{ matrix.name == 'iOS-app'}}
