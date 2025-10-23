@@ -22,7 +22,7 @@
 		"electron-builder": "^26.0.12"
 	},
 	"build": {
-		"appId": "com.mangabox.app",
+		"appId": "com.zpaolo11x.mangabox",
 		"productName": "MangaBox",
 		"asarUnpack": [
 			"**/node_modules/keytar/**"

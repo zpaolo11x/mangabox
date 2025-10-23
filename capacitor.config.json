@@ -1,5 +1,5 @@
 {
-	"appId": "com.mangabox.app",
+	"appId": "com.zpaolo11x.mangabox",
 	"appName": "MangaBox",
 	"webDir": "dist/mangabox",
 	"bundledWebRuntime": true,
