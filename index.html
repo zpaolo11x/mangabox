@@ -3969,7 +3969,7 @@
 			turnTimeout: null,
 			pageTurning: null,
 
-			turnTime: 3500,				// Duration of turning page animation
+			turnTime: 500,				// Duration of turning page animation
 			scrollSpeed: 500,			// Duration of spread page scrolling
 			turnScrollDelay: 300,	// Delay of spread page scrolling during page turn
 			turnScrollTime: 500,		// Duration of spread page scrolling during page turn
@@ -4856,9 +4856,10 @@
 					pageObjectR.uiContainer,
 				);
 
+				//TODO MA questo non è sovrascritto dal successivo?
 				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
-				spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+				spreadObject.uiItem.style.width = `calc(min(200vw, var(--mb-global-scaler) / 100 * ${mb.readerMaxRatio} * 100vh))`;
 
 				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
@@ -5281,17 +5282,17 @@
 
 		function animShadowFWD(align, duration, ease) {
 			return ([
-				[{ [align]: `calc(50% - ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0', opacity: '0.1' },
+				[{ [align]: '0%', width: '0', opacity: '0.1' },
 				{ [align]: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-				{ [align]: `calc(50% + ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0', opacity: '0' }],
+				{ [align]: '100%', width: '0', opacity: '0' }],
 				{ duration: duration, easing: ease }
 			]);
 		}
 		//TODO Tutta quella stringa complicata col calc potrebbe essere sostituita conoscendo larghezza e altezza in pixel? boh
 		function animShadowBWD(align, duration, ease) {
 			return ([
-				[{ [align]: `calc(50% + ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0', opacity: '0' },
-				{ [align]: `calc(50% + ${0.25 * mb.readerMaxRatio * globalScaler}vh)`, width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
+				[{ [align]: '100%', width: '0', opacity: '0' },
+				{ [align]: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
 				{ [align]: '50%', width: '0', opacity: '0' }],
 				{ duration: duration, easing: ease }
 			]);
@@ -5299,8 +5300,8 @@
 
 		function animLight(align, duration, ease) {
 			return ([
-				[{ [align]: `calc(50% - ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0%', opacity: '0.5' },
-				{ [align]: `calc(50% - ${0.25 * mb.readerMaxRatio * globalScaler}vh)`, width: '20%', opacity: '1' },
+				[{ [align]: '0%', width: '0%', opacity: '0.5' },
+				{ [align]: '25%', width: '20%', opacity: '1' },
 				{ [align]: '50%', width: '30%', opacity: '0' }],
 				{ duration: duration, easing: ease }
 			]);
@@ -5335,7 +5336,7 @@
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
-				{ clipPath: 'inset(0 0 0 100%)', left: `-${globalScaler}%` },
+				{ clipPath: 'inset(0 0 0 100%)', left: `-100%` },
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearL2R = [
@@ -5343,7 +5344,7 @@
 				{ clipPath: 'inset(0 0 0 0)' }
 			];
 			const appearL2R_sildeinR2L = [
-				{ clipPath: 'inset(0 100% 0 0)', left: `${globalScaler}%` },
+				{ clipPath: 'inset(0 100% 0 0)', left: `100%` },
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearR2L = [
