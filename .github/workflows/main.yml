@@ -201,7 +201,10 @@ jobs:
             name: iOS-ipa
           - os: ubuntu-latest
             sys: android
-            name: Android
+            name: Android-apk
+          - os: ubuntu-latest
+            sys: android
+            name: Android-aab
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -297,16 +300,27 @@ jobs:
       - name: Prepare output folder
         run: mkdir output
 
-      - name: Android - Build app
-        if: ${{ matrix.sys == 'android' }}
+      - name: Android-apk - Build app
+        if: ${{ matrix.name == 'Android-apk' }}
         run: |
           cd android
           ./gradlew assembleDebug
 
-      - name: Android - Move app to target
-        if: ${{ matrix.sys == 'android' }}
+      - name: Android-apk - Move apk to target
+        if: ${{ matrix.name == 'Android-apk' }}
         run: |
           mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
+
+      - name: Android-aab - Build app
+        if: ${{ matrix.name == 'Android-aab' }}
+        run: |
+          cd android
+          ./gradlew bundleRelease
+
+      - name: Android-aab - Move aab to target
+        if: ${{ matrix.name == 'Android-aab' }}
+        run: |
+          mv android/app/build/outputs/bubdle/release/app-debug.aab output/MangaBox-${{ env.version }}-${{ matrix.name }}.aab
 
       - name: iOS app - Build app for simulator
         if: ${{ matrix.name == 'iOS-app'}}
@@ -364,6 +378,7 @@ jobs:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
             output/*.apk
+            output/*.aab
             output/*.app
             output/*.ipa
 
