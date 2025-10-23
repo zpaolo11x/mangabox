@@ -1,0 +1,16 @@
+MangaBox lets you enjoy your personal manga and comic collection with a smooth, high-quality reading experience. Designed for use with your Komga server, MangaBox focuses on reading, not management, delivering a clean, elegant interface optimized for touch controls.
+
+Experience authentic two-page spreads with paper-like effects, light and dark themes, quick library filtering, offline reading and global search. Read seamlessly with thumbnail previews, smooth animations, and customizable reading direction.
+
+Features
+
+- Connect easily to your Komga server
+- Beautiful two-page reading with paper-style visuals
+- Smooth page transitions and thumbnail previews
+- Light and dark themes with custom color highlights
+- Download books for offline reading
+- Quick filtering by language, read status, and direction
+- Global search for series and volumes
+- Touch and gesture support for tablets and phones
+
+MangaBox — your collection, beautifully presented.
