@@ -620,6 +620,8 @@
 
 		//MB General Functions 
 
+		let globalScaler = getComputedStyle(document.documentElement).getPropertyValue('--mb-global-scaler');
+
 		function addItem(itemkind, properties) {
 			const { style, ...rest } = properties;
 			const element = Object.assign(document.createElement(itemkind), rest);
@@ -628,7 +630,7 @@
 		}
 
 		function getScreenAR() {
-			return (window.innerWidth / window.innerHeight);
+			return (window.innerWidth / (window.innerHeight * (globalScaler / 100)));
 		}
 
 		function toggleFullscreen() {
@@ -4386,15 +4388,15 @@
 		}
 
 		function buildSize(item, ratio) {
-			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
+			item.style.width = `calc(min(100vw, var(--mb-global-scaler) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-global-scaler) / 100 * 100vh) )`;
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
-			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
+			item.style.width = `calc(min(100vw, var(--mb-global-scaler) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-global-scaler) / 100 * vh) )`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
@@ -4402,8 +4404,8 @@
 			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
-			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
-			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh) )`;
+			item.style.width = `calc(2 * min(100vw, var(--mb-global-scaler) / 100 * ${ratio} * 50vh))`;
+			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, var(--mb-global-scaler) / 100 * vh) )`;
 		}
 
 		// Add this once when initializing the viewer
@@ -4711,9 +4713,9 @@
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
 			// readerViewer.style.height='100vh';
-			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, 100vh))`;
+			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-global-scaler) / 100 * 100vh))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
-			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+			readerViewer.style.width = `calc(min(200vw, var(--mb-global-scaler) / 100 * ${mb.readerMaxRatio} * 100vh))`;
 
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInner.style.flexDirection = rd.rtl ? 'row-reverse' : 'row';
@@ -5271,17 +5273,17 @@
 
 		function animShadowFWD(align, duration, ease) {
 			return ([
-				[{ [align]: '0%', width: '0', opacity: '0.1' },
+				[{ [align]: `calc(50% - ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0', opacity: '0.1' },
 				{ [align]: '50%', width: rd.pageShadowWidthFWD, opacity: rd.pageShadowOpacityFWD },
-				{ [align]: '100%', width: '0', opacity: '0' }],
+				{ [align]: `calc(50% + ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0', opacity: '0' }],
 				{ duration: duration, easing: ease }
 			]);
 		}
-
+//TODO Tutta quella stringa complicata col calc potrebbe essere sostituita conoscendo larghezza e altezza in pixel? boh
 		function animShadowBWD(align, duration, ease) {
 			return ([
-				[{ [align]: '100%', width: '0', opacity: '0' },
-				{ [align]: '75%', width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
+				[{ [align]: `calc(50% + ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0', opacity: '0' },
+				{ [align]: `calc(50% + ${0.25 * mb.readerMaxRatio * globalScaler}vh)`, width: rd.pageShadowWidthBWD, opacity: rd.pageShadowOpacityBWD },
 				{ [align]: '50%', width: '0', opacity: '0' }],
 				{ duration: duration, easing: ease }
 			]);
@@ -5289,8 +5291,8 @@
 
 		function animLight(align, duration, ease) {
 			return ([
-				[{ [align]: '0%', width: '0%', opacity: '0.5' },
-				{ [align]: '25%', width: '20%', opacity: '1' },
+				[{ [align]: `calc(50% - ${0.5 * mb.readerMaxRatio * globalScaler}vh)`, width: '0%', opacity: '0.5' },
+				{ [align]: `calc(50% - ${0.25 * mb.readerMaxRatio * globalScaler}vh)`, width: '20%', opacity: '1' },
 				{ [align]: '50%', width: '30%', opacity: '0' }],
 				{ duration: duration, easing: ease }
 			]);
@@ -5325,7 +5327,7 @@
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
-				{ clipPath: 'inset(0 0 0 100%)', left: '-100%' },
+				{ clipPath: 'inset(0 0 0 100%)', left: `-${globalScaler}%` },
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearL2R = [
@@ -5333,7 +5335,7 @@
 				{ clipPath: 'inset(0 0 0 0)' }
 			];
 			const appearL2R_sildeinR2L = [
-				{ clipPath: 'inset(0 100% 0 0)', left: '100%' },
+				{ clipPath: 'inset(0 100% 0 0)', left: `${globalScaler}%` },
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearR2L = [
@@ -5806,6 +5808,11 @@
 						event.preventDefault();
 						handleCloseReader();
 					}
+					break;
+				case 'A':
+					globalScaler = 40;
+					document.documentElement.style.setProperty('--mb-global-scaler', 40);
+					updateReaderOrientation()
 					break;
 				case ' ':
 					if (readerVisible) {
