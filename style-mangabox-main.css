@@ -69,7 +69,7 @@
 
 	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
 
-	--mb-global-scaler: 100;
+	--mb-reader-scale: 100;
 
 	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
 	--mb-button-transition:

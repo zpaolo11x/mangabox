@@ -217,11 +217,6 @@
 				<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 			</div>
 
-			<div id="zoomControls">
-				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
-				<span id="scaleVal" class="reader-buttons">100%</span>
-				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
-			</div>
 
 
 			<div id="bottomControls">
@@ -235,6 +230,12 @@
 				<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 			</div>
 
+			<div id="zoomControls">
+				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
+				<span id="scaleVal" class="reader-buttons">100%</span>
+				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
+			</div>
+			
 			<div id="nextBookPanel" class="modal-content hidden blankstart">
 				<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
 			</div>
@@ -620,7 +621,7 @@
 
 		//MB General Functions 
 
-		let globalScaler = getComputedStyle(document.documentElement).getPropertyValue('--mb-global-scaler');
+		//let mb.readerScale = getComputedStyle(document.documentElement).getPropertyValue('--mb-reader-scale');
 
 		function addItem(itemkind, properties) {
 			const { style, ...rest } = properties;
@@ -762,6 +763,7 @@
 			pointerItem: null,
 
 			webtoonScale: 100,
+			readerScale: 100,
 
 			offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
 
@@ -947,6 +949,7 @@
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
 			mb.webtoonScale = Number(userSettings['mangabox.ui.webtoonscale'] ?? 100);
+			mb.readerScale = Number(userSettings['mangabox.ui.readerscale'] ?? 100);
 		}
 
 
@@ -1657,8 +1660,9 @@
 			}
 		}));
 
+		//TODO Check what happens for webtoons since readerScale should be 100 for them?
 		function isReaderHorizontal(screenAR) {
-			return (screenAR / (mb.readerMaxRatio * globalScaler / 100) > rd.orientationThresholdRatio);
+			return (screenAR / (mb.readerMaxRatio * mb.readerScale / 100) > rd.orientationThresholdRatio);
 		}
 
 		function updateReaderOrientation() {
@@ -1671,8 +1675,8 @@
 				//TODO THIS FORCES HORIZONTAL FIT
 				/*
 				mb.screenAR = newScreenAR;
-				globalScaler = Math.min(mb.screenAR / mb.readerMaxRatio * 100, 100);
-				document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
+				mb.readerScale = Math.min(mb.screenAR / mb.readerMaxRatio * 100, 100);
+				document.documentElement.style.setProperty('--mb-reader-scale', mb.readerScale);
 
 				return;
 */
@@ -4052,7 +4056,7 @@
 			rd.originY = 0;
 			rd.touchLock = 0;
 
-			scaleWebtoon(0);
+			if (rd.webtoon) scaleWebtoon(0); else scaleReader(0);
 
 			//readerViewer.innerHTML = '';
 			thumbStripShowHide();
@@ -4370,7 +4374,8 @@
 			console.log("B:" + rd.currentSpreadIndex)
 
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
-			zoomControls.style.display = rd.webtoon ? '' : 'none';
+			//zoomControls.style.display = rd.webtoon ? '' : 'none';
+			zoomControls.style.bottom = rd.webtoon ? 'calc(80px + var(--mb-bottom-spacer))' : 'calc(110px + var(--mb-bottom-spacer) + var(--mb-thumb-size-px))';
 
 			initReaderUI(pagesData, bookData)
 			console.log("C:" + rd.currentSpreadIndex)
@@ -4396,15 +4401,15 @@
 		}
 
 		function buildSize(item, ratio) {
-			item.style.width = `calc(min(100vw, var(--mb-global-scaler) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-global-scaler) / 100 * 100vh) )`;
+			item.style.width = `calc(min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
-			item.style.width = `calc(min(100vw, var(--mb-global-scaler) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-global-scaler) / 100 * vh) )`;
+			item.style.width = `calc(min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * vh) )`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
@@ -4412,8 +4417,8 @@
 			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
-			item.style.width = `calc(2 * min(100vw, var(--mb-global-scaler) / 100 * ${ratio} * 50vh))`;
-			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, var(--mb-global-scaler) / 100 * vh) )`;
+			item.style.width = `calc(2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh))`;
+			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * vh) )`;
 		}
 
 		// Add this once when initializing the viewer
@@ -4546,6 +4551,21 @@
 			}
 			requestAnimationFrame(frame);
 		}
+		
+		function animateReaderScale(from, to, duration = 300, easing = t => t) {
+			let start;
+			function frame(ts) {
+				if (!start) start = ts;
+				const t = Math.min(1, (ts - start) / duration);
+				const v = from + (to - from) * easing(t);
+				document.documentElement.style.setProperty('--mb-reader-scale', v);
+				updateReaderOrientation()
+				//webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+				if (t < 1) requestAnimationFrame(frame);
+			}
+			requestAnimationFrame(frame);
+		}
+
 
 		function scaleWebtoon(inc) {
 			const oldScale = mb.webtoonScale;
@@ -4558,6 +4578,35 @@
 			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
 		}
 
+		function scaleReader(inc) {
+			const oldScale = mb.readerScale;
+			const newScale = Math.min(110, Math.max(50, mb.readerScale + inc));
+			mb.readerScale = newScale;
+
+			setUserSettings('mangabox.ui.readerscale', newScale);
+			scaleVal.innerText = newScale + "%";
+
+			animateReaderScale(oldScale, newScale, 200, t => t * (2 - t));
+		}
+
+
+		function readerScaleDown(){
+			if (rd.webtoon) {
+				scaleWebtoon(-20);
+			 } else {
+				scaleReader(-5);
+			 }
+		}
+
+		function readerScaleUp(){
+			if (rd.webtoon) {
+				scaleWebtoon(20);
+			 } else {
+				scaleReader(5);
+			 }
+		}
+
+		/*
 		function scaleWebtoonOLD(inc) {
 			mb.webtoonScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
 			setUserSettings('mangabox.ui.webtoonscale', mb.webtoonScale);
@@ -4566,6 +4615,7 @@
 			document.documentElement.style.setProperty('--webtoon-scale', mb.webtoonScale);
 			webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 		}
+		*/
 
 		function addCoverSpine(pageObjectL, pageObjectR) {
 			const coverlayR = addItem('div', {
@@ -4721,9 +4771,9 @@
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
 			// readerViewer.style.height='100vh';
-			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-global-scaler) / 100 * 100vh))`;
+			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-reader-scale) / 100 * 100vh))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
-			readerViewer.style.width = `calc(min(200vw, var(--mb-global-scaler) / 100 * ${mb.readerMaxRatio} * 100vh))`;
+			readerViewer.style.width = `calc(min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh))`;
 
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInner.style.flexDirection = rd.rtl ? 'row-reverse' : 'row';
@@ -4859,7 +4909,7 @@
 				//TODO MA questo non è sovrascritto dal successivo?
 				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
-				spreadObject.uiItem.style.width = `calc(min(200vw, var(--mb-global-scaler) / 100 * ${mb.readerMaxRatio} * 100vh))`;
+				spreadObject.uiItem.style.width = `calc(min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh))`;
 
 				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
@@ -5818,22 +5868,14 @@
 						handleCloseReader();
 					}
 					break;
-				case 'A':
-					globalScaler = Math.max(globalScaler - 5, 50);
-					document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
-					updateReaderOrientation()
-					break;
-				case 'S':
-					globalScaler = Math.min(globalScaler + 5, 100);
-					document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
-					updateReaderOrientation()
-					break;
+				/*
 				case 'D':
 					mb.screenAR = getScreenAR();
-					globalScaler = mb.screenAR / mb.readerMaxRatio * 100 - 1;
-					document.documentElement.style.setProperty('--mb-global-scaler', globalScaler);
+					mb.readerScale = mb.screenAR / mb.readerMaxRatio * 100 - 1;
+					document.documentElement.style.setProperty('--mb-reader-scale', mb.readerScale);
 					updateReaderOrientation()
 					break;
+				*/
 				case ' ':
 					if (readerVisible) {
 						event.preventDefault();
