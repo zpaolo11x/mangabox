@@ -217,7 +217,11 @@
 				<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 			</div>
 
-
+			<div id="zoomControls">
+				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
+				<span id="scaleVal" class="reader-buttons">100%</span>
+				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
+			</div>
 
 			<div id="bottomControls">
 				<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -230,12 +234,6 @@
 				<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 			</div>
 
-			<div id="zoomControls">
-				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
-				<span id="scaleVal" class="reader-buttons">100%</span>
-				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
-			</div>
-			
 			<div id="nextBookPanel" class="modal-content hidden blankstart">
 				<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
 			</div>
