@@ -365,28 +365,18 @@ jobs:
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cd ios/App
-
-          # Ensure automatic signing is allowed to create profiles
-          xcodebuild -project App.xcodeproj \
-            -scheme App \
-            -configuration Release \
-            -destination generic/platform=iOS \
-            -allowProvisioningUpdates \
-            CODE_SIGN_STYLE=Automatic \
-            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
-            PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}"
-
-          # Build and archive using automatic signing
           xcodebuild -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -sdk iphoneos \
             -archivePath build/App.xcarchive \
-            -allowProvisioningUpdates \
             clean archive \
             DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
             PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}" \
-            CODE_SIGN_STYLE=Automatic
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            CODE_SIGN_STYLE=Manual \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            OTHER_CODE_SIGN_FLAGS="--deep"
 
       - name: iOS ipa - Export signed IPA
         if: ${{ matrix.name == 'iOS-ipa' }}
