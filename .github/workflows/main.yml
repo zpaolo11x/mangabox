@@ -365,11 +365,11 @@ jobs:
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cd ios/App
-          # Ensure automatic signing is set and allowed to create profiles
+
+          # Ensure automatic signing is allowed to create profiles
           xcodebuild -project ios/App/App.xcodeproj \
-            -target App \
-            -configuration Release \
             -scheme App \
+            -configuration Release \
             -destination generic/platform=iOS \
             -allowProvisioningUpdates \
             CODE_SIGN_STYLE=Automatic \
