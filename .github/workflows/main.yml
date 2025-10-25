@@ -281,6 +281,19 @@ jobs:
         run: |
           cd ios/App
           pod install --repo-update
+          # After 'pod install' in CI
+          cd ios/App
+          ruby -e '
+          require "xcodeproj"
+          project = Xcodeproj::Project.open("Pods/Pods.xcodeproj")
+          project.targets.each do |target|
+            target.build_configurations.each do |config|
+              config.build_settings["CODE_SIGN_STYLE"] = "Automatic"
+              config.build_settings.delete("PROVISIONING_PROFILE_SPECIFIER")
+            end
+          end
+          project.save
+          '
 
 #      - name: Android - Copy custom styles.xml
 #        if: ${{ matrix.sys == 'android' }}
