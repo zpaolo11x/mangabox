@@ -361,32 +361,32 @@ jobs:
           echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > \
             ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
-      - name: iOS ipa - Build and sign for App Store
-        if: ${{ matrix.name == 'iOS-ipa' }}
-        run: |
-          cd ios/App
+          - name: iOS ipa - Build and sign for App Store
+            if: ${{ matrix.name == 'iOS-ipa' }}
+            run: |
+              cd ios/App
 
-          # Ensure automatic signing is allowed to create profiles
-          xcodebuild -project ios/App/App.xcodeproj \
-            -scheme App \
-            -configuration Release \
-            -destination generic/platform=iOS \
-            -allowProvisioningUpdates \
-            CODE_SIGN_STYLE=Automatic \
-            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
-            PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}"
+              # Ensure automatic signing is allowed to create profiles
+              xcodebuild -project App.xcodeproj \
+                -scheme App \
+                -configuration Release \
+                -destination generic/platform=iOS \
+                -allowProvisioningUpdates \
+                CODE_SIGN_STYLE=Automatic \
+                DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
+                PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}"
 
-          # Build and archive using automatic signing
-          xcodebuild -workspace App.xcworkspace \
-            -scheme App \
-            -configuration Release \
-            -sdk iphoneos \
-            -archivePath build/App.xcarchive \
-            -allowProvisioningUpdates \
-            clean archive \
-            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
-            PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}" \
-            CODE_SIGN_STYLE=Automatic
+              # Build and archive using automatic signing
+              xcodebuild -workspace App.xcworkspace \
+                -scheme App \
+                -configuration Release \
+                -sdk iphoneos \
+                -archivePath build/App.xcarchive \
+                -allowProvisioningUpdates \
+                clean archive \
+                DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
+                PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}" \
+                CODE_SIGN_STYLE=Automatic
 
       - name: iOS ipa - Export signed IPA
         if: ${{ matrix.name == 'iOS-ipa' }}
