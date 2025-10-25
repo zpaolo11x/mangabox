@@ -12,7 +12,7 @@ Reader UI
 - Added zoom congrol for book reading, useful to avoid single page switch
 
 Build
-- Udated app Id
+- Udated App Id
 - Added privacy policy to web documentation
 
 Fixes
