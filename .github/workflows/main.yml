@@ -361,10 +361,22 @@ jobs:
           echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > \
             ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
-      - name: iOS ipa - Build and sign
+      - name: iOS ipa - Build and sign for App Store
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cd ios/App
+          # Ensure automatic signing is set and allowed to create profiles
+          xcodebuild -project ios/App/App.xcodeproj \
+            -target App \
+            -configuration Release \
+            -scheme App \
+            -destination generic/platform=iOS \
+            -allowProvisioningUpdates \
+            CODE_SIGN_STYLE=Automatic \
+            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
+            PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}"
+
+          # Build and archive using automatic signing
           xcodebuild -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
@@ -374,8 +386,7 @@ jobs:
             clean archive \
             DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
             PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution"
+            CODE_SIGN_STYLE=Automatic
 
       - name: iOS ipa - Export signed IPA
         if: ${{ matrix.name == 'iOS-ipa' }}
@@ -387,7 +398,7 @@ jobs:
           <plist version="1.0">
           <dict>
             <key>method</key><string>app-store</string>
-            <key>signingStyle</key><string>manual</string>
+            <key>signingStyle</key><string>automatic</string>
             <key>teamID</key><string>${{ secrets.APPLE_TEAM_ID }}</string>
             <key>provisioningProfiles</key>
             <dict>
