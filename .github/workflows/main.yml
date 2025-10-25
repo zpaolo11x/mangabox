@@ -281,19 +281,6 @@ jobs:
         run: |
           cd ios/App
           pod install --repo-update
-          # After 'pod install' in CI
-          cd ios/App
-          ruby -e '
-          require "xcodeproj"
-          project = Xcodeproj::Project.open("Pods/Pods.xcodeproj")
-          project.targets.each do |target|
-            target.build_configurations.each do |config|
-              config.build_settings["CODE_SIGN_STYLE"] = "Automatic"
-              config.build_settings.delete("PROVISIONING_PROFILE_SPECIFIER")
-            end
-          end
-          project.save
-          '
 
 #      - name: Android - Copy custom styles.xml
 #        if: ${{ matrix.sys == 'android' }}
@@ -374,42 +361,66 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
 
-      - name: iOS ipa - Build and sign for App Store
-        if: ${{ matrix.name == 'iOS-ipa' }}
+      - name: iOS ipa - Build app for device
+        if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace \
+          xcodebuild \
+            -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -sdk iphoneos \
-            -archivePath build/App.xcarchive \
-            clean archive \
-            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
-            PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="MangaBox iOS Distribution" \
-            -allowProvisioningUpdates
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=NO \
+            archive \
+            -archivePath build/App.xcarchive
 
       - name: iOS ipa - Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cp assets/icon-ios26/* ios/App/build/App.xcarchive/Products/Applications/App.app/
 
-      - name: iOS ipa - Replace plist
+      - name: Create ExportOptions.plist
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
-          cp assets/exportOptions.plist ios/App/exportOptions.plist
+          cat > ios/App/build/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store</string>
+            <key>teamID</key>
+            <string>${{ secrets.APPLE_TEAM_ID }}</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>${{ secrets.APP_BUNDLE_ID }}</key>
+              <string>MangaBox iOS Distribution</string>
+            </dict>
+            <key>compileBitcode</key>
+            <true/>
+          </dict>
+          </plist>
+          EOF
 
       - name: iOS ipa - Export signed IPA
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cd ios/App
+          mkdir -p build/export
           xcodebuild -exportArchive \
             -archivePath build/App.xcarchive \
             -exportPath build/export \
-            -exportOptionsPlist ../../exportOptions.plist
-          mv build/export/*.ipa $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa
+            -exportOptionsPlist build/ExportOptions.plist
+
+      - name: Move signed IPA to artifacts
+        if: ${{ matrix.name == 'iOS-ipa' }}
+        run: |
+          mv ios/App/build/export/App.ipa $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-signed.ipa
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
