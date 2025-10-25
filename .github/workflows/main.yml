@@ -282,20 +282,21 @@ jobs:
           cd ios/App
           pod install --repo-update
 
-      - name: Patch Pod targets for automatic signing
+      - name: Patch Pod targets to remove signing
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cd ios/App
 
-          # Make sure Pods project exists
           if [ -f "Pods/Pods.xcodeproj/project.pbxproj" ]; then
-            echo "Patching Pod targets to use automatic signing..."
+            echo "Removing signing from Pod targets..."
 
-            # Replace any manual code signing settings in Pods
-            sed -i '' 's/CODE_SIGN_STYLE = Manual;/CODE_SIGN_STYLE = Automatic;/g' Pods/Pods.xcodeproj/project.pbxproj
+            # Remove any explicit code signing in Pods
+            sed -i '' '/CODE_SIGN_STYLE/d' Pods/Pods.xcodeproj/project.pbxproj
             sed -i '' '/PROVISIONING_PROFILE_SPECIFIER/d' Pods/Pods.xcodeproj/project.pbxproj
+            sed -i '' '/CODE_SIGN_IDENTITY/d' Pods/Pods.xcodeproj/project.pbxproj
             sed -i '' '/DEVELOPMENT_TEAM = /d' Pods/Pods.xcodeproj/project.pbxproj
           fi
+
 
 #      - name: Android - Copy custom styles.xml
 #        if: ${{ matrix.sys == 'android' }}
