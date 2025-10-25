@@ -344,58 +344,33 @@ jobs:
         run: |
           cp assets/icon-ios26/* output/MangaBox-${{ env.version }}-${{ matrix.name }}.app/
 
-      - name: Set up code signing
-        if: ${{ matrix.name == 'iOS-ipa' }}
-        run: |
-          # Create temporary keychain
-          security create-keychain -p "" build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p "" build.keychain
-          security set-keychain-settings build.keychain
-
-          # Decode and import certificate
-          echo "${{ secrets.IOS_CERT_P12 }}" | base64 --decode > dist_cert.p12
-          security import dist_cert.p12 -k build.keychain -P "${{ secrets.IOS_CERT_PW }}" -T /usr/bin/codesign
-
-          # Decode provisioning profile
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "${{ secrets.IOS_PROVISIONING_PROFILE }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profile.mobileprovision
-
-      - name: iOS ipa - Build and sign for App Store
-        if: ${{ matrix.name == 'iOS-ipa' }}
+      - name: iOS ipa - Build app for device
+        if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace \
+          xcodebuild \
+            -workspace App.xcworkspace \
             -scheme App \
             -configuration Release \
             -sdk iphoneos \
-            -archivePath build/App.xcarchive \
-            clean archive \
-            DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
-            PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}" \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            PROVISIONING_PROFILE_SPECIFIER="MangaBox iOS Distribution"
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            ONLY_ACTIVE_ARCH=NO \
+            archive \
+            -archivePath build/App.xcarchive
 
       - name: iOS ipa - Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cp assets/icon-ios26/* ios/App/build/App.xcarchive/Products/Applications/App.app/
 
-      - name: iOS ipa - Replace plist
-        if: ${{ matrix.name == 'iOS-ipa' }}
+      - name: iOS ipa - Package unsigned .ipa
+        if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
-          cp assets/exportOptions.plist ios/App/exportOptions.plist
-
-      - name: iOS ipa - Export signed IPA
-        if: ${{ matrix.name == 'iOS-ipa' }}
-        run: |
-          cd ios/App
-          xcodebuild -exportArchive \
-            -archivePath build/App.xcarchive \
-            -exportPath build/export \
-            -exportOptionsPlist ../../exportOptions.plist
-          mv build/export/*.ipa $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa
+          rsync -a ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
+          cd ios/App/build/export
+          zip -r $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa Payload
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
