@@ -283,6 +283,7 @@ jobs:
           pod install --repo-update
 
       - name: Patch Pod targets for automatic signing
+        if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cd ios/App
 
