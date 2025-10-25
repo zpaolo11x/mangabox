@@ -370,6 +370,7 @@ jobs:
             -configuration Release \
             -sdk iphoneos \
             -archivePath build/App.xcarchive \
+            -allowProvisioningUpdates \
             clean archive \
             DEVELOPMENT_TEAM="${{ secrets.APPLE_TEAM_ID }}" \
             PRODUCT_BUNDLE_IDENTIFIER="${{ secrets.APP_BUNDLE_ID }}" \
@@ -401,8 +402,9 @@ jobs:
 
           xcodebuild -exportArchive \
             -archivePath build/App.xcarchive \
-            -exportPath build/export \
-            -exportOptionsPlist exportOptions.plist
+            -exportPath build \
+            -exportOptionsPlist exportOptions.plist \
+            -allowProvisioningUpdates
 
           mv build/export/*.ipa $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa
 
