@@ -1,3 +1,24 @@
+*OFFLINE NOTES*
+
+During book item creation check if the system is offline, if it is check if the book is downloaded. If it is get the book data from the storage and not from the API. 
+
+Cache of the books data is always available for search and refreshed at start or at each time it's needed, but in this case it's better to directly get data from the SAVED version, not the CACHED version.
+
+buildBookItem creates the book object and assign its read triggers, it receives a "book" data structure as input, not a book ID. The switch to a saved book structure is done here, not before the call. This means that if the library or book data is not cached, the book won't appear even if it's offline. This is not a problem: seamless integration won't work in this case, that's why a "downloaded" pseudo-series is necessary to see all downloaded books at once when in offline mode, this will use the cached book data to build and deploy a custom book gallery.
+
+Open point: when a book is downloaded, should it read progress be tracked? Saving the progress each time? Or saving it in the local storage book data structure?
+
+BOOK ICON
+
+- Se il libro non è mai stato scaricato, c'è il drive con freccia
+- Quando il libro inizia a scaricarsi viene passato in stato "downloading"
+- Versione easy: se il libro è in download, il gauge meter si riempie e l'icona è quella della "X" che serve a interrompere il download, l'interruzione porta anche a cancellare i file scaricati quindi non c'è pause/resume. 
+- Quando finsice l'icona diventa il cestino per cancellare il file
+
+Poi penseremo a un sistema di pause/resume vero!
+
+
+
 *API NOTES*
 
 /series/list

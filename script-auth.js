@@ -2,13 +2,16 @@
 
 async function saveToken(token) {
 	debugPrint("saveToken...")
+	console.log("saveToken...")
 	await window.secureStore.setCredentials('auth', token);
 }
 
 async function loadToken() {
 	debugPrint("loadToken...")
+	console.log("loadToken...")
 	const token = await window.secureStore.getCredentials('auth');
 	debugPrint("Retrieved Token:" + token);
+	console.log("Retrieved Token:" + token);
 	if (token) {
 		return (token);
 	} else {
@@ -18,27 +21,48 @@ async function loadToken() {
 
 async function deleteToken() {
 	debugPrint("deleteToken...")
+	console.log("deleteToken...")
 
 	await window.secureStore.deleteCredentials('auth');
 }
 
 async function sessionCheck() {
-	debugPrint("sessionCheck...")
+	debugPrint("sessionCheck...");
+	console.log("sessionCheck...");
 
 	loginBaseUrl.value = mb.baseUrl;
 
+	// Load stored token (e.g. from Electron storage)
 	mb.authToken = true;
-	if (isElectronApp) mb.authToken = await loadToken();
-
+	if (isElectron) mb.authToken = await loadToken();
 	debugPrint("CURRENT TOKEN:\n" + mb.authToken);
+	console.log("CURRENT TOKEN:\n" + mb.authToken);
 
+	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.authToken)) {
+		debugPrint("Missing base URL or auth token");
 		showLoginDialog();
 		return;
 	}
 
+	// --- 2. Connectivity check (optional for immediate offline mode)
+	const sessionWasValid = localStorage.getItem("sessionValid") === "true";
+	let offline = !navigator.onLine;
 
-	let fetchPayload = (isElectronApp)
+	if (offline) {
+		debugPrint("Offline mode detected.");
+		console.log("Offline mode detected.")
+		if (sessionWasValid) {
+			hideLoginDialog();
+			bootSequence('offline');
+		} else {
+			showLoginDialog();
+		}
+		return;
+	}
+
+	// --- 3. Try validating the token
+	let fetchPayload = (isElectron)
 		? {
 			method: 'GET',
 			headers: {
@@ -58,19 +82,46 @@ async function sessionCheck() {
 
 	try {
 		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+
 		if (response.ok) {
+			debugPrint("Session valid (server confirmed).");
+			console.log("Session valid (server confirmed).");
+			localStorage.setItem("sessionValid", "true");
 			hideLoginDialog();
-			bootSequence();
+			bootSequence('online');
+		} else if (response.status === 401 || response.status === 403) {
+			debugPrint("Token invalid or expired.");
+			console.log("Token invalid or expired.");
+			localStorage.removeItem("sessionValid");
+			showLoginDialog();
+		} else {
+			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
+			console.log(`Unexpected server response (${response.status}) — assuming temporary issue.`);
+			if (sessionWasValid) {
+				hideLoginDialog();
+				bootSequence('offline');
+			} else {
+				showLoginDialog();
+			}
+		}
+	} catch (error) {
+		debugPrint("Session check failed: " + error);
+		debugPrint("Treating as temporary network/server issue.");
+		console.log("Session check failed: " + error);
+		console.log("Treating as temporary network/server issue.");
+
+		if (sessionWasValid) {
+			hideLoginDialog();
+			bootSequence('offline');
 		} else {
 			showLoginDialog();
 		}
-	} catch (error) {
-		showLoginDialog();
 	}
 }
 
 async function login() {
 	debugPrint("login...")
+	console.log("login...")
 
 	let baseUrlVal = loginBaseUrl.value;
 
@@ -94,7 +145,7 @@ async function login() {
 		const token = response.headers.get('X-Auth-Token');
 		if (response.ok && token) {
 			localStorage.setItem('mbBaseUrl', baseUrlVal);
-			if (isElectronApp) {
+			if (isElectron) {
 				window.electronAPI.sendRememberMe(loginRememberMe.checked);
 				await saveToken(token);
 			}
@@ -118,6 +169,7 @@ async function login() {
 
 function showLoginDialog() {
 	debugPrint("showLoginDialog...")
+	console.log("showLoginDialog...")
 
 	updatePWABar('white');
 	loginScreen.classList.remove('auth-hidden');
@@ -125,5 +177,6 @@ function showLoginDialog() {
 
 function hideLoginDialog() {
 	debugPrint("hideLoginDialog...")
+	console.log("hideLoginDialog...")
 	loginScreen.classList.add('auth-hidden');
 }

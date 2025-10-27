@@ -9,7 +9,7 @@
 	<meta name="theme-color" content="black">
 
 	<!--<link rel="icon" href="ab_16_alpha.png" type="image/png">-->
-	<link rel="icon" href="logo/mangabox-logo-16.svg" type="image/svg+xml">
+	<link rel="icon" href="logo/mangabox-logo-new-favicon.svg" type="image/svg+xml">
 	<link rel="apple-touch-icon" href="logo/mangabox-logo-new-red.png">
 
 
@@ -51,7 +51,13 @@
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
-					<li id="searchField" title="Search" class="library-item search-field press-button">
+					<li id="offlineLibrary" title="Offline Books" class="library-item no-grow press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-download glyph-dark"></span>
+						</div>
+						<div id="downloadSpinner" class="download-overlay"></div>
+					</li>
+					<li id="searchField" title="Search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
@@ -63,6 +69,7 @@
 						</div>
 					</li>
 				</ul>
+				<div id="offlineLed">OFFLINE</div>
 			</div>
 
 			<div id="filtersBar" class="extra-bar hidden blankstart">
@@ -80,6 +87,8 @@
 				<div id="seriesGrid" class="section hidden"></div>
 
 				<div id="booksGrid" class="section hidden"></div>
+
+				<div id="offlineGrid" class="section hidden"></div>
 
 				<div id="stripGridContainer" class="section hidden">
 					<div id="stripGrid" class="strip-grid"></div>
@@ -99,16 +108,25 @@
 				<div id="homeStripsContainer" class="section hidden"></div>
 
 				<div id="searchStripsContainer" class="section hidden">
-					<div class="strip-header-container">
-						<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
-					</div>
-					<div id="homeStripSeriesResults" class="series-results search-results"></div>
 
-					<div class="strip-header-container">
-						<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+					<div class="home-strip-parent">
+						<div id="homeStripSeriesResults" class="series-results search-results"></div>
+						<div class="strip-header-container">
+							<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
+						</div>
 					</div>
-					<div id="homeStripBooksResults" class="books-results search-results"></div>
+
+					<div class="home-strip-parent">
+						<div id="homeStripBooksResults" class="books-results search-results"></div>
+						<div class="strip-header-container">
+							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+						</div>
+					</div>
 				</div>
+
+				<!--
+					<div id="offlineBooksGrid" class="section hidden"></div>
+				-->
 
 				<div id="bookDetailsContainer" class="section hidden blankstart">
 					<div class="book-details-pic-container">
@@ -200,11 +218,10 @@
 			</div>
 
 			<div id="zoomControls">
-				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="scaleWebtoon(-20)"></span>
+				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
 				<span id="scaleVal" class="reader-buttons">100%</span>
-				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="scaleWebtoon(20)"></span>
+				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
 			</div>
-
 
 			<div id="bottomControls">
 				<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
@@ -235,7 +252,7 @@
 	</div>
 
 	<div id="dragbar" class="draggable">
-		<img id="barLogo" src="logo/mangabox-logo-16.svg">
+		<img id="barLogo" src="logo/mangabox-logo-new-favicon.svg">
 
 		<!--<img id="barLogo" src="logo/mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
@@ -250,7 +267,7 @@
 		<div id="loginDialog" class="dialog">
 			<img src="logo/mangabox-logo-new.svg" width="90px" height="90px">
 			<img src="logo/mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
-			<div class="version-note">v0.2.7</div>
+			<div class="version-note">v0.2.8</div>
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
 				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
@@ -289,19 +306,44 @@
 	<div id="debuggerObj"></div>
 
 	<script>
-		function debugPrint(text) {
-			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
-		}
+		// Set to true to disable per-device and per-platform feature select
+		const fullDebugMode = false;
 
-		const isElectronApp = !!window.electronAPI;
+		// Enable for live debug on the main UI
+		const enableDebugPrint = true;
+		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
+
+		const debugPrint = enableDebugPrint
+			? text => (debuggerObj.innerText += text + "\n")
+			: () => { };
+
+
+		const isElectron = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		let capacitorPlatform = null;
 
+		let enableFullscreen = true;
+		let enableDownload = true;
+
+		let filesFolder = 'DOCUMENTS';
+
 		if (isCapacitor) {
 			capacitorPlatform = Capacitor.getPlatform();
-			fullscreenChanger.classList.add('disabled');
+			fullscreenChanger.remove();
+			enableFullscreen = false;
+			if (capacitorPlatform == 'android') {
+				filesFolder = 'DATA';
+			}
 		}
+
+		if (!isElectron && !isCapacitor && !fullDebugMode) {
+			offlineLibrary.remove();
+			enableDownload = false;
+		}
+
+		debugPrint("enabledownload" + enableDownload)
 	</script>
 
 	<script src="script-auth.js"></script>
@@ -478,7 +520,8 @@
 			}
 		}
 
-		if (isElectronApp) {
+
+		if (isElectron) {
 			dragbarMinBtn.addEventListener('click', () => {
 				window.electronAPI.minimize();
 			});
@@ -512,11 +555,73 @@
 
 		// Hide dragbar in PWA mode
 		(function () {
-			enableDragbar(isElectronApp);
+			enableDragbar(isElectron);
 		})();
+
+		//MB Offline Events Response
+
+		function obUpdateProgressResponse(bookId, completed, total) {
+			//DEBUG THIS IS CHECK FOR DOUBLE ELEMENTS
+			let duplicates = document.querySelectorAll(`#${CSS.escape(bookId)}`);
+
+			if (duplicates.length > 1) {
+				console.warn(`Duplicate ID found for ${bookId}:`, duplicates);
+			} else if (duplicates.length === 1) {
+				console.log(`Only one element found for ${bookId}.`);
+			} else {
+				console.log(`No element found for ${bookId}.`);
+			}
+
+
+			const percent = Math.round((completed / total) * 100);
+			obSetBookProgress(bookId, percent);
+			obSetSpinner(true);
+
+			let tempDiv = document.getElementById(bookId);
+			if (tempDiv) {
+				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				tempDivChild.style.bottom = percent + '%';
+				tempDivChild.innerText = percent + '%';
+
+				let tempDivChild2 = tempDiv.querySelector('.download-book');
+				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+			}
+
+		}
+
+		function obDownloaDcompleteResponse(bookId, completed, total) {
+			let tempDiv = document.getElementById(bookId);
+
+			let tempDivChild = tempDiv.querySelector('.book-downloader');
+			tempDivChild.innerText = '100%';
+			tempDivChild.classList.add('done');
+
+			obSetBookCompleted(bookId);
+			obSetSpinner(false);
+
+			let tempDivChild2 = tempDiv.querySelector('.download-book');
+			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
+		}
+
+		//TODO Is it possible to generate download-progress events in electron too
+		//TODO instead of using the other layer for functions?
+
+		if (isCapacitor || isElectron) {
+			window.addEventListener('download-progress', (event) => {
+				const { bookId, completed, total } = event.detail;
+				obUpdateProgressResponse(bookId, completed, total);
+			});
+
+			window.addEventListener('download-complete', (event) => {
+				const { bookId, completed, total } = event.detail;
+				obDownloaDcompleteResponse(bookId, completed, total)
+			});
+		}
 
 
 		//MB General Functions 
+
+		//let mb.readerScale = getComputedStyle(document.documentElement).getPropertyValue('--mb-reader-scale');
 
 		function addItem(itemkind, properties) {
 			const { style, ...rest } = properties;
@@ -624,6 +729,10 @@
 					icon: 'fa-sun',
 					style: 'light-accent'
 				}, {
+					label: 'Transparent',
+					icon: 'fa-square',
+					style: 'transparent'
+				}, {
 					label: 'White',
 					icon: 'fa-w',
 					style: 'white'
@@ -645,8 +754,8 @@
 				.map(swatch => swatch.match(/(\d+%?)/g)),
 
 			// Media Cache
-			mediaCache: new Map(), 	//Media cache table structure
-			cacheLimit: 250,			//Limit of items in media cache
+			mediaCacheRAM: new Map(), 	//Media cache table structure
+			cacheLimitRAM: 250,			//Limit of items in media cache
 
 			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
 
@@ -654,6 +763,10 @@
 			pointerItem: null,
 
 			webtoonScale: 100,
+			readerScale: 100,
+
+			offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
+
 		}
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
@@ -682,37 +795,107 @@
 		function buildRequest(authToken, method, body) {
 			const requestTable = {
 				method: method,
-				...(!isElectronApp && { credentials: 'include' }),
+				...(!isElectron && { credentials: 'include' }),
 				headers: {
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectronApp && { 'X-Auth-Token': authToken })
+					...(isElectron && { 'X-Auth-Token': authToken })
 				},
 				...(body && { body }),
 			}
 			return requestTable
 		}
 
-		//MB API Call Function 
-		async function callAPI(API_url, method = 'GET', body = null, returnval = true) {
+		function cacheKeyFromUrl(url) {
+			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
+		}
+
+		async function onlineCheck() {
 			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
-
-				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-
-				if (returnval) {
-					const output = await response.json();
-					return output;
+				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
+				if (ping.ok) {
+					setNetworkStatus('online');
 				}
-			} catch (error) {
-				console.error('Fetch libraries error:', error);
+			} catch {
+				// still offline, ignore
 			}
 		}
 
+
+		//MB API Call Function 
+
+		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
+			const db = await openIndexedDB();
+
+			if (offlineSession) {
+				await onlineCheck() //TODO forse qui await?
+			};
+
+			if (offlineSession) {
+				console.log(`Offline mode: using cache for ${API_url}`);
+				if (cacheKey != null) {
+					const cached = await getCachedData(db, cacheKey);
+					if (cached) return cached;
+				}
+				console.warn(`No cached data for ${API_url} while offline`);
+				return null; // or throw if needed
+			}
+
+			if (!offlineSession) {
+				await obRefreshReadStatus();
+			}
+
+			try {
+				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
+				if (response.status === 404 || response.status === 204) {
+					console.warn(`API ${API_url} ${body} returned ${response.status}`);
+					return null;
+				}
+
+				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+
+				setNetworkStatus('online');
+
+				if (returnval) {
+					const output = await response.json();
+					if (cacheKey != null) await cacheData(db, cacheKey, output);
+					return output;
+				}
+			} catch (error) {
+				console.error(`Fetch error for ${API_url}:`, error);
+				setNetworkStatus('offline');
+
+				return (callAPI(cacheKey, API_url, method, body, returnval));
+
+				throw error;
+			}
+		}
+		/*
+		async function fetchWithFallback(url, key) {
+		  try {
+			 const res = await fetch(url);
+			 if (!res.ok) throw new Error('HTTP error');
+			 const data = await res.json();
+		
+			 // cache for offline use
+			 localStorage.setItem(key, JSON.stringify(data));
+		
+			 return data;
+		  } catch (err) {
+			 console.warn('Fetch failed, using cached data:', err);
+			 const cached = localStorage.getItem(key);
+			 if (cached) return JSON.parse(cached);
+			 throw err; // nothing cached → still fail
+		  }
+		}
+		*/
+
 		async function getUserSettings() {
-			const settings = await callAPI('/api/v1/client-settings/user/list', 'GET');
-			const mangaboxFlat = Object.fromEntries(
+			let mangaboxFlat = null;
+			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
+
+			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
 					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
@@ -721,14 +904,25 @@
 		}
 
 		async function setUserSettings(key, value) {
+
+			const db = await openIndexedDB();
+
 			const payload = {
 				[key]: { value: value },
 			};
-			await callAPI('/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
+			userSettings[key] = value;
+
+			// Ensure local cache mirrors the API structure
+			const cached = await getCachedData(db, 'c_usersettings') || '{}';
+
+			cached[key] = { value }; // keep the nested shape
+			cacheData(db, 'c_usersettings', cached);
+
+			await callAPI(null, '/api/v1/client-settings/user', 'PATCH', JSON.stringify(payload), false);
 		}
 
 		async function delUserSettings() {
-			await callAPI('/api/v1/client-settings/user', 'DELETE', JSON.stringify([
+			await callAPI(null, '/api/v1/client-settings/user', 'DELETE', JSON.stringify([
 				'mangabox.ui.accentcolor',
 				'mangabox.ui.themeprefs',
 				'mangabox.ui.readerthemeprefs',
@@ -748,7 +942,9 @@
 			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
-			mb.webtoonScale = Number(userSettings['mangabox.ui.webtoonscale'] ?? 100);
+
+			mb.webtoonScale = Number(localStorage.getItem('c_webtoonScale') ?? 100);
+			mb.readerScale = Number(localStorage.getItem('c_readerScale') ?? 100);
 		}
 
 
@@ -869,15 +1065,24 @@
 		themeChanger.addEventListener('click', () => {
 			mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
 			changeTheme();
-		})
+		});
 
-		fullscreenChanger.addEventListener('click', () => {
-			//mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
-			//changeTheme();
-			toggleFullscreen();
-		})
+		if (enableFullscreen) {
+			fullscreenChanger.addEventListener('click', () => {
+				// mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
+				//changeTheme();
+				toggleFullscreen();
+			});
+		}
+
+		if (enableDownload) {
+			offlineLibrary.addEventListener('click', () => {
+				navigateTo(`#offlinebooks`);
+			});
+		}
 
 		logOut.addEventListener('click', async () => {
+
 			try {
 				if (mb.baseUrl) {
 					await fetch(`${mb.baseUrl}/api/logout`, {
@@ -894,14 +1099,23 @@
 				// We continue cleanup anyway
 			}
 
-			if (isElectronApp) await deleteToken();
+			if (isElectron) await deleteToken();
 
 			sectionHide(stickyContainer);
 			sectionShow(blanker);
 
 			history.pushState(null, '', mb.basePath);
+
+			Object.keys(localStorage).forEach(key => {
+				if (key.startsWith("c_")) {
+					localStorage.removeItem(key);
+				}
+			});
+
+			await clearIndexedDB();
+
 			location.reload(true);
-		})
+		});
 
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
@@ -1086,9 +1300,31 @@
 		async function performSearch(searchString) {
 			libraryHighlight('searchField', false);
 
+			/*
+			if (searchString.includes('d:')) {
+
+				const unFilteredBooks = await callAPI('c_bookslistall',
+					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
+					'POST', `{"condition": {"allOf": []}}`
+				);
+				unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
+
+				const filteredBooks = unFilteredBooks.content.filter(item =>
+					obIsBookDownloading(item.id) || obIsBookCompleted(item.id)
+				);
+				displayBooks(filteredBooks, homeStripBooksResults, 'compact', 'top');
+
+				focusItem('top');
+				setTimeout(updateSliderProperties, 10);
+				sectionShow(searchStripsContainer);
+
+				return
+			}
+			*/
+
 			if (searchString.includes('y:')) {
 
-				const unFilteredSeries = await callAPI(
+				const unFilteredSeries = await callAPI('c_serieslistall',
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
 				);
@@ -1127,7 +1363,7 @@
 				return
 			}
 
-			const unFilteredSeries = await callAPI(
+			const unFilteredSeries = await callAPI('c_serieslistall',
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -1142,7 +1378,7 @@
 			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
-			const unFilteredBooks = await callAPI(
+			const unFilteredBooks = await callAPI('c_bookslistall',
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -1297,7 +1533,7 @@
 		};
 
 		async function buildLanguageList() {
-			const languageList = await callAPI(`/api/v1/languages`);
+			const languageList = await callAPI('c_languages', `/api/v1/languages`);
 			languageList.forEach(item => {
 				mb.filterTable.filter_by_language.switches.push({
 					name: item,
@@ -1419,8 +1655,9 @@
 			}
 		}));
 
+		//TODO Check what happens for webtoons since readerScale should be 100 for them?
 		function isReaderHorizontal(screenAR) {
-			return (screenAR / mb.readerMaxRatio > rd.orientationThresholdRatio);
+			return (screenAR / (mb.readerMaxRatio * mb.readerScale / 100) > rd.orientationThresholdRatio);
 		}
 
 		function updateReaderOrientation() {
@@ -1430,6 +1667,14 @@
 				mb.screenAR = newScreenAR;
 				mb.readerHorizontal = isReaderHorizontal(newScreenAR);
 			} else {
+				//TODO THIS FORCES HORIZONTAL FIT
+				/*
+				mb.screenAR = newScreenAR;
+				mb.readerScale = Math.min(mb.screenAR / mb.readerMaxRatio * 100, 100);
+				document.documentElement.style.setProperty('--mb-reader-scale', mb.readerScale);
+
+				return;
+*/
 				let newReaderHorizontal = isReaderHorizontal(newScreenAR);
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
@@ -1553,15 +1798,479 @@
 			await wait(100);
 		}
 
+		//MB Offline Download Functions
+		function arrayBufferToBase64(buffer) {
+			let binary = '';
+			const bytes = new Uint8Array(buffer);
+			const chunkSize = 0x8000; // 32 KB chunks
+			for (let i = 0; i < bytes.length; i += chunkSize) {
+				const chunk = bytes.subarray(i, i + chunkSize);
+				binary += String.fromCharCode.apply(null, chunk);
+			}
+			return btoa(binary);
+		}
+
+		async function capacitorGetOfflineBookData(bookId) {
+			const baseFolder = `offline-books/${bookId}`;
+			try {
+				console.log(`Reading offline book data for ${bookId}`);
+				// Read and parse each metadata file
+				const bookFile = await Capacitor.Plugins.Filesystem.readFile({
+					path: `${baseFolder}/metadata-book.json`,
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				const pagesFile = await Capacitor.Plugins.Filesystem.readFile({
+					path: `${baseFolder}/metadata-pages.json`,
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				const seriesFile = await Capacitor.Plugins.Filesystem.readFile({
+					path: `${baseFolder}/metadata-series.json`,
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				const bookMetadata = JSON.parse(bookFile.data);
+				const pagesMetadata = JSON.parse(pagesFile.data);
+				const seriesMetadata = JSON.parse(seriesFile.data);
+
+
+				// Convert base folder to a WebView-friendly URL
+				const uriResult = await Capacitor.Plugins.Filesystem.getUri({
+					path: baseFolder,
+					directory: filesFolder
+				});
+				const baseUrl = Capacitor.convertFileSrc(uriResult.uri);
+				const bookPath = baseUrl;
+
+				debugPrint(`Successfully loaded offline book data for ${bookId}`)
+				console.log(`Successfully loaded offline book data for ${bookId}`);
+				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath };
+
+			} catch (err) {
+				debugPrint('Failed to read offline book data:', err);
+				console.error('Failed to read offline book data:', err);
+				throw err;
+			}
+		}
+
+		async function capacitorDeleteBookData(bookId) {
+			try {
+				const baseFolder = `offline-books/${bookId}`;
+
+				debugPrint(`Deleting offline book data for ${bookId}...`);
+				console.log(`Deleting offline book data for ${bookId}...`);
+
+				await Capacitor.Plugins.Filesystem.rmdir({
+					path: baseFolder,
+					directory: filesFolder,
+					recursive: true
+				});
+
+				debugPrint(`Deleted offline book ${bookId} successfully.`);
+				console.log(`Deleted offline book ${bookId} successfully.`);
+				return { success: true };
+			} catch (err) {
+				debugPrint(`Failed to delete offline book ${bookId}:`, err);
+				console.error(`Failed to delete offline book ${bookId}:`, err);
+				return { success: false, message: err.message };
+			}
+		}
+
+
+		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
+			const mimeToExt = {
+				'image/jpeg': '.jpg',
+				'image/png': '.png',
+				'image/webp': '.webp',
+				'image/gif': '.gif',
+			};
+
+			const baseDir = 'offline-books';
+			const bookFolder = `${baseDir}/${bookId}`;
+			const pagesFolder = `${bookFolder}/pages`;
+			const thumbsFolder = `${bookFolder}/thumbs`;
+
+			// Helper to make directories recursively
+			async function ensureDir(path) {
+				try {
+					await Capacitor.Plugins.Filesystem.mkdir({
+						path,
+						directory: filesFolder,
+						recursive: true
+					});
+				} catch (err) {
+					debugPrint("Error creating " + path);
+					//if (!String(err.message).includes('exists')) throw err;
+				}
+			}
+
+
+			await ensureDir(baseDir);
+			await ensureDir(bookFolder);
+			await ensureDir(pagesFolder);
+			await ensureDir(thumbsFolder);
+
+			let completed = 0;
+
+			try {
+				debugPrint(`Downloading metadata for ${bookId}`);
+
+				debugPrint("Get Book Data")
+				// Book metadata
+				let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+				if (!res.ok) debugPrint(res.status)
+				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
+				const bookMeta = await res.json();
+
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-book.json`,
+					data: JSON.stringify(bookMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+
+				debugPrint("Get Series Data")
+				// Series metadata
+				res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
+				if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
+				const seriesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-series.json`,
+					data: JSON.stringify(seriesMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				debugPrint("Get Pages Data")
+				// Pages metadata
+				res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
+				if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
+				const pagesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-pages.json`,
+					data: JSON.stringify(pagesMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				// Book thumbnail
+				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
+				res = await fetch(thumbUrl, requestData);
+				if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
+
+				const thumbBuffer = await res.arrayBuffer();
+				const base64Thumb = arrayBufferToBase64(thumbBuffer);
+
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/thumbnail.jpg`,
+					data: base64Thumb,
+					directory: filesFolder
+				});
+
+				// Download all pages
+				for (const page of pagesMeta) {
+					const pageFile = `${pagesFolder}/${page.number}${mimeToExt[page.mediaType]}`;
+					const thumbFile = `${thumbsFolder}/t_${page.number}.jpg`;
+
+					let pageExists = false;
+					try {
+						await Capacitor.Plugins.Filesystem.stat({
+							path: pageFile,
+							directory: filesFolder,
+						});
+						pageExists = true;
+					} catch { }
+
+					if (!pageExists) {
+						const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
+						const pageRes = await fetch(pageUrl, requestData);
+						if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
+						const pageBuffer = await pageRes.arrayBuffer();
+						await Capacitor.Plugins.Filesystem.writeFile({
+							path: pageFile,
+							data: arrayBufferToBase64(pageBuffer),
+							directory: filesFolder
+						});
+					} else {
+						console.log(`Page ${page.number} already exists, skipping.`);
+					}
+
+					let thumbExists = false;
+					try {
+						await Capacitor.Plugins.Filesystem.stat({
+							path: thumbFile,
+							directory: filesFolder,
+						});
+						thumbExists = true;
+					} catch { }
+
+					if (!thumbExists) {
+						const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
+						const thumbRes = await fetch(thumbPageUrl, requestData);
+						if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
+						const thumbPageBuffer = await thumbRes.arrayBuffer();
+						await Capacitor.Plugins.Filesystem.writeFile({
+							path: thumbFile,
+							data: arrayBufferToBase64(thumbPageBuffer),
+							directory: filesFolder
+						});
+					} else {
+						console.log(`Thumb ${page.number} already exists, skipping.`);
+					}
+					completed++;
+					// You can dispatch a custom event to your UI
+					window.dispatchEvent(new CustomEvent('download-progress', {
+						detail: { bookId, completed, total: bookMeta.media.pagesCount }
+					}));
+				}
+
+				debugPrint(`Downloaded book "${bookTitle}" (${bookId})`);
+				window.dispatchEvent(new CustomEvent('download-complete', {
+					detail: { bookId, completed, total: bookMeta.media.pagesCount }
+				}));
+
+				return { ok: true, path: bookFolder };
+			} catch (err) {
+				debugPrint('Error in safeWriteFile:');
+				debugPrint(err);
+				console.error('Download failed:', err);
+				return { ok: false, error: err.message };
+			}
+		}
+
+		function obSaveTable() {
+			localStorage.setItem('mbOfflineBooks', JSON.stringify(mb.offlineBooks));
+		}
+
+		function obSetSpinner(status) {
+			let oldStatus = downloadSpinner.classList.contains('spin');
+			if (oldStatus == status) return;
+			downloadSpinner.classList.remove('spin');
+			if (status) downloadSpinner.classList.add('spin')
+		}
+
+		function obAddBookToTable(book) {
+			mb.offlineBooks[book.id] = {
+				status: 'downloading',
+				percent: 0,
+
+				updated: false,
+				page: book.readProgress?.page ?? 1,
+				pages: book.media.pagesCount,
+			};
+			obSaveTable();
+		}
+
+		function obRemoveBookFromTable(bookId) {
+			delete mb.offlineBooks[bookId];
+			obSaveTable();
+		}
+
+		function obSetBookCompleted(bookId) {
+			mb.offlineBooks[bookId].status = 'completed';
+			mb.offlineBooks[bookId].percent = 100;
+			obSaveTable();
+		}
+
+		function obSetBookProgress(bookId, progress) {
+			mb.offlineBooks[bookId].percent = progress;
+			obSaveTable();
+		}
+
+		function obRedrawDownloadButton(bookId) {
+			if (obIsBookCompleted(bookId)) {
+				return ('<span class="fa-regular fa-trash-can"></span>')
+			} else if (obIsBookDownloading(bookId)) {
+				return ('<span class="fa-solid fa-xmark"></span>')
+			}
+			else {
+				return ('<span class="fa-solid fa-download"></span>')
+			}
+		}
+
+		function obIsBookCompleted(bookId) {
+			if (!mb.offlineBooks) return false;
+			const book = mb.offlineBooks[bookId];
+			return book && book.status === 'completed';
+		}
+
+		function obIsBookDownloading(bookId) {
+			if (!mb.offlineBooks) return false;
+			const book = mb.offlineBooks[bookId];
+			return book && book.status === 'downloading';
+		}
+
+		function obIsAnyBookDownloading() {
+			if (!mb.offlineBooks) return false;
+			return Object.values(mb.offlineBooks).some(book => book.status === 'downloading');
+		}
+
+		function obDownloadsInProgress() {
+			if (!mb.offlineBooks) return false;
+			const book = mb.offlineBooks[bookId];
+			return book && book.status === 'downloading';
+		}
+
+		async function obDownloadBook(bookId) {
+			let request = buildRequest(mb.authToken, 'GET', null)
+
+			let bookData = {
+				bookId: bookId,
+				baseUrl: `${mb.baseUrl}`,
+				requestData: request
+			};
+
+			if (isElectron) await window.offlineAPI.downloadBook(bookData);
+			if (isCapacitor) await capacitorDownloadBook(bookData);
+
+		}
+
+		async function obDeleteBookData(bookId) {
+			let result = null
+			if (isElectron) result = await window.offlineAPI.deleteOfflineBookData(bookId)
+			if (isCapacitor) result = await capacitorDeleteBookData(bookId)
+
+			if (result.success) {
+				console.log(`Deleted offline book ${bookId} successfully.`);
+			} else {
+				console.warn(`Failed to delete offline book ${bookId}: ${result.message}`);
+			}
+			return result;
+		}
+
+		async function obLoadOfflineBook(bookId) {
+			let bookData = null;
+			if (isElectron) bookData = await window.offlineAPI.getOfflineBookData(bookId)
+			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
+			return bookData;
+		}
+
+		function obRestoreDownloadOnBoot() {
+			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
+				if (item.status == 'downloading') {
+					obSetSpinner(true);
+					obDownloadBook(bookId);
+				}
+			});
+		}
+
+		async function obRefreshReadStatus() {
+			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
+				if (item.updated) {
+					callAPI(null, `/api/v1/books/${bookId}/read-progress`, 'PATCH', JSON.stringify({ page: item.page }), false)
+					item.updated = false;
+				}
+			});
+		}
+
 		//MB Media Cache 
 
-		async function fetchMedia(url) {
-			if (mb.mediaCache.has(url)) {
+		function openIndexedDB() {
+			return new Promise((resolve, reject) => {
+				const request = indexedDB.open('MangaBoxCache', 1);
+				request.onupgradeneeded = (event) => {
+					const db = event.target.result;
+					if (!db.objectStoreNames.contains('media')) {
+						db.createObjectStore('media');
+					}
+					if (!db.objectStoreNames.contains('data')) {
+						db.createObjectStore('data');
+					}
+				};
+				request.onsuccess = () => resolve(request.result);
+				request.onerror = () => reject(request.error);
+			});
+		}
+
+		function cacheMedia(db, url, blob) {
+			return new Promise((resolve, reject) => {
+				const tx = db.transaction('media', 'readwrite');
+				tx.objectStore('media').put(blob, url);
+				tx.oncomplete = () => resolve();
+				tx.onerror = () => reject(tx.error);
+			});
+		}
+
+		function getCachedMedia(db, url) {
+			return new Promise((resolve, reject) => {
+				const tx = db.transaction('media', 'readonly');
+				const req = tx.objectStore('media').get(url);
+				req.onsuccess = () => resolve(req.result || null);
+				req.onerror = () => reject(req.error);
+			});
+		}
+
+		function cacheData(db, key, content) {
+			return new Promise((resolve, reject) => {
+				const tx = db.transaction('data', 'readwrite');
+				tx.objectStore('data').put(content, key);
+				tx.oncomplete = () => resolve();
+				tx.onerror = () => reject(tx.error);
+			});
+		}
+
+		function getCachedData(db, key) {
+			return new Promise((resolve, reject) => {
+				const tx = db.transaction('data', 'readonly');
+				const req = tx.objectStore('data').get(key);
+				req.onsuccess = () => resolve(req.result || null);
+				req.onerror = () => reject(req.error);
+			});
+		}
+
+		async function clearIndexedDB() {
+			try {
+				const db = await openIndexedDB();
+
+				const tx = db.transaction(['media', 'data'], 'readwrite');
+				const mediaStore = tx.objectStore('media');
+				const dataStore = tx.objectStore('data');
+
+				mediaStore.clear();
+				dataStore.clear();
+
+				return new Promise((resolve, reject) => {
+					tx.oncomplete = () => {
+						console.log('Media and data caches cleared.');
+						resolve();
+					};
+					tx.onerror = () => {
+						console.error('Error clearing IndexedDB caches:', tx.error);
+						reject(tx.error);
+					};
+				});
+			} catch (err) {
+				console.error('Failed to open IndexedDB for clearing:', err);
+			}
+		}
+
+
+		async function fetchMedia(url, offlineCache = true) {
+
+			const db = await openIndexedDB();
+
+			// 1️⃣ Check RAM cache first
+			if (mb.mediaCacheRAM.has(url)) {
 				// Move the accessed item to the end to mark it as recently used
-				const value = mb.mediaCache.get(url);
-				mb.mediaCache.delete(url);
-				mb.mediaCache.set(url, value);
+				const value = mb.mediaCacheRAM.get(url);
+				mb.mediaCacheRAM.delete(url);
+				mb.mediaCacheRAM.set(url, value);
 				return value;
+			}
+
+			// 2️⃣ Check in IndexedDB only if in offline session and cache it in RAM too
+			if (offlineSession) {
+				const cachedBlob = await getCachedMedia(db, url);
+				if (cachedBlob) {
+					const objectURL = URL.createObjectURL(cachedBlob);
+					mb.mediaCacheRAM.set(url, objectURL);
+					return objectURL;
+				}
 			}
 
 			try {
@@ -1572,42 +2281,51 @@
 					const objectURL = URL.createObjectURL(blob);
 
 					// Add to cache and enforce size limit
-					mb.mediaCache.set(url, objectURL);
-					if (mb.mediaCache.size > mb.cacheLimit) {
+					mb.mediaCacheRAM.set(url, objectURL);
+					if (mb.mediaCacheRAM.size > mb.cacheLimitRAM) {
 						// Remove the oldest entry
-						const oldestKey = mb.mediaCache.keys().next().value;
-						URL.revokeObjectURL(mb.mediaCache.get(oldestKey)); // Revoke object URL
-						mb.mediaCache.delete(oldestKey);
+						const oldestKey = mb.mediaCacheRAM.keys().next().value;
+						URL.revokeObjectURL(mb.mediaCacheRAM.get(oldestKey)); // Revoke object URL
+						mb.mediaCacheRAM.delete(oldestKey);
+					}
+
+					if (offlineCache) {
+						await cacheMedia(db, url, blob);
 					}
 
 					return objectURL;
 				} else {
 					console.error(`Failed to load media from ${url}`, response.status);
-					return 'fallback-image.jpg';
+					return 'fallback-image.png';
 				}
 			} catch (error) {
-				console.error(`Error fetching media: ${error.message}`);
-				return 'fallback-image.jpg';
+				console.warn(`Offline? Loading cached media for ${url}`);
+				const fallbackBlob = await getCachedMedia(db, url);
+				if (fallbackBlob) {
+					return URL.createObjectURL(fallbackBlob);
+				}
+				return 'fallback-image.png';
+
 			}
 		}
 
 
 		// Function to clear the cache entirely
-		function clearMediaCache() {
-			for (const objectURL of mb.mediaCache.values()) {
+		function clearmediaCacheRAM() {
+			for (const objectURL of mb.mediaCacheRAM.values()) {
 				URL.revokeObjectURL(objectURL);
 			}
-			mb.mediaCache.clear();
+			mb.mediaCacheRAM.clear();
 		}
 
 		async function setReadStatus(seriesId, bookId, read, item, format) {
 			if (bookId == null) {
-				await callAPI(`/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
-				const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
+				await callAPI(null, `/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
+				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData, null);
 				mb.currentlyScaled = item;
 			} else {
-				await callAPI(`/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
+				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				mb.currentlyScaled = item;
 				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
@@ -1625,7 +2343,7 @@
 					setTimeout(updateSliderProperties, 100);
 					mainContainer.scrollTop = oldTop;
 				} else {
-					const bookData = await callAPI(`/api/v1/books/${bookId}`);
+					const bookData = await callAPI(null, `/api/v1/books/${bookId}`);
 					buildBookItem(item, bookData, format, null);
 				}
 			}
@@ -1648,7 +2366,7 @@
 			const searchFieldSize = libLargeSize;
 			const margin = 10;
 
-			const libraries = await callAPI('/api/v1/libraries');
+			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 			await displayLibraries(libraries);
 
@@ -1676,7 +2394,8 @@
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
-			const unFilteredSeries = await callAPI(
+			//TODO Launch this fetch at session load to pre-cache all series
+			const unFilteredSeries = await callAPI('c_serieslistall',
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"allOf": []}}`
 			);
@@ -1738,7 +2457,7 @@
 						/*
 						item.classList.remove('scaled');
 						item.parentElement.classList.remove('top-pop');
-
+	
 						mb.currentlyScaled = null;
 						*/
 						execute();
@@ -1984,8 +2703,16 @@
 
 			series.forEach(async (serie) => {
 
+				/*
+				const existing = document.getElementById(serie.id);
+				if (existing) {
+					console.log ("EMERGENCY CLEAN:"+existing);
+					existing.remove(); // Remove the old one to avoid duplicates
+				}
+				*/
+
 				const seriesContainer = addItem('div', {
-					className: 'series-container', //XXX was ending with , 'fade-in');
+					className: 'series-container collector', //XXX was ending with , 'fade-in');
 					id: serie.id,
 				});
 
@@ -2000,11 +2727,11 @@
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
 			let allSeries = [];
-			const allSeriesPage = await callAPI(
+			const allSeriesPage = await callAPI(`c_serieslist${libraryId}`,
 				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'POST', `{"condition": {"libraryId": {"operator": "is","value": "${libraryId}"}}}`
 			);
-			allSeries = allSeriesPage.content;
+			allSeries = allSeriesPage?.content || [];
 			// now it gets the series sorted by name so no need to elaborate the sorting, but for custom sorting based for example on title time?
 			// allSeries.sort((a, b) => a.metadata.title.localeCompare(b.metadata.title));
 			return (allSeries);
@@ -2015,13 +2742,22 @@
 				mainContainer.scrollTo({ top: 0 });
 			} else if (focus) {
 				var item = document.getElementById(focus);
+
+				if (item == null) {
+					mainContainer.scrollTo({ top: 0 });
+					return;
+				}
+
 				const yOffset = -150;
 				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
 
 				mainContainer.scrollTo({ top: y });
 
 				mb.currentlyScaled = item.firstChild;
-				item.firstChild.classList.add('scaled');
+
+				if (item.firstChild != null) {
+					item.firstChild.classList.add('scaled');
+				}
 				item.classList.add('top-pop');
 
 			}
@@ -2144,7 +2880,7 @@
 
 			const base64Image = mb.libraryIcons[itemId];
 			const imageSrc = base64Image || (isLib
-				? `library-thumbnails/${libraryName}.png`
+				? `library-thumbnails/${libraryName}.svg`
 				: imagePath);
 
 			const libraryThumbnail = addItem('img', {
@@ -2156,13 +2892,7 @@
 			if (isLib) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
-					libraryThumbnail.src = `library-thumbnails/${libraryName}.jpg`;
-					libraryThumbnail.onerror = () => {
-						libraryThumbnail.onerror = null;
-						console.log('Both PNG and JPG images failed to load');
-						//libraryThumbnail.src = 'library-thumbnails/blank.png';
-						libraryThumbnail.src = `library-letters/${libraryName.charAt(0).toUpperCase()}.png`
-					};
+					libraryThumbnail.src = `library-letters/${libraryName.charAt(0).toUpperCase()}.png`
 				};
 			}
 
@@ -2262,7 +2992,7 @@
 
 		function cancelUpdate() {
 			closeModal();
-			bootSequence();
+			bootSequence(offlineSession ? 'offline' : 'online');
 		}
 
 		async function applyLibraryImage(libraryId, fileOrBase64) {
@@ -2303,7 +3033,7 @@
 						mb.libraryIcons[libraryId] = base64;
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
 						closeModal();
-						bootSequence();
+						bootSequence(offlineSession ? 'offline' : 'online');
 					},
 					high: true,
 				}, {
@@ -2322,9 +3052,7 @@
 					resultType: 'base64',  // get base64 directly
 					source: 'PHOTOS',
 				});
-				debugPrint(image);
-				debugPrint(image.base64String);
-				debugPrint("Picked");
+
 				const base64 = `data:image/${image.format};base64,${image.base64String}`;
 				applyLibraryImage(libraryId, base64);
 
@@ -2408,7 +3136,7 @@
 									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
 
 									closeModal();
-									bootSequence();
+									bootSequence(offlineSession ? 'offline' : 'online');
 								},
 								high: true
 							},
@@ -2563,7 +3291,7 @@
 			bookDetailsSummary.innerHTML = summaryArray.map(element => `<li>${element}</li>`).join('');
 			bookDetailsSummary.style.opacity = 1;
 
-			const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
+			const seriesData = await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 			/*
 			const seriesBooks = await callAPI(
 				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
@@ -2573,8 +3301,8 @@
 
 			mb.seriesData = seriesData;
 			mb.currentBook = book;
-			mb.prevBook = await callAPI(`/api/v1/books/${book.id}/previous`) || null;
-			mb.nextBook = await callAPI(`/api/v1/books/${book.id}/next`) || null;
+			mb.prevBook = await callAPI(`c_books${book.id}prev`, `/api/v1/books/${book.id}/previous`) || null;
+			mb.nextBook = await callAPI(`c_books${book.id}next`, `/api/v1/books/${book.id}/next`) || null;
 
 			/*
 						if (book.number > 1) {
@@ -2589,6 +3317,29 @@
 		//MB Book Item Creation
 
 		async function buildBookItem(item, book, format, target) {
+
+			// Check local proxy list if book is available and completed offline
+			// and tell the system to use this offline copy if we are offline
+
+			const bookIsOffline = obIsBookCompleted(book.id);
+			const bookIsDownloading = obIsBookDownloading(book.id);
+
+			const useOfflineCopy = (offlineSession && bookIsOffline);
+			let offline = {};
+
+			if (useOfflineCopy) {
+				//TODO Alternative way: when read status change, and the book 
+				// is offline, update the saved metadata so it will always be in sync
+				// but will this sync with the reading offline? No
+
+				// Load saved metadata
+				offline = await obLoadOfflineBook(book.id);
+				// Apply saved metadata to book
+				book = offline.bookMetadata;
+				// Pipe read progress into saved metadata
+				book.readProgress.page = mb.offlineBooks[book.id].page;
+			}
+
 			item.childNodes[0]?.remove();
 
 			item.title = 'Read book';
@@ -2596,6 +3347,21 @@
 			const booksItem = addItem('div', {
 				className: 'book-item'
 			});
+
+			const bookDownloadUI = addItem('div', {
+				className: 'book-downloader',
+				//innerText: '100%'
+			});
+
+			if (bookIsOffline) {
+				bookDownloadUI.innerText = '100%';
+				bookDownloadUI.classList.add('done');
+			}
+
+			if (bookIsDownloading) {
+				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + "%";
+				bookDownloadUI.innerText = mb.offlineBooks[book.id].percent + "%";
+			}
 
 			const mainRow = addItem('div', {
 				className: 'data-row top-row'
@@ -2658,10 +3424,12 @@
 				className: 'thumbnail-wrapper',
 			});
 
+			if (useOfflineCopy) debugPrint(`${offline.bookPath}/thumbnail.jpg`)
+
 			const bookThumbnail = addItem('img', {
 				className: 'book-thumbnail hidden',
 				src: 'transparent.png',
-				lazySrc: `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`,
+				lazySrc: useOfflineCopy ? `${offline.bookPath}/thumbnail.jpg` : `${mb.baseUrl}/api/v1/books/${book.id}/thumbnail`,
 				alt: book.metadata.title
 			});
 
@@ -2701,23 +3469,73 @@
 			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
-			bookOverlay.append(markAsRead, markAsUnread);
 
 
-			if (book.metadata.summary != '') {
-				const bookDetails = addItem('div', {
-					className: 'mini-buttons book-details',
-					title: 'Book Details',
-					innerHTML: `<span class="fa-solid fa-align-justify"></span>`
+			//TODO Verificare cosa succede se il titolo di book details è troppo lungo e sposta l'immagine thumb
+
+			//if (book.metadata.summary != '') {
+			const bookDetails = addItem('div', {
+				className: 'mini-buttons book-details',
+				title: 'Book Details',
+				innerHTML: `<span class="fa-solid fa-align-justify"></span>`
+			});
+
+			addClickPointerEvents(bookDetails, () => {
+				showBookDetails(book);
+			})
+			addPressEvents(bookDetails, scaleDown, scaleUp)
+			//	bookOverlay.append(bookDetails);
+			//}
+
+			if (book.metadata.summary == '') {
+				bookDetails.classList.add('half-bright')
+			};
+
+			if (isElectron || isCapacitor || fullDebugMode) {
+				const downloadButton = addItem('div', {
+					className: 'mini-buttons download-book',
+					title: 'Download book',
+					innerHTML: obRedrawDownloadButton(book.id),
 				});
 
-				addClickPointerEvents(bookDetails, () => {
-					showBookDetails(book);
-				})
-				addPressEvents(bookDetails, scaleDown, scaleUp)
-				bookOverlay.append(bookDetails);
-			}
+				addClickPointerEvents(downloadButton, () => {
+					//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
+					//TODO Or even better don't show the button in web mode :O
+					if (obIsBookCompleted(book.id)) {
+						// Book is finished, you can delete the book!
+						bookDownloadUI.classList.remove('done');
+						bookDownloadUI.style.bottom = '100%';
+						bookDownloadUI.innerText = '0%';
+						obRemoveBookFromTable(book.id);
+						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+						obDeleteBookData(book.id);
+					} else if (obIsBookDownloading(book.id)) {
+						// Book is downloading, you can cancel the process
+						bookDownloadUI.classList.remove('done');
+						bookDownloadUI.style.bottom = '100%';
+						bookDownloadUI.innerText = '0%';
+						obRemoveBookFromTable(book.id);
+						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+						obDeleteBookData(book.id);
+						obSetSpinner(false);
+					} else {
+						// Download the book!
+						bookDownloadUI.classList.remove('done');
+						bookDownloadUI.style.bottom = '0%';
+						bookDownloadUI.innerText = '0%';
+						obAddBookToTable(book);
+						obSetSpinner(true);
+						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
+						obDownloadBook(book.id)
+					}
 
+				})
+				addPressEvents(downloadButton, scaleDown, scaleUp)
+
+				bookOverlay.append(markAsRead, downloadButton, bookDetails, markAsUnread);
+			} else {
+				bookOverlay.append(markAsRead, bookDetails, markAsUnread);
+			}
 
 			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
 			const progressBar = addItem('div', { className: 'progress-bar' });
@@ -2738,18 +3556,28 @@
 
 			thumbnailWrapper.append(
 				bookThumbnail,
+				bookDownloadUI,
 				bookFader,
 				bookOverlay,
-				bookStatus
+				bookStatus,
 			);
 
 			progressBar.append(progressGauge);
 
 			addTouchScaler(booksItem, async () => {
-				const seriesData = await callAPI(`/api/v1/series/${book.seriesId}`);
+				if (offlineSession && !bookIsOffline) return;
+
+				const seriesData = useOfflineCopy ? offline.seriesMetadata : await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
-				rd.historyPath = window.location.hash.split('&book_id=')[0] + (target == booksGrid ? '&book_id=' + book.id : '');
+				if (target == booksGrid) {
+					rd.historyPath = window.location.hash.split('&book_id=')[0] + '&book_id=' + book.id;
+				} else if (target == offlineGrid) {
+					rd.historyPath = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
+				} else {
+					rd.historyPath = window.location.hash.split('&book_id=')[0];
+				}
+
 				setIncognito(false);
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#bookread
@@ -2761,7 +3589,6 @@
 			});
 
 			item.append(booksItem);
-
 		}
 
 		function displayBooks(books, target, format, focus = null) {
@@ -2785,8 +3612,15 @@
 			}
 
 			books.forEach(book => {
+				/*
+				const existing = document.getElementById(book.id);
+				if (existing) {
+					console.log ("EMERGENCY CLEAN:"+existing);
+					existing.remove(); // Remove the old one to avoid duplicates
+				}
+				*/
 				const bookContainer = addItem('div', {
-					className: 'book-container',
+					className: 'book-container collector',
 					id: book.id
 				});
 
@@ -2800,10 +3634,9 @@
 				sectionShow(seriesHeader);
 				sectionShow(seriesMiniHeader);
 				seriesMiniHeader.classList.add('collapse');
-
 				focusItem(focus);
-
 			}
+
 		}
 
 		//MB Dashboard Management
@@ -2815,6 +3648,7 @@
 
 			seriesGrid.innerHTML = '';
 			booksGrid.innerHTML = '';
+			offlineGrid.innerHTML = '';
 			stripGrid.innerHTML = '';
 
 			sectionShow(homeStripsContainer);
@@ -2834,7 +3668,7 @@
 			keepReading: {
 				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
 				getItems: async (page, size) => {
-					const out = await callAPI(
+					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"IN_PROGRESS"}}}`
 					);
@@ -2853,7 +3687,7 @@
 			onDeck: {
 				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/books/ondeck`));
+					return (await callAPI(`c_ondeck`, `/api/v1/books/ondeck`));
 				},
 				showItems: async (input, target) => {
 					displayBooks(input, target, 'compact');
@@ -2863,7 +3697,7 @@
 			recentBooks: {
 				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
 				getItems: async (page, size) => {
-					return (await callAPI(
+					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
 						'POST', `{"condition":{"allOf":[]}}`
 					));
@@ -2876,7 +3710,7 @@
 			recentSeries: {
 				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/series/new?page=${page}&size=${size}`));
+					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
 					displaySeries(input, target);
@@ -2886,7 +3720,7 @@
 			updatedSeries: {
 				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
 				getItems: async (page, size) => {
-					return (await callAPI(`/api/v1/series/updated?page=${page}&size=${size}`));
+					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
 					displaySeries(input, target);
@@ -2896,7 +3730,7 @@
 			readBooks: {
 				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
 				getItems: async (page, size) => {
-					return (await callAPI(
+					return (await callAPI(`c_readbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
 						'POST', `{"condition":{"readStatus":{"operator":"is","value":"READ"}}}`
 					));
@@ -2913,6 +3747,7 @@
 
 			seriesGrid.innerHTML = ''; // Clear the series grid
 			booksGrid.innerHTML = ''; // Clear the series grid
+			offlineGrid.innerHTML = ''; // Clear the series grid
 			stripGrid.innerHTML = '';
 
 			sectionShow(stripGridContainer);
@@ -2976,7 +3811,7 @@
 
 			item.scrollBar.append(item.scrollInput);
 			headerContainer.append(stripHeader, item.scrollBar, item.gridButton);
-			item.element.append(headerContainer, item.homeStrip);
+			item.element.append(item.homeStrip, headerContainer);
 			homeStripsContainer.append(item.element);
 
 		});
@@ -2985,19 +3820,53 @@
 		// if seriesdata is not available at the moment of the call, it fetches it from the server
 		async function openSeries(libraryId, seriesId, bookId) {
 
-			const seriesData = await callAPI(`/api/v1/series/${seriesId}`);
+			let books = [];
+			const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
 
-			const books = (await callAPI(
+			const booksData = (await callAPI(`c_bookslist${seriesId}`,
 				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${seriesId}"}}}`
-			)).content;
+			));
+
+			books = booksData?.content || [];
 
 			await libraryHighlight(libraryId, false);
-			displayHeader(seriesData);
+			if (seriesData != null) displayHeader(seriesData);
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
 
-		async function bootSequence() {
+		async function openOfflineBooks(bookId) {
+			libraryHighlight('offlineLibrary', false);
+
+			const unFilteredBooks = await callAPI('c_bookslistall',
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+				'POST', `{"condition": {"allOf": []}}`
+			);
+			unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
+
+			const filteredBooks = unFilteredBooks.content.filter(item =>
+				obIsBookDownloading(item.id) || obIsBookCompleted(item.id)
+			);
+
+			//books = booksData?.content || [];
+
+			//TODO await libraryHighlight(libraryId, false);
+
+			displayBooks(filteredBooks, offlineGrid, 'compact', bookId);
+			focusItem(bookId);//TODO ERA 'top'
+			setTimeout(updateSliderProperties, 10);
+			sectionShow(offlineGrid);
+		}
+
+		function setNetworkStatus(netStatus) {
+			offlineLed.style.opacity = (netStatus == 'offline') ? 1 : 0;
+			offlineSession = (netStatus == 'offline');
+		}
+
+		async function bootSequence(netStatus = 'online') {
+
+			setNetworkStatus(netStatus)
+
 			userSettings = await getUserSettings();
 
 			applyUserSettings();
@@ -3023,6 +3892,20 @@
 			document.querySelectorAll('.hidestrip').forEach(el => {
 				el.classList.remove('hidestrip');
 			});
+
+			if (enableDownload) await obRefreshReadStatus();
+
+			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
+			const fakerSeries = callAPI('c_serieslistall',
+				`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'POST', `{"condition": {"allOf": []}}`
+			);
+			const fakerBooks = callAPI('c_bookslistall',
+				`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+				'POST', `{"condition": {"allOf": []}}`
+			);
+
+			if (enableDownload) obRestoreDownloadOnBoot();
 		}
 
 		//MB Reader Functions and Data
@@ -3160,7 +4043,7 @@
 			rd.originY = 0;
 			rd.touchLock = 0;
 
-			scaleWebtoon(0);
+			if (rd.webtoon) scaleWebtoon(0); else scaleReader(0);
 
 			//readerViewer.innerHTML = '';
 			thumbStripShowHide();
@@ -3261,12 +4144,10 @@
 			clearAllTimeouts();
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-			//dragbarOffReader();
 
 			updatePWABar();
 			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 				Capacitor.Plugins.StatusBar.show();
-				//showAndroidTitleBar();
 			}
 
 		}
@@ -3448,12 +4329,19 @@
 
 		// Initialize viewer with page data
 		async function initViewer() {
+			//TODO questa si può estrarre come quella di buildbookitem
+			let offline = null;
+
+			let useOfflineCopy = offlineSession && obIsBookCompleted(rd.bookId);
+			if (useOfflineCopy) {
+				offline = await obLoadOfflineBook(rd.bookId);
+			}
 			updatePWABar(rd.titleBarColor);
 
-			const bookData = await callAPI(`/api/v1/books/${rd.bookId}`);
+			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 
-			rd.prevBook = await callAPI(`/api/v1/books/${rd.bookId}/previous`) || null;
-			rd.nextBook = await callAPI(`/api/v1/books/${rd.bookId}/next`) || null;
+			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
+			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
 
 			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
 			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
@@ -3463,15 +4351,16 @@
 			const coverIsPageOne = bookData.metadata.tags.includes('cover-is-page-one');
 
 			const pagesData = !rd.webtoon ?
-				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne) :
-				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne);
+				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
+				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
 
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
-			zoomControls.style.display = rd.webtoon ? '' : 'none';
+			//zoomControls.style.display = rd.webtoon ? '' : 'none';
+			zoomControls.style.bottom = rd.webtoon ? 'calc(80px + var(--mb-bottom-spacer))' : 'calc(110px + var(--mb-bottom-spacer) + var(--mb-thumb-size-px))';
 
 			initReaderUI(pagesData, bookData)
 
@@ -3496,15 +4385,15 @@
 		}
 
 		function buildSize(item, ratio) {
-			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
+			item.style.width = `calc(min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
-			item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
+			item.style.width = `calc(min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * vh) )`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
@@ -3512,8 +4401,8 @@
 			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
-			item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
-			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh) )`;
+			item.style.width = `calc(2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh))`;
+			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * vh) )`;
 		}
 
 		// Add this once when initializing the viewer
@@ -3647,24 +4536,58 @@
 			requestAnimationFrame(frame);
 		}
 
+		function animateReaderScale(from, to, duration = 300, easing = t => t) {
+			let start;
+			function frame(ts) {
+				if (!start) start = ts;
+				const t = Math.min(1, (ts - start) / duration);
+				const v = from + (to - from) * easing(t);
+				document.documentElement.style.setProperty('--mb-reader-scale', v);
+				updateReaderOrientation()
+				//webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+				if (t < 1) requestAnimationFrame(frame);
+			}
+			requestAnimationFrame(frame);
+		}
+
+
 		function scaleWebtoon(inc) {
 			const oldScale = mb.webtoonScale;
 			const newScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
 			mb.webtoonScale = newScale;
 
-			setUserSettings('mangabox.ui.webtoonscale', newScale);
+			localStorage.setItem('c_webtoonScale', JSON.stringify(newScale))
 			scaleVal.innerText = newScale + "%";
 
 			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
 		}
 
-		function scaleWebtoonOLD(inc) {
-			mb.webtoonScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
-			setUserSettings('mangabox.ui.webtoonscale', mb.webtoonScale);
-			scaleVal.innerText = mb.webtoonScale + "%";
+		function scaleReader(inc) {
+			const oldScale = mb.readerScale;
+			const newScale = Math.min(110, Math.max(50, mb.readerScale + inc));
+			mb.readerScale = newScale;
 
-			document.documentElement.style.setProperty('--webtoon-scale', mb.webtoonScale);
-			webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
+			localStorage.setItem('c_readerScale', JSON.stringify(newScale))
+			scaleVal.innerText = newScale + "%";
+
+			animateReaderScale(oldScale, newScale, 200, t => t * (2 - t));
+		}
+
+
+		function readerScaleDown() {
+			if (rd.webtoon) {
+				scaleWebtoon(-20);
+			} else {
+				scaleReader(-5);
+			}
+		}
+
+		function readerScaleUp() {
+			if (rd.webtoon) {
+				scaleWebtoon(20);
+			} else {
+				scaleReader(5);
+			}
 		}
 
 		function addCoverSpine(pageObjectL, pageObjectR) {
@@ -3688,14 +4611,24 @@
 			pageObjectL.uiContainer.append(coverlayL);
 		}
 
-		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne) {
+		const mimeToExt = {
+			'image/jpeg': '.jpg',
+			'image/png': '.png',
+			'image/webp': '.webp',
+			'image/gif': '.gif',
+		};
+
+		async function fetchPagesWebtoon(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
+
+			let useOfflineCopy = !(offline == null);
+
 			// Get the pages data structure from komga for the current book
-			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			/*
 			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
 				.reduce((sum, width) => sum + width, 0) / komgaPageData.length) + 'px';
-
+	
 			readerViewer.style.height = webtoonScale * (komgaPageData.map(item => ((item.height)))
 				.reduce((sum, width) => sum + width, 0)) + 'px';
 			*/
@@ -3703,8 +4636,8 @@
 			thumbStripInnerWT.style.flexDirection = 'column';
 
 			const pageData = komgaPageData.map(page => ({
-				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
-				thumb: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
+				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
 				height: page.height,
@@ -3798,26 +4731,28 @@
 		}
 
 		// Master function that builds all the pages slots for the book spreads
-		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne) {
+		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
+
+			let useOfflineCopy = !(offline == null);
 
 			// Get the pages data structure from komga for the current book
-			const komgaPageData = await callAPI(`/api/v1/books/${bookId}/pages`);
+			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
 			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
 			// readerViewer.style.height='100vh';
-			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, 100vh))`;
+			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-reader-scale) / 100 * 100vh))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
-			readerViewer.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+			readerViewer.style.width = `calc(min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh))`;
 
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInner.style.flexDirection = rd.rtl ? 'row-reverse' : 'row';
 
 			// Create pageData structure with the fields from fetched data
 			const pageData = komgaPageData.map(page => ({
-				url: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
-				thumb: `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
+				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
+				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
 				width: page.width,
 				height: page.height,
@@ -3942,9 +4877,10 @@
 					pageObjectR.uiContainer,
 				);
 
+				//TODO MA questo non è sovrascritto dal successivo?
 				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
-				spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
+				spreadObject.uiItem.style.width = `calc(min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh))`;
 
 				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
@@ -4086,7 +5022,7 @@
 						element.uiPage.classList.add('loading');
 						try {
 							// Fetch the image
-							const blobUrl = await fetchMedia(element.lazySrc);
+							const blobUrl = await fetchMedia(element.lazySrc, false);
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
@@ -4225,6 +5161,7 @@
 
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
+
 			const stringOut = `${mb.basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
@@ -4233,8 +5170,14 @@
 			&pag=${rd.currentPage}`;
 
 			if (!rd.incognito) {
-				callAPI(`/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
+				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.catch(error => console.error('Error:', error));
+			}
+
+			if (obIsBookCompleted(rd.bookId)) {
+				mb.offlineBooks[rd.bookId].page = rd.currentPage;
+				if (offlineSession) mb.offlineBooks[rd.bookId].updated = true;
+				obSaveTable();
 			}
 
 			return (stringOut);
@@ -4357,7 +5300,7 @@
 				{ duration: duration, easing: ease }
 			]);
 		}
-
+		//TODO Tutta quella stringa complicata col calc potrebbe essere sostituita conoscendo larghezza e altezza in pixel? boh
 		function animShadowBWD(align, duration, ease) {
 			return ([
 				[{ [align]: '100%', width: '0', opacity: '0' },
@@ -4405,7 +5348,7 @@
 			const animInstant = { duration: 0, easing: 'linear', fill: 'forwards' };
 
 			const appearR2L_slideinL2R = [
-				{ clipPath: 'inset(0 0 0 100%)', left: '-100%' },
+				{ clipPath: 'inset(0 0 0 100%)', left: `-100%` },
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearL2R = [
@@ -4413,7 +5356,7 @@
 				{ clipPath: 'inset(0 0 0 0)' }
 			];
 			const appearL2R_sildeinR2L = [
-				{ clipPath: 'inset(0 100% 0 0)', left: '100%' },
+				{ clipPath: 'inset(0 100% 0 0)', left: `100%` },
 				{ clipPath: 'inset(0 0 0 0)', left: '0%' }
 			];
 			const appearR2L = [
@@ -4627,6 +5570,7 @@
 		}
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
+
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -4650,7 +5594,9 @@
 				}
 			}
 
-			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) return;
+			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
+				return;
+			}
 
 			if (targetSpreadFocus == null) {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
@@ -4692,9 +5638,8 @@
 
 				setTimeout(() => {
 					rd.webtoonScroll = false;
-				}, 500);
+				}, 1000);
 			}
-
 
 			updateProgressBar();
 
@@ -4839,7 +5784,8 @@
 			}
 		});
 
-		document.addEventListener('keydown', (event) => {
+		//TODO: RIMUOVERE ASYNC DA QUI
+		document.addEventListener('keydown', async (event) => {
 			const readerVisible = !isSectionHidden(readerContainer);
 
 			switch (event.key) {
@@ -4873,6 +5819,14 @@
 						handleCloseReader();
 					}
 					break;
+				/*
+				case 'D':
+					mb.screenAR = getScreenAR();
+					mb.readerScale = mb.screenAR / mb.readerMaxRatio * 100 - 1;
+					document.documentElement.style.setProperty('--mb-reader-scale', mb.readerScale);
+					updateReaderOrientation()
+					break;
+				*/
 				case ' ':
 					if (readerVisible) {
 						event.preventDefault();
@@ -4913,6 +5867,7 @@
 		function getHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
+
 			const params = paramString == undefined ? null : new URLSearchParams(paramString ?? '');
 			return { path, params };
 		}
@@ -4923,6 +5878,7 @@
 			await executeFade(1);
 			dragbarOffReader();
 			document.querySelectorAll('.section').forEach(section => sectionHide(section));
+			document.querySelectorAll('.collector').forEach(item => item.remove());
 
 			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
@@ -4970,6 +5926,11 @@
 					break;
 				case 'bookread':
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
+					break;
+				case 'offlinebooks':
+					searchInput.value = '';
+					setIncognito(false);
+					await openOfflineBooks(params?.get('book_id'));
 					break;
 				default:
 					console.log('no selection');
@@ -5045,6 +6006,8 @@
 		searchInput.addEventListener('pointerdown', (event) => {
 			event.stopPropagation();
 		})
+
+		let offlineSession = false;
 
 		sessionCheck()
 

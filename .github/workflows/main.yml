@@ -174,7 +174,7 @@ jobs:
                     --exclude='package*.*' \
                     --exclude='electron/' \
                     --exclude='assets/' \
-                    --exclude='z_*.*' \
+                    --exclude='z_*' \
                     --exclude='docs/' \
                     --exclude='capacitor*' \
                     ./ webdeploy/mangabox
@@ -201,7 +201,10 @@ jobs:
             name: iOS-ipa
           - os: ubuntu-latest
             sys: android
-            name: Android
+            name: Android-apk
+          - os: ubuntu-latest
+            sys: android
+            name: Android-aab
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -245,6 +248,9 @@ jobs:
       - name: Install Capacitor Camera plugin
         run: npm install @capacitor/camera@7
 
+      - name: Install Capacitor Filesystem plugin
+        run: npm install @capacitor/filesystem@7
+
       - name: Install File Picker plugin
         run: npm install @capawesome/capacitor-file-picker@7
 
@@ -261,6 +267,12 @@ jobs:
           /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryAddUsageDescription 'We need access to save images to your photo library.'" $PLIST 2>/dev/null || \
           /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryAddUsageDescription string 'We need access to save images to your photo library.'" $PLIST
 
+          /usr/libexec/PlistBuddy -c "Set :UIFileSharingEnabled true" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :UIFileSharingEnabled bool true" $PLIST
+
+          /usr/libexec/PlistBuddy -c "Set :LSSupportsOpeningDocumentsInPlace true" $PLIST 2>/dev/null || \
+          /usr/libexec/PlistBuddy -c "Add :LSSupportsOpeningDocumentsInPlace bool true" $PLIST
+
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
 
@@ -274,21 +286,43 @@ jobs:
 #        if: ${{ matrix.sys == 'android' }}
 #        run: cp capacitor.styles.xml android/app/src/main/res/values/styles.xml
 
+      - name: Android - Version injection
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          VERSION="${{ env.version }}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+          VERSION_CODE=$((MAJOR*100 + MINOR*10 + PATCH))
+
+          # Update Gradle
+          sed -i "s/versionName \".*\"/versionName \"$VERSION\"/" android/app/build.gradle
+          sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" android/app/build.gradle
+
       - name: Prepare output folder
         run: mkdir output
 
-      - name: Android - Build app
-        if: ${{ matrix.sys == 'android' }}
+      - name: Android-apk - Build app
+        if: ${{ matrix.name == 'Android-apk' }}
         run: |
           cd android
           ./gradlew assembleDebug
 
-      - name: Android - Move app to target
-        if: ${{ matrix.sys == 'android' }}
+      - name: Android-apk - Move apk to target
+        if: ${{ matrix.name == 'Android-apk' }}
         run: |
           mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
-      - name: iOS - Build app for simulator
+      - name: Android-aab - Build app
+        if: ${{ matrix.name == 'Android-aab' }}
+        run: |
+          cd android
+          ./gradlew bundleRelease
+
+      - name: Android-aab - Move aab to target
+        if: ${{ matrix.name == 'Android-aab' }}
+        run: |
+          mv android/app/build/outputs/bundle/release/app-release.aab output/MangaBox-${{ env.version }}-${{ matrix.name }}.aab
+
+      - name: iOS app - Build app for simulator
         if: ${{ matrix.name == 'iOS-app'}}
         run: |
           cd ios/App
@@ -301,16 +335,16 @@ jobs:
             -derivedDataPath build \
             ONLY_ACTIVE_ARCH=NO
 
-      - name: iOS - Move app to target
+      - name: iOS app - Move app to target
         if: ${{ matrix.name == 'iOS-app' }}
         run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}-${{ matrix.name }}.app
 
-      - name: Replace icons for iOS26
+      - name: iOS app - Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-app' }}
         run: |
           cp assets/icon-ios26/* output/MangaBox-${{ env.version }}-${{ matrix.name }}.app/
 
-      - name: iOS - Build app for device
+      - name: iOS ipa - Build app for device
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           cd ios/App
@@ -326,12 +360,12 @@ jobs:
             archive \
             -archivePath build/App.xcarchive
 
-      - name: Replace icons for iOS26
+      - name: iOS ipa - Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
           cp assets/icon-ios26/* ios/App/build/App.xcarchive/Products/Applications/App.app/
 
-      - name: iOS - Package unsigned .ipa
+      - name: iOS ipa - Package unsigned .ipa
         if: ${{ matrix.name == 'iOS-ipa'}}
         run: |
           rsync -a ios/App/build/App.xcarchive/Products/Applications/App.app ios/App/build/export/Payload/
@@ -344,6 +378,7 @@ jobs:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
             output/*.apk
+            output/*.aab
             output/*.app
             output/*.ipa
 

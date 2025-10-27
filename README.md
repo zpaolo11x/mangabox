@@ -1,6 +1,6 @@
 <picture><img alt="MangaBox Logo" src="logo/mangabox-logo-new-with-name.svg" width=450px></picture>
 
-MangaBox is a multiplatform, web based client for <a href="https://komga.org">Komga</a>, the manga and comics media server.		
+MangaBox is a multiplatform, web technology based client for <a href="https://komga.org">Komga</a>, the manga and comics media server.		
 
 ## Supported platforms
 

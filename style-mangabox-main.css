@@ -60,12 +60,16 @@
 	--mb-card-min-width: calc(var(--mb-card-cover-min-width) + 2 * var(--mb-card-padding));
 
 	--mb-num-buttons: 1;
-	
+
 	--mb-android-top-bar: 0px;
-	
+
+	--mb-reader-inset: 0px;
+
 	--mb-top-spacer: calc(env(safe-area-inset-top) + var(--mb-android-top-bar));
 
 	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
+
+	--mb-reader-scale: 100;
 
 	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
 	--mb-button-transition:
@@ -130,6 +134,7 @@
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
+	--mb-card-color-alpha: #ffffff65;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
@@ -155,6 +160,7 @@
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
+	--mb-card-color-alpha: #35353565;
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
@@ -362,12 +368,29 @@ body {
 	margin-right: calc(max(10px, env(safe-area-inset-right)));
 }
 
+#offlineLed {
+	pointer-events: none;
+	position: absolute;
+	z-index: 10000;
+	color: red;
+	font-size: 12px;
+	font-weight: bold;
+	bottom: 5px;
+	right: 10px;
+	/*
+	background-color: rgba(200, 0, 0, 0.85);
+	border-radius:50%;
+	*/
+	/*width: 10px;*/
+	height: 10px;
+}
+
 #debuggerObj {
 	display: none;
 	pointer-events: none;
 	position: fixed;
 	z-index: 10000;
-	font-size: 17px;
+	font-size: 15px;
 	color: white;
 	font-family: 'Courier New', Courier, monospace;
 	font-weight: bold;
@@ -443,7 +466,7 @@ a {
 	display: grid;
 	grid-template-columns: auto;
 	grid-template-rows: 60px auto;
-	transition: grid-template-rows 0.2s;
+	transition: grid-template-rows 0.2s, background-color 0.3s ease;
 	background: var(--mb-page-color);
 }
 
@@ -550,6 +573,8 @@ a {
 
 /* Sticky container for libraries */
 #stickyContainer {
+	position: relative;
+	/*added to fit offline to the bottom right*/
 	grid-row: 1;
 	display: flex;
 	align-items: center;
@@ -574,8 +599,9 @@ a {
 	padding: 0;
 	margin: 0;
 	padding-top: var(--mb-library-gap);
-	padding-right: var(--mb-library-gap); /*Added to avoid clipping*/
-	padding-left:var(--mb-bar-safe-padding-left);
+	padding-right: var(--mb-library-gap);
+	/*Added to avoid clipping*/
+	padding-left: var(--mb-bar-safe-padding-left);
 	height: calc(var(--mb-button-size) + var(--mb-library-gap));
 	overflow: scroll;
 	/*background: lightblue;*/
@@ -809,7 +835,57 @@ a {
 	border-radius: 50%;
 }
 
+#downloadSpinner {
+	display: none;
+	position: absolute;
+	box-sizing: border-box;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border: 5px solid var(--mb-accent);
+	min-width: calc(var(--mb-button-size) - 2px);
+	height: calc(var(--mb-button-size) - 2px);
+	z-index: 10;
+	border-radius: 50%;
+	border-style: dotted;
+	transition: border-color 0.3s;
+}
 
+#downloadSpinner.spin {
+	display: flex;
+	animation: spin 10s linear infinite, cycle 1s ease infinite alternate;
+}
+
+@keyframes spin {
+	from {
+		transform: translate(-50%, -50%) rotate(0deg);
+	}
+
+	to {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
+}
+
+@keyframes cycle {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+
+#offlineLibrary.highlighted #downloadSpinner {
+	border-color: white;
+}
+
+#offlineLibrary {
+	position: relative;
+}
+
+#offlineLibrary.highlighted span.fa-solid,
 .library-item.search-field.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-regular {
@@ -1053,23 +1129,40 @@ a {
 	text-shadow: 0px 0px 12px rgba(255, 255, 255, 1.0), 0px 0px 5px rgba(255, 255, 255, 0.8);
 }
 
-.mini-buttons.mark-as-read {
-	right: 10px;
-	bottom: 10px;
-}
 
-.mini-buttons.mark-as-unread {
+.mini-buttons.mark-as-read {
 	left: 10px;
 	bottom: 10px;
 }
 
-.mini-buttons.book-details {
+.mini-buttons.mark-as-unread {
+	bottom: 10px;
+	left: calc((100% - 20px - 50px - 50px) / 3 + 10px + 25px);
+	/*
 	text-align: center;
 	left: 0;
 	right: 0;
 	margin: auto;
 	bottom: 10px;
-	/* Centers the div */
+	*/
+}
+
+.mini-buttons.book-details {
+	bottom: 10px;
+	right: calc((100% - 20px - 50px - 50px) / 3 + 10px + 25px);
+	/*
+	left: 10px;
+	top: 10px;
+	*/
+}
+
+.mini-buttons.book-details.half-bright {
+	display: none;
+}
+
+.mini-buttons.download-book {
+	right: 10px;
+	bottom: 10px;
 }
 
 .mini-buttons-2 {
@@ -1186,7 +1279,7 @@ a {
 
 .home-strip {
 	gap: 16px;
-	padding: 10px var(--mb-area-padding) 30px var(--mb-area-padding);
+	padding: 40px var(--mb-area-padding) 30px var(--mb-area-padding);
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
 
@@ -1246,15 +1339,68 @@ a {
 	cursor: pointer;
 }
 
+.book-downloader {
+	display: flex;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 100%;
+	background-color: var(--mb-card-color-alpha);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	/* horizontal centering */
+	justify-content: center;
+	/* vertical centering */
+	align-items: end;
+	border-radius: var(--mb-cover-radius) var(--mb-cover-radius) 0px var(--mb-cover-radius);
+	font-size: 40px;
+	transition: bottom 0.3s;
+	text-shadow: rgba(0, 0, 0, 0.5) 0px 2px 6px
+}
+
+.book-downloader.done {
+	position: absolute;
+	top: 20px;
+	left: calc(100% - 20px);
+	width: 80px;
+	height: 20px;
+	background: rgba(255, 218, 33, 0.645);
+	color: white;
+	text-align: center;
+	line-height: 20px;
+	font-size: 17px;
+	font-weight: bold;
+	transform: translate(-50%, -50%) rotate(45deg);
+		box-shadow: 0 0px 3px rgba(0,0,0,0.2);
+	text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px
+
+}
+
+.download-glyph {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
 .strip-button:hover {
 	opacity: 0.7;
 }
 
+.home-strip-parent {
+	position: relative;
+}
+
 .strip-header-container {
+	position: absolute;
+	top: 0;
 	margin-top: 0px;
 	display: grid;
 	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + env(safe-area-inset-right))));
 	gap: 10px;
+	width: 100%;
+	height: 30px;
 }
 
 #stripGridHeaderContainer {
@@ -1344,9 +1490,8 @@ a {
 
 #seriesGrid,
 #booksGrid,
-#stripGrid,
-#homeStripSeriesResults,
-#homeStripBooksResults {
+#offlineGrid,
+#stripGrid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(var(--mb-card-min-width), max-content));
 	gap: 16px;
@@ -1354,6 +1499,21 @@ a {
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
+}
+
+#homeStripSeriesResults,
+#homeStripBooksResults {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(var(--mb-card-min-width), max-content));
+	gap: 16px;
+	padding: 40px var(--mb-area-padding) 30px var(--mb-area-padding);
+	padding-left: var(--mb-area-safe-padding-left);
+	padding-right: var(--mb-area-safe-padding-right);
+	transition: opacity 0.3s ease;
+}
+
+#homeStripBooksResults {
+	padding: 40px var(--mb-area-padding) 20px var(--mb-area-padding);
 }
 
 #stripGrid {
@@ -1432,6 +1592,7 @@ a {
 	margin-left: 20px;
 	height: var(--mb-dialog-button-height);
 	line-height: var(--mb-dialog-button-height);
+	padding-right: 50px;
 }
 
 .book-details-pic-container {
@@ -1439,6 +1600,8 @@ a {
 	justify-content: center;
 	/* Centers the child horizontally */
 	width: 150px;
+	min-width: 150px;
+	max-width: 150px;
 }
 
 
@@ -1462,6 +1625,7 @@ a {
 
 #seriesGrid.hidden,
 #booksGrid.hidden,
+#offlineGrid.hidden,
 #homeStripsContainer.hidden,
 #searchStripsContainer.hidden,
 #stripGridContainer.hidden,
@@ -1492,7 +1656,7 @@ a {
 	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
 	border-radius: var(--mb-card-radius);
-	transition: scale 0.3s, box-shadow 0.3s;
+	transition: scale 0.3s, box-shadow 0.3s, background-color 0.3s ease;
 }
 
 .series-item.scaled,
@@ -1889,15 +2053,15 @@ body.sticky-medium #librariesRightBlock {
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 200px) var(--mb-button-size);
 }
 
-body.sticky-medium #stickyContainer .library-item:not(.search-field) {
+body.sticky-medium #stickyContainer .library-item:not(.no-grow) {
 	width: var(--mb-button-size);
 }
 
-body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted {
+body.sticky-medium #stickyContainer .library-item:not(.no-grow).highlighted {
 	width: var(--mb-library-large);
 }
 
-body.sticky-medium #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+body.sticky-medium #stickyContainer .library-item:not(.no-grow).highlighted.with-menu {
 	width: var(--mb-library-large-with-menu);
 }
 
@@ -1926,8 +2090,8 @@ body.sticky-small #librariesList {
 
 body.sticky-small #librariesRightBlock {
 	margin-top: calc(10px - var(--mb-library-gap));
-	padding-top:0px;
-	padding-left:var(--mb-bar-safe-padding-left);
+	padding-top: 0px;
+	padding-left: var(--mb-bar-safe-padding-left);
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) 1fr var(--mb-button-size);
 	width: 100%;
 }
@@ -1944,7 +2108,7 @@ body.sticky-small #mainUI:has(.extra-bar:not(.hidden)) {
 	grid-template-rows: 156px auto;
 }
 
-body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.search-field) {
+body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.no-grow) {
 	width: var(--mb-button-size);
 }
 
@@ -1964,11 +2128,11 @@ body.sticky-small #filtersBar .library-item {
 }
 */
 
-body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
+body.sticky-small #stickyContainer .library-item:not(.no-grow).highlighted {
 	width: var(--mb-library-large);
 }
 
-body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+body.sticky-small #stickyContainer .library-item:not(.no-grow).highlighted.with-menu {
 	width: var(--mb-library-large-with-menu);
 }
 
@@ -1989,6 +2153,17 @@ body.sticky-small #seriesMiniHeader {
 	top: calc(114px + var(--mb-top-spacer));
 }
 
+/*
+body.offline #stickyContainer {
+	background: linear-gradient(115deg,
+			var(--mb-card-color) 0px,
+			var(--mb-card-color) calc(100% - 25px - 1px),
+			red calc(100% - 25px),
+			red calc(100% - 10px),
+			var(--mb-card-color) calc(100% - 10px + 1px)
+		)
+}
+*/
 .scrollbox {
 	position: relative;
 	/*width: 100%;*/

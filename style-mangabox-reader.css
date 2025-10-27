@@ -71,6 +71,11 @@
 	--color2: black;
 }
 
+[data-theme-reader="transparent"] {
+	--color1: var(--mb-page-color);
+	--color2: var(--mb-page-color);
+}
+
 .hide-scrollbar {
 	/* Works in Firefox */
 	scrollbar-width: none;
@@ -830,7 +835,7 @@ div.single-page {
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 	width: calc(var(--mb-pill-width) + 50px + var(--mb-pill-width));
 	left: 20px;
-	bottom: calc(80px + var(--mb-bottom-spacer));;
+	bottom: calc(80px + var(--mb-bottom-spacer));
 	border-radius: var(--mb-dialog-box-radius);
 	padding-left: 10px;
 	padding-right: 10px;
@@ -864,7 +869,7 @@ div.single-page {
 #readerContainer.hidden #bottomControls,
 #controlPanel.hidden #zoomControls,
 #readerContainer.hidden #zoomControls {
-	bottom: -100px;
+	bottom: -100px !important; /*TODO Added !important to fix dependance from webtoon vs book, maybe can be avoided*/
 }
 
 #controlPanel.hidden #thumbStrip,
@@ -898,8 +903,8 @@ div.single-page {
 #prevBookPanel {
 	position: absolute;
 	left: 50%;
-	top: 50vh;
-	transform: translate(-50%, -50%);
+	top: 100px;
+	transform: translate(-50%, 0);
 	transition: opacity 0.5s ease;
 	z-index: 15;
 }
