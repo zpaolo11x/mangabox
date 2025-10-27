@@ -70,6 +70,7 @@
 	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
 
 	--mb-reader-scale: 100;
+	--mb-webtoon-scale: 100;
 
 	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
 	--mb-button-transition:
@@ -1356,7 +1357,8 @@ a {
 	border-radius: var(--mb-cover-radius) var(--mb-cover-radius) 0px var(--mb-cover-radius);
 	font-size: 40px;
 	transition: bottom 0.3s;
-	text-shadow: rgba(0, 0, 0, 0.5) 0px 2px 6px
+	text-shadow: rgba(0, 0, 0, 0.5) 0px 2px 6px;
+	color: white;
 }
 
 .book-downloader.done {

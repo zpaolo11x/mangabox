@@ -4165,7 +4165,7 @@
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
-			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
+			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
 			//rd.titleBarColor = "black";
 
@@ -4529,7 +4529,7 @@
 				if (!start) start = ts;
 				const t = Math.min(1, (ts - start) / duration);
 				const v = from + (to - from) * easing(t);
-				document.documentElement.style.setProperty('--webtoon-scale', v);
+				document.documentElement.style.setProperty('--mb-webtoon-scale', v);
 				webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 				if (t < 1) requestAnimationFrame(frame);
 			}
@@ -4672,8 +4672,8 @@
 				// these are two normal pages
 				const page1 = buildPageObject(pageData[i_page]);
 
-				page1.uiPage.style.width = `calc(var(--webtoon-scale) * 1vw)`
-				page1.uiPage.style.height = `calc(var(--webtoon-scale) * 1vw / ${pageData[i_page].AR})`
+				page1.uiPage.style.width = `calc(var(--mb-webtoon-scale) * 1vw)`
+				page1.uiPage.style.height = `calc(var(--mb-webtoon-scale) * 1vw / ${pageData[i_page].AR})`
 
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
