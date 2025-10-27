@@ -1,5 +1,5 @@
 Main UI
-- 
+- Restyled download progress indicator
 
 Reader UI
 - 
