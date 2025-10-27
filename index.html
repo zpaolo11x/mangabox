@@ -946,8 +946,9 @@
 			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
-			mb.webtoonScale = Number(userSettings['mangabox.ui.webtoonscale'] ?? 100);
-			mb.readerScale = Number(userSettings['mangabox.ui.readerscale'] ?? 100);
+
+			mb.webtoonScale = Number(localStorage.getItem('c_webtoonScale') ?? 100);
+			mb.readerScale = Number(localStorage.getItem('c_readerScale') ?? 100);
 		}
 
 
@@ -4570,7 +4571,7 @@
 			const newScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
 			mb.webtoonScale = newScale;
 
-			setUserSettings('mangabox.ui.webtoonscale', newScale);
+			localStorage.setItem('c_webtoonScale', JSON.stringify(newScale))
 			scaleVal.innerText = newScale + "%";
 
 			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
@@ -4581,7 +4582,7 @@
 			const newScale = Math.min(110, Math.max(50, mb.readerScale + inc));
 			mb.readerScale = newScale;
 
-			setUserSettings('mangabox.ui.readerscale', newScale);
+			localStorage.setItem('c_readerScale', JSON.stringify(newScale))
 			scaleVal.innerText = newScale + "%";
 
 			animateReaderScale(oldScale, newScale, 200, t => t * (2 - t));
