@@ -306,11 +306,17 @@
 	<div id="debuggerObj"></div>
 
 	<script>
+		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
 
-		function debugPrint(text) {
-			debuggerObj.innerText = debuggerObj.innerText + text + "\n";
-		}
+		// Enable for live debug on the main UI
+		const enableDebugPrint = true;
+		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
+
+		const debugPrint = enableDebugPrint
+			? text => (debuggerObj.innerText += text + "\n")
+			: () => { };
+
 
 		const isElectron = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
@@ -568,7 +574,6 @@
 
 
 			const percent = Math.round((completed / total) * 100);
-			console.log("percent:" + percent);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
 
@@ -577,8 +582,6 @@
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				tempDivChild.style.bottom = percent + '%';
 				tempDivChild.innerText = percent + '%';
-				console.log(tempDiv);
-				console.log(tempDivChild.innerText);
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
@@ -605,7 +608,6 @@
 
 		if (isCapacitor || isElectron) {
 			window.addEventListener('download-progress', (event) => {
-				debugPrint("EV1");
 				const { bookId, completed, total } = event.detail;
 				obUpdateProgressResponse(bookId, completed, total);
 			});
@@ -824,7 +826,6 @@
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
-			console.log(cacheKey + " " + API_url)
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
@@ -892,7 +893,6 @@
 
 		async function getUserSettings() {
 			let mangaboxFlat = null;
-			//try{
 			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
 
 			mangaboxFlat = Object.fromEntries(
@@ -900,10 +900,6 @@
 					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
-			//} catch (error) {
-			//	console.log("Error in fetch, getting from cache")
-			//	mangaboxFlat = JSON.parse(localStorage.getItem('cache_userSettings'));
-			//}
 			return mangaboxFlat
 		}
 
@@ -1817,7 +1813,7 @@
 		async function capacitorGetOfflineBookData(bookId) {
 			const baseFolder = `offline-books/${bookId}`;
 			try {
-				console.log(`📖 Reading offline book data for ${bookId}`);
+				console.log(`Reading offline book data for ${bookId}`);
 				// Read and parse each metadata file
 				const bookFile = await Capacitor.Plugins.Filesystem.readFile({
 					path: `${baseFolder}/metadata-book.json`,
@@ -1850,13 +1846,13 @@
 				const baseUrl = Capacitor.convertFileSrc(uriResult.uri);
 				const bookPath = baseUrl;
 
-				debugPrint(`✅ Successfully loaded offline book data for ${bookId}`)
-				console.log(`✅ Successfully loaded offline book data for ${bookId}`);
+				debugPrint(`Successfully loaded offline book data for ${bookId}`)
+				console.log(`Successfully loaded offline book data for ${bookId}`);
 				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath };
 
 			} catch (err) {
-				debugPrint('❌ Failed to read offline book data:', err);
-				console.error('❌ Failed to read offline book data:', err);
+				debugPrint('Failed to read offline book data:', err);
+				console.error('Failed to read offline book data:', err);
 				throw err;
 			}
 		}
@@ -1865,8 +1861,8 @@
 			try {
 				const baseFolder = `offline-books/${bookId}`;
 
-				debugPrint(`🗑️ Deleting offline book data for ${bookId}...`);
-				console.log(`🗑️ Deleting offline book data for ${bookId}...`);
+				debugPrint(`Deleting offline book data for ${bookId}...`);
+				console.log(`Deleting offline book data for ${bookId}...`);
 
 				await Capacitor.Plugins.Filesystem.rmdir({
 					path: baseFolder,
@@ -1874,12 +1870,12 @@
 					recursive: true
 				});
 
-				debugPrint(`✅ Deleted offline book ${bookId} successfully.`);
-				console.log(`✅ Deleted offline book ${bookId} successfully.`);
+				debugPrint(`Deleted offline book ${bookId} successfully.`);
+				console.log(`Deleted offline book ${bookId} successfully.`);
 				return { success: true };
 			} catch (err) {
-				debugPrint(`❌ Failed to delete offline book ${bookId}:`, err);
-				console.error(`❌ Failed to delete offline book ${bookId}:`, err);
+				debugPrint(`Failed to delete offline book ${bookId}:`, err);
+				console.error(`Failed to delete offline book ${bookId}:`, err);
 				return { success: false, message: err.message };
 			}
 		}
@@ -1921,7 +1917,7 @@
 			let completed = 0;
 
 			try {
-				debugPrint(`🌐 Downloading metadata for ${bookId}`);
+				debugPrint(`Downloading metadata for ${bookId}`);
 
 				debugPrint("Get Book Data")
 				// Book metadata
@@ -1929,8 +1925,7 @@
 				if (!res.ok) debugPrint(res.status)
 				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
 				const bookMeta = await res.json();
-				debugPrint("bookMeta");
-				debugPrint(bookMeta);
+
 				await Capacitor.Plugins.Filesystem.writeFile({
 					path: `${bookFolder}/metadata-book.json`,
 					data: JSON.stringify(bookMeta, null, 2),
@@ -2002,7 +1997,7 @@
 							directory: filesFolder
 						});
 					} else {
-						console.log(`✅ Page ${page.number} already exists, skipping.`);
+						console.log(`Page ${page.number} already exists, skipping.`);
 					}
 
 					let thumbExists = false;
@@ -2025,7 +2020,7 @@
 							directory: filesFolder
 						});
 					} else {
-						console.log(`✅ Thumb ${page.number} already exists, skipping.`);
+						console.log(`Thumb ${page.number} already exists, skipping.`);
 					}
 					completed++;
 					// You can dispatch a custom event to your UI
@@ -2034,16 +2029,16 @@
 					}));
 				}
 
-				debugPrint(`📕 Downloaded book "${bookTitle}" (${bookId})`);
+				debugPrint(`Downloaded book "${bookTitle}" (${bookId})`);
 				window.dispatchEvent(new CustomEvent('download-complete', {
 					detail: { bookId, completed, total: bookMeta.media.pagesCount }
 				}));
 
 				return { ok: true, path: bookFolder };
 			} catch (err) {
-				debugPrint('❌ Error in safeWriteFile:');
+				debugPrint('Error in safeWriteFile:');
 				debugPrint(err);
-				console.error('❌ Download failed:', err);
+				console.error('Download failed:', err);
 				return { ok: false, error: err.message };
 			}
 		}
@@ -2324,7 +2319,6 @@
 		}
 
 		async function setReadStatus(seriesId, bookId, read, item, format) {
-			console.log("bookid" + bookId + " seriesid" + seriesId);
 			if (bookId == null) {
 				await callAPI(null, `/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
@@ -2356,12 +2350,10 @@
 		}
 
 		async function setSeriesReadStatus(seriesId, read, item) {
-			console.log("serSeriesreadStatus for series " + seriesId);
 			setReadStatus(seriesId, null, read, item, null);
 		}
 
 		async function setBookReadStatus(bookId, read, item, format) {
-			console.log("serBookReadStatus for book " + bookId);
 			setReadStatus(null, bookId, read, item, format);
 		}
 
@@ -2582,7 +2574,6 @@
 				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
 			});
 			addClickPointerEvents(markAsRead, async () => {
-				console.log(serie.id);
 				await setSeriesReadStatus(serie.id, true, item);
 			})
 			addPressEvents(markAsRead, scaleDown, scaleUp)
@@ -3061,9 +3052,7 @@
 					resultType: 'base64',  // get base64 directly
 					source: 'PHOTOS',
 				});
-				debugPrint(image);
-				debugPrint(image.base64String);
-				debugPrint("Picked");
+
 				const base64 = `data:image/${image.format};base64,${image.base64String}`;
 				applyLibraryImage(libraryId, base64);
 
@@ -3612,7 +3601,6 @@
 			// focus is the book id to focus on
 
 			while (target.firstChild) {
-				console.log("removing book: " + target.firstChild)
 				target.removeChild(target.firstChild);
 			}
 
@@ -4365,19 +4353,16 @@
 			const pagesData = !rd.webtoon ?
 				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
 				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
-			console.log("A:" + rd.currentSpreadIndex)
+
 			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
-				console.log("current spread index set to zero")
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
-			console.log("B:" + rd.currentSpreadIndex)
 
 			touchPanel.style.display = rd.webtoon ? 'none' : '';
 			//zoomControls.style.display = rd.webtoon ? '' : 'none';
 			zoomControls.style.bottom = rd.webtoon ? 'calc(80px + var(--mb-bottom-spacer))' : 'calc(110px + var(--mb-bottom-spacer) + var(--mb-thumb-size-px))';
 
 			initReaderUI(pagesData, bookData)
-			console.log("C:" + rd.currentSpreadIndex)
 
 			jumpToSpreadSkipHistory(rd.currentSpreadIndex);
 
@@ -4550,7 +4535,7 @@
 			}
 			requestAnimationFrame(frame);
 		}
-		
+
 		function animateReaderScale(from, to, duration = 300, easing = t => t) {
 			let start;
 			function frame(ts) {
@@ -4589,32 +4574,21 @@
 		}
 
 
-		function readerScaleDown(){
+		function readerScaleDown() {
 			if (rd.webtoon) {
 				scaleWebtoon(-20);
-			 } else {
+			} else {
 				scaleReader(-5);
-			 }
+			}
 		}
 
-		function readerScaleUp(){
+		function readerScaleUp() {
 			if (rd.webtoon) {
 				scaleWebtoon(20);
-			 } else {
+			} else {
 				scaleReader(5);
-			 }
+			}
 		}
-
-		/*
-		function scaleWebtoonOLD(inc) {
-			mb.webtoonScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
-			setUserSettings('mangabox.ui.webtoonscale', mb.webtoonScale);
-			scaleVal.innerText = mb.webtoonScale + "%";
-
-			document.documentElement.style.setProperty('--webtoon-scale', mb.webtoonScale);
-			webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
-		}
-		*/
 
 		function addCoverSpine(pageObjectL, pageObjectR) {
 			const coverlayR = addItem('div', {
@@ -4660,7 +4634,7 @@
 			*/
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInnerWT.style.flexDirection = 'column';
-			console.log("fetch pages current page" + rd.currentPage)
+
 			const pageData = komgaPageData.map(page => ({
 				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
@@ -4739,7 +4713,6 @@
 				pageObjectL.uiPage.style.objectPosition = 'left';
 
 				if ((pageObjectL.isCurrent)) rd.currentSpreadIndex = index;
-				console.log("D:" + rd.currentSpreadIndex)
 
 				//spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
 				//spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
@@ -4750,7 +4723,6 @@
 				const localSpread = index;
 
 				spreadObject.uiThumb.addEventListener('pointerup', () => {
-					console.log("X-B:" + localSpread)
 					jumpToSpread(localSpread);
 				});
 				thumbStripInnerWT.append(spreadObject.uiThumb);
@@ -4923,7 +4895,6 @@
 				pageObjectR.uiPage.style.height = pageObjectR.uiContainer.style.height;
 
 				if ((pageObjectL.isCurrent) || (pageObjectR.isCurrent)) rd.currentSpreadIndex = index;
-				console.log("E:" + rd.currentSpreadIndex)
 
 				if ((spreadObject.spreadKind == 'cover-page') || (spreadObject.spreadKind == 'back-cover')) {
 					spreadObject.uiItem.classList.add('cover-page')
@@ -4979,8 +4950,6 @@
 				const localSpread = index;
 
 				spreadObject.uiThumb.addEventListener('pointerup', () => {
-					console.log("X-C:" + localSpread)
-
 					jumpToSpread(localSpread);
 				});
 				thumbStripInner.append(spreadObject.uiThumb);
@@ -5120,8 +5089,6 @@
 			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.webtoon) {
-				console.log("X-C:" + newSpread)
-
 				jumpToSpread(newSpread);
 				return
 			}
@@ -5195,8 +5162,6 @@
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
 
-			console.log("jumpstring currentpage:" + rd.currentPage)
-
 			const stringOut = `${mb.basePath}#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
@@ -5208,8 +5173,6 @@
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
 					.catch(error => console.error('Error:', error));
 			}
-
-			console.log("jumpstring currentpage 2:" + rd.currentPage)
 
 			if (obIsBookCompleted(rd.bookId)) {
 				mb.offlineBooks[rd.bookId].page = rd.currentPage;
@@ -5608,12 +5571,6 @@
 
 		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
 
-			console.log("--JUMP TO SPREAD--:")
-			console.log("  targetSpreadIndex:" + targetSpreadIndex);
-			console.log("  targetSpreadFocus:" + targetSpreadFocus);
-			console.log("  skipHistory:" + skipHistory);
-			console.log("  smoothWebtoon:" + smoothWebtoon);
-
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -5638,12 +5595,10 @@
 			}
 
 			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
-				console.log("--JUMP TO SPREAD RETURN")
 				return;
 			}
 
 			if (targetSpreadFocus == null) {
-				console.log("--TARGET SPREAD FOCUS = NULL")
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
 			}
 
@@ -5670,14 +5625,11 @@
 			rd.webtoon ? centerThumbWebtoon() : centerThumb();
 
 			if (rd.webtoon && !smoothWebtoon) {
-				console.log("--WEBTOON BLOCK--")
 				rd.webtoonScroll = true;
 
 				const el = rd.spreadsArray[targetSpreadIndex].uiItem;
 				const parent = el.parentElement;
 				const offsetTop = el.offsetTop + 1; // 1px extra upwards
-
-				console.log("--OFFSET TOP: " + offsetTop);
 
 				parent.scrollTo({
 					top: offsetTop,
@@ -5989,17 +5941,14 @@
 		// This is the most important function, it updates the history and then passes the path to the loadContent function that does all the work
 		// In MB the navigateTo function with a proper path form will open the different sections and activate various states.
 		function navigateTo(path) {
-			console.log("navigate to:" + path)
 			history.pushState(null, '', mb.basePath + path);
 			loadContent();
 		}
 
 		const webtoonPageNumberObserver = new IntersectionObserver(async (entries, observer) => {
 			entries.forEach(async (entry) => {
-				console.log("rd.webtoonScroll:" + rd.webtoonScroll)
 				if (rd.webtoonScroll) return;
 				if (entry.isIntersecting) {
-					console.log("X-A:" + (entry.target.alt - 1))
 					jumpToSpreadSmoothWebtoon(entry.target.alt - 1)
 				}
 			});
