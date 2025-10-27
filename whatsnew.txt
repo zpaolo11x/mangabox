@@ -1,20 +1,11 @@
 Main UI
-- Enabled download books functionality for offline reading
-- Added new Offline Books toolbar button to see all downloaded books
-- Automatically resume interrupted book downloads at startup
-- Caching of web requests so the UI is consistent when offline
-- Caching of viewed thumbnails for offline browsing
-- Clear cached media and data storage when logging out of server
-- Visual indicator when the sessoin is valid but the server is not reachable
+- 
 
 Reader UI
-- New color scheme that keeps the theme page color as reader background
-- Added zoom congrol for book reading, useful to avoid single page switch
+- 
 
 Build
-- Udated App Id
-- Added privacy policy to web documentation
+- 
 
 Fixes
-- Fixed smooth theme transition from light to dark
-- Moved prev and next book dialog away from other UI items
+- 
