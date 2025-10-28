@@ -164,7 +164,8 @@ async function login() {
 				window.electronAPI.sendRememberMe(loginRememberMe.checked);
 				await saveToken(token);
 			}
-			hideLoginDialog();
+			//hideLoginDialog();
+			fader.classList.remove('hidden');
 			location.reload(true);
 		} else if (response.status === 401) {
 			loginError.textContent = 'Invalid username or password.';
