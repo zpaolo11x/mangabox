@@ -137,6 +137,8 @@
 	--mb-active-color: #f0f0f0;
 	--mb-card-color-alpha: #ffffff65;
 
+	--mb-login-border-color:#c0c0c0;
+
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
@@ -162,6 +164,9 @@
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
 	--mb-card-color-alpha: #35353565;
+
+	--mb-login-border-color:#707070;
+
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);

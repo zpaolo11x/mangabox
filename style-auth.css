@@ -4,7 +4,7 @@
 	right: 0;
 	top: var(--mb-drag-bar-height);
 	bottom: 0;
-	background: linear-gradient(to bottom, white, #f5f5f5);
+	background: var(--mb-page-color);/*(to bottom, white, #f5f5f5);*/
 	z-index: 5000;
 }
 
@@ -13,7 +13,10 @@
 	text-align:right;
 	font-size: 13px;
 	margin-right:5px;
-	color:#303030;
+}
+
+#logoName{
+	filter: drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white);
 }
 
 .dialog {
@@ -27,11 +30,11 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 
-	border: 1px solid #ccc;
+	border: 1px solid var(--mb-login-border-color);
 
 	padding: var(--mb-dialog-padding);
 	border-radius: var(--mb-dialog-box-radius);
-	background-color: #fff;
+	background-color: var(--mb-card-color);
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -53,7 +56,7 @@
 	height: var(--mb-dialog-button-height);
 	width: 300px;
 	border-radius: var(--mb-dialog-button-radius);
-	border: 1px #c0c0c0 solid;
+	border: 1px var(--mb-login-border-color) solid;
 	padding-left: calc(var(--mb-dialog-button-height) + 5px);
 	
 	padding-right: 10px;
@@ -85,7 +88,7 @@
 	margin: 0px;
 	appearance: none;
 	background: #ddd;
-	border: 1px solid #aaa;
+	border: 1px solid var(--mb-login-border-color);
 	border-radius:var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
 	width: 100%;
@@ -131,7 +134,7 @@
 	/* Remove the default checkbox appearance */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
-	border: 1px solid #c0c0c0;
+	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
 	background: #fff;
 	/* Default white background */
@@ -195,12 +198,12 @@
 	top: 0px;
 	color: #555;
 	/* White icon color */
-	background-color: #ddd;
+	background-color: var(--mb-active-color);
 	/* Accent color */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
 	border-radius: var(--mb-dialog-button-radius) 0px 0px var(--mb-dialog-button-radius);
-	border: 1px solid #aaa;
+	border: 1px solid var(--mb-login-border-color);
 	border-right: transparent;
 	display: flex;
 	align-items: center;
@@ -213,7 +216,6 @@
 
 .input-wrapper:hover i {
 	border-color: var(--mb-accent);
-	background-color: #ddd;
 }
 
 .input-wrapper:focus-within i {

@@ -265,8 +265,8 @@
 
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
-			<img src="logo/mangabox-logo-new.svg" width="90px" height="90px">
-			<img src="logo/mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
+			<img id="logoIcon" src="logo/mangabox-logo-new.svg" width="90px" height="90px">
+			<img id="logoName" src="logo/mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
 			<div class="version-note">v0.2.9</div>
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
@@ -983,7 +983,12 @@
 				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
 		}
 
+		function forceTheme(toDark) {
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+		}
+
 		function changeTheme() {
+
 			let toDark = false;
 
 			if (mb.themePrefs != 2) {
@@ -1017,7 +1022,17 @@
 			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
 
-		mb.prefersDarkMode.addEventListener('change', changeTheme);
+		forceTheme(mb.prefersDarkMode.matches ? true : false)
+
+		mb.prefersDarkMode.addEventListener('change', () => {
+			if (isSectionHidden(loginScreen)){
+				console.log("A")
+				changeTheme()
+			} else {
+				console.log("B")
+				forceTheme(mb.prefersDarkMode.matches ? true : false)
+			}
+		});
 
 		// Show/Hide section functions
 		function sectionHide(item) {
