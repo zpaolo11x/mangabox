@@ -1,5 +1,4 @@
 // script.js
-
 async function saveToken(token) {
 	debugPrint("saveToken...")
 	console.log("saveToken...")
@@ -42,7 +41,7 @@ async function sessionCheck() {
 	if ((!mb.baseUrl) || (!mb.authToken)) {
 		debugPrint("Missing base URL or auth token");
 		showLoginDialog();
-		fader.classList.add('hidden');
+		sectionHide(fader);
 		return;
 	}
 
@@ -55,11 +54,11 @@ async function sessionCheck() {
 		console.log("Offline mode detected.")
 		if (sessionWasValid) {
 			hideLoginDialog();
-			fader.classList.add('hidden');
+			sectionHide(fader);
 			bootSequence('offline');
 		} else {
 			showLoginDialog();
-			fader.classList.add('hidden');
+			sectionHide(fader);
 		}
 		return;
 	}
@@ -91,15 +90,15 @@ async function sessionCheck() {
 			console.log("Session valid (server confirmed).");
 			localStorage.setItem("sessionValid", "true");
 			hideLoginDialog();
+			sectionHide(fader);
 			bootSequence('online');
-					fader.classList.add('hidden');
 
 		} else if (response.status === 401 || response.status === 403) {
 			debugPrint("Token invalid or expired.");
 			console.log("Token invalid or expired.");
 			localStorage.removeItem("sessionValid");
 			showLoginDialog();
-					fader.classList.add('hidden');
+			sectionHide(fader);
 
 		} else {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
@@ -107,12 +106,11 @@ async function sessionCheck() {
 			if (sessionWasValid) {
 				hideLoginDialog();
 				bootSequence('offline');
-						fader.classList.add('hidden');
+				sectionHide(fader);
 
 			} else {
 				showLoginDialog();
-						fader.classList.add('hidden');
-
+				sectionHide(fader);
 			}
 		}
 	} catch (error) {
@@ -124,11 +122,11 @@ async function sessionCheck() {
 		if (sessionWasValid) {
 			hideLoginDialog();
 			bootSequence('offline');
-					fader.classList.add('hidden');
+			sectionHide(fader);
 
 		} else {
 			showLoginDialog();
-					fader.classList.add('hidden');
+			sectionHide(fader);
 
 		}
 	}
@@ -165,7 +163,8 @@ async function login() {
 				await saveToken(token);
 			}
 			//hideLoginDialog();
-			fader.classList.remove('hidden');
+			sectionShow(fader);
+
 			location.reload(true);
 		} else if (response.status === 401) {
 			loginError.textContent = 'Invalid username or password.';

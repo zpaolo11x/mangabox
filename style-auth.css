@@ -4,7 +4,7 @@
 	right: 0;
 	top: var(--mb-drag-bar-height);
 	bottom: 0;
-	background: var(--mb-darkred);
+	background: linear-gradient(to bottom, var(--mb-darkred), black);
 	z-index: 5000;
 	transition: background-color 0.3s;
 }
