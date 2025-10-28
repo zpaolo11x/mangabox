@@ -344,6 +344,7 @@
 		}
 
 		debugPrint("enabledownload" + enableDownload)
+
 	</script>
 
 	<script src="script-auth.js"></script>
@@ -985,6 +986,8 @@
 
 		function forceTheme(toDark) {
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+			document.querySelector('meta[name="theme-color"]')
+				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
 		}
 
 		function changeTheme() {
@@ -1022,14 +1025,11 @@
 			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
 
-		forceTheme(mb.prefersDarkMode.matches ? true : false)
 
 		mb.prefersDarkMode.addEventListener('change', () => {
-			if (isSectionHidden(loginScreen)){
-				console.log("A")
+			if (isLoginScreenHidden()){
 				changeTheme()
 			} else {
-				console.log("B")
 				forceTheme(mb.prefersDarkMode.matches ? true : false)
 			}
 		});
@@ -6023,6 +6023,8 @@
 		})
 
 		let offlineSession = false;
+		
+		forceTheme(mb.prefersDarkMode.matches ? true : false)
 
 		sessionCheck()
 

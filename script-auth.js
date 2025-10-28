@@ -171,7 +171,7 @@ function showLoginDialog() {
 	debugPrint("showLoginDialog...")
 	console.log("showLoginDialog...")
 
-	updatePWABar('white');
+	//updatePWABar('white');
 	loginScreen.classList.remove('auth-hidden');
 }
 
@@ -179,4 +179,8 @@ function hideLoginDialog() {
 	debugPrint("hideLoginDialog...")
 	console.log("hideLoginDialog...")
 	loginScreen.classList.add('auth-hidden');
+}
+
+function isLoginScreenHidden(){
+	return (loginScreen.classList.contains('auth-hidden'));
 }

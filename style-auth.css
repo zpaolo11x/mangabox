@@ -4,19 +4,34 @@
 	right: 0;
 	top: var(--mb-drag-bar-height);
 	bottom: 0;
-	background: linear-gradient(to bottom, var(--mb-card-color), var(--mb-page-color));
+	background: var(--mb-page-color);
 	z-index: 5000;
+	transition: background-color 0.3s;
 }
 
-.version-note{
-	width:100%;
-	text-align:right;
+#loginScreen::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: var(--mb-card-color);
+	-webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+	mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	pointer-events: none;
+	transition: background-color 0.3s;
+}
+
+.version-note {
+	width: 100%;
+	text-align: right;
 	font-size: 13px;
-	margin-right:5px;
+	margin-right: 5px;
 }
 
-#logoName{
-	filter: drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white) drop-shadow(0px 0px 0.5px white);
+#logoName,
+#logoIcon {
+	filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.836)) drop-shadow(0px 0px 15px rgba(255, 255, 255, 0.836));
 }
 
 .dialog {
@@ -36,6 +51,8 @@
 	border-radius: var(--mb-dialog-box-radius);
 	background-color: var(--mb-card-color);
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+	transition: background-color 0.3s;
 }
 
 
@@ -58,7 +75,7 @@
 	border-radius: var(--mb-dialog-button-radius);
 	border: 1px var(--mb-login-border-color) solid;
 	padding-left: calc(var(--mb-dialog-button-height) + 5px);
-	
+
 	padding-right: 10px;
 	font-size: var(--mb-dialog-font-size);
 
@@ -89,13 +106,13 @@
 	appearance: none;
 	background: var(--mb-login-button-color);
 	border: 1px solid var(--mb-login-border-color);
-	border-radius:var(--mb-dialog-button-radius);
+	border-radius: var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
 	width: 100%;
 	margin-top: var(--mb-dialog-padding);
 	transition: 0.3s all;
 	font-size: var(--mb-dialog-font-size);
-		font: inherit;
+	font: inherit;
 	color: inherit;
 }
 
@@ -115,7 +132,7 @@
 }
 
 .error-message {
-	width:300px;
+	width: 300px;
 	color: red;
 	font-size: var(--mb-dialog-font-size);
 	margin-top: 10px;
