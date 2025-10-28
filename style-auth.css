@@ -4,7 +4,7 @@
 	right: 0;
 	top: var(--mb-drag-bar-height);
 	bottom: 0;
-	background: var(--mb-page-color);/*(to bottom, white, #f5f5f5);*/
+	background: linear-gradient(to bottom, var(--mb-card-color), var(--mb-page-color));
 	z-index: 5000;
 }
 
@@ -87,15 +87,16 @@
 .login-button {
 	margin: 0px;
 	appearance: none;
-	background: #ddd;
+	background: var(--mb-login-button-color);
 	border: 1px solid var(--mb-login-border-color);
 	border-radius:var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
 	width: 100%;
 	margin-top: var(--mb-dialog-padding);
 	transition: 0.3s all;
-	color: black;
 	font-size: var(--mb-dialog-font-size);
+		font: inherit;
+	color: inherit;
 }
 
 .login-button:hover {
@@ -136,7 +137,7 @@
 	height: var(--mb-dialog-button-height);
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
-	background: #fff;
+	background: var(--mb-login-button-color);
 	/* Default white background */
 	margin: 0px 5px 0px 0px;
 	position: relative;
@@ -179,7 +180,6 @@
 
 .remember-me-label {
 	font-size: var(--mb-dialog-font-size);
-	color: #555;
 	cursor: pointer;
 	/* Matches cursor with checkbox */
 }
@@ -196,9 +196,9 @@
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	color: #555;
+	color: var(--mb-glyph-color);
 	/* White icon color */
-	background-color: var(--mb-active-color);
+	background-color: var(--mb-login-button-color);
 	/* Accent color */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
