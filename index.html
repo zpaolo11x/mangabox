@@ -30,13 +30,14 @@
 	<link rel="stylesheet" href="style-mangabox-reader.css">
 
 	<script>
+		let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 		function forceTheme(toDark) {
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 			document.querySelector('meta[name="theme-color"]')
 				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
 		}
 
-		forceTheme(mb.prefersDarkMode.matches ? true : false)
+		forceTheme(prefersDarkMode.matches ? true : false)
 
 	</script>
 
