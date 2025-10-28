@@ -191,6 +191,7 @@ function showLoginDialog() {
 }
 
 function hideLoginDialog() {
+	dragbar.classList.remove('onLogin');
 	debugPrint("hideLoginDialog...")
 	console.log("hideLoginDialog...")
 	loginScreen.classList.add('auth-hidden');
