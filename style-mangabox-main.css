@@ -130,6 +130,8 @@
 }
 
 [data-theme="light"] {
+	--mb-test-color:blue;
+
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
 	--mb-input-color: #f6f6f6;
@@ -160,6 +162,9 @@
 }
 
 [data-theme="dark"] {
+		--mb-test-color:green;
+
+
 	--mb-page-color: #202020;
 	--mb-card-color: #353535;
 	--mb-input-color: #252525;
