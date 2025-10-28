@@ -10,7 +10,7 @@
 	--mb-accent-a30: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.3);
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
 	--mb-accent-dark: hsl(var(--mb-h), var(--mb-s), 40%);
-	--mb-darkred: hsl(348, 92%, 20%);
+	--mb-darkred: #620417;
 
 	--mb-area-padding: 20px;
 	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), env(safe-area-inset-left)));

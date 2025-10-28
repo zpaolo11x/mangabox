@@ -35,7 +35,7 @@
 
 		document.documentElement.setAttribute('fader-theme', toDark ? 'dark' : 'light');
 		document.querySelector('meta[name="theme-color"]')
-				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
+				.setAttribute('content', '#620417');;
 	</script>
 
 </head>
@@ -996,10 +996,9 @@
 				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
 		}
 
-		function forceTheme(toDark) {
+		function changeLoginTheme(toDark) {
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
-			document.querySelector('meta[name="theme-color"]')
-				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
+			updatePWABar('#620417')
 		}
 
 		function changeTheme() {
@@ -1042,7 +1041,7 @@
 			if (isLoginScreenHidden()){
 				changeTheme()
 			} else {
-				forceTheme(mb.prefersDarkMode.matches ? true : false)
+				changeLoginTheme(mb.prefersDarkMode.matches ? true : false)
 			}
 		});
 
@@ -6036,7 +6035,7 @@
 
 		let offlineSession = false;
 		
-		forceTheme(mb.prefersDarkMode.matches ? true : false)
+		changeLoginTheme(mb.prefersDarkMode.matches ? true : false)
 
 		sessionCheck()
 
