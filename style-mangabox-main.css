@@ -139,6 +139,7 @@
 
 	--mb-login-border-color:#c0c0c0;
 	--mb-login-button-color:#e0e0e0;
+	--mb-login-logo:0.20;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
@@ -168,6 +169,7 @@
 
 	--mb-login-border-color:#707070;
 	--mb-login-button-color:#505050;
+	--mb-login-logo:0.95;
 
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);

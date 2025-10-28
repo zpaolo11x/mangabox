@@ -29,9 +29,16 @@
 	margin-right: 5px;
 }
 
+/*
 #logoName,
 #logoIcon {
 	filter: drop-shadow(0px 0px 5px rgba(255, 255, 255, 0.836)) drop-shadow(0px 0px 15px rgba(255, 255, 255, 0.836));
+}
+*/
+
+#logoName {
+	margin-bottom: 5px;
+	filter:invert(var(--mb-login-logo));
 }
 
 .dialog {
@@ -62,7 +69,7 @@
 	appearance: none;
 	border: none;
 	outline: none;
-	background: none;
+	background: var(--mb-input-color);
 	padding: 0;
 	margin: 0;
 	box-shadow: none;
@@ -98,7 +105,6 @@
 	grid-template-columns: auto 120px;
 	width: 300px;
 	gap: var(--mb-dialog-padding);
-
 }
 
 .login-button {
@@ -114,6 +120,7 @@
 	font-size: var(--mb-dialog-font-size);
 	font: inherit;
 	color: inherit;
+
 }
 
 .login-button:hover {
