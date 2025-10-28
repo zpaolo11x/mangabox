@@ -991,6 +991,9 @@
 				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
 		}
 
+				forceTheme(mb.prefersDarkMode.matches ? true : false)
+
+				
 		function changeTheme() {
 
 			let toDark = false;
@@ -6025,8 +6028,6 @@
 
 		let offlineSession = false;
 		
-		forceTheme(mb.prefersDarkMode.matches ? true : false)
-
 		sessionCheck()
 
 		//MB Reader touch response fucntions
