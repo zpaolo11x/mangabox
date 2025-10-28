@@ -8,7 +8,7 @@
 	z-index: 5000;
 	transition: background-color 0.3s;
 }
-/*
+
 #loginScreen::before {
 	content: "";
 	position: absolute;
@@ -19,9 +19,9 @@
 	-webkit-mask-repeat: no-repeat;
 	mask-repeat: no-repeat;
 	pointer-events: none;
-	transition: background-color 0.3s, opacity 0.3s;
+	transition: background-color 0.3s;
 }
-*/
+
 .version-note {
 	width: 100%;
 	text-align: right;
