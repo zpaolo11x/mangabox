@@ -30,15 +30,22 @@
 	<link rel="stylesheet" href="style-mangabox-reader.css">
 
 	<script>
+		let themePrefs = localStorage.getItem('mbThemePrefs');
 		let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
-		function forceTheme(toDark) {
+		function loginTheme() {
+			let toDark = false;
+
+			if (themePrefs != 2) {
+				toDark = (themePrefs == 1)
+			} else {
+				toDark = prefersDarkMode.matches ? true : false
+			}
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 			document.querySelector('meta[name="theme-color"]')
 				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
 		}
-
-		forceTheme(prefersDarkMode.matches ? true : false)
-
+		loginTheme()
+		alert("P")
 	</script>
 
 </head>
@@ -1025,6 +1032,7 @@
 
 			// Save theme setting in local storage
 			setUserSettings('mangabox.ui.themeprefs', mb.themePrefs);
+			localStorage.setItem('mbThemePrefs', mb.themePrefs);
 
 			mb.darkTheme = toDark;
 
@@ -1039,7 +1047,7 @@
 			if (isLoginScreenHidden()) {
 				changeTheme()
 			} else {
-				forceTheme(mb.prefersDarkMode.matches ? true : false)
+				loginTheme()
 			}
 		});
 
