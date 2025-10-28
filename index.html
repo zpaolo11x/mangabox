@@ -16,7 +16,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
-<!--
+	<!--
 	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
 -->
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,6 +28,17 @@
 	<link rel="stylesheet" href="style-mangabox-blankstart.css">
 	<link rel="stylesheet" href="style-mangabox-main.css">
 	<link rel="stylesheet" href="style-mangabox-reader.css">
+
+	<script>
+		function forceTheme(toDark) {
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+			document.querySelector('meta[name="theme-color"]')
+				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
+		}
+
+		forceTheme(mb.prefersDarkMode.matches ? true : false)
+
+	</script>
 
 </head>
 
@@ -267,7 +278,7 @@
 	<div id="loginScreen" class="auth-hidden">
 		<div id="loginDialog" class="dialog">
 			<img id="logoIcon" src="logo/mangabox-logo-new.svg" width="90px" height="90px">
-			<img id="logoName" src="logo/mangabox-logoname.svg" width="300px" >
+			<img id="logoName" src="logo/mangabox-logoname.svg" width="300px">
 			<div class="version-note">v0.2.9</div>
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
@@ -985,15 +996,8 @@
 				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
 		}
 
-		function forceTheme(toDark) {
-			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
-			document.querySelector('meta[name="theme-color"]')
-				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
-		}
 
-				forceTheme(mb.prefersDarkMode.matches ? true : false)
 
-				
 		function changeTheme() {
 
 			let toDark = false;
@@ -1031,7 +1035,7 @@
 
 
 		mb.prefersDarkMode.addEventListener('change', () => {
-			if (isLoginScreenHidden()){
+			if (isLoginScreenHidden()) {
 				changeTheme()
 			} else {
 				forceTheme(mb.prefersDarkMode.matches ? true : false)
@@ -6027,7 +6031,7 @@
 		})
 
 		let offlineSession = false;
-		
+
 		sessionCheck()
 
 		//MB Reader touch response fucntions
