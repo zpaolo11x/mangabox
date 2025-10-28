@@ -42,6 +42,7 @@ async function sessionCheck() {
 	if ((!mb.baseUrl) || (!mb.authToken)) {
 		debugPrint("Missing base URL or auth token");
 		showLoginDialog();
+		fader.classList.add('hidden');
 		return;
 	}
 
@@ -54,9 +55,11 @@ async function sessionCheck() {
 		console.log("Offline mode detected.")
 		if (sessionWasValid) {
 			hideLoginDialog();
+			fader.classList.add('hidden');
 			bootSequence('offline');
 		} else {
 			showLoginDialog();
+			fader.classList.add('hidden');
 		}
 		return;
 	}
@@ -89,19 +92,27 @@ async function sessionCheck() {
 			localStorage.setItem("sessionValid", "true");
 			hideLoginDialog();
 			bootSequence('online');
+					fader.classList.add('hidden');
+
 		} else if (response.status === 401 || response.status === 403) {
 			debugPrint("Token invalid or expired.");
 			console.log("Token invalid or expired.");
 			localStorage.removeItem("sessionValid");
 			showLoginDialog();
+					fader.classList.add('hidden');
+
 		} else {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			console.log(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			if (sessionWasValid) {
 				hideLoginDialog();
 				bootSequence('offline');
+						fader.classList.add('hidden');
+
 			} else {
 				showLoginDialog();
+						fader.classList.add('hidden');
+
 			}
 		}
 	} catch (error) {
@@ -113,8 +124,12 @@ async function sessionCheck() {
 		if (sessionWasValid) {
 			hideLoginDialog();
 			bootSequence('offline');
+					fader.classList.add('hidden');
+
 		} else {
 			showLoginDialog();
+					fader.classList.add('hidden');
+
 		}
 	}
 }
