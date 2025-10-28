@@ -186,7 +186,7 @@ function showLoginDialog() {
 	debugPrint("showLoginDialog...")
 	console.log("showLoginDialog...")
 
-	//updatePWABar('white');
+	updatePWABar('var(--mb-darkred)');
 	loginScreen.classList.remove('auth-hidden');
 }
 
