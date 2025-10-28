@@ -861,7 +861,7 @@ div.single-page {
 
 #controlPanel.hidden #topControls,
 #readerContainer.hidden #topControls {
-	top: calc(-100px - var(--mb-top-spacer));
+	top: calc(-150px - var(--mb-top-spacer));
 }
 
 #controlPanel.hidden #bottomControls,
