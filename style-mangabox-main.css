@@ -10,6 +10,7 @@
 	--mb-accent-a30: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.3);
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
 	--mb-accent-dark: hsl(var(--mb-h), var(--mb-s), 40%);
+	--mb-darkred: hsl(348, 92%, 20%);
 
 	--mb-area-padding: 20px;
 	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), env(safe-area-inset-left)));
@@ -127,6 +128,13 @@
 		hsl(332, 91%, 64%),
 		hsl(0, 0%, 55%);
 
+}
+
+[fader-theme="light"] {
+	--mb-fader-color: var(--mb-darkred);
+}
+[fader-theme="dark"] {
+	--mb-fader-color: var(--mb-darkred);
 }
 
 [data-theme="light"] {
@@ -2068,6 +2076,23 @@ span.mini-title {
 
 .hidestrip {
 	opacity: 0;
+}
+
+#fader {
+	background: var(--mb-fader-color);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	opacity: 1;
+	transition: opacity 0.3s linear 0.3s, background-color 0.3s ease;
+	pointer-events: none;
+	z-index:12000;
+}
+
+#fader.hidden{
+	opacity:0;
 }
 
 #blanker {

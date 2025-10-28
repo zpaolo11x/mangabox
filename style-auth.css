@@ -4,11 +4,11 @@
 	right: 0;
 	top: var(--mb-drag-bar-height);
 	bottom: 0;
-	background: var(--mb-page-color);
+	background: var(--mb-darkred);
 	z-index: 5000;
 	transition: background-color 0.3s;
 }
-
+/*
 #loginScreen::before {
 	content: "";
 	position: absolute;
@@ -21,7 +21,7 @@
 	pointer-events: none;
 	transition: background-color 0.3s;
 }
-
+*/
 .version-note {
 	width: 100%;
 	text-align: right;

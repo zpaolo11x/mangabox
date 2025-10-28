@@ -29,6 +29,15 @@
 	<link rel="stylesheet" href="style-mangabox-main.css">
 	<link rel="stylesheet" href="style-mangabox-reader.css">
 
+	<script>
+		let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+		let toDark = prefersDarkMode.matches ? true : false
+
+		document.documentElement.setAttribute('fader-theme', toDark ? 'dark' : 'light');
+		document.querySelector('meta[name="theme-color"]')
+				.setAttribute('content', toDark ? '#353535' : '#ffffff');;
+	</script>
+
 </head>
 
 <body>
@@ -303,6 +312,8 @@
 
 		</div>
 	</div>
+
+	<div id="fader"></div>
 
 	<div id="debuggerObj"></div>
 
@@ -6027,6 +6038,7 @@
 		
 		forceTheme(mb.prefersDarkMode.matches ? true : false)
 
+		fader.classList.add('hidden');
 		sessionCheck()
 
 		//MB Reader touch response fucntions
