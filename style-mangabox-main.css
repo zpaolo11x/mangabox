@@ -203,6 +203,23 @@
 	font-style: normal;
  }
 */
+@font-face {
+	font-family: 'Vercetti Regular';
+	src: url('./webfonts/Vercetti-Regular.woff2') format('woff2');
+	src: url('./webfonts/Vercetti-Regular.ttf') format('truetype');
+	src: url('./webfonts/Vercetti-Regular.otf') format('otf');
+	font-weight: 100 1000;
+	font-display: swap;
+	font-style: normal;
+ }
+
+ @font-face {
+	font-family: 'Outfit';
+	src: url('./webfonts/Outfit-VariableFont_wght.ttf') format('truetype');
+	font-weight: 100 1000;
+	font-display: swap;
+	font-style: normal;
+ }
 
 * {
 	user-select: none;
@@ -440,7 +457,7 @@ body {
 }
 
 body {
-	font-family: 'Roboto Flex', sans-serif;
+	font-family: 'Outfit', sans-serif;
 	margin: 0;
 	padding: 0;
 	background: var(--mb-card-color);
@@ -1662,7 +1679,7 @@ a {
 	background-color: var(--mb-card-color);
 	text-align: left;
 	cursor: pointer;
-	font-size: 0.9em;
+	font-size: 0.9em; /*XXX NOT USED XXX*/
 	margin: 0;
 	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
@@ -1807,6 +1824,7 @@ book-item {
 	font-weight: 500;
 	padding-top: 8px;
 	padding-bottom: 0px;
+	font-size: 15px; /*XXX MAGARI 14.5px XXX*/
 }
 
 .info-row {
