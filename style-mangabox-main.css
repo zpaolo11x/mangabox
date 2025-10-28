@@ -239,6 +239,7 @@
 
 html,
 body {
+    background:var(--mb-page-color);
 	overscroll-behavior: none;
 	overflow-y: visible;
 	-webkit-text-size-adjust: 100%;
