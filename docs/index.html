@@ -82,8 +82,7 @@
 
 		.container {
 			position: relative;
-			/* ← Needed for absolute positioning inside */
-			max-width: 800px;
+			max-width: 860px;
 			margin: 30px auto;
 			padding: var(--padding-size);
 			background-color: var(--container-color);
@@ -227,7 +226,7 @@
 		pre {
 			padding: 10px;
 			font-size: 12px;
-			background-color: hsl(100, 65%, 18%);
+			background-color: hsl(348, 65%, 18%);
 			color: white;
 			border-radius: 10px;
 
@@ -242,7 +241,7 @@
 			display: block;
 			/* This is the key change */
 			font-family: monospace;
-			font-size: 12.2px;
+			font-size: 14px;
 			padding-left: 10px;
 			padding-right: 10px;
 			color: white;
@@ -256,11 +255,11 @@
 		}
 
 		span.odd {
-			background-color: hsl(115, 60%, 18%);
+			background-color: hsl(348, 60%, 18%);
 		}
 
 		span.even {
-			background-color: hsl(115, 60%, 20%);
+			background-color: hsl(348, 60%, 20%);
 		}
 
 		.code-block-wrapper {
@@ -351,17 +350,22 @@
 			</div>
 
 			<div class="grid-item">
+				<img alt="Offline download" src="pics/download.png" class="clickable">
+				<p>Books can be donwloaded and are available to read even when the server is unreachable.</p>
+			</div>
+
+			<div class="grid-item">
 				<img alt="Series search" src="pics/search.png" class="clickable">
 				<p>Search is global for both series and books, and looks into metadata, summary etc.</p>
 			</div>
 
 			<div class="grid-item">
-				<img alt="Series search" src="pics/yearsearch.png" class="clickable">
+				<img alt="Year search" src="pics/yearsearch.png" class="clickable">
 				<p>A special search prefix "y:" will show all the series that have volumes in that date range.</p>
 			</div>
 
 			<div class="grid-item">
-				<img alt="Series search" src="pics/addblank.png" class="clickable">
+				<img alt="Special tags" src="pics/addblank.png" class="clickable">
 				<p>You can set special book tags in Komga: "no-cover" starts the book with a page spread, "no-blank-page" adds a fake back of the cover image.</p>
 			</div>
 
