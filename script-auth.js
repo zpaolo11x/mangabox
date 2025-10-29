@@ -156,16 +156,10 @@ function systemRestart() {
 	}
 
 	//TODO Qui va ridefinizione di mb
-			clearLibrariesMenus();
 	mb = initMB();
-			mb.filterTable = initFilterTable();
-
-		mb.filterButtons = [
-			mb.filterTable.sorting,
-			mb.filterTable.filter_by_read,
-			mb.filterTable.filter_by_direction,
-			mb.filterTable.filter_by_language
-		];
+	mb.filterTable = initFilterTable();
+	mb.filterButtons = initFilterButtons();
+	
 	//TODO Qui va ridefinizione di rd
 
 	offlineSession = false;
