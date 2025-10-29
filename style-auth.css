@@ -38,7 +38,9 @@
 }
 
 .dialog {
-
+	max-height: calc(100vh - 50px);
+	overflow-y:scroll;
+	overflow-x:hidden;
 	max-width: 300px;
 	min-width: 180px;
 	width: calc(100% - 100px);
@@ -64,6 +66,14 @@
 	transition: background-color 0.3s;
 }
 
+.dialog {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE & Edge (legacy) */
+}
+
+.dialog::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and new Edge */
+}
 
 .login-input {
 	-webkit-appearance: none;
