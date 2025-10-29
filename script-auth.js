@@ -185,8 +185,6 @@ async function login() {
 function showLoginDialog() {
 	debugPrint("showLoginDialog...")
 	console.log("showLoginDialog...")
-
-	updatePWABar('#620417');
 	loginScreen.classList.remove('auth-hidden');
 }
 

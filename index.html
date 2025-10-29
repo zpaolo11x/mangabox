@@ -29,10 +29,7 @@
 	<script>
 		let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 		let toDark = prefersDarkMode.matches ? true : false
-
 		document.documentElement.setAttribute('fader-theme', toDark ? 'dark' : 'light');
-		document.querySelector('meta[name="theme-color"]')
-				.setAttribute('content', '#620417');;
 	</script>
 
 </head>
@@ -988,14 +985,8 @@
 			});
 		}
 
-		function updatePWABar(color = null) {
-			document.querySelector('meta[name="theme-color"]')
-				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
-		}
-
 		function changeLoginTheme(toDark) {
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
-			updatePWABar('#620417')
 		}
 
 		function changeTheme() {
@@ -1026,9 +1017,6 @@
 			setUserSettings('mangabox.ui.themeprefs', mb.themePrefs);
 
 			mb.darkTheme = toDark;
-
-			//Ttheme based top bar
-			updatePWABar();
 
 			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
@@ -4170,7 +4158,6 @@
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 
-			updatePWABar();
 			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 				Capacitor.Plugins.StatusBar.show();
 			}
@@ -4361,7 +4348,6 @@
 			if (useOfflineCopy) {
 				offline = await obLoadOfflineBook(rd.bookId);
 			}
-			updatePWABar(rd.titleBarColor);
 
 			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 
@@ -5685,12 +5671,10 @@
 				if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 					Capacitor.Plugins.StatusBar.show();
 				}
-				updatePWABar();
 			} else {
 				if (isStatusBar) {
 					Capacitor.Plugins.StatusBar.hide();
 				}
-				updatePWABar(rd.titleBarColor);
 			}
 
 			sectionToggle(controlPanel);
