@@ -134,9 +134,11 @@ async function sessionCheck() {
 
 function systemRestart() {
 	// Reapply boot theme
-	let toDark = mbPrefersDarkMode.matches ? true : false
-	document.documentElement.setAttribute('fader-theme', toDark ? 'dark' : 'light');
 
+	let toDark = mbPrefersDarkMode.matches ? true : false
+	document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+
+	loginScreen.classList = "auth-hidden logo-pattern";
 	// Clear login dialog content
 	loginBaseUrl.value = "";
 	loginPassword.value = "";
@@ -153,17 +155,26 @@ function systemRestart() {
 		}
 	}
 
-//TODO Qui va ridefinizione di mb
+	//TODO Qui va ridefinizione di mb
+			clearLibrariesMenus();
+	mb = initMB();
+			mb.filterTable = initFilterTable();
 
-//TODO Qui va ridefinizione di rd
+		mb.filterButtons = [
+			mb.filterTable.sorting,
+			mb.filterTable.filter_by_read,
+			mb.filterTable.filter_by_direction,
+			mb.filterTable.filter_by_language
+		];
+	//TODO Qui va ridefinizione di rd
 
 	offlineSession = false;
-			document.documentElement.style.setProperty('--mb-h', '348');
-			document.documentElement.style.setProperty('--mb-s', '92%');
-			document.documentElement.style.setProperty('--mb-l', '38%');
-			
-			document.documentElement.style.setProperty('--mb-gradient-1', '30');
-			document.documentElement.style.setProperty('--mb-gradient-2', '40');
+	document.documentElement.style.setProperty('--mb-h', '348');
+	document.documentElement.style.setProperty('--mb-s', '92%');
+	document.documentElement.style.setProperty('--mb-l', '38%');
+
+	document.documentElement.style.setProperty('--mb-gradient-1', '30');
+	document.documentElement.style.setProperty('--mb-gradient-2', '40');
 
 
 	sessionCheck();

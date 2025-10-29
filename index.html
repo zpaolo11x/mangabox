@@ -29,7 +29,7 @@
 	<script>
 		let mbPrefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 		let toDark = mbPrefersDarkMode.matches ? true : false
-		document.documentElement.setAttribute('fader-theme', toDark ? 'dark' : 'light');
+		document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 	</script>
 
 </head>
@@ -661,118 +661,121 @@
 		}
 
 		//MB Main Variable Setup 
-
-		// Main MangaBox data structure, for variables that are common to the whole app
-		let mb = {
-
-			libMenuVisible: null,
-			swatchMenuVisible: false,
-
-			baseUrl: localStorage.getItem('mbBaseUrl'),
-			authToken: false,
-
-			basePath: '', //'/mangabox/'
-			darkTheme: false,
-
-			// Scaling of selected item control
-			currentlyScaled: null,
-
-			// Current book references for book details
-			currentBook: null,
-			seriesData: null,
-			prevBook: null,
-			nextBook: null,
-
-			// Screen aspect ratio functions
-			screenAR: getScreenAR(),
-			readerMaxRatio: 1,
-			readerHorizontal: true,
-			resizeTimeout: null,
-
-			// Filter table placeholders
-			filterTable: null,
-			filterButtons: null,
-			filterSizer: null,
-
-			libraryMenuButtons: {},
-
-			libSizer: {}, // Used to calculate libraries button size
-			dashboardBin: '',
-			/*
-				When an item from a bin is opened, the mb.dashboardBin is set, so when the dashboard is reloaded
-				it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
-				In this way subsequent clicks on dashboard button will load the top position.
-				This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
-			*/
-
-			// Theme management variables
-			themeControl: [
+		function initMB() {
+			return (
 				{
-					label: 'Light theme',
-					icon: 'fa-sun',
-					isDark: 0
-				}, {
-					label: 'Dark theme',
-					icon: 'fa-moon',
-					isDark: 1
-				}, {
-					label: 'System theme',
-					icon: 'fa-wand-magic-sparkles',
-					isDark: 2
+					libMenuVisible: null,
+					swatchMenuVisible: false,
+
+					baseUrl: localStorage.getItem('mbBaseUrl'),
+					authToken: false,
+
+					basePath: '', //'/mangabox/'
+					darkTheme: false,
+
+					// Scaling of selected item control
+					currentlyScaled: null,
+
+					// Current book references for book details
+					currentBook: null,
+					seriesData: null,
+					prevBook: null,
+					nextBook: null,
+
+					// Screen aspect ratio functions
+					screenAR: getScreenAR(),
+					readerMaxRatio: 1,
+					readerHorizontal: true,
+					resizeTimeout: null,
+
+					// Filter table placeholders
+					filterTable: null,
+					filterButtons: null,
+					filterSizer: null,
+
+					libraryMenuButtons: {},
+
+					libSizer: {}, // Used to calculate libraries button size
+					dashboardBin: '',
+					/*
+						When an item from a bin is opened, the mb.dashboardBin is set, so when the dashboard is reloaded
+						it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
+						In this way subsequent clicks on dashboard button will load the top position.
+						This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
+					*/
+
+					// Theme management variables
+					themeControl: [
+						{
+							label: 'Light theme',
+							icon: 'fa-sun',
+							isDark: 0
+						}, {
+							label: 'Dark theme',
+							icon: 'fa-moon',
+							isDark: 1
+						}, {
+							label: 'System theme',
+							icon: 'fa-wand-magic-sparkles',
+							isDark: 2
+						}
+					],
+
+					readerThemeControl: [
+						{
+							label: 'Classic theme',
+							icon: 'fa-palette',
+							style: 'classic'
+						}, {
+							label: 'Dark accent',
+							icon: 'fa-moon',
+							style: 'dark-accent'
+						}, {
+							label: 'Light accent',
+							icon: 'fa-sun',
+							style: 'light-accent'
+						}, {
+							label: 'Transparent',
+							icon: 'fa-square',
+							style: 'transparent'
+						}, {
+							label: 'White',
+							icon: 'fa-w',
+							style: 'white'
+						}, {
+							label: 'Black',
+							icon: 'fa-b',
+							style: 'black'
+						}
+					],
+
+					swatchesHi: getComputedStyle(document.documentElement)
+						.getPropertyValue('--mb-swatches-hi')
+						.match(/hsl\([^)]*\)/g)
+						.map(swatch => swatch.match(/(\d+%?)/g)),
+
+					swatchesLo: getComputedStyle(document.documentElement)
+						.getPropertyValue('--mb-swatches-lo')
+						.match(/hsl\([^)]*\)/g)
+						.map(swatch => swatch.match(/(\d+%?)/g)),
+
+					// Media Cache
+					mediaCacheRAM: new Map(), 	//Media cache table structure
+					cacheLimitRAM: 250,			//Limit of items in media cache
+
+					clickingTile: null,
+					pointerItem: null,
+
+					webtoonScale: 100,
+					readerScale: 100,
+
+					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
+
 				}
-			],
-
-			readerThemeControl: [
-				{
-					label: 'Classic theme',
-					icon: 'fa-palette',
-					style: 'classic'
-				}, {
-					label: 'Dark accent',
-					icon: 'fa-moon',
-					style: 'dark-accent'
-				}, {
-					label: 'Light accent',
-					icon: 'fa-sun',
-					style: 'light-accent'
-				}, {
-					label: 'Transparent',
-					icon: 'fa-square',
-					style: 'transparent'
-				}, {
-					label: 'White',
-					icon: 'fa-w',
-					style: 'white'
-				}, {
-					label: 'Black',
-					icon: 'fa-b',
-					style: 'black'
-				}
-			],
-
-			swatchesHi: getComputedStyle(document.documentElement)
-				.getPropertyValue('--mb-swatches-hi')
-				.match(/hsl\([^)]*\)/g)
-				.map(swatch => swatch.match(/(\d+%?)/g)),
-
-			swatchesLo: getComputedStyle(document.documentElement)
-				.getPropertyValue('--mb-swatches-lo')
-				.match(/hsl\([^)]*\)/g)
-				.map(swatch => swatch.match(/(\d+%?)/g)),
-
-			// Media Cache
-			mediaCacheRAM: new Map(), 	//Media cache table structure
-			cacheLimitRAM: 250,			//Limit of items in media cache
-
-			clickingTile: null,
-			pointerItem: null,
-
-			webtoonScale: 100,
-			readerScale: 100,
-
-			offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
-
+			)
 		}
+		// Main MangaBox data structure, for variables that are common to the whole app
+		let mb = initMB();
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
 		const colorValues = getComputedStyle(document.documentElement)
@@ -1021,7 +1024,7 @@
 
 
 		mbPrefersDarkMode.addEventListener('change', () => {
-			if (isLoginScreenHidden()){
+			if (isLoginScreenHidden()) {
 				changeTheme()
 			} else {
 				changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
@@ -1124,6 +1127,7 @@
 			});
 
 			await clearIndexedDB();
+			localStorage.removeItem("sessionValid");
 
 			systemRestart();
 		});
@@ -1409,139 +1413,141 @@
 		}
 
 		//MB Library Filtering 
+		function initFilterTable() {
+			return ({
+				sorting: {
+					name: 'sorting',
+					selected: 0,
+					iconClass: 'fa-solid fa-heading glyph-dark',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Sort items',
+					switches: [
+						{
+							name: 'a_to_z',
+							caption: 'by Title',
+							iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
+							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
+						}, {
+							name: 'z_to_a',
+							caption: 'by Title',
+							iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
+							sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
+						}, {
+							name: '9_to_1',
+							caption: 'by Start',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
+						}, {
+							name: '1_to_9',
+							caption: 'by Start',
+							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+							sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
+						}, {
+							name: '9_to_1',
+							caption: 'by End',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
+						}, {
+							name: '1_to_9',
+							caption: 'by End',
+							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+							sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
+						}, {
+							name: '1_to_9',
+							caption: 'Books',
+							iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
+							sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
+						}, {
+							name: '9_to_1',
+							caption: 'Books',
+							iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
+							sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
+						}
+					],
+				},
+				filter_by_read: {
+					name: 'filter_by_read',
+					selected: 0,
+					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Filter by read status',
+					switches: [
+						{
+							name: 'all',
+							caption: 'All',
+							iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
+							filterFunction: (a) => true
+						}, {
+							name: 'unread',
+							caption: 'Unread',
+							iconClass: 'fa-regular fa-circle glyph-dark',
+							filterFunction: (a) => (a.mbSeriesRead == false)
+						}, {
+							name: 'read',
+							caption: 'Read',
+							iconClass: 'fa-solid fa-circle glyph-dark',
+							filterFunction: (a) => (a.mbSeriesRead == true)
+						}
+					],
+				},
+				filter_by_direction: {
+					name: 'filter_by_direction',
+					selected: 0,
+					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Filter by reading direction',
+					switches: [
+						{
+							name: 'all',
+							caption: 'All',
+							iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
+							filterFunction: (a) => true
 
-		mb.filterTable = {
-			sorting: {
-				name: 'sorting',
-				selected: 0,
-				iconClass: 'fa-solid fa-heading glyph-dark',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Sort items',
-				switches: [
-					{
-						name: 'a_to_z',
-						caption: 'by Title',
-						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
-						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
-					}, {
-						name: 'z_to_a',
-						caption: 'by Title',
-						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
-						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
-					}, {
-						name: '9_to_1',
-						caption: 'by Start',
-						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
-					}, {
-						name: '1_to_9',
-						caption: 'by Start',
-						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
-					}, {
-						name: '9_to_1',
-						caption: 'by End',
-						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
-					}, {
-						name: '1_to_9',
-						caption: 'by End',
-						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
-					}, {
-						name: '1_to_9',
-						caption: 'Books',
-						iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
-						sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
-					}, {
-						name: '9_to_1',
-						caption: 'Books',
-						iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
-						sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
-					}
-				],
-			},
-			filter_by_read: {
-				name: 'filter_by_read',
-				selected: 0,
-				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Filter by read status',
-				switches: [
-					{
-						name: 'all',
-						caption: 'All',
-						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
-						filterFunction: (a) => true
-					}, {
-						name: 'unread',
-						caption: 'Unread',
-						iconClass: 'fa-regular fa-circle glyph-dark',
-						filterFunction: (a) => (a.mbSeriesRead == false)
-					}, {
-						name: 'read',
-						caption: 'Read',
-						iconClass: 'fa-solid fa-circle glyph-dark',
-						filterFunction: (a) => (a.mbSeriesRead == true)
-					}
-				],
-			},
-			filter_by_direction: {
-				name: 'filter_by_direction',
-				selected: 0,
-				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Filter by reading direction',
-				switches: [
-					{
-						name: 'all',
-						caption: 'All',
-						iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
-						filterFunction: (a) => true
+						}, {
+							name: 'l_to_r',
+							caption: 'L to R',
+							iconClass: 'fa-solid fa-arrow-right glyph-dark',
+							filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
-					}, {
-						name: 'l_to_r',
-						caption: 'L to R',
-						iconClass: 'fa-solid fa-arrow-right glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
-
-					}, {
-						name: 'r_to_l',
-						caption: 'R to L',
-						iconClass: 'fa-solid fa-arrow-left glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
-					}, {
-						name: 'webtoon',
-						caption: 'WToon',
-						iconClass: 'fa-solid fa-arrow-down glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
-					}
-				],
-			},
-			filter_by_language: {
-				name: 'filter_by_language',
-				selected: 0,
-				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Filter by language',
-				switches: [
-					{
-						name: 'all',
-						caption: 'All',
-						iconClass: 'fa-solid fa-earth-europe glyph-dark',
-						filterFunction: (a) => true
-					}
-				],
-			},
-		};
+						}, {
+							name: 'r_to_l',
+							caption: 'R to L',
+							iconClass: 'fa-solid fa-arrow-left glyph-dark',
+							filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
+						}, {
+							name: 'webtoon',
+							caption: 'WToon',
+							iconClass: 'fa-solid fa-arrow-down glyph-dark',
+							filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
+						}
+					],
+				},
+				filter_by_language: {
+					name: 'filter_by_language',
+					selected: 0,
+					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Filter by language',
+					switches: [
+						{
+							name: 'all',
+							caption: 'All',
+							iconClass: 'fa-solid fa-earth-europe glyph-dark',
+							filterFunction: (a) => true
+						}
+					],
+				},
+			});
+		}
+		mb.filterTable = initFilterTable();
 
 		async function buildLanguageList() {
 			const languageList = await callAPI('c_languages', `/api/v1/languages`);
@@ -6015,7 +6021,7 @@
 		})
 
 		let offlineSession = false;
-		
+
 		changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
 
 		sessionCheck()

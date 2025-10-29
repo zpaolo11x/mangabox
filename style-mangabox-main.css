@@ -409,7 +409,7 @@ body {
 	display: none;
 	pointer-events: none;
 	position: fixed;
-	z-index: 10000;
+	z-index: 20000;
 	font-size: 15px;
 	color: white;
 	font-family: 'Courier New', Courier, monospace;
