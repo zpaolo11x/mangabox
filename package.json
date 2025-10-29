@@ -33,6 +33,7 @@
 		"files": [
 			"**/*",
 			"!z_*/**/*",
+			"!z_*.*",
 			"!docs/**/*",
 			"!capacitor*",
 			"package-main.js",
