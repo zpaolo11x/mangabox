@@ -27,8 +27,8 @@
 	<link rel="stylesheet" href="style-mangabox-reader.css">
 
 	<script>
-		let prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
-		let toDark = prefersDarkMode.matches ? true : false
+		let mbPrefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+		let toDark = mbPrefersDarkMode.matches ? true : false
 		document.documentElement.setAttribute('fader-theme', toDark ? 'dark' : 'light');
 	</script>
 
@@ -764,8 +764,6 @@
 			mediaCacheRAM: new Map(), 	//Media cache table structure
 			cacheLimitRAM: 250,			//Limit of items in media cache
 
-			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
-
 			clickingTile: null,
 			pointerItem: null,
 
@@ -996,7 +994,7 @@
 			if (mb.themePrefs != 2) {
 				toDark = (mb.themePrefs == 1)
 			} else {
-				toDark = mb.prefersDarkMode.matches ? true : false
+				toDark = mbPrefersDarkMode.matches ? true : false
 			}
 
 			// Set css theme to dark or light
@@ -1022,11 +1020,11 @@
 		}
 
 
-		mb.prefersDarkMode.addEventListener('change', () => {
+		mbPrefersDarkMode.addEventListener('change', () => {
 			if (isLoginScreenHidden()){
 				changeTheme()
 			} else {
-				changeLoginTheme(mb.prefersDarkMode.matches ? true : false)
+				changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
 			}
 		});
 
@@ -6018,7 +6016,7 @@
 
 		let offlineSession = false;
 		
-		changeLoginTheme(mb.prefersDarkMode.matches ? true : false)
+		changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
 
 		sessionCheck()
 
