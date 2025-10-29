@@ -1094,6 +1094,7 @@
 		}
 
 		logOut.addEventListener('click', async () => {
+            await executeFaderGradient(1);
 
 			try {
 				if (mb.baseUrl) {
@@ -1111,12 +1112,11 @@
 				// We continue cleanup anyway
 			}
 
-			sectionShow(fader);
 
 			if (isElectron) await deleteToken();
 
-			sectionHide(stickyContainer);
-			sectionShow(blanker);
+			//sectionHide(stickyContainer);
+			//sectionShow(blanker);
 
 			history.pushState(null, '', mb.basePath);
 
@@ -1547,7 +1547,6 @@
 				},
 			});
 		}
-
 		mb.filterTable = initFilterTable();
 
 		async function buildLanguageList() {
@@ -1563,16 +1562,12 @@
 			});
 		};
 
-		function initFilterButtons() {
-			return ([
-				mb.filterTable.sorting,
-				mb.filterTable.filter_by_read,
-				mb.filterTable.filter_by_direction,
-				mb.filterTable.filter_by_language
-			]);
-		}
-		
-		mb.filterButtons = initFilterButtons();
+		mb.filterButtons = [
+			mb.filterTable.sorting,
+			mb.filterTable.filter_by_read,
+			mb.filterTable.filter_by_direction,
+			mb.filterTable.filter_by_language
+		];
 
 		function saveLibraryFilters() {
 			const { path, params } = getHashAndParams();
@@ -1819,7 +1814,10 @@
 			blanker.style.opacity = val;
 			await wait(100);
 		}
-
+        async function executeFaderGradient(val) {
+            fader.style.opacity = val;
+            await wait(300);
+        }
 		//MB Offline Download Functions
 		function arrayBufferToBase64(buffer) {
 			let binary = '';

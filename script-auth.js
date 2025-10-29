@@ -41,7 +41,7 @@ async function sessionCheck() {
 	if ((!mb.baseUrl) || (!mb.authToken)) {
 		debugPrint("Missing base URL or auth token");
 		showLoginDialog();
-		sectionHide(fader);
+		await executeFaderGradient(0);
 		return;
 	}
 
@@ -53,12 +53,12 @@ async function sessionCheck() {
 		debugPrint("Offline mode detected.");
 		console.log("Offline mode detected.")
 		if (sessionWasValid) {
+            await executeFaderGradient(0);
 			hideLoginDialog();
-			sectionHide(fader);
 			bootSequence('offline');
 		} else {
 			showLoginDialog();
-			sectionHide(fader);
+            await executeFaderGradient(0);
 		}
 		return;
 	}
@@ -89,8 +89,8 @@ async function sessionCheck() {
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
 			localStorage.setItem("sessionValid", "true");
+            await executeFaderGradient(0);
 			hideLoginDialog();
-			sectionHide(fader);
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
@@ -98,7 +98,7 @@ async function sessionCheck() {
 			console.log("Token invalid or expired.");
 			localStorage.removeItem("sessionValid");
 			showLoginDialog();
-			sectionHide(fader);
+            await executeFaderGradient(0);
 
 		} else {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
@@ -106,11 +106,11 @@ async function sessionCheck() {
 			if (sessionWasValid) {
 				hideLoginDialog();
 				bootSequence('offline');
-				sectionHide(fader);
+                await executeFaderGradient(0);
 
 			} else {
 				showLoginDialog();
-				sectionHide(fader);
+                await executeFaderGradient(0);
 			}
 		}
 	} catch (error) {
@@ -122,19 +122,19 @@ async function sessionCheck() {
 		if (sessionWasValid) {
 			hideLoginDialog();
 			bootSequence('offline');
-			sectionHide(fader);
+            await executeFaderGradient(0);
 
 		} else {
 			showLoginDialog();
-			sectionHide(fader);
+            await executeFaderGradient(0);
 
 		}
 	}
 }
 
-function systemRestart() {
+async function systemRestart() {
 	// Reapply boot theme
-
+await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
 	document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
@@ -156,10 +156,16 @@ function systemRestart() {
 	}
 
 	//TODO Qui va ridefinizione di mb
+			clearLibrariesMenus();
 	mb = initMB();
-	mb.filterTable = initFilterTable();
-	mb.filterButtons = initFilterButtons();
-	
+			mb.filterTable = initFilterTable();
+
+		mb.filterButtons = [
+			mb.filterTable.sorting,
+			mb.filterTable.filter_by_read,
+			mb.filterTable.filter_by_direction,
+			mb.filterTable.filter_by_language
+		];
 	//TODO Qui va ridefinizione di rd
 
 	offlineSession = false;
@@ -200,14 +206,12 @@ async function login() {
 	}).then(async response => {
 		const token = response.headers.get('X-Auth-Token');
 		if (response.ok && token) {
+            await executeFaderGradient(1);
 			localStorage.setItem('mbBaseUrl', baseUrlVal);
 			if (isElectron) {
 				window.electronAPI.sendRememberMe(loginRememberMe.checked);
 				await saveToken(token);
 			}
-			//hideLoginDialog();
-			sectionShow(fader);
-
 			systemRestart();
 		} else if (response.status === 401) {
 			loginError.textContent = 'Invalid username or password.';
