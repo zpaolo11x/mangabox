@@ -53,12 +53,12 @@ async function sessionCheck() {
 		debugPrint("Offline mode detected.");
 		console.log("Offline mode detected.")
 		if (sessionWasValid) {
-            await executeFaderGradient(0);
+			await executeFaderGradient(0);
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
 			showLoginDialog();
-            await executeFaderGradient(0);
+			await executeFaderGradient(0);
 		}
 		return;
 	}
@@ -89,7 +89,7 @@ async function sessionCheck() {
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
 			localStorage.setItem("sessionValid", "true");
-            await executeFaderGradient(0);
+			await executeFaderGradient(0);
 			hideLoginDialog();
 			bootSequence('online');
 
@@ -98,7 +98,7 @@ async function sessionCheck() {
 			console.log("Token invalid or expired.");
 			localStorage.removeItem("sessionValid");
 			showLoginDialog();
-            await executeFaderGradient(0);
+			await executeFaderGradient(0);
 
 		} else {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
@@ -106,11 +106,11 @@ async function sessionCheck() {
 			if (sessionWasValid) {
 				hideLoginDialog();
 				bootSequence('offline');
-                await executeFaderGradient(0);
+				await executeFaderGradient(0);
 
 			} else {
 				showLoginDialog();
-                await executeFaderGradient(0);
+				await executeFaderGradient(0);
 			}
 		}
 	} catch (error) {
@@ -122,11 +122,11 @@ async function sessionCheck() {
 		if (sessionWasValid) {
 			hideLoginDialog();
 			bootSequence('offline');
-            await executeFaderGradient(0);
+			await executeFaderGradient(0);
 
 		} else {
 			showLoginDialog();
-            await executeFaderGradient(0);
+			await executeFaderGradient(0);
 
 		}
 	}
@@ -134,7 +134,7 @@ async function sessionCheck() {
 
 async function systemRestart() {
 	// Reapply boot theme
-await executeFaderGradient(1);
+	await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
 	document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
@@ -156,16 +156,16 @@ await executeFaderGradient(1);
 	}
 
 	//TODO Qui va ridefinizione di mb
-			clearLibrariesMenus();
+	clearLibrariesMenus();
 	mb = initMB();
-			mb.filterTable = initFilterTable();
+	mb.filterTable = initFilterTable();
 
-		mb.filterButtons = [
-			mb.filterTable.sorting,
-			mb.filterTable.filter_by_read,
-			mb.filterTable.filter_by_direction,
-			mb.filterTable.filter_by_language
-		];
+	mb.filterButtons = [
+		mb.filterTable.sorting,
+		mb.filterTable.filter_by_read,
+		mb.filterTable.filter_by_direction,
+		mb.filterTable.filter_by_language
+	];
 	//TODO Qui va ridefinizione di rd
 
 	offlineSession = false;
@@ -206,7 +206,7 @@ async function login() {
 	}).then(async response => {
 		const token = response.headers.get('X-Auth-Token');
 		if (response.ok && token) {
-            await executeFaderGradient(1);
+			await executeFaderGradient(1);
 			localStorage.setItem('mbBaseUrl', baseUrlVal);
 			if (isElectron) {
 				window.electronAPI.sendRememberMe(loginRememberMe.checked);

@@ -1094,7 +1094,7 @@
 		}
 
 		logOut.addEventListener('click', async () => {
-            await executeFaderGradient(1);
+			await executeFaderGradient(1);
 
 			try {
 				if (mb.baseUrl) {
@@ -1814,10 +1814,10 @@
 			blanker.style.opacity = val;
 			await wait(100);
 		}
-        async function executeFaderGradient(val) {
-            fader.style.opacity = val;
-            await wait(300);
-        }
+		async function executeFaderGradient(val) {
+			fader.style.opacity = val;
+			await wait(300);
+		}
 		//MB Offline Download Functions
 		function arrayBufferToBase64(buffer) {
 			let binary = '';
