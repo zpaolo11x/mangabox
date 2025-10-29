@@ -1,8 +1,9 @@
 Main UI
 - Restyled download progress indicator
+- New light and dark theme for login screen
 
 Reader UI
-- 
+- Reader zoom levels are saved on device, not on server
 
 Build
 - 

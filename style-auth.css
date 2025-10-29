@@ -27,13 +27,25 @@
 }
 
 #logoName {
+	max-width:300px;
+	width:100%;
 	margin-bottom: 5px;
 	filter:invert(var(--mb-login-logo));
 }
 
+#logoIcon {
+	max-width: 90px;
+}
+
 .dialog {
+
+	max-width: 300px;
+	min-width: 180px;
+	width: calc(100% - 100px);
+
 	padding: 0px;
 	margin: 0px;
+	
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -68,7 +80,7 @@
 
 	box-sizing: border-box;
 	height: var(--mb-dialog-button-height);
-	width: 300px;
+	width: 100%;
 	border-radius: var(--mb-dialog-button-radius);
 	border: 1px var(--mb-login-border-color) solid;
 	padding-left: calc(var(--mb-dialog-button-height) + 5px);
@@ -92,9 +104,10 @@
 	margin: 0px;
 	padding: 0px;
 	display: grid;
-	grid-template-columns: auto 120px;
-	width: 300px;
+grid-template-columns: auto minmax(60px, 1fr);
+	width: 100%;
 	gap: var(--mb-dialog-padding);
+	
 }
 
 .login-button {
@@ -104,7 +117,10 @@
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
-	width: 100%;
+	width:100%;
+	margin-right: 0px;
+	margin-left: auto;
+	max-width:120px;
 	margin-top: var(--mb-dialog-padding);
 	transition: 0.3s all;
 	font-size: var(--mb-dialog-font-size);
@@ -129,7 +145,7 @@
 }
 
 .error-message {
-	width: 300px;
+	width: 100%;
 	color: red;
 	font-size: var(--mb-dialog-font-size);
 	margin-top: 10px;
@@ -140,8 +156,8 @@
 	display: flex;
 	align-items: center;
 	margin-top: var(--mb-dialog-padding);
-	width: 100%;
 	/* Match the width of input boxes */
+	min-width: 50px;
 }
 
 .remember-me-checkbox {
@@ -149,6 +165,8 @@
 	/* Remove the default checkbox appearance */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
+		min-width: var(--mb-dialog-button-height);
+	min-height: var(--mb-dialog-button-height);
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
 	background: var(--mb-login-button-color);
@@ -193,8 +211,12 @@
 }
 
 .remember-me-label {
+	min-width: 20px;
 	font-size: var(--mb-dialog-font-size);
 	cursor: pointer;
+		overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	/* Matches cursor with checkbox */
 }
 
