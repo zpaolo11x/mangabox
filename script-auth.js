@@ -132,11 +132,40 @@ async function sessionCheck() {
 	}
 }
 
-function	systemRestart(){
-	loginBaseUrl.value="";
-	loginPassword.value="";
-	loginUsername.value="";
+function systemRestart() {
+	// Reapply boot theme
+	let toDark = mbPrefersDarkMode.matches ? true : false
+	document.documentElement.setAttribute('fader-theme', toDark ? 'dark' : 'light');
+
+	// Clear login dialog content
+	loginBaseUrl.value = "";
+	loginPassword.value = "";
+	loginUsername.value = "";
 	loginRememberMe.checked = false;
+
+	executeFade(1);
+
+	if (isStatusBar) {
+		if (isSharpCornerIphone || (capacitorPlatform == 'android' && isOrientationLandscape())) {
+			Capacitor.Plugins.StatusBar.hide();
+		} else {
+			Capacitor.Plugins.StatusBar.show();
+		}
+	}
+
+//TODO Qui va ridefinizione di mb
+
+//TODO Qui va ridefinizione di rd
+
+	offlineSession = false;
+			document.documentElement.style.setProperty('--mb-h', '348');
+			document.documentElement.style.setProperty('--mb-s', '92%');
+			document.documentElement.style.setProperty('--mb-l', '38%');
+			
+			document.documentElement.style.setProperty('--mb-gradient-1', '30');
+			document.documentElement.style.setProperty('--mb-gradient-2', '40');
+
+
 	sessionCheck();
 }
 
@@ -204,6 +233,6 @@ function hideLoginDialog() {
 	loginScreen.classList.add('auth-hidden');
 }
 
-function isLoginScreenHidden(){
+function isLoginScreenHidden() {
 	return (loginScreen.classList.contains('auth-hidden'));
 }
