@@ -11,7 +11,7 @@
 	
 	background-repeat: repeat, repeat, no-repeat;
 	background-size: 800px 200px, 800px 200px, cover;
-	background-position: 0px 0px, 450px 100px, center;
+	background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
 }
 
 #loginScreen {
