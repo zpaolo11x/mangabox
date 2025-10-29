@@ -15,10 +15,7 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
-<!--
-	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
--->
+
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="manifest" href="manifest.json">
 	<link rel="stylesheet" type="text/css" href="style-auth.css">
@@ -273,7 +270,7 @@
 		</div>
 	</div>
 
-	<div id="loginScreen" class="auth-hidden">
+	<div id="loginScreen" class="auth-hidden logo-pattern">
 		<div id="loginDialog" class="dialog">
 			<img id="logoIcon" src="logo/mangabox-logo-new.svg" width="90px" height="90px">
 			<img id="logoName" src="logo/mangabox-logoname.svg" width="300px" >
@@ -313,7 +310,7 @@
 		</div>
 	</div>
 
-	<div id="fader"></div>
+	<div id="fader" class="logo-pattern"></div>
 
 	<div id="debuggerObj"></div>
 
@@ -568,7 +565,7 @@
 
 		// Hide dragbar in PWA mode
 		(function () {
-			enableDragbar(isElectron);
+			enableDragbar(true);
 		})();
 
 		//MB Offline Events Response

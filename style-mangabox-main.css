@@ -10,8 +10,10 @@
 	--mb-accent-a30: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.3);
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
 	--mb-accent-dark: hsl(var(--mb-h), var(--mb-s), 40%);
-	--mb-darkred: #620417;
-	--mb-darkred2: #530514;
+
+	--mb-darkred: hsl(348, 92%, 22%);
+	--mb-darkred2: hsl(348, 89%, 12%);
+	--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred), var(--mb-darkred2));
 
 	--mb-area-padding: 20px;
 	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), env(safe-area-inset-left)));
@@ -132,10 +134,10 @@
 }
 
 [fader-theme="light"] {
-	--mb-fader-color: var(--mb-darkred);
+	--mb-fader-color: var(--mb-login-gradient);
 }
 [fader-theme="dark"] {
-	--mb-fader-color: var(--mb-darkred);
+	--mb-fader-color: var(--mb-login-gradient);
 }
 
 [data-theme="light"] {
@@ -203,29 +205,6 @@
 		0 -2px 2px rgba(0, 0, 0, 0.0),
 		0 2px 2px rgba(255, 255, 255, 0.0);
 }
-
-
-
-/*
-@font-face {
-	font-family: 'Roboto Flex';
-	src: url('./webfonts/RobotoFlex.woff2') format('woff2');
-	src: url('./webfonts/RobotoFlex.ttf') format('truetype');
-	src: url('./webfonts/roboto-flex-v27-latin-regular.woff2') format('woff2');
-	font-weight: 100 1000;
-	font-display: swap;
-	font-style: normal;
- }
-*/
-@font-face {
-	font-family: 'Vercetti Regular';
-	src: url('./webfonts/Vercetti-Regular.woff2') format('woff2');
-	src: url('./webfonts/Vercetti-Regular.ttf') format('truetype');
-	src: url('./webfonts/Vercetti-Regular.otf') format('otf');
-	font-weight: 100 1000;
-	font-display: swap;
-	font-style: normal;
- }
 
  @font-face {
 	font-family: 'Outfit';
@@ -521,7 +500,7 @@ a {
 	left: 0;
 	right: 0;
 	height: var(--mb-drag-bar-height);
-	z-index: 3000;
+	z-index: 5002;
 	background-color: var(--mb-card-color);
 	display: flex;
 	flex-direction: column;
@@ -533,7 +512,7 @@ a {
 }
 
 #dragbar.onLogin {
-	background-color: var(--mb-darkred);
+	background-color: transparent;
 	color:white;
 	transition: background-color 0.3s;
 }
@@ -2089,14 +2068,7 @@ span.mini-title {
 }
 
 #fader {
-		background: linear-gradient(to bottom, var(--mb-darkred), var(--mb-darkred2));
 
-/*	background: var(--mb-fader-color);*/
-	position: fixed;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
 	opacity: 1;
 	transition: opacity 0.3s linear 0.3s, background-color 0.3s ease;
 	pointer-events: none;
