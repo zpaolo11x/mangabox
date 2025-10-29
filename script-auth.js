@@ -132,6 +132,15 @@ async function sessionCheck() {
 	}
 }
 
+function	systemRestart(){
+	loginBaseUrl.value="";
+	loginPassword.value="";
+	loginUsername.value="";
+	loginRememberMe.checked = false;
+	sessionCheck();
+}
+
+
 async function login() {
 	debugPrint("login...")
 	console.log("login...")
@@ -165,7 +174,7 @@ async function login() {
 			//hideLoginDialog();
 			sectionShow(fader);
 
-			location.reload(true);
+			systemRestart();
 		} else if (response.status === 401) {
 			loginError.textContent = 'Invalid username or password.';
 			loginError.classList.remove('auth-hidden');
