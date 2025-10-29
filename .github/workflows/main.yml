@@ -173,6 +173,7 @@ jobs:
                     --exclude='*.yml' \
                     --exclude='package*.*' \
                     --exclude='electron/' \
+                    --exclude='stores/' \
                     --exclude='assets/' \
                     --exclude='z_*' \
                     --exclude='z_*.*' \

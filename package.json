@@ -34,6 +34,7 @@
 			"**/*",
 			"!z_*/**/*",
 			"!z_*.*",
+			"!stores/**/*",
 			"!docs/**/*",
 			"!capacitor*",
 			"package-main.js",
