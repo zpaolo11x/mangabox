@@ -5,8 +5,8 @@
 	top: 0;
 	bottom: 0;
 	background-image: 
-	url('logo/mangabox-pattern-alpha.svg'), /* Your pattern image */
-	url('logo/mangabox-pattern-alpha.svg'), /* Your pattern image */
+	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
+	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
 	var(--mb-login-gradient);
 	
 	background-repeat: repeat, repeat, no-repeat;
