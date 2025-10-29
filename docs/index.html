@@ -26,20 +26,50 @@
 			--image-ar: calc(1200/760);
 
 			--highlight: #880020;
+
+			--mb-darkred: hsl(348, 92%, 22%);
+			--mb-darkred2: hsl(348, 89%, 12%);
+			--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred), var(--mb-darkred2));
+
+		}
+
+		@font-face {
+			font-family: 'Outfit';
+			src: url('Outfit-VariableFont_wght.ttf') format('truetype');
+			font-weight: 100 1000;
+			font-display: swap;
+			font-style: normal;
+		}
+
+		.logo-pattern::before {
+			content:"";
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background-image:
+				url('mangabox-pattern-alpha-mid.svg'),
+				url('mangabox-pattern-alpha-mid.svg'),
+				var(--mb-login-gradient);
+
+			background-repeat: repeat, repeat, no-repeat;
+			background-size: 800px 200px, 800px 200px, cover;
+			background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
 		}
 
 		body {
-			font-family: sans-serif;
+			font-family: 'Outfit', sans-serif;
+			font-size: 18px;
 			line-height: 1.6;
 			margin: 0;
 			padding: 0;
-			background-color: var(--background-color);
 			color: var(--text-color-main);
 		}
 
 		h2 {
-			font-size: 18px;
-			border-bottom: 1px solid var(--highlight);
+			font-size: 20px;
+			border-bottom: 2px solid var(--highlight);
 		}
 
 		ul {
@@ -146,7 +176,7 @@
 		footer {
 			margin-top: 30px;
 			text-align: center;
-			font-size: 0.9em;
+			font-size: 16px;
 			color: var(--text-color-footer);
 		}
 
@@ -248,7 +278,7 @@
 	</style>
 </head>
 
-<body>
+<body class="logo-pattern">
 	<div class="container">
 		<!--<img class="title-image" alt="MangaBox Logo" src="mangabox-logo-new-with-name.svg" width="450">-->
 		<div class="logo" style="margin-left:auto; margin-right:auto; display:flex; align-items:center; justify-content:center; max-width:430px; min-width:200px">
@@ -369,9 +399,9 @@
 		<h2>Privacy policy</h2>
 		<ul>
 			<li>
-			MangaBox does not collect analytics, advertising data, or share any personal or usage data with third parties. See detailed <a href="privacypolicy.html">Privacy Policy</a>.
-		</li>
-	</ul>
+				MangaBox does not collect analytics, advertising data, or share any personal or usage data with third parties. See detailed <a href="privacypolicy.html">Privacy Policy</a>.
+			</li>
+		</ul>
 		<!-- Lightbox -->
 		<div id="lightBox">
 			<img id="lightBoxImgNeon" alt="">
@@ -400,7 +430,7 @@
 		</script>
 	</div>
 
-		<script>
+	<script>
 		async function getLatestVersion() {
 			const res = await fetch(`https://api.github.com/repos/zpaolo11x/mangabox/releases/latest`);
 			if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);

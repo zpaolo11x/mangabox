@@ -1,12 +1,13 @@
 Main UI
 - Restyled download progress indicator
 - New light and dark theme for login screen
+- Changed main font from Roboto to Outfit
 
 Reader UI
 - Reader zoom levels are saved on device, not on server
 
 Build
-- 
+- Updated documentation
 
 Fixes
 - 
