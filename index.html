@@ -562,7 +562,7 @@
 
 		// Hide dragbar in PWA mode
 		(function () {
-			enableDragbar(isElectron);
+			enableDragbar(isElectron || true);
 		})();
 
 		//MB Offline Events Response
@@ -1132,7 +1132,7 @@
 			console.log("-LOGOUT----------------")
 			console.log(document.getElementById('0N5QMQHBN1BKA'));
 			console.log("-----------------------")
-
+			alert("B")
 			systemRestart();
 		});
 
@@ -1821,6 +1821,7 @@
 			await wait(100);
 		}
 		async function executeFaderGradient(val) {
+			console.log('--------------exefade:'+val)
 			fader.style.opacity = val;
 			await wait(300);
 		}
@@ -3897,7 +3898,6 @@
 		}
 
 		async function bootSequence(netStatus = 'online') {
-
 			setNetworkStatus(netStatus)
 
 			userSettings = await getUserSettings();
@@ -3917,6 +3917,8 @@
 			buildLanguageList();
 
 			sectionShow(stickyContainer);
+
+			await executeFaderGradient(0);
 
 			let series_data = null;
 			await fetchLibraries();
@@ -3939,7 +3941,6 @@
 			);
 
 			if (enableDownload) obRestoreDownloadOnBoot();
-			await executeFaderGradient(0);
 			console.log("-BOOT------------------")
 			console.log(document.getElementById('0N5QMQHBN1BKA'));
 			console.log("-----------------------")

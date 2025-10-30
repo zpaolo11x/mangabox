@@ -26,6 +26,8 @@ async function deleteToken() {
 }
 
 async function sessionCheck() {
+				await executeFaderGradient(1);
+
 	debugPrint("sessionCheck...");
 	console.log("sessionCheck...");
 
@@ -88,7 +90,6 @@ async function sessionCheck() {
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
 			localStorage.setItem("sessionValid", "true");
-			await executeFaderGradient(0);
 			hideLoginDialog();
 			bootSequence('online');
 
@@ -178,7 +179,6 @@ async function systemRestart() {
 	//TODO Qui va ridefinizione di rd
 
 
-	dragbarOffReader();
 	document.querySelectorAll('.section').forEach(section => sectionHide(section));
 	document.querySelectorAll('.collector').forEach(item => item.remove());
 
@@ -241,6 +241,7 @@ async function login() {
 				window.electronAPI.sendRememberMe(loginRememberMe.checked);
 				await saveToken(token);
 			}
+			alert("A")
 			systemRestart();
 		} else if (response.status === 401) {
 			loginError.textContent = 'Invalid username or password.';
@@ -259,6 +260,7 @@ async function login() {
 
 
 function showLoginDialog() {
+	dragbar.classList.add('onLogin');
 	debugPrint("showLoginDialog...")
 	console.log("showLoginDialog...")
 	loginScreen.classList.remove('auth-hidden');
