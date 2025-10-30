@@ -53,7 +53,6 @@ async function sessionCheck() {
 		debugPrint("Offline mode detected.");
 		console.log("Offline mode detected.")
 		if (sessionWasValid) {
-			await executeFaderGradient(0);
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
@@ -155,6 +154,10 @@ async function systemRestart() {
 		}
 	}
 
+	//TODO Mettere qui distruzione library menu
+	librariesList.innerHTML = '';
+	extraButtons.innerHTML = '';
+
 	//TODO Qui va ridefinizione di mb
 	clearLibrariesMenus();
 	mb = initMB();
@@ -166,6 +169,8 @@ async function systemRestart() {
 		mb.filterTable.filter_by_direction,
 		mb.filterTable.filter_by_language
 	];
+
+	buildFilters();
 	//TODO Qui va ridefinizione di rd
 
 	offlineSession = false;
@@ -175,7 +180,6 @@ async function systemRestart() {
 
 	document.documentElement.style.setProperty('--mb-gradient-1', '30');
 	document.documentElement.style.setProperty('--mb-gradient-2', '40');
-
 
 	sessionCheck();
 }

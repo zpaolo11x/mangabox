@@ -1094,6 +1094,8 @@
 		}
 
 		logOut.addEventListener('click', async () => {
+		
+			navigateTo('#dashboard');
 			await executeFaderGradient(1);
 
 			try {
@@ -1118,8 +1120,6 @@
 			//sectionHide(stickyContainer);
 			//sectionShow(blanker);
 
-			history.pushState(null, '', mb.basePath);
-
 			Object.keys(localStorage).forEach(key => {
 				if (key.startsWith("c_")) {
 					localStorage.removeItem(key);
@@ -1128,7 +1128,7 @@
 
 			await clearIndexedDB();
 			localStorage.removeItem("sessionValid");
-
+			
 			systemRestart();
 		});
 
@@ -1627,7 +1627,7 @@
 		}
 
 		// Build filter buttons items
-
+		function buildFilters(){
 		mb.filterButtons.forEach(button => {
 			button.item = addItem('li', {
 				className: `filter-item press-button`,
@@ -1671,6 +1671,8 @@
 				saveLibraryFilters();
 			}
 		}));
+	}
+	buildFilters();
 
 		//TODO Check what happens for webtoons since readerScale should be 100 for them?
 		function isReaderHorizontal(screenAR) {
@@ -3926,6 +3928,11 @@
 			);
 
 			if (enableDownload) obRestoreDownloadOnBoot();
+						await executeFaderGradient(0);
+			console.log("-----------------------")
+			console.log(document.getElementById('0N5QMQHBN1BKA'));
+						console.log("-----------------------")
+
 		}
 
 		//MB Reader Functions and Data

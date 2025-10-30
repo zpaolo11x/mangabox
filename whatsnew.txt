@@ -10,4 +10,4 @@ Build
 - Updated documentation
 
 Fixes
-- 
+- Fxied size increase in Electron apps
