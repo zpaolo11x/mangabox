@@ -18,19 +18,28 @@
 			--background-color: #f5f5f5;
 			--container-color: #fff;
 
-			--text-color-main: #333;
-			--text-color-caption: #555;
-			--text-color-footer: #666;
+			--text-color-main: #f0e0e0;
+			--text-color-caption: #f0e0e0;
+			--text-color-footer: #f0e0e0;
 
 			--border-percent: 0.7%;
 			--image-ar: calc(1200/760);
 
-			--highlight: #880020;
+			--highlight: #f0e0e0;
 
-			--mb-darkred: hsl(348, 92%, 22%);
-			--mb-darkred2: hsl(348, 89%, 12%);
+			--mb-darkred: hsl(348, 92%, 15%);
+			--mb-darkred2: hsl(348, 89%, 10%);
 			--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred), var(--mb-darkred2));
 
+			--tablet-size: 500px;
+			--tablet-black-border: 15px;
+			--tablet-total-border: 17px;
+			--tablet-radius: 10px;
+
+			--phone-size: calc(var(--tablet-size) * 3 / 5);
+			--phone-black-border: 4px;
+			--phone-total-border: 7px;
+			--phone-radius: 20px;
 		}
 
 		@font-face {
@@ -42,20 +51,17 @@
 		}
 
 		.logo-pattern::before {
-			content:"";
+			content: "";
 			position: fixed;
 			left: 0;
 			right: 0;
 			top: 0;
 			bottom: 0;
-			background-image:
-				url('mangabox-pattern-alpha-mid.svg'),
-				url('mangabox-pattern-alpha-mid.svg'),
-				var(--mb-login-gradient);
-
-			background-repeat: repeat, repeat, no-repeat;
-			background-size: 800px 200px, 800px 200px, cover;
-			background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
+			background-image: url('mangabox-pattern-black.svg'), url('mangabox-pattern-black.svg');
+			background-repeat: repeat, repeat, ;
+			background-size: 800px 200px, 800px 200px;
+			background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px);
+			opacity: 0.1;
 		}
 
 		body {
@@ -65,9 +71,105 @@
 			margin: 0;
 			padding: 0;
 			color: var(--text-color-main);
+			font-weight: 200;
+		}
+
+		.back-gradient::before {
+			content: "";
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			background-image: var(--mb-login-gradient);
+
+			background-repeat: no-repeat;
+			background-size: cover;
+			background-position: center;
+		}
+
+		#splashScreen {
+			position: relative;
+			width: 100%;
+			max-width: 960px;
+			min-width: 600px;
+			height: 500px;
+			background-color: rgba(75, 145, 90, 0.0);
+			padding: 32px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		#logo {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			height: auto;
+
+			margin-left: auto;
+			margin-right: auto;
+			width:100%;
+		}
+
+		#titleClaim {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 80%;
+			margin-top:30px;
+		}
+
+		#titleBlock {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			width: 450px;
+			height: 100%;
+			margin-top: auto;
+			margin-bottom: auto;
+
+			margin-left: 0;
+			margin-right: auto;
+			z-index: 1;
+			
+		}
+
+		#readerPicTablet {
+			height: 100%;
+			border-radius: var(--tablet-radius);
+			box-shadow: 0px 0px 0px var(--tablet-black-border) black, 0px 0px 0px var(--tablet-total-border) grey, 10px 10px 40px black;
+		}
+
+		#splashPic1 {
+			position: absolute;
+			right: 50px;
+			bottom: var(--tablet-total-border);
+			height: var(--tablet-size);
+			width: auto;
+			z-index: 0;
+		}
+
+		#readerPicPhone {
+			height: 100%;
+			border-radius: var(--phone-radius);
+			box-shadow: 0px 0px 0px var(--phone-black-border) black, 0px 0px 0px var(--phone-total-border) grey, 10px 10px 40px black;
+		}
+
+		#splashPic2 {
+			position: absolute;
+			right: 300px;
+			bottom: var(--phone-total-border);
+			height: var(--phone-size);
+			width: auto;
+			z-index: 0;
+			margin-right: 50px;
 		}
 
 		h2 {
+			color: white;
+			font-weight: bold;
 			font-size: 20px;
 			border-bottom: 2px solid var(--highlight);
 		}
@@ -88,6 +190,7 @@
 			background-color: var(--container-color);
 			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 			border-radius: 15px;
+			background: none;
 		}
 
 		.title-image {
@@ -142,6 +245,16 @@
 			pointer-events: none;
 		}
 
+		#logoIcon {
+			width:40%;
+			margin-bottom:20px;
+		}
+
+		#logoName {
+			width:80%;
+			filter: invert(1);
+		}
+		
 		#lightBoxImg {
 			position: fixed;
 			top: 50%;
@@ -184,6 +297,7 @@
 		}
 
 		a {
+			font-weight: bold;
 			text-decoration: none;
 			color: var(--highlight);
 			transition: all 0.3s ease;
@@ -193,19 +307,12 @@
 			text-shadow: 0px 0px 6px hsla(346, 100%, 27%, 0.5);
 		}
 
-		.logo {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: center;
-			height: 100%;
-			margin-bottom: 30px;
-		}
+
 
 		.github-badge {
 			position: absolute;
 			top: 20px;
-			right: 20px;
+			left: 20px;
 			/*
 			float: right;
 			margin-top: -5px;
@@ -214,9 +321,7 @@
 
 		.github-badge img {
 			border-radius: 5px;
-			position: absolute;
-			right: 0px;
-			vertical-align: middle;
+			
 		}
 
 		li {
@@ -277,21 +382,32 @@
 	</style>
 </head>
 
-<body class="logo-pattern">
+<body class="back-gradient">
+	<div class="logo-pattern"></div>
+	<div id="splashScreen">
+		<div id="splashPic1">
+			<img src="../stores/data-ios/screenshots/ipad-11-003.png" id="readerPicTablet">
+		</div>
+		<div id="splashPic2">
+			<img src="../stores/data-ios/screenshots/iphone-63-006.png" id="readerPicPhone">
+		</div>
+		<div id="titleBlock">
+			<div id="logo">
+				<img id="logoIcon" src="mangabox-logo-new.svg">
+				<img id="logoName" src="mangabox-logoname.svg">
+			</div>
+			<div id="titleClaim">
+				Your streamlined, feature rich <a href="https://komga.org">Komga</a> client.
+			</div>
+
+		</div>
+					<div class="github-badge">
+				<a href="https://github.com/zpaolo11x/mangabox/releases/latest">
+					<img src="https://img.shields.io/github/v/release/zpaolo11x/mangabox?label=Latest%20Release&style=flat-square&color=ba082b" alt="Latest Release Badge">
+				</a>
+			</div>
+	</div>
 	<div class="container">
-		<!--<img class="title-image" alt="MangaBox Logo" src="mangabox-logo-new-with-name.svg" width="450">-->
-		<div class="logo" style="margin-left:auto; margin-right:auto; display:flex; align-items:center; justify-content:center; max-width:430px; min-width:200px">
-			<img src="mangabox-logo-new.svg" width="19%">
-			<img src="mangabox-logoname.svg" width="81%" style="margin-left:2px; opacity:0.75;">
-		</div>
-		<div class="github-badge">
-			<a href="https://github.com/zpaolo11x/mangabox/releases/latest">
-				<img src="https://img.shields.io/github/v/release/zpaolo11x/mangabox?label=Latest%20Release&style=flat-square&color=ba082b" alt="Latest Release Badge">
-			</a>
-		</div>
-		<p>
-			<a href="https://github.com/zpaolo11x/mangabox">MangaBox</a> is a streamlined, feature rich client for <a href="https://komga.org">Komga</a>, the manga and comics media server.
-		</p>
 
 		<h2>Supported platforms</h2>
 		<p>Since it's based on web technology, MangaBox is available on many different platforms</p>
