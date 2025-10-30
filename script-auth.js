@@ -241,7 +241,6 @@ async function login() {
 				window.electronAPI.sendRememberMe(loginRememberMe.checked);
 				await saveToken(token);
 			}
-			alert("A")
 			systemRestart();
 		} else if (response.status === 401) {
 			loginError.textContent = 'Invalid username or password.';
