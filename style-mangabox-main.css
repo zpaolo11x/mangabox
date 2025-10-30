@@ -870,29 +870,32 @@ color:white;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	min-width: (var(--mb-button-size));
-	height: (var(--mb-button-size));
+	min-width: var(--mb-button-size);
+	height: var(--mb-button-size);
 	z-index: 10;
 	border-radius: 50%;
 	transition: border-color 0.3s;
-	padding:0;
-	margin:0;
-	align-items: center;
-	text-align: center;
-	justify-content: center;
-
+	padding: 0;
+	margin: 0;
+	display: none;
+	place-items: center;
 }
-#downloadSpinner span{
 
-	width: (var(--mb-button-size));
-	height: (var(--mb-button-size));
-	line-height: (var(--mb-button-size));
+#downloadSpinner span {
+	grid-area: 1 / 1; /* makes them all overlap */
 	font-size: 38px;
 	width: 100%;
 	height: 100%;
+	line-height: var(--mb-button-size);
+	text-align: center;
 }
+
+#downloadSpinner span.layer{
+	transform: scaleX(-1);
+}
+
 #downloadSpinner.spin {
-	display: flex;
+	display: grid;
 	animation: spin 10s linear infinite, cycle 1s ease infinite alternate;
 }
 

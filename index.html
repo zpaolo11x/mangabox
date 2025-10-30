@@ -59,7 +59,10 @@
 						<div class="button-wrapper">
 							<span class="fa-solid fa-download glyph-dark"></span>
 						</div>
-						<div id="downloadSpinner" class="download-overlay"><span class="fa-solid fa-spinner glyph-dark mb-accent"></span></div>
+						<div id="downloadSpinner" class="download-overlay">
+							<span class="fa-solid fa-spinner glyph-dark mb-accent"></span>
+							<span class="fa-solid fa-spinner glyph-dark mb-accent layer"></span>
+						</div>
 					</li>
 					<li id="searchField" title="Search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
@@ -1820,7 +1823,7 @@
 			await wait(100);
 		}
 		async function executeFaderGradient(val) {
-			console.log('--------------exefade:'+val)
+			console.log('--------------exefade:' + val)
 			fader.style.opacity = val;
 			await wait(300);
 		}
