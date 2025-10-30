@@ -1094,7 +1094,7 @@
 		}
 
 		logOut.addEventListener('click', async () => {
-		
+
 			navigateTo('#dashboard');
 			await executeFaderGradient(1);
 
@@ -1128,7 +1128,7 @@
 
 			await clearIndexedDB();
 			localStorage.removeItem("sessionValid");
-			
+
 			console.log("-LOGOUT----------------")
 			console.log(document.getElementById('0N5QMQHBN1BKA'));
 			console.log("-----------------------")
@@ -1631,52 +1631,52 @@
 		}
 
 		// Build filter buttons items
-		function buildFilters(){
-		mb.filterButtons.forEach(button => {
-			button.item = addItem('li', {
-				className: `filter-item press-button`,
-				title: button.title,
+		function buildFilters() {
+			mb.filterButtons.forEach(button => {
+				button.item = addItem('li', {
+					className: `filter-item press-button`,
+					title: button.title,
+				});
+				button.icon = addItem('div', {
+					className: `smallbutton-wrapper`,
+					innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
+				});
+				button.caption = addItem('div', {
+					className: `library-name`,
+					innerHTML: `${button.switches[0].caption}`
+				});
+				button.item.append(
+					button.icon,
+					button.caption
+				);
+				extraButtons.append(button.item);
+				button.item.addEventListener('click', async () => {
+					button.selected = ((button.selected + 1) % button.switches.length);
+					await executeFade(1);
+					applyLibraryFilters();
+					await executeFade(0);
+					saveLibraryFilters();
+				})
 			});
-			button.icon = addItem('div', {
-				className: `smallbutton-wrapper`,
-				innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
-			});
-			button.caption = addItem('div', {
-				className: `library-name`,
-				innerHTML: `${button.switches[0].caption}`
-			});
-			button.item.append(
-				button.icon,
-				button.caption
-			);
-			extraButtons.append(button.item);
-			button.item.addEventListener('click', async () => {
-				button.selected = ((button.selected + 1) % button.switches.length);
-				await executeFade(1);
-				applyLibraryFilters();
-				await executeFade(0);
-				saveLibraryFilters();
-			})
-		});
 
-		extraButtons.append(addItem('li', {
-			title: 'Reset filters and sorting',
-			className: `filter-item press-button`,
-			innerHTML: `<div class="smallbutton-wrapper">
+			extraButtons.append(addItem('li', {
+				title: 'Reset filters and sorting',
+				className: `filter-item press-button`,
+				innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
 							</div>`,
-			onclick: async () => {
-				await executeFade(1);
-				mb.filterButtons.forEach(button => {
-					button.selected = 0;
-				});
-				applyLibraryFilters();
-				await executeFade(0);
-				saveLibraryFilters();
-			}
-		}));
-	}
-	buildFilters();
+				onclick: async () => {
+					await executeFade(1);
+					mb.filterButtons.forEach(button => {
+						button.selected = 0;
+					});
+					applyLibraryFilters();
+					await executeFade(0);
+					saveLibraryFilters();
+				}
+			}));
+		}
+		buildFilters();
 
 		//TODO Check what happens for webtoons since readerScale should be 100 for them?
 		function isReaderHorizontal(screenAR) {
@@ -2383,18 +2383,13 @@
 			setReadStatus(null, bookId, read, item, format);
 		}
 
-		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
-		async function fetchLibraries() {
+		async function updateSizer(libraries) {
 			const gapSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
 			const libSmallSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
 			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 			const filterButtonSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-filter-button-size'));
 			const searchFieldSize = libLargeSize;
 			const margin = 10;
-
-			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
-			libraries.sort((a, b) => a.name.localeCompare(b.name));
-			await displayLibraries(libraries);
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
 			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
@@ -2406,6 +2401,18 @@
 			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
 
 			mb.filterSizer = mb.filterButtons.length * (100 + gapSize) + filterButtonSize + 2 * margin;
+
+		}
+
+		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
+		async function fetchLibraries() {
+
+
+			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
+			libraries.sort((a, b) => a.name.localeCompare(b.name));
+			await displayLibraries(libraries);
+
+			await updateSizer(libraries)
 
 			updateStickyMenu();
 		}
@@ -3932,7 +3939,7 @@
 			);
 
 			if (enableDownload) obRestoreDownloadOnBoot();
-						await executeFaderGradient(0);
+			await executeFaderGradient(0);
 			console.log("-BOOT------------------")
 			console.log(document.getElementById('0N5QMQHBN1BKA'));
 			console.log("-----------------------")

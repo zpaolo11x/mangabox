@@ -143,7 +143,10 @@ async function systemRestart() {
 	loginPassword.value = "";
 	loginUsername.value = "";
 	loginRememberMe.checked = false;
-
+	loginError.textContent = '';
+	if (!loginError.classList.contains('auth-hiden')) {
+		loginError.classList.add('auth-hidden');
+	}
 	executeFade(1);
 
 	if (isStatusBar) {
@@ -157,10 +160,10 @@ async function systemRestart() {
 	//TODO Mettere qui distruzione library menu
 	librariesList.innerHTML = '';
 	extraButtons.innerHTML = '';
-	updateStickyMenu();
 
 	//TODO Qui va ridefinizione di mb
 	clearLibrariesMenus();
+
 	mb = initMB();
 	mb.filterTable = initFilterTable();
 
@@ -174,6 +177,23 @@ async function systemRestart() {
 	buildFilters();
 	//TODO Qui va ridefinizione di rd
 
+
+	dragbarOffReader();
+	document.querySelectorAll('.section').forEach(section => sectionHide(section));
+	document.querySelectorAll('.collector').forEach(item => item.remove());
+
+	//In part useless because of the click outside events, but useful when loading an url
+	sectionHide(filtersBar);
+	sectionHide(colorSwatchBar);
+	sectionHide(stickyContainer);
+
+	mb.libMenuVisible = null;
+	mb.swatchMenuVisible = false
+	await updateSizer([])
+
+	updateStickyMenu();
+
+
 	offlineSession = false;
 	document.documentElement.style.setProperty('--mb-h', '348');
 	document.documentElement.style.setProperty('--mb-s', '92%');
@@ -182,9 +202,9 @@ async function systemRestart() {
 	document.documentElement.style.setProperty('--mb-gradient-1', '30');
 	document.documentElement.style.setProperty('--mb-gradient-2', '40');
 
-			console.log("-RESTART---------------")
-			console.log(document.getElementById('0N5QMQHBN1BKA'));
-			console.log("-----------------------")
+	console.log("-RESTART---------------")
+	console.log(document.getElementById('0N5QMQHBN1BKA'));
+	console.log("-----------------------")
 
 	sessionCheck();
 }
