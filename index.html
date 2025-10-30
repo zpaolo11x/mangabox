@@ -1129,6 +1129,10 @@
 			await clearIndexedDB();
 			localStorage.removeItem("sessionValid");
 			
+			console.log("-LOGOUT----------------")
+			console.log(document.getElementById('0N5QMQHBN1BKA'));
+			console.log("-----------------------")
+
 			systemRestart();
 		});
 
@@ -3929,9 +3933,9 @@
 
 			if (enableDownload) obRestoreDownloadOnBoot();
 						await executeFaderGradient(0);
-			console.log("-----------------------")
+			console.log("-BOOT------------------")
 			console.log(document.getElementById('0N5QMQHBN1BKA'));
-						console.log("-----------------------")
+			console.log("-----------------------")
 
 		}
 

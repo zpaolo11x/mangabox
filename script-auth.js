@@ -157,6 +157,7 @@ async function systemRestart() {
 	//TODO Mettere qui distruzione library menu
 	librariesList.innerHTML = '';
 	extraButtons.innerHTML = '';
+	updateStickyMenu();
 
 	//TODO Qui va ridefinizione di mb
 	clearLibrariesMenus();
@@ -180,6 +181,10 @@ async function systemRestart() {
 
 	document.documentElement.style.setProperty('--mb-gradient-1', '30');
 	document.documentElement.style.setProperty('--mb-gradient-2', '40');
+
+			console.log("-RESTART---------------")
+			console.log(document.getElementById('0N5QMQHBN1BKA'));
+			console.log("-----------------------")
 
 	sessionCheck();
 }
