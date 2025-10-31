@@ -20,15 +20,18 @@
 
 			--tablet-black-border: 15px;
 			--tablet-total-border: 17px;
-			--tablet-radius: 10px;
-			--tablet-size: calc(500px - 2 * var(--tablet-total-border));
+			--tablet-radius: 25px;
+			--tablet-size: 100%;
 
 			--phone-black-border: 4px;
 			--phone-total-border: 7px;
 			--phone-radius: 20px;
-			--phone-size: calc(350px - 2 * var(--phone-total-border));
+			--phone-size: calc(70% - 2 * var(--phone-total-border));
 
 			--fa-inverse: var(--mb-darkred);
+
+			--minWidth: calc(max(350px, 100vw) - 2*var(--padding-size));
+			--minHeight: calc(500/450*(var(--minWidth)));
 		}
 
 		@font-face {
@@ -142,35 +145,56 @@
 			z-index: 1;
 		}
 
-		#readerPicTablet {
-			height: 100%;
-			border-radius: var(--tablet-radius);
-			box-shadow: 0px 0px 0px var(--tablet-black-border) black, 0px 0px 0px var(--tablet-total-border) grey, 10px 10px 40px black;
-		}
-
-		#splashPic1 {
+		#splashPicTablet {
 			position: absolute;
-			right: var(--tablet-total-border);
-			bottom: var(--tablet-total-border);
-			height: var(--tablet-size);
-			width: auto;
-			z-index: 0;
-		}
-
-		#readerPicPhone {
+			right: 0;
+			bottom: 0;
 			height: 100%;
-			border-radius: var(--phone-radius);
-			box-shadow: 0px 0px 0px var(--phone-black-border) black, 0px 0px 0px var(--phone-total-border) grey, 10px 10px 40px black;
+			aspect-ratio: 1859 / 2577;
+			z-index: 0;
+			background-image: url("apple/ipad-11-003-r.jpg");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 89%;
+			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
 		}
 
-		#splashPic2 {
-			position: absolute;
-			left: var(--phone-total-border);
-			bottom: var(--phone-total-border);
-			height: var(--phone-size);
-			width: auto;
-			z-index: 0;
+		#splashPicTablet::after {
+			display:block;
+			content:"";
+			width: 100%;
+			height: 100%;
+			background-image: url("frametablet.png");
+			background-repeat: none;
+			background-size: cover;
 		}
+
+		#splashPicPhone {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			height: 70%;
+			aspect-ratio: 818 / 1686;
+			z-index: 0;
+			background-image: url("apple/iphone-63-006-r.jpg");
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 95% 98%;
+			border-radius: 15% / 10%;
+			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
+
+		}
+
+		#splashPicPhone::after {
+			display:block;
+			content:"";
+			width: 100%;
+			height: 100%;
+			background-image: url("framephone.png");
+			background-repeat: none;
+			background-size: cover;
+		}
+
 
 		.github-badge {
 			position: absolute;
@@ -188,7 +212,8 @@
 
 		.platform-block {
 display: grid;
-				grid-template-columns: repeat(6, calc(1/6*100%));			flex-direction: row;
+				grid-template-columns: repeat(6, calc(1/6*100%));			
+				flex-direction: row;
 			align-items: center;
 			flex-wrap: nowrap;
 		}
@@ -218,7 +243,7 @@ display: grid;
 
 		h2 {
 			margin-top: 30px;
-			margin-bottom: 60px;
+			margin-bottom: 30px;
 			color: white;
 			font-weight: bold;
 			font-size: 20px;
@@ -254,8 +279,15 @@ display: grid;
 			/*margin-top: var(--padding-size);*/
 		}
 
+		.grid-text {
+			display:grid;
+			grid-template-rows: 30px auto;
+		}
+
 		.grid-item {
-			text-align: center;
+			display: grid;
+			grid-template-columns: auto 1fr;
+			gap: 10px;
 		}
 
 		.grid-item img {
@@ -433,5 +465,54 @@ display: grid;
 				justify-items: center;
 				row-gap: 30px;
 				align-items: center;
+			}
+
+.grid{
+	grid-template-columns: 1fr;
+}					
+
+		}
+
+
+		@media (max-width: 510px) {
+
+			#logoName{
+				width:var(--minWidth);
+			}
+					#titleClaim{
+				width:var(--minWidth);
+							text-align: center;
+			text-align-last: center;
+			}	
+			#splashScreen {
+				grid-template-columns: 1fr;
+				grid-template-rows: auto var(--minHeight);
+				width: var(--minWidth);
+				height: auto;
+			}
+
+			.github-badge {
+				top: 0px;
+				right: 0px;
+				left: auto;
+			}
+
+			.container {
+				width: var(--minWidth);
+			}
+
+			.platform-block {
+				display: grid;
+				grid-template-columns: repeat(2, calc(1/2*100%));
+				/* 3 per row */
+				grid-auto-rows: auto;
+				/* automatically make 2 rows */
+				justify-items: center;
+				row-gap: 30px;
+				align-items: center;
+			}
+
+			#screensBlock, #titleBlock{
+				width: var(--minWidth);
 			}
 		}
