@@ -8,369 +8,205 @@
 	<meta name="description" content="MangaBox is a multiplatform client for Komga, tailored for library viewing and reading manga with a clean UI and rich metadata.">
 	<meta name="author" content="zpaolo11x">
 	<meta name="keywords" content="MangaBox, Komga, Electron, Manga Reader, Library Management">
+
 	<title>MangaBox</title>
 
-	<style>
-		:root {
-			--font-size: 0.95em;
-			--padding-size: 30px;
+	<link rel="stylesheet" href="fontawesome/all.min.css">
+	<link rel="stylesheet" href="style.css">
 
-			--background-color: #f5f5f5;
-			--container-color: #fff;
-
-			--text-color-main: #333;
-			--text-color-caption: #555;
-			--text-color-footer: #666;
-
-			--border-percent: 0.7%;
-			--image-ar: calc(1200/760);
-
-			--highlight: #880020;
-
-			--mb-darkred: hsl(348, 92%, 22%);
-			--mb-darkred2: hsl(348, 89%, 12%);
-			--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred), var(--mb-darkred2));
-
-		}
-
-		@font-face {
-			font-family: 'Outfit';
-			src: url('Outfit-VariableFont_wght.ttf') format('truetype');
-			font-weight: 100 1000;
-			font-display: swap;
-			font-style: normal;
-		}
-
-		.logo-pattern::before {
-			content:"";
-			position: fixed;
-			left: 0;
-			right: 0;
-			top: 0;
-			bottom: 0;
-			background-image:
-				url('mangabox-pattern-alpha-mid.svg'),
-				url('mangabox-pattern-alpha-mid.svg'),
-				var(--mb-login-gradient);
-
-			background-repeat: repeat, repeat, no-repeat;
-			background-size: 800px 200px, 800px 200px, cover;
-			background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
-		}
-
-		body {
-			font-family: 'Outfit', sans-serif;
-			font-size: 18px;
-			line-height: 1.6;
-			margin: 0;
-			padding: 0;
-			color: var(--text-color-main);
-		}
-
-		h2 {
-			font-size: 20px;
-			border-bottom: 2px solid var(--highlight);
-		}
-
-		ul {
-			padding-left: 20px;
-		}
-
-		li {
-			line-height: 150%;
-		}
-
-		.container {
-			position: relative;
-			max-width: 860px;
-			margin: 30px auto;
-			padding: var(--padding-size);
-			background-color: var(--container-color);
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-			border-radius: 15px;
-		}
-
-		.title-image {
-			display: block;
-			margin: 0 auto 30px;
-			text-align: center;
-		}
-
-		.grid {
-			display: grid;
-			grid-template-columns: repeat(2, 1fr);
-			gap: var(--padding-size);
-			/*margin-top: var(--padding-size);*/
-		}
-
-		.grid-item {
-			text-align: center;
-		}
-
-		.grid-item img {
-			max-width: 100%;
-			height: auto;
-			border-radius: 5px;
-			box-shadow: 0 2px 8px 1px rgba(0, 0, 0, 0.1);
-			cursor: pointer;
-			transition: transform 0.2s ease-in-out;
-		}
-
-		.grid-item p {
-			text-align: left;
-			margin-top: 10px;
-			margin-bottom: 10px;
-			color: var(--text-color--caption);
-			line-height: 1.4;
-		}
-
-
-		/* Lightbox styling */
-		#lightBox {
-			display: flex;
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: rgba(0, 0, 0, 0.9);
-			justify-content: center;
-			align-items: center;
-			z-index: 1000;
-			opacity: 0;
-			transition: opacity 0.3s ease;
-			pointer-events: none;
-		}
-
-		#lightBoxImg {
-			position: fixed;
-			top: 50%;
-			lefT: 50%;
-			transform: translate(-50%, -50%);
-
-			max-width: 90%;
-			max-height: 90%;
-			border-radius: var(--border-percent) / calc(var(--border-percent) * var(--image-ar));
-			/*box-shadow: 0 0 40px -10px white;*/
-		}
-
-		#lightBoxImgNeon {
-			position: fixed;
-			top: 50%;
-			lefT: 50%;
-			transform: translate(-50%, -50%) scale(0.97, calc(1 - 0.03 * var(--image-ar)));
-			/* slightly larger */
-			filter: blur(35px) brightness(2.0) contrast(0.8);
-
-			max-width: 90%;
-			max-height: 90%;
-			border-radius: var(--border-percent) / calc(var(--border-percent) * var(--image-ar));
-		}
-
-		#lightBox.active {
-			opacity: 1;
-			pointer-events: unset;
-		}
-
-		footer {
-			margin-top: 30px;
-			text-align: center;
-			font-size: 16px;
-			color: var(--text-color-footer);
-		}
-
-		.grid-item img:hover {
-			transform: scale(1.05);
-		}
-
-		a {
-			text-decoration: none;
-			color: var(--highlight);
-			transition: all 0.3s ease;
-		}
-
-		a:hover {
-			text-shadow: 0px 0px 6px hsla(346, 100%, 27%, 0.5);
-		}
-
-		.logo {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			justify-content: center;
-			height: 100%;
-			margin-bottom: 30px;
-		}
-
-		.github-badge {
-			position: absolute;
-			top: 20px;
-			right: 20px;
-			/*
-			float: right;
-			margin-top: -5px;
-			*/
-		}
-
-		.github-badge img {
-			border-radius: 5px;
-			position: absolute;
-			right: 0px;
-			vertical-align: middle;
-		}
-
-		li {
-			margin-bottom: 5px;
-		}
-
-		pre {
-			padding: 10px;
-			font-size: 12px;
-			background-color: hsl(348, 65%, 18%);
-			color: white;
-			border-radius: 10px;
-
-			white-space: pre-wrap;
-			word-wrap: break-word;
-
-			line-height: 15px;
-		}
-
-		.odd,
-		.even {
-			display: block;
-			/* This is the key change */
-			font-family: monospace;
-			font-size: 14px;
-			padding-left: 10px;
-			padding-right: 10px;
-			color: white;
-			line-height: 25px;
-			white-space: pre-wrap;
-			/* Preserves whitespace but allows wrapping */
-			word-wrap: break-word;
-			/* Older property, but good for broader support */
-			word-break: break-word;
-			/* Allows breaking within words if necessary */
-		}
-
-		span.odd {
-			background-color: hsl(348, 60%, 18%);
-		}
-
-		span.even {
-			background-color: hsl(348, 60%, 20%);
-		}
-
-		.code-block-wrapper {
-			border-radius: 10px;
-			overflow: hidden;
-			margin-top: 10px;
-			margin-bottom: 10px;
-		}
-
-		/*
-		p {
-			overflow: hidden;
-		}
-		*/
-	</style>
 </head>
 
-<body class="logo-pattern">
-	<div class="container">
-		<!--<img class="title-image" alt="MangaBox Logo" src="mangabox-logo-new-with-name.svg" width="450">-->
-		<div class="logo" style="margin-left:auto; margin-right:auto; display:flex; align-items:center; justify-content:center; max-width:430px; min-width:200px">
-			<img src="mangabox-logo-new.svg" width="19%">
-			<img src="mangabox-logoname.svg" width="81%" style="margin-left:2px; opacity:0.75;">
+<body class="back-gradient">
+	<div class="logo-pattern"></div>
+	<div id="splashScreen">
+		<div id="titleBlock">
+			<div id="logo">
+				<img id="logoIcon" src="apple/appicon.png">
+				<img id="logoName" src="mangabox-logoname.svg">
+				<div id="titleClaim">
+					Your streamlined, feature&nbsp;rich <a href="https://komga.org">Komga</a>&nbsp;client
+				</div>
+			</div>
+			<div class="github-badge">
+				<a href="https://github.com/zpaolo11x/mangabox/releases/latest">
+					<img src="https://img.shields.io/github/v/release/zpaolo11x/mangabox?label=Latest%20Release&style=flat-square&color=ba082b" alt="Latest Release Badge">
+				</a>
+			</div>
 		</div>
+		<div id="screensBlock">
+			<div id="splashPicTablet"></div>
+			<div id="splashPicPhone"></div>
+		</div>
+		<!--
 		<div class="github-badge">
 			<a href="https://github.com/zpaolo11x/mangabox/releases/latest">
 				<img src="https://img.shields.io/github/v/release/zpaolo11x/mangabox?label=Latest%20Release&style=flat-square&color=ba082b" alt="Latest Release Badge">
 			</a>
 		</div>
-		<p>
-			<a href="https://github.com/zpaolo11x/mangabox">MangaBox</a> is a streamlined, feature rich client for <a href="https://komga.org">Komga</a>, the manga and comics media server.
-		</p>
+	-->
+	</div>
+	<div class="container">
 
 		<h2>Supported platforms</h2>
-		<p>Since it's based on web technology, MangaBox is available on many different platforms</p>
-		<ul>
-			<li><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Web.zip">Web/PWA</a> - Deploy MangaBox on a personal web server, use it in the browser or as a PWA on your device.</li>
-			<li>Electron desktop application</li>
-			<ul>
-				<li>Windows (<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-x64.exe">x86</a> and <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-arm64.exe">ARM</a>)</li>
-				<li>macOS (<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Apple Silicon</a> and <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Intel</a>)</li>
-				<li>Linux (<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Linux-x86_64.AppImage">AppImage</a>)</li>
-			</ul>
-			<li>Capacitor mobile application</li>
-			<ul>
-				<li>Android <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Android.apk">APK</a> - Debug APK, you can manually install on Android devices</li>
-				<li>iOS/ipadOS <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-iOS-ipa.ipa">.ipa</a> - Unsigned app for Apple devices, you can sideload it with AltStore or similar</li>
-				<li>iOS/ipadOS <a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-iOS-app.zip">.app</a> - App bundle for testing on XCode simulator (universal binary)</li>
-			</ul>
-		</ul>
+		<div class="platform-block">
 
-		<h2>Features gallery</h2>
-
-		<div class="grid">
-			<div class="grid-item">
-				<img alt="Dashboard view" src="pics/dashboard.png" class="clickable">
-				<p>MangaBox is a reader first, and doesn't feature library management. It features clean design, touch and mouse driven interface. You can drag and drop an image to change the library icons.</p>
+			<div class="platform-card">
+				<i class="fa-solid fa-earth-americas brand"></i>
+				<span class="label">Web/PWA</span>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Web.zip">Self Host</a>
 			</div>
 
-			<div class="grid-item">
-				<img alt="Library view" src="pics/library.png" class="clickable">
-				<p>Library view features series metadata. You can add alternate titles in Komga: "Story" and "Art" to set a series authors, "Time" for series dates.</p>
+			<div class="platform-card">
+				<i class="fa-brands fa-apple brand"></i>
+				<span class="label">iOS/ipadOS</span>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-iOS-ipa.ipa">Unsigned ipa</a>
 			</div>
 
-			<div class="grid-item">
-				<img alt="Series view" src="pics/series.png" class="clickable">
-				<p>Series view with all the volumes and series metadata. Each book has read/unread controls and a summary view button.</p>
+			<div class="platform-card">
+				<i class="fa-brands fa-android brand"></i>
+				<span class="label">Android</span>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Android.apk">Debug apk</a>
 			</div>
 
-			<div class="grid-item">
-				<img alt="Reading mode" src="pics/reader.png" class="clickable">
-				<p>Reading mode replicates the look of a real manga or comic book. It is based on two pages spreads, with paper-like effects and page animations.</p>
+			<div class="platform-card">
+				<i class="fa-brands fa-windows brand"></i>
+				<span class="label">Windows</span>
+				<span>
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-x64.exe">x86-64</a>,
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-arm64.exe">ARM</a>
+				</span>
 			</div>
 
-			<div class="grid-item">
-				<img alt="Reading thumbnails" src="pics/thumbnails.png" class="clickable">
-				<p>Reading mode features thumbnails for page preview. Thumbnails can be enlarged using a gesture or a button.</p>
+			<div class="platform-card">
+				<i class="fa-brands fa-apple brand"></i>
+				<span class="label">macOS</span>
+				<span>
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Apple Silicon</a>,
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Intel</a>
+				</span>
 			</div>
 
-			<div class="grid-item">
-				<img alt="Light/dark mode" src="pics/darktheme.png" class="clickable">
-				<p>Light and dark theme are supported, and different color highlights.</p>
-			</div>
-
-			<div class="grid-item">
-				<img alt="Library filter" src="pics/filter.png" class="clickable">
-				<p>Libraries can be sorted on the fly or filtered by read/unread, reading direction, language.</p>
-			</div>
-
-			<div class="grid-item">
-				<img alt="Offline download" src="pics/download.png" class="clickable">
-				<p>Books can be donwloaded and are available to read even when the server is unreachable.</p>
-			</div>
-
-			<div class="grid-item">
-				<img alt="Series search" src="pics/search.png" class="clickable">
-				<p>Search is global for both series and books, and looks into metadata, summary etc.</p>
-			</div>
-
-			<div class="grid-item">
-				<img alt="Year search" src="pics/yearsearch.png" class="clickable">
-				<p>A special search prefix "y:" will show all the series that have volumes in that date range.</p>
-			</div>
-
-			<div class="grid-item">
-				<img alt="Special tags" src="pics/addblank.png" class="clickable">
-				<p>You can set special book tags in Komga: "no-cover" starts the book with a page spread, "no-blank-page" adds a fake back of the cover image.</p>
+			<div class="platform-card">
+				<i class="fa-brands fa-linux brand"></i>
+				<span class="label">Linux</span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Linux-x86_64.AppImage">Appimage</a></span>
 			</div>
 
 		</div>
+	</div>
 
+	<div class="container">
+
+		<h2>Features Highlights</h2>
+
+		<div class="grid">
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-book-open"></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Rich Experience</span>
+					<span>Read in two spreads with book effects and page turn animation, supports webtoons and reading directions.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-images"></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Page Thumbnails</span>
+					<span>Reader interface features page thumbnails and seek controls.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-rotate"></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Sync Progress</span>
+					<span>Sync reading progress with your server on all devices, even when reading offline.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-magnifying-glass "></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Global Search</span>
+					<span>Search your series and books all in one place; looks into metadata, summary etc.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-download "></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Offline Reading</span>
+					<span>Download your books and read theme wherever you are, even with no connection to the server.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-paint-roller "></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Custom Themes</span>
+					<span>Adapt to your taste with dark and light theme, plus custom color highlights.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-sort "></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Live Sort & Filter</span>
+					<span>Sort your library on the fly or filter by read/unread, reading direction, language etc.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-tag "></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Advanced Tagging</span>
+					<span>Tag your books in Komga: "no-cover" to start with a page spread, "no-blank-page" to add a fake back of the cover.</span>
+				</div>
+			</div>
+
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-database "></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Advanced Metadata</span>
+					<span>Add alternate titles in Komga: "Story" and "Art" to set a series authors, "Time" for series dates</span>
+				</div>
+			</div>
+			<div class="grid-item">
+				<div>
+					<i class="fa-solid fa-magnifying-glass-chart "></i>
+				</div>
+				<div class="grid-text">
+					<span class="label">Advanced Year Search</span>
+					<span>A special search prefix "y:" will show all the series that have volumes in that date range or year.</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<h2>Privacy policy</h2>
+
+		MangaBox does not collect analytics, advertising data, or share any personal or usage data with third parties. See detailed <a href="privacypolicy.html"><span class="label">Privacy Policy</span></a>.
+
+	</div>
+	<!--
 		<h2>Installation notes</h2>
 		<ul>
 			<li>
@@ -400,13 +236,8 @@
 			</li>
 		</ul>
 		</p>
-		<h2>Privacy policy</h2>
-		<ul>
-			<li>
-				MangaBox does not collect analytics, advertising data, or share any personal or usage data with third parties. See detailed <a href="privacypolicy.html">Privacy Policy</a>.
-			</li>
-		</ul>
-		<!-- Lightbox -->
+
+
 		<div id="lightBox">
 			<img id="lightBoxImgNeon" alt="">
 			<img id="lightBoxImg" alt="">
@@ -415,23 +246,23 @@
 		<footer>
 			MangaBox by <a href="https://github.com/zpaolo11x">zpaolo11x</a>. All rights reserved.
 		</footer>
+-->
+	<script>
+		// JavaScript for lightbox functionality
+		const clickableImages = document.querySelectorAll('.clickable');
 
-		<script>
-			// JavaScript for lightbox functionality
-			const clickableImages = document.querySelectorAll('.clickable');
-
-			clickableImages.forEach(img => {
-				img.addEventListener('click', () => {
-					lightBoxImg.src = img.src;
-					lightBoxImgNeon.src = img.src;
-					lightBox.classList.add('active');
-				});
+		clickableImages.forEach(img => {
+			img.addEventListener('click', () => {
+				lightBoxImg.src = img.src;
+				lightBoxImgNeon.src = img.src;
+				lightBox.classList.add('active');
 			});
+		});
 
-			lightBox.addEventListener('click', () => {
-				lightBox.classList.remove('active');
-			});
-		</script>
+		lightBox.addEventListener('click', () => {
+			lightBox.classList.remove('active');
+		});
+	</script>
 	</div>
 
 	<script>
