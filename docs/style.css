@@ -95,6 +95,8 @@
 			padding: 30px;
 			margin-left: auto;
 			margin-right: auto;
+			transition: all 0.3s;
+			border: 1px solid blue;
 		}
 
 		#logo {
@@ -132,6 +134,8 @@
 			width: 450px;
 			height: 100%;
 			z-index: 0;
+			border: 1px solid green;
+
 		}
 
 		#titleBlock {
@@ -143,6 +147,8 @@
 			width: 450px;
 			height: 100%;
 			z-index: 1;
+			border: 1px solid green;
+
 		}
 
 		#splashPicTablet {
@@ -160,8 +166,8 @@
 		}
 
 		#splashPicTablet::after {
-			display:block;
-			content:"";
+			display: block;
+			content: "";
 			width: 100%;
 			height: 100%;
 			background-image: url("frametablet.png");
@@ -186,8 +192,8 @@
 		}
 
 		#splashPicPhone::after {
-			display:block;
-			content:"";
+			display: block;
+			content: "";
 			width: 100%;
 			height: 100%;
 			background-image: url("framephone.png");
@@ -211,9 +217,9 @@
 		}
 
 		.platform-block {
-display: grid;
-				grid-template-columns: repeat(6, calc(1/6*100%));			
-				flex-direction: row;
+			display: grid;
+			grid-template-columns: repeat(6, calc(1/6*100%));
+			flex-direction: row;
 			align-items: center;
 			flex-wrap: nowrap;
 		}
@@ -264,6 +270,7 @@ display: grid;
 			width: 930px;
 			margin: 0px auto;
 			padding: 0px var(--padding-size) var(--padding-size) var(--padding-size);
+			transition: all 0.3s;
 		}
 
 		.title-image {
@@ -276,11 +283,11 @@ display: grid;
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
 			gap: var(--padding-size);
-			/*margin-top: var(--padding-size);*/
+			transition: all 0.3s;
 		}
 
 		.grid-text {
-			display:grid;
+			display: grid;
 			grid-template-rows: 30px auto;
 		}
 
@@ -438,13 +445,62 @@ display: grid;
 		}
 		*/
 
-		@media (max-width: 900px) {
+		@media (max-width: 990px) {
+			#splashScreen {
+				width: 780px;
+				height: 320px;
+				grid-template-columns: 450px 300px;
+			}
+
+			#screensBlock {
+				position: relative;
+				width: 300px;
+				height: 320px;
+				z-index: 0;
+			}
+
+			#titleBlock {
+				height: 320px;
+			}
+
+			.github-badge {
+				top: 0px;
+				right: 0px;
+				left: auto;
+			}
+
+			.container {
+				width: 790px;
+			}
+
+			.platform-block {
+				display: grid;
+				grid-template-columns: repeat(3, calc(1/3*100%));
+				grid-auto-rows: auto;
+				justify-items: center;
+				row-gap: 30px;
+				align-items: center;
+			}
+		}
+
+
+		@media (max-width: 850px) {
 			#splashScreen {
 				grid-template-columns: 1fr;
 				grid-template-rows: auto 500px;
 				width: 450px;
 				height: auto;
 			}
+
+			#screensBlock {
+				width: 450px;
+			}
+
+			#screensBlock {
+				width: 450px;
+				height: 100%;
+			}
+
 
 			.github-badge {
 				top: 0px;
@@ -459,31 +515,30 @@ display: grid;
 			.platform-block {
 				display: grid;
 				grid-template-columns: repeat(3, calc(1/3*100%));
-				/* 3 per row */
 				grid-auto-rows: auto;
-				/* automatically make 2 rows */
 				justify-items: center;
 				row-gap: 30px;
 				align-items: center;
 			}
 
-.grid{
-	grid-template-columns: 1fr;
-}					
+			.grid {
+				grid-template-columns: 1fr;
+			}
 
 		}
 
 
 		@media (max-width: 510px) {
-
-			#logoName{
-				width:var(--minWidth);
+			#logoName {
+				width: var(--minWidth);
 			}
-					#titleClaim{
-				width:var(--minWidth);
-							text-align: center;
-			text-align-last: center;
-			}	
+
+			#titleClaim {
+				width: var(--minWidth);
+				text-align: center;
+				text-align-last: center;
+			}
+
 			#splashScreen {
 				grid-template-columns: 1fr;
 				grid-template-rows: auto var(--minHeight);
@@ -504,15 +559,14 @@ display: grid;
 			.platform-block {
 				display: grid;
 				grid-template-columns: repeat(2, calc(1/2*100%));
-				/* 3 per row */
 				grid-auto-rows: auto;
-				/* automatically make 2 rows */
 				justify-items: center;
 				row-gap: 30px;
 				align-items: center;
 			}
 
-			#screensBlock, #titleBlock{
+			#screensBlock,
+			#titleBlock {
 				width: var(--minWidth);
 			}
 		}
