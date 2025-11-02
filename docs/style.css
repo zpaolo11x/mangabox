@@ -95,8 +95,6 @@
 			padding: 30px;
 			margin-left: auto;
 			margin-right: auto;
-			transition: all 0.3s;
-			border: 1px solid blue;
 		}
 
 		#logo {
@@ -134,7 +132,6 @@
 			width: 450px;
 			height: 100%;
 			z-index: 0;
-			border: 1px solid green;
 
 		}
 
@@ -147,7 +144,6 @@
 			width: 450px;
 			height: 100%;
 			z-index: 1;
-			border: 1px solid green;
 
 		}
 
@@ -188,7 +184,6 @@
 			background-size: 95% 98%;
 			border-radius: 15% / 10%;
 			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
-
 		}
 
 		#splashPicPhone::after {
@@ -204,7 +199,7 @@
 
 		.github-badge {
 			position: absolute;
-			bottom: 0px;
+			top: 0px;
 			left: 0px;
 			/*
 			float: right;
@@ -270,7 +265,6 @@
 			width: 930px;
 			margin: 0px auto;
 			padding: 0px var(--padding-size) var(--padding-size) var(--padding-size);
-			transition: all 0.3s;
 		}
 
 		.title-image {
@@ -283,7 +277,6 @@
 			display: grid;
 			grid-template-columns: repeat(2, 1fr);
 			gap: var(--padding-size);
-			transition: all 0.3s;
 		}
 
 		.grid-text {
@@ -439,6 +432,74 @@
 			margin-bottom: 10px;
 		}
 
+		#carouselContainer{
+			width: 100%;
+			overflow-x: scroll;
+		}
+		
+		#imageCarousel{
+			display:grid;
+			grid-template-columns: 90% auto auto auto auto auto;
+			gap: 30px;
+		}
+
+		.gallery-tablet-landscape {
+			height: 100%;
+			aspect-ratio: 2577 / 1859;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 92%;
+			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
+		}
+
+		.gallery-tablet-landscape::after {
+			display: block;
+			content: "";
+			width: 100%;
+			height: 100%;
+			background-image: url("frametabletlandscape.png");
+			background-repeat: none;
+			background-size: cover;
+		}
+
+		.gallery-tablet-portrait {
+			height: 100%;
+			aspect-ratio: 1859 / 2577;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 92%;
+			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
+		}
+
+		.gallery-tablet-portrait::after {
+			display: block;
+			content: "";
+			width: 100%;
+			height: 100%;
+			background-image: url("frametablet.png");
+			background-repeat: none;
+			background-size: cover;
+		}
+
+		.gallery-phone-portrait {
+			height: 100%;
+			aspect-ratio: 818 / 1686;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-size: 95% 98%;
+			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
+			border-radius: 15% / 10%;
+		}
+
+		.gallery-phone-portrait::after {
+			display: block;
+			content: "";
+			width: 100%;
+			height: 100%;
+			background-image: url("framephone.png");
+			background-repeat: none;
+			background-size: cover;
+		}
 		/*
 		p {
 			overflow: hidden;
@@ -447,33 +508,44 @@
 
 		@media (max-width: 990px) {
 			#splashScreen {
-				width: 780px;
-				height: 320px;
-				grid-template-columns: 450px 300px;
+				width: calc(100vw - 2 * var(--padding-size));
+				height: auto;
+				grid-template-columns: 1fr 1fr;
 			}
 
 			#screensBlock {
 				position: relative;
-				width: 300px;
-				height: 320px;
+				width: 100%;
+				height: auto;
 				z-index: 0;
+				aspect-ratio: 450 / 500;
 			}
 
 			#titleBlock {
-				height: 320px;
+				width: 100%;
+				height: 100%;
 			}
 
-			.github-badge {
-				top: 0px;
-				right: 0px;
-				left: auto;
+			#logoName {
+				width: 100%;
 			}
+
+			#titleClaim {
+				width: 100%;
+				text-align: center;
+				text-align-last: center;
+			}
+
 
 			.container {
-				width: 790px;
+				width: calc(100vw - 2 * var(--padding-size));
 			}
 
-			.platform-block {
+		}
+
+		@media (max-width: 800px) {
+
+					.platform-block {
 				display: grid;
 				grid-template-columns: repeat(3, calc(1/3*100%));
 				grid-auto-rows: auto;
@@ -482,8 +554,14 @@
 				align-items: center;
 			}
 		}
+			
+		@media (max-width: 600px) {
+				.grid {
+				grid-template-columns: 1fr;
+			}		
+		}
 
-
+			/*
 		@media (max-width: 850px) {
 			#splashScreen {
 				grid-template-columns: 1fr;
@@ -527,8 +605,8 @@
 
 		}
 
-
-		@media (max-width: 510px) {
+		*/
+				@media (max-width: 600px) {
 			#logoName {
 				width: var(--minWidth);
 			}
@@ -546,15 +624,20 @@
 				height: auto;
 			}
 
-			.github-badge {
-				top: 0px;
-				right: 0px;
-				left: auto;
-			}
 
 			.container {
 				width: var(--minWidth);
 			}
+
+
+			#screensBlock,
+			#titleBlock {
+				width: var(--minWidth);
+			}
+		}
+
+
+		@media (max-width: 510px) {
 
 			.platform-block {
 				display: grid;
@@ -565,8 +648,5 @@
 				align-items: center;
 			}
 
-			#screensBlock,
-			#titleBlock {
-				width: var(--minWidth);
-			}
 		}
+
