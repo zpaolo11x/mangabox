@@ -36,7 +36,7 @@
 			"!z_*.*",
 			"!stores/**/*",
 			"!docs/**/*",
-			"!docs_x/**/*",
+			"!docs_old/**/*",
 			"!capacitor*",
 			"package-main.js",
 			"package-preload.js",

@@ -5,10 +5,11 @@ Main UI
 - Changed main font from Roboto to Outfit
 
 Reader UI
-- Reader zoom levels are saved on device, not on server
+- Reader zoom levels are saved per device, not per server
 
 Build
+- Removed titlebar coloring for PWA build
 - Updated documentation
 
 Fixes
-- Fxied size increase in Electron apps
+- Fxied executable size increase in Electron apps
