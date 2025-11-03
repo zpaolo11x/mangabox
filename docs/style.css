@@ -367,9 +367,23 @@
 		
 		#imageCarousel{
 			display:grid;
-			grid-template-columns: 90% auto auto auto auto auto;
+			grid-template-columns: auto auto auto auto auto auto;
+			grid-template-rows: calc(max(min(80vw * 3 / 4, 600px), 400px)) 60px;
 			gap: 30px;
+			row-gap: 5px;
 			margin-bottom:20px;
+		}
+		
+#imageCarousel > div:nth-child(odd) {
+  grid-row: 1;
+}
+
+#imageCarousel > div:nth-child(even) {
+  grid-row: 2;
+}
+		.carousel-note {
+			font-size:20px;
+			text-align: center;
 		}
 
 		.gallery-tablet-landscape {
