@@ -1,24 +1,53 @@
-#loginScreen {
+.logo-pattern {
 	position: fixed;
 	left: 0;
 	right: 0;
-	top: var(--mb-drag-bar-height);
+	top: 0;
 	bottom: 0;
-	background: linear-gradient(to bottom, white, #f5f5f5);
-	z-index: 5000;
+	background-image: 
+	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
+	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
+	var(--mb-login-gradient);
+	
+	background-repeat: repeat, repeat, no-repeat;
+	background-size: 800px 200px, 800px 200px, cover;
+	background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
 }
 
-.version-note{
-	width:100%;
-	text-align:right;
+#loginScreen {
+	z-index: 5000;
+	transition: background-color 0.3s;
+}
+
+.version-note {
+	width: 100%;
+	text-align: right;
 	font-size: 13px;
-	margin-right:5px;
-	color:#303030;
+	margin-right: 5px;
+}
+
+#logoName {
+	max-width:300px;
+	width:100%;
+	margin-bottom: 5px;
+	filter:invert(var(--mb-login-logo));
+}
+
+#logoIcon {
+	max-width: 90px;
 }
 
 .dialog {
+	max-height: calc(100vh - 50px);
+	overflow-y:scroll;
+	overflow-x:hidden;
+	max-width: 300px;
+	min-width: 180px;
+	width: calc(100% - 100px);
+
 	padding: 0px;
 	margin: 0px;
+	
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -27,14 +56,24 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 
-	border: 1px solid #ccc;
+	border: 1px solid var(--mb-login-border-color);
 
 	padding: var(--mb-dialog-padding);
 	border-radius: var(--mb-dialog-box-radius);
-	background-color: #fff;
+	background-color: var(--mb-card-color);
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+	transition: background-color 0.3s;
 }
 
+.dialog {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE & Edge (legacy) */
+}
+
+.dialog::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and new Edge */
+}
 
 .login-input {
 	-webkit-appearance: none;
@@ -42,7 +81,7 @@
 	appearance: none;
 	border: none;
 	outline: none;
-	background: none;
+	background: var(--mb-input-color);
 	padding: 0;
 	margin: 0;
 	box-shadow: none;
@@ -51,11 +90,11 @@
 
 	box-sizing: border-box;
 	height: var(--mb-dialog-button-height);
-	width: 300px;
+	width: 100%;
 	border-radius: var(--mb-dialog-button-radius);
-	border: 1px #c0c0c0 solid;
+	border: 1px var(--mb-login-border-color) solid;
 	padding-left: calc(var(--mb-dialog-button-height) + 5px);
-	
+
 	padding-right: 10px;
 	font-size: var(--mb-dialog-font-size);
 
@@ -75,24 +114,29 @@
 	margin: 0px;
 	padding: 0px;
 	display: grid;
-	grid-template-columns: auto 120px;
-	width: 300px;
+grid-template-columns: auto minmax(60px, 1fr);
+	width: 100%;
 	gap: var(--mb-dialog-padding);
-
+	
 }
 
 .login-button {
 	margin: 0px;
 	appearance: none;
-	background: #ddd;
-	border: 1px solid #aaa;
-	border-radius:var(--mb-dialog-button-radius);
+	background: var(--mb-login-button-color);
+	border: 1px solid var(--mb-login-border-color);
+	border-radius: var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
-	width: 100%;
+	width:100%;
+	margin-right: 0px;
+	margin-left: auto;
+	max-width:120px;
 	margin-top: var(--mb-dialog-padding);
 	transition: 0.3s all;
-	color: black;
 	font-size: var(--mb-dialog-font-size);
+	font: inherit;
+	color: inherit;
+
 }
 
 .login-button:hover {
@@ -111,7 +155,7 @@
 }
 
 .error-message {
-	width:300px;
+	width: 100%;
 	color: red;
 	font-size: var(--mb-dialog-font-size);
 	margin-top: 10px;
@@ -122,8 +166,8 @@
 	display: flex;
 	align-items: center;
 	margin-top: var(--mb-dialog-padding);
-	width: 100%;
 	/* Match the width of input boxes */
+	min-width: 50px;
 }
 
 .remember-me-checkbox {
@@ -131,9 +175,11 @@
 	/* Remove the default checkbox appearance */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
-	border: 1px solid #c0c0c0;
+		min-width: var(--mb-dialog-button-height);
+	min-height: var(--mb-dialog-button-height);
+	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
-	background: #fff;
+	background: var(--mb-login-button-color);
 	/* Default white background */
 	margin: 0px 5px 0px 0px;
 	position: relative;
@@ -175,9 +221,12 @@
 }
 
 .remember-me-label {
+	min-width: 20px;
 	font-size: var(--mb-dialog-font-size);
-	color: #555;
 	cursor: pointer;
+		overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 	/* Matches cursor with checkbox */
 }
 
@@ -193,14 +242,14 @@
 	position: absolute;
 	left: 0px;
 	top: 0px;
-	color: #555;
+	color: var(--mb-glyph-color);
 	/* White icon color */
-	background-color: #ddd;
+	background-color: var(--mb-login-button-color);
 	/* Accent color */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
 	border-radius: var(--mb-dialog-button-radius) 0px 0px var(--mb-dialog-button-radius);
-	border: 1px solid #aaa;
+	border: 1px solid var(--mb-login-border-color);
 	border-right: transparent;
 	display: flex;
 	align-items: center;
@@ -213,7 +262,6 @@
 
 .input-wrapper:hover i {
 	border-color: var(--mb-accent);
-	background-color: #ddd;
 }
 
 .input-wrapper:focus-within i {

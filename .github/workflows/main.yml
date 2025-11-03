@@ -8,6 +8,7 @@ on:
       - devtest_*
     paths-ignore:
       - "docs/**"
+      - "docs_old/**"
 
 jobs:
   version:
@@ -173,9 +174,12 @@ jobs:
                     --exclude='*.yml' \
                     --exclude='package*.*' \
                     --exclude='electron/' \
+                    --exclude='stores/' \
                     --exclude='assets/' \
                     --exclude='z_*' \
+                    --exclude='z_*.*' \
                     --exclude='docs/' \
+                    --exclude='docs_old/' \
                     --exclude='capacitor*' \
                     ./ webdeploy/mangabox
 

@@ -1,20 +1,15 @@
 Main UI
-- Enabled download books functionality for offline reading
-- Added new Offline Books toolbar button to see all downloaded books
-- Automatically resume interrupted book downloads at startup
-- Caching of web requests so the UI is consistent when offline
-- Caching of viewed thumbnails for offline browsing
-- Clear cached media and data storage when logging out of server
-- Visual indicator when the sessoin is valid but the server is not reachable
+- Restyled download progress indicator
+- New light and dark theme for login screen
+- Smoother login and logout transitions without complete reload
+- Changed main font from Roboto to Outfit
 
 Reader UI
-- New color scheme that keeps the theme page color as reader background
-- Added zoom congrol for book reading, useful to avoid single page switch
+- Reader zoom levels are saved per device, not per server
 
 Build
-- Udated App Id
-- Added privacy policy to web documentation
+- Removed titlebar coloring for PWA build
+- Updated documentation
 
 Fixes
-- Fixed smooth theme transition from light to dark
-- Moved prev and next book dialog away from other UI items
+- Fxied executable size increase in Electron apps

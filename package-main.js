@@ -1,11 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const keytar = require('keytar'); // ✅ keytar used here for secure token deletion
+const keytar = require('keytar'); // keytar used here for secure token deletion
 const fs = require('fs/promises');
 const os = require('os');
 
 let mainWindow;
-let rememberMe = false; // ✅ Track remember-me state
+let rememberMe = false; // Track remember-me state
 
 app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
 
@@ -20,7 +20,7 @@ app.on('ready', async () => {
 		autoHideMenuBar: true,
 		frame: false,         // Disable the default window frame
 		titleBarStyle: 'hidden', // Optional: macOS specific
-		trafficLightPosition: { x: -1000, y: 0 }, // ✅ hide traffic lights (move them offscreen)
+		trafficLightPosition: { x: -1000, y: 0 }, // hide traffic lights (move them offscreen)
 		titleBarOverlay: false,
 
 		webPreferences: {
@@ -28,7 +28,7 @@ app.on('ready', async () => {
 			nodeIntegration: false,
 			contextIsolation: true,
 			allowRunningInsecureContent: true,
-			sandbox: false // ⬅️ this is the critical fix
+			sandbox: false // this is the critical fix
 		},
 	});
 
@@ -72,7 +72,7 @@ app.on('ready', async () => {
 		return app.getVersion(); // This uses the version from package.json
 	});
 
-	// ✅ Receive rememberMe status from renderer
+	// Receive rememberMe status from renderer
 	ipcMain.on('remember-me-state', async (_, value) => {
 		rememberMe = value;
 		if (value) {
@@ -87,24 +87,24 @@ app.on('ready', async () => {
 	/* 
 	 mainWindow.webContents.on('did-navigate', (_, url) => {
 	  if (url.includes('bookread')) {
-		 // ✅ Enable pinch-to-zoom only when URL contains "reader.html"
+		 // Enable pinch-to-zoom only when URL contains "reader.html"
 		 mainWindow.webContents.setVisualZoomLevelLimits(1, 5);
 	  } else {
-		 // ❌ Disable pinch-to-zoom for other pages
+		 // Disable pinch-to-zoom for other pages
 		 mainWindow.webContents.setVisualZoomLevelLimits(1, 1);
 	  }
 	});
 	*/
 });
 
-// ✅ Secure token cleanup if rememberMe is false
+// Secure token cleanup if rememberMe is false
 app.on('before-quit', async () => {
 	if (!rememberMe) {
 		try {
 			await keytar.deletePassword('MangaBox', 'auth');
-			console.log("🔒 Token deleted on app quit (rememberMe was false).");
+			console.log("Token deleted on app quit (rememberMe was false).");
 		} catch (err) {
-			console.error("⚠️ Failed to delete token:", err);
+			console.error("Failed to delete token:", err);
 		}
 	}
 });
@@ -118,8 +118,6 @@ app.on('window-all-closed', () => {
 ipcMain.handle('get-offline-book-data', async (_, bookId) => {
 	try {
 		const bookPath = path.join(app.getPath('userData'), 'offline-books', bookId);
-
-		console.log("***" + bookPath);
 
 		const bookMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-book.json'), 'utf-8'));
 		const pagesMetadata = JSON.parse(await fs.readFile(path.join(bookPath, 'metadata-pages.json'), 'utf-8'));
@@ -184,43 +182,43 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 	try {
 
-		console.log('🌐 Downloading book metadata for', bookId);
+		console.log('Downloading book metadata for', bookId);
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
-		console.log('🌐 Fetch response status:', res.status);
+		console.log('Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-		// ✅ Get JSON from Komga
+		// Get JSON from Komga
 		const bookMeta = await res.json();
-		// ✅ Save the full metadata to the folder
+		// Save the full metadata to the folder
 		const bookMetaPath = path.join(bookFolder, 'metadata-book.json');
 		await fs.writeFile(bookMetaPath, JSON.stringify(bookMeta, null, 2));
-		console.log('💾 Book metadata saved to', bookMetaPath);
+		console.log('Book metadata saved to', bookMetaPath);
 
 
-		console.log('🌐 Downloading series metadata for', bookId);
+		console.log('Downloading series metadata for', bookId);
 		res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
-		console.log('🌐 Fetch response status:', res.status);
+		console.log('Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-		// ✅ Get JSON from Komga
+		// Get JSON from Komga
 		const seriesMeta = await res.json();
-		// ✅ Save the full metadata to the folder
+		// Save the full metadata to the folder
 		const seriesMetaPath = path.join(bookFolder, 'metadata-series.json');
 		await fs.writeFile(seriesMetaPath, JSON.stringify(seriesMeta, null, 2));
-		console.log('💾 Series metadata saved to', seriesMetaPath);
+		console.log('Series metadata saved to', seriesMetaPath);
 
 
-		console.log('🌐 Downloading pages metadata for', bookId);
+		console.log('Downloading pages metadata for', bookId);
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
-		console.log('🌐 Fetch response status:', res.status);
+		console.log('Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-		// ✅ Get JSON from Komga
+		// Get JSON from Komga
 		const pagesMeta = await res.json();
-		// ✅ Save the full metadata to the folder
+		// Save the full metadata to the folder
 		const pagesMetaPath = path.join(bookFolder, 'metadata-pages.json');
 		await fs.writeFile(pagesMetaPath, JSON.stringify(pagesMeta, null, 2));
-		console.log('💾 Book metadata saved to', pagesMetaPath);
+		console.log('Book metadata saved to', pagesMetaPath);
 
 		const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
-		console.log(`⬇️ Downloading book thumbnail`);
+		console.log(`Downloading book thumbnail`);
 		res = await fetch(thumbUrl, requestData);
 		if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
 		const buffer = Buffer.from(await res.arrayBuffer());
@@ -239,13 +237,13 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 			if (!pageExists) {
 				const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
-				console.log(`⬇️ Downloading page ${page.number}...`);
+				console.log(`Downloading page ${page.number}...`);
 				const res = await fetch(pageUrl, requestData);
 				if (!res.ok) throw new Error(`Failed to fetch page ${page.number}: ${res.status}`);
 				const buffer = Buffer.from(await res.arrayBuffer());
 				await fs.writeFile(pageFile, buffer);
 			} else {
-				console.log(`✅ Page ${page.number} already exists, skipping.`);
+				console.log(`Page ${page.number} already exists, skipping.`);
 			}
 
 			let thumbExists = false;
@@ -256,13 +254,13 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 			if (!thumbExists) {
 				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
-				console.log(`⬇️ Downloading thumb ${page.number}...`);
+				console.log(`Downloading thumb ${page.number}...`);
 				const res2 = await fetch(thumbUrl, requestData);
 				if (!res2.ok) throw new Error(`Failed to fetch thumbnail ${page.number}: ${res.status}`);
 				const buffer2 = Buffer.from(await res2.arrayBuffer());
 				await fs.writeFile(thumbFile, buffer2);
 			} else {
-				console.log(`✅ Thumb ${page.number} already exists, skipping.`);
+				console.log(`Thumb ${page.number} already exists, skipping.`);
 			}
 
 			completed++;
@@ -274,7 +272,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			});
 		}
 
-		console.log(`📕 Downloaded and stored book: ${bookTitle} (${bookId})`);
+		console.log(`Downloaded and stored book: ${bookTitle} (${bookId})`);
 		win.webContents.send('download-complete', {
 			bookId,
 			completed,
@@ -283,7 +281,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 		return { ok: true, path: bookFolder };
 	} catch (err) {
-		console.error('❌ Download failed:', err);
+		console.error('Download failed:', err);
 		return { ok: false, error: err.message };
 	}
 });

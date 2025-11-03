@@ -11,6 +11,10 @@
 	--mb-accent-a50: hsla(var(--mb-h), var(--mb-s), var(--mb-l), 0.5);
 	--mb-accent-dark: hsl(var(--mb-h), var(--mb-s), 40%);
 
+	--mb-darkred: hsl(348, 92%, 22%);
+	--mb-darkred2: hsl(348, 89%, 12%);
+	--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred), var(--mb-darkred2));
+
 	--mb-area-padding: 20px;
 	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), env(safe-area-inset-left)));
 	--mb-area-safe-padding-right: calc(max(var(--mb-area-padding), env(safe-area-inset-right)));
@@ -70,6 +74,7 @@
 	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
 
 	--mb-reader-scale: 100;
+	--mb-webtoon-scale: 100;
 
 	/*//TODO questa ha transform 0.15 ma alcune hanno transform 0.2*/
 	--mb-button-transition:
@@ -128,13 +133,26 @@
 
 }
 
+[fader-theme="light"] {
+	--mb-fader-color: var(--mb-login-gradient);
+}
+[fader-theme="dark"] {
+	--mb-fader-color: var(--mb-login-gradient);
+}
+
 [data-theme="light"] {
+	--mb-test-color:blue;
+
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
 	--mb-card-color-alpha: #ffffff65;
+
+	--mb-login-border-color:#c0c0c0;
+	--mb-login-button-color:#e0e0e0;
+	--mb-login-logo:0.20;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
@@ -155,12 +173,20 @@
 }
 
 [data-theme="dark"] {
+		--mb-test-color:green;
+
+
 	--mb-page-color: #202020;
 	--mb-card-color: #353535;
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
 	--mb-card-color-alpha: #35353565;
+
+	--mb-login-border-color:#707070;
+	--mb-login-button-color:#505050;
+	--mb-login-logo:0.95;
+
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
@@ -180,19 +206,13 @@
 		0 2px 2px rgba(255, 255, 255, 0.0);
 }
 
-
-
-/*
-@font-face {
-	font-family: 'Roboto Flex';
-	src: url('./webfonts/RobotoFlex.woff2') format('woff2');
-	src: url('./webfonts/RobotoFlex.ttf') format('truetype');
-	src: url('./webfonts/roboto-flex-v27-latin-regular.woff2') format('woff2');
+ @font-face {
+	font-family: 'Outfit';
+	src: url('./webfonts/Outfit-VariableFont_wght.ttf') format('truetype');
 	font-weight: 100 1000;
 	font-display: swap;
 	font-style: normal;
  }
-*/
 
 * {
 	user-select: none;
@@ -389,7 +409,7 @@ body {
 	display: none;
 	pointer-events: none;
 	position: fixed;
-	z-index: 10000;
+	z-index: 20000;
 	font-size: 15px;
 	color: white;
 	font-family: 'Courier New', Courier, monospace;
@@ -430,7 +450,7 @@ body {
 }
 
 body {
-	font-family: 'Roboto Flex', sans-serif;
+	font-family: 'Outfit', sans-serif;
 	margin: 0;
 	padding: 0;
 	background: var(--mb-card-color);
@@ -480,7 +500,7 @@ a {
 	left: 0;
 	right: 0;
 	height: var(--mb-drag-bar-height);
-	z-index: 3000;
+	z-index: 5002;
 	background-color: var(--mb-card-color);
 	display: flex;
 	flex-direction: column;
@@ -489,6 +509,15 @@ a {
 	transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 	/*bgcolor was 0.1s ease*/
 	/*border-bottom:1px red solid;*/
+}
+
+#dragbar.onLogin {
+	background-color: transparent;
+	color:white;
+	transition: background-color 0.3s;
+}
+#dragbar.onLogin #windowControls span {
+color:white;
 }
 
 #dragbar.onReader {
@@ -838,21 +867,35 @@ a {
 #downloadSpinner {
 	display: none;
 	position: absolute;
-	box-sizing: border-box;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	border: 5px solid var(--mb-accent);
-	min-width: calc(var(--mb-button-size) - 2px);
-	height: calc(var(--mb-button-size) - 2px);
+	min-width: var(--mb-button-size);
+	height: var(--mb-button-size);
 	z-index: 10;
 	border-radius: 50%;
-	border-style: dotted;
 	transition: border-color 0.3s;
+	padding: 0;
+	margin: 0;
+	display: none;
+	place-items: center;
+}
+
+#downloadSpinner span {
+	grid-area: 1 / 1; /* makes them all overlap */
+	font-size: 38px;
+	width: 100%;
+	height: 100%;
+	line-height: var(--mb-button-size);
+	text-align: center;
+}
+
+#downloadSpinner span.layer{
+	transform: scaleX(-1);
 }
 
 #downloadSpinner.spin {
-	display: flex;
+	display: grid;
 	animation: spin 10s linear infinite, cycle 1s ease infinite alternate;
 }
 
@@ -1356,7 +1399,8 @@ a {
 	border-radius: var(--mb-cover-radius) var(--mb-cover-radius) 0px var(--mb-cover-radius);
 	font-size: 40px;
 	transition: bottom 0.3s;
-	text-shadow: rgba(0, 0, 0, 0.5) 0px 2px 6px
+	text-shadow: rgba(0, 0, 0, 0.5) 0px 2px 6px;
+	color: white;
 }
 
 .book-downloader.done {
@@ -1651,7 +1695,7 @@ a {
 	background-color: var(--mb-card-color);
 	text-align: left;
 	cursor: pointer;
-	font-size: 0.9em;
+	font-size: 0.9em; /*XXX NOT USED XXX*/
 	margin: 0;
 	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
@@ -1796,6 +1840,7 @@ book-item {
 	font-weight: 500;
 	padding-top: 8px;
 	padding-bottom: 0px;
+	font-size: 15px; /*XXX MAGARI 14.5px XXX*/
 }
 
 .info-row {
@@ -2034,6 +2079,18 @@ span.mini-title {
 
 .hidestrip {
 	opacity: 0;
+}
+
+#fader {
+
+	opacity: 1;
+	transition: opacity 0.3s linear 0.3s, background-color 0.3s ease;
+	pointer-events: none;
+	z-index:12000;
+}
+
+#fader.hidden{
+	opacity:0;
 }
 
 #blanker {

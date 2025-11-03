@@ -15,8 +15,6 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
-
 
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="manifest" href="manifest.json">
@@ -27,6 +25,12 @@
 	<link rel="stylesheet" href="style-mangabox-blankstart.css">
 	<link rel="stylesheet" href="style-mangabox-main.css">
 	<link rel="stylesheet" href="style-mangabox-reader.css">
+
+	<script>
+		let mbPrefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+		let toDark = mbPrefersDarkMode.matches ? true : false
+		document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
+	</script>
 
 </head>
 
@@ -55,7 +59,10 @@
 						<div class="button-wrapper">
 							<span class="fa-solid fa-download glyph-dark"></span>
 						</div>
-						<div id="downloadSpinner" class="download-overlay"></div>
+						<div id="downloadSpinner" class="download-overlay">
+							<span class="fa-solid fa-spinner glyph-dark mb-accent"></span>
+							<span class="fa-solid fa-spinner glyph-dark mb-accent layer"></span>
+						</div>
 					</li>
 					<li id="searchField" title="Search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
@@ -251,7 +258,7 @@
 		<div id="toRightPage"></div>
 	</div>
 
-	<div id="dragbar" class="draggable">
+	<div id="dragbar" class="draggable onLogin">
 		<img id="barLogo" src="logo/mangabox-logo-new-favicon.svg">
 
 		<!--<img id="barLogo" src="logo/mangabox-logo-new.svg">-->
@@ -263,11 +270,11 @@
 		</div>
 	</div>
 
-	<div id="loginScreen" class="auth-hidden">
+	<div id="loginScreen" class="auth-hidden logo-pattern">
 		<div id="loginDialog" class="dialog">
-			<img src="logo/mangabox-logo-new.svg" width="90px" height="90px">
-			<img src="logo/mangabox-logoname.svg" width="300px" style="opacity:0.7; margin-bottom:5px;">
-			<div class="version-note">v0.2.8</div>
+			<img id="logoIcon" src="logo/mangabox-logo-new.svg">
+			<img id="logoName" src="logo/mangabox-logoname.svg">
+			<div class="version-note">v0.2.9</div>
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
 				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
@@ -302,6 +309,8 @@
 
 		</div>
 	</div>
+
+	<div id="fader" class="logo-pattern"></div>
 
 	<div id="debuggerObj"></div>
 
@@ -344,6 +353,7 @@
 		}
 
 		debugPrint("enabledownload" + enableDownload)
+
 	</script>
 
 	<script src="script-auth.js"></script>
@@ -654,120 +664,121 @@
 		}
 
 		//MB Main Variable Setup 
-
-		// Main MangaBox data structure, for variables that are common to the whole app
-		let mb = {
-
-			libMenuVisible: null,
-			swatchMenuVisible: false,
-
-			baseUrl: localStorage.getItem('mbBaseUrl'),
-			authToken: false,
-
-			basePath: '', //'/mangabox/'
-			darkTheme: false,
-
-			// Scaling of selected item control
-			currentlyScaled: null,
-
-			// Current book references for book details
-			currentBook: null,
-			seriesData: null,
-			prevBook: null,
-			nextBook: null,
-
-			// Screen aspect ratio functions
-			screenAR: getScreenAR(),
-			readerMaxRatio: 1,
-			readerHorizontal: true,
-			resizeTimeout: null,
-
-			// Filter table placeholders
-			filterTable: null,
-			filterButtons: null,
-			filterSizer: null,
-
-			libraryMenuButtons: {},
-
-			libSizer: {}, // Used to calculate libraries button size
-			dashboardBin: '',
-			/*
-				When an item from a bin is opened, the mb.dashboardBin is set, so when the dashboard is reloaded
-				it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
-				In this way subsequent clicks on dashboard button will load the top position.
-				This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
-			*/
-
-			// Theme management variables
-			themeControl: [
+		function initMB() {
+			return (
 				{
-					label: 'Light theme',
-					icon: 'fa-sun',
-					isDark: 0
-				}, {
-					label: 'Dark theme',
-					icon: 'fa-moon',
-					isDark: 1
-				}, {
-					label: 'System theme',
-					icon: 'fa-wand-magic-sparkles',
-					isDark: 2
+					libMenuVisible: null,
+					swatchMenuVisible: false,
+
+					baseUrl: localStorage.getItem('mbBaseUrl'),
+					authToken: false,
+
+					basePath: '', //'/mangabox/'
+					darkTheme: false,
+
+					// Scaling of selected item control
+					currentlyScaled: null,
+
+					// Current book references for book details
+					currentBook: null,
+					seriesData: null,
+					prevBook: null,
+					nextBook: null,
+
+					// Screen aspect ratio functions
+					screenAR: getScreenAR(),
+					readerMaxRatio: 1,
+					readerHorizontal: true,
+					resizeTimeout: null,
+
+					// Filter table placeholders
+					filterTable: null,
+					filterButtons: null,
+					filterSizer: null,
+
+					libraryMenuButtons: {},
+
+					libSizer: {}, // Used to calculate libraries button size
+					dashboardBin: '',
+					/*
+						When an item from a bin is opened, the mb.dashboardBin is set, so when the dashboard is reloaded
+						it reads this variable, if it is not "" the focus is shifted to the bin, and the variable is cleared.
+						In this way subsequent clicks on dashboard button will load the top position.
+						This variable is cleared whenever a new "Navigate To" is called that is not to dashboard
+					*/
+
+					// Theme management variables
+					themeControl: [
+						{
+							label: 'Light theme',
+							icon: 'fa-sun',
+							isDark: 0
+						}, {
+							label: 'Dark theme',
+							icon: 'fa-moon',
+							isDark: 1
+						}, {
+							label: 'System theme',
+							icon: 'fa-wand-magic-sparkles',
+							isDark: 2
+						}
+					],
+
+					readerThemeControl: [
+						{
+							label: 'Classic theme',
+							icon: 'fa-palette',
+							style: 'classic'
+						}, {
+							label: 'Dark accent',
+							icon: 'fa-moon',
+							style: 'dark-accent'
+						}, {
+							label: 'Light accent',
+							icon: 'fa-sun',
+							style: 'light-accent'
+						}, {
+							label: 'Transparent',
+							icon: 'fa-square',
+							style: 'transparent'
+						}, {
+							label: 'White',
+							icon: 'fa-w',
+							style: 'white'
+						}, {
+							label: 'Black',
+							icon: 'fa-b',
+							style: 'black'
+						}
+					],
+
+					swatchesHi: getComputedStyle(document.documentElement)
+						.getPropertyValue('--mb-swatches-hi')
+						.match(/hsl\([^)]*\)/g)
+						.map(swatch => swatch.match(/(\d+%?)/g)),
+
+					swatchesLo: getComputedStyle(document.documentElement)
+						.getPropertyValue('--mb-swatches-lo')
+						.match(/hsl\([^)]*\)/g)
+						.map(swatch => swatch.match(/(\d+%?)/g)),
+
+					// Media Cache
+					mediaCacheRAM: new Map(), 	//Media cache table structure
+					cacheLimitRAM: 250,			//Limit of items in media cache
+
+					clickingTile: null,
+					pointerItem: null,
+
+					webtoonScale: 100,
+					readerScale: 100,
+
+					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
+
 				}
-			],
-
-			readerThemeControl: [
-				{
-					label: 'Classic theme',
-					icon: 'fa-palette',
-					style: 'classic'
-				}, {
-					label: 'Dark accent',
-					icon: 'fa-moon',
-					style: 'dark-accent'
-				}, {
-					label: 'Light accent',
-					icon: 'fa-sun',
-					style: 'light-accent'
-				}, {
-					label: 'Transparent',
-					icon: 'fa-square',
-					style: 'transparent'
-				}, {
-					label: 'White',
-					icon: 'fa-w',
-					style: 'white'
-				}, {
-					label: 'Black',
-					icon: 'fa-b',
-					style: 'black'
-				}
-			],
-
-			swatchesHi: getComputedStyle(document.documentElement)
-				.getPropertyValue('--mb-swatches-hi')
-				.match(/hsl\([^)]*\)/g)
-				.map(swatch => swatch.match(/(\d+%?)/g)),
-
-			swatchesLo: getComputedStyle(document.documentElement)
-				.getPropertyValue('--mb-swatches-lo')
-				.match(/hsl\([^)]*\)/g)
-				.map(swatch => swatch.match(/(\d+%?)/g)),
-
-			// Media Cache
-			mediaCacheRAM: new Map(), 	//Media cache table structure
-			cacheLimitRAM: 250,			//Limit of items in media cache
-
-			prefersDarkMode: window.matchMedia('(prefers-color-scheme: dark)'),
-
-			clickingTile: null,
-			pointerItem: null,
-
-			webtoonScale: 100,
-			readerScale: 100,
-
-			offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
-
+			)
 		}
+		// Main MangaBox data structure, for variables that are common to the whole app
+		let mb = initMB();
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
 		const colorValues = getComputedStyle(document.documentElement)
@@ -978,18 +989,18 @@
 			});
 		}
 
-		function updatePWABar(color = null) {
-			document.querySelector('meta[name="theme-color"]')
-				.setAttribute('content', color ?? (mb.darkTheme ? '#353535' : '#ffffff'));
+		function changeLoginTheme(toDark) {
+			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 		}
 
 		function changeTheme() {
+
 			let toDark = false;
 
 			if (mb.themePrefs != 2) {
 				toDark = (mb.themePrefs == 1)
 			} else {
-				toDark = mb.prefersDarkMode.matches ? true : false
+				toDark = mbPrefersDarkMode.matches ? true : false
 			}
 
 			// Set css theme to dark or light
@@ -1011,13 +1022,17 @@
 
 			mb.darkTheme = toDark;
 
-			//Ttheme based top bar
-			updatePWABar();
-
 			applyAccent(); //TODO Maybe this substitutes other accent color changes?
 		}
 
-		mb.prefersDarkMode.addEventListener('change', changeTheme);
+
+		mbPrefersDarkMode.addEventListener('change', () => {
+			if (isLoginScreenHidden()) {
+				changeTheme()
+			} else {
+				changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
+			}
+		});
 
 		// Show/Hide section functions
 		function sectionHide(item) {
@@ -1083,6 +1098,9 @@
 
 		logOut.addEventListener('click', async () => {
 
+			navigateTo('#dashboard');
+			await executeFaderGradient(1);
+
 			try {
 				if (mb.baseUrl) {
 					await fetch(`${mb.baseUrl}/api/logout`, {
@@ -1099,12 +1117,11 @@
 				// We continue cleanup anyway
 			}
 
+
 			if (isElectron) await deleteToken();
 
-			sectionHide(stickyContainer);
-			sectionShow(blanker);
-
-			history.pushState(null, '', mb.basePath);
+			//sectionHide(stickyContainer);
+			//sectionShow(blanker);
 
 			Object.keys(localStorage).forEach(key => {
 				if (key.startsWith("c_")) {
@@ -1113,8 +1130,9 @@
 			});
 
 			await clearIndexedDB();
+			localStorage.removeItem("sessionValid");
 
-			location.reload(true);
+			systemRestart();
 		});
 
 		searchInput.addEventListener('keydown', (event) => {
@@ -1398,139 +1416,141 @@
 		}
 
 		//MB Library Filtering 
+		function initFilterTable() {
+			return ({
+				sorting: {
+					name: 'sorting',
+					selected: 0,
+					iconClass: 'fa-solid fa-heading glyph-dark',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Sort items',
+					switches: [
+						{
+							name: 'a_to_z',
+							caption: 'by Title',
+							iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
+							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
+						}, {
+							name: 'z_to_a',
+							caption: 'by Title',
+							iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
+							sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
+						}, {
+							name: '9_to_1',
+							caption: 'by Start',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
+						}, {
+							name: '1_to_9',
+							caption: 'by Start',
+							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+							sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
+						}, {
+							name: '9_to_1',
+							caption: 'by End',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
+						}, {
+							name: '1_to_9',
+							caption: 'by End',
+							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+							sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
+						}, {
+							name: '1_to_9',
+							caption: 'Books',
+							iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
+							sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
+						}, {
+							name: '9_to_1',
+							caption: 'Books',
+							iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
+							sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
+						}
+					],
+				},
+				filter_by_read: {
+					name: 'filter_by_read',
+					selected: 0,
+					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Filter by read status',
+					switches: [
+						{
+							name: 'all',
+							caption: 'All',
+							iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
+							filterFunction: (a) => true
+						}, {
+							name: 'unread',
+							caption: 'Unread',
+							iconClass: 'fa-regular fa-circle glyph-dark',
+							filterFunction: (a) => (a.mbSeriesRead == false)
+						}, {
+							name: 'read',
+							caption: 'Read',
+							iconClass: 'fa-solid fa-circle glyph-dark',
+							filterFunction: (a) => (a.mbSeriesRead == true)
+						}
+					],
+				},
+				filter_by_direction: {
+					name: 'filter_by_direction',
+					selected: 0,
+					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Filter by reading direction',
+					switches: [
+						{
+							name: 'all',
+							caption: 'All',
+							iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
+							filterFunction: (a) => true
 
-		mb.filterTable = {
-			sorting: {
-				name: 'sorting',
-				selected: 0,
-				iconClass: 'fa-solid fa-heading glyph-dark',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Sort items',
-				switches: [
-					{
-						name: 'a_to_z',
-						caption: 'by Title',
-						iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
-						sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
-					}, {
-						name: 'z_to_a',
-						caption: 'by Title',
-						iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
-						sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
-					}, {
-						name: '9_to_1',
-						caption: 'by Start',
-						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
-					}, {
-						name: '1_to_9',
-						caption: 'by Start',
-						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
-					}, {
-						name: '9_to_1',
-						caption: 'by End',
-						iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-						sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
-					}, {
-						name: '1_to_9',
-						caption: 'by End',
-						iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
-						sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
-					}, {
-						name: '1_to_9',
-						caption: 'Books',
-						iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
-						sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
-					}, {
-						name: '9_to_1',
-						caption: 'Books',
-						iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
-						sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
-					}
-				],
-			},
-			filter_by_read: {
-				name: 'filter_by_read',
-				selected: 0,
-				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Filter by read status',
-				switches: [
-					{
-						name: 'all',
-						caption: 'All',
-						iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
-						filterFunction: (a) => true
-					}, {
-						name: 'unread',
-						caption: 'Unread',
-						iconClass: 'fa-regular fa-circle glyph-dark',
-						filterFunction: (a) => (a.mbSeriesRead == false)
-					}, {
-						name: 'read',
-						caption: 'Read',
-						iconClass: 'fa-solid fa-circle glyph-dark',
-						filterFunction: (a) => (a.mbSeriesRead == true)
-					}
-				],
-			},
-			filter_by_direction: {
-				name: 'filter_by_direction',
-				selected: 0,
-				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Filter by reading direction',
-				switches: [
-					{
-						name: 'all',
-						caption: 'All',
-						iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
-						filterFunction: (a) => true
+						}, {
+							name: 'l_to_r',
+							caption: 'L to R',
+							iconClass: 'fa-solid fa-arrow-right glyph-dark',
+							filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
-					}, {
-						name: 'l_to_r',
-						caption: 'L to R',
-						iconClass: 'fa-solid fa-arrow-right glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
-
-					}, {
-						name: 'r_to_l',
-						caption: 'R to L',
-						iconClass: 'fa-solid fa-arrow-left glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
-					}, {
-						name: 'webtoon',
-						caption: 'WToon',
-						iconClass: 'fa-solid fa-arrow-down glyph-dark',
-						filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
-					}
-				],
-			},
-			filter_by_language: {
-				name: 'filter_by_language',
-				selected: 0,
-				iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
-				item: null,
-				icon: null,
-				caption: null,
-				title: 'Filter by language',
-				switches: [
-					{
-						name: 'all',
-						caption: 'All',
-						iconClass: 'fa-solid fa-earth-europe glyph-dark',
-						filterFunction: (a) => true
-					}
-				],
-			},
-		};
+						}, {
+							name: 'r_to_l',
+							caption: 'R to L',
+							iconClass: 'fa-solid fa-arrow-left glyph-dark',
+							filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
+						}, {
+							name: 'webtoon',
+							caption: 'WToon',
+							iconClass: 'fa-solid fa-arrow-down glyph-dark',
+							filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
+						}
+					],
+				},
+				filter_by_language: {
+					name: 'filter_by_language',
+					selected: 0,
+					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					item: null,
+					icon: null,
+					caption: null,
+					title: 'Filter by language',
+					switches: [
+						{
+							name: 'all',
+							caption: 'All',
+							iconClass: 'fa-solid fa-earth-europe glyph-dark',
+							filterFunction: (a) => true
+						}
+					],
+				},
+			});
+		}
+		mb.filterTable = initFilterTable();
 
 		async function buildLanguageList() {
 			const languageList = await callAPI('c_languages', `/api/v1/languages`);
@@ -1610,50 +1630,52 @@
 		}
 
 		// Build filter buttons items
+		function buildFilters() {
+			mb.filterButtons.forEach(button => {
+				button.item = addItem('li', {
+					className: `filter-item press-button`,
+					title: button.title,
+				});
+				button.icon = addItem('div', {
+					className: `smallbutton-wrapper`,
+					innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
+				});
+				button.caption = addItem('div', {
+					className: `library-name`,
+					innerHTML: `${button.switches[0].caption}`
+				});
+				button.item.append(
+					button.icon,
+					button.caption
+				);
+				extraButtons.append(button.item);
+				button.item.addEventListener('click', async () => {
+					button.selected = ((button.selected + 1) % button.switches.length);
+					await executeFade(1);
+					applyLibraryFilters();
+					await executeFade(0);
+					saveLibraryFilters();
+				})
+			});
 
-		mb.filterButtons.forEach(button => {
-			button.item = addItem('li', {
+			extraButtons.append(addItem('li', {
+				title: 'Reset filters and sorting',
 				className: `filter-item press-button`,
-				title: button.title,
-			});
-			button.icon = addItem('div', {
-				className: `smallbutton-wrapper`,
-				innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
-			});
-			button.caption = addItem('div', {
-				className: `library-name`,
-				innerHTML: `${button.switches[0].caption}`
-			});
-			button.item.append(
-				button.icon,
-				button.caption
-			);
-			extraButtons.append(button.item);
-			button.item.addEventListener('click', async () => {
-				button.selected = ((button.selected + 1) % button.switches.length);
-				await executeFade(1);
-				applyLibraryFilters();
-				await executeFade(0);
-				saveLibraryFilters();
-			})
-		});
-
-		extraButtons.append(addItem('li', {
-			title: 'Reset filters and sorting',
-			className: `filter-item press-button`,
-			innerHTML: `<div class="smallbutton-wrapper">
+				innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
 							</div>`,
-			onclick: async () => {
-				await executeFade(1);
-				mb.filterButtons.forEach(button => {
-					button.selected = 0;
-				});
-				applyLibraryFilters();
-				await executeFade(0);
-				saveLibraryFilters();
-			}
-		}));
+				onclick: async () => {
+					await executeFade(1);
+					mb.filterButtons.forEach(button => {
+						button.selected = 0;
+					});
+					applyLibraryFilters();
+					await executeFade(0);
+					saveLibraryFilters();
+				}
+			}));
+		}
+		buildFilters();
 
 		//TODO Check what happens for webtoons since readerScale should be 100 for them?
 		function isReaderHorizontal(screenAR) {
@@ -1797,7 +1819,10 @@
 			blanker.style.opacity = val;
 			await wait(100);
 		}
-
+		async function executeFaderGradient(val) {
+			fader.style.opacity = val;
+			await wait(300);
+		}
 		//MB Offline Download Functions
 		function arrayBufferToBase64(buffer) {
 			let binary = '';
@@ -2254,7 +2279,7 @@
 
 			const db = await openIndexedDB();
 
-			// 1️⃣ Check RAM cache first
+			// Check RAM cache first
 			if (mb.mediaCacheRAM.has(url)) {
 				// Move the accessed item to the end to mark it as recently used
 				const value = mb.mediaCacheRAM.get(url);
@@ -2263,7 +2288,7 @@
 				return value;
 			}
 
-			// 2️⃣ Check in IndexedDB only if in offline session and cache it in RAM too
+			// Check in IndexedDB only if in offline session and cache it in RAM too
 			if (offlineSession) {
 				const cachedBlob = await getCachedMedia(db, url);
 				if (cachedBlob) {
@@ -2357,18 +2382,13 @@
 			setReadStatus(null, bookId, read, item, format);
 		}
 
-		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
-		async function fetchLibraries() {
+		async function updateSizer(libraries) {
 			const gapSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-gap'));
 			const libSmallSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-button-size'));
 			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 			const filterButtonSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-filter-button-size'));
 			const searchFieldSize = libLargeSize;
 			const margin = 10;
-
-			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
-			libraries.sort((a, b) => a.name.localeCompare(b.name));
-			await displayLibraries(libraries);
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
 			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
@@ -2380,6 +2400,18 @@
 			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
 
 			mb.filterSizer = mb.filterButtons.length * (100 + gapSize) + filterButtonSize + 2 * margin;
+
+		}
+
+		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
+		async function fetchLibraries() {
+
+
+			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
+			libraries.sort((a, b) => a.name.localeCompare(b.name));
+			await displayLibraries(libraries);
+
+			await updateSizer(libraries)
 
 			updateStickyMenu();
 		}
@@ -3864,7 +3896,6 @@
 		}
 
 		async function bootSequence(netStatus = 'online') {
-
 			setNetworkStatus(netStatus)
 
 			userSettings = await getUserSettings();
@@ -3884,6 +3915,8 @@
 			buildLanguageList();
 
 			sectionShow(stickyContainer);
+
+			await executeFaderGradient(0);
 
 			let series_data = null;
 			await fetchLibraries();
@@ -3906,6 +3939,7 @@
 			);
 
 			if (enableDownload) obRestoreDownloadOnBoot();
+
 		}
 
 		//MB Reader Functions and Data
@@ -4145,7 +4179,6 @@
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 
-			updatePWABar();
 			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 				Capacitor.Plugins.StatusBar.show();
 			}
@@ -4165,7 +4198,7 @@
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
-			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--color1');
+			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
 			//rd.titleBarColor = "black";
 
@@ -4336,7 +4369,6 @@
 			if (useOfflineCopy) {
 				offline = await obLoadOfflineBook(rd.bookId);
 			}
-			updatePWABar(rd.titleBarColor);
 
 			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 
@@ -4529,7 +4561,7 @@
 				if (!start) start = ts;
 				const t = Math.min(1, (ts - start) / duration);
 				const v = from + (to - from) * easing(t);
-				document.documentElement.style.setProperty('--webtoon-scale', v);
+				document.documentElement.style.setProperty('--mb-webtoon-scale', v);
 				webtoonContainer.scrollTop = rd.webtoonScrollRatio * webtoonContainer.scrollHeight - 0.5 * webtoonContainer.clientHeight;
 				if (t < 1) requestAnimationFrame(frame);
 			}
@@ -4672,8 +4704,8 @@
 				// these are two normal pages
 				const page1 = buildPageObject(pageData[i_page]);
 
-				page1.uiPage.style.width = `calc(var(--webtoon-scale) * 1vw)`
-				page1.uiPage.style.height = `calc(var(--webtoon-scale) * 1vw / ${pageData[i_page].AR})`
+				page1.uiPage.style.width = `calc(var(--mb-webtoon-scale) * 1vw)`
+				page1.uiPage.style.height = `calc(var(--mb-webtoon-scale) * 1vw / ${pageData[i_page].AR})`
 
 				if (rd.webtoon) webtoonPageNumberObserver.observe(page1.uiPage);
 
@@ -5660,12 +5692,10 @@
 				if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
 					Capacitor.Plugins.StatusBar.show();
 				}
-				updatePWABar();
 			} else {
 				if (isStatusBar) {
 					Capacitor.Plugins.StatusBar.hide();
 				}
-				updatePWABar(rd.titleBarColor);
 			}
 
 			sectionToggle(controlPanel);
@@ -6008,6 +6038,8 @@
 		})
 
 		let offlineSession = false;
+
+		changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
 
 		sessionCheck()
 
