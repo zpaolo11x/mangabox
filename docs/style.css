@@ -48,6 +48,7 @@
 			color: var(--text-color-main);
 			font-weight: 200;
 			background-color: var(--mb-darkred);
+			text-shadow: 0px 0px 10px var(--mb-darkred2),0px 0px 10px var(--mb-darkred2),0px 0px 15px var(--mb-darkred2);
 		}
 
 		.back-gradient::before {
@@ -210,6 +211,7 @@
 			text-align: center;
 			margin: auto;
 			border-radius: 20%;
+			text-shadow: none;
 		}
 
 		h2 {
