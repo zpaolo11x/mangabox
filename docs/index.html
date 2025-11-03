@@ -38,13 +38,7 @@
 			<div id="splashPicTablet"></div>
 			<div id="splashPicPhone"></div>
 		</div>
-		<!--
-		<div class="github-badge">
-			<a href="https://github.com/zpaolo11x/mangabox/releases/latest">
-				<img src="https://img.shields.io/github/v/release/zpaolo11x/mangabox?label=Latest%20Release&style=flat-square&color=ba082b" alt="Latest Release Badge">
-			</a>
-		</div>
-	-->
+
 	</div>
 	<div class="container">
 
@@ -53,7 +47,7 @@
 
 			<div class="platform-card">
 				<i class="fa-solid fa-earth-americas brand"></i>
-				<span class="label">Web/PWA</span>
+				<span>Web/PWA</span>
 				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Web.zip">Self Host</a>
 			</div>
 
@@ -204,7 +198,7 @@
 
 	<div class="container">
 		<h2>Gallery</h2>
-		<div id="carouselContainer">
+		<div id="carouselContainer" class="no-bar">
 			<div id="imageCarousel">
 				<div class="gallery-tablet-landscape" style="background-image: url('apple/ipad-11-007-r.jpg')"></div>
 				<div class="gallery-tablet-portrait" style="background-image: url('apple/ipad-11-001-r.jpg')"></div>
@@ -250,23 +244,14 @@
 	<div class="container">
 		<h2>Privacy Policy</h2>
 
-		MangaBox does not collect analytics, advertising data, or share any personal or usage data with third parties. See detailed <a href="privacypolicy.html"><span class="label">Privacy Policy</span></a>.
+		MangaBox does not collect analytics, advertising data, or share any personal or usage data with third parties. See detailed <a href="privacypolicy.html">Privacy Policy</a>.
 
 	</div>
-	<!--
 
-		</p>
+	<div class="container footer">
+		MangaBox by <a href="https://github.com/zpaolo11x">zpaolo11x</a>. All rights reserved.
+	</div>
 
-
-		<div id="lightBox">
-			<img id="lightBoxImgNeon" alt="">
-			<img id="lightBoxImg" alt="">
-		</div>
-
-		<footer>
-			MangaBox by <a href="https://github.com/zpaolo11x">zpaolo11x</a>. All rights reserved.
-		</footer>
--->
 	<script>
 		// JavaScript for lightbox functionality
 		const clickableImages = document.querySelectorAll('.clickable');
@@ -282,10 +267,7 @@
 		lightBox.addEventListener('click', () => {
 			lightBox.classList.remove('active');
 		});
-	</script>
-	</div>
 
-	<script>
 		async function getLatestVersion() {
 			const res = await fetch(`https://api.github.com/repos/zpaolo11x/mangabox/releases/latest`);
 			if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
@@ -306,7 +288,6 @@
 				});
 			})
 			.catch(err => console.error(err));
-
 
 	</script>
 </body>

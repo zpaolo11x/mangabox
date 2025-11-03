@@ -36,8 +36,8 @@ async function sessionCheck() {
 	// Load stored token (e.g. from Electron storage)
 	mb.authToken = true;
 	if (isElectron) mb.authToken = await loadToken();
-	debugPrint("CURRENT TOKEN:\n" + mb.authToken);
-	console.log("CURRENT TOKEN:\n" + mb.authToken);
+	debugPrint("CURRENT TOKEN:\n" + (mb.authToken ? 'not null' : null));
+	console.log("CURRENT TOKEN:\n" + (mb.authToken ? 'not null' : null));
 
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.authToken)) {
