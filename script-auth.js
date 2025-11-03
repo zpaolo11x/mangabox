@@ -205,10 +205,6 @@ async function systemRestart() {
 	document.documentElement.style.setProperty('--mb-gradient-1', '30');
 	document.documentElement.style.setProperty('--mb-gradient-2', '40');
 
-	console.log("-RESTART---------------")
-	console.log(document.getElementById('0N5QMQHBN1BKA'));
-	console.log("-----------------------")
-
 	sessionCheck();
 }
 
