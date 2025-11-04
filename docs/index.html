@@ -96,9 +96,7 @@
 
 		<div class="grid">
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-book-open"></i>
-				</div>
+				<div><i class="fa-solid fa-book-open"></i></div>
 				<div class="grid-text">
 					<span class="label">Rich Experience</span>
 					<span>Read in two spreads with book effects and page turn animation, supports webtoons and reading directions.</span>
@@ -106,9 +104,7 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-images"></i>
-				</div>
+				<div><i class="fa-solid fa-images"></i></div>
 				<div class="grid-text">
 					<span class="label">Page Thumbnails</span>
 					<span>Reader interface features page thumbnails and seek controls.</span>
@@ -116,9 +112,7 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-rotate"></i>
-				</div>
+				<div><i class="fa-solid fa-rotate"></i></div>
 				<div class="grid-text">
 					<span class="label">Sync Progress</span>
 					<span>Sync reading progress with your server on all devices, even when reading offline.</span>
@@ -126,9 +120,7 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-magnifying-glass "></i>
-				</div>
+				<div><i class="fa-solid fa-magnifying-glass "></i></div>
 				<div class="grid-text">
 					<span class="label">Global Search</span>
 					<span>Search your series and books all in one place; looks into metadata, summary etc.</span>
@@ -136,9 +128,7 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-download "></i>
-				</div>
+				<div><i class="fa-solid fa-download "></i></div>
 				<div class="grid-text">
 					<span class="label">Offline Reading</span>
 					<span>Download your books and read theme wherever you are, even with no connection to the server.</span>
@@ -146,9 +136,7 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-paint-roller "></i>
-				</div>
+				<div><i class="fa-solid fa-paint-roller "></i></div>
 				<div class="grid-text">
 					<span class="label">Custom Themes</span>
 					<span>Adapt to your taste with dark and light theme, plus custom color highlights.</span>
@@ -156,9 +144,7 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-sort "></i>
-				</div>
+				<div><i class="fa-solid fa-sort "></i></div>
 				<div class="grid-text">
 					<span class="label">Live Sort & Filter</span>
 					<span>Sort your library on the fly or filter by read/unread, reading direction, language etc.</span>
@@ -166,9 +152,7 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-tag "></i>
-				</div>
+				<div><i class="fa-solid fa-tag "></i></div>
 				<div class="grid-text">
 					<span class="label">Advanced Tagging</span>
 					<span>Tag your books in Komga: "no-cover" to start with a page spread, "no-blank-page" to add a fake back of the cover.</span>
@@ -176,18 +160,15 @@
 			</div>
 
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-database "></i>
-				</div>
+				<div><i class="fa-solid fa-database "></i></div>
 				<div class="grid-text">
 					<span class="label">Advanced Metadata</span>
 					<span>Add alternate titles in Komga: "Story" and "Art" to set a series authors, "Time" for series dates</span>
 				</div>
 			</div>
+
 			<div class="grid-item">
-				<div>
-					<i class="fa-solid fa-magnifying-glass-chart "></i>
-				</div>
+				<div><i class="fa-solid fa-magnifying-glass-chart "></i></div>
 				<div class="grid-text">
 					<span class="label">Advanced Year Search</span>
 					<span>A special search prefix "y:" will show all the series that have volumes in that date range or year.</span>
@@ -202,19 +183,19 @@
 			<div id="imageCarousel">
 				<div class="gallery-tablet-landscape" style="background-image: url('apple/ipad-11-007-r.jpg')"></div>
 				<div class="carousel-note">Realistic paper effects</div>
-				
+
 				<div class="gallery-tablet-portrait" style="background-image: url('apple/ipad-11-001-r.jpg')"></div>
 				<div class="carousel-note">Keep reading, on deck, last additions etc.</div>
-				
+
 				<div class="gallery-phone-portrait" style="background-image: url('apple/iphone-63-002-r.jpg')"></div>
 				<div class="carousel-note">Library view with series metadata</div>
-				
+
 				<div class="gallery-phone-portrait" style="background-image: url('apple/phone-dark.jpg')"></div>
 				<div class="carousel-note">Dark theme and highlight color</div>
-				
+
 				<div class="gallery-phone-portrait" style="background-image: url('apple/phone-blue.jpg')"></div>
 				<div class="carousel-note">Portrait mode book reading</div>
-				
+
 				<div class="gallery-phone-portrait" style="background-image: url('apple/phone-search.jpg')"></div>
 				<div class="carousel-note">Global search for series and books</div>
 			</div>
@@ -224,18 +205,9 @@
 	<div class="container">
 		<h2>Installation notes</h2>
 		<ul>
-			<li>
-				To deploy the web verions just download the "web" release artifact and unpack it in a "mangabox"
-				folder on your web server. Because of CORS limitation by default MangaBox will work only if it's
-				on the same location as your komga server.
-			</li>
-			<li>
-				Electron version is not limited by CORS and it will work with any Komga server.
-			</li>
-			<li>
-				The macOS binaries are not signed, so they won't run by default. You can allow them to run on Intel macs
-				by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script
-				that will do the hard work for you:
+			<li>To deploy the web verions just download the "web" release artifact and unpack it in a "mangabox" folder on your web server. Because of CORS limitation by default MangaBox will work only if it's on the same location as your komga server.</li>
+			<li>Electron version is not limited by CORS and it will work with any Komga server.</li>
+			<li>The macOS binaries are not signed, so they won't run by default. You can allow them to run on Intel macs by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script that will do the hard work for you:
 				<br>
 				<div class="code-block-wrapper">
 					<span class="odd">#!/bin/bash<br></span>
@@ -246,17 +218,13 @@
 				</div>
 				Just chmod +x the script and run it with the .app file path as argument.
 			</li>
-			<li>
-				Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.
-			</li>
+			<li>Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.</li>
 		</ul>
 	</div>
 
 	<div class="container">
 		<h2>Privacy Policy</h2>
-
 		MangaBox does not collect analytics, advertising data, or share any personal or usage data with third parties. See detailed <a href="privacypolicy.html">Privacy Policy</a>.
-
 	</div>
 
 	<div class="container footer">
