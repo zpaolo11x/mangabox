@@ -146,7 +146,7 @@
 			content: "";
 			width: 100%;
 			height: 100%;
-			background-image: url("frametablet.png");
+			background-image: url("frame-tablet-portrait.png");
 			background-repeat: none;
 			background-size: cover;
 		}
@@ -171,7 +171,7 @@
 			content: "";
 			width: 100%;
 			height: 100%;
-			background-image: url("framephone.png");
+			background-image: url("frame-phone-portrait.png");
 			background-repeat: none;
 			background-size: cover;
 		}
@@ -401,7 +401,7 @@
 			content: "";
 			width: 100%;
 			height: 100%;
-			background-image: url("frametabletlandscape.png");
+			background-image: url("frame-tablet-landscape.png");
 			background-repeat: none;
 			background-size: cover;
 		}
@@ -419,7 +419,7 @@
 			content: "";
 			width: 100%;
 			height: 100%;
-			background-image: url("frametablet.png");
+			background-image: url("frame-tablet-portrait.png");
 			background-repeat: none;
 			background-size: cover;
 		}
@@ -438,7 +438,7 @@
 			content: "";
 			width: 100%;
 			height: 100%;
-			background-image: url("framephone.png");
+			background-image: url("frame-phone-portrait.png");
 			background-repeat: none;
 			background-size: cover;
 		}
