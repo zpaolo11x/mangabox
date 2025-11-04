@@ -48,27 +48,27 @@
 			<div class="platform-card">
 				<i class="fa-solid fa-earth-americas brand"></i>
 				<span>Web/PWA</span>
-				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Web.zip">Self Host</a>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-Web.zip">Self Host</a>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-apple brand"></i>
 				<span class="label">iOS/ipadOS</span>
-				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-iOS-ipa.ipa">Unsigned ipa</a>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-iOS-ipa.ipa">Unsigned ipa</a>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-android brand"></i>
 				<span class="label">Android</span>
-				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Android.apk">Debug apk</a>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-Android.apk">Debug apk</a>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-windows brand"></i>
 				<span class="label">Windows</span>
 				<span>
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-x64.exe">x86-64</a>,
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-arm64.exe">ARM</a>
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-Windows-x64.exe">x86-64</a>,
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-Windows-arm64.exe">ARM</a>
 				</span>
 			</div>
 
@@ -76,15 +76,15 @@
 				<i class="fa-brands fa-apple brand"></i>
 				<span class="label">macOS</span>
 				<span>
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg"><i class="fa-brands fa-apple"></i> Silicon</a>,
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Intel</a>
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-macOS-arm64.dmg"><i class="fa-brands fa-apple"></i> Silicon</a>,
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-macOS-arm64.dmg">Intel</a>
 				</span>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-linux brand"></i>
 				<span class="label">Linux</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Linux-x86_64.AppImage">Appimage</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.0/MangaBox-0.3.0-Linux-x86_64.AppImage">Appimage</a></span>
 			</div>
 
 		</div>
@@ -202,14 +202,19 @@
 			<div id="imageCarousel">
 				<div class="gallery-tablet-landscape" style="background-image: url('apple/ipad-11-007-r.jpg')"></div>
 				<div class="carousel-note">Realistic paper effects</div>
+				
 				<div class="gallery-tablet-portrait" style="background-image: url('apple/ipad-11-001-r.jpg')"></div>
 				<div class="carousel-note">Keep reading, on deck, last additions etc.</div>
+				
 				<div class="gallery-phone-portrait" style="background-image: url('apple/iphone-63-002-r.jpg')"></div>
 				<div class="carousel-note">Library view with series metadata</div>
+				
 				<div class="gallery-phone-portrait" style="background-image: url('apple/phone-dark.jpg')"></div>
 				<div class="carousel-note">Dark theme and highlight color</div>
+				
 				<div class="gallery-phone-portrait" style="background-image: url('apple/phone-blue.jpg')"></div>
 				<div class="carousel-note">Portrait mode book reading</div>
+				
 				<div class="gallery-phone-portrait" style="background-image: url('apple/phone-search.jpg')"></div>
 				<div class="carousel-note">Global search for series and books</div>
 			</div>
@@ -274,26 +279,6 @@
 			lightBox.classList.remove('active');
 		});
 
-		async function getLatestVersion() {
-			const res = await fetch(`https://api.github.com/repos/zpaolo11x/mangabox/releases/latest`);
-			if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
-
-			const release = await res.json();
-			return release.tag_name.replace(/^v/, ""); // remove leading 'v'
-		}
-
-		let latestVersion = 0
-
-		getLatestVersion()
-			.then(version => {
-				latestVersion = version
-
-				document.querySelectorAll("a.artifact").forEach(link => {
-					link.href = link.href.replace(/\*/g, latestVersion);
-					link.title = link.href;
-				});
-			})
-			.catch(err => console.error(err));
 
 	</script>
 </body>
