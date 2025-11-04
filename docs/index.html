@@ -48,27 +48,27 @@
 			<div class="platform-card">
 				<i class="fa-solid fa-earth-americas brand"></i>
 				<span>Web/PWA</span>
-				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Web.zip">Self Host</a>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-Web.zip">Self Host</a>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-apple brand"></i>
 				<span class="label">iOS/ipadOS</span>
-				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-iOS-ipa.ipa">Unsigned ipa</a>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-iOS-ipa.ipa">Unsigned ipa</a>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-android brand"></i>
 				<span class="label">Android</span>
-				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Android.apk">Debug apk</a>
+				<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-Android.apk">Debug apk</a>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-windows brand"></i>
 				<span class="label">Windows</span>
 				<span>
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-x64.exe">x86-64</a>,
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Windows-arm64.exe">ARM</a>
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-Windows-x64.exe">x86-64</a>,
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-Windows-arm64.exe">ARM</a>
 				</span>
 			</div>
 
@@ -76,15 +76,15 @@
 				<i class="fa-brands fa-apple brand"></i>
 				<span class="label">macOS</span>
 				<span>
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg"><i class="fa-brands fa-apple"></i> Silicon</a>,
-					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-macOS-arm64.dmg">Intel</a>
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-macOS-arm64.dmg"><i class="fa-brands fa-apple"></i> Silicon</a>,
+					<a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-macOS-arm64.dmg">Intel</a>
 				</span>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-linux brand"></i>
 				<span class="label">Linux</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v*/MangaBox-*-Linux-x86_64.AppImage">Appimage</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.2.9/MangaBox-0.2.9-Linux-x86_64.AppImage">Appimage</a></span>
 			</div>
 
 		</div>
@@ -273,27 +273,6 @@
 		lightBox.addEventListener('click', () => {
 			lightBox.classList.remove('active');
 		});
-
-		async function getLatestVersion() {
-			const res = await fetch(`https://api.github.com/repos/zpaolo11x/mangabox/releases/latest`);
-			if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
-
-			const release = await res.json();
-			return release.tag_name.replace(/^v/, ""); // remove leading 'v'
-		}
-
-		let latestVersion = 0
-
-		getLatestVersion()
-			.then(version => {
-				latestVersion = version
-
-				document.querySelectorAll("a.artifact").forEach(link => {
-					link.href = link.href.replace(/\*/g, latestVersion);
-					link.title = link.href;
-				});
-			})
-			.catch(err => console.error(err));
 
 	</script>
 </body>
