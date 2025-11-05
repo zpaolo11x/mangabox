@@ -13,10 +13,10 @@
 			--mb-darkred2: hsl(325, 92%, 10%);
 			--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred) 30%, var(--mb-darkred2));
 
-			--title-block: 350;
-			--screen-block: 550;
-			--title-block-fr: 350fr;
-			--screen-block-fr: 550fr;
+			--title-block: 400;
+			--screen-block: 500;
+			--title-block-fr: 400fr;
+			--screen-block-fr: 500fr;
 
 			--block-height: 350;
 			--block-width: calc((var(--title-block) * 1px + var(--screen-block) * 1px + var(--padding-size)));
@@ -25,6 +25,8 @@
 			--minHeight: calc(var(--title-block)/var(--screen-block)*(var(--minWidth)));
 
 			--scaler: 1.0;
+
+			--pic-ratio: 1.4;
 		}
 
 		@font-face {
@@ -81,11 +83,11 @@
 			grid-template-columns: var(--title-block-fr) var(--screen-block-fr);
 			gap: var(--padding-size);
 			width: var(--block-width);
-			height:calc(var(--block-height) * 1px);
+			height: auto;
 			padding: var(--padding-size);
 			margin-left: auto;
 			margin-right: auto;
-			/*border:1px solid blue;*/
+			border:1px solid blue;
 		}
 
 		#logo {
@@ -125,17 +127,18 @@
 			width: 100%;
 			height: 100%;
 			z-index: 1;
-			/*border:1px solid green;*/
+			border:1px solid green;
 		}
 
 		#screensBlock {
 			position: relative;
 			width: 100%;
-			height: 100%;
+			height: auto;
 			z-index: 0;
-			/*border:1px solid green;*/
 			margin-top:auto;
 			margin-bottom:auto;
+			aspect-ratio: var(--pic-ratio);
+			border:1px solid green;
 		}
 
 		#splashPicTablet {
@@ -505,7 +508,6 @@ Notebook to Tablet height: 0.868
 				width: 100%;
 				height: auto;
 				z-index: 0;
-				aspect-ratio: var(--screen-block) / var(--block-height);
 			}
 
 			#titleBlock {
@@ -561,7 +563,7 @@ Notebook to Tablet height: 0.868
 
 			#splashScreen {
 				grid-template-columns: 1fr;
-				grid-template-rows: auto var(--minHeight);
+				grid-template-rows: auto auto;
 				width: var(--minWidth);
 				height: auto;
 			}
