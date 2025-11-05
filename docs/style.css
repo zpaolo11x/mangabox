@@ -17,8 +17,8 @@
 			--screen-block: 550;
 			--title-block-fr: 350fr;
 			--screen-block-fr: 550fr;
-			--block-height: 400;
 
+			--block-height: 350;
 			--block-width: calc((var(--title-block) * 1px + var(--screen-block) * 1px + var(--padding-size)));
 
 			--minWidth: calc(max(350px, 100vw) - 2*var(--padding-size));
@@ -78,14 +78,14 @@
 		#splashScreen {
 			position: relative;
 			display: grid;
-			grid-template-columns: calc(var(--title-block) * 1px) calc(var(--screen-block) * 1px);
+			grid-template-columns: var(--title-block-fr) var(--screen-block-fr);
 			gap: var(--padding-size);
 			width: var(--block-width);
 			height:calc(var(--block-height) * 1px);
 			padding: var(--padding-size);
 			margin-left: auto;
 			margin-right: auto;
-			border:1px solid blue;
+			/*border:1px solid blue;*/
 		}
 
 		#logo {
@@ -125,7 +125,7 @@
 			width: 100%;
 			height: 100%;
 			z-index: 1;
-			border:1px solid green;
+			/*border:1px solid green;*/
 		}
 
 		#screensBlock {
@@ -133,7 +133,7 @@
 			width: 100%;
 			height: 100%;
 			z-index: 0;
-			border:1px solid green;
+			/*border:1px solid green;*/
 			margin-top:auto;
 			margin-bottom:auto;
 		}
@@ -163,16 +163,17 @@
 		}
 
 		#splashPicLaptop {
+			border-radius: 20px;
 			position: absolute;
 			left: 0;
 			bottom: 0;
 			height: calc(var(--scaler) * 90%);
 			aspect-ratio: 861 / 618;
 			z-index: 0;
-			background-image: url("apple/library.png"), linear-gradient(180deg, rgb(101, 76, 192), rgb(82, 51, 88));
+			background-image: url("apple/library.png"), url("macos.jpg");
 			background-repeat: no-repeat, no-repeat;
-			background-position: center, center;
-			background-size: 80%, 95% 95%;
+			background-position: center calc(50% - 20%), center calc(50% - 30%);
+			background-size: 80%, 95%;
 			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
 		}
 
@@ -192,7 +193,7 @@ Notebook to Tablet height: 0.868
 */
 		#splashPicPhone {
 			position: absolute;
-			left: 30%;
+			left: 40%;
 			bottom: 0;
 			height: calc(var(--scaler) * 66%);
 			aspect-ratio: 818 / 1686;
