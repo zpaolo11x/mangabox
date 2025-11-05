@@ -150,6 +150,7 @@
 			background-position: center;
 			background-size: 89%;
 			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
+			border-radius: 15% / 10%;
 		}
 
 		#splashPicTablet::after {
@@ -163,7 +164,7 @@
 		}
 
 		#splashPicLaptop {
-			border-radius: 20px;
+			border-radius: 5% / 7%;
 			position: absolute;
 			left: 0;
 			bottom: 0;
