@@ -13,14 +13,9 @@
 			--mb-darkred2: hsl(325, 92%, 10%);
 			--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred) 30%, var(--mb-darkred2));
 
-			--title-block: 400;
-			--screen-block: 500;
-
-
 			--block-width: 1000px;
 
 			--minWidth: calc(max(350px, 100vw) - 2*var(--padding-size));
-			--minHeight: calc(var(--title-block)/var(--screen-block)*(var(--minWidth)));
 
 			--scaler: 1.0;
 
@@ -113,16 +108,16 @@
 		#logoName {
 			width: 100%;
 			filter: invert(1);
-			margin-top: 30px;
-			margin-bottom: 15px;
+			margin-top: 8.5%;
+			margin-bottom: 4.3%;
 		}
 
 		#titleClaim {
 			width: 100%;
-			font-size: 17.5px;
-			text-align: center;
+			font-size: 20px;
+				text-align: justify;
+				text-align-last: justify;
 			text-transform: uppercase;
-			line-height: 19px;
 		}
 
 		#titleBlock {
@@ -379,7 +374,7 @@ Notebook to Tablet height: 0.868
 		a {
 			text-decoration: none;
 			color: var(--text-color-link);
-			transition: all 0.3s ease;
+			transition: text-shadow 0.3s ease;
 			font-weight: 600;
 		}
 
@@ -531,8 +526,9 @@ Notebook to Tablet height: 0.868
 
 			#titleClaim {
 				width: 100%;
-				text-align: center;
-				text-align-last: center;
+				text-align: justify;
+				text-align-last: justify;
+				font-size: 1.9vw;
 			}
 
 
@@ -554,21 +550,23 @@ Notebook to Tablet height: 0.868
 			}
 		}
 
-		@media (max-width: 650px) {
+		@media (max-width: 660px) {
 			.grid {
 				grid-template-columns: 1fr;
 			}
 		}
 
-		@media (max-width: 650px) {
+		@media (max-width: 660px) {
+			
 			#logoName {
 				width: var(--minWidth);
 			}
 
 			#titleClaim {
 				width: var(--minWidth);
-				text-align: center;
-				text-align-last: center;
+				text-align: justify;
+				text-align-last: justify;
+				font-size: calc(0.057 * var(--minWidth));
 			}
 
 			#splashScreen {
@@ -605,5 +603,6 @@ Notebook to Tablet height: 0.868
 				row-gap: 30px;
 				align-items: center;
 			}
+
 
 		}
