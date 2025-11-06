@@ -15,7 +15,7 @@
 
 			--block-width: 1000px;
 
-			--minWidth: calc(max(350px, 100vw) - 2*var(--padding-size));
+			--minWidth: calc(max(350px, 100vw) - 2*var(--padding-size) - 20px);
 
 			--scaler: 1.0;
 
@@ -25,7 +25,7 @@
 			--title-block-fr: 100fr;
 			--screen-block-fr: 165fr;
 
-			--dbg-border: none;/*1px solid green;*/
+			--dbg-border:none;/*1px solid green;*/
 		}
 
 		@font-face {
@@ -39,15 +39,17 @@
 		.logo-pattern::before {
 			content: "";
 			position: fixed;
-			left: 0;
-			right: 0;
-			top: 0;
-			bottom: 0;
+			left: 10px;
+			right: 10px;
+			top: 10px;
+			bottom: 10px;
 			background-image: url('mangabox-pattern-black.svg'), url('mangabox-pattern-black.svg');
 			background-repeat: repeat, repeat, ;
 			background-size: 800px 200px, 800px 200px;
 			background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px);
 			opacity: 0.1;
+			border-radius: 20px;
+
 		}
 
 		body {
@@ -58,22 +60,34 @@
 			padding: 0;
 			color: var(--text-color-main);
 			font-weight: 200;
-			background-color: var(--mb-darkred);
+			background-color: black;
 			text-shadow: 0px 0px 10px var(--mb-darkred2), 0px 0px 10px var(--mb-darkred2), 0px 0px 15px var(--mb-darkred2);
+		}
+
+		#mainUI {
+			position: fixed;
+			left: 10px;
+			right: 10px;
+			top: 10px;
+			bottom: 10px;
+			overflow: scroll;
+			border-radius: 20px;
 		}
 
 		.back-gradient::before {
 			content: "";
 			position: fixed;
-			left: 0;
-			right: 0;
-			top: 0;
-			bottom: 0;
+			left: 10px;
+			right: 10px;
+			top: 10px;
+			bottom: 10px;
 			background-image: var(--mb-login-gradient);
 
 			background-repeat: no-repeat;
 			background-size: cover;
 			background-position: center;
+			border-radius: 20px;
+
 		}
 
 		#splashScreen {
@@ -115,8 +129,8 @@
 		#titleClaim {
 			width: 100%;
 			font-size: 20px;
-				text-align: justify;
-				text-align-last: justify;
+			text-align: justify;
+			text-align-last: justify;
 			text-transform: uppercase;
 		}
 
@@ -139,8 +153,8 @@
 			width: 100%;
 			height: auto;
 			z-index: 0;
-			margin-top:auto;
-			margin-bottom:auto;
+			margin-top: auto;
+			margin-bottom: auto;
 			aspect-ratio: var(--screens-ratio);
 			border: var(--dbg-border);
 		}
@@ -178,7 +192,7 @@
 			height: calc(var(--scaler) * 90%);
 			aspect-ratio: 1808 / 1239;
 			z-index: 0;
-			background:rgba(0, 0, 0, 0.2);
+			background: rgba(0, 0, 0, 0.2);
 			background-image: url("apple/library.png"), url("macos.jpg");
 			background-repeat: no-repeat, no-repeat;
 			background-position: center calc(50% - 20%), center calc(50% - 30%);
@@ -196,7 +210,7 @@
 			background-size: cover;
 		}
 
-/* 
+		/* 
 Phone to Tablet height: 0.659
 Notebook to Tablet height: 0.868
 */
@@ -419,7 +433,7 @@ Notebook to Tablet height: 0.868
 		#imageCarousel {
 			display: grid;
 			grid-template-columns: auto auto auto auto auto auto;
-			grid-template-rows: calc(max(min(80vw * 3 / 4, 600px), 400px)) 50px ;
+			grid-template-rows: calc(max(min(80vw * 3 / 4, 600px), 400px)) 50px;
 			gap: 30px;
 			row-gap: 5px;
 			margin-bottom: 10px;
@@ -501,9 +515,10 @@ Notebook to Tablet height: 0.868
 		}
 
 
-		@media (max-width: 1060px) {
+		@media (max-width: 1080px) {
+
 			#splashScreen {
-				width: calc(100vw - 2 * var(--padding-size));
+				width: calc(100vw - 2 * var(--padding-size) - 20px);
 				height: auto;
 				grid-template-columns: var(--title-block-fr) var(--screen-block-fr);
 			}
@@ -528,17 +543,17 @@ Notebook to Tablet height: 0.868
 				width: 100%;
 				text-align: justify;
 				text-align-last: justify;
-				font-size: 1.9vw;
+				font-size: 1.84vw;
 			}
 
 
 			.container {
-				width: calc(100vw - 2 * var(--padding-size));
+				width: calc(100vw - 2 * var(--padding-size) - 20px);
 			}
 
 		}
 
-		@media (max-width: 800px) {
+		@media (max-width: 820px) {
 
 			.platform-block {
 				display: grid;
@@ -550,14 +565,14 @@ Notebook to Tablet height: 0.868
 			}
 		}
 
-		@media (max-width: 660px) {
+		@media (max-width: 680px) {
 			.grid {
 				grid-template-columns: 1fr;
 			}
 		}
 
-		@media (max-width: 660px) {
-			
+		@media (max-width: 680px) {
+
 			#logoName {
 				width: var(--minWidth);
 			}
@@ -574,6 +589,7 @@ Notebook to Tablet height: 0.868
 				grid-template-rows: auto auto;
 				width: var(--minWidth);
 				height: auto;
+				margin-top: 10vw;
 			}
 
 
@@ -581,13 +597,13 @@ Notebook to Tablet height: 0.868
 				width: var(--minWidth);
 			}
 
-			#screensBlock{
+			#screensBlock {
 				width: var(--minWidth);
 			}
 
 			#titleBlock {
 				width: var(--minWidth);
-								aspect-ratio: auto;
+				aspect-ratio: auto;
 
 			}
 		}
