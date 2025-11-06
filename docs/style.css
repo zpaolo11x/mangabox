@@ -15,18 +15,22 @@
 
 			--title-block: 400;
 			--screen-block: 500;
-			--title-block-fr: 400fr;
-			--screen-block-fr: 500fr;
 
-			--block-height: 350;
-			--block-width: calc((var(--title-block) * 1px + var(--screen-block) * 1px + var(--padding-size)));
+
+			--block-width: 1000px;
 
 			--minWidth: calc(max(350px, 100vw) - 2*var(--padding-size));
 			--minHeight: calc(var(--title-block)/var(--screen-block)*(var(--minWidth)));
 
 			--scaler: 1.0;
 
-			--pic-ratio: 1.45;
+			--title-ratio: 1.0;
+			--screens-ratio: 1.65;
+
+			--title-block-fr: 100fr;
+			--screen-block-fr: 165fr;
+
+			--dbg-border: none;/*1px solid green;*/
 		}
 
 		@font-face {
@@ -87,7 +91,9 @@
 			padding: var(--padding-size);
 			margin-left: auto;
 			margin-right: auto;
-			border:1px solid blue;
+			border: var(--dbg-border);
+			margin-top: 60px;
+			margin-bottom: 60px;
 		}
 
 		#logo {
@@ -116,6 +122,7 @@
 			font-size: 17.5px;
 			text-align: center;
 			text-transform: uppercase;
+			line-height: 19px;
 		}
 
 		#titleBlock {
@@ -125,9 +132,11 @@
 			align-items: center;
 			justify-content: center;
 			width: 100%;
-			height: 100%;
+			height: auto;
 			z-index: 1;
-			border:1px solid green;
+			aspect-ratio: var(--title-ratio);
+			border: var(--dbg-border);
+
 		}
 
 		#screensBlock {
@@ -137,8 +146,8 @@
 			z-index: 0;
 			margin-top:auto;
 			margin-bottom:auto;
-			aspect-ratio: var(--pic-ratio);
-			border:1px solid green;
+			aspect-ratio: var(--screens-ratio);
+			border: var(--dbg-border);
 		}
 
 		#splashPicTablet {
@@ -172,12 +181,13 @@
 			left: 0;
 			bottom: 0;
 			height: calc(var(--scaler) * 90%);
-			aspect-ratio: 861 / 618;
+			aspect-ratio: 1808 / 1239;
 			z-index: 0;
+			background:rgba(0, 0, 0, 0.2);
 			background-image: url("apple/library.png"), url("macos.jpg");
 			background-repeat: no-repeat, no-repeat;
 			background-position: center calc(50% - 20%), center calc(50% - 30%);
-			background-size: 80%, 95%;
+			background-size: 76%, 91%;
 			box-shadow: 10px 10px 40px rgba(0, 0, 0, 0.7);
 		}
 
@@ -186,7 +196,7 @@
 			content: "";
 			width: 100%;
 			height: 100%;
-			background-image: url("frame-laptop-landscape.png");
+			background-image: url("frame-laptop-landscape-3d.png");
 			background-repeat: none;
 			background-size: cover;
 		}
@@ -496,7 +506,7 @@ Notebook to Tablet height: 0.868
 		}
 
 
-		@media (max-width: 990px) {
+		@media (max-width: 1060px) {
 			#splashScreen {
 				width: calc(100vw - 2 * var(--padding-size));
 				height: auto;
@@ -544,13 +554,13 @@ Notebook to Tablet height: 0.868
 			}
 		}
 
-		@media (max-width: 600px) {
+		@media (max-width: 650px) {
 			.grid {
 				grid-template-columns: 1fr;
 			}
 		}
 
-		@media (max-width: 600px) {
+		@media (max-width: 650px) {
 			#logoName {
 				width: var(--minWidth);
 			}
@@ -573,10 +583,14 @@ Notebook to Tablet height: 0.868
 				width: var(--minWidth);
 			}
 
+			#screensBlock{
+				width: var(--minWidth);
+			}
 
-			#screensBlock,
 			#titleBlock {
 				width: var(--minWidth);
+								aspect-ratio: auto;
+
 			}
 		}
 
