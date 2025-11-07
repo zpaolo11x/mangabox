@@ -1,5 +1,6 @@
 		:root {
 			--padding-size: 30px;
+			--border-size: 10px;
 
 			--text-color-main: hsl(348, 35%, 95%);
 			--text-color-code: hsl(348, 35%, 95%);
@@ -15,7 +16,7 @@
 
 			--block-width: 1000px;
 
-			--minWidth: calc(max(350px, 100vw) - 2 * var(--padding-size) - 20px);
+			--minWidth: calc(max(350px, 100vw) - 2 * var(--padding-size) - 2 * var(--border-size));
 
 			--scaler: 1.0;
 
@@ -39,10 +40,10 @@
 		.logo-pattern::before {
 			content: "";
 			position: fixed;
-			left: 10px;
-			right: 10px;
-			top: 10px;
-			bottom: 10px;
+			left: var(--border-size);
+			right: var(--border-size);
+			top: var(--border-size);
+			bottom: var(--border-size);
 			background-image: url('mangabox-pattern-black.svg'), url('mangabox-pattern-black.svg');
 			background-repeat: repeat, repeat, ;
 			background-size: 800px 200px, 800px 200px;
@@ -66,10 +67,10 @@
 
 		#mainUI {
 			position: fixed;
-			left: 10px;
-			right: 10px;
-			top: 10px;
-			bottom: 10px;
+			left: var(--border-size);
+			right: var(--border-size);
+			top: var(--border-size);
+			bottom: var(--border-size);
 			overflow: scroll;
 			border-radius: 20px;
 		}
@@ -77,10 +78,10 @@
 		.back-gradient::before {
 			content: "";
 			position: fixed;
-			left: 10px;
-			right: 10px;
-			top: 10px;
-			bottom: 10px;
+			left: var(--border-size);
+			right: var(--border-size);
+			top: var(--border-size);
+			bottom: var(--border-size);
 			background-image: var(--mb-login-gradient);
 
 			background-repeat: no-repeat;
@@ -518,7 +519,7 @@ Notebook to Tablet height: 0.868
 		@media (max-width: 1080px) {
 
 			#splashScreen {
-				width: calc(100vw - 2 * var(--padding-size) - 20px);
+				width: calc(100vw - 2 * var(--padding-size) - 2 * var(--border-size));
 				height: auto;
 				grid-template-columns: var(--title-block-fr) var(--screen-block-fr);
 			}
@@ -548,7 +549,7 @@ Notebook to Tablet height: 0.868
 
 
 			.container {
-				width: calc(100vw - 2 * var(--padding-size) - 20px);
+				width: calc(100vw - 2 * var(--padding-size) - 2 * var(--border-size));
 			}
 
 		}
