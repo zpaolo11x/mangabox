@@ -305,7 +305,7 @@
 	<div id="myModal" class="modal">
 		<div id="modalContent" class="modal-content">
 			<div id="modalWrapper"><img id="modalImage"></div>
-			<p id="modalMessage">This is the message content.</p>
+			<div id="modalMessage">This is the message content.</div>
 
 		</div>
 	</div>
@@ -1276,7 +1276,9 @@
 			});			//modalFunctionsGlobal = functionArray;
 			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
-			modalMessage.textContent = message;
+			modalMessage.innerHTML = message;
+			
+			modalWrapper.style.display = image == '' ? 'none' : 'block';
 			//myModal.style.display = 'flex';
 
 			itemsArray.forEach(item => {
@@ -1300,11 +1302,48 @@
 				// Optional: if you still want to hide it completely from screen readers / tab order
 				myModal.classList.remove('visible');
 				myModal.classList.remove('unfade');
+				modalMessage.innerHTML = "";
 				document.querySelectorAll('.modal-button').forEach(el => {
 					el.remove();
 				});
 			}, 300);
 		}
+
+
+		async function handleThumbnailClick(imagePath, libraryId) {
+			try {
+				// Fetch the image file
+				const response = await fetch(imagePath);
+				const blob = await response.blob();
+
+				// Convert blob to base64
+				const base64 = await readFileAsBase64(blob);
+
+				// Now pass it to your existing function
+				applyLibraryImage(libraryId, base64);
+				//alert(base64); // <-- replace this with your actual handler
+
+			} catch (err) {
+				console.error("Error converting image:", err);
+				showModal('circle-mark-svg.svg', true, 'Failed to load image.',
+					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+			}
+		}
+
+		function generatePics(libraryId) {
+			let thumbNames = ["Manga", "Comics", "Girls", "Fantasy", "Puppet", "Robots", "Western"];
+			let out = "";
+			thumbNames.forEach(thumbName => {
+				out = out + `
+				<img class="mini-thumb press-button" src="library-thumbnails/${thumbName}.svg"
+				onClick="handleThumbnailClick('library-thumbnails/${thumbName}.svg', '${libraryId}')">
+				`
+			})
+			out = out + "<div>Select a thumbnail or drag an image over the library button</div>"
+			return (out)
+		}
+
+
 
 		//MB Search Functions 
 
@@ -3155,9 +3194,14 @@
 								}]);
 
 						} else {
+							showModal('', false, generatePics(libraryId), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
+
+							//TODO RIMETTER COME OPZIONE
+							/*
 							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.',
 								[{ label: 'Ok', runfunction: closeModal, high: true }]
 							);
+							*/
 						}
 					} else {
 						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', [
