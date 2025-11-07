@@ -36,20 +36,6 @@
 			font-style: normal;
 		}
 
-		.logo-pattern::before {
-			content: "";
-			position: fixed;
-			left: 0;
-			right: 0;
-			top: 0;
-			bottom: 0;
-			background-image: url('mangabox-pattern-black.svg'), url('mangabox-pattern-black.svg');
-			background-repeat: repeat, repeat, ;
-			background-size: 800px 200px, 800px 200px;
-			background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px);
-			opacity: 0.1;
-		}
-
 		body {
 			font-family: 'Outfit', sans-serif;
 			font-size: 18px;
@@ -60,20 +46,6 @@
 			font-weight: 200;
 			background-color: var(--mb-darkred);
 			text-shadow: 0px 0px 10px var(--mb-darkred2), 0px 0px 10px var(--mb-darkred2), 0px 0px 15px var(--mb-darkred2);
-		}
-
-		.back-gradient::before {
-			content: "";
-			position: fixed;
-			left: 0;
-			right: 0;
-			top: 0;
-			bottom: 0;
-			background-image: var(--mb-login-gradient);
-
-			background-repeat: no-repeat;
-			background-size: cover;
-			background-position: center;
 		}
 
 		#splashScreen {
