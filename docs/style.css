@@ -15,7 +15,7 @@
 
 			--block-width: 1000px;
 
-			--minWidth: calc(max(350px, 100vw) - 2*var(--padding-size) - 20px);
+			--minWidth: calc(max(350px, 100vw) - 2 * var(--padding-size) - 20px);
 
 			--scaler: 1.0;
 
@@ -60,7 +60,7 @@
 			padding: 0;
 			color: var(--text-color-main);
 			font-weight: 200;
-			background-color: black;
+			background: hsl(348, 63%, 7%);
 			text-shadow: 0px 0px 10px var(--mb-darkred2), 0px 0px 10px var(--mb-darkred2), 0px 0px 15px var(--mb-darkred2);
 		}
 
