@@ -3178,7 +3178,7 @@
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							showModal('', true, generatePics(libraryId,"Select a thumbnail or open an image from gallery or files"),
+							showModal('', true, generatePics(libraryId,"Select a thumbnail or open an image"),
 								[{
 									label: 'Gallery',
 									runfunction: async () => { await pickImage(libraryId); },
