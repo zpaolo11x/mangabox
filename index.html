@@ -1330,7 +1330,7 @@
 			}
 		}
 
-		function generatePics(libraryId) {
+		function generatePics(libraryId, text) {
 			let thumbNames = ["Manga", "Comics", "Girls", "Shojo", "Fantasy", "Puppet", "Robots", "Space", "Western"];
 			let out = "";
 			thumbNames.forEach(thumbName => {
@@ -1339,7 +1339,7 @@
 				onClick="handleThumbnailClick('library-thumbnails/${thumbName}.svg', '${libraryId}')">
 				`
 			})
-			out = out + "<div>Select a thumbnail or drag an image over the library button</div>"
+			out = out + `<div>${text}</div>`
 			return (out)
 		}
 
@@ -3178,7 +3178,7 @@
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							showModal('circle-info-svg.svg', true, 'Open an image from gallery or files.',
+							showModal('', true, generatePics(libraryId,"Select a thumbnail or open an image from gallery or files"),
 								[{
 									label: 'Gallery',
 									runfunction: async () => { await pickImage(libraryId); },
@@ -3194,7 +3194,7 @@
 								}]);
 
 						} else {
-							showModal('', false, generatePics(libraryId), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
+							showModal('', false, generatePics(libraryId,"Select a thumbnail or drag an image over the library button"), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
 
 							//TODO RIMETTER COME OPZIONE
 							/*
