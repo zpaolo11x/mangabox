@@ -2757,6 +2757,8 @@
 				booksLabel
 			);
 
+			seriesItem.classList.add('touch-scaler')
+
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
@@ -3639,6 +3641,8 @@
 			);
 
 			progressBar.append(progressGauge);
+
+			booksItem.classList.add('touch-scaler')
 
 			addTouchScaler(booksItem, async () => {
 				if (offlineSession && !bookIsOffline) return;
@@ -5922,6 +5926,10 @@
 		});
 
 		document.addEventListener('pointerdown', (event) => {
+			if ((mb.clickingTile != null) && (!event.target.classList.contains('touch-scaler'))){
+				mb.clickingTile = null;
+			}
+
 			if (mb.clickingTile != null) return;
 
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
