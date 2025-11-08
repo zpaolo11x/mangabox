@@ -186,7 +186,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
 		console.log('Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-		// Get JSON from Komga
+		// Get JSON from server
 		const bookMeta = await res.json();
 		// Save the full metadata to the folder
 		const bookMetaPath = path.join(bookFolder, 'metadata-book.json');
@@ -198,7 +198,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
 		console.log('Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-		// Get JSON from Komga
+		// Get JSON from server
 		const seriesMeta = await res.json();
 		// Save the full metadata to the folder
 		const seriesMetaPath = path.join(bookFolder, 'metadata-series.json');
@@ -210,7 +210,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
 		console.log('Fetch response status:', res.status);
 		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
-		// Get JSON from Komga
+		// Get JSON from server
 		const pagesMeta = await res.json();
 		// Save the full metadata to the folder
 		const pagesMetaPath = path.join(bookFolder, 'metadata-pages.json');
