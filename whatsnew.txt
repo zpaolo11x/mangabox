@@ -8,4 +8,4 @@ Build
 - 
 
 Fixes
-- 
+- Fixed touch reaction when menu bars are visible
