@@ -5926,7 +5926,9 @@
 		});
 
 		document.addEventListener('pointerdown', (event) => {
-			if ((mb.clickingTile != null) && (!event.target.classList.contains('touch-scaler'))){
+			const scaler = event.target.closest('.touch-scaler');
+
+			if ((mb.clickingTile != null) && (!scaler)){
 				mb.clickingTile = null;
 			}
 
