@@ -1,5 +1,11 @@
 Main UI
-- Added thumbnail selector when long pressing on library button
+- 
+
+Reader UI
+- 
+
+Build
+- 
 
 Fixes
-- Fixed touch reaction when menu bars are visible
+- 
