@@ -1,15 +1,5 @@
 Main UI
-- Restyled download progress indicator
-- New light and dark theme for login screen
-- Smoother login and logout transitions without complete reload
-- Changed main font from Roboto to Outfit
-
-Reader UI
-- Reader zoom levels are saved per device, not per server
-
-Build
-- Removed titlebar coloring for PWA build
-- Updated documentation
+- Added thumbnail selector when long pressing on library button
 
 Fixes
-- Fxied executable size increase in Electron apps
+- Fixed touch reaction when menu bars are visible

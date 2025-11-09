@@ -274,10 +274,10 @@
 		<div id="loginDialog" class="dialog">
 			<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 			<img id="logoName" src="logo/mangabox-logoname.svg">
-			<div class="version-note">v0.2.9</div>
+			<div class="version-note">v0.3.0</div>
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Komga Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
+				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 			</div>
 
 			<div class="input-wrapper" title="Username">
@@ -305,7 +305,7 @@
 	<div id="myModal" class="modal">
 		<div id="modalContent" class="modal-content">
 			<div id="modalWrapper"><img id="modalImage"></div>
-			<p id="modalMessage">This is the message content.</p>
+			<div id="modalMessage">This is the message content.</div>
 
 		</div>
 	</div>
@@ -1276,7 +1276,9 @@
 			});			//modalFunctionsGlobal = functionArray;
 			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
-			modalMessage.textContent = message;
+			modalMessage.innerHTML = message;
+			
+			modalWrapper.style.display = image == '' ? 'none' : 'block';
 			//myModal.style.display = 'flex';
 
 			itemsArray.forEach(item => {
@@ -1300,11 +1302,48 @@
 				// Optional: if you still want to hide it completely from screen readers / tab order
 				myModal.classList.remove('visible');
 				myModal.classList.remove('unfade');
+				modalMessage.innerHTML = "";
 				document.querySelectorAll('.modal-button').forEach(el => {
 					el.remove();
 				});
 			}, 300);
 		}
+
+
+		async function handleThumbnailClick(imagePath, libraryId) {
+			try {
+				// Fetch the image file
+				const response = await fetch(imagePath);
+				const blob = await response.blob();
+
+				// Convert blob to base64
+				const base64 = await readFileAsBase64(blob);
+
+				// Now pass it to your existing function
+				applyLibraryImage(libraryId, base64);
+				//alert(base64); // <-- replace this with your actual handler
+
+			} catch (err) {
+				console.error("Error converting image:", err);
+				showModal('circle-mark-svg.svg', true, 'Failed to load image.',
+					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+			}
+		}
+
+		function generatePics(libraryId, text) {
+			let thumbNames = ["Manga", "Comics", "Girls", "Shojo", "Fantasy", "Puppet", "Robots", "Space", "Western"];
+			let out = "";
+			thumbNames.forEach(thumbName => {
+				out = out + `
+				<img class="mini-thumb press-button" src="library-thumbnails/${thumbName}.svg"
+				onClick="handleThumbnailClick('library-thumbnails/${thumbName}.svg', '${libraryId}')">
+				`
+			})
+			out = out + `<div>${text}</div>`
+			return (out)
+		}
+
+
 
 		//MB Search Functions 
 
@@ -2718,6 +2757,8 @@
 				booksLabel
 			);
 
+			seriesItem.classList.add('touch-scaler')
+
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
@@ -3139,7 +3180,7 @@
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							showModal('circle-info-svg.svg', true, 'Open an image from gallery or files.',
+							showModal('', true, generatePics(libraryId,"Select a thumbnail or open an image"),
 								[{
 									label: 'Gallery',
 									runfunction: async () => { await pickImage(libraryId); },
@@ -3155,9 +3196,14 @@
 								}]);
 
 						} else {
+							showModal('', false, generatePics(libraryId,"Select a thumbnail or drag an image over the library button"), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
+
+							//TODO RIMETTER COME OPZIONE
+							/*
 							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.',
 								[{ label: 'Ok', runfunction: closeModal, high: true }]
 							);
+							*/
 						}
 					} else {
 						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', [
@@ -3595,6 +3641,8 @@
 			);
 
 			progressBar.append(progressGauge);
+
+			booksItem.classList.add('touch-scaler')
 
 			addTouchScaler(booksItem, async () => {
 				if (offlineSession && !bookIsOffline) return;
@@ -4654,20 +4702,20 @@
 
 			let useOfflineCopy = !(offline == null);
 
-			// Get the pages data structure from komga for the current book
-			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
+			// Get the pages data structure from server for the current book
+			const serverPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			/*
-			readerViewer.style.width = webtoonScale * (komgaPageData.map(item => ((item.width)))
-				.reduce((sum, width) => sum + width, 0) / komgaPageData.length) + 'px';
+			readerViewer.style.width = webtoonScale * (serverPageData.map(item => ((item.width)))
+				.reduce((sum, width) => sum + width, 0) / serverPageData.length) + 'px';
 	
-			readerViewer.style.height = webtoonScale * (komgaPageData.map(item => ((item.height)))
+			readerViewer.style.height = webtoonScale * (serverPageData.map(item => ((item.height)))
 				.reduce((sum, width) => sum + width, 0)) + 'px';
 			*/
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInnerWT.style.flexDirection = 'column';
 
-			const pageData = komgaPageData.map(page => ({
+			const pageData = serverPageData.map(page => ({
 				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
@@ -4687,7 +4735,7 @@
 			//let webtoonScale = 1.0;
 			//if (screenWidth < imageWidth) webtoonScale = screenWidth / imageWidth;
 
-			let i_page = 0; 		// Index of komga page data
+			let i_page = 0; 		// Index of server page data
 			let realPage = 1;		// Index of real page
 
 			// double spread with single page are treated as this:
@@ -4767,12 +4815,12 @@
 
 			let useOfflineCopy = !(offline == null);
 
-			// Get the pages data structure from komga for the current book
-			const komgaPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
+			// Get the pages data structure from server for the current book
+			const serverPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
-			mb.readerMaxRatio = komgaPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
-				.reduce((sum, ratio) => sum + ratio, 0) / komgaPageData.length;
+			mb.readerMaxRatio = serverPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
+				.reduce((sum, ratio) => sum + ratio, 0) / serverPageData.length;
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-reader-scale) / 100 * 100vh))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
@@ -4782,7 +4830,7 @@
 			thumbStripInner.style.flexDirection = rd.rtl ? 'row-reverse' : 'row';
 
 			// Create pageData structure with the fields from fetched data
-			const pageData = komgaPageData.map(page => ({
+			const pageData = serverPageData.map(page => ({
 				url: useOfflineCopy ? `${offline.bookPath}/pages/${page.number}${mimeToExt[page.mediaType]}` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}`,
 				thumb: useOfflineCopy ? `${offline.bookPath}/thumbs/t_${page.number}.jpg` : `${mb.baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`,
 				pageNum: page.number,
@@ -4821,7 +4869,7 @@
 			// Create html structure for every page and related page thumbnails
 			// and organize data structur for spread formation
 
-			let i_page = 0; 		// Index of komga page data
+			let i_page = 0; 		// Index of server page data
 			let realPage = 1;		// Index of real page
 
 			// double spread with single page are treated as this:
@@ -5878,6 +5926,12 @@
 		});
 
 		document.addEventListener('pointerdown', (event) => {
+			const scaler = event.target.closest('.touch-scaler');
+
+			if ((mb.clickingTile != null) && (!scaler)){
+				mb.clickingTile = null;
+			}
+
 			if (mb.clickingTile != null) return;
 
 			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {

@@ -136,12 +136,13 @@
 [fader-theme="light"] {
 	--mb-fader-color: var(--mb-login-gradient);
 }
+
 [fader-theme="dark"] {
 	--mb-fader-color: var(--mb-login-gradient);
 }
 
 [data-theme="light"] {
-	--mb-test-color:blue;
+	--mb-test-color: blue;
 
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
@@ -150,9 +151,9 @@
 	--mb-active-color: #f0f0f0;
 	--mb-card-color-alpha: #ffffff65;
 
-	--mb-login-border-color:#c0c0c0;
-	--mb-login-button-color:#e0e0e0;
-	--mb-login-logo:0.20;
+	--mb-login-border-color: #c0c0c0;
+	--mb-login-button-color: #e0e0e0;
+	--mb-login-logo: 0.20;
 
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
@@ -173,7 +174,7 @@
 }
 
 [data-theme="dark"] {
-		--mb-test-color:green;
+	--mb-test-color: green;
 
 
 	--mb-page-color: #202020;
@@ -183,9 +184,9 @@
 	--mb-active-color: #656565;
 	--mb-card-color-alpha: #35353565;
 
-	--mb-login-border-color:#707070;
-	--mb-login-button-color:#505050;
-	--mb-login-logo:0.95;
+	--mb-login-border-color: #707070;
+	--mb-login-button-color: #505050;
+	--mb-login-logo: 0.95;
 
 
 	--mb-text-color: rgba(255, 255, 255, 0.85);
@@ -206,13 +207,13 @@
 		0 2px 2px rgba(255, 255, 255, 0.0);
 }
 
- @font-face {
+@font-face {
 	font-family: 'Outfit';
 	src: url('./webfonts/Outfit-VariableFont_wght.ttf') format('truetype');
 	font-weight: 100 1000;
 	font-display: swap;
 	font-style: normal;
- }
+}
 
 * {
 	user-select: none;
@@ -311,7 +312,7 @@ body {
 	font-size: 18px;
 }
 
-.modal-content p {
+#modalMessage {
 	padding-left: var(--mb-dialog-padding);
 	padding-right: var(--mb-dialog-padding);
 	margin-top: calc(0.5 * var(--mb-dialog-padding));
@@ -335,6 +336,20 @@ body {
 
 #myModal.ok-only #modalCancel {
 	display: none;
+}
+
+.mini-thumb {
+	width: 45px;
+	height: 45px;
+	padding: 2px;
+	margin: 2px;
+	border-radius: 50%;
+	background-color: var(--mb-hover-color);
+}
+
+.mini-thumb:hover {
+	background-color: var(--mb-accent);
+
 }
 
 #colorSwatchBar {
@@ -513,11 +528,12 @@ a {
 
 #dragbar.onLogin {
 	background-color: transparent;
-	color:white;
+	color: white;
 	transition: background-color 0.3s;
 }
+
 #dragbar.onLogin #windowControls span {
-color:white;
+	color: white;
 }
 
 #dragbar.onReader {
@@ -882,7 +898,8 @@ color:white;
 }
 
 #downloadSpinner span {
-	grid-area: 1 / 1; /* makes them all overlap */
+	grid-area: 1 / 1;
+	/* makes them all overlap */
 	font-size: 38px;
 	width: 100%;
 	height: 100%;
@@ -890,7 +907,7 @@ color:white;
 	text-align: center;
 }
 
-#downloadSpinner span.layer{
+#downloadSpinner span.layer {
 	transform: scaleX(-1);
 }
 
@@ -1416,9 +1433,8 @@ color:white;
 	font-size: 17px;
 	font-weight: bold;
 	transform: translate(-50%, -50%) rotate(45deg);
-		box-shadow: 0 0px 3px rgba(0,0,0,0.2);
+	box-shadow: 0 0px 3px rgba(0, 0, 0, 0.2);
 	text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px
-
 }
 
 .download-glyph {
@@ -1695,7 +1711,8 @@ color:white;
 	background-color: var(--mb-card-color);
 	text-align: left;
 	cursor: pointer;
-	font-size: 0.9em; /*XXX NOT USED XXX*/
+	font-size: 0.9em;
+	/*XXX NOT USED XXX*/
 	margin: 0;
 	padding: var(--mb-card-padding);
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
@@ -1840,7 +1857,8 @@ book-item {
 	font-weight: 500;
 	padding-top: 8px;
 	padding-bottom: 0px;
-	font-size: 15px; /*XXX MAGARI 14.5px XXX*/
+	font-size: 15px;
+	/*XXX MAGARI 14.5px XXX*/
 }
 
 .info-row {
@@ -2086,11 +2104,11 @@ span.mini-title {
 	opacity: 1;
 	transition: opacity 0.3s linear 0.3s, background-color 0.3s ease;
 	pointer-events: none;
-	z-index:12000;
+	z-index: 12000;
 }
 
-#fader.hidden{
-	opacity:0;
+#fader.hidden {
+	opacity: 0;
 }
 
 #blanker {
