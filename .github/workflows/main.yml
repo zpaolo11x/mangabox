@@ -148,8 +148,6 @@ jobs:
             mv dist/*.dmg dist/MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}.dmg
           fi
 
-
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
