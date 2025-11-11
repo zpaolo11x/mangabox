@@ -402,6 +402,10 @@
 
 		const isSharpCornerIphone = getSharpCornerIphone();
 
+		if (isStatusBar && (capacitorPlatform == 'android')){
+			Capacitor.Plugins.StatusBar.setOverlaysWebView(false);
+		} 
+
 		if (isStatusBar) {
 			if (isSharpCornerIphone || (capacitorPlatform == 'android' && isOrientationLandscape())) {
 				Capacitor.Plugins.StatusBar.hide();
