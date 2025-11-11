@@ -404,8 +404,11 @@
 
 		if (isStatusBar) {
 			if (isSharpCornerIphone || (capacitorPlatform == 'android')) {
+								alert("hide")
+
 				Capacitor.Plugins.StatusBar.hide();
 			} else {
+				alert("show")
 				Capacitor.Plugins.StatusBar.show();
 			}
 		}
@@ -1837,8 +1840,12 @@
 			if (isCapacitor && (capacitorPlatform == 'android')) {
 				setTimeout(() => {
 					if (isOrientationLandscape()) {
+														alert("hide")
+
 						Capacitor.Plugins.StatusBar.hide();
 					} else {
+														alert("hide")
+
 						Capacitor.Plugins.StatusBar.hide();
 					}
 				}, 100)
@@ -4141,6 +4148,8 @@
 			sectionShow(touchPanel);
 
 			if (isStatusBar) {
+												alert("hide")
+
 				Capacitor.Plugins.StatusBar.hide();
 			}
 			initViewer();
@@ -4227,7 +4236,9 @@
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 
-			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android'))) {
+			if (isStatusBar && !isSharpCornerIphone && !(capacitorPlatform == 'android')) {
+								alert("show")
+
 				Capacitor.Plugins.StatusBar.show();
 			}
 
@@ -5738,10 +5749,14 @@
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
 				if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android'))) {
+									alert("show")
+
 					Capacitor.Plugins.StatusBar.show();
 				}
 			} else {
 				if (isStatusBar) {
+													alert("hide")
+
 					Capacitor.Plugins.StatusBar.hide();
 				}
 			}
