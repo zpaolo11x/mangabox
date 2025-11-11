@@ -403,7 +403,7 @@
 		const isSharpCornerIphone = getSharpCornerIphone();
 
 		if (isStatusBar && (capacitorPlatform == 'android')){
-			      await Capacitor.Plugins.setOverlaysWebView({ overlay: false });
+			      await Capacitor.Plugins.StatusBar.setOverlaysWebView({ overlay: false });
 		} 
 
 		if (isStatusBar) {
