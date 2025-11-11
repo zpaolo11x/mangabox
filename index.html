@@ -403,7 +403,7 @@
 		const isSharpCornerIphone = getSharpCornerIphone();
 
 		if (isStatusBar) {
-			if (isSharpCornerIphone || (capacitorPlatform == 'android' && isOrientationLandscape())) {
+			if (isSharpCornerIphone || (capacitorPlatform == 'android')) {
 				Capacitor.Plugins.StatusBar.hide();
 			} else {
 				Capacitor.Plugins.StatusBar.show();
@@ -1839,7 +1839,7 @@
 					if (isOrientationLandscape()) {
 						Capacitor.Plugins.StatusBar.hide();
 					} else {
-						Capacitor.Plugins.StatusBar.show();
+						Capacitor.Plugins.StatusBar.hide();
 					}
 				}, 100)
 			}
@@ -4227,7 +4227,7 @@
 
 			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
 
-			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
+			if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android'))) {
 				Capacitor.Plugins.StatusBar.show();
 			}
 
@@ -5737,7 +5737,7 @@
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
-				if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android') && isOrientationLandscape())) {
+				if (isStatusBar && !isSharpCornerIphone && !((capacitorPlatform == 'android'))) {
 					Capacitor.Plugins.StatusBar.show();
 				}
 			} else {
