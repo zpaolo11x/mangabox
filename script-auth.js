@@ -154,7 +154,7 @@ async function systemRestart() {
 	executeFade(1);
 
 	if (isStatusBar) {
-		if (isSharpCornerIphone || (capacitorPlatform == 'android' && isOrientationLandscape())) {
+		if (isSharpCornerIphone || (capacitorPlatform == 'android')) {
 			Capacitor.Plugins.StatusBar.hide();
 		} else {
 			Capacitor.Plugins.StatusBar.show();
