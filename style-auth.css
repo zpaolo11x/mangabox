@@ -84,7 +84,8 @@
 .input-wrapper {
 	display:flex;
 	box-sizing: border-box;
-	background: var(--mb-input-color);
+	background-color:var(--mb-login-button-color);
+	background-image: linear-gradient(90deg, transparent 40px, var(--mb-input-color) 40px);
 	padding: 0;
 	margin: 0;
 	position: relative;
@@ -115,9 +116,13 @@
 }
 
 .input-wrapper:focus-within i {
-	color: var(--mb-accent);
+	color: white;
 }
+.input-wrapper:focus-within{
+		background-color:var(--mb-accent);
 
+
+}
 .login-input {
 	background:none;
 	-webkit-appearance: none;
