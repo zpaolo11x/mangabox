@@ -80,37 +80,72 @@
 	/* Chrome, Safari, and new Edge */
 }
 
+
+.input-wrapper {
+	display:flex;
+	box-sizing: border-box;
+	background: var(--mb-input-color);
+	padding: 0;
+	margin: 0;
+	position: relative;
+	width: 100%;
+	height:var(--mb-dialog-button-height);
+	margin-top: var(--mb-dialog-padding);
+	border: 1px var(--mb-login-border-color) solid;
+	border-radius: var(--mb-dialog-button-radius);
+	box-shadow: none;
+	transition: all 0.3s, box-shadow 0.1s;
+}
+
+.input-wrapper i {
+	position: absolute;
+	left: 20px;
+	top: 20px;
+	transform: translate(-50%, -50%);
+	color: var(--mb-glyph-color);
+
+	font-size: var(--mb-dialog-font-size);
+	pointer-events: none;
+	/* Make the icon not respond to hover directly */
+	transition: all 0.3s;
+}
+
+.input-wrapper:hover i {
+	border-color: var(--mb-accent);
+}
+
+.input-wrapper:focus-within i {
+	color: var(--mb-accent);
+}
+
 .login-input {
+	background:none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
 	border: none;
 	outline: none;
-	background: var(--mb-input-color);
 	padding: 0;
 	margin: 0;
-	box-shadow: none;
 	font: inherit;
 	color: inherit;
 
 	box-sizing: border-box;
-	height: var(--mb-dialog-button-height);
+	height: 100%;
 	width: 100%;
 	border-radius: var(--mb-dialog-button-radius);
-	border: 1px var(--mb-login-border-color) solid;
 	padding-left: calc(var(--mb-dialog-button-height) + 5px);
-
 	padding-right: 10px;
 	font-size: var(--mb-dialog-font-size);
 
 	transition: all 0.3s, box-shadow 0.1s;
 }
 
-.login-input:hover {
+.input-wrapper:hover {
 	border: 1px solid var(--mb-accent);
 }
 
-.login-input:focus {
+.input-wrapper:focus-within {
 	border: 1px solid var(--mb-accent);
 	box-shadow: 0px 0px 5px var(--mb-accent-a50);
 }
@@ -146,6 +181,8 @@
 
 
 .login-button-round {
+	box-sizing: border-box;
+
 	margin: 0px;
 	padding:0px;
 	appearance: none;
@@ -161,7 +198,6 @@
 	font-size: var(--mb-dialog-font-size);
 	font: inherit;
 	color: inherit;
-	
 
 }
 
@@ -171,13 +207,12 @@
 	top: 50%;
 	transform: translate(-50%, -50%);
 	font-size: var(--mb-dialog-font-size);
+	line-height: var(--mb-dialog-button-height);
 	pointer-events: none;
 	transition: all 0.3s;
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
-	display: flex;
-	align-items: center;
-	justify-content: center;
+
 }
 
 
@@ -281,44 +316,4 @@
 	line-height: 16px;
 	/* white-space: nowrap; */
 	/* Matches cursor with checkbox */
-}
-
-.input-wrapper {
-	position: relative;
-	width: 100%;
-	margin-top: var(--mb-dialog-padding);
-
-}
-
-.input-wrapper i {
-	box-sizing: border-box;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	color: var(--mb-glyph-color);
-	/* White icon color */
-	background-color: var(--mb-login-button-color);
-	/* Accent color */
-	width: var(--mb-dialog-button-height);
-	height: var(--mb-dialog-button-height);
-	border-radius: var(--mb-dialog-button-radius) 0px 0px var(--mb-dialog-button-radius);
-	border: 1px solid var(--mb-login-border-color);
-	border-right: transparent;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: var(--mb-dialog-font-size);
-	pointer-events: none;
-	/* Make the icon not respond to hover directly */
-	transition: all 0.3s;
-}
-
-.input-wrapper:hover i {
-	border-color: var(--mb-accent);
-}
-
-.input-wrapper:focus-within i {
-	background-color: var(--mb-accent);
-	border-color: var(--mb-accent);
-	color: #fff;
 }
