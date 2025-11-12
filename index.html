@@ -437,7 +437,7 @@
 			if (isEdgeToEdge){
 				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
 				debugPrint('Insets:');
-				debugPrint(result);
+				debugPrint(JSON.stringify(result, null, 2));
 			}
 		}
 
