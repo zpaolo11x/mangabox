@@ -436,7 +436,7 @@
 		async function setAndroidInsets() {
 			if (isEdgeToEdge) {
 				let ratio = window.devicePixelRatio || 1;
-				Capacitor.Plugins.EdgeToEdge.enable()
+				await Capacitor.Plugins.EdgeToEdge.enable()
 				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
 				debugPrint(JSON.stringify(result, null, 2));
 				document.documentElement.style.setProperty('--mb-android-inset-top', (result.top/ratio) + 'px');
