@@ -434,17 +434,22 @@
 		}
 
 		async function getInsets(){
-			result = await Capacitor.Plugins.EdgeToEdge.getInsets();
-			debugPrint('Insets:');
-			debugPrint(result);
+			if (isEdgeToEdge){
+				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
+				debugPrint('Insets:');
+				debugPrint(result);
+			}
 		}
 
-		if (isEdgeToEdge) {
-			debugPrint('isEdgeToEdge: true');
-			await getInsets();
-			Capacitor.Plugins.EdgeToEdge.disable();
-			await getInsets();
-		}
+(async () => {
+	if (isEdgeToEdge) {
+		debugPrint('isEdgeToEdge: true');
+		await getInsets();
+		Capacitor.Plugins.EdgeToEdge.disable();
+		await getInsets();
+	}
+})();
+
 
 		//MB Pinch To Zoom
 
