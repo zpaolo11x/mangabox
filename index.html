@@ -434,10 +434,15 @@
 		}
 
 		if (isEdgeToEdge) {
-			Capacitor.Plugins.EdgeToEdge.disable();
+			debugPrint('isEdgeToEdge: true');
 			const getInsets = async () => {
 				const result = await Capacitor.Plugins.EdgeToEdge.getInsets();
-				debugPrint('Insets:', result);
+				debugPrint('Insets 1:', result);
+			};
+			Capacitor.Plugins.EdgeToEdge.disable();
+			const getInsets2 = async () => {
+				const result2 = await Capacitor.Plugins.EdgeToEdge.getInsets();
+				debugPrint('Insets 2:', result2);
 			};
 		}
 
