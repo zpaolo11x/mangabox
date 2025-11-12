@@ -340,7 +340,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = false;
+		const enableDebugPrint = true;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -433,8 +433,12 @@
 			}
 		}
 
-		if (isEdgeToEdge){
+		if (isEdgeToEdge) {
 			Capacitor.Plugins.EdgeToEdge.disable();
+			const getInsets = async () => {
+				const result = await Capacitor.Plugins.EdgeToEdge.getInsets();
+				debugPrint('Insets:', result);
+			};
 		}
 
 		//MB Pinch To Zoom
