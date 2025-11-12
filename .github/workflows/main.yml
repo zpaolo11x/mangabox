@@ -260,6 +260,10 @@ jobs:
         if: ${{ matrix.sys == 'android' }}
         run: npm install @capawesome/capacitor-android-edge-to-edge-support
 
+      - name: Install navigation bar plugin (Android)
+        if: ${{ matrix.sys == 'android' }}
+        run: npm install @hugotomazi/capacitor-navigation-bar
+
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
         run: |

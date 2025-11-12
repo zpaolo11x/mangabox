@@ -353,6 +353,7 @@
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
+		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar;
 
 		let capacitorPlatform = null;
 
@@ -4191,6 +4192,9 @@
 			if (isStatusBar) {
 				Capacitor.Plugins.StatusBar.hide();
 			}
+			if (isNavBar) {
+				Capacitor.Plugins.NavigationBar.hide();
+			}
 			initViewer();
 
 		}
@@ -4278,7 +4282,9 @@
 			if (isStatusBar && !isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.show();
 			}
-
+			if (isNavBar) {
+				Capacitor.Plugins.NavigationBar.show();
+			}
 		}
 
 		readerClose.addEventListener('click', () => {
