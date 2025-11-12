@@ -436,6 +436,7 @@
 		async function setAndroidInsets() {
 			if (isEdgeToEdge) {
 				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
+				debugPrint(JSON.stringify(result, null, 2));
 				document.documentElement.style.setProperty('--mb-android-inset-top', result.top + 'px');
 				document.documentElement.style.setProperty('--mb-android-inset-bottom', result.bottom + 'px');
 				document.documentElement.style.setProperty('--mb-android-inset-left', result.left + 'px');
@@ -444,6 +445,7 @@
 		}
 
 		(async () => {
+				if (isEdgeToEdge) Capacitor.Plugins.EdgeToEdge.disable();
 				await setAndroidInsets();
 		})();
 
