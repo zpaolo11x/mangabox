@@ -111,6 +111,8 @@
 	transition: all 0.3s;
 }
 
+
+
 .input-wrapper:hover i {
 	border-color: var(--mb-accent);
 }
@@ -120,9 +122,17 @@
 }
 .input-wrapper:focus-within{
 		background-color:var(--mb-accent);
-
-
 }
+/*
+#passIcon{
+	pointer-events:unset;
+	left: calc(100% - 40px);
+}
+
+.input-wrapper:focus-within #passIcon{
+ color: var(--mb-glyph-color);
+}
+*/
 .login-input {
 	background:none;
 	-webkit-appearance: none;
