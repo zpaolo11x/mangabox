@@ -262,7 +262,7 @@ jobs:
 
       - name: Install navigation bar plugin (Android)
         if: ${{ matrix.sys == 'android' }}
-        run: npm install @squareetlbas/capacitor-navigation-bar
+        run: npm install @ethion/capacitor-navigation-bar
 
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
