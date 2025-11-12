@@ -438,12 +438,12 @@
 				let ratio = window.devicePixelRatio || 1;
 				Capacitor.Plugins.EdgeToEdge.enable()
 				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
-				Capacitor.Plugins.EdgeToEdge.disable()
 				debugPrint(JSON.stringify(result, null, 2));
 				document.documentElement.style.setProperty('--mb-android-inset-top', (result.top/ratio) + 'px');
 				document.documentElement.style.setProperty('--mb-android-inset-bottom', (result.bottom/ratio) + 'px');
 				document.documentElement.style.setProperty('--mb-android-inset-left', (result.left/ratio) + 'px');
 				document.documentElement.style.setProperty('--mb-android-inset-right', (result.right/ratio) + 'px');
+				Capacitor.Plugins.EdgeToEdge.disable()
 			}
 		}
 
