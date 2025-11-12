@@ -436,6 +436,38 @@ body {
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
+#infoText {
+	display: none;
+	position: fixed;
+	z-index: 20000;
+	font-size: 20px;
+	color: white;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	bottom: 0px;
+	background-color: hsla(348, 100%, 20%, 0.75);
+	padding: 0px 20px;
+	overflow:auto;
+	backdrop-filter: blur(20px);
+	transition:all 0.3s
+}
+
+#infoText.visible{
+	display:block;
+}
+
+#infoText h1{
+ font-size: 24px;
+ font-weight: 600;
+ margin-bottom:20px;
+ margin-top:30px;
+}
+
+#infoText div, li{
+	margin-bottom:10px;
+}
+
 @keyframes fadeIn {
 	from {
 		opacity: 0;

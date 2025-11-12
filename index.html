@@ -293,10 +293,12 @@
 			<div class="login-buttons">
 				<div class="remember-me-container">
 					<input type="checkbox" id="loginRememberMe" class="remember-me-checkbox">
-					<label for="rememberMe" class="remember-me-label">Remember Me</label>
+					<label for="rememberMe" class="remember-me-label">Keep Me Signed</label>
 				</div>
 				<button class="login-button" onclick="login()">Login</button>
 			</div>
+
+			<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
 
 			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
 		</div>
@@ -311,6 +313,24 @@
 	</div>
 
 	<div id="fader" class="logo-pattern"></div>
+
+	<div id="infoText" onClick="infoText.classList.toggle('visible')">
+		<h1>MangaBox v0.3.1</h1>
+		<div>MangaBox is a streamlined client for your Komga media server.
+			To access your own, self-hosted server please enter the server URL in the login field, then your username and password. </div>
+		<div>MangaBox is not designed to access external sources and does not provide content, it is only designed to display and navigate your own libraries and read your own books.</div>
+		<h1>Features:</h1>
+		<ul>
+			<li>Connect easily to your Komga server from the onboarding screen</li>
+			<li>Light and dark themes with custom color highlights</li>
+			<li>Touch and gesture support for tablets and phones</li>
+			<li>Beautiful two-pages reading with paper-style visuals, page-turn animations and thumbnail previews</li>
+			<li>Sync reading progress with the server</li>
+			<li>Download books for offline reading</li>
+			<li>Quick filter libraries by language, read status, and direction</li>
+			<li>Global search for series and volumes</li>
+		</ul>
+	</div>
 
 	<div id="debuggerObj"></div>
 
@@ -1277,7 +1297,7 @@
 			modalWrapper.style.backgroundImage = bg ? '' : 'none';
 			modalImage.src = image;
 			modalMessage.innerHTML = message;
-			
+
 			modalWrapper.style.display = image == '' ? 'none' : 'block';
 			//myModal.style.display = 'flex';
 
@@ -1853,7 +1873,7 @@
 		window.addEventListener('pageshow', (event) => {
 			if (event.persisted) fixZoomOnPWA();
 		});
-		
+
 		// Fade in and Fade out routines
 		function wait(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));
@@ -3185,7 +3205,7 @@
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							showModal('', true, generatePics(libraryId,"Select a thumbnail or open an image"),
+							showModal('', true, generatePics(libraryId, "Select a thumbnail or open an image"),
 								[{
 									label: 'Gallery',
 									runfunction: async () => { await pickImage(libraryId); },
@@ -3201,7 +3221,7 @@
 								}]);
 
 						} else {
-							showModal('', false, generatePics(libraryId,"Select a thumbnail or drag an image over the library button"), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
+							showModal('', false, generatePics(libraryId, "Select a thumbnail or drag an image over the library button"), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
 
 							//TODO RIMETTER COME OPZIONE
 							/*
@@ -5933,7 +5953,7 @@
 		document.addEventListener('pointerdown', (event) => {
 			const scaler = event.target.closest('.touch-scaler');
 
-			if ((mb.clickingTile != null) && (!scaler)){
+			if ((mb.clickingTile != null) && (!scaler)) {
 				mb.clickingTile = null;
 			}
 

@@ -4,11 +4,13 @@
 	right: 0;
 	top: 0;
 	bottom: 0;
-	background-image: 
-	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
-	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
-	var(--mb-login-gradient);
-	
+	background-image:
+		url('logo/mangabox-pattern-alpha-mid.svg'),
+		/* Your pattern image */
+		url('logo/mangabox-pattern-alpha-mid.svg'),
+		/* Your pattern image */
+		var(--mb-login-gradient);
+
 	background-repeat: repeat, repeat, no-repeat;
 	background-size: 800px 200px, 800px 200px, cover;
 	background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
@@ -27,10 +29,10 @@
 }
 
 #logoName {
-	max-width:300px;
-	width:100%;
+	max-width: 300px;
+	width: 100%;
 	margin-bottom: 5px;
-	filter:invert(var(--mb-login-logo));
+	filter: invert(var(--mb-login-logo));
 }
 
 #logoIcon {
@@ -39,15 +41,15 @@
 
 .dialog {
 	max-height: calc(100vh - 50px);
-	overflow-y:scroll;
-	overflow-x:hidden;
+	overflow-y: scroll;
+	overflow-x: hidden;
 	max-width: 300px;
 	min-width: 180px;
 	width: calc(100% - 100px);
 
 	padding: 0px;
 	margin: 0px;
-	
+
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -67,12 +69,15 @@
 }
 
 .dialog {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE & Edge (legacy) */
+	scrollbar-width: none;
+	/* Firefox */
+	-ms-overflow-style: none;
+	/* IE & Edge (legacy) */
 }
 
 .dialog::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and new Edge */
+	display: none;
+	/* Chrome, Safari, and new Edge */
 }
 
 .login-input {
@@ -114,11 +119,12 @@
 	margin: 0px;
 	padding: 0px;
 	display: grid;
-grid-template-columns: auto minmax(60px, 1fr);
+	grid-template-columns: auto minmax(60px, 1fr);
 	width: 100%;
 	gap: var(--mb-dialog-padding);
-	
+
 }
+
 
 .login-button {
 	margin: 0px;
@@ -127,27 +133,72 @@ grid-template-columns: auto minmax(60px, 1fr);
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
-	width:100%;
+	width: 100%;
 	margin-right: 0px;
 	margin-left: auto;
-	max-width:120px;
+	max-width: 120px;
 	margin-top: var(--mb-dialog-padding);
 	transition: 0.3s all;
 	font-size: var(--mb-dialog-font-size);
 	font: inherit;
 	color: inherit;
+}
+
+
+.login-button-round {
+	margin: 0px;
+	padding:0px;
+	appearance: none;
+	background: var(--mb-login-button-color);
+	border: 1px solid var(--mb-login-border-color);
+	border-radius: var(--mb-dialog-button-radius);
+	height: var(--mb-dialog-button-height);
+	width: var(--mb-dialog-button-height);
+	min-width: var(--mb-dialog-button-height);
+	min-height: var(--mb-dialog-button-height);
+	
+	transition: 0.3s all;
+	font-size: var(--mb-dialog-font-size);
+	font: inherit;
+	color: inherit;
+	
 
 }
 
-.login-button:hover {
+.login-button-round i {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: var(--mb-dialog-font-size);
+	pointer-events: none;
+	transition: all 0.3s;
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.login-button:hover,
+.login-button-round:hover {
 	border: 1px solid var(--mb-accent);
 	/*background-color:#eee;*/
 }
 
-.login-button:active {
+.login-button:active,
+.login-button-round:active {
 	border: 1px solid var(--mb-accent);
 	background-color: var(--mb-accent);
 	color: white;
+}
+
+#loginInfo {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	margin:0px;
 }
 
 .auth-hidden {
@@ -175,7 +226,7 @@ grid-template-columns: auto minmax(60px, 1fr);
 	/* Remove the default checkbox appearance */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
-		min-width: var(--mb-dialog-button-height);
+	min-width: var(--mb-dialog-button-height);
 	min-height: var(--mb-dialog-button-height);
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
@@ -222,11 +273,13 @@ grid-template-columns: auto minmax(60px, 1fr);
 
 .remember-me-label {
 	min-width: 20px;
-	font-size: var(--mb-dialog-font-size);
+	width: 90px;
+	font-size: 14px;
 	cursor: pointer;
-		overflow: hidden;
+	overflow: hidden;
 	text-overflow: ellipsis;
-	white-space: nowrap;
+	line-height: 16px;
+	/* white-space: nowrap; */
 	/* Matches cursor with checkbox */
 }
 

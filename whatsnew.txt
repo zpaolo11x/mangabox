@@ -1,11 +1,11 @@
 Main UI
-- 
+- Added an info text on the login screen.
 
 Reader UI
 - 
 
 Build
-- 
+- Removed overlapping status bar text on Android build.
 
 Fixes
 - 
