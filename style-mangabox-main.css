@@ -15,13 +15,23 @@
 	--mb-darkred2: hsl(348, 89%, 12%);
 	--mb-login-gradient: linear-gradient(135deg, var(--mb-darkred), var(--mb-darkred2));
 
+	--mb-android-inset-top: 0px;
+	--mb-android-inset-bottom: 0px;
+	--mb-android-inset-left: 0px;
+	--mb-android-inset-right: 0px;
+
+	--mb-inset-top: calc(env(safe-area-inset-top) + var(--mb-android-inset-top));
+	--mb-inset-bottom: calc(env(safe-area-inset-bottom) + var(--mb-android-inset-top));
+	--mb-inset-left: calc(env(safe-area-inset-left) + var(--mb-android-inset-left));
+	--mb-inset-right: calc(env(safe-area-inset-right) + var(--mb-android-inset-right));
+
 	--mb-area-padding: 20px;
-	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), env(safe-area-inset-left)));
-	--mb-area-safe-padding-right: calc(max(var(--mb-area-padding), env(safe-area-inset-right)));
+	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), var(--mb-inset-left)));
+	--mb-area-safe-padding-right: calc(max(var(--mb-area-padding), var(--mb-inset-right)));
 
 	--mb-bar-padding: 10px;
-	--mb-bar-safe-padding-left: calc(max(var(--mb-bar-padding), calc(env(safe-area-inset-left) - var(--mb-bar-padding))));
-	--mb-bar-safe-padding-right: calc(max(var(--mb-bar-padding), calc(env(safe-area-inset-right) - var(--mb-bar-padding))));
+	--mb-bar-safe-padding-left: calc(max(var(--mb-bar-padding), calc(var(--mb-inset-left) - var(--mb-bar-padding))));
+	--mb-bar-safe-padding-right: calc(max(var(--mb-bar-padding), calc(var(--mb-inset-right) - var(--mb-bar-padding))));
 
 	--mb-library-gap: 8px;
 	--mb-button-size: 44px;
@@ -40,8 +50,8 @@
 	--mb-dialog-box-radius: calc(var(--mb-dialog-padding) + var(--mb-dialog-button-radius));
 	--mb-dialog-font-size: 18px;
 
-	--mb-button-safe-left: calc((env(safe-area-inset-left) - 0.5 * var(--mb-dialog-button-height) - 10px));
-	--mb-button-safe-right: calc((env(safe-area-inset-right) - 0.5 * var(--mb-dialog-button-height) - 10px));
+	--mb-button-safe-left: calc((var(--mb-inset-left) - 0.5 * var(--mb-dialog-button-height) - 10px));
+	--mb-button-safe-right: calc((var(--mb-inset-right) - 0.5 * var(--mb-dialog-button-height) - 10px));
 
 	--mb-pill-width: 37px;
 	--mb-pill-pad: calc(var(--mb-dialog-button-height) - var(--mb-pill-width));
@@ -65,13 +75,11 @@
 
 	--mb-num-buttons: 1;
 
-	--mb-android-top-bar: 0px;
-
 	--mb-reader-inset: 0px;
 
-	--mb-top-spacer: calc(env(safe-area-inset-top) + var(--mb-android-top-bar));
+	--mb-top-spacer: calc(var(--mb-inset-top));
 
-	--mb-bottom-spacer: calc(0.5 * env(safe-area-inset-bottom));
+	--mb-bottom-spacer: calc(0.5 * var(--mb-inset-bottom));
 
 	--mb-reader-scale: 100;
 	--mb-webtoon-scale: 100;
@@ -396,11 +404,11 @@ body {
 }
 
 .color-swatch:first-child {
-	margin-left: calc(max(10px, env(safe-area-inset-left)));
+	margin-left: calc(max(10px, var(--mb-inset-left)));
 }
 
 .color-swatch:last-child {
-	margin-right: calc(max(10px, env(safe-area-inset-right)));
+	margin-right: calc(max(10px, var(--mb-inset-right)));
 }
 
 #offlineLed {
@@ -1489,7 +1497,7 @@ a {
 	top: 0;
 	margin-top: 0px;
 	display: grid;
-	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + env(safe-area-inset-right))));
+	grid-template-columns: auto minmax(auto, 300px) calc(max(54px, calc(30px + var(--mb-inset-right))));
 	gap: 10px;
 	width: 100%;
 	height: 30px;
@@ -1536,7 +1544,7 @@ a {
 }
 
 .strip-header {
-	margin-left: calc(max(25px, env(safe-area-inset-left)));
+	margin-left: calc(max(25px, var(--mb-inset-left)));
 	padding: 0px;
 	font-size: 20px;
 	font-weight: 500;

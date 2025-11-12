@@ -433,22 +433,19 @@
 			}
 		}
 
-		async function getInsets(){
-			if (isEdgeToEdge){
+		async function setAndroidInsets() {
+			if (isEdgeToEdge) {
 				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
-				debugPrint('Insets:');
-				debugPrint(JSON.stringify(result, null, 2));
+				document.documentElement.style.setProperty('--mb-android-inset-top', result.top + 'px');
+				document.documentElement.style.setProperty('--mb-android-inset-bottom', result.bottom + 'px');
+				document.documentElement.style.setProperty('--mb-android-inset-left', result.left + 'px');
+				document.documentElement.style.setProperty('--mb-android-inset-right', result.right + 'px');
 			}
 		}
 
-(async () => {
-	if (isEdgeToEdge) {
-		debugPrint('isEdgeToEdge: true');
-		await getInsets();
-		Capacitor.Plugins.EdgeToEdge.disable();
-		await getInsets();
-	}
-})();
+		(async () => {
+				await setAndroidInsets();
+		})();
 
 
 		//MB Pinch To Zoom
