@@ -352,6 +352,8 @@
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
+		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
+
 		let capacitorPlatform = null;
 
 		let enableFullscreen = true;
@@ -429,6 +431,10 @@
 			} else {
 				Capacitor.Plugins.StatusBar.show();
 			}
+		}
+
+		if (isEdgeToEdge){
+			Capacitor.Plugins.EdgeToEdge.enable();
 		}
 
 		//MB Pinch To Zoom
