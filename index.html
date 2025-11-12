@@ -1834,6 +1834,7 @@
 		fixZoomOnPWA()
 
 		window.addEventListener('orientationchange', () => {
+			/*
 			if (isCapacitor && (capacitorPlatform == 'android')) {
 				setTimeout(() => {
 					if (isOrientationLandscape()) {
@@ -1843,12 +1844,16 @@
 					}
 				}, 100)
 			}
+			*/
 			fixZoomOnPWA();
 		});
+
 		document.addEventListener('visibilitychange', fixZoomOnPWA);
+
 		window.addEventListener('pageshow', (event) => {
 			if (event.persisted) fixZoomOnPWA();
 		});
+		
 		// Fade in and Fade out routines
 		function wait(ms) {
 			return new Promise(resolve => setTimeout(resolve, ms));
