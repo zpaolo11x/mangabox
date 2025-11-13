@@ -1,7 +1,8 @@
 Main UI
 - Added an info text on the login screen
 - Improved UI of the login panel
-- Added fallback image for foreign language library thumbnails
+- Tranliterate foreign alphabet characters for library letter thumbnail
+- Added fallback image for library thumbnails
 - Series summary from first available book when no series summary is present
  
 Reader UI

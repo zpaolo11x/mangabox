@@ -383,6 +383,7 @@
 
 	</script>
 
+	<script src="script-transliterate.js"></script>
 	<script src="script-auth.js"></script>
 
 	<script>
@@ -3032,7 +3033,7 @@
 			if (isLib) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
-					libraryThumbnail.src = `library-letters/${libraryName.charAt(0).toUpperCase()}.png`
+					libraryThumbnail.src = `library-letters/${transliterate(libraryName.charAt(0)).charAt(0).toUpperCase()}.png`
 					libraryThumbnail.onerror = () => {
 						libraryThumbnail.onerror = null;
 					libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
