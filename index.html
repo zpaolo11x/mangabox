@@ -340,7 +340,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = true;
+		const enableDebugPrint = false;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -440,16 +440,16 @@
 				await Capacitor.Plugins.EdgeToEdge.enable()
 				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
 				debugPrint(JSON.stringify(result, null, 2));
-				document.documentElement.style.setProperty('--mb-android-inset-top', (result.top/ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-bottom', (result.bottom/ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-left', (result.left/ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-right', (result.right/ratio) + 'px');
+				document.documentElement.style.setProperty('--mb-android-inset-top', (result.top / ratio) + 'px');
+				document.documentElement.style.setProperty('--mb-android-inset-bottom', (result.bottom / ratio) + 'px');
+				document.documentElement.style.setProperty('--mb-android-inset-left', (result.left / ratio) + 'px');
+				document.documentElement.style.setProperty('--mb-android-inset-right', (result.right / ratio) + 'px');
 				Capacitor.Plugins.EdgeToEdge.disable()
 			}
 		}
 
 		(async () => {
-				await setAndroidInsets();
+			await setAndroidInsets();
 		})();
 
 
@@ -5794,9 +5794,15 @@
 				if (isStatusBar && !isSharpCornerIphone) {
 					Capacitor.Plugins.StatusBar.show();
 				}
+				if (isNavBar) {
+					Capacitor.Plugins.NavigationBar.show();
+				}
 			} else {
 				if (isStatusBar) {
 					Capacitor.Plugins.StatusBar.hide();
+				}
+				if (isNavBar) {
+					Capacitor.Plugins.NavigationBar.hide();
 				}
 			}
 
