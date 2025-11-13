@@ -218,9 +218,9 @@
 
 			<div id="topControls">
 				<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
-				<span></span>
 				<span id="bookName"></span>
 				<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
+				<span id="readerAnimation" title="Reader Animation" class="reader-buttons press-button fa-solid"></span>
 				<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 			</div>
 
@@ -296,12 +296,15 @@
 					<input type="checkbox" id="loginRememberMe" class="remember-me-checkbox">
 					<label for="rememberMe" class="remember-me-label">Keep Me Signed</label>
 				</div>
-				<button class="login-button" onclick="login()">Login</button>
+				<button id="loginButton" class="login-button" onclick="login()">
+					<i class="fas fa-play"></i>
+					<span>Login</login>
+				</button>
 			</div>
 
 			<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
 
-			<p id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</p>
+			<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
 		</div>
 	</div>
 
@@ -795,6 +798,18 @@
 						}
 					],
 
+					readerAnimationControl: [
+						{
+							label: 'No Page Animation',
+							icon: 'fa-pause',
+							value: 0
+						}, {
+							label: 'Animate Pages',
+							icon: 'fa-right-left',
+							value: 1
+						}
+					],
+
 					swatchesHi: getComputedStyle(document.documentElement)
 						.getPropertyValue('--mb-swatches-hi')
 						.match(/hsl\([^)]*\)/g)
@@ -990,15 +1005,17 @@
 		//delUserSettings()
 
 		function applyUserSettings() {
-			// Local storage variable setup
+			// Server user variable setup
 			mb.accentColor = Number(userSettings['mangabox.ui.accentcolor'] ?? 0);
 			mb.themePrefs = Number(userSettings['mangabox.ui.themeprefs'] ?? 0);
 			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
 			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
 
+			// Local storage variable setup
 			mb.webtoonScale = Number(localStorage.getItem('c_webtoonScale') ?? 100);
 			mb.readerScale = Number(localStorage.getItem('c_readerScale') ?? 100);
+			mb.readerAnimation = Number(localStorage.getItem('c_readerAnimation') ?? 1)
 		}
 
 
@@ -4096,6 +4113,11 @@
 			turnScrollDelay: 300,	// Delay of spread page scrolling during page turn
 			turnScrollTime: 500,		// Duration of spread page scrolling during page turn
 
+			turnTime0: 500,				// Duration of turning page animation
+			scrollSpeed0: 500,			// Duration of spread page scrolling
+			turnScrollDelay0: 300,		// Delay of spread page scrolling during page turn
+			turnScrollTime0: 500,		// Duration of spread page scrolling during page turn
+
 			pageShadowOpacityFWD: '0.4',
 			pageShadowOpacityBWD: '0.3',
 			pageShadowWidthFWD: '10%',
@@ -4184,6 +4206,7 @@
 			setThumbZoom(false, true);
 
 			changeReaderTheme();
+			changeReaderAnimation();
 
 			sectionShow(readerContainer);
 			sectionShow(readerOverlay);
@@ -4291,6 +4314,21 @@
 			handleCloseReader();
 		});
 
+		function changeReaderAnimation(){
+			mb.readerAnimationControl.forEach(item => {
+				readerAnimation.classList.remove(item.icon);
+			});
+			readerAnimation.classList.add(mb.readerAnimationControl[mb.readerAnimation].icon);
+			readerAnimation.title = mb.readerAnimationControl[mb.readerAnimation].label;
+			
+			rd.turnTime = rd.turnTime0 * mb.readerAnimation;
+			rd.scrollSpeed = rd.scrollSpeed0 * mb.readerAnimation;
+			rd.turnScrollDelay = rd.turnScrollDelay0 * mb.readerAnimation;
+			rd.turnScrollTime = rd.turnScrollTime0 * mb.readerAnimation;
+
+			localStorage.setItem('c_readerAnimation', JSON.stringify(mb.readerAnimation))
+		}
+
 		function changeReaderTheme() {
 			mb.readerThemeControl.forEach(item => {
 				readerTheme.classList.remove(item.icon);
@@ -4300,6 +4338,7 @@
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
+			//TODO Is this used???
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
 			//rd.titleBarColor = "black";
@@ -4311,6 +4350,11 @@
 		readerTheme.addEventListener('click', () => {
 			mb.readerThemePrefs = (mb.readerThemePrefs + 1) % mb.readerThemeControl.length;
 			changeReaderTheme();
+		});
+
+		readerAnimation.addEventListener('click', () => {
+			mb.readerAnimation = (mb.readerAnimation + 1) % mb.readerAnimationControl.length;
+			changeReaderAnimation();
 		});
 
 		// Setup incognito button
@@ -5548,6 +5592,7 @@
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R, animData);
+//TODO Why here uses rd.turntime instead of turntime? in this way it doesn't work when force = true? 
 					leftPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 
 					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
@@ -5690,6 +5735,13 @@
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
 		function getSpreadFocus(spreadIndex) {
+			console.log("SPREAD ARRAY")
+			console.log(spreadIndex);
+			console.log(rd.spreadsArray[spreadIndex])
+			
+			//TODO Check why when vertical mode and loading page from scratch it fails
+			if (rd.spreadsArray[spreadIndex] == null ) return;
+
 			const spreadKind = rd.spreadsArray[spreadIndex].spreadKind;
 			if (spreadKind === 'cover-page') {
 				return rd.rtl ? 'focus-left-page' : 'focus-right-page';

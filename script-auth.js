@@ -213,6 +213,9 @@ async function login() {
 	debugPrint("login...")
 	console.log("login...")
 
+	loginError.classList.remove('auth-hidden');
+	loginError.classList.add('auth-hidden');
+
 	let baseUrlVal = loginBaseUrl.value;
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {

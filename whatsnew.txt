@@ -1,11 +1,13 @@
 Main UI
-- Added an info text on the login screen.
+- Added an info text on the login screen
+- Improved UI of the login panel
 
 Reader UI
-- 
+- Added button to enable/disable page turn animations
+- Android navigation bar disappears in reader mode
 
 Build
 - 
 
 Fixes
-- Fixxed android status bar overlapping main UI
+- Fixed android status bar overlapping main UI
