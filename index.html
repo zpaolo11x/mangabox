@@ -4395,9 +4395,16 @@
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
+			
+			//item.style.width = `calc(min(100vw, ${100 * ratio}vh))`;
+			//item.style.height = `calc(min(${100 / ratio}vw, 100vh) )`;
+
 			item.style.width = `calc(min(100vw, var(--mb-global-scaler) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-global-scaler) / 100 * vh) )`;
-		}
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-global-scaler) / 100 * 100vh) )`;
+alert(item.style.width+"x"+item.style.height)
+
+
+	}
 
 		// Size the spread for a two pages spread with fit on page
 		function buildSize2P(item, ratio) {
