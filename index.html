@@ -3002,6 +3002,7 @@
 			});
 		};
 
+		
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
@@ -3032,6 +3033,10 @@
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
 					libraryThumbnail.src = `library-letters/${libraryName.charAt(0).toUpperCase()}.png`
+					libraryThumbnail.onerror = () => {
+						libraryThumbnail.onerror = null;
+					libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
+					};
 				};
 			}
 
@@ -3358,6 +3363,14 @@
 
 		async function displayHeader(serie) {
 			const altTitle = getAltTitles(serie);
+
+			const summary = (serie.metadata.summary != "") 
+				? serie.metadata.summary.replace(/\n/g, '<br>') 
+				: (serie.booksMetadata.summary != "" 
+					? "<u>Summary from book "+serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+					: ""
+				)
+
 			const creditString = altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`;
@@ -3377,7 +3390,7 @@
 					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "book" : "books"}) - ${creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
-				<div class="scrollbox-content">${serie.metadata.summary.replace(/\n/g, '<br>')}</div>
+				<div class="scrollbox-content">${summary}</div>
 				<div class="scrollbox-scrollbar">
 					<div class="scrollbox-thumb"></div>
 				</div>
@@ -4314,13 +4327,13 @@
 			handleCloseReader();
 		});
 
-		function changeReaderAnimation(){
+		function changeReaderAnimation() {
 			mb.readerAnimationControl.forEach(item => {
 				readerAnimation.classList.remove(item.icon);
 			});
 			readerAnimation.classList.add(mb.readerAnimationControl[mb.readerAnimation].icon);
 			readerAnimation.title = mb.readerAnimationControl[mb.readerAnimation].label;
-			
+
 			rd.turnTime = rd.turnTime0 * mb.readerAnimation;
 			rd.scrollSpeed = rd.scrollSpeed0 * mb.readerAnimation;
 			rd.turnScrollDelay = rd.turnScrollDelay0 * mb.readerAnimation;
@@ -4571,7 +4584,7 @@
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
 			item.style.width = `calc(min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * vh) )`;
+			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
@@ -4580,7 +4593,7 @@
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
 			item.style.width = `calc(2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh))`;
-			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * vh) )`;
+			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
 		}
 
 		// Add this once when initializing the viewer
@@ -5592,7 +5605,7 @@
 				if (turnDirection == 'turn-right') {
 					rightPage.animate(appearR2L_slideinL2R, animData).finished.then(() => hideOldSpread(index, oldindex));
 					leftPage.animate(appearL2R, animData);
-//TODO Why here uses rd.turntime instead of turntime? in this way it doesn't work when force = true? 
+					//TODO Why here uses rd.turntime instead of turntime? in this way it doesn't work when force = true? 
 					leftPage.animate(unFade, { duration: rd.turnTime, easing: 'ease-in' });
 
 					newSpreadShadowR.animate(...animShadowFWD('left', turnTime, easeFull));
@@ -5738,9 +5751,9 @@
 			console.log("SPREAD ARRAY")
 			console.log(spreadIndex);
 			console.log(rd.spreadsArray[spreadIndex])
-			
+
 			//TODO Check why when vertical mode and loading page from scratch it fails
-			if (rd.spreadsArray[spreadIndex] == null ) return;
+			if (rd.spreadsArray[spreadIndex] == null) return;
 
 			const spreadKind = rd.spreadsArray[spreadIndex].spreadKind;
 			if (spreadKind === 'cover-page') {
