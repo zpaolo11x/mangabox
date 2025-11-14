@@ -2834,32 +2834,44 @@
 			item.append(seriesItem);
 		}
 
+		let chunkIndex = 0;
+		const BATCH = 20;
+
+
+		function renderSeriesChunk(series, target) {
+			const slice = series.slice(chunkIndex, chunkIndex + BATCH);
+			chunkIndex += BATCH;
+
+			const frag = document.createDocumentFragment();
+
+
+			for (const serie of slice) {
+
+				const seriesContainer = addItem('div', {
+					className: 'series-container collector',
+					id: serie.id,
+				});
+
+				buildSeriesItem(seriesContainer, serie, target);
+				frag.appendChild(seriesContainer);
+
+			}
+			target.appendChild(frag);
+
+			if (chunkIndex < series.length) {
+				requestAnimationFrame(() => { renderSeriesChunk(series, target) });
+			}
+		}
+
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target) {
+			chunkIndex = 0;
 
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
 
-			series.forEach(async (serie) => {
-
-				/*
-				const existing = document.getElementById(serie.id);
-				if (existing) {
-					console.log ("EMERGENCY CLEAN:"+existing);
-					existing.remove(); // Remove the old one to avoid duplicates
-				}
-				*/
-
-				const seriesContainer = addItem('div', {
-					className: 'series-container collector', //XXX was ending with , 'fade-in');
-					id: serie.id,
-				});
-
-				buildSeriesItem(seriesContainer, serie, target);
-
-				target.append(seriesContainer);
-			});
+			renderSeriesChunk(series, target);
 
 			sectionShow(target); //XXX serve un fade qui???
 		}
@@ -3003,7 +3015,7 @@
 			});
 		};
 
-		
+
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
@@ -3036,7 +3048,7 @@
 					libraryThumbnail.src = `library-letters/${transliterate(libraryName.charAt(0)).charAt(0).toUpperCase()}.png`
 					libraryThumbnail.onerror = () => {
 						libraryThumbnail.onerror = null;
-					libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
+						libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
 					};
 				};
 			}
@@ -3365,10 +3377,10 @@
 		async function displayHeader(serie) {
 			const altTitle = getAltTitles(serie);
 
-			const summary = (serie.metadata.summary != "") 
-				? serie.metadata.summary.replace(/\n/g, '<br>') 
-				: (serie.booksMetadata.summary != "" 
-					? "<u>Summary from book "+serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+			const summary = (serie.metadata.summary != "")
+				? serie.metadata.summary.replace(/\n/g, '<br>')
+				: (serie.booksMetadata.summary != ""
+					? "<u>Summary from book " + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
 					: ""
 				)
 
