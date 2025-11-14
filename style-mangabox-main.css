@@ -1605,10 +1605,9 @@ a {
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
 
-		will-change: transform;
+	will-change: transform;
    contain: layout style paint;
-	    contain: layout;
-    overflow-y: auto;
+   overflow-y: auto;
 	
 }
 
@@ -1757,6 +1756,8 @@ a {
 	will-change: transform;
     transform: translateZ(0); 
     backface-visibility: hidden;
+	    contain: layout style;
+
 }
 
 .series-item,
@@ -1773,9 +1774,7 @@ a {
 	border-radius: var(--mb-card-radius);
 	transition: scale 0.3s, box-shadow 0.3s, background-color 0.3s ease;
 	
-	will-change: transform;
    contain: layout style paint;
-
 }
 
 .series-item.scaled,
