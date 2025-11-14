@@ -245,6 +245,8 @@ body {
 	overflow-y: visible;
 	-webkit-text-size-adjust: 100%;
 	text-size-adjust: 100%;
+	overflow: hidden;
+
 }
 
 .fa-apple {
@@ -1602,6 +1604,12 @@ a {
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
+
+		will-change: transform;
+   contain: layout style paint;
+	    contain: layout;
+    overflow-y: auto;
+	
 }
 
 #homeStripSeriesResults,
@@ -1746,6 +1754,9 @@ a {
 .series-container,
 .book-container {
 	background-color: transparent;
+	will-change: transform;
+    transform: translateZ(0); 
+    backface-visibility: hidden;
 }
 
 .series-item,
@@ -1761,6 +1772,10 @@ a {
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
 	border-radius: var(--mb-card-radius);
 	transition: scale 0.3s, box-shadow 0.3s, background-color 0.3s ease;
+	
+	will-change: transform;
+   contain: layout style paint;
+
 }
 
 .series-item.scaled,

@@ -2908,7 +2908,7 @@
 			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 			await displaySeries(allSeries, seriesGrid);
-			fetchLibraryFilters(libraryId);
+			//fetchLibraryFilters(libraryId);
 			focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
 		}
