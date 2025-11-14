@@ -1270,6 +1270,7 @@
 			content.addEventListener('scroll', () => {
 				updateScrollbarThumb();
 				showScrollbarTemporarily();
+				content.dispatchEvent(new Event('scrollview'));
 			});
 
 			scrollbox.addEventListener('mouseenter', () => {
@@ -2834,22 +2835,13 @@
 			item.append(seriesItem);
 		}
 
-		// Creates and populates the series grid with the data from the series array.
-		async function displaySeries(series, target) {
+		async function displaySeriesOLD(series, target) {
 
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
 
 			series.forEach(async (serie) => {
-
-				/*
-				const existing = document.getElementById(serie.id);
-				if (existing) {
-					console.log ("EMERGENCY CLEAN:"+existing);
-					existing.remove(); // Remove the old one to avoid duplicates
-				}
-				*/
 
 				const seriesContainer = addItem('div', {
 					className: 'series-container collector', //XXX was ending with , 'fade-in');
@@ -2863,6 +2855,103 @@
 
 			sectionShow(target); //XXX serve un fade qui???
 		}
+
+		const CHUNK_SIZE = 40;
+		let chunkIndex = 0;
+
+		async function displaySeries(series, target, dynamic = false) {
+			while (target.firstChild) {
+				target.removeChild(target.firstChild);
+			}
+
+			if (dynamic) {
+				chunkIndex = 0;
+				// 1️⃣ create sentinel at the bottom
+				const sentinel = document.createElement('div');
+				sentinel.style.height = '5px';
+				sentinel.style.width = '80vw';
+				sentinel.style.background = 'red';
+				target.appendChild(sentinel);
+
+				let observer = null;
+				let attaching = false; // flag to prevent observer firing during attachment
+
+				function renderNextChunk() {
+
+					console.log('start chunk:' + chunkIndex)
+					attaching = true; // start attaching
+
+					const slice = series.slice(chunkIndex, chunkIndex + CHUNK_SIZE);
+					if (slice.length === 0) {
+						console.log("slice zero")
+						return;
+					}
+
+					const frag = document.createDocumentFragment();
+					slice.forEach(serie => {
+						const container = addItem('div', {
+							className: 'series-container collector',
+							id: serie.id
+						});
+						buildSeriesItem(container, serie, target);
+						frag.appendChild(container);
+					});
+
+					target.insertBefore(frag, sentinel);
+					chunkIndex += CHUNK_SIZE;
+					console.log('done chunk:' + chunkIndex)
+
+					attaching = false; // done attaching
+				}
+
+				observer = new IntersectionObserver(async (entries) => {
+					console.log("OBSERVED, attaching: " + attaching)
+					if (attaching) return; // ignore while attaching
+
+					if (entries[0].isIntersecting) {
+						console.log("zip")
+
+						observer.unobserve(sentinel);
+
+						await renderNextChunk();
+
+						observer.observe(sentinel);
+
+						// stop observing if all items are loaded
+						if (chunkIndex >= series.length) {
+							console.log("disconnect");
+							observer.disconnect();
+						}
+					}
+				}, {
+					root: mainContainer,
+					rootMargin: '200px'
+				});
+
+
+				observer.observe(sentinel);
+
+				// 2️⃣ load the initial chunk
+				renderNextChunk();
+			}
+			else {
+				series.forEach(async (serie) => {
+
+					const seriesContainer = addItem('div', {
+						className: 'series-container collector', //XXX was ending with , 'fade-in');
+						id: serie.id,
+					});
+
+					buildSeriesItem(seriesContainer, serie, target);
+
+					target.append(seriesContainer);
+				});
+			}
+			sectionShow(target);
+		}
+
+
+
 
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
@@ -2905,9 +2994,12 @@
 
 		// Compose function that opens a specific library based on it ID
 		async function openLibrary(libraryId, seriesId) {
+			
+			//TODO first create the items, then filter them, then display them dynamically
+
 			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
-			await displaySeries(allSeries, seriesGrid);
+			await displaySeries(allSeries, seriesGrid, true);
 			fetchLibraryFilters(libraryId);
 			focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
@@ -3003,7 +3095,7 @@
 			});
 		};
 
-		
+
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
@@ -3036,7 +3128,7 @@
 					libraryThumbnail.src = `library-letters/${transliterate(libraryName.charAt(0)).charAt(0).toUpperCase()}.png`
 					libraryThumbnail.onerror = () => {
 						libraryThumbnail.onerror = null;
-					libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
+						libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
 					};
 				};
 			}
@@ -3365,10 +3457,10 @@
 		async function displayHeader(serie) {
 			const altTitle = getAltTitles(serie);
 
-			const summary = (serie.metadata.summary != "") 
-				? serie.metadata.summary.replace(/\n/g, '<br>') 
-				: (serie.booksMetadata.summary != "" 
-					? "<u>Summary from book "+serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+			const summary = (serie.metadata.summary != "")
+				? serie.metadata.summary.replace(/\n/g, '<br>')
+				: (serie.booksMetadata.summary != ""
+					? "<u>Summary from book " + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
 					: ""
 				)
 
