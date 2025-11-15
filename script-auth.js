@@ -253,6 +253,7 @@ async function login() {
 		}
 	}).catch(error => {
 		console.error('Login error:', error);
+		debugPrint(error);
 		loginError.textContent = 'Cannot reach server. Check the address or your connection.';
 		loginError.classList.remove('auth-hidden');
 	});
