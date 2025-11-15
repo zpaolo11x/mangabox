@@ -9,6 +9,7 @@
     }
   },
   "android": {
+	 "allowMixedContent": true,
     "manifest": {
       "application": {
         "usesCleartextTraffic": true
