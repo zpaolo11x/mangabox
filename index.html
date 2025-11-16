@@ -2642,6 +2642,21 @@
 		}
 
 		//MB Series Items Creation
+
+const attachedObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        } else {
+            entry.target.classList.remove('visible');
+        }
+    });
+}, {
+    root: mainUI,
+	 rootMargin: '100px 0px 100px 0px',
+    threshold: 0
+});
+
 		async function buildSeriesItem(item, serie, target) {
 			const LTRvals = {
 				RIGHT_TO_LEFT: '',
@@ -2831,8 +2846,13 @@
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
+			//item.style.backgroundColor = 'red'
 			item.append(seriesItem);
+			seriesItem.classList.add('attached')
+    		attachedObserver.observe(seriesItem);
 		}
+
+
 
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target) {

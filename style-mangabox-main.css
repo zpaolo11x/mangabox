@@ -1606,9 +1606,9 @@ a {
 	transition: opacity 0.3s ease;
 
 	will-change: transform;
-   contain: layout style paint;
-   overflow-y: auto;
-	
+	contain: layout style paint;
+	overflow-y: auto;
+
 }
 
 #homeStripSeriesResults,
@@ -1750,13 +1750,30 @@ a {
 	opacity: 0;
 }
 
+.series-container:has(.attached){
+	contain: layout style paint;
+}
+
+.series-container:has(.attached.visible){
+	contain: layout style;
+}
+
+.attached {
+    opacity: 0;
+}
+
+.attached.visible {
+    opacity: 1;
+}
+
+
 .series-container,
 .book-container {
 	background-color: transparent;
 	will-change: transform;
-    transform: translateZ(0); 
-    backface-visibility: hidden;
-	    contain: layout style;
+	transform: translateZ(0);
+	backface-visibility: hidden;
+	contain: layout style;
 
 }
 
@@ -1773,8 +1790,8 @@ a {
 	box-shadow: rgba(0, 0, 0, 0.6) 0px 5px 15px -10px;
 	border-radius: var(--mb-card-radius);
 	transition: scale 0.3s, box-shadow 0.3s, background-color 0.3s ease;
-	
-   contain: layout style paint;
+
+	contain: layout style paint;
 }
 
 .series-item.scaled,
