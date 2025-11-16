@@ -569,8 +569,6 @@ div.single-page {
 	background: none;
 	gap: 0px;
 
-		contain: layout style paint;
-
 }
 
 #readerContainer.hidden #readerViewer {
