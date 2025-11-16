@@ -1751,10 +1751,12 @@ a {
 }
 
 .series-container:has(.attached){
+	background:var(--mb-card-color);
 	contain: layout style paint;
 }
 
 .series-container:has(.attached.visible){
+	background: var(--mb-page-color);
 	contain: layout style;
 }
 
