@@ -224,6 +224,10 @@ img.page:not([src]) {
 	display: block;
 }
 
+.spread-layout{
+	contain: layout style paint;
+}
+
 .spread-layout img.page {
 	display: block;
 	height: 100vh;
@@ -564,6 +568,9 @@ div.single-page {
 
 	background: none;
 	gap: 0px;
+
+		contain: layout style paint;
+
 }
 
 #readerContainer.hidden #readerViewer {
