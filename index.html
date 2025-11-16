@@ -2855,7 +2855,7 @@ const attachedObserver = new IntersectionObserver((entries) => {
 
 
 		// Creates and populates the series grid with the data from the series array.
-		async function displaySeries(series, target) {
+		async function displaySeriesOLD(series, target) {
 
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
@@ -2875,6 +2875,52 @@ const attachedObserver = new IntersectionObserver((entries) => {
 
 			sectionShow(target); //XXX serve un fade qui???
 		}
+
+
+		let chunkIndex = 0;
+		const BATCH = 20;
+
+
+		function renderSeriesChunk(series, target, focusID) {
+			const slice = series.slice(chunkIndex, chunkIndex + BATCH);
+			chunkIndex += BATCH;
+
+			const frag = document.createDocumentFragment();
+
+
+			for (const serie of slice) {
+
+				const seriesContainer = addItem('div', {
+					className: 'series-container collector',
+					id: serie.id,
+				});
+
+				buildSeriesItem(seriesContainer, serie, target);
+				frag.appendChild(seriesContainer);
+
+			}
+			target.appendChild(frag);
+
+			if (chunkIndex < series.length) {
+				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
+			} else {
+				if (focusID) focusItem(focusID);
+			}
+		}
+
+		// Creates and populates the series grid with the data from the series array.
+		async function displaySeries(series, target, focusID = null) {
+			chunkIndex = 0;
+
+			while (target.firstChild) {
+				target.removeChild(target.firstChild);
+			}
+
+			renderSeriesChunk(series, target, focusID);
+
+			sectionShow(target); //XXX serve un fade qui???
+		}
+
 
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
@@ -2919,9 +2965,9 @@ const attachedObserver = new IntersectionObserver((entries) => {
 		async function openLibrary(libraryId, seriesId) {
 			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
-			await displaySeries(allSeries, seriesGrid);
+			await displaySeries(allSeries, seriesGrid, seriesId);
 			//fetchLibraryFilters(libraryId);
-			focusItem(seriesId || 'top');
+			//focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
 		}
 
