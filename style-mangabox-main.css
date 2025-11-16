@@ -154,6 +154,9 @@
 
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
+	
+	--mb-placeholder-color: #fafafa;
+	
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
@@ -187,6 +190,9 @@
 
 	--mb-page-color: #202020;
 	--mb-card-color: #353535;
+
+	--mb-placeholder-color: #252525;
+
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
 	--mb-active-color: #656565;
@@ -1751,7 +1757,7 @@ a {
 }
 
 .series-container:has(.attached){
-	background:var(--mb-card-color);
+	background:var(--mb-placeholder-color);
 	contain: layout style paint;
 }
 
