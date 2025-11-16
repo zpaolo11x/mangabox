@@ -2878,10 +2878,12 @@ const attachedObserver = new IntersectionObserver((entries) => {
 
 
 		let chunkIndex = 0;
+		let seriesOld = null;
 		const BATCH = 20;
 
 
 		function renderSeriesChunk(series, target, focusID) {
+			if (series != seriesOld) return;
 			const slice = series.slice(chunkIndex, chunkIndex + BATCH);
 			chunkIndex += BATCH;
 
@@ -2904,6 +2906,7 @@ const attachedObserver = new IntersectionObserver((entries) => {
 			if (chunkIndex < series.length) {
 				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
 			} else {
+				sectionShow(target);
 				if (focusID) focusItem(focusID);
 			}
 		}
@@ -2915,10 +2918,10 @@ const attachedObserver = new IntersectionObserver((entries) => {
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
+			
+			seriesOld = series;
 
 			renderSeriesChunk(series, target, focusID);
-
-			sectionShow(target); //XXX serve un fade qui???
 		}
 
 
