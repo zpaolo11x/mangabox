@@ -343,7 +343,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = false;
+		const enableDebugPrint = true;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -2455,9 +2455,13 @@
 				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData, null);
 				mb.currentlyScaled = item;
+										console.log(mb.currentlyScaled)
+
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				mb.currentlyScaled = item;
+										console.log(mb.currentlyScaled)
+
 				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
 					mb.currentlyScaled = null;
@@ -2590,6 +2594,8 @@
 						item.parentElement.classList.add('top-pop');
 
 						mb.currentlyScaled = item;
+												console.log(mb.currentlyScaled)
+
 						event.preventDefault();
 					} else {
 						/*
@@ -2606,6 +2612,8 @@
 						item.classList.add('scaled');
 						item.parentElement.classList.add('top-pop');
 						mb.currentlyScaled = item;
+						console.log(mb.currentlyScaled)
+
 					} else {
 						/*
 						item.classList.remove('scaled');
@@ -2645,11 +2653,19 @@
 
 		const attachedObserver = new IntersectionObserver((entries) => {
 			entries.forEach(entry => {
+
 				if (entry.isIntersecting) {
 					console.log("ENTER:", entry.target.id);
-					entry.target.classList.remove('unattached');
 					entry.target.append(seriesItemProxy[entry.target.id])
+					entry.target.classList.remove('unattached');
+					let frameRect = seriesItemProxy[entry.target.id].getBoundingClientRect()
+					entry.target.style.aspectRatio = frameRect.width / frameRect.height
 				} else {
+					if (mb.currentlyScaled?.parentElement?.id == entry.target.id) {
+						mb.currentlyScaled.classList.remove('scaled');
+						mb.currentlyScaled.parentElement.classList.remove('top-pop');
+						mb.currentlyScaled = null;
+					}
 					console.log("EXIT:", entry.target.id); //entry.target.classList.add('visible');
 					entry.target.removeChild(seriesItemProxy[entry.target.id]);
 					entry.target.classList.add('unattached');
@@ -2657,8 +2673,8 @@
 			});
 		}, {
 			root: mainUI,
-			rootMargin: '200px 0px 200px 0px',
-			threshold: 0.0
+			rootMargin: '500px 0px 500px 0px',
+			threshold: 0
 		});
 
 		async function buildSeriesItem(item, serie, target) {
@@ -2851,7 +2867,8 @@
 			});
 
 			item.style.border = '1px solid red'
-			
+			item.classList.add('unattached');
+
 			attachedObserver.observe(item)
 
 			return (seriesItem)
@@ -2984,6 +3001,7 @@
 				mainContainer.scrollTo({ top: y });
 
 				mb.currentlyScaled = item.firstChild;
+						console.log(mb.currentlyScaled)
 
 				if (item.firstChild != null) {
 					item.firstChild.classList.add('scaled');

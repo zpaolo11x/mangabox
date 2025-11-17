@@ -1047,10 +1047,15 @@ a {
 	border-radius: var(--mb-cover-radius);
 }
 
+.series-container{
+	transition: all 0.3s;
+}
+
 .series-container.unattached{
 	max-width: 100%;
 	width: var(--mb-card-cover-max-width);
-	aspect-ratio: var(--mb-cover-aspect);
+	aspect-ratio: 0.55; /*var(--mb-cover-aspect);*/
+	transition: all 0.3s;
 }
 
 .button-wrapper {
