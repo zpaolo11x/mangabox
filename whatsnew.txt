@@ -1,4 +1,5 @@
 Main UI
+- Improved library view performance with very large libraries
 - Added an info text on the login screen
 - Improved UI of the login panel
 - Tranliterate foreign alphabet characters for library letter thumbnail
