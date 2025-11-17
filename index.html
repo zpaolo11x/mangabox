@@ -2647,18 +2647,18 @@
 			entries.forEach(entry => {
 				if (entry.isIntersecting) {
 					console.log("ENTER:", entry.target.id);
-					//entry.target.classList.add('visible');
+					entry.target.classList.remove('unattached');
 					entry.target.append(seriesItemProxy[entry.target.id])
 				} else {
 					console.log("EXIT:", entry.target.id); //entry.target.classList.add('visible');
 					entry.target.removeChild(seriesItemProxy[entry.target.id]);
-					//entry.target.classList.remove('visible');
+					entry.target.classList.add('unattached');
 				}
 			});
 		}, {
 			root: mainUI,
-			//rootMargin: '200px 0px 200px 0px',
-			threshold: 0.5
+			rootMargin: '200px 0px 200px 0px',
+			threshold: 0.0
 		});
 
 		async function buildSeriesItem(item, serie, target) {

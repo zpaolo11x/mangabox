@@ -1047,7 +1047,7 @@ a {
 	border-radius: var(--mb-cover-radius);
 }
 
-.series-container{
+.series-container.unattached{
 	max-width: 100%;
 	width: var(--mb-card-cover-max-width);
 	aspect-ratio: var(--mb-cover-aspect);
