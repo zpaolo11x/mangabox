@@ -1056,6 +1056,7 @@ a {
 	width: var(--mb-card-cover-max-width);
 	aspect-ratio: 0.55; /*var(--mb-cover-aspect);*/
 	transition: all 0.3s;
+	background-color: var(--mb-placeholder-color);
 }
 
 .button-wrapper {

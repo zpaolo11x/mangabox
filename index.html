@@ -2453,14 +2453,14 @@
 			if (bookId == null) {
 				await callAPI(null, `/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
-				buildSeriesItem(item, seriesData, null);
+				buildSeriesItem(item, seriesData, null); //TODO Cosa succede con questo?
 				mb.currentlyScaled = item;
-										console.log(mb.currentlyScaled)
+				console.log(mb.currentlyScaled)
 
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				mb.currentlyScaled = item;
-										console.log(mb.currentlyScaled)
+				console.log(mb.currentlyScaled)
 
 				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
@@ -2594,7 +2594,7 @@
 						item.parentElement.classList.add('top-pop');
 
 						mb.currentlyScaled = item;
-												console.log(mb.currentlyScaled)
+						console.log(mb.currentlyScaled)
 
 						event.preventDefault();
 					} else {
@@ -2677,7 +2677,7 @@
 			threshold: 0
 		});
 
-		async function buildSeriesItem(item, serie, target) {
+		async function buildSeriesItem(item, serie, target, dynamic = false) {
 			const LTRvals = {
 				RIGHT_TO_LEFT: '',
 				LEFT_TO_RIGHT: '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>',
@@ -2866,12 +2866,16 @@
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
-			item.style.border = '1px solid red'
-			item.classList.add('unattached');
+			if (dynamic) {
+				//item.style.border = '1px solid red' //DEBUG
+				item.classList.add('unattached');
+				attachedObserver.observe(item)
 
-			attachedObserver.observe(item)
+				return (seriesItem)
+			} else {
+				item.append(seriesItem)
+			}
 
-			return (seriesItem)
 			// item.append(fakeWrapper);
 			//item.append(seriesItem);
 			// seriesItem.classList.add('attached')
@@ -2942,32 +2946,53 @@
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target, focusID, dynamic) {
 
-			seriesContainerProxy = []
-			seriesItemProxy = {};
+			if (dynamic) {
+				seriesContainerProxy = []
+				seriesItemProxy = {};
 
-			for (const serie of series) {
-				const seriesContainer = addItem('div', {
-					className: 'series-container collector',
-					id: serie.id,
+				for (const serie of series) {
+					const seriesContainer = addItem('div', {
+						className: 'series-container collector',
+						id: serie.id,
+					});
+
+
+					seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
+					seriesContainerProxy.push(seriesContainer);
+				}
+
+				console.log(seriesItemProxy)
+				console.log(seriesContainerProxy);
+
+				chunkIndex = 0;
+
+				while (target.firstChild) {
+					target.removeChild(target.firstChild);
+				}
+
+				seriesOld = series;
+
+				renderSeriesChunk(series, target, focusID);
+			} else {
+				// TODO Ripulire questa parte che in parte viene da sopra
+				while (target.firstChild) {
+					target.removeChild(target.firstChild);
+				}
+
+				series.forEach(async (serie) => {
+
+					const seriesContainer = addItem('div', {
+						className: 'series-container collector', //XXX was ending with , 'fade-in');
+						id: serie.id,
+					});
+
+					buildSeriesItem(seriesContainer, serie, target);
+
+					target.append(seriesContainer);
 				});
 
-
-				seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target));
-				seriesContainerProxy.push(seriesContainer);
+				sectionShow(target);
 			}
-
-			console.log(seriesItemProxy)
-			console.log(seriesContainerProxy);
-
-			chunkIndex = 0;
-
-			while (target.firstChild) {
-				target.removeChild(target.firstChild);
-			}
-
-			seriesOld = series;
-
-			renderSeriesChunk(series, target, focusID);
 		}
 
 
@@ -3001,7 +3026,7 @@
 				mainContainer.scrollTo({ top: y });
 
 				mb.currentlyScaled = item.firstChild;
-						console.log(mb.currentlyScaled)
+				console.log(mb.currentlyScaled)
 
 				if (item.firstChild != null) {
 					item.firstChild.classList.add('scaled');
