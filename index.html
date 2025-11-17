@@ -2453,7 +2453,12 @@
 			if (bookId == null) {
 				await callAPI(null, `/api/v1/series/${seriesId}/read-progress`, read ? 'POST' : 'DELETE', null, false);
 				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
-				buildSeriesItem(item, seriesData, null); //TODO Cosa succede con questo?
+				if (item.dat_dynamic) {
+					seriesItemProxy[seriesId] = await buildSeriesItem(item, seriesData, null, true);
+					item.appendChild(seriesItemProxy[seriesId]);
+				 } else {
+					buildSeriesItem(item, seriesData, null); //TODO Perché è NULL? check vecchie versioni
+				 } 
 				mb.currentlyScaled = item;
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
