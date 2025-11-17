@@ -1038,6 +1038,21 @@ a {
 	border-radius: var(--mb-cover-radius);
 }
 
+.thumbnail-fake-wrapper {
+	max-width: 100%;
+	width: var(--mb-card-cover-max-width);
+	position: relative;
+	aspect-ratio: var(--mb-cover-aspect);
+	overflow: hidden;
+	border-radius: var(--mb-cover-radius);
+}
+
+.series-container{
+	max-width: 100%;
+	width: var(--mb-card-cover-max-width);
+	aspect-ratio: var(--mb-cover-aspect);
+}
+
 .button-wrapper {
 	position: relative;
 	width: var(--mb-span-size);
