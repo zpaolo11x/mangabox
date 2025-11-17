@@ -2455,12 +2455,9 @@
 				const seriesData = await callAPI(`c_seriesdata${seriesId}`, `/api/v1/series/${seriesId}`);
 				buildSeriesItem(item, seriesData, null); //TODO Cosa succede con questo?
 				mb.currentlyScaled = item;
-				console.log(mb.currentlyScaled)
-
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 				mb.currentlyScaled = item;
-				console.log(mb.currentlyScaled)
 
 				const { path, params } = getHashAndParams();
 				if (path == 'dashboard' || path == '') {
@@ -2594,7 +2591,6 @@
 						item.parentElement.classList.add('top-pop');
 
 						mb.currentlyScaled = item;
-						console.log(mb.currentlyScaled)
 
 						event.preventDefault();
 					} else {
@@ -2612,7 +2608,6 @@
 						item.classList.add('scaled');
 						item.parentElement.classList.add('top-pop');
 						mb.currentlyScaled = item;
-						console.log(mb.currentlyScaled)
 
 					} else {
 						/*
@@ -2655,7 +2650,6 @@
 			entries.forEach(entry => {
 
 				if (entry.isIntersecting) {
-					console.log("ENTER:", entry.target.id);
 					entry.target.append(seriesItemProxy[entry.target.id])
 					entry.target.classList.remove('unattached');
 					let frameRect = seriesItemProxy[entry.target.id].getBoundingClientRect()
@@ -2666,7 +2660,6 @@
 						mb.currentlyScaled.parentElement.classList.remove('top-pop');
 						mb.currentlyScaled = null;
 					}
-					console.log("EXIT:", entry.target.id); //entry.target.classList.add('visible');
 					entry.target.removeChild(seriesItemProxy[entry.target.id]);
 					entry.target.classList.add('unattached');
 				}
@@ -2916,20 +2909,17 @@
 
 		function renderSeriesChunk(series, target, focusID) {
 			if (series != seriesOld) {
-				alert("ABORT")
 				return;
 			}
 
 			const slice = seriesContainerProxy.slice(chunkIndex, chunkIndex + BATCH);
 			chunkIndex += BATCH;
-			console.log(slice)
-			console.log(seriesContainerProxy)
 
 			const frag = document.createDocumentFragment();
 
 
 			for (const serieContainer of slice) {
-				console.log(serieContainer)
+				
 				frag.appendChild(serieContainer);
 			}
 
@@ -2956,13 +2946,9 @@
 						id: serie.id,
 					});
 
-
 					seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
 					seriesContainerProxy.push(seriesContainer);
 				}
-
-				console.log(seriesItemProxy)
-				console.log(seriesContainerProxy);
 
 				chunkIndex = 0;
 
@@ -2973,6 +2959,7 @@
 				seriesOld = series;
 
 				renderSeriesChunk(series, target, focusID);
+
 			} else {
 				// TODO Ripulire questa parte che in parte viene da sopra
 				while (target.firstChild) {
@@ -3026,13 +3013,11 @@
 				mainContainer.scrollTo({ top: y });
 
 				mb.currentlyScaled = item.firstChild;
-				console.log(mb.currentlyScaled)
 
 				if (item.firstChild != null) {
 					item.firstChild.classList.add('scaled');
 				}
 				item.classList.add('top-pop');
-
 			}
 		}
 
@@ -3905,13 +3890,7 @@
 			}
 
 			books.forEach(book => {
-				/*
-				const existing = document.getElementById(book.id);
-				if (existing) {
-					console.log ("EMERGENCY CLEAN:"+existing);
-					existing.remove(); // Remove the old one to avoid duplicates
-				}
-				*/
+
 				const bookContainer = addItem('div', {
 					className: 'book-container collector',
 					id: book.id
@@ -5882,9 +5861,6 @@
 
 		// Generic spread class definition, not valid for arrowleft and right in portrait mode!
 		function getSpreadFocus(spreadIndex) {
-			console.log("SPREAD ARRAY")
-			console.log(spreadIndex);
-			console.log(rd.spreadsArray[spreadIndex])
 
 			//TODO Check why when vertical mode and loading page from scratch it fails
 			if (rd.spreadsArray[spreadIndex] == null) return;
