@@ -1270,6 +1270,7 @@
 			content.addEventListener('scroll', () => {
 				updateScrollbarThumb();
 				showScrollbarTemporarily();
+				content.dispatchEvent(new Event('scrollview'));
 			});
 
 			scrollbox.addEventListener('mouseenter', () => {
@@ -1468,7 +1469,7 @@
 				const filteredSeries = dataArray.filter((item, index) =>
 					filterArray[index]
 				);
-				displaySeries(filteredSeries, homeStripSeriesResults, null, false);
+				displaySeries(filteredSeries, homeStripSeriesResults);
 
 				// Reset book results strip
 				//TODO Need to check also books for year?
@@ -1493,7 +1494,7 @@
 					titleIn => titleIn.title.toLowerCase().includes(searchString)
 				)
 			);
-			displaySeries(filteredSeries, homeStripSeriesResults, null, false);
+			displaySeries(filteredSeries, homeStripSeriesResults);
 			focusItem('top');
 
 			const unFilteredBooks = await callAPI('c_bookslistall',
@@ -2544,7 +2545,7 @@
 				)
 			);
 
-			displaySeries(filteredItems, seriesGrid, null, false);
+			displaySeries(filteredItems, seriesGrid);
 			focusItem('top');
 
 		}
@@ -2642,21 +2643,6 @@
 		}
 
 		//MB Series Items Creation
-
-const attachedObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        } else {
-            entry.target.classList.remove('visible');
-        }
-    });
-}, {
-    root: mainUI,
-	 rootMargin: '200px 0px 200px 0px',
-    threshold: 0
-});
-
 		async function buildSeriesItem(item, serie, target) {
 			const LTRvals = {
 				RIGHT_TO_LEFT: '',
@@ -2687,10 +2673,6 @@ const attachedObserver = new IntersectionObserver((entries) => {
 			});
 
 			const thumbnailWrapper = addItem('div', {
-				className: 'thumbnail-wrapper'
-			});
-
-			const fakeWrapper = addItem('div', {
 				className: 'thumbnail-wrapper'
 			});
 
@@ -2850,15 +2832,9 @@ const attachedObserver = new IntersectionObserver((entries) => {
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
-			item.style.border = '1px solid red'
-			item.append(fakeWrapper);
-			// seriesItem.classList.add('attached')
-    		// attachedObserver.observe(seriesItem);
+			item.append(seriesItem);
 		}
 
-
-
-		// Creates and populates the series grid with the data from the series array.
 		async function displaySeriesOLD(series, target) {
 
 			while (target.firstChild) {
@@ -2880,64 +2856,101 @@ const attachedObserver = new IntersectionObserver((entries) => {
 			sectionShow(target); //XXX serve un fade qui???
 		}
 
-
+		const CHUNK_SIZE = 40;
 		let chunkIndex = 0;
-		let seriesOld = null;
-		let libraryProxy = [];
-		const BATCH = 20;
 
-
-		function renderSeriesChunk(series, target, focusID) {
-			if (series != seriesOld) return;
-
-			const slice = libraryProxy.slice(chunkIndex, chunkIndex + BATCH);
-			chunkIndex += BATCH;
-
-			const frag = document.createDocumentFragment();
-
-
-			for (const serieItem of slice) {
-				frag.appendChild(serieItem);
-			}
-
-			target.appendChild(frag);
-
-			if (chunkIndex < libraryProxy.length) {
-				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
-			} else {
-				sectionShow(target);
-				if (focusID) focusItem(focusID);
-			}
-		}
-
-		// Creates and populates the series grid with the data from the series array.
-		async function displaySeries(series, target, focusID, dynamic) {
-
-			libraryProxy = [];
-
-			series.forEach(async (serie) => {
-				const seriesContainer = addItem('div', {
-					className: 'series-container collector',
-					id: serie.id,
-				});
-
-				buildSeriesItem(seriesContainer, serie, target);
-
-				libraryProxy.push(seriesContainer);
-			});
-
-			console.log(libraryProxy);
-
-			chunkIndex = 0;
-
+		async function displaySeries(series, target, dynamic = false) {
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
-			
-			seriesOld = series;
 
-			renderSeriesChunk(series, target, focusID);
+			if (dynamic) {
+				chunkIndex = 0;
+				// 1️⃣ create sentinel at the bottom
+				const sentinel = document.createElement('div');
+				sentinel.style.height = '5px';
+				sentinel.style.width = '80vw';
+				sentinel.style.background = 'red';
+				target.appendChild(sentinel);
+
+				let observer = null;
+				let attaching = false; // flag to prevent observer firing during attachment
+
+				function renderNextChunk() {
+
+					console.log('start chunk:' + chunkIndex)
+					attaching = true; // start attaching
+
+					const slice = series.slice(chunkIndex, chunkIndex + CHUNK_SIZE);
+					if (slice.length === 0) {
+						console.log("slice zero")
+						return;
+					}
+
+					const frag = document.createDocumentFragment();
+					slice.forEach(serie => {
+						const container = addItem('div', {
+							className: 'series-container collector',
+							id: serie.id
+						});
+						buildSeriesItem(container, serie, target);
+						frag.appendChild(container);
+					});
+
+					target.insertBefore(frag, sentinel);
+					chunkIndex += CHUNK_SIZE;
+					console.log('done chunk:' + chunkIndex)
+
+					attaching = false; // done attaching
+				}
+
+				observer = new IntersectionObserver(async (entries) => {
+					console.log("OBSERVED, attaching: " + attaching)
+					if (attaching) return; // ignore while attaching
+
+					if (entries[0].isIntersecting) {
+						console.log("zip")
+
+						observer.unobserve(sentinel);
+
+						await renderNextChunk();
+
+						observer.observe(sentinel);
+
+						// stop observing if all items are loaded
+						if (chunkIndex >= series.length) {
+							console.log("disconnect");
+							observer.disconnect();
+						}
+					}
+				}, {
+					root: mainContainer,
+					rootMargin: '200px'
+				});
+
+
+				observer.observe(sentinel);
+
+				// 2️⃣ load the initial chunk
+				renderNextChunk();
+			}
+			else {
+				series.forEach(async (serie) => {
+
+					const seriesContainer = addItem('div', {
+						className: 'series-container collector', //XXX was ending with , 'fade-in');
+						id: serie.id,
+					});
+
+					buildSeriesItem(seriesContainer, serie, target);
+
+					target.append(seriesContainer);
+				});
+			}
+			sectionShow(target);
 		}
+
+
 
 
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
@@ -2981,11 +2994,14 @@ const attachedObserver = new IntersectionObserver((entries) => {
 
 		// Compose function that opens a specific library based on it ID
 		async function openLibrary(libraryId, seriesId) {
+			
+			//TODO first create the items, then filter them, then display them dynamically
+
 			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
-			await displaySeries(allSeries, seriesGrid, seriesId, true);
-			//fetchLibraryFilters(libraryId);
-			//focusItem(seriesId || 'top');
+			await displaySeries(allSeries, seriesGrid, true);
+			fetchLibraryFilters(libraryId);
+			focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
 		}
 
@@ -3079,7 +3095,7 @@ const attachedObserver = new IntersectionObserver((entries) => {
 			});
 		};
 
-		
+
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
 
@@ -3112,7 +3128,7 @@ const attachedObserver = new IntersectionObserver((entries) => {
 					libraryThumbnail.src = `library-letters/${transliterate(libraryName.charAt(0)).charAt(0).toUpperCase()}.png`
 					libraryThumbnail.onerror = () => {
 						libraryThumbnail.onerror = null;
-					libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
+						libraryThumbnail.src = 'library-letters/blank.png'; // your fallback image
 					};
 				};
 			}
@@ -3441,10 +3457,10 @@ const attachedObserver = new IntersectionObserver((entries) => {
 		async function displayHeader(serie) {
 			const altTitle = getAltTitles(serie);
 
-			const summary = (serie.metadata.summary != "") 
-				? serie.metadata.summary.replace(/\n/g, '<br>') 
-				: (serie.booksMetadata.summary != "" 
-					? "<u>Summary from book "+serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+			const summary = (serie.metadata.summary != "")
+				? serie.metadata.summary.replace(/\n/g, '<br>')
+				: (serie.booksMetadata.summary != ""
+					? "<u>Summary from book " + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
 					: ""
 				)
 
@@ -3949,7 +3965,7 @@ const attachedObserver = new IntersectionObserver((entries) => {
 					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
-					displaySeries(input, target, null, false);
+					displaySeries(input, target);
 				}
 			},
 
@@ -3959,7 +3975,7 @@ const attachedObserver = new IntersectionObserver((entries) => {
 					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
 				showItems: async (input, target) => {
-					displaySeries(input, target, null, false);
+					displaySeries(input, target);
 				}
 			},
 
