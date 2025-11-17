@@ -2646,10 +2646,17 @@
 
 		//MB Series Items Creation
 
-		const attachedObserver = new IntersectionObserver((entries) => {
-			entries.forEach(entry => {
+		const attachedObserver = new IntersectionObserver(async (entries) => {
+			for (const entry of entries) {
 
 				if (entry.isIntersecting) {
+					if (!seriesItemProxy[entry.target.id]) {
+						console.log("CREATE "+entry.target.id)
+						console.log(entry.target);
+						seriesItemProxy[entry.target.id] = await buildSeriesItem(entry.target, entry.target.dat_serie, entry.target.dat_target, true)
+						console.log(seriesItemProxy[entry.target.id])
+					}
+					
 					entry.target.append(seriesItemProxy[entry.target.id])
 					entry.target.classList.remove('unattached');
 					let frameRect = seriesItemProxy[entry.target.id].getBoundingClientRect()
@@ -2660,10 +2667,14 @@
 						mb.currentlyScaled.parentElement.classList.remove('top-pop');
 						mb.currentlyScaled = null;
 					}
-					entry.target.removeChild(seriesItemProxy[entry.target.id]);
+					const child = seriesItemProxy[entry.target.id];
+
+					if (child && entry.target.contains(child)) {
+						entry.target.removeChild(child);
+					}
 					entry.target.classList.add('unattached');
 				}
-			});
+			};
 		}, {
 			root: mainUI,
 			rootMargin: '500px 0px 500px 0px',
@@ -2861,9 +2872,11 @@
 
 			if (dynamic) {
 				//item.style.border = '1px solid red' //DEBUG
-				item.classList.add('unattached');
-				attachedObserver.observe(item)
-
+				//item.classList.add('unattached');
+				//attachedObserver.observe(item)
+				console.log("XXX")
+				console.log(seriesItem)
+				console.log("XXX")
 				return (seriesItem)
 			} else {
 				item.append(seriesItem)
@@ -2919,8 +2932,8 @@
 
 
 			for (const serieContainer of slice) {
-				
 				frag.appendChild(serieContainer);
+				attachedObserver.observe(serieContainer)
 			}
 
 			target.appendChild(frag);
@@ -2942,12 +2955,16 @@
 
 				for (const serie of series) {
 					const seriesContainer = addItem('div', {
-						className: 'series-container collector',
+						className: 'series-container collector unattached',
 						id: serie.id,
 					});
+					seriesContainer.dat_serie = serie;
+					seriesContainer.dat_target = target;
+					seriesContainer.dat_dynamic = dynamic;
 
-					seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
+					//seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
 					seriesContainerProxy.push(seriesContainer);
+
 				}
 
 				chunkIndex = 0;
