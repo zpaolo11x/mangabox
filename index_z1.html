@@ -35,7 +35,6 @@
 </head>
 
 <body>
-	<div id="mainLoader" class="hidden"></div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -1374,12 +1373,16 @@
 
 		async function handleThumbnailClick(imagePath, libraryId) {
 			try {
+				// Fetch the image file
 				const response = await fetch(imagePath);
 				const blob = await response.blob();
 
+				// Convert blob to base64
 				const base64 = await readFileAsBase64(blob);
 
+				// Now pass it to your existing function
 				applyLibraryImage(libraryId, base64);
+				//alert(base64); // <-- replace this with your actual handler
 
 			} catch (err) {
 				console.error("Error converting image:", err);
@@ -1686,6 +1689,7 @@
 				mb.filterButtons.forEach(button => {
 					mb.filterTable[button.name].selected = filterValues[button.name];
 				});
+				applyLibraryFilters()
 			}
 		}
 
@@ -1693,7 +1697,7 @@
 			const { path, params } = getHashAndParams();
 			const libraryId = params.get('library_id');
 
-			const divs = seriesContainerProxy;//Array.from(seriesGrid.children);
+			const divs = Array.from(seriesGrid.children);
 			divs.forEach(div => {
 				div.infilter = true;
 			});
@@ -1711,14 +1715,9 @@
 					divs.sort((a, b) => {
 						return button.switches[button.selected].sortFunction(a, b);
 					});
-					/*
 					divs.forEach((item, index) => {
 						item.style.order = index;
 					});
-					*/
-					seriesGrid.innerHTML = "";
-					divs.forEach(div => seriesGrid.appendChild(div));
-
 				} else {
 					divs.forEach((div) => {
 						div.infilter = div.infilter && button.switches[button.selected].filterFunction(div);
@@ -2457,9 +2456,9 @@
 				if (item.dat_dynamic) {
 					seriesItemProxy[seriesId] = await buildSeriesItem(item, seriesData, null, true);
 					item.appendChild(seriesItemProxy[seriesId]);
-				} else {
+				 } else {
 					buildSeriesItem(item, seriesData, null); //TODO Perché è NULL? check vecchie versioni
-				}
+				 } 
 				mb.currentlyScaled = item;
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
@@ -2657,9 +2656,12 @@
 
 				if (entry.isIntersecting) {
 					if (!seriesItemProxy[entry.target.id]) {
+						console.log("CREATE "+entry.target.id)
+						console.log(entry.target);
 						seriesItemProxy[entry.target.id] = await buildSeriesItem(entry.target, entry.target.dat_serie, entry.target.dat_target, true)
+						console.log(seriesItemProxy[entry.target.id])
 					}
-
+					
 					entry.target.append(seriesItemProxy[entry.target.id])
 					entry.target.classList.remove('unattached');
 					let frameRect = seriesItemProxy[entry.target.id].getBoundingClientRect()
@@ -2679,22 +2681,10 @@
 				}
 			};
 		}, {
-			root: mainContainer,
+			root: mainUI,
 			rootMargin: '500px 0px 500px 0px',
 			threshold: 0
 		});
-
-		function buildSeriesData(item, serie){
-			const unreadCount = serie.booksUnreadCount;
-			const altTitle = getAltTitles(serie);
-			const bookCount = serie.booksCount;
-			item.mbSeriesTitle = serie.metadata.title ?? '';
-			item.mbSeriesStart = timeSplit(altTitle.time)[0];
-			item.mbBooksCount = serie.booksCount;
-			item.mbSeriesRead = (unreadCount == 0);
-			item.mbSeriesDirection = (serie.metadata.readingDirection);
-			item.mbSeriesLanguage = serie.metadata.language;
-		}
 
 		async function buildSeriesItem(item, serie, target, dynamic = false) {
 			const LTRvals = {
@@ -2889,6 +2879,9 @@
 				//item.style.border = '1px solid red' //DEBUG
 				//item.classList.add('unattached');
 				//attachedObserver.observe(item)
+				console.log("XXX")
+				console.log(seriesItem)
+				console.log("XXX")
 				return (seriesItem)
 			} else {
 				item.append(seriesItem)
@@ -2929,7 +2922,7 @@
 		let seriesOld = null;
 		let seriesContainerProxy = [];
 		let seriesItemProxy = {};
-		const BATCH = 100;
+		const BATCH = 20;
 
 
 		function renderSeriesChunk(series, target, focusID) {
@@ -2952,19 +2945,15 @@
 
 			if (chunkIndex < seriesContainerProxy.length) {
 				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
-				//renderSeriesChunk(series, target, focusID);
 			} else {
-				console.log("ENDCHUNKS")
 				sectionShow(target);
-				//DEBUG QUESTO RALLENTA! PERCHE'??? 
-				//applyLibraryFilters()
 				if (focusID) focusItem(focusID);
 			}
 		}
 
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target, focusID, dynamic) {
-		
+
 			if (dynamic) {
 				seriesContainerProxy = []
 				seriesItemProxy = {};
@@ -2977,11 +2966,9 @@
 					seriesContainer.dat_serie = serie;
 					seriesContainer.dat_target = target;
 					seriesContainer.dat_dynamic = dynamic;
-					buildSeriesData(seriesContainer, serie);
-					
+
 					//seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
 					seriesContainerProxy.push(seriesContainer);
-					applyLibraryFilters();
 				}
 
 				chunkIndex = 0;
@@ -3010,7 +2997,6 @@
 					buildSeriesItem(seriesContainer, serie, target);
 
 					target.append(seriesContainer);
-					
 				});
 
 				sectionShow(target);
@@ -3061,7 +3047,7 @@
 			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 			await displaySeries(allSeries, seriesGrid, seriesId, true);
-			fetchLibraryFilters(libraryId);
+			//fetchLibraryFilters(libraryId);
 			//focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
 		}
@@ -6245,8 +6231,6 @@
 			closeBookDetails();
 			mb.screenAR = getScreenAR();
 
-			mainLoader.classList.remove('hidden');
-
 			switch (path) {
 				case '':
 				case 'dashboard':
@@ -6291,8 +6275,6 @@
 				default:
 					console.log('no selection');
 			}
-			mainLoader.classList.add('hidden');
-
 			await executeFade(0);
 		}
 
