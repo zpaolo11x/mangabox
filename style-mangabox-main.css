@@ -154,9 +154,9 @@
 
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
-	
+
 	--mb-placeholder-color: #fafafa;
-	
+
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
 	--mb-active-color: #f0f0f0;
@@ -554,6 +554,39 @@ a {
 	grid-template-rows: 60px auto;
 	transition: grid-template-rows 0.2s, background-color 0.3s ease;
 	background: var(--mb-page-color);
+}
+
+#mainLoader {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 300px;
+	height: 300px;
+	border-radius: 50%;
+
+	background: conic-gradient(transparent 0deg 30deg,
+			var(--mb-card-color) 30deg 60deg,
+			transparent 60deg 90deg,
+			var(--mb-card-color) 90deg 120deg,
+			transparent 120deg 150deg,
+			var(--mb-card-color) 150deg 180deg,
+			transparent 180deg 210deg,
+			var(--mb-card-color) 210deg 240deg,
+			transparent 240deg 270deg,
+			var(--mb-card-color) 270deg 300deg,
+			transparent 300deg 330deg,
+			var(--mb-card-color) 330deg 360deg);
+	mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
+	-webkit-mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
+
+	transform: translate(-50%, -50%);
+	display: block;
+	z-index: 10000;
+	animation: loader_spin 1s linear infinite;
+}
+
+#mainLoader.hidden {
+	display: none;
 }
 
 #dragbar {
@@ -1047,14 +1080,15 @@ a {
 	border-radius: var(--mb-cover-radius);
 }
 
-.series-container{
+.series-container {
 	transition: all 0.3s;
 }
 
-.series-container.unattached{
+.series-container.unattached {
 	max-width: 100%;
 	width: var(--mb-card-cover-max-width);
-	aspect-ratio: 0.55; /*var(--mb-cover-aspect);*/
+	aspect-ratio: 0.55;
+	/*var(--mb-cover-aspect);*/
 	transition: all 0.3s;
 	background-color: var(--mb-placeholder-color);
 }
@@ -1777,22 +1811,22 @@ a {
 	opacity: 0;
 }
 
-.series-container:has(.attached){
-	background:var(--mb-placeholder-color);
+.series-container:has(.attached) {
+	background: var(--mb-placeholder-color);
 	contain: layout style paint;
 }
 
-.series-container:has(.attached.visible){
+.series-container:has(.attached.visible) {
 	background: var(--mb-page-color);
 	contain: layout style;
 }
 
 .attached {
-    opacity: 0;
+	opacity: 0;
 }
 
 .attached.visible {
-    opacity: 1;
+	opacity: 1;
 }
 
 

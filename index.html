@@ -35,6 +35,7 @@
 </head>
 
 <body>
+		<div id="mainLoader"></div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -1373,16 +1374,12 @@
 
 		async function handleThumbnailClick(imagePath, libraryId) {
 			try {
-				// Fetch the image file
 				const response = await fetch(imagePath);
 				const blob = await response.blob();
 
-				// Convert blob to base64
 				const base64 = await readFileAsBase64(blob);
 
-				// Now pass it to your existing function
 				applyLibraryImage(libraryId, base64);
-				//alert(base64); // <-- replace this with your actual handler
 
 			} catch (err) {
 				console.error("Error converting image:", err);
@@ -2970,7 +2967,6 @@
 					//seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
 					seriesContainerProxy.push(seriesContainer);
 				}
-
 				chunkIndex = 0;
 
 				while (target.firstChild) {
@@ -6231,6 +6227,8 @@
 			closeBookDetails();
 			mb.screenAR = getScreenAR();
 
+			mainLoader.classList.remove('hidden');
+
 			switch (path) {
 				case '':
 				case 'dashboard':
@@ -6275,6 +6273,8 @@
 				default:
 					console.log('no selection');
 			}
+			mainLoader.classList.add('hidden');
+
 			await executeFade(0);
 		}
 
