@@ -583,6 +583,8 @@ a {
 	display: block;
 	z-index: 10000;
 	animation: loader_spin 1s linear infinite;
+	contain: layout style paint;
+
 }
 
 #mainLoader.hidden {
