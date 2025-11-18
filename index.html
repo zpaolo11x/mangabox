@@ -2690,6 +2690,18 @@ console.log(divs);
 			threshold: 0
 		});
 
+		function buildSeriesData(item, serie){
+			const unreadCount = serie.booksUnreadCount;
+			const altTitle = getAltTitles(serie);
+			const bookCount = serie.booksCount;
+			item.mbSeriesTitle = serie.metadata.title ?? '';
+			item.mbSeriesStart = timeSplit(altTitle.time)[0];
+			item.mbBooksCount = serie.booksCount;
+			item.mbSeriesRead = (unreadCount == 0);
+			item.mbSeriesDirection = (serie.metadata.readingDirection);
+			item.mbSeriesLanguage = serie.metadata.language;
+		}
+
 		async function buildSeriesItem(item, serie, target, dynamic = false) {
 			const LTRvals = {
 				RIGHT_TO_LEFT: '',
@@ -2970,9 +2982,9 @@ console.log(divs);
 					seriesContainer.dat_serie = serie;
 					seriesContainer.dat_target = target;
 					seriesContainer.dat_dynamic = dynamic;
-
-					seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
+					buildSeriesData(seriesContainer, serie);
 					
+					//seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
 					seriesContainerProxy.push(seriesContainer);
 				}
 				chunkIndex = 0;
@@ -3001,7 +3013,7 @@ console.log(divs);
 					buildSeriesItem(seriesContainer, serie, target);
 
 					target.append(seriesContainer);
-
+					
 				});
 
 				sectionShow(target);
