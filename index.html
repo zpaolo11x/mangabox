@@ -35,7 +35,7 @@
 </head>
 
 <body>
-		<div id="mainLoader" class="hidden"></div>
+	<div id="mainLoader" class="hidden"></div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -2453,9 +2453,9 @@
 				if (item.dat_dynamic) {
 					seriesItemProxy[seriesId] = await buildSeriesItem(item, seriesData, null, true);
 					item.appendChild(seriesItemProxy[seriesId]);
-				 } else {
+				} else {
 					buildSeriesItem(item, seriesData, null); //TODO Perché è NULL? check vecchie versioni
-				 } 
+				}
 				mb.currentlyScaled = item;
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
@@ -2653,12 +2653,12 @@
 
 				if (entry.isIntersecting) {
 					if (!seriesItemProxy[entry.target.id]) {
-						console.log("CREATE "+entry.target.id)
+						console.log("CREATE " + entry.target.id)
 						console.log(entry.target);
 						seriesItemProxy[entry.target.id] = await buildSeriesItem(entry.target, entry.target.dat_serie, entry.target.dat_target, true)
 						console.log(seriesItemProxy[entry.target.id])
 					}
-					
+
 					entry.target.append(seriesItemProxy[entry.target.id])
 					entry.target.classList.remove('unattached');
 					let frameRect = seriesItemProxy[entry.target.id].getBoundingClientRect()
@@ -2678,7 +2678,7 @@
 				}
 			};
 		}, {
-			root: mainUI,
+			root: mainContainer,
 			rootMargin: '500px 0px 500px 0px',
 			threshold: 0
 		});
@@ -2941,7 +2941,7 @@
 			target.appendChild(frag);
 
 			if (chunkIndex < seriesContainerProxy.length) {
-				//DEBUG requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
+				//requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
 				renderSeriesChunk(series, target, focusID);
 			} else {
 				sectionShow(target);
