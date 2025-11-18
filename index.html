@@ -1528,7 +1528,11 @@
 							name: 'a_to_z',
 							caption: 'by Title',
 							iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
-							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
+							sortFunction: (a, b) => {
+								console.log(a);
+								console.log(a.mbSeriesTitle);
+								return(a.mbSeriesTitle.localeCompare(b.mbSeriesTitle))
+							}
 						}, {
 							name: 'z_to_a',
 							caption: 'by Title',
@@ -1686,7 +1690,6 @@
 				mb.filterButtons.forEach(button => {
 					mb.filterTable[button.name].selected = filterValues[button.name];
 				});
-				applyLibraryFilters()
 			}
 		}
 
@@ -1694,7 +1697,11 @@
 			const { path, params } = getHashAndParams();
 			const libraryId = params.get('library_id');
 
-			const divs = Array.from(seriesGrid.children);
+			const divs = seriesContainerProxy;//Array.from(seriesGrid.children);
+
+console.log("APPLYLIBRARYFILTERS")
+console.log(divs);
+
 			divs.forEach(div => {
 				div.infilter = true;
 			});
@@ -1710,6 +1717,9 @@
 
 				if (button.switches[button.selected].sortFunction) {
 					divs.sort((a, b) => {
+						console.log(a);
+						console.log("vs");
+						console.log(b);
 						return button.switches[button.selected].sortFunction(a, b);
 					});
 					divs.forEach((item, index) => {
@@ -2653,10 +2663,7 @@
 
 				if (entry.isIntersecting) {
 					if (!seriesItemProxy[entry.target.id]) {
-						console.log("CREATE " + entry.target.id)
-						console.log(entry.target);
 						seriesItemProxy[entry.target.id] = await buildSeriesItem(entry.target, entry.target.dat_serie, entry.target.dat_target, true)
-						console.log(seriesItemProxy[entry.target.id])
 					}
 
 					entry.target.append(seriesItemProxy[entry.target.id])
@@ -2876,9 +2883,6 @@
 				//item.style.border = '1px solid red' //DEBUG
 				//item.classList.add('unattached');
 				//attachedObserver.observe(item)
-				console.log("XXX")
-				console.log(seriesItem)
-				console.log("XXX")
 				return (seriesItem)
 			} else {
 				item.append(seriesItem)
@@ -2944,14 +2948,16 @@
 				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
 				//renderSeriesChunk(series, target, focusID);
 			} else {
+				console.log("ENDCHUNKS")
 				sectionShow(target);
+				applyLibraryFilters()
 				if (focusID) focusItem(focusID);
 			}
 		}
 
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target, focusID, dynamic) {
-
+		
 			if (dynamic) {
 				seriesContainerProxy = []
 				seriesItemProxy = {};
@@ -3044,7 +3050,7 @@
 			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 			await displaySeries(allSeries, seriesGrid, seriesId, true);
-			//fetchLibraryFilters(libraryId);
+			fetchLibraryFilters(libraryId);
 			//focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
 		}
