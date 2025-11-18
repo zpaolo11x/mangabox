@@ -1689,7 +1689,7 @@
 			}
 		}
 
-		
+
 		async function applyLibraryFilters(boot = false) {
 			const { path, params } = getHashAndParams();
 			const libraryId = params.get('library_id');
@@ -1698,10 +1698,10 @@
 			divs.forEach(div => {
 				div.infilter = true;
 			});
-
-			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 			
-			console.log("isFiltered: "+isFiltered);
+			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
+			console.log(mb.filterButtons);
+			console.log("isFiltered: " + isFiltered);
 
 			mb.libraryMenuButtons[libraryId].classList.remove('filtered');
 			if (isFiltered != 0) mb.libraryMenuButtons[libraryId].classList.add('filtered');
@@ -1719,8 +1719,8 @@
 						item.style.order = index;
 					});
 					*/
-						seriesGrid.innerHTML = "";
-						divs.forEach(div => seriesGrid.appendChild(div));
+					seriesGrid.innerHTML = "";
+					divs.forEach(div => seriesGrid.appendChild(div));
 				} else {
 					divs.forEach((div) => {
 						div.infilter = div.infilter && button.switches[button.selected].filterFunction(div);
@@ -2686,7 +2686,7 @@
 			threshold: 0
 		});
 
-		function buildSeriesData(item, serie){
+		function buildSeriesData(item, serie) {
 			const unreadCount = serie.booksUnreadCount;
 			const altTitle = getAltTitles(serie);
 			const bookCount = serie.booksCount;
@@ -2966,7 +2966,7 @@
 
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeries(series, target, focusID, dynamic) {
-		
+
 			if (dynamic) {
 				seriesContainerProxy = []
 				seriesItemProxy = {};
@@ -2980,13 +2980,10 @@
 					seriesContainer.dat_target = target;
 					seriesContainer.dat_dynamic = dynamic;
 					buildSeriesData(seriesContainer, serie);
-					
+
 					//seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
 					seriesContainerProxy.push(seriesContainer);
 
-					//TODO Questo applica i filtri e riattacca tutto, quindi fa quello che farà
-					//TODO dopo l'altro comando, ovvero renderSeriesChunk... forse va spostato da qui
-					applyLibraryFilters(true);
 				}
 
 				chunkIndex = 0;
@@ -2994,6 +2991,10 @@
 				while (target.firstChild) {
 					target.removeChild(target.firstChild);
 				}
+
+				//TODO Questo applica i filtri e riattacca tutto, quindi fa quello che farà
+				//TODO dopo l'altro comando, ovvero renderSeriesChunk... forse va spostato da qui
+				applyLibraryFilters(true);
 
 				seriesOld = series;
 
@@ -3015,7 +3016,7 @@
 					buildSeriesItem(seriesContainer, serie, target);
 
 					target.append(seriesContainer);
-					
+
 				});
 
 				sectionShow(target);
