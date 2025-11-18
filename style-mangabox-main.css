@@ -156,6 +156,7 @@
 	--mb-card-color: #ffffff;
 
 	--mb-placeholder-color: #fafafa;
+	--mb-gear-color: #fdfdfd;
 
 	--mb-input-color: #f6f6f6;
 	--mb-hover-color: #eeeeee;
@@ -192,6 +193,7 @@
 	--mb-card-color: #353535;
 
 	--mb-placeholder-color: #252525;
+	--mb-gear-color: #252525;
 
 	--mb-input-color: #252525;
 	--mb-hover-color: #606060;
@@ -555,7 +557,11 @@ a {
 	transition: grid-template-rows 0.2s, background-color 0.3s ease;
 	background: var(--mb-page-color);
 }
-
+/* Fade-in animation */
+@keyframes loader_fadein {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 #mainLoader {
 	position: fixed;
 	top: 50%;
@@ -563,32 +569,27 @@ a {
 	width: 300px;
 	height: 300px;
 	border-radius: 50%;
-
-	background: conic-gradient(transparent 0deg 30deg,
-			var(--mb-card-color) 30deg 60deg,
-			transparent 60deg 90deg,
-			var(--mb-card-color) 90deg 120deg,
-			transparent 120deg 150deg,
-			var(--mb-card-color) 150deg 180deg,
-			transparent 180deg 210deg,
-			var(--mb-card-color) 210deg 240deg,
-			transparent 240deg 270deg,
-			var(--mb-card-color) 270deg 300deg,
-			transparent 300deg 330deg,
-			var(--mb-card-color) 330deg 360deg);
-	mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
-	-webkit-mask-image: radial-gradient(circle, transparent 50%, white 50%, white 70%);
-
 	transform: translate(-50%, -50%);
 	display: block;
 	z-index: 10000;
-	animation: loader_spin 1s linear infinite;
+	animation: 
+		loader_spin 1.5s linear infinite,
+	   loader_fadein 0.75s ease-out forwards;
 	contain: layout style paint;
+}
 
+#mainLoader span {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 200px;
+	color: var(--mb-gear-color);
+	transition: color 0.3s;
 }
 
 #mainLoader.hidden {
-	display: none;
+	display:none;
 }
 
 #dragbar {

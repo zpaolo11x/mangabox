@@ -35,7 +35,7 @@
 </head>
 
 <body>
-	<div id="mainLoader" class="hidden"></div>
+	<div id="mainLoader" class="hidden"><span class="fa-solid fa-gear"></span></div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -1700,7 +1700,7 @@
 			});
 			
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
-			console.log(mb.filterButtons);
+
 			console.log("isFiltered: " + isFiltered);
 
 			mb.libraryMenuButtons[libraryId].classList.remove('filtered');
@@ -1719,8 +1719,10 @@
 						item.style.order = index;
 					});
 					*/
-					seriesGrid.innerHTML = "";
-					divs.forEach(div => seriesGrid.appendChild(div));
+					if (!boot){
+						seriesGrid.innerHTML = "";
+						divs.forEach(div => seriesGrid.appendChild(div));
+					}
 				} else {
 					divs.forEach((div) => {
 						div.infilter = div.infilter && button.switches[button.selected].filterFunction(div);
@@ -3066,8 +3068,8 @@
 		async function openLibrary(libraryId, seriesId) {
 			await libraryHighlight(libraryId, true);		// Triggers and manages the library menu
 			const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
-			await displaySeries(allSeries, seriesGrid, seriesId, true);
 			fetchLibraryFilters(libraryId);
+			await displaySeries(allSeries, seriesGrid, seriesId, true);
 			//focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
 		}
