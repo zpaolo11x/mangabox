@@ -2971,7 +2971,8 @@ console.log(divs);
 					seriesContainer.dat_target = target;
 					seriesContainer.dat_dynamic = dynamic;
 
-					//seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
+					seriesItemProxy[serie.id] = await (buildSeriesItem(seriesContainer, serie, target, dynamic));
+					
 					seriesContainerProxy.push(seriesContainer);
 				}
 				chunkIndex = 0;
@@ -3000,6 +3001,7 @@ console.log(divs);
 					buildSeriesItem(seriesContainer, serie, target);
 
 					target.append(seriesContainer);
+
 				});
 
 				sectionShow(target);
