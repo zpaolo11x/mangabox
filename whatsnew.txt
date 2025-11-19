@@ -11,7 +11,7 @@ Reader UI
 - Android navigation bar disappears in reader mode
 
 Build
-- 
+- Cleanup web documentation
 
 Fixes
 - Fixed android status bar overlapping main UI
