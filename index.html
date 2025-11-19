@@ -1710,7 +1710,9 @@
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
 				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
 
+				//For each button check if the button is a sort button or one of the filters buttons
 				if (button.switches[button.selected].sortFunction) {
+					// We are processing the sort
 					divs.sort((a, b) => {
 						return button.switches[button.selected].sortFunction(a, b);
 					});
@@ -1719,19 +1721,28 @@
 						item.style.order = index;
 					});
 					*/
+					/*
 					if (!boot){
 						seriesGrid.innerHTML = "";
 						divs.forEach(div => seriesGrid.appendChild(div));
 					}
+					*/
 				} else {
+					// We are processing the filters, infilter is "and"ed with all the button filters.
 					divs.forEach((div) => {
 						div.infilter = div.infilter && button.switches[button.selected].filterFunction(div);
 					});
 				}
 			});
+			seriesGrid.innerHTML = "";
+			divs.forEach(div => {
+				if(div.infilter) seriesGrid.appendChild(div)
+			});
+			/*
 			divs.forEach((div) => {
 				div.style.display = div.infilter ? '' : 'none';
 			});
+			*/
 		}
 
 		// Build filter buttons items
@@ -2948,8 +2959,8 @@
 
 
 			for (const serieContainer of slice) {
-				frag.appendChild(serieContainer);
 				attachedObserver.observe(serieContainer)
+				if(serieContainer.infilter) frag.appendChild(serieContainer);
 			}
 
 			target.appendChild(frag);
