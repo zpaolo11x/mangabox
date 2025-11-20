@@ -661,9 +661,6 @@
 			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 		}
 
-		//TODO Is it possible to generate download-progress events in electron too
-		//TODO instead of using the other layer for functions?
-
 		if (isCapacitor || isElectron) {
 			window.addEventListener('download-progress', (event) => {
 				const { bookId, completed, total } = event.detail;
@@ -703,12 +700,9 @@
 		document.addEventListener('fullscreenchange', updateFullscreenLabel);
 
 		function updateFullscreenLabel() {
-			fullscreenLabel.classList.remove('fa-expand', 'fa-compress');
-			if (document.fullscreenElement) {
-				fullscreenLabel.classList.add('fa-compress');
-			} else {
-				fullscreenLabel.classList.add('fa-expand');
-			}
+			const isFull = !!document.fullscreenElement;
+			fullscreenLabel.classList.toggle('fa-compress', isFull);
+			fullscreenLabel.classList.toggle('fa-expand', !isFull);
 		}
 
 		//MB Main Variable Setup 
@@ -1045,8 +1039,8 @@
 		function swapThemeClass(classSelector, lightClass, darkClass, toDark) {
 			Array.from(document.getElementsByClassName(classSelector)).forEach((item) => {
 				if (!item.classList.contains('no-theme-icon')) {
-					item.classList.remove(toDark ? lightClass : darkClass);
-					item.classList.add(toDark ? darkClass : lightClass);
+					item.classList.toggle(darkClass, toDark);
+					item.classList.toggle(lightClass, !toDark);
 				}
 			});
 		}
@@ -1699,7 +1693,7 @@
 			divs.forEach(div => {
 				div.infilter = true;
 			});
-			
+
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
 			console.log("isFiltered: " + isFiltered);
@@ -1736,9 +1730,9 @@
 				}
 			});
 			seriesGrid.innerHTML = "";
-			if(!boot){
+			if (!boot) {
 				divs.forEach(div => {
-					if(div.infilter) seriesGrid.appendChild(div)
+					if (div.infilter) seriesGrid.appendChild(div)
 				});
 			}
 			/*
@@ -1857,20 +1851,13 @@
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
-			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
-				document.body.classList.remove('sticky-medium');
-				document.body.classList.remove('sticky-hybrid');
-				document.body.classList.remove('sticky-small');
+		  	document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
 
+			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
+				//nothing happens
 			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 60) {
-				document.body.classList.remove('sticky-medium');
-				document.body.classList.remove('sticky-hybrid');
-				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-medium');
 			} else {
-				document.body.classList.remove('sticky-medium');
-				document.body.classList.remove('sticky-hybrid');
-				document.body.classList.remove('sticky-small');
 				document.body.classList.add('sticky-small');
 
 				if (containerWidth - mb.libSizer.large >= 9) {
@@ -2904,18 +2891,10 @@
 			});
 
 			if (dynamic) {
-				//item.style.border = '1px solid red' //DEBUG
-				//item.classList.add('unattached');
-				//attachedObserver.observe(item)
 				return (seriesItem)
 			} else {
 				item.append(seriesItem)
 			}
-
-			// item.append(fakeWrapper);
-			//item.append(seriesItem);
-			// seriesItem.classList.add('attached')
-			// attachedObserver.observe(seriesItem);
 		}
 
 
@@ -2950,7 +2929,7 @@
 		const BATCH = 100;
 
 
-		function renderSeriesChunk(series, target, focusID) {
+		function renderSeriesChunk(series, target, focusId) {
 			if (series != seriesOld) {
 				return;
 			}
@@ -2963,25 +2942,25 @@
 
 			for (const serieContainer of slice) {
 				attachedObserver.observe(serieContainer)
-				if(serieContainer.infilter) frag.appendChild(serieContainer);
+				if (serieContainer.infilter) frag.appendChild(serieContainer);
 			}
 
 			target.appendChild(frag);
 
 			if (chunkIndex < seriesContainerProxy.length) {
-				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusID) });
-				//renderSeriesChunk(series, target, focusID);
+				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusId) });
+				//renderSeriesChunk(series, target, focusId);
 			} else {
 				console.log("ENDCHUNKS")
 				sectionShow(target);
-				//DEBUG QUESTO RALLENTA! PERCHE'??? 
-				//applyLibraryFilters()
-				if (focusID) focusItem(focusID);
+				//TODO Da qualche parte andava il jump to top?
+				focusItem(focusId ? focusId : 'top')
+				//if (focusId) focusItem(focusId);
 			}
 		}
 
 		// Creates and populates the series grid with the data from the series array.
-		async function displaySeries(series, target, focusID, dynamic) {
+		async function displaySeries(series, target, focusId, dynamic) {
 
 			if (dynamic) {
 				seriesContainerProxy = []
@@ -3008,15 +2987,15 @@
 					target.removeChild(target.firstChild);
 				}
 
-				//TODO Questo applica i filtri e riattacca tutto, quindi fa quello che farà
-				//TODO dopo l'altro comando, ovvero renderSeriesChunk... forse va spostato da qui
-				if (dynamic){
+				// If dynamic is not null we are loading a series in series grid, which means we can
+				// apply the filters for that library. "dynamic" is either null or the libraryId
+				if (dynamic) {
 					fetchLibraryFilters(dynamic)
 				}
 
 				seriesOld = series;
 
-				renderSeriesChunk(series, target, focusID);
+				renderSeriesChunk(series, target, focusId);
 
 			} else {
 				// TODO Ripulire questa parte che in parte viene da sopra
@@ -3446,13 +3425,6 @@
 
 						} else {
 							showModal('', false, generatePics(libraryId, "Select a thumbnail or drag an image over the library button"), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
-
-							//TODO RIMETTER COME OPZIONE
-							/*
-							showModal('circle-info-svg.svg', true, 'Drop an image on the library button to change thumbnail.',
-								[{ label: 'Ok', runfunction: closeModal, high: true }]
-							);
-							*/
 						}
 					} else {
 						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', [
@@ -3627,26 +3599,12 @@
 			bookDetailsSummary.style.opacity = 1;
 
 			const seriesData = await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
-			/*
-			const seriesBooks = await callAPI(
-				`/api/v1/books/list?unpaged=true&sort=metadata.numberSort,asc`,
-				'POST', `{"condition": {"seriesId": {"operator": "is","value": "${book.seriesId}"}}}`
-			);
-			*/
 
 			mb.seriesData = seriesData;
 			mb.currentBook = book;
 			mb.prevBook = await callAPI(`c_books${book.id}prev`, `/api/v1/books/${book.id}/previous`) || null;
 			mb.nextBook = await callAPI(`c_books${book.id}next`, `/api/v1/books/${book.id}/next`) || null;
 
-			/*
-						if (book.number > 1) {
-							mb.prevBook = seriesBooks.content[book.number - 2];
-						}
-						if (book.number < seriesData.booksCount) {
-							mb.nextBook = seriesBooks.content[book.number];
-						}
-			*/
 		}
 
 		//MB Book Item Creation
@@ -3834,8 +3792,6 @@
 				});
 
 				addClickPointerEvents(downloadButton, () => {
-					//TODO Add here a control if we are on web or not, and call the proper download routine based on electron or capacitor
-					//TODO Or even better don't show the button in web mode :O
 					if (obIsBookCompleted(book.id)) {
 						// Book is finished, you can delete the book!
 						bookDownloadUI.classList.remove('done');
@@ -4544,14 +4500,8 @@
 
 		// Setup incognito button
 		function setIncognito(status) {
-			readerIncognito.classList.remove('incognito');
-			incognitoMark.classList.remove('incognito');
-
-			if (status) {
-				readerIncognito.classList.add('incognito');
-				incognitoMark.classList.add('incognito')
-			};
-
+			readerIncognito.classList.toggle('incognito', status);
+			incognitoMark.classList.toggle('incognito', status);
 			rd.incognito = status;
 		}
 
@@ -5064,21 +5014,13 @@
 				spreadObject.uiItem.style.width = pageObjectL.uiPage.style.width
 				spreadObject.uiItem.style.height = pageObjectL.uiPage.style.height
 
-				//buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
-				//spreadObject.uiItem.style.width = `calc(min(200vw, ${100 * mb.readerMaxRatio}vh))`;
-
-				//buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
-				//buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
 
 				pageObjectL.uiPage.style.float = 'right';
 				pageObjectL.uiPage.style.objectFit = 'cover';
 				pageObjectL.uiPage.style.objectPosition = 'left';
 
 				if ((pageObjectL.isCurrent)) rd.currentSpreadIndex = index;
-
-				//spreadObject.uiItem.append(spreadObject.uiShadowL, spreadObject.uiShadowR);
-				//spreadObject.uiItem.append(spreadObject.uiLightL, spreadObject.uiLightR);
 
 				webtoonContainer.append(spreadObject.uiItem);
 				//spreadHide(index);
