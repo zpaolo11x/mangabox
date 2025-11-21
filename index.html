@@ -1916,7 +1916,11 @@
 			await setAndroidInsets();
 		});
 
-		document.addEventListener('visibilitychange', fixZoomOnPWA);
+		document.addEventListener('visibilitychange', (event) => {
+			//DEBUG Add this to debug ipad orientation bug location.reload();
+			//DEBUG Add this to debug ipad orientation bug loadContent();
+			fixZoomOnPWA()
+		});
 
 		window.addEventListener('pageshow', (event) => {
 			if (event.persisted) fixZoomOnPWA();
