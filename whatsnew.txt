@@ -1,18 +1,18 @@
 Main UI
 - Improved library view performance with very large libraries
-- Added an info text on the login screen
-- Improved UI of the login panel
-- Tranliterate foreign alphabet characters for library letter thumbnail
-- Added fallback image for library thumbnails
-- Series summary from first available book when no series summary is present
- 
+- Added an info text to the login screen
+- Improved the UI of the login panel
+- Transliterated foreign-alphabet characters for library letter thumbnails
+- Added a fallback image for library thumbnails
+- Added series summary fallback using the first available book when no series summary is present
+
 Reader UI
-- Added button to enable/disable page turn animations
-- Android navigation bar disappears in reader mode
+- Added a button to enable/disable page-turn animations
+- Android navigation bar now hides in reader mode
 
 Build
-- Cleanup web documentation
+- Cleaned up web documentation
 
 Fixes
-- Fixed android status bar overlapping main UI
+- Fixed Android status bar overlapping the main UI
 - Fixed book cover image scaling
