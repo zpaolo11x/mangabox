@@ -2293,13 +2293,13 @@ body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 
 body.sticky-small #stickyContainer {
 	/*	height: 105px; */
-	max-width: calc(100vw);
+	max-width: 100dvw;
 	min-width: 350px;
 	flex-wrap: wrap;
 }
 
 body.sticky-small #librariesList {
-	max-width: calc(100vw);
+	max-width: 100dvw;
 	/*reduce to add space for buttons?*/
 }
 
