@@ -1931,10 +1931,12 @@
 			blanker.style.opacity = val;
 			await wait(100);
 		}
+
 		async function executeFaderGradient(val) {
 			fader.style.opacity = val;
 			await wait(300);
 		}
+
 		//MB Offline Download Functions
 		function arrayBufferToBase64(buffer) {
 			let binary = '';
@@ -6374,16 +6376,16 @@
 
 				if (Math.abs(diffX) > threshold && Math.abs(diffY) < threshold) {
 					if (diffX > 0) {
-						onSwipeRight?.(); // Call custom right swipe function
+						onSwipeRight?.();
 					} else {
-						onSwipeLeft?.(); // Call custom left swipe function
+						onSwipeLeft?.();
 					}
 					item.SingleTouch = false; // Prevent repeat action on the same swipe
 				} else if (Math.abs(diffY) > threshold && Math.abs(diffX) < threshold) {
 					if (diffY > 0) {
-						onSwipeDown?.(); // Call custom down swipe function
+						onSwipeDown?.();
 					} else {
-						onSwipeUp?.(); // Call custom up swipe function
+						onSwipeUp?.();
 					}
 					item.SingleTouch = false;
 				}
@@ -6397,15 +6399,10 @@
 		enableTouchResponse(thumbStripWT, 20, handleLargeThumbs, handleSmallThumbs, null, null);
 		enableTouchResponse(thumbStrip, 20, null, null, handleLargeThumbs, handleSmallThumbs);
 
-		/*
-		webtoonContainer.addEventListener('click', () => {
-			toggleMenu();
-		})
-		*/
-
 		webtoonContainer.addEventListener('pointerdown', () => {
 			rd.touchLock = true;
 		});
+
 		webtoonContainer.addEventListener('pointerup', () => {
 			if (!rd.touchLock) return;
 			rd.touchLock = false;
@@ -6415,6 +6412,7 @@
 		webtoonContainer.addEventListener('scroll', () => {
 			rd.webtoonScrollRatio = webtoonRatio();
 		})
+
 		enableTouchResponse(webtoonContainer, 30, null, handleCloseReader, null, null);
 
 	</script>
