@@ -1,11 +1,18 @@
 {
-	"appId": "com.zpaolo11x.mangabox",
-	"appName": "MangaBox",
-	"webDir": "dist/mangabox",
-	"bundledWebRuntime": true,
-	"plugins": {
-		"CapacitorHttp": {
-			"enabled": true
-		}
-	}
+  "appId": "com.zpaolo11x.mangabox",
+  "appName": "MangaBox",
+  "webDir": "dist/mangabox",
+  "bundledWebRuntime": true,
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  },
+  "android": {
+    "manifest": {
+      "application": {
+        "usesCleartextTraffic": true
+      }
+    }
+  }
 }
