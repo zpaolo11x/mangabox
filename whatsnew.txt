@@ -15,4 +15,5 @@ Build
 
 Fixes
 - Fixed Android status bar overlapping the main UI
+- Fixed Android support for http server address
 - Fixed book cover image scaling
