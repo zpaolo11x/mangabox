@@ -286,6 +286,18 @@ jobs:
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
 
+      - name: Android - Enable http connections
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          MANIFEST="android/app/src/main/AndroidManifest.xml"
+          echo "Patching $MANIFEST"
+
+          # Insert usesCleartextTraffic="true" into <application ...>
+          sed -i 's|<application |<application android:usesCleartextTraffic="true" |' "$MANIFEST"
+
+          echo "Resulting <application> line:"
+          grep "<application" "$MANIFEST"
+
       - name: iOS - Install CocoaPods dependencies
         if: ${{ matrix.sys == 'ios' }}
         run: |
