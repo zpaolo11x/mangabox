@@ -1696,8 +1696,6 @@
 
 			const isFiltered = Object.values(mb.filterButtons).reduce((sum, item) => sum + (item.selected || 0), 0);
 
-			console.log("isFiltered: " + isFiltered);
-
 			mb.libraryMenuButtons[libraryId].classList.remove('filtered');
 			if (isFiltered != 0) mb.libraryMenuButtons[libraryId].classList.add('filtered');
 
@@ -1917,8 +1915,6 @@
 		});
 
 		document.addEventListener('visibilitychange', (event) => {
-			//DEBUG Add this to debug ipad orientation bug location.reload();
-			//DEBUG Add this to debug ipad orientation bug loadContent();
 			fixZoomOnPWA()
 		});
 
@@ -2957,7 +2953,6 @@
 				requestAnimationFrame(() => { renderSeriesChunk(series, target, focusId) });
 				//renderSeriesChunk(series, target, focusId);
 			} else {
-				console.log("ENDCHUNKS")
 				sectionShow(target);
 				//TODO Da qualche parte andava il jump to top?
 				focusItem(focusId ? focusId : 'top')
