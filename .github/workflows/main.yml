@@ -285,34 +285,27 @@ jobs:
 
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
-        
+
       - name: Patch Android Manifest to allow cleartext
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
           echo "Patching $MANIFEST …"
 
-          # Backup original
           cp "$MANIFEST" "$MANIFEST.bak"
-
-          # Insert usesCleartextTraffic with tools:replace attribute if missing
-          # We use xmlstarlet (install it) or fallback to sed
 
           if command -v xmlstarlet > /dev/null; then
             xmlstarlet ed -L \
               -N a="http://schemas.android.com/apk/res/android" \
               -N t="http://schemas.android.com/tools" \
-              -u "/manifest/application" \
-              -x "concat(@android:usesCleartextTraffic, '')" \
               -i "/manifest/application" -t attr -n "android:usesCleartextTraffic" -v "true" \
               -i "/manifest/application" -t attr -n "tools:replace" -v "android:usesCleartextTraffic" \
               "$MANIFEST"
           else
-            # Fallback to sed: naive but often works
             sed -i 's|<application |<application android:usesCleartextTraffic="true" tools:replace="android:usesCleartextTraffic" |' "$MANIFEST"
           fi
 
           echo "Resulting application tag:"
-          grep -o '<application[^>]*>' "$MANIFEST"
+          grep -o '<application[^>]*>' "$MANIFEST" || true
 
       - name: iOS - Install CocoaPods dependencies
         if: ${{ matrix.sys == 'ios' }}
