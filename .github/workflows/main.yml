@@ -293,27 +293,33 @@ jobs:
           cat android/app/src/main/AndroidManifest.xml || true
           echo "-----------------------------"
 
-      - name: Patch Android Manifest to allow cleartext
+      - name: Patch AndroidManifest.xml to allow cleartext
         if: ${{ matrix.sys == 'android' }}
         run: |
           MANIFEST="android/app/src/main/AndroidManifest.xml"
+
           echo "Patching $MANIFEST …"
 
+          # Backup original
           cp "$MANIFEST" "$MANIFEST.bak"
 
-          if command -v xmlstarlet > /dev/null; then
-            xmlstarlet ed -L \
-              -N a="http://schemas.android.com/apk/res/android" \
-              -N t="http://schemas.android.com/tools" \
-              -i "/manifest/application" -t attr -n "android:usesCleartextTraffic" -v "true" \
-              -i "/manifest/application" -t attr -n "tools:replace" -v "android:usesCleartextTraffic" \
-              "$MANIFEST"
+          # Insert attribute only if missing
+          if ! grep -q 'usesCleartextTraffic' "$MANIFEST"; then
+            echo "Adding android:usesCleartextTraffic=\"true\""
+            sed -i 's|<application |<application android:usesCleartextTraffic="true" |' "$MANIFEST"
           else
-            sed -i 's|<application |<application android:usesCleartextTraffic="true" tools:replace="android:usesCleartextTraffic" |' "$MANIFEST"
+            echo "Already present"
           fi
 
-          echo "Resulting application tag:"
-          grep -o '<application[^>]*>' "$MANIFEST" || true
+          echo "--- Resulting application tag ---"
+          grep -o '<application[^>]*>' "$MANIFEST"
+
+      - name: Show generated AndroidManifest.xml
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          echo "----- ANDROID MANIFEST -----"
+          cat android/app/src/main/AndroidManifest.xml || true
+          echo "-----------------------------"
 
       - name: iOS - Install CocoaPods dependencies
         if: ${{ matrix.sys == 'ios' }}
