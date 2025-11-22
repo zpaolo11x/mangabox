@@ -293,33 +293,12 @@ jobs:
           cat android/app/src/main/AndroidManifest.xml || true
           echo "-----------------------------"
 
-      - name: Patch AndroidManifest.xml to allow cleartext
+      - name: Overwrite generated manifest
         if: ${{ matrix.sys == 'android' }}
         run: |
-          MANIFEST="android/app/src/main/AndroidManifest.xml"
-
-          echo "Patching $MANIFEST …"
-
-          # Backup original
-          cp "$MANIFEST" "$MANIFEST.bak"
-
-          # Insert attribute only if missing
-          if ! grep -q 'usesCleartextTraffic' "$MANIFEST"; then
-            echo "Adding android:usesCleartextTraffic=\"true\""
-            sed -i 's|<application |<application android:usesCleartextTraffic="true" |' "$MANIFEST"
-          else
-            echo "Already present"
-          fi
-
-          echo "--- Resulting application tag ---"
-          grep -o '<application[^>]*>' "$MANIFEST"
-
-      - name: Show generated AndroidManifest.xml
-        if: ${{ matrix.sys == 'android' }}
-        run: |
-          echo "----- ANDROID MANIFEST -----"
-          cat android/app/src/main/AndroidManifest.xml || true
-          echo "-----------------------------"
+          cp capacitor.AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+          echo "Using custom AndroidManifest.xml:"
+          cat android/app/src/main/AndroidManifest.xml
 
       - name: iOS - Install CocoaPods dependencies
         if: ${{ matrix.sys == 'ios' }}
