@@ -224,6 +224,10 @@ img.page:not([src]) {
 	display: block;
 }
 
+.spread-layout{
+	contain: layout style paint;
+}
+
 .spread-layout img.page {
 	display: block;
 	height: 100vh;
@@ -564,6 +568,7 @@ div.single-page {
 
 	background: none;
 	gap: 0px;
+
 }
 
 #readerContainer.hidden #readerViewer {
@@ -846,7 +851,7 @@ div.single-page {
 }
 
 #topControls {
-	grid-template-columns: var(--mb-pill-width) var(--mb-pill-width) 1fr var(--mb-pill-width) var(--mb-pill-width);
+	grid-template-columns: var(--mb-pill-width) 1fr var(--mb-pill-width) var(--mb-pill-width) var(--mb-pill-width);
 	top: 0px;
 	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.15);
 }

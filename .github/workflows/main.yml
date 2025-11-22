@@ -148,8 +148,6 @@ jobs:
             mv dist/*.dmg dist/MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}.dmg
           fi
 
-
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -258,6 +256,14 @@ jobs:
       - name: Install File Picker plugin
         run: npm install @capawesome/capacitor-file-picker@7
 
+      - name: Install edge management plugin (Android)
+        if: ${{ matrix.sys == 'android' }}
+        run: npm install @capawesome/capacitor-android-edge-to-edge-support
+
+      - name: Install navigation bar plugin (Android)
+        if: ${{ matrix.sys == 'android' }}
+        run: npm install @ethion/capacitor-navigation-bar
+
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
         run: |
@@ -279,6 +285,20 @@ jobs:
 
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
+      
+      - name: Show generated AndroidManifest.xml
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          echo "----- ANDROID MANIFEST -----"
+          cat android/app/src/main/AndroidManifest.xml || true
+          echo "-----------------------------"
+
+      - name: Overwrite generated manifest
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          cp capacitor.AndroidManifest.xml android/app/src/main/AndroidManifest.xml
+          echo "Using custom AndroidManifest.xml:"
+          cat android/app/src/main/AndroidManifest.xml
 
       - name: iOS - Install CocoaPods dependencies
         if: ${{ matrix.sys == 'ios' }}

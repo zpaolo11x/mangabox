@@ -4,11 +4,13 @@
 	right: 0;
 	top: 0;
 	bottom: 0;
-	background-image: 
-	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
-	url('logo/mangabox-pattern-alpha-mid.svg'), /* Your pattern image */
-	var(--mb-login-gradient);
-	
+	background-image:
+		url('logo/mangabox-pattern-alpha-mid.svg'),
+		/* Your pattern image */
+		url('logo/mangabox-pattern-alpha-mid.svg'),
+		/* Your pattern image */
+		var(--mb-login-gradient);
+
 	background-repeat: repeat, repeat, no-repeat;
 	background-size: 800px 200px, 800px 200px, cover;
 	background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
@@ -27,10 +29,10 @@
 }
 
 #logoName {
-	max-width:300px;
-	width:100%;
+	max-width: 300px;
+	width: 100%;
 	margin-bottom: 5px;
-	filter:invert(var(--mb-login-logo));
+	filter: invert(var(--mb-login-logo));
 }
 
 #logoIcon {
@@ -39,15 +41,15 @@
 
 .dialog {
 	max-height: calc(100vh - 50px);
-	overflow-y:scroll;
-	overflow-x:hidden;
+	overflow-y: scroll;
+	overflow-x: hidden;
 	max-width: 300px;
 	min-width: 180px;
 	width: calc(100% - 100px);
 
 	padding: 0px;
 	margin: 0px;
-	
+
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -67,45 +69,98 @@
 }
 
 .dialog {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE & Edge (legacy) */
+	scrollbar-width: none;
+	/* Firefox */
+	-ms-overflow-style: none;
+	/* IE & Edge (legacy) */
 }
 
 .dialog::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and new Edge */
+	display: none;
+	/* Chrome, Safari, and new Edge */
 }
 
+
+.input-wrapper {
+	display:flex;
+	box-sizing: border-box;
+	background-color:var(--mb-login-button-color);
+	background-image: linear-gradient(90deg, transparent 40px, var(--mb-input-color) 40px);
+	padding: 0;
+	margin: 0;
+	position: relative;
+	width: 100%;
+	height:var(--mb-dialog-button-height);
+	margin-top: var(--mb-dialog-padding);
+	border: 1px var(--mb-login-border-color) solid;
+	border-radius: var(--mb-dialog-button-radius);
+	box-shadow: none;
+	transition: all 0.3s, box-shadow 0.1s;
+}
+
+.input-wrapper i {
+	position: absolute;
+	left: 20px;
+	top: 20px;
+	transform: translate(-50%, -50%);
+	color: var(--mb-glyph-color);
+
+	font-size: var(--mb-dialog-font-size);
+	pointer-events: none;
+	/* Make the icon not respond to hover directly */
+	transition: all 0.3s;
+}
+
+
+
+.input-wrapper:hover i {
+	border-color: var(--mb-accent);
+}
+
+.input-wrapper:focus-within i {
+	color: white;
+}
+.input-wrapper:focus-within{
+		background-color:var(--mb-accent);
+}
+/*
+#passIcon{
+	pointer-events:unset;
+	left: calc(100% - 40px);
+}
+
+.input-wrapper:focus-within #passIcon{
+ color: var(--mb-glyph-color);
+}
+*/
 .login-input {
+	background:none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
 	border: none;
 	outline: none;
-	background: var(--mb-input-color);
 	padding: 0;
 	margin: 0;
-	box-shadow: none;
 	font: inherit;
 	color: inherit;
 
 	box-sizing: border-box;
-	height: var(--mb-dialog-button-height);
+	height: 100%;
 	width: 100%;
 	border-radius: var(--mb-dialog-button-radius);
-	border: 1px var(--mb-login-border-color) solid;
 	padding-left: calc(var(--mb-dialog-button-height) + 5px);
-
 	padding-right: 10px;
 	font-size: var(--mb-dialog-font-size);
 
 	transition: all 0.3s, box-shadow 0.1s;
 }
 
-.login-input:hover {
+.input-wrapper:hover {
 	border: 1px solid var(--mb-accent);
 }
 
-.login-input:focus {
+.input-wrapper:focus-within {
 	border: 1px solid var(--mb-accent);
 	box-shadow: 0px 0px 5px var(--mb-accent-a50);
 }
@@ -114,11 +169,11 @@
 	margin: 0px;
 	padding: 0px;
 	display: grid;
-grid-template-columns: auto minmax(60px, 1fr);
+	grid-template-columns: auto minmax(40px, 1fr);
 	width: 100%;
 	gap: var(--mb-dialog-padding);
-	
 }
+
 
 .login-button {
 	margin: 0px;
@@ -127,11 +182,32 @@ grid-template-columns: auto minmax(60px, 1fr);
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
-	width:100%;
+	width: 100%;
 	margin-right: 0px;
 	margin-left: auto;
-	max-width:120px;
+	max-width: 120px;
 	margin-top: var(--mb-dialog-padding);
+	transition: 0.3s all;
+	font-size: var(--mb-dialog-font-size);
+	font: inherit;
+	color: inherit;
+}
+
+
+.login-button-round {
+	box-sizing: border-box;
+
+	margin: 0px;
+	padding:0px;
+	appearance: none;
+	background: var(--mb-login-button-color);
+	border: 1px solid var(--mb-login-border-color);
+	border-radius: var(--mb-dialog-button-radius);
+	height: var(--mb-dialog-button-height);
+	width: var(--mb-dialog-button-height);
+	min-width: var(--mb-dialog-button-height);
+	min-height: var(--mb-dialog-button-height);
+	
 	transition: 0.3s all;
 	font-size: var(--mb-dialog-font-size);
 	font: inherit;
@@ -139,15 +215,72 @@ grid-template-columns: auto minmax(60px, 1fr);
 
 }
 
-.login-button:hover {
+
+.login-button-round i {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: var(--mb-dialog-font-size);
+	line-height: var(--mb-dialog-button-height);
+	pointer-events: none;
+	transition: all 0.3s;
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
+}
+
+#loginButton{
+	position:relative;
+  container-type: inline-size; /* enables width-based container queries */
+}
+
+#loginButton span{
+	transition: all 0.3s;
+
+}
+
+#loginButton i {
+	  opacity: 0;
+
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	font-size: var(--mb-dialog-font-size);
+	line-height: var(--mb-dialog-button-height);
+	pointer-events: none;
+	transition: all 0.3s;
+	width: var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
+}
+
+@container (max-width: 60px) {
+  #loginButton span {
+    opacity: 0;
+  }
+  #loginButton i {
+    opacity: 1;
+  }
+}
+
+.login-button:hover,
+.login-button-round:hover {
 	border: 1px solid var(--mb-accent);
 	/*background-color:#eee;*/
 }
 
-.login-button:active {
+.login-button:active,
+.login-button-round:active {
 	border: 1px solid var(--mb-accent);
 	background-color: var(--mb-accent);
 	color: white;
+}
+
+#loginInfo {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	margin:0px;
 }
 
 .auth-hidden {
@@ -155,10 +288,14 @@ grid-template-columns: auto minmax(60px, 1fr);
 }
 
 .error-message {
-	width: 100%;
-	color: red;
+	width: calc(100% - 30px);
+	color: white;
 	font-size: var(--mb-dialog-font-size);
-	margin-top: 10px;
+	margin-top: 15px;
+	padding: 12px 15px 15px 15px;
+	background: rgb(160, 6, 39);
+	margin-bottom:0px;
+	border-radius: 20px;
 }
 
 
@@ -175,7 +312,7 @@ grid-template-columns: auto minmax(60px, 1fr);
 	/* Remove the default checkbox appearance */
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
-		min-width: var(--mb-dialog-button-height);
+	min-width: var(--mb-dialog-button-height);
 	min-height: var(--mb-dialog-button-height);
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
@@ -221,51 +358,15 @@ grid-template-columns: auto minmax(60px, 1fr);
 }
 
 .remember-me-label {
-	min-width: 20px;
+	min-width: 80px;
+	width: 90px;
 	font-size: var(--mb-dialog-font-size);
 	cursor: pointer;
-		overflow: hidden;
+	/*
+	overflow: hidden;
 	text-overflow: ellipsis;
-	white-space: nowrap;
+	*/
+	line-height: 16px;
+	/* white-space: nowrap; */
 	/* Matches cursor with checkbox */
-}
-
-.input-wrapper {
-	position: relative;
-	width: 100%;
-	margin-top: var(--mb-dialog-padding);
-
-}
-
-.input-wrapper i {
-	box-sizing: border-box;
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	color: var(--mb-glyph-color);
-	/* White icon color */
-	background-color: var(--mb-login-button-color);
-	/* Accent color */
-	width: var(--mb-dialog-button-height);
-	height: var(--mb-dialog-button-height);
-	border-radius: var(--mb-dialog-button-radius) 0px 0px var(--mb-dialog-button-radius);
-	border: 1px solid var(--mb-login-border-color);
-	border-right: transparent;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: var(--mb-dialog-font-size);
-	pointer-events: none;
-	/* Make the icon not respond to hover directly */
-	transition: all 0.3s;
-}
-
-.input-wrapper:hover i {
-	border-color: var(--mb-accent);
-}
-
-.input-wrapper:focus-within i {
-	background-color: var(--mb-accent);
-	border-color: var(--mb-accent);
-	color: #fff;
 }

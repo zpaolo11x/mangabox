@@ -154,7 +154,7 @@ async function systemRestart() {
 	executeFade(1);
 
 	if (isStatusBar) {
-		if (isSharpCornerIphone || (capacitorPlatform == 'android' && isOrientationLandscape())) {
+		if (isSharpCornerIphone) {
 			Capacitor.Plugins.StatusBar.hide();
 		} else {
 			Capacitor.Plugins.StatusBar.show();
@@ -212,6 +212,9 @@ async function systemRestart() {
 async function login() {
 	debugPrint("login...")
 	console.log("login...")
+
+	loginError.classList.remove('auth-hidden');
+	loginError.classList.add('auth-hidden');
 
 	let baseUrlVal = loginBaseUrl.value;
 
