@@ -285,6 +285,13 @@ jobs:
 
       - name: Capacitor sync
         run: npx cap sync ${{ matrix.sys }}
+      
+      - name: Show generated AndroidManifest.xml
+        if: ${{ matrix.sys == 'android' }}
+        run: |
+          echo "----- ANDROID MANIFEST -----"
+          cat android/app/src/main/AndroidManifest.xml || true
+          echo "-----------------------------"
 
       - name: Patch Android Manifest to allow cleartext
         if: ${{ matrix.sys == 'android' }}
