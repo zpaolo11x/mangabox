@@ -1,5 +1,5 @@
 Main UI
-- 
+- Added three new library icons: horror, detective and humor
 
 Reader UI
 - 
