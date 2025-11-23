@@ -1,3 +1,11 @@
+Main UI
+- 
+
+Reader UI
+- 
+
+Build
+- 
+
 Fixes
-- Fixed blank libraries when no filters are applied
-- Fixed UI issue when logging out of server
+- 
