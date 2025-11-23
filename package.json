@@ -1,6 +1,6 @@
 {
 	"name": "mangabox",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Desktop client for Komga server",
 	"main": "package-main.js",
