@@ -1851,7 +1851,7 @@
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
-		  	document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
+			document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
 				//nothing happens
@@ -2794,15 +2794,17 @@
 
 			// Fetch and display the number of books and alternate title
 			const bookCount = serie.booksCount;
+
 			const infoRow = addItem('div', {
 				className: 'data-row info-row'
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				title: `Filter time: ${altTitle.time}`
 			});
+			
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
@@ -2817,41 +2819,52 @@
 			});
 
 			if (altTitle.story != altTitle.art) {
+				if (altTitle.story != 'N/A') {
+					const storyLabel = addItem('div', {
+						innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
+						className: 'red data-label search-trigger',
+						title: `Filter artist: ${altTitle.story}`
+					});
 
-				const storyLabel = addItem('div', {
-					innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
-					className: 'red data-label search-trigger',
-					title: `Filter artist: ${altTitle.story}`
-				});
+					artistRow.append(storyLabel);
 
-				const artLabel = addItem('div', {
-					innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
-					className: 'red data-label search-trigger',
-					title: `Filter artist: ${altTitle.art}`
-				});
+					addClickPointerEvents(storyLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+					});
+				}
 
-				artistRow.append(storyLabel, artLabel);
+				if (altTitle.art != 'N/A') {
+					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
+						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						className: 'red data-label search-trigger',
+						title: `Filter artist: ${altTitle.art}`
+					});
 
-				addClickPointerEvents(storyLabel, async () => {
-					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
-				});
+					artistRow.append(artLabel);
 
-				addClickPointerEvents(artLabel, async () => {
-					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
-				});
+					addClickPointerEvents(artLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
+					});
+				}
+
+
+
 			} else {
-				const artistLabel = addItem('div', {
-					innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
-					title: `Filter artist: ${altTitle.story}`,
-					className: 'red data-label search-trigger'
-				});
-				artistRow.append(artistLabel);
-				addClickPointerEvents(artistLabel, async () => {
-					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
-				});
+				if (altTitle.story != 'N/A') {
+					const artistLabel = addItem('div', {
+						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+						title: `Filter artist: ${altTitle.story}`,
+						className: 'red data-label search-trigger'
+					});
+					artistRow.append(artistLabel);
+
+					addClickPointerEvents(artistLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+					});
+				}
 			}
 
 			item.mbSeriesTitle = serie.metadata.title ?? '';
