@@ -1,6 +1,6 @@
 Main UI
 - Added three new library icons: horror, detective and humor
-- Reduced line height of book name
+- Reduced line spacing of book name
 
 Reader UI
 - 
@@ -9,4 +9,4 @@ Build
 - 
 
 Fixes
-- 
+- Fixed book details title
