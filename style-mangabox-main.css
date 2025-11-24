@@ -2005,6 +2005,12 @@ book-item {
 	word-break: break-word;
 }
 
+.book-item .info-row{
+	margin-top: 3px;
+	line-height: 16px;
+	margin-bottom: 3px;
+}
+
 .custom-scrollbar {
 	display: flex;
 	justify-content: center;

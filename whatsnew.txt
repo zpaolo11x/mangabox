@@ -1,5 +1,6 @@
 Main UI
 - Added three new library icons: horror, detective and humor
+- Reduced line height of book name
 
 Reader UI
 - 
