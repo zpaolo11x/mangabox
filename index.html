@@ -2391,7 +2391,7 @@
 		}
 
 
-		async function fetchMedia(url, offlineCache = true) {
+		async function fetchMedia(url, offlineCache = true, returnBlob = false) {
 
 			const db = await openIndexedDB();
 
@@ -2401,6 +2401,11 @@
 				const value = mb.mediaCacheRAM.get(url);
 				mb.mediaCacheRAM.delete(url);
 				mb.mediaCacheRAM.set(url, value);
+				if (returnBlob) {
+					// convert object URL back to Blob
+					const res = await fetch(value);
+					return await res.blob();
+				}
 				return value;
 			}
 
@@ -2408,9 +2413,8 @@
 			if (offlineSession) {
 				const cachedBlob = await getCachedMedia(db, url);
 				if (cachedBlob) {
-					const objectURL = URL.createObjectURL(cachedBlob);
-					mb.mediaCacheRAM.set(url, objectURL);
-					return objectURL;
+					if (!returnBlob) return URL.createObjectURL(cachedBlob);
+					else return cachedBlob;
 				}
 			}
 
@@ -2434,19 +2438,16 @@
 						await cacheMedia(db, url, blob);
 					}
 
-					return objectURL;
+					return returnBlob ? blob : objectURL;
 				} else {
 					console.error(`Failed to load media from ${url}`, response.status);
 					return 'fallback-image.png';
 				}
 			} catch (error) {
-				console.warn(`Offline? Loading cached media for ${url}`);
+				console.warn(`Offline? Loading cached media for ${url}`, error);
 				const fallbackBlob = await getCachedMedia(db, url);
-				if (fallbackBlob) {
-					return URL.createObjectURL(fallbackBlob);
-				}
+				if (fallbackBlob) return returnBlob ? fallbackBlob : URL.createObjectURL(fallbackBlob);
 				return 'fallback-image.png';
-
 			}
 		}
 
@@ -2804,7 +2805,7 @@
 				className: 'red search-trigger',
 				title: `Filter time: ${altTitle.time}`
 			});
-			
+
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
@@ -4427,10 +4428,16 @@
 
 			let [duration, delay] = !smoothMove ? [0, 0] : (delayMove ? [rd.turnScrollTime, rd.turnScrollDelay] : [rd.scrollSpeed, 0]);
 
-			readerViewer.animate(
+			if (duration > 0) readerIsAnimating = true;
+
+			const anim = readerViewer.animate(
 				[{ transform: rd.focusTransition[focusString] }],
 				{ duration: duration, easing: 'ease', fill: 'forwards', delay: delay }
 			);
+
+			anim.finished.then(() => {
+				readerIsAnimating = false;
+			});
 			rd.spreadFocus = focusString;
 		}
 
@@ -5323,6 +5330,33 @@
 			console.log(out);
 		}
 
+		let readerIsAnimating = false;
+
+		function waitUntilAnimationIdle() {
+			return new Promise(res => {
+				if (!readerIsAnimating) return res(); // already idle
+
+				const check = () => {
+					if (!readerIsAnimating) {
+						cancelAnimationFrame(timer);
+						return res();
+					}
+					timer = requestAnimationFrame(check);
+				}
+				let timer = requestAnimationFrame(check);
+			});
+		}
+
+
+		async function safeDecode(blob) {
+			// Wait until no animation is running
+			await waitUntilAnimationIdle();
+
+			// Then decode
+			return await createImageBitmap(blob);
+		}
+
+
 		// Actually load media in the selected index, isPreload is true if the population action is
 		// triggered by a preload, so it doesn't trigger further preloads
 
@@ -5343,13 +5377,12 @@
 						element.uiPage.classList.add('loading');
 						try {
 							// Fetch the image
-							const blobUrl = await fetchMedia(element.lazySrc, false);
+							const blob = await fetchMedia(element.lazySrc, false, true);
 							if (isSectionHidden(readerContainer)) return;
-							// These lines reduce stuttering
-							//TODO Verify if this creates some errors when going back from reader and pages are still loading
-							const img = new Image();
-							img.src = blobUrl;
-							await img.decode();
+
+							await waitUntilAnimationIdle();       // <-- NEW: pause if animation is running
+							await createImageBitmap(blob);
+							const blobUrl = URL.createObjectURL(blob);
 
 							element.uiPage.src = blobUrl;
 							element.hasSrc = true;
