@@ -4221,7 +4221,7 @@
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
-			preloadCount: 2,			// TODO SET BACK TO 15 Image preload count
+			preloadCount: 1,			// TODO SET BACK TO 15 Image preload count
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
 			jumpTimeout: null,		// Timeout counter for jumping to spreads
@@ -5351,8 +5351,8 @@
 							//img.src = blobUrl;
 							//await img.decode();
 
-							//element.uiPage.src = blobUrl;
-							element.uiPage.blobUrl = blobUrl;
+							element.uiPage.src = blobUrl;
+							//element.uiPage.blobUrl = blobUrl;
 							element.hasSrc = true;
 							//rd.uiPages[element].src = rd.pagesDataArray[element].url;
 							// Handle successful load
@@ -5936,13 +5936,14 @@
 
 			if (isSectionHidden(readerContainer)) return;
 
-			await populateSpread(localNewSpreadIndex);
-
+			populateSpread(localNewSpreadIndex);
+/*
 console.log(rd.spreadsArray[localNewSpreadIndex].pageObjL);
 console.log(rd.spreadsArray[localNewSpreadIndex].pageObjR);
 
 rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.blobUrl;
 rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.blobUrl;
+	*/
 			// TODO
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
