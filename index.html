@@ -1465,7 +1465,7 @@
 
 				// Reset book results strip
 				//TODO Need to check also books for year?
-				displayBooks([], homeStripBooksResults, 'compact', 'top');
+				displayBooks([], homeStripBooksResults, 'full', 'top');
 
 				focusItem('top');
 				setTimeout(updateSliderProperties, 10);
@@ -1502,7 +1502,7 @@
 					tagIn => tagIn.toLowerCase().includes(searchString)
 				)
 			);
-			displayBooks(filteredBooks, homeStripBooksResults, 'compact', 'top');
+			displayBooks(filteredBooks, homeStripBooksResults, 'full', 'top');
 
 			setTimeout(updateSliderProperties, 10);
 			sectionShow(searchStripsContainer);
@@ -2804,7 +2804,7 @@
 				className: 'red search-trigger',
 				title: `Filter time: ${altTitle.time}`
 			});
-			
+
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
@@ -3702,7 +3702,7 @@
 			if (format == 'longname') {
 				secondRow.classList.add('info-row');
 				secondRow.textContent = book.metadata.title;
-			} else if (format == 'compact') {
+			} else if ((format == 'compact') || (format == 'full')) {
 				const volumeNumberLabel = addItem('span', {
 					innerHTML: `Book ${book.metadata.number}`
 				});
@@ -3727,6 +3727,15 @@
 				});
 
 				secondRow.append(volumeNumberLabelShort, timeLabel);
+			}
+
+			let thirdRow = null
+			if (format == 'full') {
+				thirdRow = addItem('div', {
+					className: 'data-row',
+				});
+				thirdRow.classList.add('info-row');
+				thirdRow.textContent = book.metadata.title;
 			}
 
 			const thumbnailWrapper = addItem('div', {
@@ -3861,6 +3870,10 @@
 				secondRow
 			);
 
+			if (format == 'full'){
+				booksItem.append(thirdRow)
+			}
+
 			thumbnailWrapper.append(
 				bookThumbnail,
 				bookDownloadUI,
@@ -3906,6 +3919,7 @@
 				- longname: will not show the series name, but the book file name
 				- compact: will show series name and pages 
 				- timeline: will show latest read date
+				- full: will show series name and pages plus the book title 
 			*/
 			// focus is the book id to focus on
 
@@ -5937,19 +5951,19 @@
 			if (isSectionHidden(readerContainer)) return;
 
 			populateSpread(localNewSpreadIndex);
-/*
-console.log(rd.spreadsArray[localNewSpreadIndex].pageObjL);
-console.log(rd.spreadsArray[localNewSpreadIndex].pageObjR);
-
-rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.blobUrl;
-rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.blobUrl;
-	*/
+			/*
+			console.log(rd.spreadsArray[localNewSpreadIndex].pageObjL);
+			console.log(rd.spreadsArray[localNewSpreadIndex].pageObjR);
+			
+			rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.blobUrl;
+			rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.blobUrl;
+				*/
 			// TODO
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
 			// This adds a slight delay when jumping cover to cover
 			spreadSetFocusSmoothDelay(targetSpreadFocus);
-			
+
 			spreadShow(localNewSpreadIndex);
 
 			const turnDirectionCalc = (localNewSpreadIndex > localOldSpreadIndex) === rd.rtl ? 'turn-right' : 'turn-left';
