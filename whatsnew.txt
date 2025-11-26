@@ -5,6 +5,7 @@ Main UI
 - Added book title to search results
 
 Reader UI
+- Improved two fingers pinch to zoom and pan
 - 
 
 Build
