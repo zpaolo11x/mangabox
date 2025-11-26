@@ -461,8 +461,8 @@
 		//MB Pinch To Zoom
 		// ===== Two-Finger Pinch + Pan for MangaBox =====
 
-		const page = document.getElementById("touchPanel");
-		const pageTarget = document.getElementById("readerContainer");
+		//const page = document.getElementById("touchPanel");
+		//const pageTarget = document.getElementById("readerContainer");
 
 		function getDistance(touches) {
 			const dx = touches[0].clientX - touches[1].clientX;
@@ -485,87 +485,68 @@
 			startContent: { x: 0, y: 0 }
 		};
 
+		function createPinchAndPanResponse(page, targetPage) {
+			// --------------------------
+			// Touch handlers
+			// --------------------------
+			page.addEventListener("touchstart", e => {
+				pageTarget.style.transformOrigin = `0 0`;
+				if (e.touches.length === 2) {
+					rd.touchLock = false;
+					e.preventDefault();
+					//pageTarget.style.transform = `scale(1.5)`;
 
-		// --------------------------
-		// Touch handlers
-		// --------------------------
-		page.addEventListener("touchstart", e => {
-			pageTarget.style.transformOrigin = `0 0`;
-			if (e.touches.length === 2) {
+					gesture.startDist = getDistance(e.touches);
+					gesture.startScale = rd.scale;
+					gesture.startMid = getMidpoint(e.touches);
+
+					const rectPage = page.getBoundingClientRect();
+					const rectPageTarget = pageTarget.getBoundingClientRect();
+					gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
+					gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
+				}
+			}, { passive: false });
+
+			page.addEventListener("touchmove", e => {
+				if (e.touches.length !== 2) return;
 				rd.touchLock = false;
-				e.preventDefault();
-				//pageTarget.style.transform = `scale(1.5)`;
 
-				gesture.startDist = getDistance(e.touches);
-				gesture.startScale = rd.scale;
-				gesture.startMid = getMidpoint(e.touches);
+				e.preventDefault();
+
+				const newDist = getDistance(e.touches);
+				const factor = newDist / gesture.startDist;
+				let newScale = Math.max(1, Math.min(4, gesture.startScale * factor));
+
+				const newMid = getMidpoint(e.touches);
 
 				const rectPage = page.getBoundingClientRect();
 				const rectPageTarget = pageTarget.getBoundingClientRect();
-				gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
-				gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
-			}
-		}, { passive: false });
-
-		page.addEventListener("touchmove", e => {
-			if (e.touches.length !== 2) return;
-			rd.touchLock = false;
-
-			e.preventDefault();
-
-			const newDist = getDistance(e.touches);
-			const factor = newDist / gesture.startDist;
-			let newScale = Math.max(1, Math.min(4, gesture.startScale * factor));
-
-			const newMid = getMidpoint(e.touches);
-
-			const rectPage = page.getBoundingClientRect();
-			const rectPageTarget = pageTarget.getBoundingClientRect();
 
 
-			let calcOffsetX = newMid.x - gesture.startContent.x * newScale / gesture.startScale;
-			let calcOffsetY = newMid.y - gesture.startContent.y * newScale / gesture.startScale;
+				let calcOffsetX = newMid.x - gesture.startContent.x * newScale / gesture.startScale;
+				let calcOffsetY = newMid.y - gesture.startContent.y * newScale / gesture.startScale;
 
-			// compute unclamped offsets
-			// let newOffsetX = Math.min(0, calcOffsetX);
-			// let newOffsetY = Math.min(0, calcOffsetY);
+				let newOffsetX = Math.max(Math.min(0, calcOffsetX), rectPage.width - rectPage.width * newScale)
+				let newOffsetY = Math.max(Math.min(0, calcOffsetY), rectPage.height - rectPage.height * newScale)
 
-			let newOffsetX = Math.max(Math.min(0, calcOffsetX), rectPage.width - rectPage.width * newScale)
-			let newOffsetY = Math.max(Math.min(0, calcOffsetY), rectPage.height - rectPage.height * newScale)
-			//newOffsetY = Math.max(newOffsetX, rectPage.height - pageTarget.offsetHeight)
+				rd.scale = newScale;
+				rd.offsetX = newOffsetX;
+				rd.offsetY = newOffsetY;
 
-			// ---------- CLAMPING ----------
-			/*
-			const contentWidth = pageTarget.offsetWidth * newScale;
-			const contentHeight = pageTarget.offsetHeight * newScale;
+				pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+			}, { passive: false });
 
-			const maxOffsetX = Math.max(0, (contentWidth - rect.width) / 2);
-			const maxOffsetY = Math.max(0, (contentHeight - rect.height) / 2);
+			page.addEventListener("touchend", e => {
+				if (e.touches.length < 2) {
+					// gesture finished, rd state already updated
+				}
+			});
+		}
 
-			newOffsetX = Math.min(maxOffsetX, Math.max(-maxOffsetX, newOffsetX));
-			newOffsetY = Math.min(maxOffsetY, Math.max(-maxOffsetY, newOffsetY));
-			*/
+		createPinchAndPanResponse(touchPanel, readerContainer);
+		createPinchAndPanResponse(webtoonContainer, readerContainer);
 
-			rd.scale = newScale;
-			rd.offsetX = newOffsetX;
-			rd.offsetY = newOffsetY;
 
-			pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
-		}, { passive: false });
-
-		page.addEventListener("touchend", e => {
-			if (e.touches.length < 2) {
-				// gesture finished, rd state already updated
-			}
-		});
-
-		/*
-				createPinchResponse(touchPanel, readerContainer);
-				createPinchResponse(webtoonContainer, readerContainer);
-		
-				createPanResponse(touchPanel, readerContainer);
-				createPanResponse(webtoonContainer, readerContainer);
-		*/
 
 		//MB Manage Electron titlebar
 
