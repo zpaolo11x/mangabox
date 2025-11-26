@@ -344,7 +344,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = false;
+		const enableDebugPrint = true;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -490,8 +490,8 @@
 			// Touch handlers
 			// --------------------------
 			page.addEventListener("touchstart", e => {
-				pageTarget.style.transformOrigin = `0 0`;
 				if (e.touches.length === 2) {
+					pageTarget.style.transformOrigin = `0 0`;
 					rd.touchLock = false;
 					e.preventDefault();
 					//pageTarget.style.transform = `scale(1.5)`;
@@ -545,8 +545,8 @@
 			});
 		}
 
-		//createPinchAndPanResponse(touchPanel, readerContainer);
-		//createPinchAndPanResponse(webtoonContainer, readerContainer);
+		createPinchAndPanResponse(touchPanel, readerContainer);
+		createPinchAndPanResponse(webtoonContainer, readerContainer);
 
 
 
