@@ -522,9 +522,17 @@
 			const rectPage = page.getBoundingClientRect();
 			const rectPageTarget = pageTarget.getBoundingClientRect();
 
+
+			let calcOffsetX = newMid.x - gesture.startContent.x * newScale / gesture.startScale;
+			let calcOffsetY = newMid.y - gesture.startContent.y * newScale / gesture.startScale;
+
 			// compute unclamped offsets
-			let newOffsetX = Math.min(0, newMid.x - gesture.startContent.x * newScale / gesture.startScale);
-			let newOffsetY = Math.min(0, newMid.y - gesture.startContent.y * newScale / gesture.startScale);
+			// let newOffsetX = Math.min(0, calcOffsetX);
+			// let newOffsetY = Math.min(0, calcOffsetY);
+
+			let newOffsetX = Math.max(Math.min(0, calcOffsetX), rectPage.width - rectPage.width * newScale)
+			let newOffsetY = Math.max(Math.min(0, calcOffsetY), rectPage.height - rectPage.height * newScale)
+			//newOffsetY = Math.max(newOffsetX, rectPage.height - pageTarget.offsetHeight)
 
 			// ---------- CLAMPING ----------
 			/*
@@ -4366,6 +4374,13 @@
 			rd.offsetY = 0;
 
 			if (rd.webtoon) scaleWebtoon(0); else scaleReader(0);
+
+			gesture = {
+				startDist: 0,
+				startScale: 1,
+				startMid: { x: 0, y: 0 },
+				startContent: { x: 0, y: 0 }
+			};
 
 			//readerViewer.innerHTML = '';
 			thumbStripShowHide();
