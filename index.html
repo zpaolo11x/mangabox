@@ -344,7 +344,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = true;
+		const enableDebugPrint = false;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -505,9 +505,10 @@
 					gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
 					gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
 				}
-			}, { passive: true });
+			}, { passive: false });
 
 			page.addEventListener("touchmove", e => {
+				
 				if (e.touches.length !== 2) return;
 				rd.touchLock = false;
 
@@ -534,7 +535,7 @@
 				rd.offsetY = newOffsetY;
 
 				pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
-			}, { passive: true });
+			}, { passive: false });
 
 			page.addEventListener("touchend", e => {
 				rd.touchLock = false;
@@ -6035,6 +6036,7 @@
 		toLeftPage.addEventListener('pointerup', () => {
 			if (!rd.touchLock) return;
 			rd.touchLock = false;
+			debugPrint("A")
 			handleLeftArrow();
 		});
 
@@ -6044,6 +6046,7 @@
 		toRightPage.addEventListener('pointerup', () => {
 			if (!rd.touchLock) return;
 			rd.touchLock = false;
+			debugPrint("B")
 			handleRightArrow();
 		});
 
@@ -6053,7 +6056,8 @@
 		openMenu.addEventListener('pointerup', () => {
 			if (!rd.touchLock) return;
 			rd.touchLock = false;
-			toggleMenu();
+				debugPrint("C")
+		toggleMenu();
 		});
 
 		// Seek function to move to specific spread based on click or drag
@@ -6386,7 +6390,7 @@
 
 			function handleTouchStart(event) {
 				if (getDerivedScale() > 1.01) return;
-
+debugPrint("HandleTouchStart noscale")
 				if (event.touches.length > 1) {
 					item.SingleTouch = false; // Multiple touches: ignore for swipe
 					return;
@@ -6397,8 +6401,8 @@
 			}
 
 			function handleTouchMove(event) {
+				rd.touchLock = false;
 				if (getDerivedScale() > 1.01 || !item.SingleTouch) return;
-
 				const touchEndX = event.touches[0].clientX;
 				const touchEndY = event.touches[0].clientY;
 
