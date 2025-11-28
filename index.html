@@ -46,16 +46,8 @@
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="themeChanger" title="Light/Dark Theme" class="library-item press-button">
-						<div class="button-wrapper">
-							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
-						</div>
-					</li>
-					<li id="colorChanger" title="Theme Color" class="library-item press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
-						</div>
-					</li>
+					
+					
 					<li id="offlineLibrary" title="Offline Books" class="library-item no-grow press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-download glyph-dark"></span>
@@ -71,23 +63,42 @@
 						</div>
 						<input id="searchInput" type="text" class="search-input" placeholder="Search...">
 					</li>
-					<li id="logOut" title="Logout" class="library-item press-button">
+					<li id="settings" title="Settings" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+							<span class="fa-solid fa-gear glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
 				<div id="offlineLed">OFFLINE</div>
 			</div>
-
+			<div id="settingsMenu" class="extra-bar hidden blankstart">
+				<ul id="settingsMenuUL" class="filters-list buttons">
+					<li id="themeChanger" title="Light/Dark Theme" class="filter-item press-button">
+						<div class="smallbutton-wrapper">
+							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+						</div>
+						<div class="library-name">Theme</div>
+					</li>
+					<li id="colorChanger" title="Accent Color" class="filter-item press-button">
+						<div class="smallbutton-wrapper">
+							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+						</div>
+						<div class="library-name mb-accent">Color</div>
+					</li>
+					<li id="logOut" title="Log Out" class="filter-item press-button">
+						<div class="smallbutton-wrapper">
+							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+						</div>
+						<div class="library-name">Log Out</div>
+					</li>
+				</ul>
+			</div>
 			<div id="filtersBar" class="extra-bar hidden blankstart">
 				<ul id="extraButtons" class="filters-list buttons"></ul>
 			</div>
-
-			<div id="colorSwatchBar" class="extra-bar hidden blankstart">
-			</div>
-
+			<div id="colorSwatchBar" class="third-bar hidden blankstart"></div>
 		</div>
+		
 		<div id="mainScrollBox" class="scrollbox" data-scroll-direction="vertical">
 			<div id="mainContainer" class="scrollbox-content">
 				<div id="seriesHeader" class="section hidden"></div>
@@ -1129,7 +1140,26 @@
 				sectionToggle(colorSwatchBar);
 			}, unrollTimeout);
 
-			mb.swatchMenuVisible = !mb.swatchMenuVisible
+			mb.swatchMenuVisible = !mb.swatchMenuVisible;
+
+		});
+		
+		settings.addEventListener('click', () => {
+
+			const unrollTimeout = isSectionHidden(filtersBar) ? 0 : 200
+
+			if ((mb.libMenuVisible != null)) {
+				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
+				sectionToggle(filtersBar);
+				mb.libMenuVisible = null;
+			}
+
+			setTimeout(() => {
+				sectionToggle(settingsMenu);
+				sectionHide(colorSwatchBar);
+			}, unrollTimeout);
+
+			mb.swatchMenuVisible = false;
 
 		});
 
