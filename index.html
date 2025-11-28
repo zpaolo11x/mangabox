@@ -4840,6 +4840,10 @@ applyZoomAndPan(pageTarget)
 
 			readerContainer.style.transform = `scale(100%)`;
 			readerContainer.style.transformOrigin = `50% 50%`;
+			
+			rd.baseWidth  = readerContainer.offsetWidth;
+			rd.baseHeight = readerContainer.offsetHeight;
+			document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
 
 			setTimeout(() => {
 				webtoonContainer.style.overflow = 'auto';
@@ -5340,7 +5344,7 @@ applyZoomAndPan(pageTarget)
 				//TODO MA questo non è sovrascritto dal successivo?
 				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
-				spreadObject.uiItem.style.width = `calc(min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh))`;
+				spreadObject.uiItem.style.width = `calc(var(--mb-pinchzoom) * (min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh)))`;
 
 				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);

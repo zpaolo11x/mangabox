@@ -181,7 +181,7 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	width:150dvw;
+	width:100dvw;
 	height:100dvh;
 	z-index: 1002;
 	transition: top 0.3s;
