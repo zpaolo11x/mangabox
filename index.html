@@ -3276,6 +3276,7 @@
 						mb.libMenuVisible = itemId;
 						mb.swatchMenuVisible = false;
 						sectionHide(colorSwatchBar);
+						sectionHide(settingsMenu);
 					} else {
 						libMenuDown(mb.libraryMenuButtons[itemId]);
 						mb.libMenuVisible = null;
@@ -6258,6 +6259,7 @@
 			if ((mb.swatchMenuVisible) && (!colorSwatchBar.contains(event.target)) && (!colorChanger.contains(event.target))) {
 				mb.swatchMenuVisible = false;
 				sectionHide(colorSwatchBar);
+				sectionHide(settingsMenu);
 			}
 
 		});
@@ -6282,6 +6284,7 @@
 			//In part useless because of the click outside events, but useful when loading an url
 			sectionHide(filtersBar);
 			sectionHide(colorSwatchBar);
+			sectionHide(settingsMenu);
 			mb.libMenuVisible = null;
 			mb.swatchMenuVisible = false
 
