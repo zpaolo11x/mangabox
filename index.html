@@ -594,7 +594,9 @@
 
 					const newDist = getDistance(e.touches);
 					const factor = newDist / gesture.startDist;
+
 					let newScale = Math.max(1, Math.min(rd.maxScale, gesture.startScale * factor));
+					debugPrint(newDist+" "+factor);
 
 					const newMid = getMidpoint(e.touches);
 
@@ -612,7 +614,9 @@
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
 
-					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${1 / rd.maxScale * rd.scale})`;
+					debugPrint(rd.scale);
+					debugPrint(JSON.stringify(pageTarget.style.transform))
 				} else if (isDragging && e.touches.length === 1) {
 					e.preventDefault();
 
@@ -630,7 +634,7 @@
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
 
-					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${1 / rd.maxScale * rd.scale})`;
 				}
 			}, { passive: false });
 
@@ -4819,8 +4823,11 @@
 				rd.webtoonScrollRatio = webtoonRatio()
 			}
 
+			readerContainer.style.width = `calc(${rd.maxScale} * 100dvw)`
+			readerContainer.style.height = `calc(${rd.maxScale} * 100dvh)`
+			
 			readerContainer.style.transform = `scale(${1/rd.maxScale})`;
-			readerContainer.style.transformOrigin = `50% 50%`;
+			readerContainer.style.transformOrigin = `0 0`;
 
 			setTimeout(() => {
 				webtoonContainer.style.overflow = 'auto';
