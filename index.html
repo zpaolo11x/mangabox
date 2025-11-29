@@ -551,20 +551,20 @@
 					}
 				}
 		*/
-function applyZoomAndPan(pageTarget) {
+		function applyZoomAndPan(pageTarget) {
 
-    // REAL SIZE (zoom)
-    pageTarget.style.width  = rd.baseWidth  * rd.scale + "px";
-    pageTarget.style.height = rd.baseHeight * rd.scale + "px";
+			// REAL SIZE (zoom)
+			pageTarget.style.width = rd.baseWidth * rd.scale + "px";
+			pageTarget.style.height = rd.baseHeight * rd.scale + "px";
 
-    // REAL POSITION (pan)
-    pageTarget.style.left = rd.offsetX + "px";
-    pageTarget.style.top  = rd.offsetY + "px";
+			// REAL POSITION (pan)
+			pageTarget.style.left = rd.offsetX + "px";
+			pageTarget.style.top = rd.offsetY + "px";
 
-	document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
+			document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
 
-	 
-}
+
+		}
 
 		function createPinchAndPanResponse(page, pageTarget) {
 			let isDragging = false;
@@ -573,8 +573,8 @@ function applyZoomAndPan(pageTarget) {
 			// Touch handlers
 			// --------------------------
 			page.addEventListener("touchstart", e => {
-				if (rd.scale == 1.0){
-					rd.baseWidth  = pageTarget.offsetWidth;
+				if (rd.scale == 1.0) {
+					rd.baseWidth = pageTarget.offsetWidth;
 					rd.baseHeight = pageTarget.offsetHeight;
 				}
 				if (e.touches.length === 2) {
@@ -629,7 +629,7 @@ function applyZoomAndPan(pageTarget) {
 					rd.scale = newScale;
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
-applyZoomAndPan(pageTarget)
+					applyZoomAndPan(pageTarget)
 					//pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 
 				} else if (isDragging && e.touches.length === 1) {
@@ -648,7 +648,7 @@ applyZoomAndPan(pageTarget)
 
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
-applyZoomAndPan(pageTarget)
+					applyZoomAndPan(pageTarget)
 					//pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 				}
 			}, { passive: false });
@@ -4840,8 +4840,8 @@ applyZoomAndPan(pageTarget)
 
 			readerContainer.style.transform = `scale(100%)`;
 			readerContainer.style.transformOrigin = `50% 50%`;
-			
-			rd.baseWidth  = readerContainer.offsetWidth;
+
+			rd.baseWidth = readerContainer.offsetWidth;
 			rd.baseHeight = readerContainer.offsetHeight;
 			document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
 
