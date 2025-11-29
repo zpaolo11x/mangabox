@@ -4605,6 +4605,7 @@
 			readerProgress.style.float = rd.rtl ? 'right' : 'left';
 
 			[rd.currentPage, readerPage.innerText] = getPageFromSpread(currentSpreadIndex);
+			readerPage.innerText = readerPage.innerText.replace(" ", " | ");
 
 			readerPage.style.left = rd.rtl
 				? `min(max(0px, calc(${100 - progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
