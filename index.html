@@ -344,7 +344,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = false;
+		const enableDebugPrint = true;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -551,20 +551,30 @@
 					}
 				}
 		*/
-function applyZoomAndPan(pageTarget) {
+		function resetZoomAndPan(pageTarget) {
+			pageTarget.style.width = '';
+			pageTarget.style.height = '';
+			pageTarget.style.left = '';
+			pageTarget.style.top = '';
+			document.documentElement.style.setProperty('--mb-pinchzoom', '1');
+		}
 
-    // REAL SIZE (zoom)
-    pageTarget.style.width  = rd.baseWidth  * rd.scale + "px";
-    pageTarget.style.height = rd.baseHeight * rd.scale + "px";
+		function applyZoomAndPan(pageTarget) {
 
-    // REAL POSITION (pan)
-    pageTarget.style.left = rd.offsetX + "px";
-    pageTarget.style.top  = rd.offsetY + "px";
+			document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
 
-	document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
+			// REAL SIZE (zoom)
+			pageTarget.style.width = rd.baseWidth * rd.scale + "px";
+			pageTarget.style.height = rd.baseHeight * rd.scale + "px";
 
-	 
-}
+			// REAL POSITION (pan)
+			pageTarget.style.left = rd.offsetX + "px";
+			pageTarget.style.top = rd.offsetY + "px";
+
+		}
+
+		let is2fZooming = false;
+		let is1fPan = false;
 
 		function createPinchAndPanResponse(page, pageTarget) {
 			let isDragging = false;
@@ -573,12 +583,17 @@ function applyZoomAndPan(pageTarget) {
 			// Touch handlers
 			// --------------------------
 			page.addEventListener("touchstart", e => {
-				if (rd.scale == 1.0){
-					rd.baseWidth  = pageTarget.offsetWidth;
+				if (rd.scale == 1.0) {
+					rd.baseWidth = pageTarget.offsetWidth;
 					rd.baseHeight = pageTarget.offsetHeight;
 				}
 				if (e.touches.length === 2) {
+					debugPrint("2 FINGER TOUCH")
 					pageTarget.style.transformOrigin = `0 0`;
+					if (rd.scale > 1) {
+						resetZoomAndPan(pageTarget);
+						pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+					}
 					rd.touchLock = false;
 					e.preventDefault();
 
@@ -591,7 +606,11 @@ function applyZoomAndPan(pageTarget) {
 					gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
 					gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
 				} else if ((rd.scale > 1) && (e.touches.length === 1)) {
-					isDragging = true;
+						if (rd.scale > 1) {
+						resetZoomAndPan(pageTarget);
+						pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+					}
+									isDragging = true;
 					e.preventDefault();
 					gesture.startDist = 0;
 					gesture.startScale = rd.scale;
@@ -604,8 +623,8 @@ function applyZoomAndPan(pageTarget) {
 			}, { passive: false });
 
 			page.addEventListener("touchmove", e => {
-
 				if (e.touches.length == 2) {
+					is2fZooming = true;
 					rd.touchLock = false;
 
 					e.preventDefault();
@@ -629,8 +648,8 @@ function applyZoomAndPan(pageTarget) {
 					rd.scale = newScale;
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
-applyZoomAndPan(pageTarget)
-					//pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+					//applyZoomAndPan(pageTarget)
+					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 
 				} else if (isDragging && e.touches.length === 1) {
 					e.preventDefault();
@@ -648,14 +667,28 @@ applyZoomAndPan(pageTarget)
 
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
-applyZoomAndPan(pageTarget)
-					//pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+
+					//applyZoomAndPan(pageTarget)
+					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 				}
 			}, { passive: false });
 
 			page.addEventListener("touchend", e => {
-				if (e.touches.length == 1) {
+				debugPrint("TOUCH END " + e.touches.length);
+
+				if (is2fZooming) {
+					debugPrint("zooming follow up")
+
+					applyZoomAndPan(pageTarget);
+					pageTarget.style.transform = '';
+
+					is2fZooming = false;
+				}
+
+				if (e.touches.length < 2) {
 					rd.touchLock = false;
+
+					/*
 					if (rd.scale > 1) {
 						isDragging = true;
 						gesture.startDist = 0;
@@ -666,8 +699,9 @@ applyZoomAndPan(pageTarget)
 						gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
 						gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
 					}
+					*/
 				}
-				else if (isDragging && (e.touches.length == 0)) {
+				if (isDragging && (e.touches.length == 0)) {
 					isDragging = false;
 				}
 			});
@@ -4840,8 +4874,8 @@ applyZoomAndPan(pageTarget)
 
 			readerContainer.style.transform = `scale(100%)`;
 			readerContainer.style.transformOrigin = `50% 50%`;
-			
-			rd.baseWidth  = readerContainer.offsetWidth;
+
+			rd.baseWidth = readerContainer.offsetWidth;
 			rd.baseHeight = readerContainer.offsetHeight;
 			document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
 
