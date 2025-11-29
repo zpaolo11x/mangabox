@@ -612,7 +612,7 @@ function applyZoomAndPan(pageTarget) {
 
 					const newDist = getDistance(e.touches);
 					const factor = newDist / gesture.startDist;
-					let newScale = Math.max(1, Math.min(4, gesture.startScale * factor));
+					let newScale = Math.max(1, Math.min(3, gesture.startScale * factor));
 
 					const newMid = getMidpoint(e.touches);
 
@@ -4859,16 +4859,16 @@ applyZoomAndPan(pageTarget)
 		}
 
 		function buildSize(item, ratio) {
-			item.style.width = `calc(4 * (min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh)))`;
-			item.style.height = `calc(4 * (min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
+			item.style.width = `calc(3 * (min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh)))`;
+			item.style.height = `calc(3 * (min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
 
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
-			item.style.width = `calc(4 * (min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh)))`;
-			item.style.height = `calc(4 * (min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
+			item.style.width = `calc(3 * (min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh)))`;
+			item.style.height = `calc(3 * (min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
 	
 		}
 
@@ -4877,8 +4877,8 @@ applyZoomAndPan(pageTarget)
 			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
-			item.style.width = `calc(4 * (2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh)))`;
-			item.style.height = `calc(4 * ( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
+			item.style.width = `calc(3 * (2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh)))`;
+			item.style.height = `calc(3 * ( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
 
 		}
 
@@ -5358,9 +5358,9 @@ applyZoomAndPan(pageTarget)
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
 			
 				pageObjectL.uiPage.style.transformOrigin = `100% 50%`;
-				pageObjectL.uiPage.style.transform = `scale(${0.25 * 1.0})`;
+				pageObjectL.uiPage.style.transform = `scale(calc(0.333 * var(--mb-pinchzoom)))`;
 				pageObjectR.uiPage.style.transformOrigin = `0% 50%`;
-				pageObjectR.uiPage.style.transform = `scale(${0.25 * 1.0})`;
+				pageObjectR.uiPage.style.transform = `scale(calc(0.333 * var(--mb-pinchzoom)))`;
 
 				pageObjectL.uiPage.style.float = 'right';
 				pageObjectR.uiPage.style.float = 'left';
