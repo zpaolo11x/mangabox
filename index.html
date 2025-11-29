@@ -5345,6 +5345,7 @@ applyZoomAndPan(pageTarget)
 				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
 				spreadObject.uiItem.style.width = `calc(var(--mb-pinchzoom) * (min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh)))`;
+				spreadObject.uiItem.style.height = `calc(var(--mb-pinchzoom) * (1/${mb.readerMaxRatio}) (min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh)))`;
 
 				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
