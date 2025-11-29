@@ -551,6 +551,20 @@
 					}
 				}
 		*/
+function applyZoomAndPan(pageTarget) {
+
+    // REAL SIZE (zoom)
+    pageTarget.style.width  = rd.baseWidth  * rd.scale + "px";
+    pageTarget.style.height = rd.baseHeight * rd.scale + "px";
+
+    // REAL POSITION (pan)
+    pageTarget.style.left = rd.offsetX + "px";
+    pageTarget.style.top  = rd.offsetY + "px";
+
+	document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
+
+	 
+}
 
 		function createPinchAndPanResponse(page, pageTarget) {
 			let isDragging = false;
@@ -559,6 +573,10 @@
 			// Touch handlers
 			// --------------------------
 			page.addEventListener("touchstart", e => {
+				if (rd.scale == 1.0){
+					rd.baseWidth  = pageTarget.offsetWidth;
+					rd.baseHeight = pageTarget.offsetHeight;
+				}
 				if (e.touches.length === 2) {
 					pageTarget.style.transformOrigin = `0 0`;
 					rd.touchLock = false;
@@ -594,7 +612,7 @@
 
 					const newDist = getDistance(e.touches);
 					const factor = newDist / gesture.startDist;
-					let newScale = Math.max(1, Math.min(rd.maxScale, gesture.startScale * factor));
+					let newScale = Math.max(1, Math.min(4, gesture.startScale * factor));
 
 					const newMid = getMidpoint(e.touches);
 
@@ -611,8 +629,9 @@
 					rd.scale = newScale;
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
+applyZoomAndPan(pageTarget)
+					//pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 
-					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 				} else if (isDragging && e.touches.length === 1) {
 					e.preventDefault();
 
@@ -629,8 +648,8 @@
 
 					rd.offsetX = newOffsetX;
 					rd.offsetY = newOffsetY;
-
-					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+applyZoomAndPan(pageTarget)
+					//pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 				}
 			}, { passive: false });
 
@@ -4411,8 +4430,8 @@
 			offsetX: 0,
 			offsetY: 0,
 			touchLock: 0,
-
-			maxScale: 0.2,
+			baseWidth: 0,
+			baseHeight: 0,
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
@@ -4819,8 +4838,12 @@
 				rd.webtoonScrollRatio = webtoonRatio()
 			}
 
-			readerContainer.style.transform = `scale(${1/rd.maxScale})`;
+			readerContainer.style.transform = `scale(100%)`;
 			readerContainer.style.transformOrigin = `50% 50%`;
+			
+			rd.baseWidth  = readerContainer.offsetWidth;
+			rd.baseHeight = readerContainer.offsetHeight;
+			document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
 
 			setTimeout(() => {
 				webtoonContainer.style.overflow = 'auto';
@@ -4834,15 +4857,15 @@
 		}
 
 		function buildSize(item, ratio) {
-			item.style.width = `calc(${rd.maxScale} * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(${rd.maxScale} * min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
+			item.style.width = `calc(var(--mb-pinchzoom) * (min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh)))`;
+			item.style.height = `calc(var(--mb-pinchzoom) * (min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
-			item.style.width = `calc(${rd.maxScale} * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(${rd.maxScale} * min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
+			item.style.width = `calc(var(--mb-pinchzoom) * (min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh)))`;
+			item.style.height = `calc(var(--mb-pinchzoom) * (min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
@@ -4850,8 +4873,8 @@
 			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
-			item.style.width = `calc(${rd.maxScale} * 2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh))`;
-			item.style.height = `calc(${rd.maxScale} *  min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
+			item.style.width = `calc(var(--mb-pinchzoom) * (2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh)))`;
+			item.style.height = `calc(var(--mb-pinchzoom) * ( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
 		}
 
 		// Add this once when initializing the viewer
@@ -5183,9 +5206,9 @@
 			mb.readerMaxRatio = serverPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / serverPageData.length;
 			// readerViewer.style.height='100vh';
-			readerViewer.style.height = `calc(${rd.maxScale} * min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-reader-scale) / 100 * 100vh))`;
+			readerViewer.style.height = `calc(var(--mb-pinchzoom) * (min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-reader-scale) / 100 * 100vh)))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
-			readerViewer.style.width = `calc(${rd.maxScale} * min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh))`;
+			readerViewer.style.width = `calc(var(--mb-pinchzoom) * (min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh)))`;
 
 			mb.readerHorizontal = isReaderHorizontal(mb.screenAR);
 			thumbStripInner.style.flexDirection = rd.rtl ? 'row-reverse' : 'row';
@@ -5321,7 +5344,7 @@
 				//TODO MA questo non è sovrascritto dal successivo?
 				buildSize2P(spreadObject.uiItem, mb.readerMaxRatio);
 				//TODO Ma questo serve???? Farlo uguale a readerViewer?
-				spreadObject.uiItem.style.width = `calc(${rd.maxScale} * min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh))`;
+				spreadObject.uiItem.style.width = `calc(var(--mb-pinchzoom) * (min(200vw, var(--mb-reader-scale) / 100 * ${mb.readerMaxRatio} * 100vh)))`;
 
 				buildSize(pageObjectL.uiContainer, mb.readerMaxRatio * 0.5);
 				buildSize(pageObjectR.uiContainer, mb.readerMaxRatio * 0.5);
