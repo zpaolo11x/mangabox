@@ -594,7 +594,7 @@
 
 					const newDist = getDistance(e.touches);
 					const factor = newDist / gesture.startDist;
-					let newScale = Math.max(1, Math.min(4, gesture.startScale * factor));
+					let newScale = Math.max(1, Math.min(rd.maxScale, gesture.startScale * factor));
 
 					const newMid = getMidpoint(e.touches);
 
@@ -4410,7 +4410,9 @@
 			originY: 0,
 			offsetX: 0,
 			offsetY: 0,
-			touchLock: 0
+			touchLock: 0,
+
+			maxScale: 0.9,
 		};
 
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
@@ -4832,15 +4834,15 @@
 		}
 
 		function buildSize(item, ratio) {
-			item.style.width = `calc(min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
+			item.style.width = `calc(${rd.maxScale} * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(${rd.maxScale} * min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
 		}
 
 		function buildSizeCV(item, ratio) {
 			//item.style.objectFit = 'fill';
 			item.style.objectPosition = 'center center';
-			item.style.width = `calc(min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
-			item.style.height = `calc(min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
+			item.style.width = `calc(${rd.maxScale} * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 100vh))`;
+			item.style.height = `calc(${rd.maxScale} * min(${100 / ratio}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
 		}
 
 		// Size the spread for a two pages spread with fit on page
@@ -4848,8 +4850,8 @@
 			//item.style.width = `calc(2 * min(100vw, ${100 * ratio * 0.5}vh))`;
 			//item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, 100vh))`;
 
-			item.style.width = `calc(2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh))`;
-			item.style.height = `calc( min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
+			item.style.width = `calc(${rd.maxScale} * 2 * min(100vw, var(--mb-reader-scale) / 100 * ${ratio} * 50vh))`;
+			item.style.height = `calc(${rd.maxScale} *  min(${100 / (ratio * 0.5)}vw, var(--mb-reader-scale) / 100 * 100vh) )`;
 		}
 
 		// Add this once when initializing the viewer
