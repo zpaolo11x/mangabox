@@ -344,7 +344,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = false;
+		const enableDebugPrint = true;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -560,15 +560,14 @@
 			// REAL POSITION (pan)
 			pageTarget.style.left = rd.offsetX + "px";
 			pageTarget.style.top = rd.offsetY + "px";
-
+debugPrint(rd.scale)
 			document.documentElement.style.setProperty('--mb-pinchzoom', rd.scale);
-
 
 		}
 
 		function createPinchAndPanResponse(page, pageTarget) {
 			let isDragging = false;
-
+			let rectPage = null;
 			// --------------------------
 			// Touch handlers
 			// --------------------------
@@ -586,7 +585,7 @@
 					gesture.startScale = rd.scale;
 					gesture.startMid = getMidpoint(e.touches);
 
-					const rectPage = page.getBoundingClientRect();
+					rectPage = page.getBoundingClientRect();
 					const rectPageTarget = pageTarget.getBoundingClientRect();
 					gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
 					gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
@@ -596,7 +595,7 @@
 					gesture.startDist = 0;
 					gesture.startScale = rd.scale;
 					gesture.startMid = getMidpoint(e.touches);
-					const rectPage = page.getBoundingClientRect();
+					rectPage = page.getBoundingClientRect();
 					const rectPageTarget = pageTarget.getBoundingClientRect();
 					gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
 					gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
@@ -616,9 +615,6 @@
 
 					const newMid = getMidpoint(e.touches);
 
-					const rectPage = page.getBoundingClientRect();
-					const rectPageTarget = pageTarget.getBoundingClientRect();
-
 
 					let calcOffsetX = newMid.x - gesture.startContent.x * newScale / gesture.startScale;
 					let calcOffsetY = newMid.y - gesture.startContent.y * newScale / gesture.startScale;
@@ -636,9 +632,6 @@
 					e.preventDefault();
 
 					const newMid = getMidpoint(e.touches);
-
-					const rectPage = page.getBoundingClientRect();
-					const rectPageTarget = pageTarget.getBoundingClientRect();
 
 					let calcOffsetX = newMid.x - gesture.startContent.x;
 					let calcOffsetY = newMid.y - gesture.startContent.y;
@@ -4492,6 +4485,7 @@
 				startScale: 1,
 				startMid: { x: 0, y: 0 },
 				startContent: { x: 0, y: 0 }
+
 			};
 
 			//readerViewer.innerHTML = '';
