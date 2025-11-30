@@ -3,6 +3,7 @@ Main UI
 - Reduced line spacing of book name
 - Removed vsiualization of empty series metadata fields
 - Added book title to search results
+- Logout button opens a confirmation dialog
 
 Reader UI
 - Improved two fingers pinch to zoom and pan

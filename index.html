@@ -1245,44 +1245,65 @@
 		}
 
 		logOut.addEventListener('click', async () => {
+			let currentUser = await callAPI(null, '/api/v2/users/me')
+			let dialogText = `
+			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+				<span class="fa-solid fa-user"></span><span>${currentUser.email}</span>
+			</div>
+			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+				<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+			</div>
+			`
+			showModal('', true, dialogText,
+				[
+					{
+						label: 'Logout', runfunction: async () => {
+							closeModal();
+							navigateTo('#dashboard');
+							await executeFaderGradient(1);
 
-			navigateTo('#dashboard');
-			await executeFaderGradient(1);
-
-			try {
-				if (mb.baseUrl) {
-					await fetch(`${mb.baseUrl}/api/logout`, {
-						method: 'POST',
-						credentials: 'include',
-						headers: {
-							'X-Requested-With': 'XMLHttpRequest',
-							'skip_zrok_interstitial': '1',
-						},
-					});
-				}
-			} catch (error) {
-				console.warn('Logout API call failed:', error);
-				// We continue cleanup anyway
-			}
+							try {
+								if (mb.baseUrl) {
+									await fetch(`${mb.baseUrl}/api/logout`, {
+										method: 'POST',
+										credentials: 'include',
+										headers: {
+											'X-Requested-With': 'XMLHttpRequest',
+											'skip_zrok_interstitial': '1',
+										},
+									});
+								}
+							} catch (error) {
+								console.warn('Logout API call failed:', error);
+								// We continue cleanup anyway
+							}
 
 
-			if (isElectron) await deleteToken();
+							if (isElectron) await deleteToken();
 
-			//sectionHide(stickyContainer);
-			//sectionShow(blanker);
+							//sectionHide(stickyContainer);
+							//sectionShow(blanker);
 
-			Object.keys(localStorage).forEach(key => {
-				if (key.startsWith("c_")) {
-					localStorage.removeItem(key);
-				}
-			});
+							Object.keys(localStorage).forEach(key => {
+								if (key.startsWith("c_")) {
+									localStorage.removeItem(key);
+								}
+							});
 
-			await clearIndexedDB();
-			localStorage.removeItem("sessionValid");
+							await clearIndexedDB();
+							localStorage.removeItem("sessionValid");
 
-			mainLoader.classList.add('hidden');
+							mainLoader.classList.add('hidden');
 
-			systemRestart();
+							systemRestart();
+
+						}, high: true
+					},
+					{
+						label: 'Cancel', runfunction: closeModal, high: false
+					}
+				]
+			);
 		});
 
 		searchInput.addEventListener('keydown', (event) => {
