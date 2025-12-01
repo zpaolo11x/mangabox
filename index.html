@@ -275,7 +275,7 @@
 		<div id="loginDialog" class="dialog">
 			<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 			<img id="logoName" src="logo/mangabox-logoname.svg">
-			<div class="version-note">v0.3.2</div>
+			<div class="version-note">v0.3.3</div>
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
 				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
@@ -320,7 +320,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.3.2</h1>
+		<h1>MangaBox v0.3.3</h1>
 		<div>MangaBox is a streamlined client for your Komga media server.
 			To access your own, self-hosted server please enter the server URL in the login field, then your username and password. </div>
 		<div>MangaBox is not designed to access external sources and does not provide content, it is only designed to display and navigate your own libraries and read your own books.</div>
@@ -444,7 +444,7 @@
 				let ratio = window.devicePixelRatio || 1;
 				await Capacitor.Plugins.EdgeToEdge.enable()
 				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
-				debugPrint(JSON.stringify(result, null, 2));
+
 				document.documentElement.style.setProperty('--mb-android-inset-top', (result.top / ratio) + 'px');
 				document.documentElement.style.setProperty('--mb-android-inset-bottom', (result.bottom / ratio) + 'px');
 				document.documentElement.style.setProperty('--mb-android-inset-left', (result.left / ratio) + 'px');
@@ -459,112 +459,204 @@
 
 
 		//MB Pinch To Zoom
+		// ===== Two-Finger Pinch + Pan for MangaBox =====
 
-		const page = document.getElementById("touchPanel");
-		const pageTarget = document.getElementById("readerContainer");
+		//const page = document.getElementById("touchPanel");
+		//const pageTarget = document.getElementById("readerContainer");
 
 		function getDistance(touches) {
-			const dx = touches[0].clientX - touches[1].clientX;
-			const dy = touches[0].clientY - touches[1].clientY;
-			return Math.sqrt(dx * dx + dy * dy);
+			if (touches.length === 1) {
+				return (0);
+			}
+			if (touches.length == 2) {
+				const dx = touches[0].clientX - touches[1].clientX;
+				const dy = touches[0].clientY - touches[1].clientY;
+				return Math.sqrt(dx * dx + dy * dy);
+			}
 		}
 
 		function getMidpoint(touches) {
-			return {
-				x: (touches[0].clientX + touches[1].clientX) / 2,
-				y: (touches[0].clientY + touches[1].clientY) / 2,
-			};
+
+			// If there is only one touch, return its coordinates
+			if (touches.length === 1) {
+				return {
+					x: touches[0].clientX,
+					y: touches[0].clientY
+				};
+			}
+
+			// Two or more touches → midpoint between the first two
+			if (touches.length === 2) {
+				return {
+					x: (touches[0].clientX + touches[1].clientX) / 2,
+					y: (touches[0].clientY + touches[1].clientY) / 2
+				};
+			}
 		}
 
-		function createPanResponse(page, pageTarget) {
+
+
+		let gesture = {
+			startDist: 0,
+			startScale: 1,
+			startMid: { x: 0, y: 0 },
+			startContent: { x: 0, y: 0 }
+		};
+
+		/*
+				function createPanResponse(page, pageTarget) {
+					let isDragging = false;
+					let lastX = 0, lastY = 0;
+					let offsetX = 0, offsetY = 0; // accumulated pan
+		
+					page.addEventListener("touchstart", (e) => {
+						if (rd.scale > 1 && e.touches.length === 1) {
+							isDragging = true;
+							lastX = e.touches[0].clientX;
+							lastY = e.touches[0].clientY;
+						}
+					});
+		
+					page.addEventListener("touchmove", (e) => {
+						if (isDragging && e.touches.length === 1) {
+							e.preventDefault(); // stop native scrolling
+							const dx = e.touches[0].clientX - lastX;
+							const dy = e.touches[0].clientY - lastY;
+		
+							offsetX += dx;
+							offsetY += dy;
+		
+							lastX = e.touches[0].clientX;
+							lastY = e.touches[0].clientY;
+		
+							updateTransform();
+						}
+					});
+		
+					page.addEventListener("touchend", (e) => {
+						if (e.touches.length === 0) {
+							isDragging = false;
+						}
+					});
+		
+					function updateTransform() {
+						// clamp offsets so you can’t drag past edges
+						const maxX = (rd.scale - 1) * page.clientWidth / 2;
+						const maxY = (rd.scale - 1) * page.clientHeight / 2;
+		
+						offsetX = Math.min(maxX, Math.max(-maxX, offsetX));
+						offsetY = Math.min(maxY, Math.max(-maxY, offsetY));
+		
+						pageTarget.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${rd.scale})`;
+					}
+				}
+		*/
+
+		function createPinchAndPanResponse(page, pageTarget) {
 			let isDragging = false;
-			let lastX = 0, lastY = 0;
-			let offsetX = 0, offsetY = 0; // accumulated pan
 
-			page.addEventListener("touchstart", (e) => {
-				if (rd.scale > 1 && e.touches.length === 1) {
+			// --------------------------
+			// Touch handlers
+			// --------------------------
+			page.addEventListener("touchstart", e => {
+				if (e.touches.length === 2) {
+					pageTarget.style.transformOrigin = `0 0`;
+					rd.touchLock = false;
+					e.preventDefault();
+
+					gesture.startDist = getDistance(e.touches);
+					gesture.startScale = rd.scale;
+					gesture.startMid = getMidpoint(e.touches);
+
+					const rectPage = page.getBoundingClientRect();
+					const rectPageTarget = pageTarget.getBoundingClientRect();
+					gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
+					gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
+				} else if ((rd.scale > 1) && (e.touches.length === 1)) {
 					isDragging = true;
-					lastX = e.touches[0].clientX;
-					lastY = e.touches[0].clientY;
+					e.preventDefault();
+					gesture.startDist = 0;
+					gesture.startScale = rd.scale;
+					gesture.startMid = getMidpoint(e.touches);
+					const rectPage = page.getBoundingClientRect();
+					const rectPageTarget = pageTarget.getBoundingClientRect();
+					gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
+					gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
 				}
-			});
+			}, { passive: false });
 
-			page.addEventListener("touchmove", (e) => {
-				if (isDragging && e.touches.length === 1) {
-					e.preventDefault(); // stop native scrolling
-					const dx = e.touches[0].clientX - lastX;
-					const dy = e.touches[0].clientY - lastY;
+			page.addEventListener("touchmove", e => {
 
-					offsetX += dx;
-					offsetY += dy;
+				if (e.touches.length == 2) {
+					rd.touchLock = false;
 
-					lastX = e.touches[0].clientX;
-					lastY = e.touches[0].clientY;
+					e.preventDefault();
 
-					updateTransform();
+					const newDist = getDistance(e.touches);
+					const factor = newDist / gesture.startDist;
+					let newScale = Math.max(1, Math.min(4, gesture.startScale * factor));
+
+					const newMid = getMidpoint(e.touches);
+
+					const rectPage = page.getBoundingClientRect();
+					const rectPageTarget = pageTarget.getBoundingClientRect();
+
+
+					let calcOffsetX = newMid.x - gesture.startContent.x * newScale / gesture.startScale;
+					let calcOffsetY = newMid.y - gesture.startContent.y * newScale / gesture.startScale;
+
+					let newOffsetX = Math.max(Math.min(0, calcOffsetX), rectPage.width - rectPage.width * newScale)
+					let newOffsetY = Math.max(Math.min(0, calcOffsetY), rectPage.height - rectPage.height * newScale)
+
+					rd.scale = newScale;
+					rd.offsetX = newOffsetX;
+					rd.offsetY = newOffsetY;
+
+					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
+				} else if (isDragging && e.touches.length === 1) {
+					e.preventDefault();
+
+					const newMid = getMidpoint(e.touches);
+
+					const rectPage = page.getBoundingClientRect();
+					const rectPageTarget = pageTarget.getBoundingClientRect();
+
+					let calcOffsetX = newMid.x - gesture.startContent.x;
+					let calcOffsetY = newMid.y - gesture.startContent.y;
+
+					let newOffsetX = Math.max(Math.min(0, calcOffsetX), rectPage.width - rectPage.width * rd.scale)
+					let newOffsetY = Math.max(Math.min(0, calcOffsetY), rectPage.height - rectPage.height * rd.scale)
+
+					rd.offsetX = newOffsetX;
+					rd.offsetY = newOffsetY;
+
+					pageTarget.style.transform = `translate(${rd.offsetX}px, ${rd.offsetY}px) scale(${rd.scale})`;
 				}
-			});
+			}, { passive: false });
 
-			page.addEventListener("touchend", (e) => {
-				if (e.touches.length === 0) {
+			page.addEventListener("touchend", e => {
+				if (e.touches.length == 1) {
+					rd.touchLock = false;
+					if (rd.scale > 1) {
+						isDragging = true;
+						gesture.startDist = 0;
+						gesture.startScale = rd.scale;
+						gesture.startMid = getMidpoint(e.touches);
+						const rectPage = page.getBoundingClientRect();
+						const rectPageTarget = pageTarget.getBoundingClientRect();
+						gesture.startContent.x = (gesture.startMid.x - rectPageTarget.left);
+						gesture.startContent.y = (gesture.startMid.y - rectPageTarget.top);
+					}
+				}
+				else if (isDragging && (e.touches.length == 0)) {
 					isDragging = false;
 				}
 			});
-
-			function updateTransform() {
-				// clamp offsets so you can’t drag past edges
-				const maxX = (rd.scale - 1) * page.clientWidth / 2;
-				const maxY = (rd.scale - 1) * page.clientHeight / 2;
-
-				offsetX = Math.min(maxX, Math.max(-maxX, offsetX));
-				offsetY = Math.min(maxY, Math.max(-maxY, offsetY));
-
-				pageTarget.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${rd.scale})`;
-			}
-
-		}
-		function createPinchResponse(page, pageTarget) {
-
-			page.addEventListener("touchstart", e => {
-				if (e.touches.length === 2) {
-					rd.touchLock = false;
-
-					rd.startDist = getDistance(e.touches);
-					const mid = getMidpoint(e.touches);
-
-					// convert screen coords into element coords
-					const rect = page.getBoundingClientRect();
-					rd.originX = ((mid.x - rect.left) / rect.width) * 100;
-					rd.originY = ((mid.y - rect.top) / rect.height) * 100;
-
-					pageTarget.style.transformOrigin = `${rd.originX}% ${rd.originY}%`;
-				}
-			}, { passive: true });
-
-			page.addEventListener("touchmove", e => {
-				rd.touchLock = false;
-				if (e.touches.length === 2) {
-					const newDist = getDistance(e.touches);
-					const factor = newDist / rd.startDist;
-					const newScale = Math.min(Math.max(1, rd.scale * factor), 4);
-					pageTarget.style.transform = `scale(${newScale})`;
-				}
-			}, { passive: true });
-
-			page.addEventListener("touchend", e => {
-				rd.touchLock = false;
-				if (e.touches.length < 2) {
-					const matrix = new WebKitCSSMatrix(getComputedStyle(pageTarget).transform);
-					rd.scale = matrix.a;
-				}
-			});
 		}
 
-		createPinchResponse(touchPanel, readerContainer);
-		createPinchResponse(webtoonContainer, readerContainer);
+		createPinchAndPanResponse(touchPanel, readerContainer);
+		createPinchAndPanResponse(webtoonContainer, readerContainer);
 
-		createPanResponse(touchPanel, readerContainer);
-		createPanResponse(webtoonContainer, readerContainer);
 
 		//MB Manage Electron titlebar
 
@@ -1153,44 +1245,65 @@
 		}
 
 		logOut.addEventListener('click', async () => {
+			let currentUser = await callAPI(null, '/api/v2/users/me')
+			let dialogText = `
+			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+				<span class="fa-solid fa-user"></span><span>${currentUser.email}</span>
+			</div>
+			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+				<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+			</div>
+			`
+			showModal('', true, dialogText,
+				[
+					{
+						label: 'Logout', runfunction: async () => {
+							closeModal();
+							navigateTo('#dashboard');
+							await executeFaderGradient(1);
 
-			navigateTo('#dashboard');
-			await executeFaderGradient(1);
-
-			try {
-				if (mb.baseUrl) {
-					await fetch(`${mb.baseUrl}/api/logout`, {
-						method: 'POST',
-						credentials: 'include',
-						headers: {
-							'X-Requested-With': 'XMLHttpRequest',
-							'skip_zrok_interstitial': '1',
-						},
-					});
-				}
-			} catch (error) {
-				console.warn('Logout API call failed:', error);
-				// We continue cleanup anyway
-			}
+							try {
+								if (mb.baseUrl) {
+									await fetch(`${mb.baseUrl}/api/logout`, {
+										method: 'POST',
+										credentials: 'include',
+										headers: {
+											'X-Requested-With': 'XMLHttpRequest',
+											'skip_zrok_interstitial': '1',
+										},
+									});
+								}
+							} catch (error) {
+								console.warn('Logout API call failed:', error);
+								// We continue cleanup anyway
+							}
 
 
-			if (isElectron) await deleteToken();
+							if (isElectron) await deleteToken();
 
-			//sectionHide(stickyContainer);
-			//sectionShow(blanker);
+							//sectionHide(stickyContainer);
+							//sectionShow(blanker);
 
-			Object.keys(localStorage).forEach(key => {
-				if (key.startsWith("c_")) {
-					localStorage.removeItem(key);
-				}
-			});
+							Object.keys(localStorage).forEach(key => {
+								if (key.startsWith("c_")) {
+									localStorage.removeItem(key);
+								}
+							});
 
-			await clearIndexedDB();
-			localStorage.removeItem("sessionValid");
+							await clearIndexedDB();
+							localStorage.removeItem("sessionValid");
 
-			mainLoader.classList.add('hidden');
+							mainLoader.classList.add('hidden');
 
-			systemRestart();
+							systemRestart();
+
+						}, high: true
+					},
+					{
+						label: 'Cancel', runfunction: closeModal, high: false
+					}
+				]
+			);
 		});
 
 		searchInput.addEventListener('keydown', (event) => {
@@ -1385,7 +1498,7 @@
 		}
 
 		function generatePics(libraryId, text) {
-			let thumbNames = ["Manga", "Comics", "Girls", "Shojo", "Fantasy", "Puppet", "Robots", "Space", "Western"];
+			let thumbNames = ["Manga", "Comics", "Girls", "Shojo", "Fantasy", "Puppet", "Robots", "Space", "Western", "Horror", "Detective", "Humor"];
 			let out = "";
 			thumbNames.forEach(thumbName => {
 				out = out + `
@@ -1465,7 +1578,7 @@
 
 				// Reset book results strip
 				//TODO Need to check also books for year?
-				displayBooks([], homeStripBooksResults, 'compact', 'top');
+				displayBooks([], homeStripBooksResults, 'full', 'top');
 
 				focusItem('top');
 				setTimeout(updateSliderProperties, 10);
@@ -1502,7 +1615,7 @@
 					tagIn => tagIn.toLowerCase().includes(searchString)
 				)
 			);
-			displayBooks(filteredBooks, homeStripBooksResults, 'compact', 'top');
+			displayBooks(filteredBooks, homeStripBooksResults, 'full', 'top');
 
 			setTimeout(updateSliderProperties, 10);
 			sectionShow(searchStripsContainer);
@@ -1851,7 +1964,7 @@
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
-		  	document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
+			document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
 				//nothing happens
@@ -2794,15 +2907,17 @@
 
 			// Fetch and display the number of books and alternate title
 			const bookCount = serie.booksCount;
+
 			const infoRow = addItem('div', {
 				className: 'data-row info-row'
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				title: `Filter time: ${altTitle.time}`
 			});
+
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				navigateTo(`#search?search_string=y:${altTitle.time}`);
@@ -2817,41 +2932,52 @@
 			});
 
 			if (altTitle.story != altTitle.art) {
+				if (altTitle.story != 'N/A') {
+					const storyLabel = addItem('div', {
+						innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
+						className: 'red data-label search-trigger',
+						title: `Filter artist: ${altTitle.story}`
+					});
 
-				const storyLabel = addItem('div', {
-					innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
-					className: 'red data-label search-trigger',
-					title: `Filter artist: ${altTitle.story}`
-				});
+					artistRow.append(storyLabel);
 
-				const artLabel = addItem('div', {
-					innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
-					className: 'red data-label search-trigger',
-					title: `Filter artist: ${altTitle.art}`
-				});
+					addClickPointerEvents(storyLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+					});
+				}
 
-				artistRow.append(storyLabel, artLabel);
+				if (altTitle.art != 'N/A') {
+					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
+						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						className: 'red data-label search-trigger',
+						title: `Filter artist: ${altTitle.art}`
+					});
 
-				addClickPointerEvents(storyLabel, async () => {
-					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
-				});
+					artistRow.append(artLabel);
 
-				addClickPointerEvents(artLabel, async () => {
-					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
-				});
+					addClickPointerEvents(artLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
+					});
+				}
+
+
+
 			} else {
-				const artistLabel = addItem('div', {
-					innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
-					title: `Filter artist: ${altTitle.story}`,
-					className: 'red data-label search-trigger'
-				});
-				artistRow.append(artistLabel);
-				addClickPointerEvents(artistLabel, async () => {
-					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
-				});
+				if (altTitle.story != 'N/A') {
+					const artistLabel = addItem('div', {
+						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+						title: `Filter artist: ${altTitle.story}`,
+						className: 'red data-label search-trigger'
+					});
+					artistRow.append(artistLabel);
+
+					addClickPointerEvents(artistLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+					});
+				}
 			}
 
 			item.mbSeriesTitle = serie.metadata.title ?? '';
@@ -3689,7 +3815,7 @@
 			if (format == 'longname') {
 				secondRow.classList.add('info-row');
 				secondRow.textContent = book.metadata.title;
-			} else if (format == 'compact') {
+			} else if ((format == 'compact') || (format == 'full')) {
 				const volumeNumberLabel = addItem('span', {
 					innerHTML: `Book ${book.metadata.number}`
 				});
@@ -3714,6 +3840,15 @@
 				});
 
 				secondRow.append(volumeNumberLabelShort, timeLabel);
+			}
+
+			let thirdRow = null
+			if (format == 'full') {
+				thirdRow = addItem('div', {
+					className: 'data-row',
+				});
+				thirdRow.classList.add('info-row');
+				thirdRow.textContent = book.metadata.title;
 			}
 
 			const thumbnailWrapper = addItem('div', {
@@ -3848,6 +3983,10 @@
 				secondRow
 			);
 
+			if (format == 'full') {
+				booksItem.append(thirdRow)
+			}
+
 			thumbnailWrapper.append(
 				bookThumbnail,
 				bookDownloadUI,
@@ -3893,6 +4032,7 @@
 				- longname: will not show the series name, but the book file name
 				- compact: will show series name and pages 
 				- timeline: will show latest read date
+				- full: will show series name and pages plus the book title 
 			*/
 			// focus is the book id to focus on
 
@@ -4208,7 +4348,8 @@
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
-			preloadCount: 5,			// TODO SET BACK TO 15 Image preload count
+			preloadCount: isCapacitor ? 1 : 5,			// TODO SET BACK TO 15 Image preload count
+
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
 			jumpTimeout: null,		// Timeout counter for jumping to spreads
@@ -4288,6 +4429,8 @@
 			startDist: 0,
 			originX: 0,
 			originY: 0,
+			offsetX: 0,
+			offsetY: 0,
 			touchLock: 0
 		};
 
@@ -4339,8 +4482,17 @@
 			rd.originX = 0;
 			rd.originY = 0;
 			rd.touchLock = 0;
+			rd.offsetX = 0;
+			rd.offsetY = 0;
 
 			if (rd.webtoon) scaleWebtoon(0); else scaleReader(0);
+
+			gesture = {
+				startDist: 0,
+				startScale: 1,
+				startMid: { x: 0, y: 0 },
+				startContent: { x: 0, y: 0 }
+			};
 
 			//readerViewer.innerHTML = '';
 			thumbStripShowHide();
@@ -5334,11 +5486,12 @@
 							if (isSectionHidden(readerContainer)) return;
 							// These lines reduce stuttering
 							//TODO Verify if this creates some errors when going back from reader and pages are still loading
-							const img = new Image();
-							img.src = blobUrl;
-							await img.decode();
+							//const img = new Image();
+							//img.src = blobUrl;
+							//await img.decode();
 
 							element.uiPage.src = blobUrl;
+							//element.uiPage.blobUrl = blobUrl;
 							element.hasSrc = true;
 							//rd.uiPages[element].src = rd.pagesDataArray[element].url;
 							// Handle successful load
@@ -5882,7 +6035,7 @@
 			return rd.rtl ? 'focus-right-page' : 'focus-left-page';
 		}
 
-		function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
+		async function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
 
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
@@ -5923,7 +6076,13 @@
 			if (isSectionHidden(readerContainer)) return;
 
 			populateSpread(localNewSpreadIndex);
-
+			/*
+			console.log(rd.spreadsArray[localNewSpreadIndex].pageObjL);
+			console.log(rd.spreadsArray[localNewSpreadIndex].pageObjR);
+			
+			rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.blobUrl;
+			rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.blobUrl;
+				*/
 			// TODO
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
@@ -6356,7 +6515,7 @@
 
 			function handleTouchStart(event) {
 				if (getDerivedScale() > 1.01) return;
-
+				debugPrint("HandleTouchStart noscale")
 				if (event.touches.length > 1) {
 					item.SingleTouch = false; // Multiple touches: ignore for swipe
 					return;
@@ -6367,8 +6526,8 @@
 			}
 
 			function handleTouchMove(event) {
+				rd.touchLock = false;
 				if (getDerivedScale() > 1.01 || !item.SingleTouch) return;
-
 				const touchEndX = event.touches[0].clientX;
 				const touchEndY = event.touches[0].clientY;
 

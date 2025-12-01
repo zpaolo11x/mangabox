@@ -325,7 +325,7 @@ body {
 	text-align: center;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	/*max-width: 400px;*/
-	width: 200px;
+	width: 260px;
 	color: var(--mb-text-color);
 	font-size: 18px;
 }
@@ -1765,7 +1765,8 @@ a {
 	font-size: 20px;
 	margin-left: 20px;
 	height: var(--mb-dialog-button-height);
-	line-height: var(--mb-dialog-button-height);
+	line-height: 20px;
+	align-content:center;
 	padding-right: 50px;
 }
 
@@ -2003,6 +2004,12 @@ book-item {
 
 .info-row {
 	word-break: break-word;
+}
+
+.book-item .info-row{
+	margin-top: 3px;
+	line-height: 16px;
+	margin-bottom: 3px;
 }
 
 .custom-scrollbar {

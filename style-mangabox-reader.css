@@ -231,6 +231,7 @@ img.page:not([src]) {
 .spread-layout img.page {
 	display: block;
 	height: 100vh;
+	contain: layout style paint;
 }
 
 /*

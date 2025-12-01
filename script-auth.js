@@ -245,15 +245,15 @@ async function login() {
 			}
 			systemRestart();
 		} else if (response.status === 401) {
-			loginError.textContent = 'Invalid username or password.';
+			loginError.textContent = `Invalid username or password.`;
 			loginError.classList.remove('auth-hidden');
 		} else {
-			loginError.textContent = `Login failed (${response.status})`;
+			loginError.textContent = `Login failed`;
 			loginError.classList.remove('auth-hidden');
 		}
 	}).catch(error => {
 		console.error('Login error:', error);
-		loginError.textContent = 'Cannot reach server. Check the address or your connection.';
+		loginError.textContent = `Cannot reach server. Check the address or your connection. ${error}`;
 		loginError.classList.remove('auth-hidden');
 	});
 
