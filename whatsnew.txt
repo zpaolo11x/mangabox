@@ -8,8 +8,5 @@ Main UI
 Reader UI
 - Improved two fingers pinch to zoom and pan
 
-Build
-- 
-
 Fixes
 - Fixed book details title
