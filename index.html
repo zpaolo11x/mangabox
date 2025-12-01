@@ -4736,7 +4736,7 @@
 			readerProgress.style.width = `${progressPercent}%`;
 			readerProgress.style.float = rd.rtl ? 'right' : 'left';
 
-			[rd.currentPage, readerPage.innerText] = getPageFromSpread(currentSpreadIndex);
+			[rd.currentPage, readerPage.innerHTML] = getPageFromSpread(currentSpreadIndex);
 
 			readerPage.style.left = rd.rtl
 				? `min(max(0px, calc(${100 - progressPercent}% - ${readerPage.clientWidth * 0.5}px)), calc(100% - ${readerPage.clientWidth}px))`
@@ -5264,7 +5264,7 @@
 			while (i_page < pageData.length) {
 				let spreadObject = null;
 
-				pageNum1 = realPage == firstNonCover ? (coverIsPageOne ? 2 : ' ') : realPage;
+				pageNum1 = realPage == firstNonCover ? (coverIsPageOne ? 2 : '') : realPage;
 				pageNum2 = realPage == firstNonCover ? (coverIsPageOne ? 3 : realPage) : realPage + 1
 				pageCover = pageData[i_page].isCover;
 
@@ -5272,7 +5272,7 @@
 					// Element is a cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum, pageTable(coverIsPageOne ? ' ' : ' ', coverIsPageOne ? 1 : ' '));
+					spreadObject = buildSpreadObject('cover-page', pageTable(hidden, cover), pageData[i_page].pageNum, pageTable(coverIsPageOne ? '' : '', coverIsPageOne ? 1 : ''));
 				}
 				else if (pageData[i_page].isDoubleSpread) {
 					// Element is a double spread, generate second set of images
@@ -5285,7 +5285,7 @@
 					// Element is last single page, so back cover
 					const cover = buildPageObject(pageData[i_page]);
 					const hidden = buildPageObject('hidden');
-					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum, pageTable(realPage, ' '));
+					spreadObject = buildSpreadObject('back-cover', pageTable(cover, hidden), pageData[i_page].pageNum, pageTable(realPage, ''));
 					rd.realLastPage = realPage;
 				}
 				else if (((i_page + 1 < pageData.length) && (pageData[i_page + 1].isDoubleSpread)) || (pageData[i_page].isOrphan)) {
@@ -5613,7 +5613,11 @@
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			const pageNumText = rd.webtoon ? spreadObject.pageNumL : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			
+			console.log(spreadObject.pageNumL)
+			let pageNumText = rd.webtoon ? spreadObject.pageNumL : '<span class="left">'+spreadObject.pageNumL + '</span><span class="separator"></span><span class="right">' + spreadObject.pageNumR+'</span>';
+
+			//pageNumText = pageNumText.trim().replace(' ', '<span style="width: 10px; border-right:1px solid white">&nbsp;</span><span style="width:10px;">&nbsp;</span>')
 
 			const out = [currentPage, pageNumText];
 
