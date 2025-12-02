@@ -5189,6 +5189,49 @@
 
 			});
 		}
+function computeReaderMaxRatio(serverPageData, spreadThreshold = 1.5) {
+  if (!serverPageData || serverPageData.length === 0) return 1;
+
+  // compute aspect ratios
+  const ratios = serverPageData.map(item => item.width / item.height);
+
+  // decide orientation by majority
+  const landscapeCount = ratios.filter(r => r > 1).length;
+  const isLandscape = landscapeCount > ratios.length / 2;
+
+  // estimate typical single page ratio:
+  // - for landscape: median of ratios > 1
+  // - for portrait: median of ratios < 1
+  let candidate;
+  if (isLandscape) {
+    const landscapeSingles = ratios.filter(r => r > 1);
+    candidate = median(landscapeSingles.length ? landscapeSingles : ratios);
+  } else {
+    const portraitSingles = ratios.filter(r => r < 1);
+    candidate = median(portraitSingles.length ? portraitSingles : ratios);
+  }
+
+  // fallback guard
+  if (!isFinite(candidate) || candidate <= 0) candidate = median(ratios);
+
+  // now for each page: if page looks like a single (ratio close to typical_single),
+  // treat it as half of a spread => use 2 * ratio. Otherwise use ratio as-is.
+  const adjusted = ratios.map(r => {
+    const normalized = r / candidate;
+    return (normalized < spreadThreshold) ? (2 * r) : r;
+  });
+
+  // average
+  const sum = adjusted.reduce((s, v) => s + v, 0);
+  return sum / adjusted.length;
+}
+
+		function median(arr) {
+			if (!arr || arr.length === 0) return NaN;
+			const a = Array.from(arr).sort((x, y) => x - y);
+			const m = Math.floor(a.length / 2);
+			return (a.length % 2 === 1) ? a[m] : (a[m - 1] + a[m]) / 2;
+		}
 
 		// Master function that builds all the pages slots for the book spreads
 		async function fetchPages(bookId, noCover, noWhitePage, coverIsPageOne, offline) {
@@ -5198,9 +5241,15 @@
 			// Get the pages data structure from server for the current book
 			const serverPageData = useOfflineCopy ? offline.pagesMetadata : await callAPI(`c_bookpages${bookId}`, `/api/v1/books/${bookId}/pages`);
 
+
 			// mb.readerMaxRatioOLD = Math.max(...dataOut.map(item => (item.isCover || item.isDoubleSpread) ? 0 : ((item.width / item.height) < 1 ? 2 * item.width / item.height : 2 * item.width / item.height)));
+			/*
 			mb.readerMaxRatio = serverPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / serverPageData.length;
+			*/
+			
+			mb.readerMaxRatio = computeReaderMaxRatio(serverPageData, 1.5);
+
 			// readerViewer.style.height='100vh';
 			readerViewer.style.height = `calc(min(${100 / (0.5 * mb.readerMaxRatio)}vw, var(--mb-reader-scale) / 100 * 100vh))`;
 			//readerViewer.style.width=`calc(${mb.readerMaxRatio} * 100vh)`;
@@ -5220,7 +5269,7 @@
 				isCover: noCover ? false : page.number == 1,
 				isOrphan: noWhitePage && (page.number == 2),
 				isCurrent: page.number == rd.currentPage,
-				isDoubleSpread: page.width > page.height,
+				isDoubleSpread: ((page.width / page.height) > 1.5 * (mb.readerMaxRatio * 0.5)),
 				size: page.sizeBytes
 			}));
 
@@ -5613,9 +5662,9 @@
 			const lastSpread = (twoPages && (index == (spreadsTotal() - 1)));
 
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
-			
+
 			console.log(spreadObject.pageNumL)
-			let pageNumText = rd.webtoon ? spreadObject.pageNumL : '<span class="left">'+spreadObject.pageNumL + '</span><span class="separator"></span><span class="right">' + spreadObject.pageNumR+'</span>';
+			let pageNumText = rd.webtoon ? spreadObject.pageNumL : '<span class="left">' + spreadObject.pageNumL + '</span><span class="separator"></span><span class="right">' + spreadObject.pageNumR + '</span>';
 
 			//pageNumText = pageNumText.trim().replace(' ', '<span style="width: 10px; border-right:1px solid white">&nbsp;</span><span style="width:10px;">&nbsp;</span>')
 
