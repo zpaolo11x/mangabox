@@ -1670,8 +1670,7 @@ a {
 	transition: opacity 0.3s ease;
 
 	will-change: transform;
-	contain: layout style paint;
-	overflow-y: auto;
+	contain: layout style; /*XXX Was layout style paint before the fix*/
 
 }
 
