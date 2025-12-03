@@ -5930,8 +5930,9 @@ console.log(serie)
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 
 			console.log(spreadObject.pageNumL)
-			let pageNumText = rd.webtoon ? spreadObject.pageNumL : '<span class="left">' + spreadObject.pageNumL + '</span><span class="separator"></span><span class="right">' + spreadObject.pageNumR + '</span>';
-
+			let pageNumText = rd.webtoon ? spreadObject.pageNumL : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			pageNumText = pageNumText.trim().replace(' ', '￨')
+			
 			//pageNumText = pageNumText.trim().replace(' ', '<span style="width: 10px; border-right:1px solid white">&nbsp;</span><span style="width:10px;">&nbsp;</span>')
 
 			const out = [currentPage, pageNumText];
