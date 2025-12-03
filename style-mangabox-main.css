@@ -949,6 +949,7 @@ a {
 	width: auto;
 }
 
+.libglyph,
 .library-item span.fa-solid,
 .library-item span.fa-regular {
 	width: var(--mb-span-size);
@@ -2205,6 +2206,10 @@ span.mini-title {
 .glyph-dark {
 	color: var(--mb-glyph-color);
 	transition: color 0.3s ease;
+}
+
+.highlighted .glyph-dark {
+	color:white;
 }
 
 .glyph-flag {

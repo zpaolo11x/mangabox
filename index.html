@@ -41,6 +41,16 @@
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
 				<ul id="librariesRightBlock">
+					<li id="readlistsButton2" title="Read Lists" class="library-item no-grow press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-book-bookmark glyph-dark"></span>
+						</div>
+					</li>
+					<li id="collectionsButton2" title="Collections" class="library-item no-grow press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-box-archive glyph-dark"></span>
+						</div>
+					</li>
 					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
@@ -54,16 +64,6 @@
 					<li id="colorChanger" title="Theme Color" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
-						</div>
-					</li>
-					<li id="readlistsButton2" title="Read Lists" class="library-item no-grow press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid fa-book-bookmark glyph-dark"></span>
-						</div>
-					</li>
-					<li id="collectionsButton2" title="Collections" class="library-item no-grow press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid fa-box-archive glyph-dark"></span>
 						</div>
 					</li>
 					<li id="offlineLibrary" title="Offline Books" class="library-item no-grow press-button">
@@ -351,7 +351,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = false;
+		const fullDebugMode = true;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -3374,8 +3374,8 @@ console.log(serie)
 		}
 
 		async function openReadlists() {
-			//libraryHighlight('readlistsButton', false);		// Triggers and manages the library menu
-			libraryHighlight('readlistsButton2', false);		// Triggers and manages the library menu
+			libraryHighlight('readlistsButton', false);		// Triggers and manages the library menu
+			//libraryHighlight('readlistsButton2', false);		// Triggers and manages the library menu
 			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 
 			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
@@ -3389,8 +3389,8 @@ console.log(serie)
 		}
 		
 		async function openCollections() {
-			//libraryHighlight('collectionsButton', false);		// Triggers and manages the library menu
-			libraryHighlight('collectionsButton2', false);		// Triggers and manages the library menu
+			libraryHighlight('collectionsButton', false);		// Triggers and manages the library menu
+			//libraryHighlight('collectionsButton2', false);		// Triggers and manages the library menu
 			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 
 			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
@@ -3496,6 +3496,7 @@ console.log(serie)
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
+			const isFA = imagePath?.startsWith("fa-");
 
 			const listItem = addItem('li', {
 				id: itemId,
@@ -3514,13 +3515,18 @@ console.log(serie)
 				? `library-thumbnails/${libraryName}.svg`
 				: imagePath);
 
-			const libraryThumbnail = addItem('img', {
+
+			const libraryThumbnail = isFA ? 
+			addItem('i', {
+				className: `fa-solid ${imagePath} glyph-dark libglyph`,
+			}) : 
+			addItem('img', {
 				className: 'library-thumbnail',
 				src: imageSrc,
 				alt: isLib ? `${libraryName} Cover` : libraryName,
 			})
 
-			if (isLib) {
+			if (isLib && !isFA) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
 					libraryThumbnail.src = `library-letters/${transliterate(libraryName.charAt(0)).charAt(0).toUpperCase()}.png`
@@ -3810,19 +3816,19 @@ console.log(serie)
 
 				librariesList.append(listItem);
 			});
-/*
-			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-letters/R.png')
+
+			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'fa-book-bookmark')
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
 				navigateTo('#readlists');
 			});
 			
-			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-letters/C.png')
+			let collections = buildLibraryItem('collectionsButton', 'Collections', 'fa-box-archive')
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
 				navigateTo('#collections');
 			});
-*/
+
 		}
 
 		function getAltTitles(serie) {
@@ -4501,8 +4507,8 @@ console.log(serie)
 
 			books = booksData?.content || [];
 
-			//await libraryHighlight('readlistsButton', false);
-			await libraryHighlight('readlistsButton2', false);
+			await libraryHighlight('readlistsButton', false);
+			//await libraryHighlight('readlistsButton2', false);
 			if (seriesData != null) displayHeader(seriesData, true);
 			displayBooks(books, booksGrid, 'full');
 		}
@@ -4519,8 +4525,8 @@ console.log(serie)
 
 			contents = contentsData?.content || [];
 
-			//await libraryHighlight('collectionsButton', false);
-			await libraryHighlight('collectionsButton2', false);
+			await libraryHighlight('collectionsButton', false);
+			//await libraryHighlight('collectionsButton2', false);
 			if (itemData != null) displayHeader(itemData, true);
 			displaySeries(contents, seriesGrid, null, false);
 		}
