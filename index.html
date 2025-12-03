@@ -41,6 +41,7 @@
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
 				<ul id="librariesRightBlock">
+					<!--
 					<li id="readlistsButton2" title="Read Lists" class="library-item no-grow press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>
@@ -51,6 +52,7 @@
 							<span class="fa-solid fa-box-archive glyph-dark"></span>
 						</div>
 					</li>
+					-->
 					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
@@ -1253,13 +1255,14 @@
 				navigateTo(`#offlinebooks`);
 			});
 		}
+		/*
 			readlistsButton2.addEventListener('click', () => {
 				navigateTo(`#readlists`);
 			});
 						collectionsButton2.addEventListener('click', () => {
 				navigateTo(`#collections`);
 			});
-
+*/
 		logOut.addEventListener('click', async () => {
 			let currentUser = await callAPI(null, '/api/v2/users/me')
 			let dialogText = `
@@ -3817,13 +3820,13 @@ console.log(serie)
 				librariesList.append(listItem);
 			});
 
-			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'fa-book-bookmark')
+			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-symbols/readlists2.png')
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
 				navigateTo('#readlists');
 			});
 			
-			let collections = buildLibraryItem('collectionsButton', 'Collections', 'fa-box-archive')
+			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-symbols/collections2.png')
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
 				navigateTo('#collections');
