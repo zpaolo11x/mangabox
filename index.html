@@ -3101,7 +3101,7 @@
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 
 			// Find alternate title with label 'Time'
-			const altTitle = {story:'N/A', art:'N/A', time:'N/A'};
+			const altTitle = { story: 'N/A', art: 'N/A', time: 'N/A' };
 
 			// Fetch and display the number of books and alternate title
 			const bookCount = serie.bookIds.length;
@@ -3212,11 +3212,11 @@
 
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
+				navigateTo(`#list?list_id=${serie.id}`)
 			});
 
 			item.append(seriesItem)
-	
+
 		}
 
 		// Creates and populates the series grid with the data from the series array.
@@ -3870,33 +3870,42 @@
 		}
 
 
-		async function displayHeader(serie) {
-			const altTitle = getAltTitles(serie);
+		async function displayHeader(serie, isReadList) {
+			const altTitle = isReadList ? null : getAltTitles(serie);
 
-			const summary = (serie.metadata.summary != "")
-				? serie.metadata.summary.replace(/\n/g, '<br>')
-				: (serie.booksMetadata.summary != ""
-					? "<u>Summary from book " + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
-					: ""
-				)
+			const title = isReadList ? serie.name : serie.metadata.title;
+			const books = isReadList ? serie.bookIds.length : serie.booksCount;
+			const summaryData = isReadList ? serie.summary : serie.metadata.summary;
 
-			const creditString = altTitle.story == altTitle.art
+			const summary = (isReadList ?
+				summaryData :
+				(serie.metadata.summary != "")
+					? serie.metadata.summary.replace(/\n/g, '<br>')
+					: (serie.booksMetadata.summary != ""
+						? "<u>Summary from book " + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+						: ""
+					)
+			)
+
+			const creditString = isReadList ? '' : (altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
-				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`;
+				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+			)
 
+			const thumbURL = isReadList ? `${mb.baseUrl}/api/v1/readlists/${serie.id}/thumbnail` : `${mb.baseUrl}/api/v1/series/${serie.id}/thumbnail`
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
-					<img id="seriesHeaderThumbnail" src="${mb.baseUrl}/api/v1/series/${serie.id}/thumbnail" class="header-pic">
+					<img id="seriesHeaderThumbnail" src="${thumbURL}" class="header-pic">
 				</div>
 			</div>
 			<div class="header-title">
 				<span class="title">
-				${serie.metadata.title}
+				${title}
 				${serie.metadata?.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle.time}');">${altTitle.time}</a> (${serie.booksCount} ${serie.booksCount == 1 ? "book" : "books"}) - ${creditString}</span>
+					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle?.time}');">${altTitle?.time ?? ''}</a> (${books} ${books == 1 ? "book" : "books"}) ${isReadList ? '' : ' - ' + creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${summary}</div>
@@ -4493,6 +4502,24 @@
 			await libraryHighlight(libraryId, false);
 			if (seriesData != null) displayHeader(seriesData);
 			displayBooks(books, booksGrid, 'longname', bookId);
+		}
+
+		async function openReadList(listId) {
+			console.log("SSSSS")
+			let books = [];
+			const seriesData = await callAPI(`c_readlists${listId}`, `/api/v1/readlists/${listId}`);
+			console.log(seriesData)
+			const booksData = (await callAPI(`c_bookslist${listId}`,
+				`/api/v1/readlists/${listId}/books?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+				'GET'
+			));
+			console.log(booksData)
+
+			books = booksData?.content || [];
+
+			await libraryHighlight('listButton', false);
+			if (seriesData != null) displayHeader(seriesData, true);
+			displayBooks(books, booksGrid, 'full');
 		}
 
 		async function openOfflineBooks(bookId) {
@@ -6681,16 +6708,21 @@
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
 					break;
+				case 'series':
+					searchInput.value = '';
+					setIncognito(false);
+					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
+					break;
 				case 'readlists':
 					mb.dashboardBin = '';
 					searchInput.value = '';
 					setIncognito(false);
 					await openReadLists();
 					break;
-				case 'series':
+				case 'list':
 					searchInput.value = '';
 					setIncognito(false);
-					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
+					await openReadList(params.get('list_id'));
 					break;
 				case 'search':
 					setIncognito(false);
