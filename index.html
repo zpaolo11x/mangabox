@@ -56,6 +56,16 @@
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
+					<li id="readlistsButton2" title="Read Lists" class="library-item no-grow press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-book-bookmark glyph-dark"></span>
+						</div>
+					</li>
+					<li id="collectionsButton2" title="Collections" class="library-item no-grow press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-box-archive glyph-dark"></span>
+						</div>
+					</li>
 					<li id="offlineLibrary" title="Offline Books" class="library-item no-grow press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-download glyph-dark"></span>
@@ -1243,6 +1253,12 @@
 				navigateTo(`#offlinebooks`);
 			});
 		}
+			readlistsButton2.addEventListener('click', () => {
+				navigateTo(`#readlists`);
+			});
+						collectionsButton2.addEventListener('click', () => {
+				navigateTo(`#collections`);
+			});
 
 		logOut.addEventListener('click', async () => {
 			let currentUser = await callAPI(null, '/api/v2/users/me')
@@ -3358,7 +3374,8 @@ console.log(serie)
 		}
 
 		async function openReadlists() {
-			libraryHighlight('readlistsButton', false);		// Triggers and manages the library menu
+			//libraryHighlight('readlistsButton', false);		// Triggers and manages the library menu
+			libraryHighlight('readlistsButton2', false);		// Triggers and manages the library menu
 			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 
 			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
@@ -3372,7 +3389,8 @@ console.log(serie)
 		}
 		
 		async function openCollections() {
-			libraryHighlight('collectionsButton', false);		// Triggers and manages the library menu
+			//libraryHighlight('collectionsButton', false);		// Triggers and manages the library menu
+			libraryHighlight('collectionsButton2', false);		// Triggers and manages the library menu
 			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 
 			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
@@ -3792,19 +3810,19 @@ console.log(serie)
 
 				librariesList.append(listItem);
 			});
-
-			let readlists = buildLibraryItem('readlistsButton', 'Read lists', 'logo/mangabox-logo-new.svg')
+/*
+			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-letters/R.png')
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
 				navigateTo('#readlists');
 			});
 			
-			let collections = buildLibraryItem('collectionsButton', 'Collections', 'logo/mangabox-logo-new.svg')
+			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-letters/C.png')
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
 				navigateTo('#collections');
 			});
-
+*/
 		}
 
 		function getAltTitles(serie) {
@@ -4483,7 +4501,8 @@ console.log(serie)
 
 			books = booksData?.content || [];
 
-			await libraryHighlight('readlistsButton', false);
+			//await libraryHighlight('readlistsButton', false);
+			await libraryHighlight('readlistsButton2', false);
 			if (seriesData != null) displayHeader(seriesData, true);
 			displayBooks(books, booksGrid, 'full');
 		}
@@ -4501,6 +4520,7 @@ console.log(serie)
 			contents = contentsData?.content || [];
 
 			await libraryHighlight('collectionsButton', false);
+			await libraryHighlight('collectionsButton2', false);
 			if (itemData != null) displayHeader(itemData, true);
 			displaySeries(contents, seriesGrid, null, false);
 		}

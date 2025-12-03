@@ -1032,6 +1032,8 @@ a {
 	position: relative;
 }
 
+#readlistsButton2.highlighted span.fa-solid,
+#collectionsButton2.highlighted span.fa-solid,
 #offlineLibrary.highlighted span.fa-solid,
 .library-item.search-field.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-solid,
