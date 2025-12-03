@@ -3027,12 +3027,19 @@
 			}
 		}
 
+		async function buildCollectionsItem(item, serie, target){
+			buildContainerItem(item,serie,target,'collections', 'seriesIds', 'fa-layer-group')
+		}
 
-		async function buildReadListsItem(item, serie, target) {
+		async function buildReadlistsItem(item, serie, target) {
+			buildContainerItem(item,serie,target,'readlists', 'bookIds', 'fa-book')
+		}
+
+		async function buildContainerItem(item, serie, target, container, items, icon) {
 
 			item.childNodes[0]?.remove();
 
-			item.title = 'Open read list';
+			item.title = 'Open Container';
 
 			const seriesItem = addItem('div', {
 				className: 'series-item'
@@ -3052,7 +3059,7 @@
 			const seriesThumbnail = addItem('img', {
 				className: 'series-thumbnail hidden',
 				src: 'transparent.png',
-				lazySrc: `${mb.baseUrl}/api/v1/readlists/${serie.id}/thumbnail`,
+				lazySrc: `${mb.baseUrl}/api/v1/${container}/${serie.id}/thumbnail`,
 				alt: serie.name
 			});
 
@@ -3065,20 +3072,12 @@
 			const seriesOverlay = addItem('div', {
 				className: 'series-overlay'
 			});
-
-			const seriesStatus = addItem('div', {
-				className: 'series-status'
+			
+			const timeLabel = addItem('span', {
+				innerHTML: '',
+				className: 'red search-trigger',
+				title: ''
 			});
-
-			const unreadCount = serie.booksUnreadCount;
-
-			if (unreadCount > 0) {
-				const unreadCountBadge = addItem('div', {
-					className: 'unread-count',
-					innerHTML: `<span>${unreadCount}</span>`
-				});
-				seriesStatus.append(unreadCountBadge);
-			}
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
@@ -3099,105 +3098,32 @@
 				await setSeriesReadStatus(serie.id, false, item);
 			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
-
-			// Find alternate title with label 'Time'
-			const altTitle = { story: 'N/A', art: 'N/A', time: 'N/A' };
-
+			console.log("ZZZZZZ")
+console.log(serie)
 			// Fetch and display the number of books and alternate title
-			const bookCount = serie.bookIds.length;
+			const bookCount = serie[items].length;
 
 			const infoRow = addItem('div', {
 				className: 'data-row info-row'
 			});
 
-			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
-				className: 'red search-trigger',
-				title: `Filter time: ${altTitle.time}`
-			});
-
-			addClickPointerEvents(timeLabel, async () => {
-				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#search?search_string=y:${altTitle.time}`);
-			})
-
 			const booksLabel = addItem('span', {
-				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
+				innerHTML: `<span class='fa-solid ${icon} glyph-dark'></span>&nbsp;${bookCount}`
 			});
-
-			const artistRow = addItem('div', {
-				className: 'data-row artist-row'
-			});
-
-			if (altTitle.story != altTitle.art) {
-				if (altTitle.story != 'N/A') {
-					const storyLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
-						className: 'red data-label search-trigger',
-						title: `Filter artist: ${altTitle.story}`
-					});
-
-					artistRow.append(storyLabel);
-
-					addClickPointerEvents(storyLabel, async () => {
-						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
-					});
-				}
-
-				if (altTitle.art != 'N/A') {
-					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
-						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
-						className: 'red data-label search-trigger',
-						title: `Filter artist: ${altTitle.art}`
-					});
-
-					artistRow.append(artLabel);
-
-					addClickPointerEvents(artLabel, async () => {
-						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
-					});
-				}
-
-
-
-			} else {
-				if (altTitle.story != 'N/A') {
-					const artistLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
-						title: `Filter artist: ${altTitle.story}`,
-						className: 'red data-label search-trigger'
-					});
-					artistRow.append(artistLabel);
-
-					addClickPointerEvents(artistLabel, async () => {
-						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
-					});
-				}
-			}
 
 			item.mbSeriesTitle = serie.name ?? '';
 
-			item.mbSeriesStart = timeSplit(altTitle.time)[0];
-			item.mbSeriesStop = timeSplit(altTitle.time)[1];
-
-			item.mbBooksCount = serie.bookIds.length;
-
-			item.mbSeriesRead = (unreadCount == 0);
+			item.mbBooksCount = serie[items].length;
 
 			seriesItem.append(
 				thumbnailWrapper,
 				seriesTitle,
 				infoRow,
-				artistRow
 			);
 			thumbnailWrapper.append(
 				seriesThumbnail,
 				seriesFader,
 				seriesOverlay,
-				seriesStatus
 			);
 			seriesOverlay.append(
 				markAsRead,
@@ -3212,7 +3138,7 @@
 
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#list?list_id=${serie.id}`)
+				navigateTo(`#${container}item?item_id=${serie.id}`)
 			});
 
 			item.append(seriesItem)
@@ -3339,7 +3265,7 @@
 			}
 		}
 
-		async function displayReadLists(series, target) {
+		async function displayReadlists(series, target) {
 
 			// TODO Ripulire questa parte che in parte viene da sopra
 			while (target.firstChild) {
@@ -3353,7 +3279,29 @@
 					id: serie.id,
 				});
 
-				buildReadListsItem(seriesContainer, serie, target);
+				buildReadlistsItem(seriesContainer, serie, target);
+
+				target.append(seriesContainer);
+
+			});
+			sectionShow(target);
+		}
+
+		async function displayCollections(series, target) {
+
+			// TODO Ripulire questa parte che in parte viene da sopra
+			while (target.firstChild) {
+				target.removeChild(target.firstChild);
+			}
+
+			series.forEach(async (serie) => {
+				console.log(serie);
+				const seriesContainer = addItem('div', {
+					className: 'series-container collector', //XXX was ending with , 'fade-in');
+					id: serie.id,
+				});
+
+				buildCollectionsItem(seriesContainer, serie, target);
 
 				target.append(seriesContainer);
 
@@ -3409,18 +3357,32 @@
 			//TODO Move here the logic that enables the library options buttons?
 		}
 
-		async function openReadLists() {
-			libraryHighlight('listButton', false);		// Triggers and manages the library menu
+		async function openReadlists() {
+			libraryHighlight('readlistsButton', false);		// Triggers and manages the library menu
 			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 
 			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
-			const readListsPage = await callAPI(`c_readlists`,
+			const readlistsPage = await callAPI(`c_readlists`,
 				`/api/v1/readlists?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'GET'
 			);
-			readLists = readListsPage?.content || [];
-			console.log(readLists)
-			displayReadLists(readLists, seriesGrid);
+			readlists = readlistsPage?.content || [];
+			console.log(readlists)
+			displayReadlists(readlists, seriesGrid);
+		}
+		
+		async function openCollections() {
+			libraryHighlight('collectionsButton', false);		// Triggers and manages the library menu
+			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
+
+			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
+			const collectionsPage = await callAPI(`c_collections`,
+				`/api/v1/collections?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'GET'
+			);
+			collections = collectionsPage?.content || [];
+			console.log(collections)
+			displayCollections(collections, seriesGrid);
 		}
 
 		const menuClassUp = 'fa-caret-up';
@@ -3831,11 +3793,18 @@
 				librariesList.append(listItem);
 			});
 
-			let readLists = buildLibraryItem('listButton', 'Read lists', 'logo/mangabox-logo-new.svg')
-			librariesList.append(readLists);
-			listButton.addEventListener('click', () => {
+			let readlists = buildLibraryItem('readlistsButton', 'Read lists', 'logo/mangabox-logo-new.svg')
+			librariesList.append(readlists);
+			readlistsButton.addEventListener('click', () => {
 				navigateTo('#readlists');
 			});
+			
+			let collections = buildLibraryItem('collectionsButton', 'Collections', 'logo/mangabox-logo-new.svg')
+			librariesList.append(collections);
+			collectionsButton.addEventListener('click', () => {
+				navigateTo('#collections');
+			});
+
 		}
 
 		function getAltTitles(serie) {
@@ -3870,14 +3839,14 @@
 		}
 
 
-		async function displayHeader(serie, isReadList) {
-			const altTitle = isReadList ? null : getAltTitles(serie);
+		async function displayHeader(serie, isReadlist) {
+			const altTitle = isReadlist ? null : getAltTitles(serie);
 
-			const title = isReadList ? serie.name : serie.metadata.title;
-			const books = isReadList ? serie.bookIds.length : serie.booksCount;
-			const summaryData = isReadList ? serie.summary : serie.metadata.summary;
+			const title = isReadlist ? serie.name : serie.metadata.title;
+			const books = isReadlist ? serie.bookIds.length : serie.booksCount;
+			const summaryData = isReadlist ? serie.summary : serie.metadata.summary;
 
-			const summary = (isReadList ?
+			const summary = (isReadlist ?
 				summaryData :
 				(serie.metadata.summary != "")
 					? serie.metadata.summary.replace(/\n/g, '<br>')
@@ -3887,12 +3856,12 @@
 					)
 			)
 
-			const creditString = isReadList ? '' : (altTitle.story == altTitle.art
+			const creditString = isReadlist ? '' : (altTitle.story == altTitle.art
 				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			)
 
-			const thumbURL = isReadList ? `${mb.baseUrl}/api/v1/readlists/${serie.id}/thumbnail` : `${mb.baseUrl}/api/v1/series/${serie.id}/thumbnail`
+			const thumbURL = isReadlist ? `${mb.baseUrl}/api/v1/readlists/${serie.id}/thumbnail` : `${mb.baseUrl}/api/v1/series/${serie.id}/thumbnail`
 			seriesHeader.innerHTML = `
 			<div class="header-pic-container">
 				<div class="thumbnail-wrapper">
@@ -3905,7 +3874,7 @@
 				${serie.metadata?.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle?.time}');">${altTitle?.time ?? ''}</a> (${books} ${books == 1 ? "book" : "books"}) ${isReadList ? '' : ' - ' + creditString}</span>
+					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle?.time}');">${altTitle?.time ?? ''}</a> (${books} ${books == 1 ? "book" : "books"}) ${isReadlist ? '' : ' - ' + creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${summary}</div>
@@ -3918,7 +3887,7 @@
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
 			createCustomScrollbar(bookScrollBox);
 			seriesMiniHeader.innerHTML = `
-				<span class="mini-title">${serie.metadata.title}</span>
+				<span class="mini-title">${title}</span>
 			`
 		}
 
@@ -4504,22 +4473,36 @@
 			displayBooks(books, booksGrid, 'longname', bookId);
 		}
 
-		async function openReadList(listId) {
-			console.log("SSSSS")
+		async function openReadlist(itemId) {
 			let books = [];
-			const seriesData = await callAPI(`c_readlists${listId}`, `/api/v1/readlists/${listId}`);
-			console.log(seriesData)
-			const booksData = (await callAPI(`c_bookslist${listId}`,
-				`/api/v1/readlists/${listId}/books?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+			const seriesData = await callAPI(`c_readlists${itemId}`, `/api/v1/readlists/${itemId}`);
+			const booksData = (await callAPI(`c_bookslist${itemId}`,
+				`/api/v1/readlists/${itemId}/books?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'GET'
 			));
-			console.log(booksData)
 
 			books = booksData?.content || [];
 
-			await libraryHighlight('listButton', false);
+			await libraryHighlight('readlistsButton', false);
 			if (seriesData != null) displayHeader(seriesData, true);
 			displayBooks(books, booksGrid, 'full');
+		}
+
+		async function openCollection(itemId) {
+			let contents = [];
+			const itemData = await callAPI(`c_collections${itemId}`, `/api/v1/collections/${itemId}`);
+			console.log(itemData)
+			const contentsData = (await callAPI(`c_serieslist${itemId}`,
+				`/api/v1/collections/${itemId}/series?page=0&unpaged=true&sort=metadata.numberSort,asc`,
+				'GET'
+			));
+			console.log(contentsData)
+
+			contents = contentsData?.content || [];
+
+			await libraryHighlight('collectionsButton', false);
+			if (itemData != null) displayHeader(itemData, true);
+			displaySeries(contents, seriesGrid, null, false);
 		}
 
 		async function openOfflineBooks(bookId) {
@@ -6717,12 +6700,23 @@
 					mb.dashboardBin = '';
 					searchInput.value = '';
 					setIncognito(false);
-					await openReadLists();
+					await openReadlists();
 					break;
-				case 'list':
+				case 'readlistsitem':
 					searchInput.value = '';
 					setIncognito(false);
-					await openReadList(params.get('list_id'));
+					await openReadlist(params.get('item_id'));
+					break;
+				case 'collections':
+					mb.dashboardBin = '';
+					searchInput.value = '';
+					setIncognito(false);
+					await openCollections();
+					break;
+				case 'collectionsitem':
+					searchInput.value = '';
+					setIncognito(false);
+					await openCollection(params.get('item_id'));
 					break;
 				case 'search':
 					setIncognito(false);
