@@ -2641,9 +2641,9 @@
 		// Function that fetches the libraries list, sort it by name, then calls displayLibraries to show the fetched libraries
 		async function fetchLibraries() {
 
-
 			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
+
 			await displayLibraries(libraries);
 
 			await updateSizer(libraries)
@@ -3028,6 +3028,196 @@
 		}
 
 
+		async function buildReadListsItem(item, serie, target) {
+
+			item.childNodes[0]?.remove();
+
+			item.title = 'Open read list';
+
+			const seriesItem = addItem('div', {
+				className: 'series-item'
+			});
+
+			const seriesTitle = addItem('div', {
+				innerHTML: `
+								<div class="title-row data-row top-row">
+									<div style="flex-grow:1" class="series-title">${preventHyphenBreaks(serie.name)}</div>
+								</div>`
+			});
+
+			const thumbnailWrapper = addItem('div', {
+				className: 'thumbnail-wrapper'
+			});
+
+			const seriesThumbnail = addItem('img', {
+				className: 'series-thumbnail hidden',
+				src: 'transparent.png',
+				lazySrc: `${mb.baseUrl}/api/v1/readlists/${serie.id}/thumbnail`,
+				alt: serie.name
+			});
+
+			addLazyLoading(seriesThumbnail);
+
+			const seriesFader = addItem('div', {
+				className: 'series-fader'
+			});
+
+			const seriesOverlay = addItem('div', {
+				className: 'series-overlay'
+			});
+
+			const seriesStatus = addItem('div', {
+				className: 'series-status'
+			});
+
+			const unreadCount = serie.booksUnreadCount;
+
+			if (unreadCount > 0) {
+				const unreadCountBadge = addItem('div', {
+					className: 'unread-count',
+					innerHTML: `<span>${unreadCount}</span>`
+				});
+				seriesStatus.append(unreadCountBadge);
+			}
+
+			const markAsRead = addItem('div', {
+				className: 'mini-buttons mark-as-read',
+				title: 'Mark series as read',
+				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
+			});
+			addClickPointerEvents(markAsRead, async () => {
+				await setSeriesReadStatus(serie.id, true, item);
+			})
+			addPressEvents(markAsRead, scaleDown, scaleUp)
+
+			const markAsUnread = addItem('div', {
+				className: 'mini-buttons mark-as-unread',
+				title: 'Mark series as unread',
+				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
+			});
+			addClickPointerEvents(markAsUnread, async () => {
+				await setSeriesReadStatus(serie.id, false, item);
+			})
+			addPressEvents(markAsUnread, scaleDown, scaleUp)
+
+			// Find alternate title with label 'Time'
+			const altTitle = {story:'N/A', art:'N/A', time:'N/A'};
+
+			// Fetch and display the number of books and alternate title
+			const bookCount = serie.bookIds.length;
+
+			const infoRow = addItem('div', {
+				className: 'data-row info-row'
+			});
+
+			const timeLabel = addItem('span', {
+				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				className: 'red search-trigger',
+				title: `Filter time: ${altTitle.time}`
+			});
+
+			addClickPointerEvents(timeLabel, async () => {
+				if (target?.binName) mb.dashboardBin = target.binName;
+				navigateTo(`#search?search_string=y:${altTitle.time}`);
+			})
+
+			const booksLabel = addItem('span', {
+				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
+			});
+
+			const artistRow = addItem('div', {
+				className: 'data-row artist-row'
+			});
+
+			if (altTitle.story != altTitle.art) {
+				if (altTitle.story != 'N/A') {
+					const storyLabel = addItem('div', {
+						innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
+						className: 'red data-label search-trigger',
+						title: `Filter artist: ${altTitle.story}`
+					});
+
+					artistRow.append(storyLabel);
+
+					addClickPointerEvents(storyLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+					});
+				}
+
+				if (altTitle.art != 'N/A') {
+					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
+						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						className: 'red data-label search-trigger',
+						title: `Filter artist: ${altTitle.art}`
+					});
+
+					artistRow.append(artLabel);
+
+					addClickPointerEvents(artLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
+					});
+				}
+
+
+
+			} else {
+				if (altTitle.story != 'N/A') {
+					const artistLabel = addItem('div', {
+						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+						title: `Filter artist: ${altTitle.story}`,
+						className: 'red data-label search-trigger'
+					});
+					artistRow.append(artistLabel);
+
+					addClickPointerEvents(artistLabel, async () => {
+						if (target?.binName) mb.dashboardBin = target.binName;
+						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+					});
+				}
+			}
+
+			item.mbSeriesTitle = serie.name ?? '';
+
+			item.mbSeriesStart = timeSplit(altTitle.time)[0];
+			item.mbSeriesStop = timeSplit(altTitle.time)[1];
+
+			item.mbBooksCount = serie.bookIds.length;
+
+			item.mbSeriesRead = (unreadCount == 0);
+
+			seriesItem.append(
+				thumbnailWrapper,
+				seriesTitle,
+				infoRow,
+				artistRow
+			);
+			thumbnailWrapper.append(
+				seriesThumbnail,
+				seriesFader,
+				seriesOverlay,
+				seriesStatus
+			);
+			seriesOverlay.append(
+				markAsRead,
+				markAsUnread
+			);
+			infoRow.append(
+				timeLabel,
+				booksLabel
+			);
+
+			seriesItem.classList.add('touch-scaler')
+
+			addTouchScaler(seriesItem, () => {
+				if (target?.binName) mb.dashboardBin = target.binName;
+				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
+			});
+
+			item.append(seriesItem)
+	
+		}
 
 		// Creates and populates the series grid with the data from the series array.
 		async function displaySeriesOLD(series, target) {
@@ -3133,7 +3323,7 @@
 				}
 
 				series.forEach(async (serie) => {
-
+					console.log(serie);
 					const seriesContainer = addItem('div', {
 						className: 'series-container collector', //XXX was ending with , 'fade-in');
 						id: serie.id,
@@ -3149,6 +3339,27 @@
 			}
 		}
 
+		async function displayReadLists(series, target) {
+
+			// TODO Ripulire questa parte che in parte viene da sopra
+			while (target.firstChild) {
+				target.removeChild(target.firstChild);
+			}
+
+			series.forEach(async (serie) => {
+				console.log(serie);
+				const seriesContainer = addItem('div', {
+					className: 'series-container collector', //XXX was ending with , 'fade-in');
+					id: serie.id,
+				});
+
+				buildReadListsItem(seriesContainer, serie, target);
+
+				target.append(seriesContainer);
+
+			});
+			sectionShow(target);
+		}
 
 		// Function that fetches all the series list within a library, sorted by name, then calls displaySeries to show the fetched series
 		async function fetchAllSeries(libraryId) {
@@ -3196,6 +3407,20 @@
 			await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
 			//focusItem(seriesId || 'top');
 			//TODO Move here the logic that enables the library options buttons?
+		}
+
+		async function openReadLists() {
+			libraryHighlight('listButton', false);		// Triggers and manages the library menu
+			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
+
+			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
+			const readListsPage = await callAPI(`c_readlists`,
+				`/api/v1/readlists?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'GET'
+			);
+			readLists = readListsPage?.content || [];
+			console.log(readLists)
+			displayReadLists(readLists, seriesGrid);
 		}
 
 		const menuClassUp = 'fa-caret-up';
@@ -3606,6 +3831,11 @@
 				librariesList.append(listItem);
 			});
 
+			let readLists = buildLibraryItem('listButton', 'Read lists', 'logo/mangabox-logo-new.svg')
+			librariesList.append(readLists);
+			listButton.addEventListener('click', () => {
+				navigateTo('#readlists');
+			});
 		}
 
 		function getAltTitles(serie) {
@@ -5189,42 +5419,42 @@
 
 			});
 		}
-function computeReaderMaxRatio(serverPageData, spreadThreshold = 1.5) {
-  if (!serverPageData || serverPageData.length === 0) return 1;
+		function computeReaderMaxRatio(serverPageData, spreadThreshold = 1.5) {
+			if (!serverPageData || serverPageData.length === 0) return 1;
 
-  // compute aspect ratios
-  const ratios = serverPageData.map(item => item.width / item.height);
+			// compute aspect ratios
+			const ratios = serverPageData.map(item => item.width / item.height);
 
-  // decide orientation by majority
-  const landscapeCount = ratios.filter(r => r > 1).length;
-  const isLandscape = landscapeCount > ratios.length / 2;
+			// decide orientation by majority
+			const landscapeCount = ratios.filter(r => r > 1).length;
+			const isLandscape = landscapeCount > ratios.length / 2;
 
-  // estimate typical single page ratio:
-  // - for landscape: median of ratios > 1
-  // - for portrait: median of ratios < 1
-  let candidate;
-  if (isLandscape) {
-    const landscapeSingles = ratios.filter(r => r > 1);
-    candidate = median(landscapeSingles.length ? landscapeSingles : ratios);
-  } else {
-    const portraitSingles = ratios.filter(r => r < 1);
-    candidate = median(portraitSingles.length ? portraitSingles : ratios);
-  }
+			// estimate typical single page ratio:
+			// - for landscape: median of ratios > 1
+			// - for portrait: median of ratios < 1
+			let candidate;
+			if (isLandscape) {
+				const landscapeSingles = ratios.filter(r => r > 1);
+				candidate = median(landscapeSingles.length ? landscapeSingles : ratios);
+			} else {
+				const portraitSingles = ratios.filter(r => r < 1);
+				candidate = median(portraitSingles.length ? portraitSingles : ratios);
+			}
 
-  // fallback guard
-  if (!isFinite(candidate) || candidate <= 0) candidate = median(ratios);
+			// fallback guard
+			if (!isFinite(candidate) || candidate <= 0) candidate = median(ratios);
 
-  // now for each page: if page looks like a single (ratio close to typical_single),
-  // treat it as half of a spread => use 2 * ratio. Otherwise use ratio as-is.
-  const adjusted = ratios.map(r => {
-    const normalized = r / candidate;
-    return (normalized < spreadThreshold) ? (2 * r) : r;
-  });
+			// now for each page: if page looks like a single (ratio close to typical_single),
+			// treat it as half of a spread => use 2 * ratio. Otherwise use ratio as-is.
+			const adjusted = ratios.map(r => {
+				const normalized = r / candidate;
+				return (normalized < spreadThreshold) ? (2 * r) : r;
+			});
 
-  // average
-  const sum = adjusted.reduce((s, v) => s + v, 0);
-  return sum / adjusted.length;
-}
+			// average
+			const sum = adjusted.reduce((s, v) => s + v, 0);
+			return sum / adjusted.length;
+		}
 
 		function median(arr) {
 			if (!arr || arr.length === 0) return NaN;
@@ -5247,7 +5477,7 @@ function computeReaderMaxRatio(serverPageData, spreadThreshold = 1.5) {
 			mb.readerMaxRatio = serverPageData.map(item => ((item.width / item.height) < 1 ? 2 * item.width / item.height : item.width / item.height))
 				.reduce((sum, ratio) => sum + ratio, 0) / serverPageData.length;
 			*/
-			
+
 			mb.readerMaxRatio = computeReaderMaxRatio(serverPageData, 1.5);
 
 			// readerViewer.style.height='100vh';
@@ -6450,6 +6680,12 @@ function computeReaderMaxRatio(serverPageData, spreadThreshold = 1.5) {
 					searchInput.value = '';
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
+					break;
+				case 'readlists':
+					mb.dashboardBin = '';
+					searchInput.value = '';
+					setIncognito(false);
+					await openReadLists();
 					break;
 				case 'series':
 					searchInput.value = '';
