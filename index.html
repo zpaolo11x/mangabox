@@ -3055,7 +3055,15 @@
 		}
 
 		async function buildContainerItem(item, serie, target, container, items, icon) {
-
+			
+			const dateString = serie.lastModifiedDate ?
+					new Intl.DateTimeFormat('en-GB', {
+						day: '2-digit',
+						month: 'short',
+						year: '2-digit'
+					}).format(new Date(serie.lastModifiedDate))
+					: '';
+console.log(dateString)
 			item.childNodes[0]?.remove();
 
 			item.title = 'Open Container';
@@ -3092,11 +3100,10 @@
 				className: 'series-overlay'
 			});
 
+
 			const timeLabel = addItem('span', {
-				innerHTML: '',
-				className: 'red search-trigger',
-				title: ''
-			});
+					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
+				});
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
