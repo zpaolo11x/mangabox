@@ -3046,12 +3046,12 @@
 			}
 		}
 
-		async function buildCollectionsItem(item, serie, target){
-			buildContainerItem(item,serie,target,'collections', 'seriesIds', 'fa-layer-group')
+		async function buildCollectionsItem(item, serie, target) {
+			buildContainerItem(item, serie, target, 'collections', 'seriesIds', 'fa-layer-group')
 		}
 
 		async function buildReadlistsItem(item, serie, target) {
-			buildContainerItem(item,serie,target,'readlists', 'bookIds', 'fa-book')
+			buildContainerItem(item, serie, target, 'readlists', 'bookIds', 'fa-book')
 		}
 
 		async function buildContainerItem(item, serie, target, container, items, icon) {
@@ -3091,7 +3091,7 @@
 			const seriesOverlay = addItem('div', {
 				className: 'series-overlay'
 			});
-			
+
 			const timeLabel = addItem('span', {
 				innerHTML: '',
 				className: 'red search-trigger',
@@ -3118,7 +3118,7 @@
 			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
 			console.log("ZZZZZZ")
-console.log(serie)
+			console.log(serie)
 			// Fetch and display the number of books and alternate title
 			const bookCount = serie[items].length;
 
@@ -3390,7 +3390,7 @@ console.log(serie)
 			console.log(readlists)
 			displayReadlists(readlists, seriesGrid);
 		}
-		
+
 		async function openCollections() {
 			libraryHighlight('collectionsButton', false);		// Triggers and manages the library menu
 			//libraryHighlight('collectionsButton2', false);		// Triggers and manages the library menu
@@ -3519,15 +3519,15 @@ console.log(serie)
 				: imagePath);
 
 
-			const libraryThumbnail = isFA ? 
-			addItem('i', {
-				className: `fa-solid ${imagePath} glyph-dark libglyph`,
-			}) : 
-			addItem('img', {
-				className: 'library-thumbnail',
-				src: imageSrc,
-				alt: isLib ? `${libraryName} Cover` : libraryName,
-			})
+			const libraryThumbnail = isFA ?
+				addItem('i', {
+					className: `fa-solid ${imagePath} glyph-dark libglyph`,
+				}) :
+				addItem('img', {
+					className: 'library-thumbnail',
+					src: imageSrc,
+					alt: isLib ? `${libraryName} Cover` : libraryName,
+				})
 
 			if (isLib && !isFA) {
 				libraryThumbnail.onerror = () => {
@@ -3743,6 +3743,34 @@ console.log(serie)
 				navigateTo('#dashboard');
 			});
 
+			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-symbols/readlists3d.png')
+			librariesList.append(readlists);
+			readlistsButton.addEventListener('click', () => {
+				navigateTo('#readlists');
+			});
+
+			let readlistsAPI = callAPI(`c_readlists`,
+				`/api/v1/readlists?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'GET'
+			).then((res) => {
+				if (res.content.length == 0) readlistsButton.style.display = 'none';
+			});
+
+			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-symbols/collections3d.png')
+			librariesList.append(collections);
+			collectionsButton.addEventListener('click', () => {
+				navigateTo('#collections');
+			});
+
+			let collectionsAPI = callAPI(`c_collections`,
+				`/api/v1/collections?page=0&unpaged=true&sort=metadata.titleSort,asc`,
+				'GET'
+			).then((res) => {
+				console.log("XXXXXX")
+				console.log(res.content.length)
+				if (res.content.length == 0) collectionsButton.style.display = 'none';
+			});
+
 			Array.from(libraries).forEach((library, index) => {
 				const listItem = buildLibraryItem(library.id, library.name);
 
@@ -3820,17 +3848,6 @@ console.log(serie)
 				librariesList.append(listItem);
 			});
 
-			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-symbols/readlists2.png')
-			librariesList.append(readlists);
-			readlistsButton.addEventListener('click', () => {
-				navigateTo('#readlists');
-			});
-			
-			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-symbols/collections2.png')
-			librariesList.append(collections);
-			collectionsButton.addEventListener('click', () => {
-				navigateTo('#collections');
-			});
 
 		}
 
@@ -5935,7 +5952,7 @@ console.log(serie)
 			console.log(spreadObject.pageNumL)
 			let pageNumText = rd.webtoon ? spreadObject.pageNumL : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
 			pageNumText = pageNumText.trim().replace(' ', '￨')
-			
+
 			//pageNumText = pageNumText.trim().replace(' ', '<span style="width: 10px; border-right:1px solid white">&nbsp;</span><span style="width:10px;">&nbsp;</span>')
 
 			const out = [currentPage, pageNumText];
