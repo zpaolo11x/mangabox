@@ -3105,27 +3105,6 @@ console.log(dateString)
 					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
 				});
 
-			const markAsRead = addItem('div', {
-				className: 'mini-buttons mark-as-read',
-				title: 'Mark series as read',
-				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
-			});
-			addClickPointerEvents(markAsRead, async () => {
-				await setSeriesReadStatus(serie.id, true, item);
-			})
-			addPressEvents(markAsRead, scaleDown, scaleUp)
-
-			const markAsUnread = addItem('div', {
-				className: 'mini-buttons mark-as-unread',
-				title: 'Mark series as unread',
-				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
-			});
-			addClickPointerEvents(markAsUnread, async () => {
-				await setSeriesReadStatus(serie.id, false, item);
-			})
-			addPressEvents(markAsUnread, scaleDown, scaleUp)
-			console.log("ZZZZZZ")
-			console.log(serie)
 			// Fetch and display the number of books and alternate title
 			const bookCount = serie[items].length;
 
@@ -3151,10 +3130,7 @@ console.log(dateString)
 				seriesFader,
 				seriesOverlay,
 			);
-			seriesOverlay.append(
-				markAsRead,
-				markAsUnread
-			);
+
 			infoRow.append(
 				timeLabel,
 				booksLabel
