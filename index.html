@@ -2664,7 +2664,7 @@
 			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
 
 			const libNum = libraries.length;
-			const mainLibAndMenu = margin + libLargeSize + 40;
+			const mainLibAndMenu = margin + 3 * libLargeSize + 40;
 			mb.libSizer.large = mainLibAndMenu + libNum * (libLargeSize + gapSize);
 			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
 			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
