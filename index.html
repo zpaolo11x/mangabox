@@ -976,6 +976,19 @@
 			return requestTable
 		}
 
+		function buildRequestMedia(authToken, method, body) {
+			const requestTable = {
+				method: method,
+				...(!isElectron && { credentials: 'include' }),
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+					'skip_zrok_interstitial': '1',
+					...(isElectron && { 'X-Auth-Token': authToken })
+				},
+			}
+			return requestTable
+		}
+
 		function cacheKeyFromUrl(url) {
 			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
 		}
@@ -2550,7 +2563,7 @@
 			}
 
 			try {
-				const response = await fetch(url, buildRequest(mb.authToken, 'GET', null));
+				const response = await fetch(url, buildRequestMedia(mb.authToken, 'GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();
