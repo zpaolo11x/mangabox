@@ -353,7 +353,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = true;
+		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -5458,6 +5458,7 @@ console.log(dateString)
 
 			});
 		}
+
 		function computeReaderMaxRatio(serverPageData, spreadThreshold = 1.5) {
 			if (!serverPageData || serverPageData.length === 0) return 1;
 
@@ -5466,7 +5467,27 @@ console.log(dateString)
 
 			// decide orientation by majority
 			const landscapeCount = ratios.filter(r => r > 1).length;
-			const isLandscape = landscapeCount > ratios.length / 2;
+		//	const isLandscape = landscapeCount > ratios.length / 2;
+// if there is at least one portrait page, then
+// a majority of >1 ratios does NOT mean true landscape — it means "double-spread portrait".
+const hasPortrait = ratios.some(r => r < 1);
+let isLandscape;
+if (!hasPortrait) {
+    // ALL pages are landscape → trust landscape mode
+    isLandscape = true;
+} else {
+    // We have portrait pages somewhere.
+    // If >80% are wide, but portrait pages exist → assume portrait book with double spreads.
+    const widePercentage = landscapeCount / ratios.length;
+    if (widePercentage > 0.5) {
+        isLandscape = false; // portrait book, spreads
+
+    } else {
+        // Normal book → orientation by majority
+        isLandscape = landscapeCount > ratios.length / 2;
+
+    }
+}
 
 			// estimate typical single page ratio:
 			// - for landscape: median of ratios > 1
