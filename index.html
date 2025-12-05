@@ -1265,6 +1265,9 @@
 */
 		logOut.addEventListener('click', async () => {
 			let currentUser = await callAPI(null, '/api/v2/users/me')
+			if (cuurentUser == null) currentUser = {
+				email:'Offline'
+			}
 			let dialogText = `
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
 				<span class="fa-solid fa-user"></span><span>${currentUser.email}</span>
