@@ -1265,7 +1265,7 @@
 */
 		logOut.addEventListener('click', async () => {
 			let currentUser = await callAPI(null, '/api/v2/users/me')
-			if (cuurentUser == null) currentUser = {
+			if (currentUser == null) currentUser = {
 				email:'Offline'
 			}
 			let dialogText = `
@@ -5471,6 +5471,7 @@ console.log(dateString)
 			// decide orientation by majority
 			const landscapeCount = ratios.filter(r => r > 1).length;
 		//	const isLandscape = landscapeCount > ratios.length / 2;
+
 // if there is at least one portrait page, then
 // a majority of >1 ratios does NOT mean true landscape — it means "double-spread portrait".
 const hasPortrait = ratios.some(r => r < 1);
