@@ -4271,7 +4271,7 @@ console.log(dateString)
 						&series_id=${book.seriesId}
 						&book_id=${book.id}
 						&dir=${readingDirection}
-						&pag=${(book.readProgress ? book.readProgress.page : 1)}`);
+						&pg=${(book.readProgress ? book.readProgress.page : 1)}`);
 			});
 
 			item.append(booksItem);
@@ -4727,11 +4727,11 @@ console.log(dateString)
 						&series_id=${book.seriesId}
 						&book_id=${book.id}
 						&dir=${readingDirection}
-						&pag=${force ? 1 : (book.readProgress ? book.readProgress.page : 1)}`);
+						&pg=${force ? 1 : (book.readProgress ? book.readProgress.page : 1)}`);
 		}
 
 		// Function that setups the reader for a specific book, this is not run directly
-		function openBookReader(libraryId, seriesId, bookId, dir, pag) {
+		function openBookReader(libraryId, seriesId, bookId, dir, pg) {
 			//TODO aggiungere funzione per pulire l'array del preload e quello delle pic
 			Object.entries(dashboardElements).forEach(([name, item]) => {
 				item.homeStrip.innerHTML = '';
@@ -4747,7 +4747,7 @@ console.log(dateString)
 			rd.webtoonScrollRatio = 0;
 			rd.rtl = (dir == 'RIGHT_TO_LEFT');
 
-			rd.currentPage = pag;
+			rd.currentPage = pg;
 
 			rd.spreadsArray = [];
 
@@ -5989,7 +5989,7 @@ if (!hasPortrait) {
 			&series_id=${rd.seriesId}
 			&book_id=${rd.bookId}
 			&dir=${rd.direction}
-			&pag=${rd.currentPage}`;
+			&pg=${rd.currentPage}`;
 
 			if (!rd.incognito) {
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
@@ -6792,7 +6792,7 @@ if (!hasPortrait) {
 					await performSearch(params.get('search_string'));
 					break;
 				case 'bookread':
-					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pag'));
+					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pg'));
 					break;
 				case 'offlinebooks':
 					searchInput.value = '';
