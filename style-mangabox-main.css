@@ -1055,7 +1055,7 @@ a {
 .clear-btn {
 	position: absolute;
 	right: 0px;
-	width: 30px !important;
+	width: 40px !important;
 	display: none;
 	/*
 	width: 30px !important;
@@ -1079,7 +1079,7 @@ a {
 	padding: 0px;
 	margin-left: 5px;
 	padding-left: 15px;
-	padding-right: 10px;
+	padding-right: 30px;
 	border: none;
 	outline: none;
 	background-color: var(--mb-input-color);
