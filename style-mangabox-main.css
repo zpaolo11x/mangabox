@@ -557,11 +557,18 @@ a {
 	transition: grid-template-rows 0.2s, background-color 0.3s ease;
 	background: var(--mb-page-color);
 }
+
 /* Fade-in animation */
 @keyframes loader_fadein {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }
+
 #mainLoader {
 	position: fixed;
 	top: 50%;
@@ -572,9 +579,9 @@ a {
 	transform: translate(-50%, -50%);
 	display: block;
 	z-index: 10000;
-	animation: 
+	animation:
 		loader_spin 1.5s linear infinite,
-	   loader_fadein 0.75s ease-out forwards;
+		loader_fadein 0.75s ease-out forwards;
 	contain: layout style paint;
 }
 
@@ -589,7 +596,7 @@ a {
 }
 
 #mainLoader.hidden {
-	display:none;
+	display: none;
 }
 
 #dragbar {
@@ -1036,7 +1043,7 @@ a {
 #readlistsButton2.highlighted span.fa-solid,
 #collectionsButton2.highlighted span.fa-solid,
 #offlineLibrary.highlighted span.fa-solid,
-.library-item.search-field.highlighted span.fa-solid,
+.library-item.search-field.highlighted span.fa-solid:not(.lib-override),
 .filter-item.highlighted span.fa-solid,
 .filter-item.highlighted span.fa-regular {
 	color: white;
@@ -1046,17 +1053,27 @@ a {
 
 
 .clear-btn {
-  position: absolute;
-  right: 0px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  display: none;
-  font-size: 15px !important;
-   color: var(--mb-glyph-color) !important;
-	transition: color 0.3s ease;
+	position: absolute;
+	right: 0px;
+	width: 30px !important;
+	display: none;
+		height: 20px;
+	line-height: 20px;
+	/*
+	width: 30px !important;
+	position: absolute;
+	right: 0px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	display: none;
+	color: var(--mb-glyph-color) !important;
+	*/
 }
 
+.x-btn {
+	font-size: 15px !important;
+}
 
 .search-input {
 	width: 100%;
@@ -1064,7 +1081,7 @@ a {
 	padding: 0px;
 	margin-left: 5px;
 	padding-left: 15px;
-	padding-right:10px;
+	padding-right: 10px;
 	border: none;
 	outline: none;
 	background-color: var(--mb-input-color);
@@ -1076,9 +1093,10 @@ a {
 	color: var(--mb-text-color);
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
+
 /* Hide the built-in clear (cancel) button in Chrome/Edge */
 .search-input::-webkit-search-cancel-button {
-    display: none;
+	display: none;
 }
 
 .library-item:hover,
@@ -1087,7 +1105,7 @@ a {
 }
 
 #searchField {
-	position:relative;
+	position: relative;
 }
 
 .thumbnail-wrapper {
@@ -1695,7 +1713,8 @@ a {
 	transition: opacity 0.3s ease;
 
 	will-change: transform;
-	contain: layout style ; /*XXX WAS layout style paint and removed overflow-y:auto*/
+	contain: layout style;
+	/*XXX WAS layout style paint and removed overflow-y:auto*/
 
 }
 
@@ -1790,7 +1809,7 @@ a {
 	margin-left: 20px;
 	height: var(--mb-dialog-button-height);
 	line-height: 20px;
-	align-content:center;
+	align-content: center;
 	padding-right: 50px;
 }
 
@@ -2030,7 +2049,7 @@ book-item {
 	word-break: break-word;
 }
 
-.book-item .info-row{
+.book-item .info-row {
 	margin-top: 3px;
 	line-height: 16px;
 	margin-bottom: 3px;
@@ -2232,7 +2251,7 @@ span.mini-title {
 
 
 .highlighted .glyph-dark {
-	color:white;
+	color: white;
 }
 
 .glyph-flag {

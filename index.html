@@ -81,7 +81,10 @@
 						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
-						<span id="clearSearchBtn" class="clear-btn fa-solid fa-xmark"></span>
+						<!--<span id="clearSearchBtn" class="clear-btn fa-solid fa-xmark"></span>-->
+						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button" onclick="jumpBookDetailsNext()">
+							<span class="x-btn lib-override fa-solid fa-xmark"></span>
+						</div>
 						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" placeholder="Search...">
 					</li>
 					<li id="logOut" title="Logout" class="library-item press-button">
@@ -1341,33 +1344,34 @@
 				]
 			);
 		});
-
-		clearSearchBtn.addEventListener('pointerdown', e => {
-			e.stopPropagation();
-		});
-
-		clearSearchBtn.addEventListener('pointerup', e => {
-			e.stopPropagation();
-		});
-
-		searchInput.addEventListener('input', () => {
-			clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
-			searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
-		});
-
-		searchInput.addEventListener('click', () => {
-			clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
-			searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
-		});
-
-		clearSearchBtn.addEventListener('click', (e) => {
-			e.stopPropagation();
-
-			searchInput.value = '';
-			clearSearchBtn.style.display = 'none';
-			searchInput.focus();
-		});
-
+		
+				clearSearchBtn.addEventListener('pointerdown', e => {
+					e.stopPropagation();
+				});
+		
+				clearSearchBtn.addEventListener('pointerup', e => {
+					e.stopPropagation();
+				});
+		
+				searchInput.addEventListener('input', () => {
+					clearSearchBtn.style.display = searchInput.value ? '' : 'none';
+					searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+				});
+		
+				searchInput.addEventListener('click', () => {
+					clearSearchBtn.style.display = searchInput.value ? '' : 'none';
+					searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+				});
+		
+				clearSearchBtn.addEventListener('click', (e) => {
+					e.stopPropagation();
+		
+					searchInput.value = '';
+					clearSearchBtn.style.display = 'none';
+					searchInput.focus();
+				});
+		
+				
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
 				mb.dashboardBin = '';
