@@ -1344,37 +1344,41 @@
 				]
 			);
 		});
-		
-		function updateSearchX(){
-					clearSearchBtn.style.display = searchInput.value ? '' : 'none';
-					searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+
+		function updateSearchX() {
+			clearSearchBtn.style.display = searchInput.value ? '' : 'none';
+			searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
 		}
 
-				clearSearchBtn.addEventListener('pointerdown', e => {
-					e.stopPropagation();
-				});
-		
-				clearSearchBtn.addEventListener('pointerup', e => {
-					e.stopPropagation();
-				});
-		
-				searchInput.addEventListener('input', () => {
-					updateSearchX()
-				});
-		
-				searchInput.addEventListener('click', () => {
-					updateSearchX()
-				});
-		
-				clearSearchBtn.addEventListener('click', (e) => {
-					e.stopPropagation();
-		
-					searchInput.value = '';
-					updateSearchX();
-					searchInput.focus();
-				});
-		
-				
+		function clearSearchField() {
+			searchInput.value = '';
+			updateSearchX();
+		}
+
+		clearSearchBtn.addEventListener('pointerdown', e => {
+			e.stopPropagation();
+		});
+
+		clearSearchBtn.addEventListener('pointerup', e => {
+			e.stopPropagation();
+		});
+
+		searchInput.addEventListener('input', () => {
+			updateSearchX()
+		});
+
+		searchInput.addEventListener('click', () => {
+			updateSearchX()
+		});
+
+		clearSearchBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+
+			clearSearchField();
+			searchInput.focus();
+		});
+
+
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
 				mb.dashboardBin = '';
@@ -6773,8 +6777,8 @@
 			switch (path) {
 				case '':
 				case 'dashboard':
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
@@ -6790,40 +6794,40 @@
 					break;
 				case 'library':
 					mb.dashboardBin = '';
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
 					break;
 				case 'series':
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
 					break;
 				case 'readlists':
 					mb.dashboardBin = '';
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					await openReadlists();
 					break;
 				case 'readlistsitem':
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					await openReadlist(params.get('item_id'));
 					break;
 				case 'collections':
 					mb.dashboardBin = '';
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					await openCollections();
 					break;
 				case 'collectionsitem':
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					await openCollection(params.get('item_id'));
 					break;
@@ -6836,8 +6840,8 @@
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pg'));
 					break;
 				case 'offlinebooks':
-					searchInput.value = '';
-					updateSearchX();
+					clearSearchField();
+
 					setIncognito(false);
 					await openOfflineBooks(params?.get('book_id'));
 					break;
