@@ -8,4 +8,4 @@ Build
 - Updated website
 
 Fixes
-- 
+- Fixed logout button stuck in offline mode
