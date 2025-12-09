@@ -3117,7 +3117,7 @@
 					year: '2-digit'
 				}).format(new Date(serie.lastModifiedDate))
 				: '';
-			console.log(dateString)
+
 			item.childNodes[0]?.remove();
 
 			item.title = 'Open Container';
@@ -3305,7 +3305,6 @@
 				}
 
 				series.forEach(async (serie) => {
-					console.log(serie);
 					const seriesContainer = addItem('div', {
 						className: 'series-container collector', //XXX was ending with , 'fade-in');
 						id: serie.id,
@@ -3329,7 +3328,6 @@
 			}
 
 			series.forEach(async (serie) => {
-				console.log(serie);
 				const seriesContainer = addItem('div', {
 					className: 'series-container collector', //XXX was ending with , 'fade-in');
 					id: serie.id,
@@ -3351,7 +3349,6 @@
 			}
 
 			series.forEach(async (serie) => {
-				console.log(serie);
 				const seriesContainer = addItem('div', {
 					className: 'series-container collector', //XXX was ending with , 'fade-in');
 					id: serie.id,
@@ -3424,7 +3421,6 @@
 				'GET'
 			);
 			readlists = readlistsPage?.content || [];
-			console.log(readlists)
 			displayReadlists(readlists, seriesGrid);
 		}
 
@@ -3439,7 +3435,6 @@
 				'GET'
 			);
 			collections = collectionsPage?.content || [];
-			console.log(collections)
 			displayCollections(collections, seriesGrid);
 		}
 
@@ -3803,8 +3798,6 @@
 				`/api/v1/collections?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'GET'
 			).then((res) => {
-				console.log("XXXXXX")
-				console.log(res.content.length)
 				if (res.content.length == 0) collectionsButton.style.display = 'none';
 			});
 
@@ -4573,12 +4566,10 @@
 		async function openCollection(itemId) {
 			let contents = [];
 			const itemData = await callAPI(`c_collections${itemId}`, `/api/v1/collections/${itemId}`);
-			console.log(itemData)
 			const contentsData = (await callAPI(`c_serieslist${itemId}`,
 				`/api/v1/collections/${itemId}/series?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 				'GET'
 			));
-			console.log(contentsData)
 
 			contents = contentsData?.content || [];
 
@@ -6008,7 +5999,6 @@
 
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 
-			console.log(spreadObject.pageNumL)
 			let pageNumText = rd.webtoon ? spreadObject.pageNumL : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
 			pageNumText = pageNumText.trim().replace(' ', '￨')
 
