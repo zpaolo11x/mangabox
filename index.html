@@ -1342,6 +1342,32 @@
 			);
 		});
 
+		clearSearchBtn.addEventListener('pointerdown', e => {
+			e.stopPropagation();
+		});
+
+		clearSearchBtn.addEventListener('pointerup', e => {
+			e.stopPropagation();
+		});
+
+		searchInput.addEventListener('input', () => {
+			clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
+			searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+		});
+
+		searchInput.addEventListener('click', () => {
+			clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
+			searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+		});
+
+		clearSearchBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+
+			searchInput.value = '';
+			clearSearchBtn.style.display = 'none';
+			searchInput.focus();
+		});
+
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
 				mb.dashboardBin = '';
@@ -1556,28 +1582,6 @@
 			if (outTime.length == 1) outTime.push(outTime[0]);
 			return outTime
 		}
-
-		clearSearchBtn.addEventListener('pointerdown', e => {
-			e.stopPropagation();
-		});
-
-		clearSearchBtn.addEventListener('pointerup', e => {
-			e.stopPropagation();
-		});
-		searchInput.addEventListener('input', () => {
-			clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
-			searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
-		});
-
-		clearSearchBtn.addEventListener('click', (e) => {
-			e.stopPropagation();
-
-			searchInput.value = '';
-			clearSearchBtn.style.display = 'none';
-			searchInput.focus();
-
-		});
-
 
 		async function performSearch(searchString) {
 			libraryHighlight('searchField', false);
