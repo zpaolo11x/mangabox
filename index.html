@@ -1345,6 +1345,11 @@
 			);
 		});
 		
+		function updateSearchX(){
+					clearSearchBtn.style.display = searchInput.value ? '' : 'none';
+					searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+		}
+
 				clearSearchBtn.addEventListener('pointerdown', e => {
 					e.stopPropagation();
 				});
@@ -1354,20 +1359,18 @@
 				});
 		
 				searchInput.addEventListener('input', () => {
-					clearSearchBtn.style.display = searchInput.value ? '' : 'none';
-					searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+					updateSearchX()
 				});
 		
 				searchInput.addEventListener('click', () => {
-					clearSearchBtn.style.display = searchInput.value ? '' : 'none';
-					searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+					updateSearchX()
 				});
 		
 				clearSearchBtn.addEventListener('click', (e) => {
 					e.stopPropagation();
 		
 					searchInput.value = '';
-					clearSearchBtn.style.display = 'none';
+					updateSearchX();
 					searchInput.focus();
 				});
 		
@@ -6771,6 +6774,7 @@
 				case '':
 				case 'dashboard':
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
@@ -6787,33 +6791,39 @@
 				case 'library':
 					mb.dashboardBin = '';
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
 					break;
 				case 'series':
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
 					break;
 				case 'readlists':
 					mb.dashboardBin = '';
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					await openReadlists();
 					break;
 				case 'readlistsitem':
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					await openReadlist(params.get('item_id'));
 					break;
 				case 'collections':
 					mb.dashboardBin = '';
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					await openCollections();
 					break;
 				case 'collectionsitem':
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					await openCollection(params.get('item_id'));
 					break;
@@ -6827,6 +6837,7 @@
 					break;
 				case 'offlinebooks':
 					searchInput.value = '';
+					updateSearchX();
 					setIncognito(false);
 					await openOfflineBooks(params?.get('book_id'));
 					break;
