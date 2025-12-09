@@ -1,12 +1,12 @@
 Main UI
-- Added three new library icons: horror, detective and humor
-- Reduced line spacing of book name
-- Removed vsiualization of empty series metadata fields
-- Added book title to search results
-- Logout button opens a confirmation dialog
+- Support for viewing read lists and collections
+- Added x icon to clear search field
 
 Reader UI
-- Improved two fingers pinch to zoom and pan
+- Added a vertical separator for page numbers in the seek bar
+
+Build
+- Updated website
 
 Fixes
-- Fixed book details title
+- Fixed logout button stuck in offline mode

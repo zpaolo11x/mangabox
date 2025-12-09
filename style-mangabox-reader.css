@@ -974,10 +974,11 @@ div.single-page {
 }
 
 #readerPage {
+  
 	width: fit-content;
 	min-width: 30px;
 	height: 30px;
-	padding: 0px 8px;
+	padding: 0px 10px;
 	margin: 0px;
 	position: absolute;
 	line-height: 30px;

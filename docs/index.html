@@ -54,42 +54,42 @@
 			<div class="platform-card">
 				<i class="fa-solid fa-earth-americas brand"></i>
 				<span>Web/PWA</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-Web.zip">Self Host</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.4/MangaBox-0.3.4-Web.zip">Self Host</a></span>
 				<span>&nbsp;</span>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-apple brand"></i>
 				<span class="label">iOS/ipadOS</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-iOS-ipa.ipa">Unsigned ipa</a></span>
+				<span><a class="artifact" href="https://apps.apple.com/us/app/mangabox/id6754503588">App Store</a></span>
 				<span>&nbsp;</span>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-android brand"></i>
 				<span class="label">Android</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-Android.apk">Debug apk</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.4/MangaBox-0.3.4-Android.apk">Debug apk</a></span>
 				<span>&nbsp;</span>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-windows brand"></i>
 				<span class="label">Windows</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-Windows-x64.exe">x86-64</a></span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-Windows-arm64.exe">ARM</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.4/MangaBox-0.3.4-Windows-x64.exe">x86-64</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.4/MangaBox-0.3.4-Windows-arm64.exe">ARM</a></span>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-apple brand"></i>
 				<span class="label">macOS</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-macOS-arm64.dmg">Apple Silicon</a></span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-macOS-arm64.dmg">Intel</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.4/MangaBox-0.3.4-macOS-arm64-signed.dmg">Apple Silicon</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.4/MangaBox-0.3.4-macOS-x64-signed.dmg">Intel</a></span>
 			</div>
 
 			<div class="platform-card">
 				<i class="fa-brands fa-linux brand"></i>
 				<span class="label">Linux</span>
-				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.3/MangaBox-0.3.3-Linux-x86_64.AppImage">Appimage</a></span>
+				<span><a class="artifact" href="https://github.com/zpaolo11x/mangabox/releases/download/v0.3.4/MangaBox-0.3.4-Linux-x86_64.AppImage">Appimage</a></span>
 				<span>&nbsp;</span>
 			</div>
 		</div>
@@ -213,18 +213,7 @@
 		<ul>
 			<li>To deploy the web verions just download the "web" release artifact and unpack it in a "mangabox" folder on your web server. Because of CORS limitation by default MangaBox will work only if it's on the same location as your server.</li>
 			<li>Electron version is not limited by CORS and it will work with any server location.</li>
-			<li>The macOS binaries are not signed, so they won't run by default. You can allow them to run on Intel macs by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script that will do the hard work for you:
-				<br>
-				<div class="code-block-wrapper">
-					<span class="odd">#!/bin/bash<br></span>
-					<span class="even">app="$1"<br></span>
-					<span class="odd">xattr -d com.apple.quarantine "${app}"<br></span>
-					<span class="even">find "${app}/Contents" -type f -exec codesign --force --timestamp --verify --verbose --sign - "{}" \;<br></span>
-					<span class="odd">codesign --force --timestamp --verify --verbose --sign - "${app}"<br></span>
-				</div>
-				Just chmod +x the script and run it with the .app file path as argument.
-			</li>
-			<li>Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.</li>
+			<li>Android version is not signed, you can sideload the apk on your device.</li>
 		</ul>
 	</div>
 
