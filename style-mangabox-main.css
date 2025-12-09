@@ -1044,6 +1044,20 @@ a {
 	border-radius: 50%;
 }
 
+
+.clear-btn {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  display: none;
+  font-size: 15px !important;
+   color: var(--mb-glyph-color) !important;
+	transition: color 0.3s ease;
+}
+
+
 .search-input {
 	width: 100%;
 	margin: 0px;
@@ -1062,12 +1076,19 @@ a {
 	color: var(--mb-text-color);
 	transition: background-color 0.3s ease, color 0.3s ease;
 }
+/* Hide the built-in clear (cancel) button in Chrome/Edge */
+.search-input::-webkit-search-cancel-button {
+    display: none;
+}
 
 .library-item:hover,
 .filter-item:hover {
 	background-color: var(--mb-hover-color);
 }
 
+#searchField {
+	position:relative;
+}
 
 .thumbnail-wrapper {
 	max-width: 100%;
@@ -2208,6 +2229,7 @@ span.mini-title {
 	color: var(--mb-glyph-color);
 	transition: color 0.3s ease;
 }
+
 
 .highlighted .glyph-dark {
 	color:white;

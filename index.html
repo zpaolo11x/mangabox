@@ -81,6 +81,7 @@
 						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
+						<span id="clearSearchBtn" class="clear-btn fa-solid fa-xmark"></span>
 						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" placeholder="Search...">
 					</li>
 					<li id="logOut" title="Logout" class="library-item press-button">
@@ -1279,7 +1280,7 @@
 		logOut.addEventListener('click', async () => {
 			let currentUser = await callAPI(null, '/api/v2/users/me')
 			if (currentUser == null) currentUser = {
-				email:'Offline'
+				email: 'Offline'
 			}
 			let dialogText = `
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
@@ -1555,6 +1556,28 @@
 			if (outTime.length == 1) outTime.push(outTime[0]);
 			return outTime
 		}
+
+		clearSearchBtn.addEventListener('pointerdown', e => {
+			e.stopPropagation();
+		});
+
+		clearSearchBtn.addEventListener('pointerup', e => {
+			e.stopPropagation();
+		});
+		searchInput.addEventListener('input', () => {
+			clearSearchBtn.style.display = searchInput.value ? 'block' : 'none';
+			searchInput.style.paddingRight = searchInput.value ? '30px' : '10px';
+		});
+
+		clearSearchBtn.addEventListener('click', (e) => {
+			e.stopPropagation();
+
+			searchInput.value = '';
+			clearSearchBtn.style.display = 'none';
+			searchInput.focus();
+
+		});
+
 
 		async function performSearch(searchString) {
 			libraryHighlight('searchField', false);
@@ -2720,7 +2743,7 @@
 				if (getComputedStyle(item).opacity == 0) return;
 				mb.pointerItem = item
 			});
-			item.addEventListener('pointerup', () => {
+			item.addEventListener('pointerup', (event) => {
 				event.stopPropagation();
 
 				if (mb.pointerItem != item) {
@@ -3071,15 +3094,15 @@
 		}
 
 		async function buildContainerItem(item, serie, target, container, items, icon) {
-			
+
 			const dateString = serie.lastModifiedDate ?
-					new Intl.DateTimeFormat('en-GB', {
-						day: '2-digit',
-						month: 'short',
-						year: '2-digit'
-					}).format(new Date(serie.lastModifiedDate))
-					: '';
-console.log(dateString)
+				new Intl.DateTimeFormat('en-GB', {
+					day: '2-digit',
+					month: 'short',
+					year: '2-digit'
+				}).format(new Date(serie.lastModifiedDate))
+				: '';
+			console.log(dateString)
 			item.childNodes[0]?.remove();
 
 			item.title = 'Open Container';
@@ -3118,8 +3141,8 @@ console.log(dateString)
 
 
 			const timeLabel = addItem('span', {
-					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
-				});
+				innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
+			});
 
 			// Fetch and display the number of books and alternate title
 			const bookCount = serie[items].length;
@@ -5483,28 +5506,28 @@ console.log(dateString)
 
 			// decide orientation by majority
 			const landscapeCount = ratios.filter(r => r > 1).length;
-		//	const isLandscape = landscapeCount > ratios.length / 2;
+			//	const isLandscape = landscapeCount > ratios.length / 2;
 
-// if there is at least one portrait page, then
-// a majority of >1 ratios does NOT mean true landscape — it means "double-spread portrait".
-const hasPortrait = ratios.some(r => r < 1);
-let isLandscape;
-if (!hasPortrait) {
-    // ALL pages are landscape → trust landscape mode
-    isLandscape = true;
-} else {
-    // We have portrait pages somewhere.
-    // If >80% are wide, but portrait pages exist → assume portrait book with double spreads.
-    const widePercentage = landscapeCount / ratios.length;
-    if (widePercentage > 0.5) {
-        isLandscape = false; // portrait book, spreads
+			// if there is at least one portrait page, then
+			// a majority of >1 ratios does NOT mean true landscape — it means "double-spread portrait".
+			const hasPortrait = ratios.some(r => r < 1);
+			let isLandscape;
+			if (!hasPortrait) {
+				// ALL pages are landscape → trust landscape mode
+				isLandscape = true;
+			} else {
+				// We have portrait pages somewhere.
+				// If >80% are wide, but portrait pages exist → assume portrait book with double spreads.
+				const widePercentage = landscapeCount / ratios.length;
+				if (widePercentage > 0.5) {
+					isLandscape = false; // portrait book, spreads
 
-    } else {
-        // Normal book → orientation by majority
-        isLandscape = landscapeCount > ratios.length / 2;
+				} else {
+					// Normal book → orientation by majority
+					isLandscape = landscapeCount > ratios.length / 2;
 
-    }
-}
+				}
+			}
 
 			// estimate typical single page ratio:
 			// - for landscape: median of ratios > 1
