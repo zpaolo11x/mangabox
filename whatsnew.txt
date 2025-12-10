@@ -1,12 +1,11 @@
 Main UI
-- Support for viewing read lists and collections
-- Added x icon to clear search field
+- 
 
 Reader UI
-- Added a vertical separator for page numbers in the seek bar
+- 
 
 Build
-- Updated website
+- 
 
 Fixes
-- Fixed logout button stuck in offline mode
+- 
