@@ -2485,6 +2485,7 @@
 			let bookData = null;
 			if (isElectron) bookData = await window.offlineAPI.getOfflineBookData(bookId)
 			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
+			bookData['bookMetadata']['readProgress']['page'] = mb.offlineBooks[book.id].page;
 			return bookData;
 		}
 
@@ -4051,13 +4052,15 @@
 		//MB Book Item Creation
 
 		async function buildBookItem(item, book, format, target) {
-
+			
 			// Check local proxy list if book is available and completed offline
 			// and tell the system to use this offline copy if we are offline
 
 			const bookIsOffline = obIsBookCompleted(book.id);
 			const bookIsDownloading = obIsBookDownloading(book.id);
-
+console.log("book:"+book)
+console.log("offlineSession:"+offlineSession)
+console.log("bookIsOffline:"+bookIsOffline)
 			const useOfflineCopy = (offlineSession && bookIsOffline);
 			let offline = {};
 
@@ -4073,6 +4076,7 @@
 				// Apply saved metadata to book
 				book = offline.bookMetadata;
 				// Pipe read progress into saved metadata
+				console.log()
 				book.readProgress.page = mb.offlineBooks[book.id].page;
 			}
 
