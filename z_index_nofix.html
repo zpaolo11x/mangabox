@@ -1851,14 +1851,14 @@
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
-			document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
+			document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-tworows');
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
 				//nothing happens
 			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 60) {
 				document.body.classList.add('sticky-medium');
 			} else {
-				document.body.classList.add('sticky-small');
+				document.body.classList.add('sticky-tworows');
 
 				if (containerWidth - mb.libSizer.large >= 9) {
 					document.body.classList.add('sticky-hybrid');

@@ -1832,28 +1832,28 @@ body.sticky-medium #stickyContainer .library-item.highlighted .library-name {
 
 /* Second reduction: serach bar moved to second row */
 
-body.sticky-small #stickyContainer {
+body.sticky-tworows #stickyContainer {
 	/*	height: 105px; */
 	flex-wrap: wrap;
 }
 
-body.sticky-small #librariesRightBlock {
+body.sticky-tworows #librariesRightBlock {
 	margin-top: 10px;
 }
 
-body.sticky-small #mainUI {
+body.sticky-tworows #mainUI {
 	grid-template-rows: 114px auto;
 }
 
-body.sticky-small #stripGridHeaderContainer {
+body.sticky-tworows #stripGridHeaderContainer {
 	top: 114px;
 }
 
-body.sticky-small #mainUI:has(.extra-bar:not(.hidden)) {
+body.sticky-tworows #mainUI:has(.extra-bar:not(.hidden)) {
 	grid-template-rows: 156px auto;
 }
 
-body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.search-field) {
+body.sticky-tworows:not(.sticky-hybrid) #stickyContainer .library-item:not(.search-field) {
 	width: var(--mb-button-size);
 }
 
@@ -1863,44 +1863,44 @@ body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item:not(.search
 
 
 /*
-body.sticky-small #filtersBar .filter-item {
+body.sticky-tworows #filtersBar .filter-item {
 	width: var(--mb-filter-button-size);
 }
 */
 /*
-body.sticky-small #filtersBar .library-item {
+body.sticky-tworows #filtersBar .library-item {
 	width: var(--mb-button-size);
 }
 */
 
-body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted {
+body.sticky-tworows #stickyContainer .library-item:not(.search-field).highlighted {
 	width: var(--mb-library-large);
 }
 
-body.sticky-small #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
+body.sticky-tworows #stickyContainer .library-item:not(.search-field).highlighted.with-menu {
 	width: var(--mb-library-large-with-menu);
 }
 
-body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-name {
+body.sticky-tworows:not(.sticky-hybrid) #stickyContainer .library-name {
 	opacity: 0;
 }
 
-body.sticky-small:not(.sticky-hybrid) #stickyContainer .library-item.highlighted .library-name {
+body.sticky-tworows:not(.sticky-hybrid) #stickyContainer .library-item.highlighted .library-name {
 	opacity: 1;
 }
 
-body.sticky-small #bookDetailsContainer {
+body.sticky-tworows #bookDetailsContainer {
 	transform: translate(-50%, 60px);
 	max-height: calc(100vh - 150px - 60px);
 }
 
-body.sticky-small #librariesRightBlock {
+body.sticky-tworows #librariesRightBlock {
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) 1fr var(--mb-button-size);
 	width: 100%;
 	padding-left: 0px;
 }
 
-body.sticky-small #seriesMiniHeader {
+body.sticky-tworows #seriesMiniHeader {
 	top: 114px;
 }
 

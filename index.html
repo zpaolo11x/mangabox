@@ -2037,14 +2037,16 @@
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
-			document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
+			document.body.classList.remove('sticky-medium', 'sticky-small', 'sticky-hybrid', 'sticky-tworows');
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
 				//nothing happens
 			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 60) {
 				document.body.classList.add('sticky-medium');
-			} else {
+			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.small >= 60) {
 				document.body.classList.add('sticky-small');
+			} else {
+				document.body.classList.add('sticky-tworows');
 
 				if (containerWidth - mb.libSizer.large >= 9) {
 					document.body.classList.add('sticky-hybrid');
@@ -2696,15 +2698,17 @@
 			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 			const filterButtonSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-filter-button-size'));
 			const searchFieldSize = libLargeSize;
+			const libMenuSize = 40;
 			const margin = 10;
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
 			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
-
-			const libNum = libraries.length;
-			const mainLibAndMenu = margin + 3 * libLargeSize + 40;
-			mb.libSizer.large = mainLibAndMenu + libNum * (libLargeSize + gapSize);
-			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
+console.log(libraries)
+			const libNum = 3 + libraries.length;
+			const mainLibAndMenu = margin + libLargeSize + libMenuSize;
+			mb.libSizer.large = mainLibAndMenu + (libNum - 1) * (libLargeSize + gapSize);
+			mb.libSizer.medium = mainLibAndMenu + (libNum - 3) * (libLargeSize + gapSize) + 2 * (libSmallSize + gapSize) - libMenuSize;
+			mb.libSizer.small = mainLibAndMenu + (libNum - 1) * (libSmallSize + gapSize);
 			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
 
 			mb.filterSizer = mb.filterButtons.length * (100 + gapSize) + filterButtonSize + 2 * margin;
@@ -3770,12 +3774,14 @@
 			librariesList.innerHTML = '';
 
 			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'logo/mangabox-logo-new.svg')
+			dashboard.classList.add('shrink-first');
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
 
 			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-symbols/readlists3d.png')
+			readlists.classList.add('shrink-first');
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
 				navigateTo('#readlists');
@@ -3789,6 +3795,7 @@
 			});
 
 			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-symbols/collections3d.png')
+			collections.classList.add('shrink-first');
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
 				navigateTo('#collections');
