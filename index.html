@@ -2047,9 +2047,18 @@
 				document.body.classList.add('sticky-small');
 			} else {
 				document.body.classList.add('sticky-tworows');
-
-				if (containerWidth - mb.libSizer.large >= 9) {
-					document.body.classList.add('sticky-hybrid');
+				console.log("container: " + containerWidth)
+				console.log("large:     " + mb.libSizer.large)
+				console.log("medium:    " + mb.libSizer.medium)
+				console.log("small:     " + mb.libSizer.small)
+				if (containerWidth - mb.libSizer.large >= 10) {
+					//nothing happens
+				} else if (containerWidth - mb.libSizer.medium >= 10) {
+					document.body.classList.add('sticky-medium');
+				} else if (containerWidth - mb.libSizer.small >= 10) {
+					document.body.classList.add('sticky-small');
+				} else {
+					document.body.classList.add('sticky-small')
 				}
 			};
 
@@ -2703,7 +2712,7 @@
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
 			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
-console.log(libraries)
+			console.log(libraries)
 			const libNum = 3 + libraries.length;
 			const mainLibAndMenu = margin + libLargeSize + libMenuSize;
 			mb.libSizer.large = mainLibAndMenu + (libNum - 1) * (libLargeSize + gapSize);
@@ -3941,11 +3950,11 @@ console.log(libraries)
 
 			if (isReadlist || ((altTitle.story == 'N/A') && (altTitle.art == 'N/A')) || altTitle == null) {
 				creditString = ''
-			} else if (altTitle.story == 'N/A'){
+			} else if (altTitle.story == 'N/A') {
 				creditString = `Art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			} else if (altTitle.art == 'N/A') {
 				creditString = `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
-			} else if (altTitle.story == altTitle.art){
+			} else if (altTitle.story == altTitle.art) {
 				creditString = `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 			} else {
 				creditString = `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`

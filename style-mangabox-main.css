@@ -743,7 +743,7 @@ a {
 	padding-left: var(--mb-bar-safe-padding-left);
 	height: calc(var(--mb-button-size) + var(--mb-library-gap));
 	overflow: scroll;
-	background: lightblue;
+	/*background: lightblue;*/
 }
 
 #librariesList::-webkit-scrollbar {
@@ -768,7 +768,7 @@ a {
 
 	grid-template-columns: repeat(var(--mb-num-buttons), var(--mb-button-size)) minmax(auto, 210px) var(--mb-button-size);
 
-	background-color: pink;
+	/*background-color: pink;*/
 }
 
 .filters-list {
@@ -2384,11 +2384,11 @@ body.sticky-tworows #stripGridHeaderContainer {
 body.sticky-tworows #mainUI:has(.extra-bar:not(.hidden)) {
 	grid-template-rows: 156px auto;
 }
-
+/*
 body.sticky-tworows:not(.sticky-hybrid) #stickyContainer .library-item:not(.no-grow) {
 	width: var(--mb-button-size);
 }
-
+*/
 #extraButtons.filter-small .filter-item:not(:first-child) {
 	width: var(--mb-filter-button-size);
 }
@@ -2404,7 +2404,7 @@ body.sticky-tworows #filtersBar .library-item {
 	width: var(--mb-button-size);
 }
 */
-
+/*
 body.sticky-tworows #stickyContainer .library-item:not(.no-grow).highlighted {
 	width: var(--mb-library-large);
 }
@@ -2420,6 +2420,7 @@ body.sticky-tworows:not(.sticky-hybrid) #stickyContainer .library-name {
 body.sticky-tworows:not(.sticky-hybrid) #stickyContainer .library-item.highlighted .library-name {
 	opacity: 1;
 }
+*/
 
 body.sticky-tworows #bookDetailsContainer {
 	transform: translate(-50%, 60px);
