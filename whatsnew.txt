@@ -1,5 +1,6 @@
 Main UI
 - Improved credits text and time text on series page header
+- Improved library buttons sizing logic
 
 Reader UI
 - 
