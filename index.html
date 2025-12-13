@@ -4295,7 +4295,7 @@ console.log("bookIsOffline:"+bookIsOffline)
 			const progressBar = addItem('div', { className: 'progress-bar' });
 			const progressGauge = addItem('div', { className: 'progress-gauge' });
 
-			if (progress == 0) {
+			if ((progress == 0) && !(useOfflineCopy)) {
 				progressBar.classList.add('no-show');
 			} else {
 				progressGauge.style.width = `${Math.round(100 * progress / book.media.pagesCount)}%`;
