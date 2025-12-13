@@ -2485,7 +2485,7 @@
 			let bookData = null;
 			if (isElectron) bookData = await window.offlineAPI.getOfflineBookData(bookId)
 			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
-			bookData['bookMetadata']['readProgress']['page'] = mb.offlineBooks[book.id].page;
+			bookData['bookMetadata']['readProgress']['page'] = mb.offlineBooks[bookId].page;
 			return bookData;
 		}
 
