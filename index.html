@@ -3960,13 +3960,13 @@
 			if (isReadlist || ((altTitle.story == 'N/A') && (altTitle.art == 'N/A')) || altTitle == null) {
 				creditString = ''
 			} else if (altTitle.story == 'N/A') {
-				creditString = `Art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+				creditString = ` - Art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			} else if (altTitle.art == 'N/A') {
-				creditString = `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 			} else if (altTitle.story == altTitle.art) {
-				creditString = `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+				creditString = ` - Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 			} else {
-				creditString = `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			}
 
 			const timeString =
@@ -3987,7 +3987,7 @@
 				${serie.metadata?.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "book" : "books"}) ${isReadlist ? '' : ' - ' + creditString}</span>
+				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "book" : "books"}) ${isReadlist ? '' : creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${summary}</div>
@@ -4291,7 +4291,7 @@ console.log("bookIsOffline:"+bookIsOffline)
 				bookOverlay.append(markAsRead, bookDetails, markAsUnread);
 			}
 
-			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
+			let progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
 			const progressBar = addItem('div', { className: 'progress-bar' });
 			const progressGauge = addItem('div', { className: 'progress-gauge' });
 
