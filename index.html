@@ -2485,8 +2485,12 @@
 			let bookData = null;
 			if (isElectron) bookData = await window.offlineAPI.getOfflineBookData(bookId)
 			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
+			console.log("BOOKDATA PRE:")
+		console.log(bookData)
 			bookData['bookMetadata']['readProgress']['page'] = mb.offlineBooks[bookId].page;
-			return bookData;
+			console.log("BOOKDATA POST:")
+		console.log(bookData)
+					return bookData;
 		}
 
 		function obRestoreDownloadOnBoot() {
@@ -4076,8 +4080,7 @@ console.log("bookIsOffline:"+bookIsOffline)
 				// Apply saved metadata to book
 				book = offline.bookMetadata;
 				// Pipe read progress into saved metadata
-				console.log()
-				book.readProgress.page = mb.offlineBooks[book.id].page;
+				//book.readProgress.page = mb.offlineBooks[book.id].page;
 			}
 
 			item.childNodes[0]?.remove();
