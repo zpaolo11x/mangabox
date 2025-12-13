@@ -5179,7 +5179,7 @@ console.log("bookIsOffline:"+bookIsOffline)
 				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
 				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
 
-			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
+			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true) && !useOfflineCopy) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
