@@ -2485,12 +2485,14 @@
 			let bookData = null;
 			if (isElectron) bookData = await window.offlineAPI.getOfflineBookData(bookId)
 			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
-			console.log("BOOKDATA PRE:")
-		console.log(bookData)
-			bookData['bookMetadata']['readProgress']['page'] = mb.offlineBooks[bookId].page;
-			console.log("BOOKDATA POST:")
-		console.log(bookData)
-					return bookData;
+
+			if (!bookData.bookMetadata.readProgress) {
+				bookData.bookMetadata.readProgress = {};
+			}
+
+			bookData.bookMetadata.readProgress.page = mb.offlineBooks[bookId].page;
+
+			return bookData;
 		}
 
 		function obRestoreDownloadOnBoot() {
