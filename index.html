@@ -2478,6 +2478,8 @@
 			} else {
 				console.warn(`Failed to delete offline book ${bookId}: ${result.message}`);
 			}
+			delete mb.offlineBooks[bookId];
+			obSaveTable();
 			return result;
 		}
 
