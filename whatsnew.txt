@@ -9,4 +9,4 @@ Build
 - 
 
 Fixes
-- 
+- Fixed read position sync for downloaded books
