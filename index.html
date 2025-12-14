@@ -2047,10 +2047,6 @@
 				document.body.classList.add('sticky-small');
 			} else {
 				document.body.classList.add('sticky-tworows');
-				console.log("container: " + containerWidth)
-				console.log("large:     " + mb.libSizer.large)
-				console.log("medium:    " + mb.libSizer.medium)
-				console.log("small:     " + mb.libSizer.small)
 				if (containerWidth - mb.libSizer.large >= 10) {
 					//nothing happens
 				} else if (containerWidth - mb.libSizer.medium >= 10) {
@@ -2721,7 +2717,7 @@
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
 			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
-			console.log(libraries)
+
 			const libNum = 3 + libraries.length;
 			const mainLibAndMenu = margin + libLargeSize + libMenuSize;
 			mb.libSizer.large = mainLibAndMenu + (libNum - 1) * (libLargeSize + gapSize);
@@ -4066,9 +4062,7 @@
 
 			const bookIsOffline = obIsBookCompleted(book.id);
 			const bookIsDownloading = obIsBookDownloading(book.id);
-console.log("book:"+book)
-console.log("offlineSession:"+offlineSession)
-console.log("bookIsOffline:"+bookIsOffline)
+
 			const useOfflineCopy = (offlineSession && bookIsOffline);
 			let offline = {};
 
@@ -4077,10 +4071,8 @@ console.log("bookIsOffline:"+bookIsOffline)
 				// is offline, update the saved metadata so it will always be in sync
 				// but will this sync with the reading offline? No
 
-				// Load saved metadata
+				// Load saved metadata, the function also apply the new page position
 				offline = await obLoadOfflineBook(book.id);
-				console.log("OFFLINE:");
-				console.log(offline);
 				// Apply saved metadata to book
 				book = offline.bookMetadata;
 				// Pipe read progress into saved metadata
