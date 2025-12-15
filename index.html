@@ -2674,6 +2674,11 @@
 				mb.currentlyScaled = item;
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
+
+				if (obIsBookCompleted(rd.bookId)) {
+					mb.offlineBooks[bookId].page  = mb.offlineBooks[bookId].pages;
+				}
+
 				mb.currentlyScaled = item;
 
 				const { path, params } = getHashAndParams();
@@ -4056,7 +4061,7 @@
 		//MB Book Item Creation
 
 		async function buildBookItem(item, book, format, target) {
-			
+
 			// Check local proxy list if book is available and completed offline
 			// and tell the system to use this offline copy if we are offline
 
