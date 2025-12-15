@@ -2389,12 +2389,19 @@
 		}
 
 		function obAddBookToTable(book) {
+			let page = 1;
+			if (book.readProgress){
+				page = (book.readProgress.page == book.media.pagesCount) 
+					? page = book.media.pagesCount 
+					: page = book.readProgress.page
+			}
+
 			mb.offlineBooks[book.id] = {
 				status: 'downloading',
 				percent: 0,
 
 				updated: false,
-				page: book.readProgress?.page ?? 1,
+				page: page,
 				pages: book.media.pagesCount,
 			};
 			obSaveTable();
@@ -2677,6 +2684,7 @@
 
 				if (obIsBookCompleted(rd.bookId)) {
 					mb.offlineBooks[bookId].page  = mb.offlineBooks[bookId].pages;
+					obSaveTable();
 				}
 
 				mb.currentlyScaled = item;
