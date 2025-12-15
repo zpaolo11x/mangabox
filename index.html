@@ -4283,13 +4283,15 @@
 				bookOverlay.append(markAsRead, bookDetails, markAsUnread);
 			}
 
-			let progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
+			let progress = (book.readProgress ? ((book.readProgress.page == book.media.pagesCount) ? 0 : book.readProgress.page) : 0)
 			const progressBar = addItem('div', { className: 'progress-bar' });
 			const progressGauge = addItem('div', { className: 'progress-gauge' });
 
+			/*
 			if (useOfflineCopy){
 				progress = book.readProgress.page;
 			}
+			*/
 
 			if ((progress == 0)) {
 				progressBar.classList.add('no-show');
@@ -5175,7 +5177,7 @@
 				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
 				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
 
-			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true) && !useOfflineCopy) {
+			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.page == bookData.media.pagesCount)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
