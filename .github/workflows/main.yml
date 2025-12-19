@@ -258,7 +258,7 @@ jobs:
 
       - name: Install edge management plugin (Android)
         if: ${{ matrix.sys == 'android' }}
-        run: npm install @capawesome/capacitor-android-edge-to-edge-support
+        run: npm install @capawesome/capacitor-android-edge-to-edge-support@7
 
       - name: Install navigation bar plugin (Android)
         if: ${{ matrix.sys == 'android' }}

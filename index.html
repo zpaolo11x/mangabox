@@ -291,7 +291,7 @@
 		<div id="loginDialog" class="dialog">
 			<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 			<img id="logoName" src="logo/mangabox-logoname.svg">
-			<div class="version-note">v0.3.4</div>
+			<div class="version-note">v0.3.5</div>
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
 				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
@@ -336,7 +336,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.3.4</h1>
+		<h1>MangaBox v0.3.5</h1>
 		<div>MangaBox is a streamlined client for your Komga media server.
 			To access your own, self-hosted server please enter the server URL in the login field, then your username and password. </div>
 		<div>MangaBox is not designed to access external sources and does not provide content, it is only designed to display and navigate your own libraries and read your own books.</div>
@@ -2037,17 +2037,24 @@
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
 
-			document.body.classList.remove('sticky-medium', 'sticky-hybrid', 'sticky-small');
+			document.body.classList.remove('sticky-medium', 'sticky-small', 'sticky-hybrid', 'sticky-tworows');
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
 				//nothing happens
 			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.medium >= 60) {
 				document.body.classList.add('sticky-medium');
-			} else {
+			} else if (containerWidth - mb.libSizer.rightmin - mb.libSizer.small >= 60) {
 				document.body.classList.add('sticky-small');
-
-				if (containerWidth - mb.libSizer.large >= 9) {
-					document.body.classList.add('sticky-hybrid');
+			} else {
+				document.body.classList.add('sticky-tworows');
+				if (containerWidth - mb.libSizer.large >= 10) {
+					//nothing happens
+				} else if (containerWidth - mb.libSizer.medium >= 10) {
+					document.body.classList.add('sticky-medium');
+				} else if (containerWidth - mb.libSizer.small >= 10) {
+					document.body.classList.add('sticky-small');
+				} else {
+					document.body.classList.add('sticky-small')
 				}
 			};
 
@@ -2382,12 +2389,19 @@
 		}
 
 		function obAddBookToTable(book) {
+			let page = 1;
+			if (book.readProgress){
+				page = (book.readProgress.page == book.media.pagesCount) 
+					? page = book.media.pagesCount 
+					: page = book.readProgress.page
+			}
+
 			mb.offlineBooks[book.id] = {
 				status: 'downloading',
 				percent: 0,
 
 				updated: false,
-				page: book.readProgress?.page ?? 1,
+				page: page,
 				pages: book.media.pagesCount,
 			};
 			obSaveTable();
@@ -2467,6 +2481,8 @@
 			} else {
 				console.warn(`Failed to delete offline book ${bookId}: ${result.message}`);
 			}
+			delete mb.offlineBooks[bookId];
+			obSaveTable();
 			return result;
 		}
 
@@ -2474,6 +2490,13 @@
 			let bookData = null;
 			if (isElectron) bookData = await window.offlineAPI.getOfflineBookData(bookId)
 			if (isCapacitor) bookData = await capacitorGetOfflineBookData(bookId)
+
+			if (!bookData.bookMetadata.readProgress) {
+				bookData.bookMetadata.readProgress = {};
+			}
+
+			bookData.bookMetadata.readProgress.page = mb.offlineBooks[bookId].page;
+
 			return bookData;
 		}
 
@@ -2658,6 +2681,12 @@
 				mb.currentlyScaled = item;
 			} else {
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
+
+				if (obIsBookCompleted(rd.bookId)) {
+					mb.offlineBooks[bookId].page  = mb.offlineBooks[bookId].pages;
+					obSaveTable();
+				}
+
 				mb.currentlyScaled = item;
 
 				const { path, params } = getHashAndParams();
@@ -2696,15 +2725,17 @@
 			const libLargeSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-library-large'));
 			const filterButtonSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--mb-filter-button-size'));
 			const searchFieldSize = libLargeSize;
+			const libMenuSize = 40;
 			const margin = 10;
 
 			const rightBlockButtons = librariesRightBlock.childElementCount - 1;
 			document.documentElement.style.setProperty('--mb-num-buttons', rightBlockButtons - 1);
 
-			const libNum = libraries.length;
-			const mainLibAndMenu = margin + 3 * libLargeSize + 40;
-			mb.libSizer.large = mainLibAndMenu + libNum * (libLargeSize + gapSize);
-			mb.libSizer.medium = mainLibAndMenu + libNum * (libSmallSize + gapSize);
+			const libNum = 3 + libraries.length;
+			const mainLibAndMenu = margin + libLargeSize + libMenuSize;
+			mb.libSizer.large = mainLibAndMenu + (libNum - 1) * (libLargeSize + gapSize);
+			mb.libSizer.medium = mainLibAndMenu + (libNum - 3) * (libLargeSize + gapSize) + 2 * (libSmallSize + gapSize) - libMenuSize;
+			mb.libSizer.small = mainLibAndMenu + (libNum - 1) * (libSmallSize + gapSize);
 			mb.libSizer.rightmin = margin + rightBlockButtons * (libSmallSize + gapSize) + searchFieldSize + gapSize;
 
 			mb.filterSizer = mb.filterButtons.length * (100 + gapSize) + filterButtonSize + 2 * margin;
@@ -3770,12 +3801,14 @@
 			librariesList.innerHTML = '';
 
 			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'logo/mangabox-logo-new.svg')
+			dashboard.classList.add('shrink-first');
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
 
 			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-symbols/readlists3d.png')
+			readlists.classList.add('shrink-first');
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
 				navigateTo('#readlists');
@@ -3789,6 +3822,7 @@
 			});
 
 			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-symbols/collections3d.png')
+			collections.classList.add('shrink-first');
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
 				navigateTo('#collections');
@@ -3930,10 +3964,24 @@
 					)
 			)
 
-			const creditString = isReadlist ? '' : (altTitle.story == altTitle.art
-				? `Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
-				: `Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
-			)
+			let creditString;
+
+			if (isReadlist || ((altTitle.story == 'N/A') && (altTitle.art == 'N/A')) || altTitle == null) {
+				creditString = ''
+			} else if (altTitle.story == 'N/A') {
+				creditString = ` - Art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+			} else if (altTitle.art == 'N/A') {
+				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+			} else if (altTitle.story == altTitle.art) {
+				creditString = ` - Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+			} else {
+				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+			}
+
+			const timeString =
+				altTitle?.time && altTitle.time !== 'N/A'
+					? altTitle.time
+					: '';
 
 			const thumbURL = isReadlist ? `${mb.baseUrl}/api/v1/readlists/${serie.id}/thumbnail` : `${mb.baseUrl}/api/v1/series/${serie.id}/thumbnail`
 			seriesHeader.innerHTML = `
@@ -3948,7 +3996,7 @@
 				${serie.metadata?.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-					<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${altTitle?.time}');">${altTitle?.time ?? ''}</a> (${books} ${books == 1 ? "book" : "books"}) ${isReadlist ? '' : ' - ' + creditString}</span>
+				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "book" : "books"}) ${isReadlist ? '' : creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${summary}</div>
@@ -4036,12 +4084,12 @@
 				// is offline, update the saved metadata so it will always be in sync
 				// but will this sync with the reading offline? No
 
-				// Load saved metadata
+				// Load saved metadata, the function also apply the new page position
 				offline = await obLoadOfflineBook(book.id);
 				// Apply saved metadata to book
 				book = offline.bookMetadata;
 				// Pipe read progress into saved metadata
-				book.readProgress.page = mb.offlineBooks[book.id].page;
+				//book.readProgress.page = mb.offlineBooks[book.id].page;
 			}
 
 			item.childNodes[0]?.remove();
@@ -4248,11 +4296,17 @@
 				bookOverlay.append(markAsRead, bookDetails, markAsUnread);
 			}
 
-			const progress = (book.readProgress ? (book.readProgress.completed ? 0 : book.readProgress.page) : 0)
+			let progress = (book.readProgress ? ((book.readProgress.page == book.media.pagesCount) ? 0 : book.readProgress.page) : 0)
 			const progressBar = addItem('div', { className: 'progress-bar' });
 			const progressGauge = addItem('div', { className: 'progress-gauge' });
 
-			if (progress == 0) {
+			/*
+			if (useOfflineCopy){
+				progress = book.readProgress.page;
+			}
+			*/
+
+			if ((progress == 0)) {
 				progressBar.classList.add('no-show');
 			} else {
 				progressGauge.style.width = `${Math.round(100 * progress / book.media.pagesCount)}%`;
@@ -5136,7 +5190,7 @@
 				await fetchPages(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline) :
 				await fetchPagesWebtoon(rd.bookId, noCover, noWhitePage, coverIsPageOne, offline);
 
-			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.completed === true)) {
+			if (!rd.incognito && bookData.readProgress && (bookData.readProgress.page == bookData.media.pagesCount)) {
 				rd.currentSpreadIndex = 0; //TODO Maybe change this with a check with the top page?
 			}
 
@@ -5999,7 +6053,8 @@
 
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 
-			let pageNumText = rd.webtoon ? spreadObject.pageNumL : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			let pageNumText = rd.webtoon ? spreadObject.pageNumL + "" : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+
 			pageNumText = pageNumText.trim().replace(' ', '￨')
 
 			//pageNumText = pageNumText.trim().replace(' ', '<span style="width: 10px; border-right:1px solid white">&nbsp;</span><span style="width:10px;">&nbsp;</span>')

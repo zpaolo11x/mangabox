@@ -1,12 +1,7 @@
 Main UI
-- Support for viewing read lists and collections
-- Added x icon to clear search field
-
-Reader UI
-- Added a vertical separator for page numbers in the seek bar
-
-Build
-- Updated website
+- Improved credits text and time text on series page header
+- Improved library buttons sizing logic
 
 Fixes
-- Fixed logout button stuck in offline mode
+- Fixed read position sync for downloaded books
+- Fixed webtoon page progress issue
