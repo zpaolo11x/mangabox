@@ -1,7 +1,11 @@
 Main UI
-- Improved credits text and time text on series page header
-- Improved library buttons sizing logic
+- 
+
+Reader UI
+- 
+
+Build
+- 
 
 Fixes
-- Fixed read position sync for downloaded books
-- Fixed webtoon page progress issue
+- 
