@@ -1001,7 +1001,7 @@
 			try {
 				const res = await fetch(
 					`${mb.baseUrl}/api/v1/client-settings/global/list`,
-					{ method: 'HEAD', cache: 'no-store' }
+					{ method: 'GET', cache: 'no-store' }
 				);
 
 				console.log(res);
