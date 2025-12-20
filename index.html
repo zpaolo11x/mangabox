@@ -999,10 +999,9 @@
 
 		async function onlineCheck() {
 			try {
-				const res = await fetch(
-					`${mb.baseUrl}/api/v1/client-settings/global/list`,
-					{ method: 'GET', cache: 'no-store' }
-				);
+				    const res = await fetch(`${mb.baseUrl}/api/v1/users/me`, {
+      cache: 'no-store'
+    });
 
 				console.log(res);
 
