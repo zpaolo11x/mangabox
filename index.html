@@ -998,26 +998,28 @@
 		}
 
 		async function onlineCheck() {
-  try {
-    const res = await fetch(
-      `${mb.baseUrl}/api/v1/client-settings/global/list`,
-      { method: 'HEAD', cache: 'no-store' }
-    );
+			try {
+				const res = await fetch(
+					`${mb.baseUrl}/api/v1/client-settings/global/list`,
+					{ method: 'HEAD', cache: 'no-store' }
+				);
 
-    if (!res.ok) {
-      console.log("Server reachable but unhealthy:", res.status);
-      setNetworkStatus('offline');
-      return;
-    }
+				console.log(res);
 
-    console.log("Server OK");
-    setNetworkStatus('online');
+				if (!res.ok) {
+					console.log("Server reachable but unhealthy:", res.status);
+					setNetworkStatus('offline');
+					return;
+				}
 
-  } catch (err) {
-    console.log("Network error, still offline");
-    setNetworkStatus('offline');
-  }
-}
+				console.log("Server OK");
+				setNetworkStatus('online');
+
+			} catch (err) {
+				console.log("Network error, still offline");
+				setNetworkStatus('offline');
+			}
+		}
 
 
 
@@ -1026,7 +1028,7 @@
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 			const db = await openIndexedDB();
-			console.log("API Call, offlineSession: "+offlineSession)
+			console.log("API Call, offlineSession: " + offlineSession)
 			if (offlineSession) {
 				await onlineCheck() //TODO forse qui await?
 			};
@@ -2403,9 +2405,9 @@
 
 		function obAddBookToTable(book) {
 			let page = 1;
-			if (book.readProgress){
-				page = (book.readProgress.page == book.media.pagesCount) 
-					? page = book.media.pagesCount 
+			if (book.readProgress) {
+				page = (book.readProgress.page == book.media.pagesCount)
+					? page = book.media.pagesCount
 					: page = book.readProgress.page
 			}
 
@@ -2696,7 +2698,7 @@
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 
 				if (obIsBookCompleted(rd.bookId)) {
-					mb.offlineBooks[bookId].page  = mb.offlineBooks[bookId].pages;
+					mb.offlineBooks[bookId].page = mb.offlineBooks[bookId].pages;
 					obSaveTable();
 				}
 
