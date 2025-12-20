@@ -104,11 +104,12 @@ async function sessionCheck() {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			console.log(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			if (sessionWasValid) {
+				console.log("Session was valid, booting in offline mode")
 				hideLoginDialog();
 				bootSequence('offline');
 				await executeFaderGradient(0);
-
 			} else {
+				console.log("Session invalid")
 				showLoginDialog();
 				await executeFaderGradient(0);
 			}
