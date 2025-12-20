@@ -1020,18 +1020,6 @@
 }
 
 
-		async function onlineCheck() {
-			try {
-				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
-				if (ping.ok) {
-					console.log("Pinged OK, set status to online")
-					setNetworkStatus('online');
-				}
-			} catch {
-					console.log("Pinged NOT OK, don't change offlineSession status")
-				// still offline, ignore
-			}
-		}
 
 
 		//MB API Call Function 
