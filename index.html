@@ -1001,9 +1001,11 @@
 			try {
 				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
 				if (ping.ok) {
+					console.log("Pinged OK, set status to online")
 					setNetworkStatus('online');
 				}
 			} catch {
+					console.log("Pinged NOT OK, don't change offlineSession status")
 				// still offline, ignore
 			}
 		}
@@ -1013,7 +1015,7 @@
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 			const db = await openIndexedDB();
-
+			console.log("API Call, offlineSession: "+offlineSession)
 			if (offlineSession) {
 				await onlineCheck() //TODO forse qui await?
 			};
