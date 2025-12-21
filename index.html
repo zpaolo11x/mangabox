@@ -998,51 +998,39 @@
 		}
 
 let onlineCheckInFlight = false;
-
 async function onlineCheck() {
-  if (onlineCheckInFlight) return;
-  onlineCheckInFlight = true;
+  if (!navigator.onLine) {
+    setNetworkStatus('offline');
+    return;
+  }
 
   try {
-    // Browser has no network at all
-    if (!navigator.onLine) {
-		console.log("navigator is offline")
-      setNetworkStatus('offline');
-      return;
-    }
-
-    // App-level readiness check
-    const res = await fetch(`${mb.baseUrl}/api/v1/users/me`, {
-      cache: 'no-store',
-      credentials: 'include'
-    });
-
-	 console.log(res)
-
+    const res = await fetch(
+      `${mb.baseUrl}/api/v1/users/me`,
+      { cache: 'no-store', credentials: 'include' }
+    );
 
     if (!res.ok) {
-				console.log("res is not ok, system is offline")
-
-      // Server reachable but not usable = offline for the app
-      setNetworkStatus('offline');
+      setNetworkStatus('offline', `HTTP ${res.status}`);
       return;
     }
 
-    // Only state that counts as online
-	 		console.log("system is online")
+    // 🔴 THIS is the missing part
+    const data = await res.json();
+
+    // Komga-specific sanity check
+    if (!data || !data.id) {
+      setNetworkStatus('offline', 'invalid Komga response');
+      return;
+    }
 
     setNetworkStatus('online');
 
-  } catch {
-    // Network / tunnel failure
-	 	 		console.log("network tunnel failure")
-
-    setNetworkStatus('offline');
-
-  } finally {
-    onlineCheckInFlight = false;
+  } catch (e) {
+    setNetworkStatus('offline', e.message);
   }
 }
+
 
 
 
