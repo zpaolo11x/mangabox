@@ -997,39 +997,38 @@
 			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
 		}
 
-let onlineCheckInFlight = false;
-async function onlineCheck() {
-  if (!navigator.onLine) {
-    setNetworkStatus('offline');
-    return;
-  }
 
-  try {
-    const res = await fetch(
-      `${mb.baseUrl}/api/v1/users/me`,
-      { cache: 'no-store', credentials: 'include' }
-    );
+		async function onlineCheck() {
+			if (!navigator.onLine) {
+				setNetworkStatus('offline');
+				return;
+			}
 
-    if (!res.ok) {
-      setNetworkStatus('offline', `HTTP ${res.status}`);
-      return;
-    }
+			try {
+				const res = await fetch(
+					`${mb.baseUrl}/api/v1/client-settings/global/list`,
+					{ cache: 'no-store', credentials: 'include' }
+				);
 
-    // 🔴 THIS is the missing part
-    const data = await res.json();
+				if (!res.ok) {
+					setNetworkStatus('offline', `HTTP ${res.status}`);
+					return;
+				}
 
-    // Komga-specific sanity check
-    if (!data || !data.id) {
-      setNetworkStatus('offline', 'invalid Komga response');
-      return;
-    }
+				const data = await res.json();
 
-    setNetworkStatus('online');
+				// Komga-specific sanity check
+				if (!data || !data.id) {
+					setNetworkStatus('offline', 'invalid Komga response');
+					return;
+				}
 
-  } catch (e) {
-    setNetworkStatus('offline', e.message);
-  }
-}
+				setNetworkStatus('online');
+
+			} catch (e) {
+				setNetworkStatus('offline', e.message);
+			}
+		}
 
 
 
@@ -4683,7 +4682,10 @@ async function onlineCheck() {
 			sectionShow(offlineGrid);
 		}
 
-		function setNetworkStatus(netStatus) {
+		function setNetworkStatus(netStatus, message = null) {
+			
+			if (message) console.log(message);
+
 			offlineLed.style.opacity = (netStatus == 'offline') ? 1 : 0;
 			offlineSession = (netStatus == 'offline');
 		}
