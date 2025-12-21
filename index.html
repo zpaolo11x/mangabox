@@ -1006,7 +1006,7 @@
 
 			try {
 				const res = await fetch(
-					`${mb.baseUrl}/api/v1/client-settings/global/list`,
+					`${mb.baseUrl}/api/v1/users/me`,
 					{ cache: 'no-store', credentials: 'include' }
 				);
 
@@ -4683,7 +4683,7 @@
 		}
 
 		function setNetworkStatus(netStatus, message = null) {
-			
+
 			if (message) console.log("MSG:" + message);
 
 			offlineLed.style.opacity = (netStatus == 'offline') ? 1 : 0;
