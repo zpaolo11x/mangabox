@@ -996,29 +996,44 @@
 		function cacheKeyFromUrl(url) {
 			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
 		}
+		
+let onlineCheckInFlight = false;
 
-		async function onlineCheck() {
-			try {
-				    const res = await fetch(`${mb.baseUrl}/api/v1/users/me`, {
-      cache: 'no-store'
+async function onlineCheck() {
+  if (onlineCheckInFlight) return;
+  onlineCheckInFlight = true;
+
+  try {
+    // Browser has no network at all
+    if (!navigator.onLine) {
+      setNetworkStatus('offline');
+      return;
+    }
+
+    // App-level readiness check
+    const res = await fetch(`${mb.baseUrl}/api/v1/users/me`, {
+      cache: 'no-store',
+      credentials: 'include'
     });
 
-				console.log(res);
+    if (!res.ok) {
+      // Server reachable but not usable = offline for the app
+      setNetworkStatus('offline');
+      return;
+    }
 
-				if (!res.ok) {
-					console.log("Server reachable but unhealthy:", res.status);
-					setNetworkStatus('offline');
-					return;
-				}
+    // Only state that counts as online
+    setNetworkStatus('online');
 
-				console.log("Server OK");
-				setNetworkStatus('online');
+  } catch {
+    // Network / tunnel failure
+    setNetworkStatus('offline');
 
-			} catch (err) {
-				console.log("Network error, still offline");
-				setNetworkStatus('offline');
-			}
-		}
+  } finally {
+    onlineCheckInFlight = false;
+  }
+}
+
 
 
 
