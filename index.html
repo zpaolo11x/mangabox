@@ -1007,8 +1007,18 @@
 			try {
 				const res = await fetch(
 					`${mb.baseUrl}/api/v1/users/me`,
-					{ cache: 'no-store', credentials: 'include' }
+					{ 
+						cache: 'no-store', 
+						credentials: 'include',	
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': 'XMLHttpRequest',
+							'skip_zrok_interstitial': '1',
+						}
+					}
 				);
+				
+				console.log(res);
 
 				if (!res.ok) {
 					setNetworkStatus('offline', `HTTP ${res.status}`);
