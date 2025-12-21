@@ -1006,9 +1006,10 @@
 
 			try {
 				const res = await fetch(
-					`${mb.baseUrl}/api/v1/client-settings/global/list`,
+					`${mb.baseUrl}/api/v1/users/me`,
 					{ 
 						cache: 'no-store', 
+						credentials: 'include',	
 						headers: {
 							'Content-Type': 'application/json',
 							'X-Requested-With': 'XMLHttpRequest',
