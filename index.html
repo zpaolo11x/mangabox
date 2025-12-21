@@ -1000,7 +1000,7 @@
 
 		async function onlineCheck() {
 			if (!navigator.onLine) {
-				setNetworkStatus('offline');
+				setNetworkStatus('offline', "no network connection");
 				return;
 			}
 
@@ -4684,7 +4684,7 @@
 
 		function setNetworkStatus(netStatus, message = null) {
 			
-			if (message) console.log(message);
+			if (message) console.log("MSG:" + message);
 
 			offlineLed.style.opacity = (netStatus == 'offline') ? 1 : 0;
 			offlineSession = (netStatus == 'offline');
