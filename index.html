@@ -1015,7 +1015,7 @@
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
-				await onlineCheck() //TODO forse qui await?
+				await onlineCheck();
 			};
 
 			if (offlineSession) {
@@ -1039,7 +1039,10 @@
 					return null;
 				}
 
-				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+				if (!response.ok) {
+					setNetworkStatus('offline');
+					return (callAPI(cacheKey, API_url, method, body, returnval));
+				}
 
 				setNetworkStatus('online');
 
@@ -1054,7 +1057,7 @@
 
 				return (callAPI(cacheKey, API_url, method, body, returnval));
 
-				throw error;
+				//throw error;
 			}
 		}
 		/*
