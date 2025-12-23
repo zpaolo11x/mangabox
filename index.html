@@ -999,11 +999,22 @@
 
 		async function onlineCheck() {
 			try {
-				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
+				const ping = await fetch(`${mb.baseUrl}/api/v1/claim`, {
+					method: 'GET',
+					cache: 'no-store',
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				});
+				console.log("XXXXXXXXXXXXXX")
+				console.log(ping)
+				//let pingJSON = await ping.json();
+				console.log(pingJSON)
 				if (ping.ok) {
 					setNetworkStatus('online');
 				}
 			} catch {
+				console.log("onlineCheck ERROR")
 				// still offline, ignore
 			}
 		}
@@ -1013,7 +1024,7 @@
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 			const db = await openIndexedDB();
-
+onlineCheck()
 			if (offlineSession) {
 				await onlineCheck() //TODO forse qui await?
 			};
@@ -1080,7 +1091,8 @@
 		async function getUserSettings() {
 			let mangaboxFlat = null;
 			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
-
+			console.log("YYYYYYYYYYYYY")
+			console.log(settings);
 			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
 					.filter(([key]) => key.startsWith('mangabox'))
@@ -2390,9 +2402,9 @@
 
 		function obAddBookToTable(book) {
 			let page = 1;
-			if (book.readProgress){
-				page = (book.readProgress.page == book.media.pagesCount) 
-					? page = book.media.pagesCount 
+			if (book.readProgress) {
+				page = (book.readProgress.page == book.media.pagesCount)
+					? page = book.media.pagesCount
 					: page = book.readProgress.page
 			}
 
@@ -2683,7 +2695,7 @@
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 
 				if (obIsBookCompleted(rd.bookId)) {
-					mb.offlineBooks[bookId].page  = mb.offlineBooks[bookId].pages;
+					mb.offlineBooks[bookId].page = mb.offlineBooks[bookId].pages;
 					obSaveTable();
 				}
 
