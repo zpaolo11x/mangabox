@@ -1015,7 +1015,7 @@
 				if (ping.ok) {
 					setNetworkStatus('online');
 				}
-			} catch {
+			} catch (err){
     console.error("onlineCheck ERROR:", err);
     console.error("name:", err?.name);
     console.error("message:", err?.message);
