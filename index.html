@@ -1013,9 +1013,13 @@
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 			const db = await openIndexedDB();
+			
+			console.log ("XX - callAPI started with offlineSession: " + offlineSession)
 
 			if (offlineSession) {
+				console.log ("XX - onlineCheck because it's an offlineSession")
 				await onlineCheck();
+				console.log ("XX - onlineCheck returned offlineSession: " + offlineSession)
 			};
 
 			if (offlineSession) {
@@ -1033,17 +1037,26 @@
 			}
 
 			try {
+				console.log ("XX - start of try loop")
+
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
+				console.log ("XX - this is the response:")
+				console.log (response);
+
 				if (response.status === 404 || response.status === 204) {
+					console.log ("XX - response was 404 or 204")
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
 				}
 
 				if (!response.ok) {
+					console.log ("XX - Response is not OK, set networkstatus to offline")
 					setNetworkStatus('offline');
+					console.log ("XX - Response is not OK, recall the API")
 					return (callAPI(cacheKey, API_url, method, body, returnval));
 				}
 
+				console.log ("XX - Response is OK, set networkstatus to online")
 				setNetworkStatus('online');
 
 				if (returnval) {
@@ -1053,7 +1066,9 @@
 				}
 			} catch (error) {
 				console.error(`Fetch error for ${API_url}:`, error);
+					console.log ("XX - There was an error, set networkstatus to offline")
 				setNetworkStatus('offline');
+					console.log ("XX - There was an error, recall the API")
 
 				return (callAPI(cacheKey, API_url, method, body, returnval));
 
