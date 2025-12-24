@@ -43,7 +43,7 @@ contextBridge.exposeInMainWorld('secureStore', {
 		return await keytar.deletePassword('MangaBox', account);
 	},
 	checkCredentials2: async () => {
-		const creds = await keytar.findCredentials('MangaBox');
+		const creds = await keytar.findCredentials('MangaBox-user');
 
 		if (!creds || creds.length === 0) {
 			return null;
@@ -57,13 +57,13 @@ contextBridge.exposeInMainWorld('secureStore', {
 	},
 
 	setCredentials2: async (username, password) => {
-		return keytar.setPassword('MangaBox', username, password);
+		return keytar.setPassword('MangaBox-user', username, password);
 	},
 	getCredentials2: async (username) => {
-		return keytar.getPassword('MangaBox', username);
+		return keytar.getPassword('MangaBox-user', username);
 	},
 	deleteCredentials2: async (username) => {
-		return keytar.deletePassword('MangaBox', username);
+		return keytar.deletePassword('MangaBox-user', username);
 	}
 });
 

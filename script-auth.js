@@ -60,6 +60,8 @@ async function sessionCheck() {
 	mb.loggedUser = 'cookie';
 	if (isElectron) mb.loggedUser = await checkSavedUser();
 
+console.log("Z - loggedUser:" + mb.loggedUser)
+	
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.loggedUser)) {
 		debugPrint("Missing base URL or auth token");
