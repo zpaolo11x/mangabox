@@ -1029,7 +1029,7 @@
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 			const db = await openIndexedDB();
-//onlineCheck()
+
 			if (offlineSession) {
 				await onlineCheck() //TODO forse qui await?
 			};
