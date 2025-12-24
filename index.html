@@ -989,7 +989,7 @@
 		}
 
 		async function buildRequestMedia(loggedUser, method, body) {
-			  			const electronHeaders = isElectron ? await electronHeader() : {};
+			const electronHeaders = isElectron ? await electronHeader() : {};
 
 			const requestTable = {
 				method: method,
@@ -1060,6 +1060,9 @@
 
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.loggedUser, method, body));
+				
+				console.log(response);
+				
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
