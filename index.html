@@ -1042,7 +1042,7 @@
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 			const db = await openIndexedDB();
-
+			console.log("API - " + API_url)
 			if (offlineSession) {
 				await onlineCheck() //TODO forse qui await?
 			};
@@ -1062,11 +1062,13 @@
 			}
 
 			try {
+				console.log("API - REQUEST - "+ API_url)
+				console.log(buildRequest(mb.loggedUser, method, body))
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.loggedUser, method, body));
 
-				console.log("RESPONSE")
+				console.log("API - RESPONSE - "+ API_url)
 				console.log(response);
-				console.log("BODY")
+				console.log("API - BODY - "+ API_url)
 				let resb = await response.json();
 				console.log(resb)
 
