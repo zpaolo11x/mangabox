@@ -1061,7 +1061,13 @@
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.loggedUser, method, body));
 				
+				console.log("RESPONSE")
 				console.log(response);
+				console.log("BODY")
+				console.log(response.json());
+				console.log("BODY 2")
+				let resb = await response.json();
+				console.log(resb)
 				
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
@@ -1113,7 +1119,7 @@
 			console.log(settings);
 			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
-					.filter(([key]) => key.startsWith('mangabox'))
+					.filter(([key]) => key.startsWith('mangabox'))		
 					.map(([key, obj]) => [key, obj.value])
 			);
 			return mangaboxFlat
