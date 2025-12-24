@@ -821,7 +821,7 @@
 					swatchMenuVisible: false,
 
 					baseUrl: localStorage.getItem('mbBaseUrl'),
-					authToken: false,
+					loggedUser: false,
 
 					basePath: '', //'/mangabox/'
 					darkTheme: false,
@@ -965,7 +965,14 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-		function buildRequest(authToken, method, body) {
+		function electronHeader(){
+			const username = mb.loggedUser;
+			const password = loadUserPass(mb.loggedUser);
+			return ({'Authorization': 'Basic ' + btoa(`${username}:${password}`),})
+		}
+
+		function buildRequest(loggedUser, method, body) {
+
 			const requestTable = {
 				method: method,
 				...(!isElectron && { credentials: 'include' }),
@@ -973,21 +980,21 @@
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectron && { 'X-Auth-Token': authToken })
+					...(isElectron && electronHeader())
 				},
 				...(body && { body }),
 			}
 			return requestTable
 		}
 
-		function buildRequestMedia(authToken, method, body) {
+		function buildRequestMedia(loggedUser, method, body) {
 			const requestTable = {
 				method: method,
 				...(!isElectron && { credentials: 'include' }),
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectron && { 'X-Auth-Token': authToken })
+					...(isElectron && electronHeader())
 				},
 			}
 			return requestTable
@@ -1049,7 +1056,7 @@
 			}
 
 			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
+				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.loggedUser, method, body));
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
@@ -1335,7 +1342,7 @@
 							}
 
 
-							if (isElectron) await deleteToken();
+							if (isElectron) await deleteUserPass(mb.loggedUser);
 
 							//sectionHide(stickyContainer);
 							//sectionShow(blanker);
@@ -2475,7 +2482,7 @@
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = buildRequest(mb.authToken, 'GET', null)
+			let request = buildRequest(mb.loggedUser, 'GET', null)
 
 			let bookData = {
 				bookId: bookId,
@@ -2641,7 +2648,7 @@
 			}
 
 			try {
-				const response = await fetch(url, buildRequestMedia(mb.authToken, 'GET', null));
+				const response = await fetch(url, buildRequestMedia(mb.loggedUser, 'GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();

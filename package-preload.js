@@ -44,6 +44,32 @@ contextBridge.exposeInMainWorld('secureStore', {
 	}
 });
 
+contextBridge.exposeInMainWorld('secureStore', {
+	checkCredentials2: async () => {
+		const creds = await keytar.findCredentials('MangaBox');
+
+		if (!creds || creds.length === 0) {
+			return null;
+		}
+
+		if (creds.length > 1) {
+			console.warn('Multiple credentials found, using the first one');
+		}
+
+		return creds[0].account;
+	},
+
+	setCredentials2: async (username, password) => {
+		return keytar.setPassword('MangaBox', username, password);
+	},
+	getCredentials2: async (username) => {
+		return keytar.getPassword('MangaBox', username);
+	},
+	deleteCredentials2: async (username) => {
+		return keytar.deletePassword('MangaBox', username);
+	}
+});
+
 
 ipcRenderer.on('download-complete', (_, data) => {
 	window.dispatchEvent(new CustomEvent('download-complete', { detail: data }));
