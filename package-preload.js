@@ -41,10 +41,7 @@ contextBridge.exposeInMainWorld('secureStore', {
 	},
 	deleteCredentials: async (account) => {
 		return await keytar.deletePassword('MangaBox', account);
-	}
-});
-
-contextBridge.exposeInMainWorld('secureStore', {
+	},
 	checkCredentials2: async () => {
 		const creds = await keytar.findCredentials('MangaBox');
 
