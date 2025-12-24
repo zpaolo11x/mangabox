@@ -965,9 +965,9 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-		function electronHeader(){
+		async function electronHeader(){
 			const username = mb.loggedUser;
-			const password = loadUserPass(mb.loggedUser);
+			const password = await loadUserPass(mb.loggedUser);
 			return ({'Authorization': 'Basic ' + btoa(`${username}:${password}`),})
 		}
 
