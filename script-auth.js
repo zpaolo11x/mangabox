@@ -92,7 +92,7 @@ console.log("Z - loggedUser:" + mb.loggedUser)
 	if (isElectron) {
 		
 		const username = mb.loggedUser;
-		const password = loadUserPass(mb.loggedUser);
+		const password = await loadUserPass(mb.loggedUser);
 
 		fetchPayload = {
 			method: 'GET',
