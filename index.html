@@ -971,7 +971,8 @@
 			return ({'Authorization': 'Basic ' + btoa(`${username}:${password}`),})
 		}
 
-		function buildRequest(loggedUser, method, body) {
+		async function buildRequest(loggedUser, method, body) {
+  			const electronHeaders = isElectron ? await electronHeader() : {};
 
 			const requestTable = {
 				method: method,
@@ -980,21 +981,23 @@
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectron && electronHeader())
+					...electronHeaders
 				},
 				...(body && { body }),
 			}
 			return requestTable
 		}
 
-		function buildRequestMedia(loggedUser, method, body) {
+		async function buildRequestMedia(loggedUser, method, body) {
+			  			const electronHeaders = isElectron ? await electronHeader() : {};
+
 			const requestTable = {
 				method: method,
 				...(!isElectron && { credentials: 'include' }),
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectron && electronHeader())
+					...electronHeaders
 				},
 			}
 			return requestTable
