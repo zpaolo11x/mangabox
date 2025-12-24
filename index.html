@@ -965,14 +965,16 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-		async function electronHeader(){
+		async function electronHeader() {
 			const username = mb.loggedUser;
 			const password = await loadUserPass(mb.loggedUser);
-			return ({'Authorization': 'Basic ' + btoa(`${username}:${password}`),})
+			const out ={ 'Authorization': 'Basic ' + btoa(`${username}:${password}`) }
+			console.log(out) 
+			return (out)
 		}
 
 		async function buildRequest(loggedUser, method, body) {
-  			const electronHeaders = isElectron ? await electronHeader() : {};
+			const electronHeaders = isElectron ? await electronHeader() : {};
 
 			const requestTable = {
 				method: method,
@@ -985,6 +987,7 @@
 				},
 				...(body && { body }),
 			}
+			console.log(requestTable)
 			return requestTable
 		}
 
@@ -1014,8 +1017,8 @@
 					cache: 'no-store',
 					headers: {
 						'Content-Type': 'application/json',
-																	'X-Requested-With': 'XMLHttpRequest',
-											'skip_zrok_interstitial': '1',
+						'X-Requested-With': 'XMLHttpRequest',
+						'skip_zrok_interstitial': '1',
 					}
 				});
 				console.log("XXXXXXXXXXXXXX")
@@ -1025,12 +1028,12 @@
 				if (ping.ok) {
 					setNetworkStatus('online');
 				}
-			} catch (err){
-    console.error("onlineCheck ERROR:", err);
-    console.error("name:", err?.name);
-    console.error("message:", err?.message);
-    console.error("stack:", err?.stack);
-	 				// still offline, ignore
+			} catch (err) {
+				console.error("onlineCheck ERROR:", err);
+				console.error("name:", err?.name);
+				console.error("message:", err?.message);
+				console.error("stack:", err?.stack);
+				// still offline, ignore
 			}
 		}
 
@@ -1060,7 +1063,7 @@
 
 			try {
 				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.loggedUser, method, body));
-				
+
 				console.log("RESPONSE")
 				console.log(response);
 				console.log("BODY")
@@ -1068,7 +1071,7 @@
 				console.log("BODY 2")
 				let resb = await response.json();
 				console.log(resb)
-				
+
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
@@ -1119,7 +1122,7 @@
 			console.log(settings);
 			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
-					.filter(([key]) => key.startsWith('mangabox'))		
+					.filter(([key]) => key.startsWith('mangabox'))
 					.map(([key, obj]) => [key, obj.value])
 			);
 			return mangaboxFlat
