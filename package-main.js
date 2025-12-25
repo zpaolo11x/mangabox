@@ -99,14 +99,18 @@ app.on('ready', async () => {
 
 // Secure token cleanup if rememberMe is false
 app.on('before-quit', async () => {
-	if (!rememberMe) {
-		try {
-			await keytar.deletePassword('MangaBox', 'auth');
-			console.log("Token deleted on app quit (rememberMe was false).");
-		} catch (err) {
-			console.error("Failed to delete token:", err);
-		}
-	}
+  if (!rememberMe) {
+    try {
+      const creds = await keytar.findCredentials('MangaBox-user');
+
+      for (const { account } of creds) {
+        await keytar.deletePassword('MangaBox-user', account);
+        console.log(`Deleted keytar entry for account: ${account}`);
+      }
+    } catch (err) {
+      console.error("Failed to delete credentials:", err);
+    }
+  }
 });
 
 app.on('window-all-closed', () => {

@@ -44,15 +44,12 @@ contextBridge.exposeInMainWorld('secureStore', {
 	},
 	checkCredentials2: async () => {
 		const creds = await keytar.findCredentials('MangaBox-user');
-
 		if (!creds || creds.length === 0) {
 			return null;
 		}
-
 		if (creds.length > 1) {
 			console.warn('Multiple credentials found, using the first one');
 		}
-
 		return creds[0].account;
 	},
 
