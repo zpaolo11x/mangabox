@@ -1100,7 +1100,7 @@ try {
 				setNetworkStatus('online');
 
 				if (returnval) {
-					const output = await response.json();
+					const output = parsed;
 					if (cacheKey != null) await cacheData(db, cacheKey, output);
 					return output;
 				}
