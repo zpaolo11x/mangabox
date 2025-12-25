@@ -1062,15 +1062,33 @@
 			}
 
 			try {
-				console.log("API - REQUEST - "+ API_url)
-				console.log(buildRequest(mb.loggedUser, method, body))
-				const response = await fetch(`${mb.baseUrl}${API_url}`, await buildRequest(mb.loggedUser, method, body));
+console.log("API - REQUEST - " + API_url);
+const req = await buildRequest(mb.loggedUser, method, body);
+console.log(req);
 
-				console.log("API - RESPONSE - "+ API_url)
-				console.log(response);
-				console.log("API - BODY - "+ API_url)
-				let resb = await response.json();
-				console.log(resb)
+const response = await fetch(`${mb.baseUrl}${API_url}`, req);
+
+console.log("API - RESPONSE - " + API_url);
+console.log("status:", response.status);
+console.log("ok:", response.ok);
+console.log("content-type:", response.headers.get("content-type"));
+
+// 🔴 IMPORTANT: read as text first
+const rawBody = await response.text();
+
+console.log("API - RAW BODY - " + API_url);
+console.log(rawBody);
+
+// Optional: try parsing manually
+let parsed = null;
+try {
+  parsed = JSON.parse(rawBody);
+  console.log("API - PARSED JSON - " + API_url);
+  console.log(parsed);
+} catch (e) {
+  console.warn("API - BODY IS NOT JSON");
+}
+
 
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
