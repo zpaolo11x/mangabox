@@ -5,13 +5,10 @@ const fs = require('fs/promises');
 const os = require('os');
 
 let mainWindow;
-let rememberMe = false; // Track remember-me state
 
 app.commandLine.appendSwitch('enable-features', 'OverlayScrollbar');
 
 app.on('ready', async () => {
-	const rememberFlag = await keytar.getPassword('MangaBox-settings', 'rememberMe');
-	rememberMe = rememberFlag === 'true';
 
 	mainWindow = new BrowserWindow({
 		width: 1200,
@@ -72,16 +69,6 @@ app.on('ready', async () => {
 		return app.getVersion(); // This uses the version from package.json
 	});
 
-	// Receive rememberMe status from renderer
-	ipcMain.on('remember-me-state', async (_, value) => {
-		rememberMe = value;
-		if (value) {
-			await keytar.setPassword('MangaBox-settings', 'rememberMe', 'true');
-		} else {
-			await keytar.deletePassword('MangaBox-settings', 'rememberMe');
-		}
-	});
-
 
 	// Check URL changes and enable zoom conditionally
 	/* 
@@ -95,22 +82,6 @@ app.on('ready', async () => {
 	  }
 	});
 	*/
-});
-
-// Secure token cleanup if rememberMe is false
-app.on('before-quit', async () => {
-  if (!rememberMe) {
-    try {
-      const creds = await keytar.findCredentials('MangaBox-user');
-
-      for (const { account } of creds) {
-        await keytar.deletePassword('MangaBox-user', account);
-        console.log(`Deleted keytar entry for account: ${account}`);
-      }
-    } catch (err) {
-      console.error("Failed to delete credentials:", err);
-    }
-  }
 });
 
 app.on('window-all-closed', () => {

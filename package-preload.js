@@ -23,10 +23,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	getAppVersion: () =>
 		ipcRenderer.invoke('get-app-version'),
 
-	// Manage remember me
-	sendRememberMe: (value) =>
-		ipcRenderer.send('remember-me-state', value),
-
 	// File access
 	readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
 

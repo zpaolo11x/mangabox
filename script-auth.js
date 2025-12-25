@@ -176,7 +176,7 @@ async function systemRestart() {
 	loginBaseUrl.value = "";
 	loginPassword.value = "";
 	loginUsername.value = "";
-	loginRememberMe.checked = false;
+
 	loginError.textContent = '';
 	if (!loginError.classList.contains('auth-hiden')) {
 		loginError.classList.add('auth-hidden');
@@ -255,7 +255,7 @@ async function login() {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+	fetch(`${baseUrlVal}/api/v1/login/set-cookie?remember-me=true}`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -270,7 +270,6 @@ async function login() {
 			await executeFaderGradient(1);
 			localStorage.setItem('mbBaseUrl', baseUrlVal);
 			if (isElectron) {
-				window.electronAPI.sendRememberMe(loginRememberMe.checked);
 				await saveUserPass(loginUsername.value, loginPassword.value);
 			}
 			systemRestart();
