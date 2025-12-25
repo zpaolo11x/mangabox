@@ -255,7 +255,7 @@ async function login() {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie?remember-me=true}`, {
+	fetch(`${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
