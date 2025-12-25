@@ -1064,7 +1064,7 @@
 			try {
 				console.log("API - REQUEST - "+ API_url)
 				console.log(buildRequest(mb.loggedUser, method, body))
-				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.loggedUser, method, body));
+				const response = await fetch(`${mb.baseUrl}${API_url}`, await buildRequest(mb.loggedUser, method, body));
 
 				console.log("API - RESPONSE - "+ API_url)
 				console.log(response);
@@ -2663,7 +2663,7 @@
 			}
 
 			try {
-				const response = await fetch(url, buildRequestMedia(mb.loggedUser, 'GET', null));
+				const response = await fetch(url, await buildRequestMedia(mb.loggedUser, 'GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();
