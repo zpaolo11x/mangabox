@@ -968,8 +968,7 @@
 		async function electronHeader() {
 			const username = mb.loggedUser;
 			const password = await loadUserPass(mb.loggedUser);
-			const out ={ 'Authorization': 'Basic ' + btoa(`${username}:${password}`) }
-			console.log(out) 
+			const out = { 'Authorization': 'Basic ' + btoa(`${username}:${password}`) }
 			return (out)
 		}
 
@@ -987,7 +986,6 @@
 				},
 				...(body && { body }),
 			}
-			console.log(requestTable)
 			return requestTable
 		}
 
@@ -1021,10 +1019,7 @@
 						'skip_zrok_interstitial': '1',
 					}
 				});
-				console.log("XXXXXXXXXXXXXX")
-				console.log(ping)
 				let pingJSON = await ping.json();
-				console.log(pingJSON)
 				if (ping.ok) {
 					setNetworkStatus('online');
 				}
@@ -1042,7 +1037,7 @@
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
 			const db = await openIndexedDB();
-			console.log("API - " + API_url)
+
 			if (offlineSession) {
 				await onlineCheck() //TODO forse qui await?
 			};
@@ -1062,32 +1057,19 @@
 			}
 
 			try {
-console.log("API - REQUEST - " + API_url);
-const req = await buildRequest(mb.loggedUser, method, body);
-console.log(req);
+				const req = await buildRequest(mb.loggedUser, method, body);
 
-const response = await fetch(`${mb.baseUrl}${API_url}`, req);
+				const response = await fetch(`${mb.baseUrl}${API_url}`, req);
 
-console.log("API - RESPONSE - " + API_url);
-console.log("status:", response.status);
-console.log("ok:", response.ok);
-console.log("content-type:", response.headers.get("content-type"));
+				const rawBody = await response.text();
 
-// 🔴 IMPORTANT: read as text first
-const rawBody = await response.text();
-
-console.log("API - RAW BODY - " + API_url);
-console.log(rawBody);
-
-// Optional: try parsing manually
-let parsed = null;
-try {
-  parsed = JSON.parse(rawBody);
-  console.log("API - PARSED JSON - " + API_url);
-  console.log(parsed);
-} catch (e) {
-  console.warn("API - BODY IS NOT JSON");
-}
+				// Optional: try parsing manually
+				let parsed = null;
+				try {
+					parsed = JSON.parse(rawBody);
+				} catch (e) {
+					console.warn(`API ${API_url} BODY IS NOT JSON`);
+				}
 
 
 				if (response.status === 404 || response.status === 204) {
@@ -1136,8 +1118,7 @@ try {
 		async function getUserSettings() {
 			let mangaboxFlat = null;
 			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
-			console.log("YYYYYYYYYYYYY")
-			console.log(settings);
+
 			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
 					.filter(([key]) => key.startsWith('mangabox'))
