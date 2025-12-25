@@ -1,11 +1,11 @@
 Main UI
-- 
+- Removed Remember Me from login screen
 
 Reader UI
 - 
 
 Build
-- 
+- Changed authentication on Electron app
 
 Fixes
 - 
