@@ -1491,6 +1491,7 @@
 			});
 
 			scrollbox.addEventListener('mouseenter', () => {
+				if (isCapacitor) return;
 				updateScrollbarThumb();
 				showScrollbarTemporarily();
 			});
