@@ -2889,6 +2889,8 @@
 
 			item.addEventListener('mouseenter', () => {
 				// Added this to unselect pre-scaled book
+				if (!isCapacitor) return;
+
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
 
@@ -2901,6 +2903,8 @@
 			});
 
 			item.addEventListener('mouseleave', () => {
+				if (!isCapacitor) return;
+
 				item.classList.remove('scaled');
 				item.parentElement.classList.remove('top-pop');
 				mb.clickingTile = null;
