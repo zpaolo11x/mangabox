@@ -8,4 +8,4 @@ Build
 - Changed authentication on Electron app
 
 Fixes
-- 
+- Fixed keyboard input issue on iOS 15
