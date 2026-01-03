@@ -815,6 +815,9 @@
 		function initMB() {
 			return (
 				{
+					libraryError: false,
+					libraryNames: "",
+
 					libMenuVisible: null,
 					swatchMenuVisible: false,
 
@@ -2785,11 +2788,36 @@
 			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 
+			mb.libraryError = false;
+			mb.libraryNames = "<ul>";
+			Array.from(libraries).forEach(libItem => {
+				if (libItem.analyzeDimensions == false){
+					mb.libraryError = true;
+					mb.libraryNames = mb.libraryNames + "<li style='text-align:left'>" + libItem.name + "</li>"
+				}
+			});
+			mb.libraryNames = mb.libraryNames + "</ul>";
+			//TODO
+			/*
+			if (libraryError){
+				showModal('circle-mark-svg.svg', true, "Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames,
+							[{ label: 'Ok', runfunction: closeModal, high: true }]);
+						return;
+			}		
+			alert("Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames)
+			*/
 			await displayLibraries(libraries);
 
 			await updateSizer(libraries)
 
 			updateStickyMenu();
+
+			if (mb.libraryError){
+				showModal('circle-mark-svg.svg', true, "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>"+mb.libraryNames,
+							[{ label: 'Ok', runfunction: closeModal, high: true }]);
+						return;
+			}		
+
 		}
 
 
@@ -5346,6 +5374,7 @@
 		}
 
 		function buildPageObject(pageData) {
+
 			const isBlank = (pageData == 'blank');
 			const isHidden = (pageData == 'hidden');
 
