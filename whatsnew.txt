@@ -1,6 +1,7 @@
 Main UI
 - Removed Remember Me from login screen
-- Added warning message when a library has analize pages dimensions disabled
+- Added warning message when a library has analise pages dimensions disabled
+
 Reader UI
 - 
 
