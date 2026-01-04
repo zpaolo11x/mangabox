@@ -1,11 +1,2 @@
-Main UI
-- 
-
-Reader UI
-- 
-
-Build
-- 
-
 Fixes
-- 
+- Fixed issue with offline books
