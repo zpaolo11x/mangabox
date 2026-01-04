@@ -2498,7 +2498,7 @@
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = buildRequest(mb.loggedUser, 'GET', null)
+			let request = await buildRequest(mb.loggedUser, 'GET', null)
 
 			let bookData = {
 				bookId: bookId,
