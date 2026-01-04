@@ -1,4 +1,27 @@
 // script.js
+
+async function checkSavedUser() {
+	const user = await window.secureStore.checkCredentials2();
+	return user;
+}
+
+async function saveUserPass(user, pass) {
+	await window.secureStore.setCredentials2(user, pass);
+}
+
+async function loadUserPass(user) {
+	const pass = await window.secureStore.getCredentials2(user);
+	if (pass) {
+		return (pass);
+	} else {
+		return (false);
+	}
+}
+
+async function deleteUserPass(user) {
+	await window.secureStore.deleteCredentials2(user);
+}
+
 async function saveToken(token) {
 	debugPrint("saveToken...")
 	console.log("saveToken...")
@@ -26,7 +49,7 @@ async function deleteToken() {
 }
 
 async function sessionCheck() {
-				await executeFaderGradient(1);
+	await executeFaderGradient(1);
 
 	debugPrint("sessionCheck...");
 	console.log("sessionCheck...");
@@ -34,13 +57,13 @@ async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
 	// Load stored token (e.g. from Electron storage)
-	mb.authToken = true;
-	if (isElectron) mb.authToken = await loadToken();
-	debugPrint("CURRENT TOKEN:\n" + (mb.authToken ? 'not null' : null));
-	console.log("CURRENT TOKEN:\n" + (mb.authToken ? 'not null' : null));
+	mb.loggedUser = 'cookie';
+	if (isElectron) mb.loggedUser = await checkSavedUser();
 
+console.log("Z - loggedUser:" + mb.loggedUser)
+	
 	// --- 1. Missing credentials → login
-	if ((!mb.baseUrl) || (!mb.authToken)) {
+	if ((!mb.baseUrl) || (!mb.loggedUser)) {
 		debugPrint("Missing base URL or auth token");
 		showLoginDialog();
 		await executeFaderGradient(0);
@@ -65,23 +88,30 @@ async function sessionCheck() {
 	}
 
 	// --- 3. Try validating the token
-	let fetchPayload = (isElectron)
-		? {
+	let fetchPayload
+	if (isElectron) {
+		
+		const username = mb.loggedUser;
+		const password = await loadUserPass(mb.loggedUser);
+
+		fetchPayload = {
 			method: 'GET',
 			headers: {
-				'X-Auth-Token': mb.authToken,
+      		'Authorization': 'Basic ' + btoa(`${username}:${password}`),
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
 		}
-		: {
+	} else {
+		fetchPayload = {
 			method: 'GET',
 			credentials: 'include',
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
-		};
+		}
+	}
 
 	try {
 		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
@@ -135,7 +165,7 @@ async function sessionCheck() {
 async function systemRestart() {
 	//TODO: This works and is quite good but it would be better to implement a navigateTo "login" for the login screen
 	//TODO: and externalise the functions that are hear in a function that is called at boot or at login screen show
-	
+
 	// Reapply boot theme
 	await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
@@ -146,7 +176,7 @@ async function systemRestart() {
 	loginBaseUrl.value = "";
 	loginPassword.value = "";
 	loginUsername.value = "";
-	loginRememberMe.checked = false;
+
 	loginError.textContent = '';
 	if (!loginError.classList.contains('auth-hiden')) {
 		loginError.classList.add('auth-hidden');
@@ -225,7 +255,7 @@ async function login() {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie${loginRememberMe.checked ? '?remember-me=true' : ''}`, {
+	fetch(`${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -240,8 +270,7 @@ async function login() {
 			await executeFaderGradient(1);
 			localStorage.setItem('mbBaseUrl', baseUrlVal);
 			if (isElectron) {
-				window.electronAPI.sendRememberMe(loginRememberMe.checked);
-				await saveToken(token);
+				await saveUserPass(loginUsername.value, loginPassword.value);
 			}
 			systemRestart();
 		} else if (response.status === 401) {

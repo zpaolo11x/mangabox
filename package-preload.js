@@ -23,10 +23,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	getAppVersion: () =>
 		ipcRenderer.invoke('get-app-version'),
 
-	// Manage remember me
-	sendRememberMe: (value) =>
-		ipcRenderer.send('remember-me-state', value),
-
 	// File access
 	readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
 
@@ -41,6 +37,26 @@ contextBridge.exposeInMainWorld('secureStore', {
 	},
 	deleteCredentials: async (account) => {
 		return await keytar.deletePassword('MangaBox', account);
+	},
+	checkCredentials2: async () => {
+		const creds = await keytar.findCredentials('MangaBox-user');
+		if (!creds || creds.length === 0) {
+			return null;
+		}
+		if (creds.length > 1) {
+			console.warn('Multiple credentials found, using the first one');
+		}
+		return creds[0].account;
+	},
+
+	setCredentials2: async (username, password) => {
+		return keytar.setPassword('MangaBox-user', username, password);
+	},
+	getCredentials2: async (username) => {
+		return keytar.getPassword('MangaBox-user', username);
+	},
+	deleteCredentials2: async (username) => {
+		return keytar.deletePassword('MangaBox-user', username);
 	}
 });
 

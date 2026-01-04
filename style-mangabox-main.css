@@ -238,6 +238,16 @@
 	-webkit-tap-highlight-color: transparent;
 }
 
+input,
+textarea,
+select,
+[contenteditable] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -ms-user-select: text !important;
+  -webkit-tap-highlight-color: initial;
+}
+
 .draggable {
 	-webkit-app-region: drag;
 }

@@ -291,7 +291,8 @@
 		<div id="loginDialog" class="dialog">
 			<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 			<img id="logoName" src="logo/mangabox-logoname.svg">
-			<div class="version-note">v0.3.5</div>
+			<div class="version-note">v0.3.6</div>
+
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
 				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
@@ -309,10 +310,7 @@
 			</div>
 
 			<div class="login-buttons">
-				<div class="remember-me-container">
-					<input type="checkbox" id="loginRememberMe" class="remember-me-checkbox">
-					<label for="rememberMe" class="remember-me-label">Keep Me Signed</label>
-				</div>
+				<div></div>
 				<button id="loginButton" class="login-button" onclick="login()">
 					<i class="fas fa-play"></i>
 					<span>Login</login>
@@ -336,7 +334,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.3.5</h1>
+		<h1>MangaBox v0.3.6</h1>
 		<div>MangaBox is a streamlined client for your Komga media server.
 			To access your own, self-hosted server please enter the server URL in the login field, then your username and password. </div>
 		<div>MangaBox is not designed to access external sources and does not provide content, it is only designed to display and navigate your own libraries and read your own books.</div>
@@ -817,11 +815,14 @@
 		function initMB() {
 			return (
 				{
+					libraryError: false,
+					libraryNames: "",
+
 					libMenuVisible: null,
 					swatchMenuVisible: false,
 
 					baseUrl: localStorage.getItem('mbBaseUrl'),
-					authToken: false,
+					loggedUser: false,
 
 					basePath: '', //'/mangabox/'
 					darkTheme: false,
@@ -965,7 +966,16 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-		function buildRequest(authToken, method, body) {
+		async function electronHeader() {
+			const username = mb.loggedUser;
+			const password = await loadUserPass(mb.loggedUser);
+			const out = { 'Authorization': 'Basic ' + btoa(`${username}:${password}`) }
+			return (out)
+		}
+
+		async function buildRequest(loggedUser, method, body) {
+			const electronHeaders = isElectron ? await electronHeader() : {};
+
 			const requestTable = {
 				method: method,
 				...(!isElectron && { credentials: 'include' }),
@@ -973,21 +983,23 @@
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectron && { 'X-Auth-Token': authToken })
+					...electronHeaders
 				},
 				...(body && { body }),
 			}
 			return requestTable
 		}
 
-		function buildRequestMedia(authToken, method, body) {
+		async function buildRequestMedia(loggedUser, method, body) {
+			const electronHeaders = isElectron ? await electronHeader() : {};
+
 			const requestTable = {
 				method: method,
 				...(!isElectron && { credentials: 'include' }),
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...(isElectron && { 'X-Auth-Token': authToken })
+					...electronHeaders
 				},
 			}
 			return requestTable
@@ -999,11 +1011,24 @@
 
 		async function onlineCheck() {
 			try {
-				const ping = await fetch(`${mb.baseUrl}/api/v1/client-settings/global/list`, { method: 'HEAD', cache: 'no-store' });
+				const ping = await fetch(`${mb.baseUrl}/api/v1/claim`, {
+					method: 'GET',
+					cache: 'no-store',
+					headers: {
+						'Content-Type': 'application/json',
+						'X-Requested-With': 'XMLHttpRequest',
+						'skip_zrok_interstitial': '1',
+					}
+				});
+				let pingJSON = await ping.json();
 				if (ping.ok) {
 					setNetworkStatus('online');
 				}
-			} catch {
+			} catch (err) {
+				console.error("onlineCheck ERROR:", err);
+				console.error("name:", err?.name);
+				console.error("message:", err?.message);
+				console.error("stack:", err?.stack);
 				// still offline, ignore
 			}
 		}
@@ -1033,7 +1058,21 @@
 			}
 
 			try {
-				const response = await fetch(`${mb.baseUrl}${API_url}`, buildRequest(mb.authToken, method, body));
+				const req = await buildRequest(mb.loggedUser, method, body);
+
+				const response = await fetch(`${mb.baseUrl}${API_url}`, req);
+
+				const rawBody = await response.text();
+
+				// Optional: try parsing manually
+				let parsed = null;
+				try {
+					parsed = JSON.parse(rawBody);
+				} catch (e) {
+					console.warn(`API ${API_url} BODY IS NOT JSON`);
+				}
+
+
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
@@ -1044,7 +1083,7 @@
 				setNetworkStatus('online');
 
 				if (returnval) {
-					const output = await response.json();
+					const output = parsed;
 					if (cacheKey != null) await cacheData(db, cacheKey, output);
 					return output;
 				}
@@ -1318,7 +1357,7 @@
 							}
 
 
-							if (isElectron) await deleteToken();
+							if (isElectron) await deleteUserPass(mb.loggedUser);
 
 							//sectionHide(stickyContainer);
 							//sectionShow(blanker);
@@ -1456,6 +1495,7 @@
 			});
 
 			scrollbox.addEventListener('mouseenter', () => {
+				if (isCapacitor) return;
 				updateScrollbarThumb();
 				showScrollbarTemporarily();
 			});
@@ -2390,9 +2430,9 @@
 
 		function obAddBookToTable(book) {
 			let page = 1;
-			if (book.readProgress){
-				page = (book.readProgress.page == book.media.pagesCount) 
-					? page = book.media.pagesCount 
+			if (book.readProgress) {
+				page = (book.readProgress.page == book.media.pagesCount)
+					? page = book.media.pagesCount
 					: page = book.readProgress.page
 			}
 
@@ -2458,7 +2498,7 @@
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = buildRequest(mb.authToken, 'GET', null)
+			let request = buildRequest(mb.loggedUser, 'GET', null)
 
 			let bookData = {
 				bookId: bookId,
@@ -2624,7 +2664,7 @@
 			}
 
 			try {
-				const response = await fetch(url, buildRequestMedia(mb.authToken, 'GET', null));
+				const response = await fetch(url, await buildRequestMedia(mb.loggedUser, 'GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();
@@ -2683,7 +2723,7 @@
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 
 				if (obIsBookCompleted(rd.bookId)) {
-					mb.offlineBooks[bookId].page  = mb.offlineBooks[bookId].pages;
+					mb.offlineBooks[bookId].page = mb.offlineBooks[bookId].pages;
 					obSaveTable();
 				}
 
@@ -2748,11 +2788,36 @@
 			const libraries = await callAPI('c_libraries', '/api/v1/libraries');
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 
+			mb.libraryError = false;
+			mb.libraryNames = "<ul>";
+			Array.from(libraries).forEach(libItem => {
+				if (libItem.analyzeDimensions == false){
+					mb.libraryError = true;
+					mb.libraryNames = mb.libraryNames + "<li style='text-align:left'>" + libItem.name + "</li>"
+				}
+			});
+			mb.libraryNames = mb.libraryNames + "</ul>";
+			//TODO
+			/*
+			if (libraryError){
+				showModal('circle-mark-svg.svg', true, "Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames,
+							[{ label: 'Ok', runfunction: closeModal, high: true }]);
+						return;
+			}		
+			alert("Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames)
+			*/
 			await displayLibraries(libraries);
 
 			await updateSizer(libraries)
 
 			updateStickyMenu();
+
+			if (mb.libraryError){
+				showModal('circle-mark-svg.svg', true, "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>"+mb.libraryNames,
+							[{ label: 'Ok', runfunction: closeModal, high: true }]);
+						return;
+			}		
+
 		}
 
 
@@ -2854,6 +2919,8 @@
 
 			item.addEventListener('mouseenter', () => {
 				// Added this to unselect pre-scaled book
+				if (isCapacitor) return;
+
 				if (mb.currentlyScaled != null) {
 					mb.currentlyScaled.classList.remove('scaled');
 
@@ -2866,6 +2933,8 @@
 			});
 
 			item.addEventListener('mouseleave', () => {
+				if (isCapacitor) return;
+
 				item.classList.remove('scaled');
 				item.parentElement.classList.remove('top-pop');
 				mb.clickingTile = null;
@@ -3443,10 +3512,7 @@
 
 		async function openReadlists() {
 			libraryHighlight('readlistsButton', false);		// Triggers and manages the library menu
-			//libraryHighlight('readlistsButton2', false);		// Triggers and manages the library menu
-			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 
-			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
 			const readlistsPage = await callAPI(`c_readlists`,
 				`/api/v1/readlists?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'GET'
@@ -3457,10 +3523,7 @@
 
 		async function openCollections() {
 			libraryHighlight('collectionsButton', false);		// Triggers and manages the library menu
-			//libraryHighlight('collectionsButton2', false);		// Triggers and manages the library menu
-			//const allSeries = await fetchAllSeries(libraryId);		// Updates the series within the library
 
-			//await displaySeries(allSeries, seriesGrid, seriesId, libraryId);
 			const collectionsPage = await callAPI(`c_collections`,
 				`/api/v1/collections?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 				'GET'
@@ -5311,6 +5374,7 @@
 		}
 
 		function buildPageObject(pageData) {
+
 			const isBlank = (pageData == 'blank');
 			const isHidden = (pageData == 'hidden');
 

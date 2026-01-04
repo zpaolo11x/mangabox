@@ -1,7 +1,11 @@
 Main UI
-- Improved credits text and time text on series page header
-- Improved library buttons sizing logic
+- Removed Remember Me from login screen
+
+Reader UI
+- Added warning message when a library has analise pages dimensions disabled
+
+Build
+- Changed authentication on Electron app
 
 Fixes
-- Fixed read position sync for downloaded books
-- Fixed webtoon page progress issue
+- Fixed keyboard input issue on iOS 15
