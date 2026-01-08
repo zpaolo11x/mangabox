@@ -53,22 +53,22 @@
 						</div>
 					</li>
 					-->
-					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item press-button">
+					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="themeChanger" title="Light/Dark Theme" class="library-item press-button">
+					<li id="themeChanger" data-i18n-title="button.lightdark" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="colorChanger" title="Theme Color" class="library-item press-button">
+					<li id="colorChanger" data-i18n-title="button.themecolor" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
-					<li id="offlineLibrary" title="Offline Books" class="library-item no-grow press-button">
+					<li id="offlineLibrary" data-i18n-title="button.offlinebooks" class="library-item no-grow press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-download glyph-dark"></span>
 						</div>
@@ -77,7 +77,7 @@
 							<span class="fa-solid fa-spinner glyph-dark mb-accent layer"></span>
 						</div>
 					</li>
-					<li id="searchField" title="Search" class="library-item search-field no-grow press-button">
+					<li id="searchField" data-i18n-title="button.search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
@@ -87,7 +87,7 @@
 						</div>
 						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" placeholder="Search...">
 					</li>
-					<li id="logOut" title="Logout" class="library-item press-button">
+					<li id="logOut" data-i18n-title="button.logout" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
 						</div>
@@ -121,8 +121,8 @@
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
-							<span id="stripPrevPage" title="Previous Page" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
-							<span id="stripNextPage" title="Next Page" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
+							<span id="stripPrevPage" data-i18n-title="navstrip.prevpage" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
+							<span id="stripNextPage" data-i18n-title="navstrip.nextpage" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
 						</div>
 					</div>
 				</div>
@@ -136,14 +136,14 @@
 					<div class="home-strip-parent">
 						<div id="homeStripSeriesResults" class="series-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
+							<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="search.seriesresults"></span></div>
 						</div>
 					</div>
 
 					<div class="home-strip-parent">
 						<div id="homeStripBooksResults" class="books-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;<span data-i18n="search.booksresults"></span></div>
 						</div>
 					</div>
 				</div>
@@ -155,17 +155,17 @@
 				<div id="bookDetailsContainer" class="section hidden blankstart">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
-							<div class="mini-buttons-2 press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.prevbook" onclick="jumpBookDetailsPrev()">
 								<span class="fa-solid fa-chevron-left"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" title="Go to library" onclick="jumpBookLibrary()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.nextbook" onclick="jumpBookLibrary()">
 								<span class="fa-solid fa-layer-group"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.gotolib" onclick="jumpBookDetailsNext()">
 								<span class="fa-solid fa-chevron-right"></span>
 							</div>
 						</div>
-						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" title="Open Book" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" data-i18n-title="bkdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
 							<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
 						</div>
 					</div>
@@ -335,19 +335,21 @@
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
 		<h1>MangaBox v0.3.8</h1>
-		<div>MangaBox is a streamlined client for your Komga media server.
-			To access your own, self-hosted server please enter the server URL in the login field, then your username and password. </div>
-		<div>MangaBox is not designed to access external sources and does not provide content, it is only designed to display and navigate your own libraries and read your own books.</div>
-		<h1>Features:</h1>
+
+		<div data-i18n="about.intro"></div>
+		<div data-i18n="about.disclaimer"></div>
+
+		<h1 data-i18n="about.features.title"></h1>
+
 		<ul>
-			<li>Connect easily to your Komga server from the onboarding screen</li>
-			<li>Light and dark themes with custom color highlights</li>
-			<li>Touch and gesture support for tablets and phones</li>
-			<li>Beautiful two-pages reading with paper-style visuals, page-turn animations and thumbnail previews</li>
-			<li>Sync reading progress with the server</li>
-			<li>Download books for offline reading</li>
-			<li>Quick filter libraries by language, read status, and direction</li>
-			<li>Global search for series and volumes</li>
+			<li data-i18n="about.features.connect"></li>
+			<li data-i18n="about.features.theme"></li>
+			<li data-i18n="about.features.touch"></li>
+			<li data-i18n="about.features.reader"></li>
+			<li data-i18n="about.features.sync"></li>
+			<li data-i18n="about.features.offline"></li>
+			<li data-i18n="about.features.filter"></li>
+			<li data-i18n="about.features.search"></li>
 		</ul>
 	</div>
 
@@ -409,6 +411,68 @@
 					.catch(err => console.error("Service Worker registration failed:", err));
 			});
 		}
+
+		//MB Language Management
+
+		let i18n = {};
+		let currentLang = 'en';
+
+		async function loadLanguage(lang) {
+			try {
+				const res = await fetch(`./i18n/${lang}.json`);
+				i18n = await res.json();
+				currentLang = lang;
+			} catch {
+				console.warn(`Missing language ${lang}, falling back to en`);
+				if (lang !== 'en') return loadLanguage('en');
+			}
+		}
+
+		function t(key, vars = {}) {
+			let str = i18n[key] || key;
+			for (const k in vars) {
+				str = str.replace(`{${k}}`, vars[k]);
+			}
+			return str;
+		}
+
+		function translateDOM_OLD(root = document) {
+
+			root.querySelectorAll("[data-i18n]").forEach(el => {
+				el.textContent = t(el.dataset.i18n);
+			});
+			root.querySelectorAll("[data-i18n-title]").forEach(el => {
+				el.setAttribute("title", t(el.dataset.i18nTitle));
+			});
+		}
+
+		function translateDOM(root = document) {
+			const elements = root === document
+				? document.querySelectorAll("[data-i18n], [data-i18n-title]")
+				: [
+					...(root.matches("[data-i18n], [data-i18n-title]") ? [root] : []),
+					...root.querySelectorAll("[data-i18n], [data-i18n-title]")
+				];
+
+			elements.forEach(el => {
+				if (el.dataset.i18n) {
+					el.textContent = t(el.dataset.i18n);
+				}
+				if (el.dataset.i18nTitle) {
+					el.title = t(el.dataset.i18nTitle);
+				}
+			});
+		}
+
+		async function initApp() {
+			//const lang = detectLanguage();
+			await loadLanguage(currentLang);
+			translateDOM();
+		}
+
+		// call it
+		initApp();
+
 
 		executeFade(1);
 
@@ -473,7 +537,7 @@
 
 
 		//MB Pinch To Zoom
-		// ===== Two-Finger Pinch + Pan for MangaBox =====
+		// Two-Finger Pinch + Pan
 
 		//const page = document.getElementById("touchPanel");
 		//const pageTarget = document.getElementById("readerContainer");
@@ -784,12 +848,29 @@
 
 		//let mb.readerScale = getComputedStyle(document.documentElement).getPropertyValue('--mb-reader-scale');
 
-		function addItem(itemkind, properties) {
+		function addItem_OLD(itemkind, properties) {
 			const { style, ...rest } = properties;
 			const element = Object.assign(document.createElement(itemkind), rest);
 			if (style) Object.assign(element.style, style);
 			return element;
 		}
+
+		function addItem(itemkind, properties = {}) {
+			const { style, dataset, ...rest } = properties;
+
+			const element = Object.assign(document.createElement(itemkind), rest);
+
+			if (style) Object.assign(element.style, style);
+
+			if (dataset) {
+				Object.entries(dataset).forEach(([key, value]) => {
+					element.dataset[key] = value;
+				});
+			}
+
+			return element;
+		}
+
 
 		function getScreenAR() {
 			return (window.innerWidth / window.innerHeight);
@@ -861,15 +942,15 @@
 					// Theme management variables
 					themeControl: [
 						{
-							label: 'Light theme',
+							label: 'theme.light',
 							icon: 'fa-sun',
 							isDark: 0
 						}, {
-							label: 'Dark theme',
+							label: 'theme.dark',
 							icon: 'fa-moon',
 							isDark: 1
 						}, {
-							label: 'System theme',
+							label: 'theme.system',
 							icon: 'fa-wand-magic-sparkles',
 							isDark: 2
 						}
@@ -877,27 +958,27 @@
 
 					readerThemeControl: [
 						{
-							label: 'Classic theme',
+							label: 'rdtheme.classic',
 							icon: 'fa-palette',
 							style: 'classic'
 						}, {
-							label: 'Dark accent',
+							label: 'rdtheme.dark',
 							icon: 'fa-moon',
 							style: 'dark-accent'
 						}, {
-							label: 'Light accent',
+							label: 'rdtheme.light',
 							icon: 'fa-sun',
 							style: 'light-accent'
 						}, {
-							label: 'Transparent',
+							label: 'rdtheme.transparent',
 							icon: 'fa-square',
 							style: 'transparent'
 						}, {
-							label: 'White',
+							label: 'rdtheme.white',
 							icon: 'fa-w',
 							style: 'white'
 						}, {
-							label: 'Black',
+							label: 'rdtheme.black',
 							icon: 'fa-b',
 							style: 'black'
 						}
@@ -905,11 +986,11 @@
 
 					readerAnimationControl: [
 						{
-							label: 'No Page Animation',
+							label: 'rdanimation.no',
 							icon: 'fa-pause',
 							value: 0
 						}, {
-							label: 'Animate Pages',
+							label: 'rdanimation.yes',
 							icon: 'fa-right-left',
 							value: 1
 						}
@@ -1227,7 +1308,9 @@
 			});
 
 			themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
-			themeLabel.title = mb.themeControl[mb.themePrefs].label;
+			themeChanger.dataset.i18nTitle = mb.themeControl[mb.themePrefs].label;
+			translateDOM(themeChanger)
+
 			// Change fa icons for light or dark theme
 			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
@@ -1378,7 +1461,8 @@
 						}, high: true
 					},
 					{
-						label: 'Cancel', runfunction: closeModal, high: false
+						// No need to use translateDOM because modals are modal and spawned each time
+						label: t('modal.cancel'), runfunction: closeModal, high: false
 					}
 				]
 			);
@@ -1609,7 +1693,7 @@
 
 			} catch (err) {
 				console.error("Error converting image:", err);
-				showModal('circle-mark-svg.svg', true, 'Failed to load image.',
+				showModal('circle-mark-svg.svg', true, t('modal.imageloadfail'),
 					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
 			}
 		}
@@ -1748,54 +1832,54 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Sort items',
+					title: 'button.sort',
 					switches: [
 						{
 							name: 'a_to_z',
-							caption: 'by Title',
-							longCaption: 'by Title A to Z',
+							caption: 'sort.titleaz',
+							longCaption: 'sort.titleaz.long',
 							iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 						}, {
 							name: 'z_to_a',
-							caption: 'by Title',
-							longCaption: 'by Title Z to A',
+							caption: 'sort.titleza',
+							longCaption: 'sort.titleza.long',
 							iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
 							sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 						}, {
 							name: '9_to_1',
-							caption: 'by Start',
-							longCaption: 'by Start Date New to Old',
+							caption: 'sort.startnewtoold',
+							longCaption: 'sort.startnewtoold.long',
 							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 						}, {
 							name: '1_to_9',
-							caption: 'by Start',
-							longCaption: 'by Start Date Old to New',
+							caption: 'sort.startoldtonew',
+							longCaption: 'sort.startoldtonew.long',
 							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
 						}, {
 							name: '9_to_1',
-							caption: 'by End',
-							longCaption: 'by End Date New to Old',
+							caption: 'sort.stopnewtoold',
+							longCaption: 'sort.stopnewtoold.long',
 							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
-							caption: 'by End',
-							longCaption: 'by End Date Old to New',
+							caption: 'sort.stopoldtonew',
+							longCaption: 'sort.stopoldtonew.long',
 							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
 							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
-							caption: 'Books',
-							longCaption: 'by Books Decreasing',
+							caption: 'sort.booksdecreasing',
+							longCaption: 'sort.booksdecreasing.long',
 							iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
 							sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
 						}, {
 							name: '9_to_1',
-							caption: 'Books',
-							longCaption: 'by Books Increasing',
+							caption: 'sort.booksincreasing',
+							longCaption: 'sort.booksincreasing.long',
 							iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
 							sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
 						}
@@ -1808,24 +1892,24 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Filter by read status',
+					title: 'button.filterread',
 					switches: [
 						{
 							name: 'all',
-							caption: 'All',
-							longCaption: 'All Series',
+							caption: 'filterread.all',
+							longCaption: 'filterread.all.long',
 							iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
 							filterFunction: (a) => true
 						}, {
 							name: 'unread',
-							caption: 'Unread',
-							longCaption: 'Unread Series',
+							caption: 'filterread.unread',
+							longCaption: 'filterread.unread.long',
 							iconClass: 'fa-regular fa-circle glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == false)
 						}, {
 							name: 'read',
-							caption: 'Read',
-							longCaption: 'Read Series',
+							caption: 'filterread.read',
+							longCaption: 'filterread.read.long',
 							iconClass: 'fa-solid fa-circle glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == true)
 						}
@@ -1838,32 +1922,32 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Filter by reading direction',
+					title: 'button.filterdirection',
 					switches: [
 						{
 							name: 'all',
-							caption: 'All',
-							longCaption: 'All Directions',
+							caption: 'filterdirection.all',
+							longCaption: 'filterdirection.all.long',
 							iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
 							filterFunction: (a) => true
 
 						}, {
 							name: 'l_to_r',
-							caption: 'L to R',
-							longCaption: 'Left to Right',
+							caption: 'filterdirection.l2r',
+							longCaption: 'filterdirection.l2r.long',
 							iconClass: 'fa-solid fa-arrow-right glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
 						}, {
 							name: 'r_to_l',
-							caption: 'R to L',
-							longCaption: 'Right to Left',
+							caption: 'filterdirection.r2l',
+							longCaption: 'filterdirection.r2l.long',
 							iconClass: 'fa-solid fa-arrow-left glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
 						}, {
 							name: 'webtoon',
-							caption: 'WToon',
-							longCaption: 'Webtoon',
+							caption: 'filterdirection.webtoon',
+							longCaption: 'filterdirection.webtoon.long',
 							iconClass: 'fa-solid fa-arrow-down glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
 						}
@@ -1876,12 +1960,12 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Filter by language',
+					title: 'button.filterlanguage',
 					switches: [
 						{
 							name: 'all',
-							caption: 'All',
-							longCaption: 'All Languages',
+							caption: 'filterlanguage.all',
+							longCaption: 'filterLanguage.all.long',
 
 							iconClass: 'fa-solid fa-earth-europe glyph-dark',
 							filterFunction: (a) => true
@@ -1956,8 +2040,9 @@
 
 			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
-				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
-
+				button.caption.dataset.i18n = `${button.switches[button.selected].caption}`;
+				translateDOM(button.caption);
+				
 				//For each button check if the button is a sort button or one of the filters buttons
 				if (button.switches[button.selected].sortFunction) {
 					// We are processing the sort
@@ -2015,7 +2100,7 @@
 		}
 
 		function buildFilterDialog(button, buttonIndex) {
-			let out = button.title;
+			let out = t(button.title);
 			out = out + '<ul class="filter-menu" id="filterMenu">';
 			button.switches.forEach((switchItem, index) => {
 				let isSelected = (button.selected == index);
@@ -2023,7 +2108,7 @@
 									<div class='smallbutton-wrapper'>
 										<span style="${switchItem.iconStyle}" class="${switchItem.iconClass}"></span>
 									</div>
-									<div class='library-name filter-menu-text'>${switchItem.longCaption}</div>
+									<div class='library-name filter-menu-text'>${t(switchItem.longCaption)}</div>
 								</li>`
 			});
 			out = out + "</ul>";
@@ -2035,7 +2120,9 @@
 			mb.filterButtons.forEach((button, index) => {
 				button.item = addItem('li', {
 					className: `filter-item press-button`,
-					title: button.title,
+					dataset: {
+						i18nTitle: button.title,
+					}
 				});
 				button.icon = addItem('div', {
 					className: `smallbutton-wrapper`,
@@ -2043,7 +2130,9 @@
 				});
 				button.caption = addItem('div', {
 					className: `library-name`,
-					innerHTML: `${button.switches[0].caption}`
+					dataset: {
+						i18n: `${button.switches[0].caption}`,
+					}
 				});
 				button.item.append(
 					button.icon,
@@ -2058,12 +2147,12 @@
 					saveLibraryFilters();
 				})
 				addLongPressListener(button.item, 'filter-item', async () => {
-					showModal('', false, buildFilterDialog(button, index), [{ label: 'Ok', runfunction: closeModal, high: true }]);
+					showModal('', false, buildFilterDialog(button, index), [{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
 				}, 500)
 			});
 
 			extraButtons.append(addItem('li', {
-				title: 'Reset filters and sorting',
+				//title: 'Reset filters and sorting',
 				className: `filter-item press-button`,
 				innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
@@ -2076,6 +2165,9 @@
 					applyLibraryFilters();
 					await executeFade(0);
 					saveLibraryFilters();
+				},
+				dataset: {
+					i18nTitle: 'filtersort.reset'
 				}
 			}));
 		}
@@ -5113,7 +5205,8 @@
 				readerAnimation.classList.remove(item.icon);
 			});
 			readerAnimation.classList.add(mb.readerAnimationControl[mb.readerAnimation].icon);
-			readerAnimation.title = mb.readerAnimationControl[mb.readerAnimation].label;
+			readerAnimation.dataset.i18nTitle = mb.readerAnimationControl[mb.readerAnimation].label;
+			translateDOM(readerAnimation)
 
 			rd.turnTime = rd.turnTime0 * mb.readerAnimation;
 			rd.scrollSpeed = rd.scrollSpeed0 * mb.readerAnimation;
@@ -5128,7 +5221,8 @@
 				readerTheme.classList.remove(item.icon);
 			});
 			readerTheme.classList.add(mb.readerThemeControl[mb.readerThemePrefs].icon);
-			readerTheme.title = mb.readerThemeControl[mb.readerThemePrefs].label;
+			readerTheme.dataset.i18nTitle = mb.readerThemeControl[mb.readerThemePrefs].label;
+			translateDOM(readerTheme)
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
