@@ -415,7 +415,7 @@
 		//MB Language Management
 
 		let i18n = {};
-		let currentLang = 'it';
+		let currentLang = 'en';
 
 		async function loadLanguage(lang) {
 			try {
@@ -7044,6 +7044,11 @@
 						event.preventDefault();
 						handleCloseReader();
 					}
+					break;
+				case 'I':
+					console.log("SWITCH")
+					currentLang = 'it';
+					initApp();
 					break;
 				/*
 				case 'D':
