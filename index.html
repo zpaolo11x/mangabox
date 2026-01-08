@@ -2015,7 +2015,7 @@
 		}
 
 		function buildFilterDialog(button, buttonIndex) {
-			let out = button.title + '<hr>';
+			let out = button.title;
 			out = out + '<ul class="filter-menu" id="filterMenu">';
 			button.switches.forEach((switchItem, index) => {
 				let isSelected = (button.selected == index);
