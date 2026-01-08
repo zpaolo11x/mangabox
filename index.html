@@ -158,10 +158,10 @@
 							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.prevbook" onclick="jumpBookDetailsPrev()">
 								<span class="fa-solid fa-chevron-left"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.nextbook" onclick="jumpBookLibrary()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.gotolib" onclick="jumpBookLibrary()">
 								<span class="fa-solid fa-layer-group"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.gotolib" onclick="jumpBookDetailsNext()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.nextbook" onclick="jumpBookDetailsNext()">
 								<span class="fa-solid fa-chevron-right"></span>
 							</div>
 						</div>
@@ -415,7 +415,7 @@
 		//MB Language Management
 
 		let i18n = {};
-		let currentLang = 'en';
+		let currentLang = 'it';
 
 		async function loadLanguage(lang) {
 			try {
@@ -446,7 +446,7 @@
 			});
 		}
 
-		function translateDOM(root = document) {
+		function translateDOM_OLD2(root = document) {
 			const elements = root === document
 				? document.querySelectorAll("[data-i18n], [data-i18n-title]")
 				: [
@@ -455,11 +455,50 @@
 				];
 
 			elements.forEach(el => {
+				console.log("TRANSLATING:")
+				console.log(el)
 				if (el.dataset.i18n) {
 					el.textContent = t(el.dataset.i18n);
 				}
 				if (el.dataset.i18nTitle) {
 					el.title = t(el.dataset.i18nTitle);
+				}
+			});
+		}
+
+		function getI18nVars(el, base) {
+			const raw = el.dataset[`${base}Vars`];
+			if (!raw) return undefined;
+
+			try {
+				return JSON.parse(raw);
+			} catch {
+				console.warn("Invalid i18n vars:", raw);
+				return undefined;
+			}
+		}
+
+		function translateDOM(root = document) {
+			const elements =
+				root === document
+					? document.querySelectorAll("[data-i18n], [data-i18n-title]")
+					: root.matches("[data-i18n], [data-i18n-title]")
+						? [root]
+						: [];
+
+			elements.forEach(el => {
+				if (el.dataset.i18n) {
+					el.textContent = t(
+						el.dataset.i18n,
+						getI18nVars(el, "i18n")
+					);
+				}
+
+				if (el.dataset.i18nTitle) {
+					el.title = t(
+						el.dataset.i18nTitle,
+						getI18nVars(el, "i18nTitle")
+					);
 				}
 			});
 		}
@@ -2042,7 +2081,7 @@
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
 				button.caption.dataset.i18n = `${button.switches[button.selected].caption}`;
 				translateDOM(button.caption);
-				
+
 				//For each button check if the button is a sort button or one of the filters buttons
 				if (button.switches[button.selected].sortFunction) {
 					// We are processing the sort
@@ -2966,13 +3005,15 @@
 			*/
 			await displayLibraries(libraries);
 
+			translateDOM(librariesList);
+
 			await updateSizer(libraries)
 
 			updateStickyMenu();
 
 			if (mb.libraryError) {
-				showModal('circle-mark-svg.svg', true, "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>" + mb.libraryNames,
-					[{ label: 'Ok', runfunction: closeModal, high: true }]);
+				showModal('circle-mark-svg.svg', true, t('modal.analyzewarning') + mb.libraryNames,
+					[{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
 				return;
 			}
 
@@ -3160,7 +3201,9 @@
 
 			item.childNodes[0]?.remove();
 
-			item.title = 'Open series';
+			//item.title = 'Open series';
+			item.dataset.i18nTitle = 'series.open';
+			translateDOM(item);
 
 			const seriesItem = addItem('div', {
 				className: 'series-item'
@@ -3217,7 +3260,10 @@
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
 				title: 'Mark series as read',
-				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-check"></span>`,
+				dataset: {
+					i18nTitle: 'series.markasread'
+				}
 			});
 			addClickPointerEvents(markAsRead, async () => {
 				await setSeriesReadStatus(serie.id, true, item);
@@ -3226,13 +3272,18 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark series as unread',
-				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`,
+				dataset: {
+					i18nTitle: 'series.markasunread'
+				}
 			});
 			addClickPointerEvents(markAsUnread, async () => {
 				await setSeriesReadStatus(serie.id, false, item);
 			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
+
+			translateDOM(markAsRead);
+			translateDOM(markAsUnread);
 
 			// Find alternate title with label 'Time'
 			const altTitle = getAltTitles(serie);
@@ -3247,8 +3298,13 @@
 			const timeLabel = addItem('span', {
 				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
-				title: `Filter time: ${altTitle.time}`
+				dataset: {
+					i18nTitle: 'series.filtertime',
+					i18nTitleVars: JSON.stringify({ time: altTitle.time })
+				}
 			});
+
+			translateDOM(timeLabel);
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
@@ -3268,9 +3324,14 @@
 					const storyLabel = addItem('div', {
 						innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
 						className: 'red data-label search-trigger',
-						title: `Filter artist: ${altTitle.story}`
+						//title: `Filter artist: ${altTitle.story}`,
+						dataset: {
+							i18nTitle: 'series.filterartist',
+							i18nTitleVars: JSON.stringify({ name: altTitle.story })
+						}
 					});
 
+					translateDOM(storyLabel);
 					artistRow.append(storyLabel);
 
 					addClickPointerEvents(storyLabel, async () => {
@@ -3283,9 +3344,13 @@
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
 						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
 						className: 'red data-label search-trigger',
-						title: `Filter artist: ${altTitle.art}`
+						//title: `Filter artist: ${altTitle.art}`
+						dataset: {
+							i18nTitle: 'series.filterartist',
+							i18nTitleVars: JSON.stringify({ name: altTitle.art })
+						}
 					});
-
+					translateDOM(artLabel);
 					artistRow.append(artLabel);
 
 					addClickPointerEvents(artLabel, async () => {
@@ -3294,15 +3359,19 @@
 					});
 				}
 
-
-
 			} else {
 				if (altTitle.story != 'N/A') {
 					const artistLabel = addItem('div', {
 						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
-						title: `Filter artist: ${altTitle.story}`,
-						className: 'red data-label search-trigger'
+						//title: `Filter artist: ${altTitle.story}`,
+						className: 'red data-label search-trigger',
+						dataset: {
+							i18nTitle: 'series.filterartist',
+							i18nTitleVars: JSON.stringify({ name: altTitle.story })
+						}
 					});
+
+					translateDOM(artistLabel);
 					artistRow.append(artistLabel);
 
 					addClickPointerEvents(artistLabel, async () => {
@@ -3790,6 +3859,9 @@
 				id: itemId,
 				className: 'library-item press-button',
 				title: libraryName,
+				dataset:{
+					i18nTitle: libraryName,
+				}
 			});
 
 			addPressEvents(listItem, pressDown, pressUp);
@@ -3827,7 +3899,10 @@
 
 			const libraryNameDiv = addItem('div', {
 				className: 'library-name',
-				textContent: libraryName
+				textContent: libraryName,
+				dataset: {
+					i18n: libraryName,
+				}
 			});
 
 			thumbnailWrapper.append(libraryThumbnail);
@@ -3932,8 +4007,8 @@
 				debugPrint("----Input is a file")
 				if (!fileOrBase64.type.startsWith('image/')) {
 					debugPrint("----But it's not a valid image file")
-					showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
-						[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+					showModal('circle-mark-svg.svg', true, t('modal.validimage'),
+						[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
 					return;
 				}
 				base64 = await readFileAsBase64(fileOrBase64);
@@ -3949,15 +4024,15 @@
 			else {
 				debugPrint("----Input is not valid")
 				debugPrint(fileOrBase64);
-				showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
-					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+				showModal('circle-mark-svg.svg', true, t('modal.validimage'),
+					[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
 				return;
 			}
 
 			// Show confirmation modal
-			showModal(base64, false, 'Set this image as library thumbnail?',
+			showModal(base64, false, t('modal.confirmimage'),
 				[{
-					label: 'Ok',
+					label: t('modal.ok'),
 					runfunction: async () => {
 						mb.libraryIcons[libraryId] = base64;
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
@@ -3966,7 +4041,7 @@
 					},
 					high: true,
 				}, {
-					label: 'Cancel', runfunction: cancelUpdate, high: false
+					label: t('modal.cancel'), runfunction: cancelUpdate, high: false
 				}
 				]);
 		}
@@ -4022,14 +4097,14 @@
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'logo/mangabox-logo-new.svg')
+			let dashboard = buildLibraryItem('homeButton', 'lib.dashboard', 'logo/mangabox-logo-new.svg')
 			dashboard.classList.add('shrink-first');
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
 
-			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-symbols/readlists3d.png')
+			let readlists = buildLibraryItem('readlistsButton', 'lib.readlists', 'library-symbols/readlists3d.png')
 			readlists.classList.add('shrink-first');
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
@@ -4043,7 +4118,7 @@
 				if (res.content.length == 0) readlistsButton.style.display = 'none';
 			});
 
-			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-symbols/collections3d.png')
+			let collections = buildLibraryItem('collectionsButton', 'lib.collections', 'library-symbols/collections3d.png')
 			collections.classList.add('shrink-first');
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
@@ -4065,28 +4140,28 @@
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							showModal('', true, generatePics(libraryId, "Select a thumbnail or open an image"),
+							showModal('', true, generatePics(libraryId, t('modal.selectopenimage')),
 								[{
-									label: 'Gallery',
+									label: t('modal.gallery'),
 									runfunction: async () => { await pickImage(libraryId); },
 									high: true
 								}, {
-									label: 'Files',
+									label: t('modal.files'),
 									runfunction: async () => { await pickFile(libraryId); },
 									high: true
 								}, {
-									label: 'Cancel',
+									label: t('modal.cancel'),
 									runfunction: closeModal,
 									high: false
 								}]);
 
 						} else {
-							showModal('', false, generatePics(libraryId, "Select a thumbnail or drag an image over the library button"), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
+							showModal('', false, generatePics(libraryId, t('modal.selectordrag')), [{ label: t('modal.ok'), runfunction: () => closeModal(), high: true }]);
 						}
 					} else {
-						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', [
+						showModal(mb.libraryIcons[libraryId], false, t('modal.removethumb'), [
 							{
-								label: 'Ok',
+								label: t('modal.ok'),
 								runfunction: async () => {
 									await delete mb.libraryIcons[libraryId];
 									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
@@ -4096,7 +4171,7 @@
 								},
 								high: true
 							},
-							{ label: 'Cancel', runfunction: cancelUpdate, high: false }
+							{ label: t('modal.cancel'), runfunction: cancelUpdate, high: false }
 						]);
 
 					}
@@ -4132,9 +4207,10 @@
 				});
 
 				librariesList.append(listItem);
+
 			});
 
-
+			translateDOM();
 		}
 
 		function getAltTitles(serie) {
@@ -4181,7 +4257,7 @@
 				(serie.metadata.summary != "")
 					? serie.metadata.summary.replace(/\n/g, '<br>')
 					: (serie.booksMetadata.summary != ""
-						? "<u>Summary from book " + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+						? '<u><span data-i18n="seriesheader.summary"></span> ' + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
 						: ""
 					)
 			)
@@ -4191,13 +4267,13 @@
 			if (isReadlist || ((altTitle.story == 'N/A') && (altTitle.art == 'N/A')) || altTitle == null) {
 				creditString = ''
 			} else if (altTitle.story == 'N/A') {
-				creditString = ` - Art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+				creditString = ` - <span data-i18n="seriesheader.artby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			} else if (altTitle.art == 'N/A') {
-				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+				creditString = ` - <span data-i18n="seriesheader.storyby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 			} else if (altTitle.story == altTitle.art) {
-				creditString = ` - Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+				creditString = ` - <span data-i18n="seriesheader.storyandartby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 			} else {
-				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+				creditString = ` - <span data-i18n="seriesheader.storyby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, <span data-i18n="seriesheader.artby2"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			}
 
 			const timeString =
@@ -4218,7 +4294,7 @@
 				${serie.metadata?.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "book" : "books"}) ${isReadlist ? '' : creditString}</span>
+				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "<span data-i18n=\"seriesheader.book\"></span>" : "<span data-i18n=\"seriesheader.books\"></span>"}) ${isReadlist ? '' : creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${summary}</div>
@@ -4233,6 +4309,8 @@
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${title}</span>
 			`
+
+			translateDOM();
 		}
 
 		//MB Book Details Panel 
@@ -4654,7 +4732,7 @@
 
 		dashboardElements = {
 			keepReading: {
-				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
+				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
 				getItems: async (page, size) => {
 					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
@@ -4673,7 +4751,7 @@
 
 
 			onDeck: {
-				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
+				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;<span data-i18n="header.ondeck"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_ondeck`, `/api/v1/books/ondeck`));
 				},
@@ -4683,7 +4761,7 @@
 			},
 
 			recentBooks: {
-				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
+				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
@@ -4696,7 +4774,7 @@
 			},
 
 			recentSeries: {
-				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
+				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
@@ -4706,7 +4784,7 @@
 			},
 
 			updatedSeries: {
-				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
+				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;<span data-i18n="header.lastupdatedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
@@ -4716,7 +4794,7 @@
 			},
 
 			readBooks: {
-				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
+				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;<span data-i18n="header.lastreadbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_readbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
@@ -4776,7 +4854,10 @@
 			});
 			item.gridButton = addItem('div', {
 				className: 'strip-all press-flat-button strip-button',
-				innerHTML: '<span title="View All" class="fa-solid fa-grip glyph-dark"></span>',
+				innerHTML: '<span class="fa-solid fa-grip glyph-dark"></span>',
+				dataset: {
+					i18nTitle: 'navstrip.all'
+				}
 			});
 			item.homeStrip = addItem('div', {
 				className: 'home-strip' + (isLast ? ' last-strip' : ''),

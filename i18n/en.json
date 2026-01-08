@@ -1,4 +1,8 @@
 {
+	"lib.dashboard": "Dashboard",
+	"lib.readlists": "Read Lists",
+	"lib.collections": "Collections",
+
 	"button.fullscreen": "Toggle Fullscreen",
 	"button.lightdark": "Light/Dark Theme",
 	"button.themecolor": "Theme Color",
@@ -6,8 +10,16 @@
 	"button.search": "Search",
 	"button.logout": "Logout",
 
+	"header.keepreading": "Keep Reading",
+	"header.ondeck": "On Deck",
+	"header.lastaddedbooks": "Last Added Books",
+	"header.lastaddedseries": "Last Added Series",
+	"header.lastupdatedseries": "Last Updated Series",
+	"header.lastreadbooks": "Last Read Books",
+
 	"navstrip.prevpage": "Previous Page",
 	"navstrip.nextpage": "Next Page",
+	"navstrip.all": "View All",
 
 	"search.seriesresults": "Series Results",
 	"search.booksresults": "Books Results",
@@ -46,7 +58,16 @@
 	"modal.ok": "Ok",
 	"modal.cancel": "Cancel",
 	"modal.imageloadfail": "Failed to laod image.",
+	"modal.analizewarning": "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>",
 
+	"modal.validimage": "Please provide a valid image.",
+	"modal.confirmimage": "Set this image as library thumbnail?",
+	"modal.selectopenimage": "Select a thumbnail or open an image",
+	"modal.gallery": "Gallery",
+	"modal.files": "Files",
+	"modal.selectordrag": "Select a thumbnail or drag an image over the library button",
+	"modal.removethumb": "Remove custom library thumbnail?",
+	
 	"button.sort": "Sort Items",
 	"button.filterread": "Filter by read status",
 	"button.filterdirection": "Filter by reading direction",
@@ -88,5 +109,20 @@
 	"filterlanguage.all": "All",
 	"filterLanguage.all.long": "All Languages",
 
-	"filtersort.reset": "Reset filters and sorting"
+	"filtersort.reset": "Reset filters and sorting",
+
+	"series.open": "Open series",
+	"series.filterartist": "Filter artist: {name}",
+	"series.filtertime": "Filter time: {time}",
+	"series.markasread": "Mark series as read",
+	"series.markasunread": "Mark series as unread",
+
+	"seriesheader.book": "book",
+	"seriesheader.books": "books",
+	"seriesheader.storyby": "Story by",
+	"seriesheader.artby": "Art by",
+	"seriesheader.artby2": "art by",
+	"seriesheader.storyandartby": "Story and art by",
+	"seriesheader.summary": "Summari from book"
+
 }
