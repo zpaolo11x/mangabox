@@ -1578,6 +1578,10 @@
 			myModal.classList.add('visible');
 		}
 
+		function isModalVisible() {
+			return (myModal.classList.contains('visible'))
+		}
+
 		function closeModal() {
 			myModal.classList.add('unfade');
 			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
@@ -1749,41 +1753,49 @@
 						{
 							name: 'a_to_z',
 							caption: 'by Title',
+							longCaption: 'by Title A to Z',
 							iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 						}, {
 							name: 'z_to_a',
 							caption: 'by Title',
+							longCaption: 'by Title Z to A',
 							iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
 							sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 						}, {
 							name: '9_to_1',
 							caption: 'by Start',
-							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
-						}, {
-							name: '1_to_9',
-							caption: 'by Start',
+							longCaption: 'by Start Date New to Old',
 							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 						}, {
+							name: '1_to_9',
+							caption: 'by Start',
+							longCaption: 'by Start Date Old to New',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
+						}, {
 							name: '9_to_1',
 							caption: 'by End',
-							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
-						}, {
-							name: '1_to_9',
-							caption: 'by End',
+							longCaption: 'by End Date New to Old',
 							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
+							caption: 'by End',
+							longCaption: 'by End Date Old to New',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
+						}, {
+							name: '1_to_9',
 							caption: 'Books',
+							longCaption: 'by Books Increasing',
 							iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
 							sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
 						}, {
 							name: '9_to_1',
 							caption: 'Books',
+							longCaption: 'by Books Decreasing',
 							iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
 							sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
 						}
@@ -1801,16 +1813,19 @@
 						{
 							name: 'all',
 							caption: 'All',
+							longCaption: 'All Series',
 							iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
 							filterFunction: (a) => true
 						}, {
 							name: 'unread',
 							caption: 'Unread',
+							longCaption: 'Unread Series',
 							iconClass: 'fa-regular fa-circle glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == false)
 						}, {
 							name: 'read',
 							caption: 'Read',
+							longCaption: 'Read Series',
 							iconClass: 'fa-solid fa-circle glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == true)
 						}
@@ -1828,23 +1843,27 @@
 						{
 							name: 'all',
 							caption: 'All',
+							longCaption: 'All Directions',
 							iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
 							filterFunction: (a) => true
 
 						}, {
 							name: 'l_to_r',
 							caption: 'L to R',
+							longCaption: 'Left to Right',
 							iconClass: 'fa-solid fa-arrow-right glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
 						}, {
 							name: 'r_to_l',
 							caption: 'R to L',
+							longCaption: 'Right to Left',
 							iconClass: 'fa-solid fa-arrow-left glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
 						}, {
 							name: 'webtoon',
 							caption: 'WToon',
+							longCaption: 'Webtoon',
 							iconClass: 'fa-solid fa-arrow-down glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
 						}
@@ -1862,6 +1881,8 @@
 						{
 							name: 'all',
 							caption: 'All',
+							longCaption: 'All Languages',
+
 							iconClass: 'fa-solid fa-earth-europe glyph-dark',
 							filterFunction: (a) => true
 						}
@@ -1869,7 +1890,12 @@
 				},
 			});
 		}
+
 		mb.filterTable = initFilterTable();
+
+		function languageName(tag, locale = navigator.language) {
+			return new Intl.DisplayNames([locale], { type: "language" }).of(tag);
+		}
 
 		async function buildLanguageList() {
 			const languageList = await callAPI('c_languages', `/api/v1/languages`);
@@ -1877,6 +1903,7 @@
 				mb.filterTable.filter_by_language.switches.push({
 					name: item,
 					caption: item.toUpperCase(),
+					longCaption: languageName(item),
 					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
 					iconStyle: `background-image:url('flags/${item}.svg')`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
@@ -1968,9 +1995,48 @@
 			*/
 		}
 
+
+		async function setFilterValue(itemIndex, valueIndex) {
+			console.log(mb.filterButtons[itemIndex])
+
+			mb.filterButtons[itemIndex].selected = valueIndex;
+
+			[...filterMenu.children].forEach((li, index) => {
+				li.classList.toggle('highlighted', index === valueIndex);
+			});
+
+			await executeFade(1);
+			applyLibraryFilters();
+			await executeFade(0);
+			saveLibraryFilters();
+
+			console.log(filterMenu);
+
+
+			//TODO Maybe make this smoother instead of reloading the whole menu!
+			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: closeModal, high: true }]);
+		}
+
+		function buildFilterDialog(button, buttonIndex) {
+			console.log(button);
+			let out = button.title + '<hr>';
+			out = out + '<ul class="filter-menu" id="filterMenu">';
+			button.switches.forEach((switchItem, index) => {
+				let isSelected = (button.selected == index);
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setFilterValue(${buttonIndex},${index})">
+									<div class='smallbutton-wrapper'>
+										<span style="${switchItem.iconStyle}" class="${switchItem.iconClass}"></span>
+									</div>
+									<div class='library-name filter-menu-text'>${switchItem.longCaption}</div>
+								</li>`
+			});
+			out = out + "</ul>";
+			return (out)
+		}
+
 		// Build filter buttons items
 		function buildFilters() {
-			mb.filterButtons.forEach(button => {
+			mb.filterButtons.forEach((button, index) => {
 				button.item = addItem('li', {
 					className: `filter-item press-button`,
 					title: button.title,
@@ -1995,6 +2061,9 @@
 					await executeFade(0);
 					saveLibraryFilters();
 				})
+				addLongPressListener(button.item, 'filter-item', async () => {
+					showModal('', false, buildFilterDialog(button, index), [{ label: 'Ok', runfunction: closeModal, high: true }]);
+				}, 500)
 			});
 
 			extraButtons.append(addItem('li', {
@@ -2014,6 +2083,7 @@
 				}
 			}));
 		}
+
 		buildFilters();
 
 		//TODO Check what happens for webtoons since readerScale should be 100 for them?
@@ -2791,7 +2861,7 @@
 			mb.libraryError = false;
 			mb.libraryNames = "<ul>";
 			Array.from(libraries).forEach(libItem => {
-				if (libItem.analyzeDimensions == false){
+				if (libItem.analyzeDimensions == false) {
 					mb.libraryError = true;
 					mb.libraryNames = mb.libraryNames + "<li style='text-align:left'>" + libItem.name + "</li>"
 				}
@@ -2812,11 +2882,11 @@
 
 			updateStickyMenu();
 
-			if (mb.libraryError){
-				showModal('circle-mark-svg.svg', true, "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>"+mb.libraryNames,
-							[{ label: 'Ok', runfunction: closeModal, high: true }]);
-						return;
-			}		
+			if (mb.libraryError) {
+				showModal('circle-mark-svg.svg', true, "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>" + mb.libraryNames,
+					[{ label: 'Ok', runfunction: closeModal, high: true }]);
+				return;
+			}
 
 		}
 
@@ -3724,12 +3794,12 @@
 			});
 		}
 
-		function addLongPressListener(element, callback, duration = 1200) {
+		function addLongPressListener(element, filterclass, callback, duration = 1200) {
 			let pressTimer;
 			let wasLongPress = false;
 
 			const start = (e) => {
-				if (e.target.classList.contains('is-lib-menu')) return;
+				if (e.target.classList.contains(filterclass)) return;
 				wasLongPress = false;
 				pressTimer = setTimeout(() => {
 					wasLongPress = true;
@@ -3901,7 +3971,7 @@
 			Array.from(libraries).forEach((library, index) => {
 				const listItem = buildLibraryItem(library.id, library.name);
 
-				addLongPressListener(listItem, async () => {
+				addLongPressListener(listItem, 'is-lib-menu', async () => {
 
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
@@ -6840,7 +6910,7 @@
 
 			if (mb.clickingTile != null) return;
 
-			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
+			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target)) && (!isModalVisible())) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
 				sectionToggle(filtersBar);
 				mb.libMenuVisible = null;

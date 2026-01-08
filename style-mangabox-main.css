@@ -892,6 +892,18 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
+.filter-item-menu {
+	width:100%;
+	margin-bottom:5px;
+}
+
+.filter-menu {
+	padding-left:0px;
+}
+.filter-menu-text {
+	width:100% !important;
+}
+
 /* All press-button classes are animated with 3D button */
 .press-button,
 .press-flat-button {
