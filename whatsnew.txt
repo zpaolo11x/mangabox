@@ -1,5 +1,5 @@
 Main UI
-- 
+- Long press on filters open filters or sort menu
 
 Reader UI
 - 
@@ -8,4 +8,4 @@ Build
 - 
 
 Fixes
-- 
+- Fixed sort by date issue

@@ -1982,6 +1982,7 @@
 					});
 				}
 			});
+
 			seriesGrid.innerHTML = "";
 			if (!boot) {
 				divs.forEach(div => {
@@ -1997,7 +1998,6 @@
 
 
 		async function setFilterValue(itemIndex, valueIndex) {
-			console.log(mb.filterButtons[itemIndex])
 
 			mb.filterButtons[itemIndex].selected = valueIndex;
 
@@ -2010,15 +2010,11 @@
 			await executeFade(0);
 			saveLibraryFilters();
 
-			console.log(filterMenu);
-
-
 			//TODO Maybe make this smoother instead of reloading the whole menu!
 			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: closeModal, high: true }]);
 		}
 
 		function buildFilterDialog(button, buttonIndex) {
-			console.log(button);
 			let out = button.title + '<hr>';
 			out = out + '<ul class="filter-menu" id="filterMenu">';
 			button.switches.forEach((switchItem, index) => {
@@ -3055,6 +3051,7 @@
 			const bookCount = serie.booksCount;
 			item.mbSeriesTitle = serie.metadata.title ?? '';
 			item.mbSeriesStart = timeSplit(altTitle.time)[0];
+			item.mbSeriesStop = timeSplit(altTitle.time)[1];
 			item.mbBooksCount = serie.booksCount;
 			item.mbSeriesRead = (unreadCount == 0);
 			item.mbSeriesDirection = (serie.metadata.readingDirection);
