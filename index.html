@@ -1702,7 +1702,10 @@
 
 			itemsArray.forEach(item => {
 				let uiButton = addItem('button', {
-					innerText: item.label,
+					innerText: t(item.label),
+					dataset:{
+						i18n:item.label,
+					},
 					className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
 				})
 				addPressEvents(uiButton, pressDown, pressUp);
@@ -2195,7 +2198,7 @@
 		}
 
 		function languageDialog() {
-			showModal('', false, buildLanguageDialog(), [{ label: t('modal.ok'), runfunction: () => closeModal(), high: true }]);
+			showModal('', false, buildLanguageDialog(), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 		}
 
 		function buildFilterDialog(button, buttonIndex) {

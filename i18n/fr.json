@@ -57,7 +57,7 @@
   "rdanimation.no": "Aucune animation de page",
   "rdanimation.yes": "Animer les pages",
 
-  "modal.ok": "OK",
+  "modal.ok": "Ok",
   "modal.cancel": "Annuler",
   "modal.imageloadfail": "Échec du chargement de l'image.",
   "modal.analizewarning": "Veuillez activer<br><b>Analyser les dimensions des pages</b><br>pour les bibliothèques suivantes afin d'éviter des problèmes de lecture :<br>",
