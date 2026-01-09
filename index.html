@@ -4546,6 +4546,7 @@
 				const timeLabel = addItem('span', {
 					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
 				});
+				translateDOM(volumeNumberLabelShort);
 
 				secondRow.append(volumeNumberLabelShort, timeLabel);
 			}

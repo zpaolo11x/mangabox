@@ -129,7 +129,7 @@
 
   "book.open": "Leer libro",
   "book.book": "Libro {booksnumber}",
-  "book.bookshort": "Lib {booksnumber}",
+  "book.bookshort": "Lb {booksnumber}",
   "book.markasread": "Marcar libro como leído",
   "book.markasunread": "Marcar libro como no leído",
   "book.details": "Detalles del libro",
