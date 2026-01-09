@@ -116,6 +116,20 @@ jobs:
         run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
+      - name: heck for nested .app bundles
+        run: |
+          echo "Searching for .app bundles in dist/"
+          APPS=$(find dist -name "*.app")
+          echo "$APPS"
+
+          COUNT=$(echo "$APPS" | wc -l | tr -d ' ')
+          echo "Found $COUNT .app bundle(s)"
+
+          if [ "$COUNT" -gt 1 ]; then
+            echo "::error::Nested .app detected!"
+            exit 1
+          fi
+
       - name: Package macOS app into DMG
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
