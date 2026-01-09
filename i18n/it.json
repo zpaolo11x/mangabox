@@ -29,17 +29,17 @@
 	"bkdetails.gotolib": "Vai alla libreria",
 	"bkdetails.openbook": "Apri libro",
 
-	"about.intro": "MangaBox is a streamlined client for your Komga media server. To access your own, self-hosted server please enter the server URL in the login field, then your username and password.",
-	"about.disclaimer": "MangaBox is not designed to access external sources and does not provide content; it is only designed to display and navigate your own libraries and read your own books.",
-	"about.features.title": "Features:",
-	"about.features.connect": "Connect easily to your Komga server from the onboarding screen",
-	"about.features.theme": "Light and dark themes with custom color highlights",
-	"about.features.touch": "Touch and gesture support for tablets and phones",
-	"about.features.reader": "Beautiful two-page reading with paper-style visuals, page-turn animations and thumbnail previews",
-	"about.features.sync": "Sync reading progress with the server",
-	"about.features.offline": "Download books for offline reading",
-	"about.features.filter": "Quickly filter libraries by language, read status, and reading direction",
-	"about.features.search": "Global search for series and volumes",
+  "about.intro": "MangaBox è un client semplice e intuitivo per il tuo media server Komga. Per accedere al tuo server personale, inserisci l'URL del server nel campo di accesso, quindi il nome utente e la password.",
+  "about.disclaimer": "MangaBox non è progettato per accedere a fonti esterne e non fornisce contenuti; è pensato esclusivamente per visualizzare ed esplorare le tue librerie e leggere i tuoi libri.",
+  "about.features.title": "Funzionalità:",
+  "about.features.connect": "Connessione semplice al tuo server Komga dalla schermata iniziale",
+  "about.features.theme": "Temi chiaro e scuro con colori personalizzabili",
+  "about.features.touch": "Supporto per il tocco e i gesti su tablet e smartphone",
+  "about.features.reader": "Lettore di libri a due pagine con resa stile carta, animazioni di cambio pagina e anteprime in miniatura",
+  "about.features.sync": "Sincronizzazione dei progressi di lettura con il server",
+  "about.features.offline": "Download dei libri per la lettura offline",
+  "about.features.filter": "Filtraggio rapido delle librerie per lingua, stato di lettura e direzione di lettura",
+  "about.features.search": "Ricerca globale di serie e volumi",
 
 	"theme.light": "Tema chiaro",
 	"theme.dark": "Tema scuro",
@@ -123,6 +123,15 @@
 	"seriesheader.artby": "Disegni: ",
 	"seriesheader.artby2": "disegni: ",
 	"seriesheader.storyandartby": "Storia e disegni: ",
-	"seriesheader.summary": "Riassunto dal libro"
+	"seriesheader.summary": "Riassunto dal libro",
 
+	"book.open": "Leggi libro",
+	"book.book": "Libro {booksnumber}",
+	"book.bookshort": "Lb {booksnumber}",
+	"book.markasread": "Segna il libro come letto",
+	"book.markasunread": "Segna il libro come da leggere",
+	"book.details": "Informazioni sul libro",
+	"book.download": "Scarica libro",
+	
+	"language.title": "Seleziona la linga"
 }

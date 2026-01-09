@@ -412,106 +412,6 @@
 			});
 		}
 
-		//MB Language Management
-
-		let i18n = {};
-		let currentLang = 'en';
-
-		async function loadLanguage(lang) {
-			try {
-				const res = await fetch(`./i18n/${lang}.json`);
-				i18n = await res.json();
-				currentLang = lang;
-			} catch {
-				console.warn(`Missing language ${lang}, falling back to en`);
-				if (lang !== 'en') return loadLanguage('en');
-			}
-		}
-
-		function t(key, vars = {}) {
-			let str = i18n[key] || key;
-			for (const k in vars) {
-				str = str.replace(`{${k}}`, vars[k]);
-			}
-			return str;
-		}
-
-		function translateDOM_OLD(root = document) {
-
-			root.querySelectorAll("[data-i18n]").forEach(el => {
-				el.textContent = t(el.dataset.i18n);
-			});
-			root.querySelectorAll("[data-i18n-title]").forEach(el => {
-				el.setAttribute("title", t(el.dataset.i18nTitle));
-			});
-		}
-
-		function translateDOM_OLD2(root = document) {
-			const elements = root === document
-				? document.querySelectorAll("[data-i18n], [data-i18n-title]")
-				: [
-					...(root.matches("[data-i18n], [data-i18n-title]") ? [root] : []),
-					...root.querySelectorAll("[data-i18n], [data-i18n-title]")
-				];
-
-			elements.forEach(el => {
-				console.log("TRANSLATING:")
-				console.log(el)
-				if (el.dataset.i18n) {
-					el.textContent = t(el.dataset.i18n);
-				}
-				if (el.dataset.i18nTitle) {
-					el.title = t(el.dataset.i18nTitle);
-				}
-			});
-		}
-
-		function getI18nVars(el, base) {
-			const raw = el.dataset[`${base}Vars`];
-			if (!raw) return undefined;
-
-			try {
-				return JSON.parse(raw);
-			} catch {
-				console.warn("Invalid i18n vars:", raw);
-				return undefined;
-			}
-		}
-
-		function translateDOM(root = document) {
-			const elements =
-				root === document
-					? document.querySelectorAll("[data-i18n], [data-i18n-title]")
-					: root.matches("[data-i18n], [data-i18n-title]")
-						? [root]
-						: [];
-
-			elements.forEach(el => {
-				if (el.dataset.i18n) {
-					el.textContent = t(
-						el.dataset.i18n,
-						getI18nVars(el, "i18n")
-					);
-				}
-
-				if (el.dataset.i18nTitle) {
-					el.title = t(
-						el.dataset.i18nTitle,
-						getI18nVars(el, "i18nTitle")
-					);
-				}
-			});
-		}
-
-		async function initApp() {
-			//const lang = detectLanguage();
-			await loadLanguage(currentLang);
-			translateDOM();
-		}
-
-		// call it
-		initApp();
-
 
 		executeFade(1);
 
@@ -935,6 +835,10 @@
 		function initMB() {
 			return (
 				{
+					languages: ['en', 'it'],
+					languageAuto: false,
+					languageVal: '',
+
 					libraryError: false,
 					libraryNames: "",
 
@@ -1154,6 +1058,93 @@
 		}
 
 
+		//MB Language Management
+
+		let i18n = {};
+
+		async function detectLanguage() {
+			// Sets auto language to false then tries to load a saved language
+			mb.languageAuto = false;
+			const stored = localStorage.getItem('mbLanguage');
+			
+			if (stored) {
+				mb.languageVal = stored;
+			} else {
+				mb.languageAuto = true
+				const browserLang = navigator.language; // e.g. "it-IT"
+				mb.languageVal = browserLang.split('-')[0];  // "it"
+			}
+		}
+
+		async function loadLanguage() {
+			try {
+				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				i18n = await res.json();
+			} catch {
+				console.warn(`Missing language ${mb.languageVal}, falling back to en`);
+				if (mb.languageVal !== 'en') {
+					mb.languageVal = 'en';
+					return loadLanguage();
+				}
+			}
+		}
+
+		function t(key, vars = {}) {
+			let str = i18n[key] || key;
+			for (const k in vars) {
+				str = str.replace(`{${k}}`, vars[k]);
+			}
+			return str;
+		}
+
+		function getI18nVars(el, base) {
+			const raw = el.dataset[`${base}Vars`];
+			if (!raw) return undefined;
+
+			try {
+				return JSON.parse(raw);
+			} catch {
+				console.warn("Invalid i18n vars:", raw);
+				return undefined;
+			}
+		}
+
+		function translateDOM(root = document) {
+			const elements =
+				root === document
+					? document.querySelectorAll("[data-i18n], [data-i18n-title]")
+					: root.matches("[data-i18n], [data-i18n-title]")
+						? [root]
+						: [];
+
+			elements.forEach(el => {
+				if (el.dataset.i18n) {
+					el.textContent = t(
+						el.dataset.i18n,
+						getI18nVars(el, "i18n")
+					);
+				}
+
+				if (el.dataset.i18nTitle) {
+					el.title = t(
+						el.dataset.i18nTitle,
+						getI18nVars(el, "i18nTitle")
+					);
+				}
+			});
+		}
+
+		async function applyLanguage() {
+			// Load saved language definition or use system one
+			await detectLanguage();
+			// Load language data structure based on currentLang global
+			await loadLanguage();
+			// Translate the DOM
+			translateDOM();
+		}
+
+		applyLanguage();
+		
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
@@ -2016,7 +2007,7 @@
 
 		mb.filterTable = initFilterTable();
 
-		function languageName(tag, locale = navigator.language) {
+		function languageName(tag, locale = mb.languageVal) {
 			return new Intl.DisplayNames([locale], { type: "language" }).of(tag);
 		}
 
@@ -2026,7 +2017,10 @@
 				mb.filterTable.filter_by_language.switches.push({
 					name: item,
 					caption: item.toUpperCase(),
-					longCaption: languageName(item),
+					langTag: item,
+					get longCaption() {
+						return languageName(this.langTag);
+					},
 					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
 					iconStyle: `background-image:url('flags/${item}.svg')`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
@@ -2119,7 +2113,26 @@
 			});
 			*/
 		}
+		async function setLanguageValue(valueIndex, language = null) {
 
+			[...languageMenu.children].forEach((li, index) => {
+				li.classList.toggle('highlighted', index === valueIndex);
+			});
+			localStorage.setItem('mbLanguage', language);
+			applyLanguage();
+
+		}
+		
+		async function setLanguageAuto() {
+			let menuLength = [...languageMenu.children].length;
+
+			[...languageMenu.children].forEach((li, index) => {
+				li.classList.toggle('highlighted', index === menuLength - 1);
+			});
+			localStorage.removeItem('mbLanguage');
+			applyLanguage();
+
+		}
 
 		async function setFilterValue(itemIndex, valueIndex) {
 
@@ -2136,6 +2149,32 @@
 
 			//TODO Maybe make this smoother instead of reloading the whole menu!
 			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: closeModal, high: true }]);
+		}
+
+		function buildLanguageDialog() {
+			let out = t('language.title');
+			out = out + '<ul class="filter-menu" id="languageMenu">';
+			mb.languages.forEach((language, index) => {
+				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
+									<div class='smallbutton-wrapper'>
+										<span style="background-image:url('flags/${language}.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
+									</div>
+									<div class='library-name filter-menu-text'>${languageName(language, language)}</div>
+								</li>`
+			});
+			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
+									<div class='smallbutton-wrapper'>
+										<span style="background-image:url('flags/X.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
+									</div>
+									<div class='library-name filter-menu-text'>Automatic</div>
+								</li>`
+			out = out + "</ul>";
+			return (out)
+		}
+
+		function languageDialog() {
+			showModal('', false, buildLanguageDialog(), [{ label: t('modal.ok'), runfunction: () => closeModal(), high: true }]);
 		}
 
 		function buildFilterDialog(button, buttonIndex) {
@@ -3439,7 +3478,7 @@
 		async function buildContainerItem(item, serie, target, container, items, icon) {
 
 			const dateString = serie.lastModifiedDate ?
-				new Intl.DateTimeFormat('en-GB', {
+				new Intl.DateTimeFormat(mb.languageVal, {
 					day: '2-digit',
 					month: 'short',
 					year: '2-digit'
@@ -3859,7 +3898,7 @@
 				id: itemId,
 				className: 'library-item press-button',
 				title: libraryName,
-				dataset:{
+				dataset: {
 					i18nTitle: libraryName,
 				}
 			});
@@ -4394,7 +4433,9 @@
 
 			item.childNodes[0]?.remove();
 
-			item.title = 'Read book';
+			//item.title = 'Read book';
+			item.dataset.i18nTitle = 'book.open';
+			translateDOM(item);
 
 			const booksItem = addItem('div', {
 				className: 'book-item'
@@ -4422,11 +4463,16 @@
 			if (format == 'longname') {
 				mainRow.classList.add('book-row');
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Book ${book.metadata.number}`,
+					dataset: {
+						i18n: 'book.book',
+						i18nVars: JSON.stringify({ booksnumber: book.metadata.number })
+					}
+					//innerHTML: `<span data-i18n="book.book"></span> ${book.metadata.number}`,
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
+				translateDOM(volumeNumberLabel);
 				mainRow.append(volumeNumberLabel, pagesLabel);
 			} else {
 				mainRow.classList.add('book-series-row', 'red');
@@ -4447,15 +4493,19 @@
 				secondRow.textContent = book.metadata.title;
 			} else if ((format == 'compact') || (format == 'full')) {
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Book ${book.metadata.number}`
+					dataset: {
+						i18n: 'book.book',
+						i18nVars: JSON.stringify({ booksnumber: book.metadata.number })
+					}
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
+				translateDOM(volumeNumberLabel);
 				secondRow.append(volumeNumberLabel, pagesLabel);
 			} else if (format == 'timeline') {
 				const dateString = book.readProgress ?
-					new Intl.DateTimeFormat('en-GB', {
+					new Intl.DateTimeFormat(mb.languageVal, {
 						day: '2-digit',
 						month: 'short',
 						year: '2-digit'
@@ -4463,7 +4513,11 @@
 					: '';
 
 				const volumeNumberLabelShort = addItem('span', {
-					innerHTML: `Bk.${book.metadata.number}`
+					dataset: {
+						i18n: 'book.bookshort',
+						i18nVars: JSON.stringify({ booksnumber: book.metadata.number })
+					}
+					//innerHTML: `Bk.${book.metadata.number}`
 				});
 				const timeLabel = addItem('span', {
 					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
@@ -4511,8 +4565,10 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				title: 'Mark book as read',
-				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-check"></span>`,
+				dataset: {
+					i18nTitle: 'book.markasread'
+				}
 			});
 			addClickPointerEvents(markAsRead, () => {
 				setBookReadStatus(book.id, true, item, format);
@@ -4522,8 +4578,10 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark book as unread',
-				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`,
+				dataset: {
+					i18nTitle: 'book.markasunread'
+				}
 			});
 			addClickPointerEvents(markAsUnread, () => {
 				setBookReadStatus(book.id, false, item, format);
@@ -4537,8 +4595,10 @@
 			//if (book.metadata.summary != '') {
 			const bookDetails = addItem('div', {
 				className: 'mini-buttons book-details',
-				title: 'Book Details',
-				innerHTML: `<span class="fa-solid fa-align-justify"></span>`
+				innerHTML: `<span class="fa-solid fa-align-justify"></span>`,
+				dataset: {
+					i18nTitle: 'book.details'
+				}
 			});
 
 			addClickPointerEvents(bookDetails, () => {
@@ -4555,8 +4615,11 @@
 			if (isElectron || isCapacitor || fullDebugMode) {
 				const downloadButton = addItem('div', {
 					className: 'mini-buttons download-book',
-					title: 'Download book',
+					//title: 'Download book',
 					innerHTML: obRedrawDownloadButton(book.id),
+					dataset: {
+						i18nTitle: 'book.download'
+					}
 				});
 
 				addClickPointerEvents(downloadButton, () => {
@@ -7047,8 +7110,11 @@
 					break;
 				case 'I':
 					console.log("SWITCH")
+					languageDialog();
+					/*
 					currentLang = 'it';
 					initApp();
+					*/
 					break;
 				/*
 				case 'D':

@@ -123,6 +123,15 @@
 	"seriesheader.artby": "Art by",
 	"seriesheader.artby2": "art by",
 	"seriesheader.storyandartby": "Story and art by",
-	"seriesheader.summary": "Summari from book"
+	"seriesheader.summary": "Summary from book",
 
+	"book.open": "Read book",
+	"book.book": "Book {booksnumber}",
+	"book.bookshort": "Bk {booksnumber}",
+	"book.markasread": "Mark book as read",
+	"book.markasunread": "Mark book as unread",
+	"book.details": "Book details",
+	"book.download": "Download book",
+
+	"language.title": "Select Language"
 }
