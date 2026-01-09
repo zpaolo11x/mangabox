@@ -160,9 +160,7 @@ jobs:
           if [ "${{ matrix.arch }}" = "x64" ]; then
             mv dist/*.dmg dist/MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}.dmg
           fi
-
-      - name: Debug DMG source folder
-        run: |
+          
           echo "PREPACKAGED = $PREPACKAGED"
           echo "Contents of PREPACKAGED:"
           ls -lR "$PREPACKAGED"
