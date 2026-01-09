@@ -38,6 +38,7 @@
 			"!docs/**/*",
 			"!docs_old/**/*",
 			"!capacitor*",
+			"!dist/**",
 			"package-main.js",
 			"package-preload.js",
 			"package.json"
