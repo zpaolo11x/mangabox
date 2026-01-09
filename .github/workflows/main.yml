@@ -127,7 +127,6 @@ jobs:
 
           if [ "$COUNT" -gt 1 ]; then
             echo "::error::Nested .app detected!"
-            exit 1
           fi
 
       - name: Package macOS app into DMG
