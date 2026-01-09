@@ -13,11 +13,11 @@
   "button.logout": "Déconnexion",
 
   "header.keepreading": "Continuer la lecture",
-  "header.ondeck": "À lire ensuite",
-  "header.lastaddedbooks": "Derniers livres ajoutés",
-  "header.lastaddedseries": "Dernières séries ajoutées",
-  "header.lastupdatedseries": "Séries récemment mises à jour",
-  "header.lastreadbooks": "Derniers livres lus",
+  "header.ondeck": "En cours",
+  "header.lastaddedbooks": "Livres ajoutés",
+  "header.lastaddedseries": "Séries ajoutées",
+  "header.lastupdatedseries": "Séries mises à jour",
+  "header.lastreadbooks": "Lus récemment",
 
   "navstrip.prevpage": "Page précédente",
   "navstrip.nextpage": "Page suivante",

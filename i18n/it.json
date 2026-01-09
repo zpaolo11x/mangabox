@@ -14,9 +14,9 @@
 
 	"header.keepreading": "Continua a leggere",
 	"header.ondeck": "Prossime letture",
-	"header.lastaddedbooks": "Ultimi libri aggiunti",
-	"header.lastaddedseries": "Ultime serie aggiunte",
-	"header.lastupdatedseries": "Ultime serie aggiornate",
+	"header.lastaddedbooks": "Libri aggiunti",
+	"header.lastaddedseries": "Serie aggiunte",
+	"header.lastupdatedseries": "Serie aggiornate",
 	"header.lastreadbooks": "Ultimi libri letti",
 
 	"navstrip.prevpage": "Pagina precedente",

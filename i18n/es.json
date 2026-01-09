@@ -14,10 +14,10 @@
 
   "header.keepreading": "Seguir leyendo",
   "header.ondeck": "En cola",
-  "header.lastaddedbooks": "Últimos libros añadidos",
-  "header.lastaddedseries": "Últimas series añadidas",
-  "header.lastupdatedseries": "Series actualizadas recientemente",
-  "header.lastreadbooks": "Últimos libros leídos",
+  "header.lastaddedbooks": "Libros añadidos",
+  "header.lastaddedseries": "Series añadidas",
+  "header.lastupdatedseries": "Series actualizadas",
+  "header.lastreadbooks": "Últimos leídos",
 
   "navstrip.prevpage": "Página anterior",
   "navstrip.nextpage": "Página siguiente",

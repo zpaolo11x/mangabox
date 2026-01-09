@@ -2379,7 +2379,7 @@ body.sticky-small #stickyContainer .library-item.highlighted .library-name {
 body.sticky-tworows #stickyContainer {
 	/*	height: 105px; */
 	max-width: 100dvw;
-	min-width: 350px;
+	min-width: 375px;
 	flex-wrap: wrap;
 }
 
