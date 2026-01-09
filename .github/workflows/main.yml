@@ -116,19 +116,6 @@ jobs:
         run: npm run build -- --${{ matrix.sys }} --${{ matrix.arch }}
         shell: bash
 
-      - name: heck for nested .app bundles
-        run: |
-          echo "Searching for .app bundles in dist/"
-          APPS=$(find dist -name "*.app")
-          echo "$APPS"
-
-          COUNT=$(echo "$APPS" | wc -l | tr -d ' ')
-          echo "Found $COUNT .app bundle(s)"
-
-          if [ "$COUNT" -gt 1 ]; then
-            echo "::error::Nested .app detected!"
-          fi
-
       - name: Package macOS app into DMG
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -160,10 +147,6 @@ jobs:
           if [ "${{ matrix.arch }}" = "x64" ]; then
             mv dist/*.dmg dist/MangaBox-${{ env.version }}-macOS-${{ matrix.arch }}.dmg
           fi
-          
-          echo "PREPACKAGED = $PREPACKAGED"
-          echo "Contents of PREPACKAGED:"
-          ls -lR "$PREPACKAGED"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
