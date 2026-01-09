@@ -7,7 +7,9 @@
 	"button.lightdark": "Tema chiaro/scuro",
 	"button.themecolor": "Colore del tema",
 	"button.offlinebooks": "Libri offline",
+	"button.language": "Cambia lingua",
 	"button.search": "Cerca",
+	"button.searchtext": "Cerca...",
 	"button.logout": "Logout",
 
 	"header.keepreading": "Continua a leggere",
@@ -132,6 +134,11 @@
 	"book.markasunread": "Segna il libro come da leggere",
 	"book.details": "Informazioni sul libro",
 	"book.download": "Scarica libro",
-	
-	"language.title": "Seleziona la linga"
+
+	"language.title": "Seleziona la linga",
+	"language.automatic": "Lingua di sistema",
+
+	"login.username": "Nome utente",
+	"login.password": "Password",
+	"login.serverurl": "URL del server"
 }

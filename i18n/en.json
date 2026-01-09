@@ -7,7 +7,9 @@
 	"button.lightdark": "Light/Dark Theme",
 	"button.themecolor": "Theme Color",
 	"button.offlinebooks": "Offline Books",
+	"button.language": "Change Language",
 	"button.search": "Search",
+	"button.searchtext": "Search...",
 	"button.logout": "Logout",
 
 	"header.keepreading": "Keep Reading",
@@ -133,5 +135,10 @@
 	"book.details": "Book details",
 	"book.download": "Download book",
 
-	"language.title": "Select Language"
+	"language.title": "Select Language",
+	"language.automatic": "System Language",
+
+	"login.username": "Username",
+	"login.password": "Password",
+	"login.serverurl": "Server URL"
 }

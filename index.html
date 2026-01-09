@@ -68,6 +68,11 @@
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
+					<li id="languageChanger" data-i18n-title="button.language" class="library-item press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-earth glyph-dark"></span>
+						</div>
+					</li>
 					<li id="offlineLibrary" data-i18n-title="button.offlinebooks" class="library-item no-grow press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-download glyph-dark"></span>
@@ -85,7 +90,7 @@
 						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button" onclick="jumpBookDetailsNext()">
 							<span class="x-btn lib-override fa-solid fa-xmark"></span>
 						</div>
-						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" placeholder="Search...">
+						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" data-i18n-placeholder="button.searchtext">
 					</li>
 					<li id="logOut" data-i18n-title="button.logout" class="library-item press-button">
 						<div class="button-wrapper">
@@ -295,22 +300,24 @@
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
+				<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 			</div>
 
 			<div class="input-wrapper" title="Username">
 				<i class="fas fa-user"></i> <!-- Icon for username -->
-				<input type="email" class="login-input" id="loginUsername" placeholder="Username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
+				<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 			</div>
 
 			<div class="input-wrapper" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
 				<!--<i id="passIcon" class="fas fa-eye"></i>  -->
-				<input type="password" class="login-input" id="loginPassword" placeholder="Password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+				<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 			</div>
 
 			<div class="login-buttons">
-				<div></div>
+				<button id="languageButton" class="login-button-round" onclick="languageDialog()">
+					<i class="fas fa-earth"></i>
+				</button>
 				<button id="loginButton" class="login-button" onclick="login()">
 					<i class="fas fa-play"></i>
 					<span>Login</login>
@@ -1112,8 +1119,8 @@
 		function translateDOM(root = document) {
 			const elements =
 				root === document
-					? document.querySelectorAll("[data-i18n], [data-i18n-title]")
-					: root.matches("[data-i18n], [data-i18n-title]")
+					? document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
+					: root.matches("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
 						? [root]
 						: [];
 
@@ -1129,6 +1136,13 @@
 					el.title = t(
 						el.dataset.i18nTitle,
 						getI18nVars(el, "i18nTitle")
+					);
+				}
+
+				if (el.dataset.i18nPlaceholder) {
+					el.placeholder = t(
+						el.dataset.i18nPlaceholder,
+						getI18nVars(el, "i18nPlaceholder")
 					);
 				}
 			});
@@ -1411,6 +1425,10 @@
 			changeTheme();
 		});
 
+		languageChanger.addEventListener('click', () => {
+			languageDialog();
+		});
+
 		if (enableFullscreen) {
 			fullscreenChanger.addEventListener('click', () => {
 				// mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
@@ -1443,6 +1461,9 @@
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
 				<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+			</div>
+			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;" onClick="languageDialog()">
+				<span class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
 			showModal('', true, dialogText,
@@ -2152,7 +2173,7 @@
 		}
 
 		function buildLanguageDialog() {
-			let out = t('language.title');
+			let out = `<span data-i18n="language.title">${t('language.title')}</span>`;
 			out = out + '<ul class="filter-menu" id="languageMenu">';
 			mb.languages.forEach((language, index) => {
 				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
@@ -2165,9 +2186,9 @@
 			});
 			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
 									<div class='smallbutton-wrapper'>
-										<span style="background-image:url('flags/X.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
+										<span class="fa-solid fa-robot glyph-dark"></span>
 									</div>
-									<div class='library-name filter-menu-text'>Automatic</div>
+									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
 								</li>`
 			out = out + "</ul>";
 			return (out)
