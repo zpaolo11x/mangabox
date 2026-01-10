@@ -1,0 +1,19 @@
+{
+				"lib.dashboard": "ホーム",
+				"lib.readlists": "読書リスト",
+				"lib.collections": "まとめ",
+				"button.fullscreen": "フルスクリーンに切替",
+				"button.lightdark": "ライト／ダークモード",
+				"button.themecolor": "テーマカラー",
+				"button.offlinebooks": "オフライン本",
+				"button.language": "言語変更",
+				"button.search": "検索",
+				"button.searchtext": "検索...",
+				"button.logout": "ログアウト",
+				"header.keepreading": "読書を続ける",
+				"header.ondeck": "次に読む",
+				"header.lastaddedbooks": "最近追加の本",
+				"header.lastaddedseries": "追加シリーズ",
+				"header.lastupdatedseries": "更新シリーズ",
+				"header.lastreadbooks": "最近読んだ本"
+}
