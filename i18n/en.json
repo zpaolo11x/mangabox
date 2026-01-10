@@ -47,12 +47,19 @@
 	"theme.dark": "Dark Theme",
 	"theme.system": "System Theme",
 
-	"rdtheme.classic": "Classic Theme",
-	"rdtheme.dark": "Dark Accent",
-	"rdtheme.light": "Light Accent",
-	"rdtheme.transparent": "Transparent",
-	"rdtheme.white": "White",
-	"rdtheme.black": "Black",
+	"reader.close": "Close Reader",
+	"reader.theme": "Reader Theme",
+	"reader.animation": "Reader Animation",
+	"reader.incognito": "Incognito Reading",
+	"reader.scaleup": "Scale Up",
+	"reader.scaledown": "Scale Down",
+
+	"readertheme.classic": "Classic Theme",
+	"readertheme.dark": "Dark Accent",
+	"readertheme.light": "Light Accent",
+	"readertheme.transparent": "Transparent",
+	"readertheme.white": "White",
+	"readertheme.black": "Black",
 
 	"rdanimation.no": "No Page Animation",
 	"rdanimation.yes": "Animate Pages",
@@ -69,7 +76,7 @@
 	"modal.files": "Files",
 	"modal.selectordrag": "Select a thumbnail or drag an image over the library button",
 	"modal.removethumb": "Remove custom library thumbnail?",
-	
+
 	"button.sort": "Sort Items",
 	"button.filterread": "Filter by read status",
 	"button.filterdirection": "Filter by reading direction",
@@ -107,7 +114,7 @@
 	"filterdirection.r2l.long": "Right to Left",
 	"filterdirection.webtoon": "WToon",
 	"filterdirection.webtoon.long": "WebToon",
-	
+
 	"filterlanguage.all": "All",
 	"filterLanguage.all.long": "All Languages",
 

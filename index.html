@@ -239,17 +239,17 @@
 			</div>
 
 			<div id="topControls">
-				<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
+				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
 				<span id="bookName"></span>
-				<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
-				<span id="readerAnimation" title="Reader Animation" class="reader-buttons press-button fa-solid"></span>
-				<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
+				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left fa-solid"></span>
+				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button fa-solid"></span>
+				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 			</div>
 
 			<div id="zoomControls">
-				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
+				<span id="scaleDown" data-i18n-title="reader.scaledown" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
 				<span id="scaleVal" class="reader-buttons">100%</span>
-				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
+				<span id="scaleUp" data-i18n-title="reader.scaleup" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
 			</div>
 
 			<div id="bottomControls">
@@ -908,27 +908,27 @@
 
 					readerThemeControl: [
 						{
-							label: 'rdtheme.classic',
+							label: 'readertheme.classic',
 							icon: 'fa-palette',
 							style: 'classic'
 						}, {
-							label: 'rdtheme.dark',
+							label: 'readertheme.dark',
 							icon: 'fa-moon',
 							style: 'dark-accent'
 						}, {
-							label: 'rdtheme.light',
+							label: 'readertheme.light',
 							icon: 'fa-sun',
 							style: 'light-accent'
 						}, {
-							label: 'rdtheme.transparent',
+							label: 'readertheme.transparent',
 							icon: 'fa-square',
 							style: 'transparent'
 						}, {
-							label: 'rdtheme.white',
+							label: 'readertheme.white',
 							icon: 'fa-w',
 							style: 'white'
 						}, {
-							label: 'rdtheme.black',
+							label: 'readertheme.black',
 							icon: 'fa-b',
 							style: 'black'
 						}
@@ -7133,14 +7133,16 @@
 						handleCloseReader();
 					}
 					break;
+				/*
 				case 'I':
 					console.log("SWITCH")
 					languageDialog();
-					/*
+					
 					currentLang = 'it';
 					initApp();
-					*/
+					
 					break;
+				*/
 				/*
 				case 'D':
 					mb.screenAR = getScreenAR();
