@@ -1,5 +1,6 @@
 Main UI
 - Long press on filters open filters or sort menu
+- Added UI translations for Italian, French, Deutsch and Spanish
 
 Reader UI
 - 
@@ -8,4 +9,4 @@ Build
 - 
 
 Fixes
-- Fixed sort by date issue
+- Fixed issue when sorting by date
