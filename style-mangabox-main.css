@@ -892,6 +892,10 @@ a {
 	width: var(--mb-filter-button-size);
 }
 
+.filter-name{
+	padding-left:2px !important;
+}
+
 .filter-item-menu {
 	width:100%;
 	margin-bottom:5px;

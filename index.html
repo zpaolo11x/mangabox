@@ -842,7 +842,7 @@
 		function initMB() {
 			return (
 				{
-					languages: ['en', 'es', 'fr', 'it'],
+					languages: ['de', 'en', 'es', 'fr', 'it'],
 					languageAuto: false,
 					languageVal: '',
 
@@ -2231,7 +2231,7 @@
 					innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
 				});
 				button.caption = addItem('div', {
-					className: `library-name`,
+					className: `library-name filter-name`,
 					dataset: {
 						i18n: `${button.switches[0].caption}`,
 					}
