@@ -127,11 +127,11 @@
 	"series.markasunread": "Segna la serie come da leggere",
 
 	"seriesheader.book": "libro",
-	"seriesheader.books": "libri",	
-	"seriesheader.storyby": "Storia: ",
-	"seriesheader.artby": "Disegni: ",
-	"seriesheader.artby2": "disegni: ",
-	"seriesheader.storyandartby": "Storia e disegni: ",
+	"seriesheader.books": "libri",
+	"seriesheader.storyby": "Storia:",
+	"seriesheader.artby": "Disegni:",
+	"seriesheader.artby2": "disegni:",
+	"seriesheader.storyandartby": "Storia e disegni:",
 	"seriesheader.summary": "Riassunto dal libro",
 
 	"book.open": "Leggi libro",
