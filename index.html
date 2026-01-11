@@ -1069,13 +1069,19 @@
 		//MB Language Management
 
 		let i18n = {};
+		let i18n_en = {};
+		
+		async function loadFallbackLanguage(){	
+			const res_en = await fetch(`./i18n/en.json`);
+			i18n_en = await res_en.json();
+		}
 
 		async function detectLanguage() {
 			console.log("DETECT LANGUAGE")
 			// Sets auto language to false then tries to load a saved language
 			mb.languageAuto = false;
 			const stored = localStorage.getItem('mbLanguage');
-			console.log("stored:"+stored);
+			console.log("stored:" + stored);
 			if (stored) {
 				mb.languageVal = stored;
 			} else {
@@ -1085,7 +1091,10 @@
 			}
 		}
 
-		async function loadLanguage() {
+		async function loadLanguage_old() {
+			const resFallback = await fetch(`./i18n/en.json`);
+			i18n_en = await resFallback.json();
+
 			try {
 				const res = await fetch(`./i18n/${mb.languageVal}.json`);
 				i18n = await res.json();
@@ -1098,12 +1107,36 @@
 			}
 		}
 
-		function t(key, vars = {}) {
+		async function loadLanguage() {
+			i18n = {};
+			try {
+				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				i18n = await res.json();
+			} catch {
+				console.warn(`Missing language ${mb.languageVal}, using en only`);
+			}
+		}
+
+
+		function t_old(key, vars = {}) {
 			let str = i18n[key] || key;
 			for (const k in vars) {
 				str = str.replace(`{${k}}`, vars[k]);
 			}
 			return str;
+		}
+
+		function t(key, vars = {}) {
+			const str =
+				i18n[key] ??
+				i18n_en[key] ??
+				key;
+
+			let out = str;
+			for (const k in vars) {
+				out = out.replace(`{${k}}`, vars[k]);
+			}
+			return out;
 		}
 
 		function getI18nVars(el, base) {
@@ -1158,9 +1191,10 @@
 			// Translate the DOM
 			translateDOM();
 		}
-
-		applyLanguage();
 		
+		loadFallbackLanguage();
+		applyLanguage();
+
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
@@ -1705,8 +1739,8 @@
 			itemsArray.forEach(item => {
 				let uiButton = addItem('button', {
 					innerText: t(item.label),
-					dataset:{
-						i18n:item.label,
+					dataset: {
+						i18n: item.label,
 					},
 					className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
 				})
@@ -2148,7 +2182,7 @@
 			applyLanguage();
 
 		}
-		
+
 		async function setLanguageAuto() {
 			let menuLength = [...languageMenu.children].length;
 
