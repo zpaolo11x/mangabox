@@ -60,8 +60,8 @@ async function sessionCheck() {
 	mb.loggedUser = 'cookie';
 	if (isElectron) mb.loggedUser = await checkSavedUser();
 
-console.log("Z - loggedUser:" + mb.loggedUser)
-	
+	console.log("Z - loggedUser:" + mb.loggedUser)
+
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.loggedUser)) {
 		debugPrint("Missing base URL or auth token");
@@ -90,14 +90,14 @@ console.log("Z - loggedUser:" + mb.loggedUser)
 	// --- 3. Try validating the token
 	let fetchPayload
 	if (isElectron) {
-		
+
 		const username = mb.loggedUser;
 		const password = await loadUserPass(mb.loggedUser);
 
 		fetchPayload = {
 			method: 'GET',
 			headers: {
-      		'Authorization': 'Basic ' + btoa(`${username}:${password}`),
+				'Authorization': 'Basic ' + btoa(`${username}:${password}`),
 				'X-Requested-With': 'XMLHttpRequest',
 				'skip_zrok_interstitial': '1'
 			}
@@ -199,6 +199,9 @@ async function systemRestart() {
 	clearLibrariesMenus();
 
 	mb = initMB();
+
+	applyLanguage();
+
 	mb.filterTable = initFilterTable();
 
 	mb.filterButtons = [
