@@ -1,7 +1,7 @@
 {
-	"lib.dashboard": "Dashboard",
-	"lib.readlists": "Leselisten",
-	"lib.collections": "Sammlungen",
+	"library.dashboard": "Dashboard",
+	"library.readlists": "Leselisten",
+	"library.collections": "Sammlungen",
 	"button.fullscreen": "Vollbild umschalten",
 	"button.lightdark": "Hell-/Dunkelmodus",
 	"button.themecolor": "Themenfarbe",

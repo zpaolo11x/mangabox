@@ -1,14 +1,14 @@
 {
-	"lib.dashboard": "ホーム",
-	"lib.readlists": "読書リスト",
-	"lib.collections": "読書リスト",
+	"library.dashboard": "ホーム",
+	"library.readlists": "読書リスト",
+	"library.collections": "読書リスト",
 	"button.fullscreen": "フルスクリーンに切替",
 	"button.lightdark": "ライト／ダークモード",
 	"button.themecolor": "テーマカラー",
 	"button.offlinebooks": "オフライン本",
 	"button.language": "言語変更",
 	"button.search": "検索",
-	"button.searchtext": "検索...",
+	"button.searchtext": "検索…",
 	"button.logout": "ログアウト",
 	"header.keepreading": "読書を続ける",
 	"header.ondeck": "次に読む",
@@ -90,5 +90,10 @@
 	"filterdirection.webtoon.long": "ウェブトゥーン",
 	"filterlanguage.all": "すべて",
 	"filterLanguage.all.long": "すべての言語",
-	"filtersort.reset": "フィルターと並び順をリセット"
+	"filtersort.reset": "フィルターと並び順をリセット",
+	"login.username": "ユーザー名",
+	"login.password": "パスワード",
+	"login.serverurl": "サーバーURL",
+	"language.title": "言語を選択",
+	"language.automatic": "システム言語"
 }

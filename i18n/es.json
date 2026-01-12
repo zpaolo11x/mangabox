@@ -1,7 +1,7 @@
 {
-	"lib.dashboard": "Dashboard",
-	"lib.readlists": "Listas",
-	"lib.collections": "Colecciones",
+	"library.dashboard": "Dashboard",
+	"library.readlists": "Listas",
+	"library.collections": "Colecciones",
 	"button.fullscreen": "Alternar pantalla completa",
 	"button.lightdark": "Tema claro/oscuro",
 	"button.themecolor": "Color del tema",

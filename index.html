@@ -126,8 +126,8 @@
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
-							<span id="stripPrevPage" data-i18n-title="navstrip.prevpage" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
-							<span id="stripNextPage" data-i18n-title="navstrip.nextpage" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
+							<span id="stripPrevPage" data-i18n-title="navigation.prevpage" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
+							<span id="stripNextPage" data-i18n-title="navigation.nextpage" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
 						</div>
 					</div>
 				</div>
@@ -160,17 +160,17 @@
 				<div id="bookDetailsContainer" class="section hidden blankstart">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
-							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.prevbook" onclick="jumpBookDetailsPrev()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.prevbook" onclick="jumpBookDetailsPrev()">
 								<span class="fa-solid fa-chevron-left"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.gotolib" onclick="jumpBookLibrary()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.gotolib" onclick="jumpBookLibrary()">
 								<span class="fa-solid fa-layer-group"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bkdetails.nextbook" onclick="jumpBookDetailsNext()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.nextbook" onclick="jumpBookDetailsNext()">
 								<span class="fa-solid fa-chevron-right"></span>
 							</div>
 						</div>
-						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" data-i18n-title="bkdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
 							<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
 						</div>
 					</div>
@@ -937,11 +937,11 @@
 
 					readerAnimationControl: [
 						{
-							label: 'rdanimation.no',
+							label: 'readeranimation.no',
 							icon: 'fa-pause',
 							value: 0
 						}, {
-							label: 'rdanimation.yes',
+							label: 'readeranimation.yes',
 							icon: 'fa-right-left',
 							value: 1
 						}
@@ -4196,14 +4196,14 @@
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			let dashboard = buildLibraryItem('homeButton', 'lib.dashboard', 'logo/mangabox-logo-new.svg')
+			let dashboard = buildLibraryItem('homeButton', 'library.dashboard', 'logo/mangabox-logo-new.svg')
 			dashboard.classList.add('shrink-first');
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
 
-			let readlists = buildLibraryItem('readlistsButton', 'lib.readlists', 'library-symbols/readlists3d.png')
+			let readlists = buildLibraryItem('readlistsButton', 'library.readlists', 'library-symbols/readlists3d.png')
 			readlists.classList.add('shrink-first');
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
@@ -4217,7 +4217,7 @@
 				if (res.content.length == 0) readlistsButton.style.display = 'none';
 			});
 
-			let collections = buildLibraryItem('collectionsButton', 'lib.collections', 'library-symbols/collections3d.png')
+			let collections = buildLibraryItem('collectionsButton', 'library.collections', 'library-symbols/collections3d.png')
 			collections.classList.add('shrink-first');
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
@@ -4981,7 +4981,7 @@
 				className: 'strip-all press-flat-button strip-button',
 				innerHTML: '<span class="fa-solid fa-grip glyph-dark"></span>',
 				dataset: {
-					i18nTitle: 'navstrip.all'
+					i18nTitle: 'navigation.all'
 				}
 			});
 			item.homeStrip = addItem('div', {
