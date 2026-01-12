@@ -112,7 +112,7 @@
 	"seriesheader.artby": "Arte por",
 	"seriesheader.artby2": "arte por",
 	"seriesheader.storyandartby": "Historia y arte por",
-	"seriesheader.summary": "Resumen del libro",
+	"seriesheader.summary": "Resumen del libro {summarysource}",
 	"book.open": "Leer libro",
 	"book.book": "Libro {booksnumber}",
 	"book.bookshort": "Lb {booksnumber}",

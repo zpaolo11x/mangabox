@@ -4356,7 +4356,7 @@
 				(serie.metadata.summary != "")
 					? serie.metadata.summary.replace(/\n/g, '<br>')
 					: (serie.booksMetadata.summary != ""
-						? '<u><span data-i18n="seriesheader.summary"></span> ' + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+						? `<u><span data-i18n="seriesheader.summary" data-i18n-vars='${JSON.stringify({summarysource: serie.booksMetadata.summaryNumber})}'></span></u><br>` + serie.booksMetadata.summary.replace(/\n/g, '<br>')
 						: ""
 					)
 			)

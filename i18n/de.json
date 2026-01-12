@@ -112,7 +112,7 @@
 	"seriesheader.artby": "Zeichnungen von",
 	"seriesheader.artby2": "zeichnungen von",
 	"seriesheader.storyandartby": "Story und Zeichnungen von",
-	"seriesheader.summary": "Zusammenfassung des Buches",
+	"seriesheader.summary": "Zusammenfassung des Buches {summarysource}",
 	"book.open": "Buch lesen",
 	"book.book": "Buch {booksnumber}",
 	"book.bookshort": "Bd {booksnumber}",
