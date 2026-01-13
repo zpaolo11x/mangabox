@@ -232,6 +232,7 @@
 }
 
 * {
+	font-family: 'Outfit', sans-serif;
 	user-select: none;
 	-webkit-user-select: none;
 	-ms-user-select: none;
