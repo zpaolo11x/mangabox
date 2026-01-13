@@ -2568,6 +2568,10 @@ body.offline #stickyContainer {
 	pointer-events: auto;
 }
 
+.capitalize-first:first-letter {
+    text-transform: uppercase;
+}
+
 /*
  .scrollbox-scrollbar:hover .scrollbox-thumb {
 	background: var(--mb-accent);

@@ -843,7 +843,7 @@
 			console.log("INIT MB")
 			return (
 				{
-					languages: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt'],
+					languages: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'zh-Hans'],
 					languageAuto: false,
 					languageVal: '',
 
@@ -2220,7 +2220,7 @@
 									<div class='smallbutton-wrapper'>
 										<span style="background-image:url('flags/${language}.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
 									</div>
-									<div class='library-name filter-menu-text'>${languageName(language, language)}</div>
+									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
 								</li>`
 			});
 			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
@@ -2246,7 +2246,7 @@
 									<div class='smallbutton-wrapper'>
 										<span style="${switchItem.iconStyle}" class="${switchItem.iconClass}"></span>
 									</div>
-									<div class='library-name filter-menu-text'>${t(switchItem.longCaption)}</div>
+									<div class='library-name filter-menu-text capitalize-first'>${t(switchItem.longCaption)}</div>
 								</li>`
 			});
 			out = out + "</ul>";
