@@ -840,7 +840,7 @@
 
 		//MB Main Variable Setup 
 		function initMB() {
-			console.log("INIT MB")
+
 			return (
 				{
 					languages: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'zh-Hans'],
@@ -1077,11 +1077,11 @@
 		}
 
 		async function detectLanguage() {
-			console.log("DETECT LANGUAGE")
+
 			// Sets auto language to false then tries to load a saved language
 			mb.languageAuto = false;
 			const stored = localStorage.getItem('mbLanguage');
-			console.log("stored:" + stored);
+
 			if (stored) {
 				mb.languageVal = stored;
 			} else {
