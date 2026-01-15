@@ -338,16 +338,19 @@ jobs:
         if: ${{ matrix.name == 'Android-apk' }}
         run: |
           echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/mangabox.keystore
+          ls -R
           
       - name: Android-apk - Build app
         if: ${{ matrix.name == 'Android-apk' }}
         run: |
           cd android
-          ./gradlew assembleRelease --info --stacktrace
+          ./gradlew assembleRelease
 
       - name: Android-apk - Move apk to target
         if: ${{ matrix.name == 'Android-apk' }}
         run: |
+          pwd
+          ls -R
           mv android/app/build/outputs/apk/release/app-release.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
       - name: Android-aab - Build app
