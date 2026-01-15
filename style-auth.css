@@ -82,15 +82,15 @@
 
 
 .input-wrapper {
-	display:flex;
+	display: flex;
 	box-sizing: border-box;
-	background-color:var(--mb-login-button-color);
+	background-color: var(--mb-login-button-color);
 	background-image: linear-gradient(90deg, transparent 40px, var(--mb-input-color) 40px);
 	padding: 0;
 	margin: 0;
 	position: relative;
 	width: 100%;
-	height:var(--mb-dialog-button-height);
+	height: var(--mb-dialog-button-height);
 	margin-top: var(--mb-dialog-padding);
 	border: 1px var(--mb-login-border-color) solid;
 	border-radius: var(--mb-dialog-button-radius);
@@ -112,6 +112,22 @@
 }
 
 
+.pwd span.right {
+	position: absolute;
+	display: inline-block;
+	/* or block */
+	text-align: center;
+	right: 0px;
+	top: 20px;
+	width: 40px;
+	text-align: middle;
+	transform: translate(0, -50%);
+	color: var(--mb-glyph-color);
+
+	font-size: var(--mb-dialog-font-size);
+	/* Make the icon not respond to hover directly */
+	transition: all 0.3s;
+}
 
 .input-wrapper:hover i {
 	border-color: var(--mb-accent);
@@ -120,9 +136,11 @@
 .input-wrapper:focus-within i {
 	color: white;
 }
-.input-wrapper:focus-within{
-		background-color:var(--mb-accent);
+
+.input-wrapper:focus-within {
+	background-color: var(--mb-accent);
 }
+
 /*
 #passIcon{
 	pointer-events:unset;
@@ -134,7 +152,7 @@
 }
 */
 .login-input {
-	background:none;
+	background: none;
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
@@ -154,6 +172,10 @@
 	font-size: var(--mb-dialog-font-size);
 
 	transition: all 0.3s, box-shadow 0.1s;
+}
+
+.pwd .login-input {
+	padding-right: calc(var(--mb-dialog-button-height));
 }
 
 .input-wrapper:hover {
@@ -198,7 +220,7 @@
 	box-sizing: border-box;
 
 	margin: 0px;
-	padding:0px;
+	padding: 0px;
 	appearance: none;
 	background: var(--mb-login-button-color);
 	border: 1px solid var(--mb-login-border-color);
@@ -207,7 +229,7 @@
 	width: var(--mb-dialog-button-height);
 	min-width: var(--mb-dialog-button-height);
 	min-height: var(--mb-dialog-button-height);
-	
+
 	transition: 0.3s all;
 	font-size: var(--mb-dialog-font-size);
 	font: inherit;
@@ -229,12 +251,13 @@
 	height: var(--mb-dialog-button-height);
 }
 
-#loginButton{
-	position:relative;
-  container-type: inline-size; /* enables width-based container queries */
+#loginButton {
+	position: relative;
+	container-type: inline-size;
+	/* enables width-based container queries */
 }
 
-#loginButton span{
+#loginButton span {
 	transition: all 0.3s;
 
 }
@@ -255,12 +278,13 @@
 }
 
 @container (max-width: 60px) {
-  #loginButton span {
-    opacity: 0;
-  }
-  #loginButton i {
-    opacity: 1;
-  }
+	#loginButton span {
+		opacity: 0;
+	}
+
+	#loginButton i {
+		opacity: 1;
+	}
 }
 
 .login-button:hover,
@@ -280,10 +304,10 @@
 	position: absolute;
 	top: 15px;
 	right: 15px;
-	margin:0px;
+	margin: 0px;
 }
 
-#languageButton{
+#languageButton {
 	position: relative;
 	margin-top: var(--mb-dialog-padding);
 
@@ -300,6 +324,6 @@
 	margin-top: 15px;
 	padding: 12px 15px 15px 15px;
 	background: rgb(160, 6, 39);
-	margin-bottom:0px;
+	margin-bottom: 0px;
 	border-radius: 20px;
 }

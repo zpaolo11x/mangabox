@@ -293,6 +293,9 @@ async function login() {
 
 
 function showLoginDialog() {
+	loginPassword.type = 'password';
+	viewPassword.classList.toggle('fa-eye', true);
+	viewPassword.classList.toggle('fa-eye-slash', false);
 	dragbar.classList.add('onLogin');
 	debugPrint("showLoginDialog...")
 	console.log("showLoginDialog...")

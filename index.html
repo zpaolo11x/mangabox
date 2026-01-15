@@ -308,10 +308,11 @@
 				<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 			</div>
 
-			<div class="input-wrapper" title="Password">
+			<div class="input-wrapper pwd" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
 				<!--<i id="passIcon" class="fas fa-eye"></i>  -->
 				<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+				<span id="viewPassword" class="fas fa-eye right"></span>
 			</div>
 
 			<div class="login-buttons">
@@ -1070,8 +1071,8 @@
 
 		let i18n = {};
 		let i18n_en = {};
-		
-		async function loadFallbackLanguage(){	
+
+		async function loadFallbackLanguage() {
 			const res_en = await fetch(`./i18n/en.json`);
 			i18n_en = await res_en.json();
 		}
@@ -1191,7 +1192,7 @@
 			// Translate the DOM
 			translateDOM();
 		}
-		
+
 		loadFallbackLanguage();
 		applyLanguage();
 
@@ -1478,6 +1479,17 @@
 				navigateTo(`#offlinebooks`);
 			});
 		}
+
+		viewPassword.addEventListener('click', () => {
+			const isPassword = loginPassword.type === 'password';
+			const showPassword = loginPassword.type === 'password';
+
+			loginPassword.type = isPassword ? 'text' : 'password';
+
+			viewPassword.classList.toggle('fa-eye', !showPassword);
+			viewPassword.classList.toggle('fa-eye-slash', showPassword);
+
+		})
 		/*
 			readlistsButton2.addEventListener('click', () => {
 				navigateTo(`#readlists`);
@@ -4356,7 +4368,7 @@
 				(serie.metadata.summary != "")
 					? serie.metadata.summary.replace(/\n/g, '<br>')
 					: (serie.booksMetadata.summary != ""
-						? `<u><span data-i18n="seriesheader.summary" data-i18n-vars='${JSON.stringify({summarysource: serie.booksMetadata.summaryNumber})}'></span></u><br>` + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+						? `<u><span data-i18n="seriesheader.summary" data-i18n-vars='${JSON.stringify({ summarysource: serie.booksMetadata.summaryNumber })}'></span></u><br>` + serie.booksMetadata.summary.replace(/\n/g, '<br>')
 						: ""
 					)
 			)
