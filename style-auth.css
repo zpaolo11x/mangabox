@@ -122,11 +122,15 @@
 	width: 40px;
 	text-align: middle;
 	transform: translate(0, -50%);
-	color: var(--mb-glyph-color);
-
+	color: var(--mb-login-border-color);
 	font-size: var(--mb-dialog-font-size);
 	/* Make the icon not respond to hover directly */
 	transition: all 0.3s;
+}
+
+.pwd span.right:hover{
+		color: var(--mb-glyph-color);
+
 }
 
 .input-wrapper:hover i {
