@@ -321,14 +321,29 @@ jobs:
           sed -i "s/versionName \".*\"/versionName \"$VERSION\"/" android/app/build.gradle
           sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" android/app/build.gradle
 
+      - name: Inject Android signing properties
+        if: ${{ matrix.name == 'Android-apk' }}
+        run: |
+          cat >> android/gradle.properties <<EOF
+          MYAPP_UPLOAD_STORE_FILE=mangabox.keystore
+          MYAPP_UPLOAD_STORE_PASSWORD=${ANDROID_KEYSTORE_PASSWORD}
+          MYAPP_UPLOAD_KEY_ALIAS=${ANDROID_KEY_ALIAS}
+          MYAPP_UPLOAD_KEY_PASSWORD=${ANDROID_KEY_PASSWORD}
+          EOF
+          
       - name: Prepare output folder
         run: mkdir output
 
+      - name: Restore Android keystore
+        if: ${{ matrix.name == 'Android-apk' }}
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/mangabox.keystore
+          
       - name: Android-apk - Build app
         if: ${{ matrix.name == 'Android-apk' }}
         run: |
           cd android
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease
 
       - name: Android-apk - Move apk to target
         if: ${{ matrix.name == 'Android-apk' }}
