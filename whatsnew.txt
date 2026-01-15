@@ -1,7 +1,11 @@
 Main UI
-- Long press on filters open filters or sort menu
-- Added UI translations for Italian, French, Deutsch and Spanish
-- Rearranged search field so it enlarges when the screen is small
+- 
+
+Reader UI
+-
+
+Build
+-
 
 Fixes
-- Fixed issue when sorting by date
+- 
