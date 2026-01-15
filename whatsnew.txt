@@ -1,8 +1,8 @@
 Main UI
-- 
+- Added icon to show/hide the password at login screen
 
 Reader UI
--
+- Customised the blank page added by "no_blank_page" book tag
 
 Build
 -

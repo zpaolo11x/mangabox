@@ -5780,8 +5780,8 @@
 							aspectRatio: isHidden ? '0.001' : pageData.AR,
 						}
 				}),
-				hasSrc: (isBlank || isHidden) ? true : false,
-				lazySrc: (isBlank || isHidden) ? '' : pageData.url,
+				hasSrc: isHidden ? true : false,
+				lazySrc: isHidden ? '' : (isBlank ? 'mangablankw.png' : pageData.url),
 				size: (isBlank || isHidden) ? 0 : pageData.size,
 				pageNum: (isBlank || isHidden) ? '' : pageData.pageNum,
 				isCurrent: (isBlank || isHidden) ? false : pageData.isCurrent,
