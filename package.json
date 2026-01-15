@@ -1,6 +1,6 @@
 {
 	"name": "mangabox",
-	"version": "0.3.7",
+	"version": "0.3.8",
 	"author": "zpaolo11x paolo.zago@gmail.com",
 	"description": "Desktop client for Komga server",
 	"main": "package-main.js",
@@ -19,7 +19,7 @@
 	"devDependencies": {
 		"@capacitor/cli": "^7.0.0",
 		"electron": "^38.2.0",
-		"electron-builder": "^26.0.12"
+		"electron-builder": "26.0.12"
 	},
 	"build": {
 		"appId": "com.zpaolo11x.mangabox",
@@ -38,6 +38,7 @@
 			"!docs/**/*",
 			"!docs_old/**/*",
 			"!capacitor*",
+			"!dist/**",
 			"package-main.js",
 			"package-preload.js",
 			"package.json"

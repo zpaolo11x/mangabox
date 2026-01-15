@@ -240,7 +240,7 @@
 }
 
 #loginButton i {
-	  opacity: 0;
+	opacity: 0;
 
 	position: absolute;
 	left: 50%;
@@ -281,6 +281,12 @@
 	top: 15px;
 	right: 15px;
 	margin:0px;
+}
+
+#languageButton{
+	position: relative;
+	margin-top: var(--mb-dialog-padding);
+
 }
 
 .auth-hidden {

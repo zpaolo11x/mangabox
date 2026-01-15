@@ -53,22 +53,27 @@
 						</div>
 					</li>
 					-->
-					<li id="fullscreenChanger" title="Toggle Fullscreen" class="library-item press-button">
+					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="themeChanger" title="Light/Dark Theme" class="library-item press-button">
+					<li id="themeChanger" data-i18n-title="button.lightdark" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
 						</div>
 					</li>
-					<li id="colorChanger" title="Theme Color" class="library-item press-button">
+					<li id="colorChanger" data-i18n-title="button.themecolor" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
-					<li id="offlineLibrary" title="Offline Books" class="library-item no-grow press-button">
+					<li id="languageChanger" data-i18n-title="button.language" class="library-item press-button">
+						<div class="button-wrapper">
+							<span class="fa-solid fa-earth glyph-dark"></span>
+						</div>
+					</li>
+					<li id="offlineLibrary" data-i18n-title="button.offlinebooks" class="library-item no-grow press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-download glyph-dark"></span>
 						</div>
@@ -77,17 +82,17 @@
 							<span class="fa-solid fa-spinner glyph-dark mb-accent layer"></span>
 						</div>
 					</li>
-					<li id="searchField" title="Search" class="library-item search-field no-grow press-button">
+					<li id="searchField" data-i18n-title="button.search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
 							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
 						</div>
 						<!--<span id="clearSearchBtn" class="clear-btn fa-solid fa-xmark"></span>-->
-						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button" onclick="jumpBookDetailsNext()">
+						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button">
 							<span class="x-btn lib-override fa-solid fa-xmark"></span>
 						</div>
-						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" placeholder="Search...">
+						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" data-i18n-placeholder="button.searchtext">
 					</li>
-					<li id="logOut" title="Logout" class="library-item press-button">
+					<li id="logOut" data-i18n-title="button.logout" class="library-item press-button">
 						<div class="button-wrapper">
 							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
 						</div>
@@ -121,8 +126,8 @@
 							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
-							<span id="stripPrevPage" title="Previous Page" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
-							<span id="stripNextPage" title="Next Page" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
+							<span id="stripPrevPage" data-i18n-title="navigation.prevpage" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
+							<span id="stripNextPage" data-i18n-title="navigation.nextpage" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
 						</div>
 					</div>
 				</div>
@@ -136,14 +141,14 @@
 					<div class="home-strip-parent">
 						<div id="homeStripSeriesResults" class="series-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Series Results</div>
+							<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="search.seriesresults"></span></div>
 						</div>
 					</div>
 
 					<div class="home-strip-parent">
 						<div id="homeStripBooksResults" class="books-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;Books Results</div>
+							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;<span data-i18n="search.booksresults"></span></div>
 						</div>
 					</div>
 				</div>
@@ -155,17 +160,17 @@
 				<div id="bookDetailsContainer" class="section hidden blankstart">
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
-							<div class="mini-buttons-2 press-flat-button" title="Previous book" onclick="jumpBookDetailsPrev()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.prevbook" onclick="jumpBookDetailsPrev()">
 								<span class="fa-solid fa-chevron-left"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" title="Go to library" onclick="jumpBookLibrary()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.gotolib" onclick="jumpBookLibrary()">
 								<span class="fa-solid fa-layer-group"></span>
 							</div>
-							<div class="mini-buttons-2 press-flat-button" title="Next book" onclick="jumpBookDetailsNext()">
+							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.nextbook" onclick="jumpBookDetailsNext()">
 								<span class="fa-solid fa-chevron-right"></span>
 							</div>
 						</div>
-						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" title="Open Book" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
 							<img id="bookDetailCover" class="book-thumbnail hidden" src="transparent.png">
 						</div>
 					</div>
@@ -234,17 +239,17 @@
 			</div>
 
 			<div id="topControls">
-				<span id="readerClose" title="Close Reader" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
+				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
 				<span id="bookName"></span>
-				<span id="readerTheme" title="Reader Theme" class="reader-buttons press-button corner-left fa-solid"></span>
-				<span id="readerAnimation" title="Reader Animation" class="reader-buttons press-button fa-solid"></span>
-				<span id="readerIncognito" title="Incognito Reading" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
+				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left fa-solid"></span>
+				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button fa-solid"></span>
+				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
 			</div>
 
 			<div id="zoomControls">
-				<span id="scaleDown" title="Scale Down" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
+				<span id="scaleDown" data-i18n-title="reader.scaledown" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
 				<span id="scaleVal" class="reader-buttons">100%</span>
-				<span id="scaleUp" title="Scale Up" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
+				<span id="scaleUp" data-i18n-title="reader.scaleup" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
 			</div>
 
 			<div id="bottomControls">
@@ -291,26 +296,28 @@
 		<div id="loginDialog" class="dialog">
 			<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 			<img id="logoName" src="logo/mangabox-logoname.svg">
-			<div class="version-note">v0.3.7</div>
+			<div class="version-note">v0.3.8</div>
 
 			<div class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="loginBaseUrl" placeholder="Server URL" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
+				<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 			</div>
 
 			<div class="input-wrapper" title="Username">
 				<i class="fas fa-user"></i> <!-- Icon for username -->
-				<input type="email" class="login-input" id="loginUsername" placeholder="Username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
+				<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 			</div>
 
 			<div class="input-wrapper" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
 				<!--<i id="passIcon" class="fas fa-eye"></i>  -->
-				<input type="password" class="login-input" id="loginPassword" placeholder="Password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+				<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 			</div>
 
 			<div class="login-buttons">
-				<div></div>
+				<button id="languageButton" class="login-button-round" onclick="languageDialog()">
+					<i class="fas fa-earth"></i>
+				</button>
 				<button id="loginButton" class="login-button" onclick="login()">
 					<i class="fas fa-play"></i>
 					<span>Login</login>
@@ -334,20 +341,22 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.3.7</h1>
-		<div>MangaBox is a streamlined client for your Komga media server.
-			To access your own, self-hosted server please enter the server URL in the login field, then your username and password. </div>
-		<div>MangaBox is not designed to access external sources and does not provide content, it is only designed to display and navigate your own libraries and read your own books.</div>
-		<h1>Features:</h1>
+		<h1>MangaBox v0.3.8</h1>
+
+		<div data-i18n="about.intro"></div>
+		<div data-i18n="about.disclaimer"></div>
+
+		<h1 data-i18n="about.features.title"></h1>
+
 		<ul>
-			<li>Connect easily to your Komga server from the onboarding screen</li>
-			<li>Light and dark themes with custom color highlights</li>
-			<li>Touch and gesture support for tablets and phones</li>
-			<li>Beautiful two-pages reading with paper-style visuals, page-turn animations and thumbnail previews</li>
-			<li>Sync reading progress with the server</li>
-			<li>Download books for offline reading</li>
-			<li>Quick filter libraries by language, read status, and direction</li>
-			<li>Global search for series and volumes</li>
+			<li data-i18n="about.features.connect"></li>
+			<li data-i18n="about.features.theme"></li>
+			<li data-i18n="about.features.touch"></li>
+			<li data-i18n="about.features.reader"></li>
+			<li data-i18n="about.features.sync"></li>
+			<li data-i18n="about.features.offline"></li>
+			<li data-i18n="about.features.filter"></li>
+			<li data-i18n="about.features.search"></li>
 		</ul>
 	</div>
 
@@ -409,6 +418,7 @@
 					.catch(err => console.error("Service Worker registration failed:", err));
 			});
 		}
+
 
 		executeFade(1);
 
@@ -473,7 +483,7 @@
 
 
 		//MB Pinch To Zoom
-		// ===== Two-Finger Pinch + Pan for MangaBox =====
+		// Two-Finger Pinch + Pan
 
 		//const page = document.getElementById("touchPanel");
 		//const pageTarget = document.getElementById("readerContainer");
@@ -784,12 +794,29 @@
 
 		//let mb.readerScale = getComputedStyle(document.documentElement).getPropertyValue('--mb-reader-scale');
 
-		function addItem(itemkind, properties) {
+		function addItem_OLD(itemkind, properties) {
 			const { style, ...rest } = properties;
 			const element = Object.assign(document.createElement(itemkind), rest);
 			if (style) Object.assign(element.style, style);
 			return element;
 		}
+
+		function addItem(itemkind, properties = {}) {
+			const { style, dataset, ...rest } = properties;
+
+			const element = Object.assign(document.createElement(itemkind), rest);
+
+			if (style) Object.assign(element.style, style);
+
+			if (dataset) {
+				Object.entries(dataset).forEach(([key, value]) => {
+					element.dataset[key] = value;
+				});
+			}
+
+			return element;
+		}
+
 
 		function getScreenAR() {
 			return (window.innerWidth / window.innerHeight);
@@ -813,8 +840,13 @@
 
 		//MB Main Variable Setup 
 		function initMB() {
+
 			return (
 				{
+					languages: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'zh-Hans'],
+					languageAuto: false,
+					languageVal: '',
+
 					libraryError: false,
 					libraryNames: "",
 
@@ -861,15 +893,15 @@
 					// Theme management variables
 					themeControl: [
 						{
-							label: 'Light theme',
+							label: 'theme.light',
 							icon: 'fa-sun',
 							isDark: 0
 						}, {
-							label: 'Dark theme',
+							label: 'theme.dark',
 							icon: 'fa-moon',
 							isDark: 1
 						}, {
-							label: 'System theme',
+							label: 'theme.system',
 							icon: 'fa-wand-magic-sparkles',
 							isDark: 2
 						}
@@ -877,27 +909,27 @@
 
 					readerThemeControl: [
 						{
-							label: 'Classic theme',
+							label: 'readertheme.classic',
 							icon: 'fa-palette',
 							style: 'classic'
 						}, {
-							label: 'Dark accent',
+							label: 'readertheme.dark',
 							icon: 'fa-moon',
 							style: 'dark-accent'
 						}, {
-							label: 'Light accent',
+							label: 'readertheme.light',
 							icon: 'fa-sun',
 							style: 'light-accent'
 						}, {
-							label: 'Transparent',
+							label: 'readertheme.transparent',
 							icon: 'fa-square',
 							style: 'transparent'
 						}, {
-							label: 'White',
+							label: 'readertheme.white',
 							icon: 'fa-w',
 							style: 'white'
 						}, {
-							label: 'Black',
+							label: 'readertheme.black',
 							icon: 'fa-b',
 							style: 'black'
 						}
@@ -905,11 +937,11 @@
 
 					readerAnimationControl: [
 						{
-							label: 'No Page Animation',
+							label: 'readeranimation.no',
 							icon: 'fa-pause',
 							value: 0
 						}, {
-							label: 'Animate Pages',
+							label: 'readeranimation.yes',
 							icon: 'fa-right-left',
 							value: 1
 						}
@@ -1033,6 +1065,135 @@
 			}
 		}
 
+
+		//MB Language Management
+
+		let i18n = {};
+		let i18n_en = {};
+		
+		async function loadFallbackLanguage(){	
+			const res_en = await fetch(`./i18n/en.json`);
+			i18n_en = await res_en.json();
+		}
+
+		async function detectLanguage() {
+
+			// Sets auto language to false then tries to load a saved language
+			mb.languageAuto = false;
+			const stored = localStorage.getItem('mbLanguage');
+
+			if (stored) {
+				mb.languageVal = stored;
+			} else {
+				mb.languageAuto = true
+				const browserLang = navigator.language; // e.g. "it-IT"
+				mb.languageVal = browserLang.split('-')[0];  // "it"
+			}
+		}
+
+		async function loadLanguage_old() {
+			const resFallback = await fetch(`./i18n/en.json`);
+			i18n_en = await resFallback.json();
+
+			try {
+				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				i18n = await res.json();
+			} catch {
+				console.warn(`Missing language ${mb.languageVal}, falling back to en`);
+				if (mb.languageVal !== 'en') {
+					mb.languageVal = 'en';
+					return loadLanguage();
+				}
+			}
+		}
+
+		async function loadLanguage() {
+			i18n = {};
+			try {
+				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				i18n = await res.json();
+			} catch {
+				console.warn(`Missing language ${mb.languageVal}, using en only`);
+			}
+		}
+
+
+		function t_old(key, vars = {}) {
+			let str = i18n[key] || key;
+			for (const k in vars) {
+				str = str.replace(`{${k}}`, vars[k]);
+			}
+			return str;
+		}
+
+		function t(key, vars = {}) {
+			const str =
+				i18n[key] ??
+				i18n_en[key] ??
+				key;
+
+			let out = str;
+			for (const k in vars) {
+				out = out.replace(`{${k}}`, vars[k]);
+			}
+			return out;
+		}
+
+		function getI18nVars(el, base) {
+			const raw = el.dataset[`${base}Vars`];
+			if (!raw) return undefined;
+
+			try {
+				return JSON.parse(raw);
+			} catch {
+				console.warn("Invalid i18n vars:", raw);
+				return undefined;
+			}
+		}
+
+		function translateDOM(root = document) {
+			const elements =
+				root === document
+					? document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
+					: root.matches("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
+						? [root]
+						: [];
+
+			elements.forEach(el => {
+				if (el.dataset.i18n) {
+					el.textContent = t(
+						el.dataset.i18n,
+						getI18nVars(el, "i18n")
+					);
+				}
+
+				if (el.dataset.i18nTitle) {
+					el.title = t(
+						el.dataset.i18nTitle,
+						getI18nVars(el, "i18nTitle")
+					);
+				}
+
+				if (el.dataset.i18nPlaceholder) {
+					el.placeholder = t(
+						el.dataset.i18nPlaceholder,
+						getI18nVars(el, "i18nPlaceholder")
+					);
+				}
+			});
+		}
+
+		async function applyLanguage() {
+			// Load saved language definition or use system one
+			await detectLanguage();
+			// Load language data structure based on currentLang global
+			await loadLanguage();
+			// Translate the DOM
+			translateDOM();
+		}
+		
+		loadFallbackLanguage();
+		applyLanguage();
 
 		//MB API Call Function 
 
@@ -1227,7 +1388,9 @@
 			});
 
 			themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
-			themeLabel.title = mb.themeControl[mb.themePrefs].label;
+			themeChanger.dataset.i18nTitle = mb.themeControl[mb.themePrefs].label;
+			translateDOM(themeChanger)
+
 			// Change fa icons for light or dark theme
 			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
@@ -1298,6 +1461,10 @@
 			changeTheme();
 		});
 
+		languageChanger.addEventListener('click', () => {
+			languageDialog();
+		});
+
 		if (enableFullscreen) {
 			fullscreenChanger.addEventListener('click', () => {
 				// mb.themePrefs = (mb.themePrefs + 1) % mb.themeControl.length;
@@ -1331,11 +1498,14 @@
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
 				<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
 			</div>
+			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;" onClick="languageDialog()">
+				<span class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
+			</div>
 			`
 			showModal('', true, dialogText,
 				[
 					{
-						label: 'Logout', runfunction: async () => {
+						label: t('button.logout'), runfunction: async () => {
 							closeModal();
 							navigateTo('#dashboard');
 							await executeFaderGradient(1);
@@ -1378,7 +1548,8 @@
 						}, high: true
 					},
 					{
-						label: 'Cancel', runfunction: closeModal, high: false
+						// No need to use translateDOM because modals are modal and spawned each time
+						label: t('modal.cancel'), runfunction: closeModal, high: false
 					}
 				]
 			);
@@ -1567,7 +1738,10 @@
 
 			itemsArray.forEach(item => {
 				let uiButton = addItem('button', {
-					innerText: item.label,
+					innerText: t(item.label),
+					dataset: {
+						i18n: item.label,
+					},
 					className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
 				})
 				addPressEvents(uiButton, pressDown, pressUp);
@@ -1576,6 +1750,10 @@
 			});
 
 			myModal.classList.add('visible');
+		}
+
+		function isModalVisible() {
+			return (myModal.classList.contains('visible'))
 		}
 
 		function closeModal() {
@@ -1605,7 +1783,7 @@
 
 			} catch (err) {
 				console.error("Error converting image:", err);
-				showModal('circle-mark-svg.svg', true, 'Failed to load image.',
+				showModal('circle-mark-svg.svg', true, t('modal.imageloadfail'),
 					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
 			}
 		}
@@ -1744,46 +1922,54 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Sort items',
+					title: 'button.sort',
 					switches: [
 						{
 							name: 'a_to_z',
-							caption: 'by Title',
+							caption: 'sort.titleaz',
+							longCaption: 'sort.titleaz.long',
 							iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
 							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 						}, {
 							name: 'z_to_a',
-							caption: 'by Title',
+							caption: 'sort.titleza',
+							longCaption: 'sort.titleza.long',
 							iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
 							sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 						}, {
 							name: '9_to_1',
-							caption: 'by Start',
-							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
-						}, {
-							name: '1_to_9',
-							caption: 'by Start',
+							caption: 'sort.startnewtoold',
+							longCaption: 'sort.startnewtoold.long',
 							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 						}, {
-							name: '9_to_1',
-							caption: 'by End',
-							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
-							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
-						}, {
 							name: '1_to_9',
-							caption: 'by End',
+							caption: 'sort.startoldtonew',
+							longCaption: 'sort.startoldtonew.long',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
+						}, {
+							name: '9_to_1',
+							caption: 'sort.stopnewtoold',
+							longCaption: 'sort.stopnewtoold.long',
 							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
-							caption: 'Books',
+							caption: 'sort.stopoldtonew',
+							longCaption: 'sort.stopoldtonew.long',
+							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
+						}, {
+							name: '1_to_9',
+							caption: 'sort.booksdecreasing',
+							longCaption: 'sort.booksdecreasing.long',
 							iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
 							sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
 						}, {
 							name: '9_to_1',
-							caption: 'Books',
+							caption: 'sort.booksincreasing',
+							longCaption: 'sort.booksincreasing.long',
 							iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
 							sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
 						}
@@ -1796,21 +1982,24 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Filter by read status',
+					title: 'button.filterread',
 					switches: [
 						{
 							name: 'all',
-							caption: 'All',
+							caption: 'filterread.all',
+							longCaption: 'filterread.all.long',
 							iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
 							filterFunction: (a) => true
 						}, {
 							name: 'unread',
-							caption: 'Unread',
+							caption: 'filterread.unread',
+							longCaption: 'filterread.unread.long',
 							iconClass: 'fa-regular fa-circle glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == false)
 						}, {
 							name: 'read',
-							caption: 'Read',
+							caption: 'filterread.read',
+							longCaption: 'filterread.read.long',
 							iconClass: 'fa-solid fa-circle glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == true)
 						}
@@ -1823,28 +2012,32 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Filter by reading direction',
+					title: 'button.filterdirection',
 					switches: [
 						{
 							name: 'all',
-							caption: 'All',
+							caption: 'filterdirection.all',
+							longCaption: 'filterdirection.all.long',
 							iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
 							filterFunction: (a) => true
 
 						}, {
 							name: 'l_to_r',
-							caption: 'L to R',
+							caption: 'filterdirection.l2r',
+							longCaption: 'filterdirection.l2r.long',
 							iconClass: 'fa-solid fa-arrow-right glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
 						}, {
 							name: 'r_to_l',
-							caption: 'R to L',
+							caption: 'filterdirection.r2l',
+							longCaption: 'filterdirection.r2l.long',
 							iconClass: 'fa-solid fa-arrow-left glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
 						}, {
 							name: 'webtoon',
-							caption: 'WToon',
+							caption: 'filterdirection.webtoon',
+							longCaption: 'filterdirection.webtoon.long',
 							iconClass: 'fa-solid fa-arrow-down glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
 						}
@@ -1857,11 +2050,13 @@
 					item: null,
 					icon: null,
 					caption: null,
-					title: 'Filter by language',
+					title: 'button.filterlanguage',
 					switches: [
 						{
 							name: 'all',
-							caption: 'All',
+							caption: 'filterlanguage.all',
+							longCaption: 'filterLanguage.all.long',
+
 							iconClass: 'fa-solid fa-earth-europe glyph-dark',
 							filterFunction: (a) => true
 						}
@@ -1869,7 +2064,12 @@
 				},
 			});
 		}
+
 		mb.filterTable = initFilterTable();
+
+		function languageName(tag, locale = mb.languageVal) {
+			return new Intl.DisplayNames([locale], { type: "language" }).of(tag);
+		}
 
 		async function buildLanguageList() {
 			const languageList = await callAPI('c_languages', `/api/v1/languages`);
@@ -1877,6 +2077,10 @@
 				mb.filterTable.filter_by_language.switches.push({
 					name: item,
 					caption: item.toUpperCase(),
+					langTag: item,
+					get longCaption() {
+						return languageName(this.langTag);
+					},
 					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
 					iconStyle: `background-image:url('flags/${item}.svg')`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
@@ -1929,7 +2133,8 @@
 
 			mb.filterButtons.forEach(button => {
 				button.icon.innerHTML = `<span style="${button.switches[button.selected].iconStyle}" class="${button.switches[button.selected].iconClass}${button.selected != 0 ? ' mb-accent' : ''}"></span>`;
-				button.caption.innerHTML = `${button.switches[button.selected].caption}`;
+				button.caption.dataset.i18n = `${button.switches[button.selected].caption}`;
+				translateDOM(button.caption);
 
 				//For each button check if the button is a sort button or one of the filters buttons
 				if (button.switches[button.selected].sortFunction) {
@@ -1955,6 +2160,7 @@
 					});
 				}
 			});
+
 			seriesGrid.innerHTML = "";
 			if (!boot) {
 				divs.forEach(div => {
@@ -1967,21 +2173,104 @@
 			});
 			*/
 		}
+		async function setLanguageValue(valueIndex, language = null) {
+
+			[...languageMenu.children].forEach((li, index) => {
+				li.classList.toggle('highlighted', index === valueIndex);
+			});
+			localStorage.setItem('mbLanguage', language);
+			applyLanguage();
+
+		}
+
+		async function setLanguageAuto() {
+			let menuLength = [...languageMenu.children].length;
+
+			[...languageMenu.children].forEach((li, index) => {
+				li.classList.toggle('highlighted', index === menuLength - 1);
+			});
+			localStorage.removeItem('mbLanguage');
+			applyLanguage();
+
+		}
+
+		async function setFilterValue(itemIndex, valueIndex) {
+
+			mb.filterButtons[itemIndex].selected = valueIndex;
+
+			[...filterMenu.children].forEach((li, index) => {
+				li.classList.toggle('highlighted', index === valueIndex);
+			});
+
+			await executeFade(1);
+			applyLibraryFilters();
+			await executeFade(0);
+			saveLibraryFilters();
+
+			//TODO Maybe make this smoother instead of reloading the whole menu!
+			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: closeModal, high: true }]);
+		}
+
+		function buildLanguageDialog() {
+			let out = `<span data-i18n="language.title">${t('language.title')}</span>`;
+			out = out + '<ul class="filter-menu" id="languageMenu">';
+			mb.languages.forEach((language, index) => {
+				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
+									<div class='smallbutton-wrapper'>
+										<span style="background-image:url('flags/${language}.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
+									</div>
+									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
+								</li>`
+			});
+			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
+									<div class='smallbutton-wrapper'>
+										<span class="fa-solid fa-robot glyph-dark"></span>
+									</div>
+									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
+								</li>`
+			out = out + "</ul>";
+			return (out)
+		}
+
+		function languageDialog() {
+			showModal('', false, buildLanguageDialog(), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
+		}
+
+		function buildFilterDialog(button, buttonIndex) {
+			let out = t(button.title);
+			out = out + '<ul class="filter-menu" id="filterMenu">';
+			button.switches.forEach((switchItem, index) => {
+				let isSelected = (button.selected == index);
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setFilterValue(${buttonIndex},${index})">
+									<div class='smallbutton-wrapper'>
+										<span style="${switchItem.iconStyle}" class="${switchItem.iconClass}"></span>
+									</div>
+									<div class='library-name filter-menu-text capitalize-first'>${t(switchItem.longCaption)}</div>
+								</li>`
+			});
+			out = out + "</ul>";
+			return (out)
+		}
 
 		// Build filter buttons items
 		function buildFilters() {
-			mb.filterButtons.forEach(button => {
+			mb.filterButtons.forEach((button, index) => {
 				button.item = addItem('li', {
 					className: `filter-item press-button`,
-					title: button.title,
+					dataset: {
+						i18nTitle: button.title,
+					}
 				});
 				button.icon = addItem('div', {
 					className: `smallbutton-wrapper`,
 					innerHTML: `<span style="${button.switches[0].iconStyle}" class="${button.switches[0].iconClass}"></span>`
 				});
 				button.caption = addItem('div', {
-					className: `library-name`,
-					innerHTML: `${button.switches[0].caption}`
+					className: `library-name filter-name`,
+					dataset: {
+						i18n: `${button.switches[0].caption}`,
+					}
 				});
 				button.item.append(
 					button.icon,
@@ -1995,10 +2284,13 @@
 					await executeFade(0);
 					saveLibraryFilters();
 				})
+				addLongPressListener(button.item, 'filter-item', async () => {
+					showModal('', false, buildFilterDialog(button, index), [{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
+				}, 500)
 			});
 
 			extraButtons.append(addItem('li', {
-				title: 'Reset filters and sorting',
+				//title: 'Reset filters and sorting',
 				className: `filter-item press-button`,
 				innerHTML: `<div class="smallbutton-wrapper">
 								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
@@ -2011,9 +2303,13 @@
 					applyLibraryFilters();
 					await executeFade(0);
 					saveLibraryFilters();
+				},
+				dataset: {
+					i18nTitle: 'filtersort.reset'
 				}
 			}));
 		}
+
 		buildFilters();
 
 		//TODO Check what happens for webtoons since readerScale should be 100 for them?
@@ -2791,7 +3087,7 @@
 			mb.libraryError = false;
 			mb.libraryNames = "<ul>";
 			Array.from(libraries).forEach(libItem => {
-				if (libItem.analyzeDimensions == false){
+				if (libItem.analyzeDimensions == false) {
 					mb.libraryError = true;
 					mb.libraryNames = mb.libraryNames + "<li style='text-align:left'>" + libItem.name + "</li>"
 				}
@@ -2808,15 +3104,17 @@
 			*/
 			await displayLibraries(libraries);
 
+			translateDOM(librariesList);
+
 			await updateSizer(libraries)
 
 			updateStickyMenu();
 
-			if (mb.libraryError){
-				showModal('circle-mark-svg.svg', true, "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>"+mb.libraryNames,
-							[{ label: 'Ok', runfunction: closeModal, high: true }]);
-						return;
-			}		
+			if (mb.libraryError) {
+				showModal('circle-mark-svg.svg', true, t('modal.analyzewarning') + mb.libraryNames,
+					[{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
+				return;
+			}
 
 		}
 
@@ -2985,6 +3283,7 @@
 			const bookCount = serie.booksCount;
 			item.mbSeriesTitle = serie.metadata.title ?? '';
 			item.mbSeriesStart = timeSplit(altTitle.time)[0];
+			item.mbSeriesStop = timeSplit(altTitle.time)[1];
 			item.mbBooksCount = serie.booksCount;
 			item.mbSeriesRead = (unreadCount == 0);
 			item.mbSeriesDirection = (serie.metadata.readingDirection);
@@ -3001,7 +3300,9 @@
 
 			item.childNodes[0]?.remove();
 
-			item.title = 'Open series';
+			//item.title = 'Open series';
+			item.dataset.i18nTitle = 'series.open';
+			translateDOM(item);
 
 			const seriesItem = addItem('div', {
 				className: 'series-item'
@@ -3058,7 +3359,10 @@
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
 				title: 'Mark series as read',
-				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-check"></span>`,
+				dataset: {
+					i18nTitle: 'series.markasread'
+				}
 			});
 			addClickPointerEvents(markAsRead, async () => {
 				await setSeriesReadStatus(serie.id, true, item);
@@ -3067,13 +3371,18 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark series as unread',
-				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`,
+				dataset: {
+					i18nTitle: 'series.markasunread'
+				}
 			});
 			addClickPointerEvents(markAsUnread, async () => {
 				await setSeriesReadStatus(serie.id, false, item);
 			})
 			addPressEvents(markAsUnread, scaleDown, scaleUp)
+
+			translateDOM(markAsRead);
+			translateDOM(markAsUnread);
 
 			// Find alternate title with label 'Time'
 			const altTitle = getAltTitles(serie);
@@ -3088,8 +3397,13 @@
 			const timeLabel = addItem('span', {
 				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
-				title: `Filter time: ${altTitle.time}`
+				dataset: {
+					i18nTitle: 'series.filtertime',
+					i18nTitleVars: JSON.stringify({ time: altTitle.time })
+				}
 			});
+
+			translateDOM(timeLabel);
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
@@ -3109,9 +3423,14 @@
 					const storyLabel = addItem('div', {
 						innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
 						className: 'red data-label search-trigger',
-						title: `Filter artist: ${altTitle.story}`
+						//title: `Filter artist: ${altTitle.story}`,
+						dataset: {
+							i18nTitle: 'series.filterartist',
+							i18nTitleVars: JSON.stringify({ name: altTitle.story })
+						}
 					});
 
+					translateDOM(storyLabel);
 					artistRow.append(storyLabel);
 
 					addClickPointerEvents(storyLabel, async () => {
@@ -3124,9 +3443,13 @@
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
 						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
 						className: 'red data-label search-trigger',
-						title: `Filter artist: ${altTitle.art}`
+						//title: `Filter artist: ${altTitle.art}`
+						dataset: {
+							i18nTitle: 'series.filterartist',
+							i18nTitleVars: JSON.stringify({ name: altTitle.art })
+						}
 					});
-
+					translateDOM(artLabel);
 					artistRow.append(artLabel);
 
 					addClickPointerEvents(artLabel, async () => {
@@ -3135,15 +3458,19 @@
 					});
 				}
 
-
-
 			} else {
 				if (altTitle.story != 'N/A') {
 					const artistLabel = addItem('div', {
 						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
-						title: `Filter artist: ${altTitle.story}`,
-						className: 'red data-label search-trigger'
+						//title: `Filter artist: ${altTitle.story}`,
+						className: 'red data-label search-trigger',
+						dataset: {
+							i18nTitle: 'series.filterartist',
+							i18nTitleVars: JSON.stringify({ name: altTitle.story })
+						}
 					});
+
+					translateDOM(artistLabel);
 					artistRow.append(artistLabel);
 
 					addClickPointerEvents(artistLabel, async () => {
@@ -3211,7 +3538,7 @@
 		async function buildContainerItem(item, serie, target, container, items, icon) {
 
 			const dateString = serie.lastModifiedDate ?
-				new Intl.DateTimeFormat('en-GB', {
+				new Intl.DateTimeFormat(mb.languageVal, {
 					day: '2-digit',
 					month: 'short',
 					year: '2-digit'
@@ -3631,6 +3958,9 @@
 				id: itemId,
 				className: 'library-item press-button',
 				title: libraryName,
+				dataset: {
+					i18nTitle: libraryName,
+				}
 			});
 
 			addPressEvents(listItem, pressDown, pressUp);
@@ -3668,7 +3998,10 @@
 
 			const libraryNameDiv = addItem('div', {
 				className: 'library-name',
-				textContent: libraryName
+				textContent: libraryName,
+				dataset: {
+					i18n: libraryName,
+				}
 			});
 
 			thumbnailWrapper.append(libraryThumbnail);
@@ -3724,12 +4057,12 @@
 			});
 		}
 
-		function addLongPressListener(element, callback, duration = 1200) {
+		function addLongPressListener(element, filterclass, callback, duration = 1200) {
 			let pressTimer;
 			let wasLongPress = false;
 
 			const start = (e) => {
-				if (e.target.classList.contains('is-lib-menu')) return;
+				if (e.target.classList.contains(filterclass)) return;
 				wasLongPress = false;
 				pressTimer = setTimeout(() => {
 					wasLongPress = true;
@@ -3773,8 +4106,8 @@
 				debugPrint("----Input is a file")
 				if (!fileOrBase64.type.startsWith('image/')) {
 					debugPrint("----But it's not a valid image file")
-					showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
-						[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+					showModal('circle-mark-svg.svg', true, t('modal.validimage'),
+						[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
 					return;
 				}
 				base64 = await readFileAsBase64(fileOrBase64);
@@ -3790,15 +4123,15 @@
 			else {
 				debugPrint("----Input is not valid")
 				debugPrint(fileOrBase64);
-				showModal('circle-mark-svg.svg', true, 'Please provide a valid image.',
-					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+				showModal('circle-mark-svg.svg', true, t('modal.validimage'),
+					[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
 				return;
 			}
 
 			// Show confirmation modal
-			showModal(base64, false, 'Set this image as library thumbnail?',
+			showModal(base64, false, t('modal.confirmimage'),
 				[{
-					label: 'Ok',
+					label: t('modal.ok'),
 					runfunction: async () => {
 						mb.libraryIcons[libraryId] = base64;
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
@@ -3807,7 +4140,7 @@
 					},
 					high: true,
 				}, {
-					label: 'Cancel', runfunction: cancelUpdate, high: false
+					label: t('modal.cancel'), runfunction: cancelUpdate, high: false
 				}
 				]);
 		}
@@ -3863,14 +4196,14 @@
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
-			let dashboard = buildLibraryItem('homeButton', 'Dashboard', 'logo/mangabox-logo-new.svg')
+			let dashboard = buildLibraryItem('homeButton', 'library.dashboard', 'logo/mangabox-logo-new.svg')
 			dashboard.classList.add('shrink-first');
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
 				navigateTo('#dashboard');
 			});
 
-			let readlists = buildLibraryItem('readlistsButton', 'Read Lists', 'library-symbols/readlists3d.png')
+			let readlists = buildLibraryItem('readlistsButton', 'library.readlists', 'library-symbols/readlists3d.png')
 			readlists.classList.add('shrink-first');
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
@@ -3884,7 +4217,7 @@
 				if (res.content.length == 0) readlistsButton.style.display = 'none';
 			});
 
-			let collections = buildLibraryItem('collectionsButton', 'Collections', 'library-symbols/collections3d.png')
+			let collections = buildLibraryItem('collectionsButton', 'library.collections', 'library-symbols/collections3d.png')
 			collections.classList.add('shrink-first');
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
@@ -3901,33 +4234,33 @@
 			Array.from(libraries).forEach((library, index) => {
 				const listItem = buildLibraryItem(library.id, library.name);
 
-				addLongPressListener(listItem, async () => {
+				addLongPressListener(listItem, 'is-lib-menu', async () => {
 
 					const libraryId = listItem.id
 					if (mb.libraryIcons[libraryId] == null) {
 						if (isCapacitor) {
-							showModal('', true, generatePics(libraryId, "Select a thumbnail or open an image"),
+							showModal('', true, generatePics(libraryId, t('modal.selectopenimage')),
 								[{
-									label: 'Gallery',
+									label: t('modal.gallery'),
 									runfunction: async () => { await pickImage(libraryId); },
 									high: true
 								}, {
-									label: 'Files',
+									label: t('modal.files'),
 									runfunction: async () => { await pickFile(libraryId); },
 									high: true
 								}, {
-									label: 'Cancel',
+									label: t('modal.cancel'),
 									runfunction: closeModal,
 									high: false
 								}]);
 
 						} else {
-							showModal('', false, generatePics(libraryId, "Select a thumbnail or drag an image over the library button"), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
+							showModal('', false, generatePics(libraryId, t('modal.selectordrag')), [{ label: t('modal.ok'), runfunction: () => closeModal(), high: true }]);
 						}
 					} else {
-						showModal(mb.libraryIcons[libraryId], false, 'Remove custom library thumbnail?', [
+						showModal(mb.libraryIcons[libraryId], false, t('modal.removethumb'), [
 							{
-								label: 'Ok',
+								label: t('modal.ok'),
 								runfunction: async () => {
 									await delete mb.libraryIcons[libraryId];
 									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
@@ -3937,7 +4270,7 @@
 								},
 								high: true
 							},
-							{ label: 'Cancel', runfunction: cancelUpdate, high: false }
+							{ label: t('modal.cancel'), runfunction: cancelUpdate, high: false }
 						]);
 
 					}
@@ -3973,9 +4306,10 @@
 				});
 
 				librariesList.append(listItem);
+
 			});
 
-
+			translateDOM();
 		}
 
 		function getAltTitles(serie) {
@@ -4022,7 +4356,7 @@
 				(serie.metadata.summary != "")
 					? serie.metadata.summary.replace(/\n/g, '<br>')
 					: (serie.booksMetadata.summary != ""
-						? "<u>Summary from book " + serie.booksMetadata.summaryNumber + "</u><br>" + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+						? `<u><span data-i18n="seriesheader.summary" data-i18n-vars='${JSON.stringify({summarysource: serie.booksMetadata.summaryNumber})}'></span></u><br>` + serie.booksMetadata.summary.replace(/\n/g, '<br>')
 						: ""
 					)
 			)
@@ -4032,13 +4366,13 @@
 			if (isReadlist || ((altTitle.story == 'N/A') && (altTitle.art == 'N/A')) || altTitle == null) {
 				creditString = ''
 			} else if (altTitle.story == 'N/A') {
-				creditString = ` - Art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+				creditString = ` - <span data-i18n="seriesheader.artby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			} else if (altTitle.art == 'N/A') {
-				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+				creditString = ` - <span data-i18n="seriesheader.storyby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 			} else if (altTitle.story == altTitle.art) {
-				creditString = ` - Story and art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
+				creditString = ` - <span data-i18n="seriesheader.storyandartby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>`
 			} else {
-				creditString = ` - Story by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, art by <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
+				creditString = ` - <span data-i18n="seriesheader.storyby"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.story.toLowerCase()}');">${altTitle.story}</a>, <span data-i18n="seriesheader.artby2"></span> <a class="red search-trigger" href="javascript:navigateTo('#search?search_string=${altTitle.art.toLowerCase()}');">${altTitle.art}</a>`
 			}
 
 			const timeString =
@@ -4059,7 +4393,7 @@
 				${serie.metadata?.language ? `<img width="20px" height="20px" style="margin-left:15px; margin-top:2px; vertical-align: top;" src="flags/${serie.metadata.language}.svg">` : ''}
 				</span>
 				<span class="notes">
-				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "book" : "books"}) ${isReadlist ? '' : creditString}</span>
+				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "<span data-i18n=\"seriesheader.book\"></span>" : "<span data-i18n=\"seriesheader.books\"></span>"}) ${isReadlist ? '' : creditString}</span>
 			</div>
 			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
 				<div class="scrollbox-content">${summary}</div>
@@ -4074,6 +4408,8 @@
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${title}</span>
 			`
+
+			translateDOM();
 		}
 
 		//MB Book Details Panel 
@@ -4157,7 +4493,9 @@
 
 			item.childNodes[0]?.remove();
 
-			item.title = 'Read book';
+			//item.title = 'Read book';
+			item.dataset.i18nTitle = 'book.open';
+			translateDOM(item);
 
 			const booksItem = addItem('div', {
 				className: 'book-item'
@@ -4185,11 +4523,16 @@
 			if (format == 'longname') {
 				mainRow.classList.add('book-row');
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Book ${book.metadata.number}`,
+					dataset: {
+						i18n: 'book.book',
+						i18nVars: JSON.stringify({ booksnumber: book.metadata.number })
+					}
+					//innerHTML: `<span data-i18n="book.book"></span> ${book.metadata.number}`,
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
+				translateDOM(volumeNumberLabel);
 				mainRow.append(volumeNumberLabel, pagesLabel);
 			} else {
 				mainRow.classList.add('book-series-row', 'red');
@@ -4210,15 +4553,20 @@
 				secondRow.textContent = book.metadata.title;
 			} else if ((format == 'compact') || (format == 'full')) {
 				const volumeNumberLabel = addItem('span', {
-					innerHTML: `Book ${book.metadata.number}`
+					dataset: {
+						i18n: 'book.book',
+						i18nVars: JSON.stringify({ booksnumber: book.metadata.number })
+					}
 				});
 				const pagesLabel = addItem('span', {
 					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
+				translateDOM(volumeNumberLabel);
 				secondRow.append(volumeNumberLabel, pagesLabel);
 			} else if (format == 'timeline') {
+
 				const dateString = book.readProgress ?
-					new Intl.DateTimeFormat('en-GB', {
+					new Intl.DateTimeFormat(mb.languageVal, {
 						day: '2-digit',
 						month: 'short',
 						year: '2-digit'
@@ -4226,11 +4574,16 @@
 					: '';
 
 				const volumeNumberLabelShort = addItem('span', {
-					innerHTML: `Bk.${book.metadata.number}`
+					dataset: {
+						i18n: 'book.bookshort',
+						i18nVars: JSON.stringify({ booksnumber: book.metadata.number })
+					}
+					//innerHTML: `Bk.${book.metadata.number}`
 				});
 				const timeLabel = addItem('span', {
 					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
 				});
+				translateDOM(volumeNumberLabelShort);
 
 				secondRow.append(volumeNumberLabelShort, timeLabel);
 			}
@@ -4274,8 +4627,10 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				title: 'Mark book as read',
-				innerHTML: `<span class="fa-regular fa-circle-check"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-check"></span>`,
+				dataset: {
+					i18nTitle: 'book.markasread'
+				}
 			});
 			addClickPointerEvents(markAsRead, () => {
 				setBookReadStatus(book.id, true, item, format);
@@ -4285,8 +4640,10 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				title: 'Mark book as unread',
-				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`
+				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`,
+				dataset: {
+					i18nTitle: 'book.markasunread'
+				}
 			});
 			addClickPointerEvents(markAsUnread, () => {
 				setBookReadStatus(book.id, false, item, format);
@@ -4300,8 +4657,10 @@
 			//if (book.metadata.summary != '') {
 			const bookDetails = addItem('div', {
 				className: 'mini-buttons book-details',
-				title: 'Book Details',
-				innerHTML: `<span class="fa-solid fa-align-justify"></span>`
+				innerHTML: `<span class="fa-solid fa-align-justify"></span>`,
+				dataset: {
+					i18nTitle: 'book.details'
+				}
 			});
 
 			addClickPointerEvents(bookDetails, () => {
@@ -4318,8 +4677,11 @@
 			if (isElectron || isCapacitor || fullDebugMode) {
 				const downloadButton = addItem('div', {
 					className: 'mini-buttons download-book',
-					title: 'Download book',
+					//title: 'Download book',
 					innerHTML: obRedrawDownloadButton(book.id),
+					dataset: {
+						i18nTitle: 'book.download'
+					}
 				});
 
 				addClickPointerEvents(downloadButton, () => {
@@ -4495,7 +4857,7 @@
 
 		dashboardElements = {
 			keepReading: {
-				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading',
+				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
 				getItems: async (page, size) => {
 					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
@@ -4514,7 +4876,7 @@
 
 
 			onDeck: {
-				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;On Deck',
+				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;<span data-i18n="header.ondeck"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_ondeck`, `/api/v1/books/ondeck`));
 				},
@@ -4524,7 +4886,7 @@
 			},
 
 			recentBooks: {
-				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;Last Added Books',
+				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
@@ -4537,7 +4899,7 @@
 			},
 
 			recentSeries: {
-				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;Last Added Series',
+				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
@@ -4547,7 +4909,7 @@
 			},
 
 			updatedSeries: {
-				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;Last Updated Series',
+				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;<span data-i18n="header.lastupdatedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
@@ -4557,7 +4919,7 @@
 			},
 
 			readBooks: {
-				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;Last Read Books',
+				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;<span data-i18n="header.lastreadbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_readbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
@@ -4617,7 +4979,10 @@
 			});
 			item.gridButton = addItem('div', {
 				className: 'strip-all press-flat-button strip-button',
-				innerHTML: '<span title="View All" class="fa-solid fa-grip glyph-dark"></span>',
+				innerHTML: '<span class="fa-solid fa-grip glyph-dark"></span>',
+				dataset: {
+					i18nTitle: 'navigation.all'
+				}
 			});
 			item.homeStrip = addItem('div', {
 				className: 'home-strip' + (isLast ? ' last-strip' : ''),
@@ -5046,7 +5411,8 @@
 				readerAnimation.classList.remove(item.icon);
 			});
 			readerAnimation.classList.add(mb.readerAnimationControl[mb.readerAnimation].icon);
-			readerAnimation.title = mb.readerAnimationControl[mb.readerAnimation].label;
+			readerAnimation.dataset.i18nTitle = mb.readerAnimationControl[mb.readerAnimation].label;
+			translateDOM(readerAnimation)
 
 			rd.turnTime = rd.turnTime0 * mb.readerAnimation;
 			rd.scrollSpeed = rd.scrollSpeed0 * mb.readerAnimation;
@@ -5061,7 +5427,8 @@
 				readerTheme.classList.remove(item.icon);
 			});
 			readerTheme.classList.add(mb.readerThemeControl[mb.readerThemePrefs].icon);
-			readerTheme.title = mb.readerThemeControl[mb.readerThemePrefs].label;
+			readerTheme.dataset.i18nTitle = mb.readerThemeControl[mb.readerThemePrefs].label;
+			translateDOM(readerTheme)
 
 			document.documentElement.setAttribute('data-theme-reader', mb.readerThemeControl[mb.readerThemePrefs].style);
 
@@ -6804,6 +7171,16 @@
 					}
 					break;
 				/*
+				case 'I':
+					console.log("SWITCH")
+					languageDialog();
+					
+					currentLang = 'it';
+					initApp();
+					
+					break;
+				*/
+				/*
 				case 'D':
 					mb.screenAR = getScreenAR();
 					mb.readerScale = mb.screenAR / mb.readerMaxRatio * 100 - 1;
@@ -6840,7 +7217,7 @@
 
 			if (mb.clickingTile != null) return;
 
-			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target))) {
+			if ((mb.libMenuVisible != null) && (!filtersBar.contains(event.target)) && (!isModalVisible())) {
 				libMenuDown(mb.libraryMenuButtons[mb.libMenuVisible]);
 				sectionToggle(filtersBar);
 				mb.libMenuVisible = null;
