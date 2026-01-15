@@ -348,7 +348,7 @@ jobs:
       - name: Android-apk - Move apk to target
         if: ${{ matrix.name == 'Android-apk' }}
         run: |
-          mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
+          mv android/app/build/outputs/apk/release/app-release.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
       - name: Android-aab - Build app
         if: ${{ matrix.name == 'Android-aab' }}
