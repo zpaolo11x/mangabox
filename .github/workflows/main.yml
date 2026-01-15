@@ -325,7 +325,7 @@ jobs:
         if: ${{ matrix.name == 'Android-apk' }}
         run: |
           cat >> android/gradle.properties <<EOF
-          MYAPP_UPLOAD_STORE_FILE=mangabox.keystore
+           MYAPP_UPLOAD_STORE_FILE=android/app/mangabox.keystore
           MYAPP_UPLOAD_STORE_PASSWORD=${ANDROID_KEYSTORE_PASSWORD}
           MYAPP_UPLOAD_KEY_ALIAS=${ANDROID_KEY_ALIAS}
           MYAPP_UPLOAD_KEY_PASSWORD=${ANDROID_KEY_PASSWORD}
@@ -337,7 +337,7 @@ jobs:
       - name: Restore Android keystore
         if: ${{ matrix.name == 'Android-apk' }}
         run: |
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/mangabox.keystore
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/mangabox.keystore
           
       - name: Android-apk - Build app
         if: ${{ matrix.name == 'Android-apk' }}
