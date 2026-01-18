@@ -1,7 +1,22 @@
 // script.js
 
+async function checkCredentialsCap() {
+	const creds = await Capacitor.Plugins.SecureStoragePlugin.keys()
+	debugPrint(creds);
+	debugPrint(creds[0]);
+	if (!creds || creds.length === 0) {
+		return null;
+	}
+	if (creds.length > 1) {
+		console.warn('Multiple credentials found, using the first one');
+	}
+	return creds[0];
+}
+
 async function checkSavedUser() {
-	const user = await window.secureStore.checkCredentials2();
+	const user = isElectron
+		? await window.secureStore.checkCredentials2()
+		: await checkCredentialsCap();
 	return user;
 }
 
@@ -58,9 +73,10 @@ async function sessionCheck() {
 
 	// Load stored token (e.g. from Electron storage)
 	mb.loggedUser = 'cookie';
-	if (isElectron) mb.loggedUser = await checkSavedUser();
+	if (isElectron || isCapacitor) mb.loggedUser = await checkSavedUser();
 
 	console.log("Z - loggedUser:" + mb.loggedUser)
+	debugPrint("Z - loggedUser:" + mb.loggedUser)
 
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.loggedUser)) {
@@ -89,7 +105,7 @@ async function sessionCheck() {
 
 	// --- 3. Try validating the token
 	let fetchPayload
-	if (isElectron) {
+	if (isElectron || isCapacitor) {
 
 		const username = mb.loggedUser;
 		const password = await loadUserPass(mb.loggedUser);
@@ -258,7 +274,7 @@ async function login(test = false) {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	fetch(test 
+	fetch(test
 		? `${baseUrlVal}/api/v2/users/me`
 		: `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
 		method: 'GET',
@@ -272,10 +288,10 @@ async function login(test = false) {
 	}).then(async response => {
 		const token = response.headers.get('X-Auth-Token');
 		if (response.ok && token) {
-			if (!test){
+			if (!test) {
 				await executeFaderGradient(1);
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				if (isElectron) {
+				if (isElectron || isCapacitor) {
 					await saveUserPass(loginUsername.value, loginPassword.value);
 				}
 				systemRestart();
@@ -304,7 +320,7 @@ function applyScenario(modeName) {
 
 	const inputsEnable = new Set(mb.loginModes[modeName].inputs || []);
 	document.querySelectorAll(".input-wrapper").forEach(inp => {
-		inp.classList.toggle ('disabled-input', !inputsEnable.has(inp.id));
+		inp.classList.toggle('disabled-input', !inputsEnable.has(inp.id));
 	});
 }
 
@@ -317,7 +333,7 @@ function showLoginDialog(dialogMode = 'firstboot') {
 	applyScenario(dialogMode)
 
 
-	
+
 	loginPassword.type = 'password';
 	viewPassword.classList.toggle('fa-eye', true);
 	viewPassword.classList.toggle('fa-eye-slash', false);
