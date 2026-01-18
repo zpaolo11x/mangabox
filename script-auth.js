@@ -13,6 +13,28 @@ async function checkCredentialsCap() {
 	return creds[0];
 }
 
+async function setCredentialsCap(username, password) {
+	await Capacitor.Plugins.SecureStoragePlugin.set({
+		key: 'mangaxox.server.credentials',
+		value: JSON.stringify({ username, password })
+	})
+}
+
+
+async function getCredentialsCap(username) {
+  const { value } = await SecureStorage.get({
+    key: `mangabox.server.credentials`
+  });
+
+  if (!value) return null;
+
+  try {
+    return JSON.parse(value); // { username, password }
+  } catch {
+    return null; // corrupted or unexpected
+  }
+}
+
 async function checkSavedUser() {
 	const user = isElectron
 		? await window.secureStore.checkCredentials2()
@@ -21,11 +43,19 @@ async function checkSavedUser() {
 }
 
 async function saveUserPass(user, pass) {
-	await window.secureStore.setCredentials2(user, pass);
+	if (isElectron) {
+		await window.secureStore.setCredentials2(user, pass);
+	} else if (isCapacitor) {
+		await setCredentialsCap(user, pass);
+	}
 }
 
 async function loadUserPass(user) {
-	const pass = await window.secureStore.getCredentials2(user);
+
+	const pass = isElectron
+		? await window.secureStore.getCredentials2(user)
+		: await getCredentialsCap(user)
+
 	if (pass) {
 		return (pass);
 	} else {
