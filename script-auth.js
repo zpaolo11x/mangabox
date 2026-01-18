@@ -6,14 +6,16 @@ async function checkCredentialsCap() {
 	try {
 debugPrint(JSON.stringify(creds));
 	} catch(err){debugPrint('error in keys')}
+	
+	const value = creds.value;
 
-	if (!creds || creds.length === 0) {
+	if (!value || value.length === 0) {
 		return null;
 	}
-	if (creds.length > 1) {
+	if (value.length > 1) {
 		console.warn('Multiple credentials found, using the first one');
 	}
-	return creds[0];
+	return value[0];
 }
 
 async function setCredentialsCap(username, password) {
