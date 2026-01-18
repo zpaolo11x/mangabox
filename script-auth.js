@@ -42,6 +42,7 @@ async function getCredentialsCap(username) {
 		result = await Capacitor.Plugins.SecureStoragePlugin.get({
 			key: username
 		});
+		debugPrint(JSON.stringify(result));
 		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
 	} catch (err) {
 		debugPrint(`SecureStorage error while loading credentials for ${username}`, err);
