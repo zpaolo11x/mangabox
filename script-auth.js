@@ -2,8 +2,8 @@
 
 async function checkCredentialsCap() {
 	const creds = await Capacitor.Plugins.SecureStoragePlugin.keys()
-	debugPrint(creds);
-	debugPrint(creds[0]);
+	debugPrint(JSON.parse(creds));
+
 	if (!creds || creds.length === 0) {
 		return null;
 	}
