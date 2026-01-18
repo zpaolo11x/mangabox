@@ -14,34 +14,37 @@ async function checkCredentialsCap() {
 }
 
 async function setCredentialsCap(username, password) {
-	debugPrint("Saving Credentials:"+username+" "+password)
+	debugPrint("Saving Credentials:" + username + " " + password)
 
 	try {
-    const result = await Capacitor.Plugins.SecureStoragePlugin.set({
-      key: username,
-      value: password
-    });
+		const result = await Capacitor.Plugins.SecureStoragePlugin.set({
+			key: username,
+			value: password
+		});
 
-    debugPrint(`SecureStorage set result: ${result?.value === true ? 'OK' : 'FAILED'}`);
-  } catch (err) {
-    debugPrint(`SecureStorage error while saving credentials for ${username}`, err);
-    throw err;
-  }
+		debugPrint(`SecureStorage set result: ${result?.value === true ? 'OK' : 'FAILED'}`);
+	} catch (err) {
+		debugPrint(`SecureStorage error while saving credentials for ${username}`, err);
+		throw err;
+	}
 }
 
 
 async function getCredentialsCap(username) {
-  const { value } = await SecureStorage.get({
-    key: `mangabox.server.credentials`
-  });
+	let result = null;
+	try {
+		result = await SecureStorage.get({
+			key: username
+		});
+		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
+	} catch (err) {
+		debugPrint(`SecureStorage error while loading credentials for ${username}`, err);
+		throw err;
+	}
+	debugPrint ('result is'+result)
+	if (!result) return null;
 
-  if (!value) return null;
-
-  try {
-    return JSON.parse(value); // { username, password }
-  } catch {
-    return null; // corrupted or unexpected
-  }
+	return result;
 }
 
 async function checkSavedUser() {
