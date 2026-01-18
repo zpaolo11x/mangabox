@@ -388,7 +388,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = false;
+		const enableDebugPrint = true;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -401,6 +401,8 @@
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
+		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
+		debugPrint(isSecureStorage);
 		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar;
 
 		let capacitorPlatform = null;
