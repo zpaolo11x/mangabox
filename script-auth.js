@@ -46,7 +46,6 @@ async function getCredentialsCap(username) {
 		debugPrint(`SecureStorage error while loading credentials for ${username}`, err);
 		throw err;
 	}
-	debugPrint ('result is'+result)
 	if (!result) return null;
 
 	return result;
