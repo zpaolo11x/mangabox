@@ -39,7 +39,7 @@ async function setCredentialsCap(username, password) {
 async function getCredentialsCap(username) {
 	let result = null;
 	try {
-		result = await SecureStorage.get({
+		result = await Capacitor.Plugins.SecureStoragePlugin.get({
 			key: username
 		});
 		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
