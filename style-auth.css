@@ -98,6 +98,11 @@
 	transition: all 0.3s, box-shadow 0.1s;
 }
 
+.input-wrapper.disabled-input{
+	opacity:0.3;
+	pointer-events: none;
+}
+
 .input-wrapper i {
 	position: absolute;
 	left: 20px;
@@ -195,9 +200,28 @@
 	margin: 0px;
 	padding: 0px;
 	display: grid;
-	grid-template-columns: auto minmax(40px, 1fr);
 	width: 100%;
 	gap: var(--mb-dialog-padding);
+	grid-auto-flow: column;
+}
+
+.login-buttons-left {
+/*	background-color:lightblue;*/
+	display: flex;
+	margin: 0px;
+	padding: 0px;
+	gap: calc(0.5 * var(--mb-dialog-padding));
+}
+
+.login-buttons-right {
+/*	background-color:lightgreen;*/
+	display: grid;
+	margin: 0px;
+	padding: 0px;
+	gap: calc(0.5 * var(--mb-dialog-padding));
+	grid-auto-flow: column;
+		justify-content: end;
+
 }
 
 
@@ -208,10 +232,7 @@
 	border: 1px solid var(--mb-login-border-color);
 	border-radius: var(--mb-dialog-button-radius);
 	height: var(--mb-dialog-button-height);
-	width: 100%;
-	margin-right: 0px;
-	margin-left: auto;
-	max-width: 120px;
+	width: 80px;
 	margin-top: var(--mb-dialog-padding);
 	transition: 0.3s all;
 	font-size: var(--mb-dialog-font-size);
@@ -233,7 +254,6 @@
 	width: var(--mb-dialog-button-height);
 	min-width: var(--mb-dialog-button-height);
 	min-height: var(--mb-dialog-button-height);
-
 	transition: 0.3s all;
 	font-size: var(--mb-dialog-font-size);
 	font: inherit;
@@ -255,41 +275,6 @@
 	height: var(--mb-dialog-button-height);
 }
 
-#loginButton {
-	position: relative;
-	container-type: inline-size;
-	/* enables width-based container queries */
-}
-
-#loginButton span {
-	transition: all 0.3s;
-
-}
-
-#loginButton i {
-	opacity: 0;
-
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	font-size: var(--mb-dialog-font-size);
-	line-height: var(--mb-dialog-button-height);
-	pointer-events: none;
-	transition: all 0.3s;
-	width: var(--mb-dialog-button-height);
-	height: var(--mb-dialog-button-height);
-}
-
-@container (max-width: 60px) {
-	#loginButton span {
-		opacity: 0;
-	}
-
-	#loginButton i {
-		opacity: 1;
-	}
-}
 
 .login-button:hover,
 .login-button-round:hover {
@@ -311,10 +296,9 @@
 	margin: 0px;
 }
 
-#languageButton {
+.login-button-round {
 	position: relative;
 	margin-top: var(--mb-dialog-padding);
-
 }
 
 .auth-hidden {

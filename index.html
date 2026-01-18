@@ -298,17 +298,22 @@
 			<img id="logoName" src="logo/mangabox-logoname.svg">
 			<div class="version-note">v0.3.9</div>
 
-			<div class="input-wrapper" title="Server Address">
+			<div id="divServerName" class="input-wrapper" title="Server Name">
+				<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
+				<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
+			</div>
+
+			<div id="divBaseUrl" class="input-wrapper" title="Server Address">
 				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
 				<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 			</div>
 
-			<div class="input-wrapper" title="Username">
+			<div id="divUsername" class="input-wrapper" title="Username">
 				<i class="fas fa-user"></i> <!-- Icon for username -->
 				<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 			</div>
 
-			<div class="input-wrapper pwd" title="Password">
+			<div id="divPassword" class="input-wrapper pwd" title="Password">
 				<i class="fas fa-lock"></i> <!-- Icon for password -->
 				<!--<i id="passIcon" class="fas fa-eye"></i>  -->
 				<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
@@ -316,13 +321,28 @@
 			</div>
 
 			<div class="login-buttons">
-				<button id="languageButton" class="login-button-round" onclick="languageDialog()">
-					<i class="fas fa-earth"></i>
-				</button>
-				<button id="loginButton" class="login-button" onclick="login()">
-					<i class="fas fa-play"></i>
-					<span>Login</login>
-				</button>
+				<div class="login-buttons-left">
+					<button id="languageButton" class="action login-button-round" onclick="languageDialog()">
+						<i class="fas fa-earth"></i>
+					</button>
+					<button id="serverTest" class="action login-button-round" onclick="login(true)">
+						<i class="fas fa-globe"></i>
+					</button>
+					<button id="serverList" class="action login-button-round" onclick="serversDialog()">
+						<i class="fas fa-server"></i>
+					</button>
+				</div>
+				<div class="login-buttons-right">
+					<button id="serverSave" class="action login-button" onclick="languageDialog()">
+						<span>Save</login>
+					</button>
+					<button id="serverCancel" class="action login-button" onclick="showLoginDialog('firstboot')">
+						<span>Cancel</login>
+					</button>
+					<button id="loginButton" class="action login-button" onclick="login()">
+						<span>Login</login>
+					</button>
+				</div>
 			</div>
 
 			<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
@@ -372,7 +392,7 @@
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
-			? text => (debuggerObj.innerText += text + "\n")
+			? text => (debuggerObj.innerText += text + '\n')
 			: () => { };
 
 
@@ -404,7 +424,7 @@
 			enableDownload = false;
 		}
 
-		debugPrint("enabledownload" + enableDownload)
+		debugPrint('enabledownload' + enableDownload)
 
 	</script>
 
@@ -412,11 +432,11 @@
 	<script src="script-auth.js"></script>
 
 	<script>
-		if ("serviceWorker" in navigator) {
-			window.addEventListener("load", () => {
-				navigator.serviceWorker.register("/script-sw.js")
-					.then(reg => console.log("Service Worker registered:", reg.scope))
-					.catch(err => console.error("Service Worker registration failed:", err));
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/script-sw.js')
+					.then(reg => console.log('Service Worker registered:', reg.scope))
+					.catch(err => console.error('Service Worker registration failed:', err));
 			});
 		}
 
@@ -424,7 +444,7 @@
 		executeFade(1);
 
 		function isOrientationLandscape() {
-			return window.matchMedia("(orientation: landscape)").matches;
+			return window.matchMedia('(orientation: landscape)').matches;
 		}
 
 		function getSharpCornerIphone() {
@@ -486,8 +506,8 @@
 		//MB Pinch To Zoom
 		// Two-Finger Pinch + Pan
 
-		//const page = document.getElementById("touchPanel");
-		//const pageTarget = document.getElementById("readerContainer");
+		//const page = document.getElementById('touchPanel');
+		//const pageTarget = document.getElementById('readerContainer');
 
 		function getDistance(touches) {
 			if (touches.length === 1) {
@@ -583,7 +603,7 @@
 			// --------------------------
 			// Touch handlers
 			// --------------------------
-			page.addEventListener("touchstart", e => {
+			page.addEventListener('touchstart', e => {
 				if (e.touches.length === 2) {
 					pageTarget.style.transformOrigin = `0 0`;
 					rd.touchLock = false;
@@ -610,7 +630,7 @@
 				}
 			}, { passive: false });
 
-			page.addEventListener("touchmove", e => {
+			page.addEventListener('touchmove', e => {
 
 				if (e.touches.length == 2) {
 					rd.touchLock = false;
@@ -659,7 +679,7 @@
 				}
 			}, { passive: false });
 
-			page.addEventListener("touchend", e => {
+			page.addEventListener('touchend', e => {
 				if (e.touches.length == 1) {
 					rd.touchLock = false;
 					if (rd.scale > 1) {
@@ -849,7 +869,7 @@
 					languageVal: '',
 
 					libraryError: false,
-					libraryNames: "",
+					libraryNames: '',
 
 					libMenuVisible: null,
 					swatchMenuVisible: false,
@@ -968,8 +988,34 @@
 					webtoonScale: 100,
 					readerScale: 100,
 
-					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
+					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}'),
 
+					loginModes: {
+						firstboot: {
+							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
+							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
+						},
+						editserver: {
+							inputs: ['divServerName', 'divBaseUrl', 'divUsername', 'divPassword'],
+							buttons: ['languageButton', 'serverTest', 'serverSave', 'serverCancel']
+						},
+						passwordonly: {
+							inputs: ['divPassword'],
+							buttons: ['languageButton', 'serverList', 'loginButton']
+						},
+					},
+
+					serverList: {
+						0: {
+							name: 'Unsaved Server',
+							url: '',
+							username: '',
+							password: '',
+							createdAt: 0,
+						}
+					},
+					editServerData: {}, //data structure of the server being edited
+					editServerId: 0, //ID of the server that is edited by the dialog
 				}
 			)
 		}
@@ -1058,10 +1104,10 @@
 					setNetworkStatus('online');
 				}
 			} catch (err) {
-				console.error("onlineCheck ERROR:", err);
-				console.error("name:", err?.name);
-				console.error("message:", err?.message);
-				console.error("stack:", err?.stack);
+				console.error('onlineCheck ERROR:', err);
+				console.error('name:', err?.name);
+				console.error('message:', err?.message);
+				console.error('stack:', err?.stack);
 				// still offline, ignore
 			}
 		}
@@ -1147,7 +1193,7 @@
 			try {
 				return JSON.parse(raw);
 			} catch {
-				console.warn("Invalid i18n vars:", raw);
+				console.warn('Invalid i18n vars:', raw);
 				return undefined;
 			}
 		}
@@ -1155,8 +1201,8 @@
 		function translateDOM(root = document) {
 			const elements =
 				root === document
-					? document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
-					: root.matches("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
+					? document.querySelectorAll('[data-i18n], [data-i18n-title], [data-i18n-placeholder]')
+					: root.matches('[data-i18n], [data-i18n-title], [data-i18n-placeholder]')
 						? [root]
 						: [];
 
@@ -1164,21 +1210,21 @@
 				if (el.dataset.i18n) {
 					el.textContent = t(
 						el.dataset.i18n,
-						getI18nVars(el, "i18n")
+						getI18nVars(el, 'i18n')
 					);
 				}
 
 				if (el.dataset.i18nTitle) {
 					el.title = t(
 						el.dataset.i18nTitle,
-						getI18nVars(el, "i18nTitle")
+						getI18nVars(el, 'i18nTitle')
 					);
 				}
 
 				if (el.dataset.i18nPlaceholder) {
 					el.placeholder = t(
 						el.dataset.i18nPlaceholder,
-						getI18nVars(el, "i18nPlaceholder")
+						getI18nVars(el, 'i18nPlaceholder')
 					);
 				}
 			});
@@ -1277,6 +1323,59 @@
 		  }
 		}
 		*/
+
+		function initServer() {
+			const serverID = crypto.randomUUID();
+			const server = {
+				name: '',
+				url: '',
+				username: '',
+				password: '',
+				createdAt: Date.now(),
+			};
+			return [id, server];
+		}
+
+		function setServerProperty(id, property, value) {
+			mb.serversList[id][property] = value;
+		}
+
+		function addServer() {
+			[mb.editServerId, mb.editServerData] = initServer();
+			showLoginDialog('editserver');
+			closeModal();
+		}
+
+		function buildServersDialog() {
+			let out = `<span data-i18n="servers.title">${t('servers.title')}</span>`;
+			/*
+			out = out + '<ul class="filter-menu" id="languageMenu">';
+			mb.languages.forEach((language, index) => {
+				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
+									<div class='smallbutton-wrapper'>
+										<span style="background-image:url('flags/${language}.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
+									</div>
+									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
+								</li>`
+			});
+			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
+									<div class='smallbutton-wrapper'>
+										<span class="fa-solid fa-robot glyph-dark"></span>
+									</div>
+									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
+								</li>`
+			out = out + "</ul>";
+			*/
+			return (out)
+		}
+
+		function serversDialog() {
+			showModal('', false, buildServersDialog(), [
+				{ label: 'servers.add', runfunction: () => addServer() },
+				{ label: 'modal.ok', runfunction: () => closeModal(), high: true }
+			]);
+		}
 
 		async function getUserSettings() {
 			let mangaboxFlat = null;
@@ -1545,13 +1644,13 @@
 							//sectionShow(blanker);
 
 							Object.keys(localStorage).forEach(key => {
-								if (key.startsWith("c_")) {
+								if (key.startsWith('c_')) {
 									localStorage.removeItem(key);
 								}
 							});
 
 							await clearIndexedDB();
-							localStorage.removeItem("sessionValid");
+							localStorage.removeItem('sessionValid');
 
 							mainLoader.classList.add('hidden');
 
@@ -1776,7 +1875,7 @@
 				// Optional: if you still want to hide it completely from screen readers / tab order
 				myModal.classList.remove('visible');
 				myModal.classList.remove('unfade');
-				modalMessage.innerHTML = "";
+				modalMessage.innerHTML = '';
 				document.querySelectorAll('.modal-button').forEach(el => {
 					el.remove();
 				});
@@ -1794,15 +1893,15 @@
 				applyLibraryImage(libraryId, base64);
 
 			} catch (err) {
-				console.error("Error converting image:", err);
+				console.error('Error converting image:', err);
 				showModal('circle-mark-svg.svg', true, t('modal.imageloadfail'),
 					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
 			}
 		}
 
 		function generatePics(libraryId, text) {
-			let thumbNames = ["Manga", "Comics", "Girls", "Shojo", "Fantasy", "Puppet", "Robots", "Space", "Western", "Horror", "Detective", "Humor"];
-			let out = "";
+			let thumbNames = ['Manga', 'Comics', 'Girls', 'Shojo', 'Fantasy', 'Puppet', 'Robots', 'Space', 'Western', 'Horror', 'Detective', 'Humor'];
+			let out = '';
 			thumbNames.forEach(thumbName => {
 				out = out + `
 				<img class="mini-thumb press-button" src="library-thumbnails/${thumbName}.svg"
@@ -2080,7 +2179,7 @@
 		mb.filterTable = initFilterTable();
 
 		function languageName(tag, locale = mb.languageVal) {
-			return new Intl.DisplayNames([locale], { type: "language" }).of(tag);
+			return new Intl.DisplayNames([locale], { type: 'language' }).of(tag);
 		}
 
 		async function buildLanguageList() {
@@ -2173,7 +2272,7 @@
 				}
 			});
 
-			seriesGrid.innerHTML = "";
+			seriesGrid.innerHTML = '';
 			if (!boot) {
 				divs.forEach(div => {
 					if (div.infilter) seriesGrid.appendChild(div)
@@ -2585,7 +2684,7 @@
 						recursive: true
 					});
 				} catch (err) {
-					debugPrint("Error creating " + path);
+					debugPrint('Error creating ' + path);
 					//if (!String(err.message).includes('exists')) throw err;
 				}
 			}
@@ -2601,7 +2700,7 @@
 			try {
 				debugPrint(`Downloading metadata for ${bookId}`);
 
-				debugPrint("Get Book Data")
+				debugPrint('Get Book Data')
 				// Book metadata
 				let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
 				if (!res.ok) debugPrint(res.status)
@@ -2616,7 +2715,7 @@
 				});
 
 
-				debugPrint("Get Series Data")
+				debugPrint('Get Series Data')
 				// Series metadata
 				res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
 				if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
@@ -2628,7 +2727,7 @@
 					encoding: 'utf8'
 				});
 
-				debugPrint("Get Pages Data")
+				debugPrint('Get Pages Data')
 				// Pages metadata
 				res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
 				if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
@@ -3097,14 +3196,14 @@
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 
 			mb.libraryError = false;
-			mb.libraryNames = "<ul>";
+			mb.libraryNames = '<ul>';
 			Array.from(libraries).forEach(libItem => {
 				if (libItem.analyzeDimensions == false) {
 					mb.libraryError = true;
 					mb.libraryNames = mb.libraryNames + "<li style='text-align:left'>" + libItem.name + "</li>"
 				}
 			});
-			mb.libraryNames = mb.libraryNames + "</ul>";
+			mb.libraryNames = mb.libraryNames + '</ul>';
 			//TODO
 			/*
 			if (libraryError){
@@ -3407,7 +3506,7 @@
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
@@ -3964,7 +4063,7 @@
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
-			const isFA = imagePath?.startsWith("fa-");
+			const isFA = imagePath?.startsWith('fa-');
 
 			const listItem = addItem('li', {
 				id: itemId,
@@ -4115,9 +4214,9 @@
 
 			// Case 1: It's a File
 			if (fileOrBase64 instanceof File) {
-				debugPrint("----Input is a file")
+				debugPrint('----Input is a file')
 				if (!fileOrBase64.type.startsWith('image/')) {
-					debugPrint("----But it's not a valid image file")
+					debugPrint('----But is not a valid image file')
 					showModal('circle-mark-svg.svg', true, t('modal.validimage'),
 						[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
 					return;
@@ -4127,13 +4226,13 @@
 
 			// Case 2: It's already a base64 string
 			else if (typeof fileOrBase64 === 'string' && fileOrBase64.startsWith('data:image/')) {
-				debugPrint("----Input is a string")
+				debugPrint('----Input is a string')
 				base64 = fileOrBase64;
 			}
 
 			// Case 3: Not valid
 			else {
-				debugPrint("----Input is not valid")
+				debugPrint('----Input is not valid')
 				debugPrint(fileOrBase64);
 				showModal('circle-mark-svg.svg', true, t('modal.validimage'),
 					[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
@@ -4159,7 +4258,7 @@
 
 
 		async function pickImage(libraryId) {
-			debugPrint("PickImage");
+			debugPrint('PickImage');
 			try {
 				const image = await Capacitor.Plugins.Camera.getPhoto({
 					quality: 90,
@@ -4172,12 +4271,12 @@
 				applyLibraryImage(libraryId, base64);
 
 			} catch (err) {
-				debugPrint("Image picking failed:\n" + err);
+				debugPrint('Image picking failed:\n' + err);
 			}
 		}
 
 		async function pickFile(libraryId) {
-			debugPrint("PickFile");
+			debugPrint('PickFile');
 			try {
 				const result = await Capacitor.Plugins.FilePicker.pickFiles({
 					extensions: ['png', 'jpg', 'jpeg', 'heic'], // common formats on iOS
@@ -4201,7 +4300,7 @@
 				}
 
 			} catch (err) {
-				debugPrint("Image picking failed:\n" + err);
+				debugPrint('Image picking failed:\n' + err);
 			}
 		}
 
@@ -4365,11 +4464,11 @@
 
 			const summary = (isReadlist ?
 				summaryData :
-				(serie.metadata.summary != "")
+				(serie.metadata.summary != '')
 					? serie.metadata.summary.replace(/\n/g, '<br>')
-					: (serie.booksMetadata.summary != ""
+					: (serie.booksMetadata.summary != ''
 						? `<u><span data-i18n="seriesheader.summary" data-i18n-vars='${JSON.stringify({ summarysource: serie.booksMetadata.summaryNumber })}'></span></u><br>` + serie.booksMetadata.summary.replace(/\n/g, '<br>')
-						: ""
+						: ''
 					)
 			)
 
@@ -4451,7 +4550,7 @@
 		}
 
 		async function showBookDetails(book) {
-			bookDetailCover.className = "book-thumbnail hidden";
+			bookDetailCover.className = 'book-thumbnail hidden';
 			bookDetailsTitle.style.opacity = 0;
 			bookDetailsSummary.style.opacity = 0;
 
@@ -4524,8 +4623,8 @@
 			}
 
 			if (bookIsDownloading) {
-				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + "%";
-				bookDownloadUI.innerText = mb.offlineBooks[book.id].percent + "%";
+				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + '%';
+				bookDownloadUI.innerText = mb.offlineBooks[book.id].percent + '%';
 			}
 
 			const mainRow = addItem('div', {
@@ -5447,7 +5546,7 @@
 			//TODO Is this used???
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
-			//rd.titleBarColor = "black";
+			//rd.titleBarColor = 'black';
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -5621,8 +5720,8 @@
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
 			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
 
-			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
-			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
+			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden');
+			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden');
 
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
@@ -5684,7 +5783,7 @@
 		}
 
 		// Add this once when initializing the viewer
-		//readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease";
+		//readerViewer.style.transition = 'left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease';
 
 		function buildForeEdge(index, total) {
 			// book size is a parabola based on number of spreads capped at 400 spreads
@@ -5702,7 +5801,7 @@
 
 		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
 			// I put the image item and container item in the array so I can target them for changes
-			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
+			// and I put all the metadata like 'hasSrc' in the object metadata instead of in a separate item.
 			if (!rd.webtoon) {
 				return ({
 					// dom object, spread div and its content
@@ -5836,7 +5935,7 @@
 			mb.webtoonScale = newScale;
 
 			localStorage.setItem('c_webtoonScale', JSON.stringify(newScale))
-			scaleVal.innerText = newScale + "%";
+			scaleVal.innerText = newScale + '%';
 
 			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
 		}
@@ -5847,7 +5946,7 @@
 			mb.readerScale = newScale;
 
 			localStorage.setItem('c_readerScale', JSON.stringify(newScale))
-			scaleVal.innerText = newScale + "%";
+			scaleVal.innerText = newScale + '%';
 
 			animateReaderScale(oldScale, newScale, 200, t => t * (2 - t));
 		}
@@ -6496,7 +6595,7 @@
 
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 
-			let pageNumText = rd.webtoon ? spreadObject.pageNumL + "" : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			let pageNumText = rd.webtoon ? spreadObject.pageNumL + '' : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
 
 			pageNumText = pageNumText.trim().replace(' ', '￨')
 
@@ -7442,7 +7541,7 @@
 
 			function handleTouchStart(event) {
 				if (getDerivedScale() > 1.01) return;
-				debugPrint("HandleTouchStart noscale")
+				debugPrint('HandleTouchStart noscale')
 				if (event.touches.length > 1) {
 					item.SingleTouch = false; // Multiple touches: ignore for swipe
 					return;

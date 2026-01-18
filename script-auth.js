@@ -242,7 +242,7 @@ async function systemRestart() {
 }
 
 
-async function login() {
+async function login(test = false) {
 	debugPrint("login...")
 	console.log("login...")
 
@@ -258,7 +258,9 @@ async function login() {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
+	fetch(test 
+		? `${baseUrlVal}/api/v2/users/me`
+		: `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -270,12 +272,16 @@ async function login() {
 	}).then(async response => {
 		const token = response.headers.get('X-Auth-Token');
 		if (response.ok && token) {
-			await executeFaderGradient(1);
-			localStorage.setItem('mbBaseUrl', baseUrlVal);
-			if (isElectron) {
-				await saveUserPass(loginUsername.value, loginPassword.value);
+			if (!test){
+				await executeFaderGradient(1);
+				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				if (isElectron) {
+					await saveUserPass(loginUsername.value, loginPassword.value);
+				}
+				systemRestart();
+			} else {
+				showModal('', false, 'Sever Connection OK', [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
-			systemRestart();
 		} else if (response.status === 401) {
 			loginError.textContent = `Invalid username or password.`;
 			loginError.classList.remove('auth-hidden');
@@ -288,14 +294,34 @@ async function login() {
 		loginError.textContent = `Cannot reach server. Check the address or your connection. ${error}`;
 		loginError.classList.remove('auth-hidden');
 	});
-
 }
 
+function applyScenario(modeName) {
+	const buttonsEnable = new Set(mb.loginModes[modeName].buttons || []);
+	document.querySelectorAll(".action").forEach(btn => {
+		btn.style.display = !buttonsEnable.has(btn.id) ? 'none' : '';
+	});
 
-function showLoginDialog() {
+	const inputsEnable = new Set(mb.loginModes[modeName].inputs || []);
+	document.querySelectorAll(".input-wrapper").forEach(inp => {
+		inp.classList.toggle ('disabled-input', !inputsEnable.has(inp.id));
+	});
+}
+
+function showLoginDialog(dialogMode = 'firstboot') {
+	//dialogMode = 'firstboot'
+	loginError.textContent = '';
+	if (!loginError.classList.contains('auth-hiden')) {
+		loginError.classList.add('auth-hidden');
+	}
+	applyScenario(dialogMode)
+
+
+	
 	loginPassword.type = 'password';
 	viewPassword.classList.toggle('fa-eye', true);
 	viewPassword.classList.toggle('fa-eye-slash', false);
+
 	dragbar.classList.add('onLogin');
 	debugPrint("showLoginDialog...")
 	console.log("showLoginDialog...")

@@ -124,5 +124,8 @@
 	"language.automatic": "System Language",
 	"login.username": "Username",
 	"login.password": "Password",
-	"login.serverurl": "Server URL"
+	"login.serverurl": "Server URL",
+	"login.servername": "Server Name",
+	"servers.title": "Servers List",
+	"servers.add": "Add Server"
 }
