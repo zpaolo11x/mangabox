@@ -14,10 +14,19 @@ async function checkCredentialsCap() {
 }
 
 async function setCredentialsCap(username, password) {
-	await Capacitor.Plugins.SecureStoragePlugin.set({
-		key: 'mangaxox.server.credentials',
-		value: JSON.stringify({ username, password })
-	})
+	debugPrint("Saving Credentials:"+username+" "+password)
+
+	try {
+    const result = await Capacitor.Plugins.SecureStoragePlugin.set({
+      key: username,
+      value: password
+    });
+
+    debugPrint(`SecureStorage set result: ${result?.value === true ? 'OK' : 'FAILED'}`);
+  } catch (err) {
+    debugPrint(`SecureStorage error while saving credentials for ${username}`, err);
+    throw err;
+  }
 }
 
 
