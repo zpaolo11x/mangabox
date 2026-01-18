@@ -50,7 +50,7 @@ async function getCredentialsCap(username) {
 	}
 	if (!result) return null;
 
-	return result;
+	return result.value;
 }
 
 async function checkSavedUser() {
