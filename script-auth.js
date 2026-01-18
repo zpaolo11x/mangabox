@@ -13,7 +13,8 @@ debugPrint(JSON.stringify(creds));
 		return null;
 	}
 	if (value.length > 1) {
-		console.warn('Multiple credentials found, using the first one');
+		await Capacitor.Plugins.SecureStoragePlugin.clear()
+		console.warn('Multiple credentials found, cleaned');
 	}
 	return value[0];
 }
