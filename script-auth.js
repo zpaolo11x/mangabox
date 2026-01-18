@@ -1,9 +1,12 @@
 // script.js
 
 async function checkCredentialsCap() {
+	debugPrint('check Credentials Capacitor')
 	const creds = await Capacitor.Plugins.SecureStoragePlugin.keys()
-	debugPrint(JSON.parse(creds));
-
+	try {
+		debugPrint(JSON.parse(creds));
+	} catch(err){debugPrint('error in keys')}
+	
 	if (!creds || creds.length === 0) {
 		return null;
 	}
