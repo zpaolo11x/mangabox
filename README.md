@@ -36,6 +36,9 @@ MangaBox is a multiplatform, web technology based client for <a href="https://ko
 
 - Mobile versions are not signed, you can sideload the Android apk on your device, and you can sideload the iOS/ipadOS version using a developer tool like AltStore which will self sign and renew the signature every 7 days.
 
+## Localization
+MangaBox is available in different languages and uses [Weblate](https://www.weblate.com) to manage translation files. Feel free to contribute to the project by submitting corrections and translations at https://hosted.weblate.org/projects/mangabox/.
+
 ## Features gallery
 <table>
 <tr>
