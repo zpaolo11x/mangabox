@@ -1,12 +1,13 @@
 // script.js
+//TODO ALLO STATO ATTUALE NON FUNZIONA IL LOGOUT!
 
 async function checkCredentialsCap() {
 	debugPrint('check Credentials Capacitor')
 	const creds = await Capacitor.Plugins.SecureStoragePlugin.keys()
 	try {
-debugPrint(JSON.stringify(creds));
-	} catch(err){debugPrint('error in keys')}
-	
+		debugPrint(JSON.stringify(creds));
+	} catch (err) { debugPrint('error in keys') }
+
 	const value = creds.value;
 
 	if (!value || value.length === 0) {
@@ -34,7 +35,20 @@ async function setCredentialsCap(username, password) {
 		throw err;
 	}
 }
+async function deleteCredentialsCap(username) {
+	debugPrint("Deleting Credentials:" + username)
 
+	try {
+		const result = await Capacitor.Plugins.SecureStoragePlugin.remove({
+			key: username
+		});
+
+		debugPrint(`SecureStorage del result: ${result?.value === true ? 'OK' : 'FAILED'}`);
+	} catch (err) {
+		debugPrint(`SecureStorage error while deleting credentials for ${username}`, err);
+		throw err;
+	}
+}
 
 async function getCredentialsCap(username) {
 	let result = null;
@@ -82,7 +96,11 @@ async function loadUserPass(user) {
 }
 
 async function deleteUserPass(user) {
-	await window.secureStore.deleteCredentials2(user);
+	if (isElectron){
+		await window.secureStore.deleteCredentials2(user);
+	} else if (isCapacitor){
+		await deleteCredentialsCap(user)
+	}
 }
 
 async function saveToken(token) {
