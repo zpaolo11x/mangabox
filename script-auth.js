@@ -200,7 +200,7 @@ async function sessionCheck() {
 	let fetchPayload
 	if (!isWeb) {
 		const username = mb.loggedUser;
-		const password = await loadUserPass(mb.loggedUser);
+		const password = await loadUserPass(mb.currentServerId);
 
 		fetchPayload = {
 			method: 'GET',
