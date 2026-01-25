@@ -129,5 +129,5 @@
 	"servers.title": "Servers List",
 	"servers.add": "Add Server",
 	"servers.delete": "Confirm Delete Server",
-	"servers.switchserver": "Switch Server"
+	"button.serverslist": "Servers List"
 }

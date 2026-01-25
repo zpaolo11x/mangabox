@@ -20,46 +20,46 @@ async function checkCredentialsCap() {
 	return value[0];
 }
 
-async function setCredentialsCap(username, password) {
-	debugPrint("Saving Credentials:" + username + " " + password)
+async function setCredentialsCap(serverId, password) {
+	debugPrint("Saving Credentials:" + serverId + " " + password)
 
 	try {
 		const result = await Capacitor.Plugins.SecureStoragePlugin.set({
-			key: username,
+			key: serverId,
 			value: password
 		});
 
 		debugPrint(`SecureStorage set result: ${result?.value === true ? 'OK' : 'FAILED'}`);
 	} catch (err) {
-		debugPrint(`SecureStorage error while saving credentials for ${username}`, err);
+		debugPrint(`SecureStorage error while saving credentials for ${serverId}`, err);
 		throw err;
 	}
 }
-async function deleteCredentialsCap(username) {
-	debugPrint("Deleting Credentials:" + username)
+async function deleteCredentialsCap(serverId) {
+	debugPrint("Deleting Credentials:" + serverId)
 
 	try {
 		const result = await Capacitor.Plugins.SecureStoragePlugin.remove({
-			key: username
+			key: serverId
 		});
 
 		debugPrint(`SecureStorage del result: ${result?.value === true ? 'OK' : 'FAILED'}`);
 	} catch (err) {
-		debugPrint(`SecureStorage error while deleting credentials for ${username}`, err);
+		debugPrint(`SecureStorage error while deleting credentials for ${serverId}`, err);
 		throw err;
 	}
 }
 
-async function getCredentialsCap(username) {
+async function getCredentialsCap(serverId) {
 	let result = null;
 	try {
 		result = await Capacitor.Plugins.SecureStoragePlugin.get({
-			key: username
+			key: serverId
 		});
 		debugPrint(JSON.stringify(result));
 		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
 	} catch (err) {
-		debugPrint(`SecureStorage error while loading credentials for ${username}`, err);
+		debugPrint(`SecureStorage error while loading credentials for ${serverId}`, err);
 		throw err;
 	}
 	if (!result) return null;
