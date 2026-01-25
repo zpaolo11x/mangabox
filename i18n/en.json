@@ -129,5 +129,6 @@
 	"servers.title": "Servers List",
 	"servers.add": "Add Server",
 	"servers.delete": "Confirm Delete Server",
+	"servers.unsaved": "Unsaved Server",
 	"button.serverslist": "Servers List"
 }

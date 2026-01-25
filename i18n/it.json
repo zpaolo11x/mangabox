@@ -124,5 +124,11 @@
 	"language.automatic": "Lingua di sistema",
 	"login.username": "Nome utente",
 	"login.password": "Password",
-	"login.serverurl": "URL del server"
+	"login.serverurl": "URL del server",
+	"login.servername": "Nome del server",
+	"servers.title": "Lista server",
+	"servers.add": "Aggiungi server",
+	"servers.delete": "Conferma eliminazione server",
+	"servers.unsaved": "Server temporaneo",
+	"button.serverslist": "Lista server"
 }

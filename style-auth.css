@@ -331,5 +331,13 @@
 }
 
 .server-button{
-	
+	transition: 0.3s all;
+}
+
+.server-button:hover{
+	opacity: 0.8;
+}
+
+.server-button:active{
+	scale: 0.8;
 }

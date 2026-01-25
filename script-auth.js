@@ -271,7 +271,10 @@ console.log("LOGGING IN: "+username+" "+password);
 }
 
 async function setServerFields(serverId) {
-	loginServerName.value = mb.serverList[serverId].name;
+	console.log("SET FIELDS")
+	console.log(serverId)
+	console.log(mb.serverList[serverId].name)
+	loginServerName.value = (serverId == 0) ? t(mb.serverList[serverId].name) : mb.serverList[serverId].name;
 	loginBaseUrl.value = mb.serverList[serverId].url;
 	loginUsername.value = mb.serverList[serverId].username;
 	if (serverId == 0 || mb.serverList[serverId].askPassword) {
@@ -386,6 +389,11 @@ async function loginToServer(event, serverId, test) {
 
 async function login(serverId, test, fromDialog) {
 
+	if (serverId == 0){
+		mb.serverList[0].url = loginBaseUrl.value;
+		mb.serverList[0].username = loginUsername.value;
+	}
+
 	console.log("LOGGING:" + serverId);
 
 	debugPrint("login...")
@@ -432,7 +440,7 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 				mb.currentServerId = serverId
 				localStorage.setItem('mbCurrentServerId', mb.currentServerId);
-				mb.serverList[serverId].askPassword = false;
+				if (serverId != 0) mb.serverList[serverId].askPassword = false;
 				localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
 				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
 				systemRestart();
