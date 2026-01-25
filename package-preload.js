@@ -49,14 +49,14 @@ contextBridge.exposeInMainWorld('secureStore', {
 		return creds[0].account;
 	},
 
-	setCredentials2: async (username, password) => {
-		return keytar.setPassword('MangaBox-user', username, password);
+	setCredentials2: async (serverId, password) => {
+		return keytar.setPassword('MangaBox-server', serverId, password);
 	},
-	getCredentials2: async (username) => {
-		return keytar.getPassword('MangaBox-user', username);
+	getCredentials2: async (serverId) => {
+		return keytar.getPassword('MangaBox-server', serverId);
 	},
-	deleteCredentials2: async (username) => {
-		return keytar.deletePassword('MangaBox-user', username);
+	deleteCredentials2: async (serverId) => {
+		return keytar.deletePassword('MangaBox-server', serverId);
 	}
 });
 

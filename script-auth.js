@@ -67,6 +67,7 @@ async function getCredentialsCap(username) {
 	return result.value;
 }
 
+//TODO NON USATA DA NESSUNA PARTE!
 async function checkSavedUser() {
 	let user = 'cookie'
 	if (isWeb) {
@@ -87,10 +88,10 @@ async function saveUserPass(serverId, user, pass) {
 		return
 	}
 	if (isElectron) {
-		await window.secureStore.setCredentials2(user, pass);
+		await window.secureStore.setCredentials2(serverId, pass);
 	}
 	if (isCapacitor) {
-		await setCredentialsCap(user, pass);
+		await setCredentialsCap(serverId, pass);
 	}
 }
 
@@ -101,10 +102,10 @@ async function loadUserPass(serverId) {
 		pass = localStorage.getItem(serverId) || '';
 	}
 	if (isElectron) {
-		pass = await window.secureStore.getCredentials2(user);
+		pass = await window.secureStore.getCredentials2(serverId);
 	}
 	if (isCapacitor) {
-		pass = await getCredentialsCap(user);
+		pass = await getCredentialsCap(serverId);
 	}
 
 	console.log(pass)
@@ -123,10 +124,10 @@ async function deleteUserPass(serverId, user) {
 		return
 	}
 	if (isElectron) {
-		await window.secureStore.deleteCredentials2(user);
+		await window.secureStore.deleteCredentials2(serverId);
 	}
 	if (isCapacitor) {
-		await deleteCredentialsCap(user)
+		await deleteCredentialsCap(serverId)
 	}
 }
 
