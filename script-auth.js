@@ -68,37 +68,64 @@ async function getCredentialsCap(username) {
 }
 
 async function checkSavedUser() {
-	const user = isElectron
-		? await window.secureStore.checkCredentials2()
-		: await checkCredentialsCap();
+	let user = 'cookie'
+	if (isWeb) {
+		//NO action
+	}
+	if (isElectron) {
+		user = await window.secureStore.checkCredentials2()
+	}
+	if (isCapacitor) {
+		user = await checkCredentialsCap();
+	}
 	return user;
 }
 
-async function saveUserPass(user, pass) {
+async function saveUserPass(serverId, user, pass) {
+	if (isWeb) {
+		localStorage.setItem(serverId, pass);
+		return
+	}
 	if (isElectron) {
 		await window.secureStore.setCredentials2(user, pass);
-	} else if (isCapacitor) {
+	}
+	if (isCapacitor) {
 		await setCredentialsCap(user, pass);
 	}
 }
 
-async function loadUserPass(user) {
+async function loadUserPass(serverId) {
+	let pass = '';
+	if (isWeb) {
+		console.log(serverId)
+		pass = localStorage.getItem(serverId) || '';
+	}
+	if (isElectron) {
+		pass = await window.secureStore.getCredentials2(user);
+	}
+	if (isCapacitor) {
+		pass = await getCredentialsCap(user);
+	}
 
-	const pass = isElectron
-		? await window.secureStore.getCredentials2(user)
-		: await getCredentialsCap(user)
-
+	console.log(pass)
 	if (pass) {
+		console.log('PASS OK')
 		return (pass);
 	} else {
-		return (false);
+		console.log('PASS EMPTY')
+		return ('');
 	}
 }
 
-async function deleteUserPass(user) {
-	if (isElectron){
+async function deleteUserPass(serverId, user) {
+	if (isWeb) {
+		localStorage.removeItem(serverId);
+		return
+	}
+	if (isElectron) {
 		await window.secureStore.deleteCredentials2(user);
-	} else if (isCapacitor){
+	}
+	if (isCapacitor) {
 		await deleteCredentialsCap(user)
 	}
 }
@@ -138,16 +165,15 @@ async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
 	// Load stored token (e.g. from Electron storage)
-	mb.loggedUser = 'cookie';
-	if (isElectron || isCapacitor) mb.loggedUser = await checkSavedUser();
+	mb.currentServerId = localStorage.getItem('mbCurrentServerId') || false;
 
-	console.log("Z - loggedUser:" + mb.loggedUser)
-	debugPrint("Z - loggedUser:" + mb.loggedUser)
+	console.log("Z - loggedServer:" + mb.currentServerId)
+	debugPrint("Z - loggedServer:" + mb.currentServerId)
 
 	// --- 1. Missing credentials → login
-	if ((!mb.baseUrl) || (!mb.loggedUser)) {
+	if ((!mb.baseUrl) || (!mb.currentServerId)) {
 		debugPrint("Missing base URL or auth token");
-		showLoginDialog();
+		showLoginDialog('firstboot', 0);
 		await executeFaderGradient(0);
 		return;
 	}
@@ -163,7 +189,7 @@ async function sessionCheck() {
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog();
+			showLoginDialog('firstboot', 0);
 			await executeFaderGradient(0);
 		}
 		return;
@@ -171,8 +197,7 @@ async function sessionCheck() {
 
 	// --- 3. Try validating the token
 	let fetchPayload
-	if (isElectron || isCapacitor) {
-
+	if (!isWeb) {
 		const username = mb.loggedUser;
 		const password = await loadUserPass(mb.loggedUser);
 
@@ -209,7 +234,7 @@ async function sessionCheck() {
 			debugPrint("Token invalid or expired.");
 			console.log("Token invalid or expired.");
 			localStorage.removeItem("sessionValid");
-			showLoginDialog();
+			showLoginDialog('firstboot', 0);
 			await executeFaderGradient(0);
 
 		} else {
@@ -221,7 +246,7 @@ async function sessionCheck() {
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog();
+				showLoginDialog('firstboot', 0);
 				await executeFaderGradient(0);
 			}
 		}
@@ -237,10 +262,25 @@ async function sessionCheck() {
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog();
+			showLoginDialog('firstboot', 0);
 			await executeFaderGradient(0);
 
 		}
+	}
+}
+
+async function setServerFields(serverId) {
+	loginServerName.value = mb.serverList[serverId].name;
+	loginBaseUrl.value = mb.serverList[serverId].url;
+	loginUsername.value = mb.serverList[serverId].username;
+	if (serverId == 0 || mb.serverList[serverId].askPassword) {
+		loginPassword.value = ''
+	} else {
+		let localPass = await loadUserPass(serverId);
+		console.log("LOCALPASS")
+		console.log(localPass)
+		loginPassword.value = localPass;
+		//TODO Eliminare la variabile ora
 	}
 }
 
@@ -255,14 +295,11 @@ async function systemRestart() {
 
 	loginScreen.classList = "auth-hidden logo-pattern";
 	// Clear login dialog content
-	loginBaseUrl.value = "";
-	loginPassword.value = "";
-	loginUsername.value = "";
+
+	setServerFields(0)
 
 	loginError.textContent = '';
-	if (!loginError.classList.contains('auth-hiden')) {
-		loginError.classList.add('auth-hidden');
-	}
+	loginError.classList.toggle('auth-hidden', true);	
 	executeFade(1);
 
 	if (isStatusBar) {
@@ -323,22 +360,56 @@ async function systemRestart() {
 	sessionCheck();
 }
 
+async function loginToServer(event, serverId, test) {
 
-async function login(test = false) {
+	mb.loggingServerId = serverId;
+
+	event.stopPropagation();
+
+	if (mb.serverList[serverId].askPassword) {
+		showLoginDialog('enterpassword', mb.loggingServerId);
+		closeModal();
+	} else {
+		mb.currentServerId = serverId;
+		closeModal();
+		login(serverId, test, false);
+	}
+
+	return
+	if (mb.serverList[serverId].askPassword) {
+		showLoginDialog('firstboot', serverId)
+	} else {
+		login(serverId, test, false)
+	}
+}
+
+async function login(serverId, test, fromDialog) {
+
+	console.log("LOGGING:" + serverId);
+
 	debugPrint("login...")
 	console.log("login...")
 
-	loginError.classList.remove('auth-hidden');
-	loginError.classList.add('auth-hidden');
+	loginError.classList.toggle('auth-hidden', true);
 
-	let baseUrlVal = loginBaseUrl.value;
+	let baseUrlVal = fromDialog ? loginBaseUrl.value : mb.serverList[serverId].url;
+	let usernameVal = fromDialog ? loginUsername.value : mb.serverList[serverId].username;
+	let passwordVal = fromDialog ? loginPassword.value : await loadUserPass(serverId);
+
+	console.log(baseUrlVal)
+	console.log(usernameVal)
+	console.log(passwordVal)
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
 	}
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+	//TODO Questo funziona per i test con server 0 e per gli edit quando i valori del server da modificare si portano
+	// in editserver e quindi sono già nei field. Funziona anche con l'enter della password perché i field sono popolati
+	// Ma funzionerò quando la password è automatica, e non voglio passare per i field???
+
+	let mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
 
 	fetch(test
 		? `${baseUrlVal}/api/v2/users/me`
@@ -353,32 +424,41 @@ async function login(test = false) {
 		}
 	}).then(async response => {
 		const token = response.headers.get('X-Auth-Token');
+
 		if (response.ok && token) {
 			if (!test) {
 				await executeFaderGradient(1);
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
-				if (isElectron || isCapacitor) {
-					await saveUserPass(loginUsername.value, loginPassword.value);
-				}
+				mb.currentServerId = serverId
+				localStorage.setItem('mbCurrentServerId', mb.currentServerId);
+				mb.serverList[serverId].askPassword = false;
+				localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
+				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
 				systemRestart();
 			} else {
 				showModal('', false, 'Sever Connection OK', [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
 			loginError.textContent = `Invalid username or password.`;
-			loginError.classList.remove('auth-hidden');
+			loginError.classList.toggle('auth-hidden', false);
 		} else {
 			loginError.textContent = `Login failed`;
-			loginError.classList.remove('auth-hidden');
+			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
 		console.error('Login error:', error);
 		loginError.textContent = `Cannot reach server. Check the address or your connection. ${error}`;
-		loginError.classList.remove('auth-hidden');
+		loginError.classList.toggle('auth-hidden', false);
 	});
+
+	// Reset login credentials
+	if (!test) {
+		loginPassword.value = null;
+		mbAuthHeader = null;
+	}
 }
 
-function applyScenario(modeName) {
+function applyScenario(modeName, serverId) {
 	const buttonsEnable = new Set(mb.loginModes[modeName].buttons || []);
 	document.querySelectorAll(".action").forEach(btn => {
 		btn.style.display = !buttonsEnable.has(btn.id) ? 'none' : '';
@@ -388,17 +468,24 @@ function applyScenario(modeName) {
 	document.querySelectorAll(".input-wrapper").forEach(inp => {
 		inp.classList.toggle('disabled-input', !inputsEnable.has(inp.id));
 	});
+
+	if (modeName == 'firstboot') {
+		mb.editServerId = 0;
+		mb.editServerData = mb.serverList[0];
+	}
+
+	setServerFields(serverId);
 }
 
-function showLoginDialog(dialogMode = 'firstboot') {
+function showLoginDialog(dialogMode, serverId) {
+
+	mb.loginMode = dialogMode;
+
 	//dialogMode = 'firstboot'
 	loginError.textContent = '';
-	if (!loginError.classList.contains('auth-hiden')) {
-		loginError.classList.add('auth-hidden');
-	}
-	applyScenario(dialogMode)
-
-
+	loginError.classList.toggle('auth-hidden', true);
+	
+	applyScenario(dialogMode, serverId)
 
 	loginPassword.type = 'password';
 	viewPassword.classList.toggle('fa-eye', true);
@@ -407,14 +494,16 @@ function showLoginDialog(dialogMode = 'firstboot') {
 	dragbar.classList.add('onLogin');
 	debugPrint("showLoginDialog...")
 	console.log("showLoginDialog...")
-	loginScreen.classList.remove('auth-hidden');
+	loginScreen.classList.toggle('auth-hidden', false);
 }
 
 function hideLoginDialog() {
+	mb.loginMode = '';
+
 	dragbar.classList.remove('onLogin');
 	debugPrint("hideLoginDialog...")
 	console.log("hideLoginDialog...")
-	loginScreen.classList.add('auth-hidden');
+	loginScreen.classList.toggle('auth-hidden', true);
 }
 
 function isLoginScreenHidden() {

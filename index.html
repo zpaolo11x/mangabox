@@ -94,7 +94,7 @@
 					</li>
 					<li id="logOut" data-i18n-title="button.logout" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+							<span class="fa-solid fa-user-group glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
@@ -325,7 +325,7 @@
 					<button id="languageButton" class="action login-button-round" onclick="languageDialog()">
 						<i class="fas fa-earth"></i>
 					</button>
-					<button id="serverTest" class="action login-button-round" onclick="login(true)">
+					<button id="serverTest" class="action login-button-round" onclick="login(0, true, true)">
 						<i class="fas fa-globe"></i>
 					</button>
 					<button id="serverList" class="action login-button-round" onclick="serversDialog()">
@@ -333,13 +333,13 @@
 					</button>
 				</div>
 				<div class="login-buttons-right">
-					<button id="serverSave" class="action login-button" onclick="languageDialog()">
-						<span>Save</login>
-					</button>
-					<button id="serverCancel" class="action login-button" onclick="showLoginDialog('firstboot')">
+					<button id="serverCancel" class="action login-button" onclick="cancelServer()">
 						<span>Cancel</login>
 					</button>
-					<button id="loginButton" class="action login-button" onclick="login()">
+					<button id="serverSave" class="action login-button" onclick="saveServer()">
+						<span>Save</login>
+					</button>
+					<button id="loginButton" class="action login-button" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : mb.currentServerId, false)">
 						<span>Login</login>
 					</button>
 				</div>
@@ -388,7 +388,7 @@
 		const fullDebugMode = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = true;
+		const enableDebugPrint = false;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
@@ -398,6 +398,8 @@
 
 		const isElectron = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
+		const isWeb = !(isElectron || isCapacitor);
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
@@ -800,7 +802,7 @@
 			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 		}
 
-		if (isCapacitor || isElectron) {
+		if (!isWeb) {
 			window.addEventListener('download-progress', (event) => {
 				const { bookId, completed, total } = event.detail;
 				obUpdateProgressResponse(bookId, completed, total);
@@ -1001,13 +1003,15 @@
 							inputs: ['divServerName', 'divBaseUrl', 'divUsername', 'divPassword'],
 							buttons: ['languageButton', 'serverTest', 'serverSave', 'serverCancel']
 						},
-						passwordonly: {
+						enterpassword: {
 							inputs: ['divPassword'],
-							buttons: ['languageButton', 'serverList', 'loginButton']
+							buttons: ['languageButton', 'serverList', 'loginButton','serverCancel']
 						},
 					},
 
-					serverList: {
+					loginMode: '',
+
+					serverList: JSON.parse(localStorage.getItem('mbServerList')) ?? {
 						0: {
 							name: 'Unsaved Server',
 							url: '',
@@ -1018,12 +1022,15 @@
 					},
 					editServerData: {}, //data structure of the server being edited
 					editServerId: 0, //ID of the server that is edited by the dialog
+					currentServerId: 0, //ID of the server passed to login and other auth functions
+					loggingServerId: 0, //ID of the server passed to login and other auth functions
 				}
 			)
 		}
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = initMB();
-
+		console.log("XXXXXXXXXX")
+		console.log(mb.serverList)
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
 		const colorValues = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches-hi')
@@ -1047,40 +1054,44 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-		async function electronHeader() {
-			const username = mb.loggedUser;
-			const password = await loadUserPass(mb.loggedUser);
+		async function basicHeader() {
+			let username = mb.serverList[mb.currentServerId].username;
+			let password = await loadUserPass(mb.currentServerId);
+			console.log("----------------")
+			console.log(username+" "+password)
+			console.log("----------------")
 			const out = { 'Authorization': 'Basic ' + btoa(`${username}:${password}`) }
+			username = null;
+			password = null;
 			return (out)
 		}
 
-		async function buildRequest(loggedUser, method, body) {
-			const electronHeaders = isElectron ? await electronHeader() : {};
+		async function buildRequest(method, body) {
+			const basicHeaders = await basicHeader() ;
 
 			const requestTable = {
 				method: method,
-				...(!isElectron && { credentials: 'include' }),
 				headers: {
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...electronHeaders
+					...basicHeaders
 				},
 				...(body && { body }),
 			}
 			return requestTable
 		}
 
-		async function buildRequestMedia(loggedUser, method, body) {
-			const electronHeaders = isElectron ? await electronHeader() : {};
+		async function buildRequestMedia(method, body) {
+			const basicHeaders = !isWeb ? await basicHeader() : {};
 
 			const requestTable = {
 				method: method,
-				...(!isElectron && { credentials: 'include' }),
+				...(isWeb && { credentials: 'include' }),
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...electronHeaders
+					...basicHeaders
 				},
 			}
 			return requestTable
@@ -1268,7 +1279,7 @@
 			}
 
 			try {
-				const req = await buildRequest(mb.loggedUser, method, body);
+				const req = await buildRequest(method, body);
 
 				const response = await fetch(`${mb.baseUrl}${API_url}`, req);
 
@@ -1334,24 +1345,157 @@
 				username: '',
 				password: '',
 				createdAt: Date.now(),
+				askPassword: true //When logged is true the password is taken from the table, if is logged out the password is requested. But the password is always in the table unless the server is deleted
 			};
-			return [id, server];
+			return ['mbUser_' + serverID, server];
 		}
 
 		function setServerProperty(id, property, value) {
 			mb.serversList[id][property] = value;
 		}
 
-		function addServer() {
-			[mb.editServerId, mb.editServerData] = initServer();
-			showLoginDialog('editserver');
+		function cancelServer(){
+			console.log('LOG:'+mb.currentServerId)
+			console.log('LOG:'+mb.loggingServerId)
+			console.log('MOD:'+mb.loginMode);
+			if (!mb.currentServerId) {
+				console.log("A")
+				showLoginDialog('firstboot', 0)
+			} else if (mb.loginMode == 'enterpassword'){
+				console.log("B")
+				hideLoginDialog()
+			}
+			serversDialog()
+		}
+
+		function saveServer() {
+			console.log(loginPassword.value)
+
+			// Populate mb.editServerData with the data
+			mb.editServerData.name = loginServerName.value;
+			mb.editServerData.url = loginBaseUrl.value;
+			mb.editServerData.username = loginUsername.value;
+			mb.editServerData.askPassword = false;
+
+			mb.serverList[mb.editServerId] = {
+				...(mb.serverList[mb.editServerId] ?? {}),
+				...mb.editServerData
+			};
+
+			console.log(mb.serverList);
+
+			localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
+
+			saveUserPass(mb.editServerId, '', loginPassword.value)
+
+			showLoginDialog('firstboot', 0)
+			serversDialog();
+
+			//TODO Save the password to secure storage
+		}
+
+		function editServer(serverId) {
+			console.log("EDIT SERVER:" + serverId)
+			console.log(mb.serverList[serverId])
+			mb.editServerId = serverId;
+			mb.editServerData = mb.serverList[serverId];
+			showLoginDialog('editserver', serverId);
 			closeModal();
 		}
 
+		function addServer() {
+			[mb.editServerId, mb.editServerData] = initServer();
+			showLoginDialog('editserver', 0);
+			closeModal();
+		}
+
+		function deleteServer(serverId) {
+			//TODO add code to delete password from key
+			showModal('', false, `
+				<span data-i18n="servers.delete">${t('servers.delete')}</span>
+				<ul class="filter-menu">
+					<li class="filter-item filter-item-menu">
+						<div class='smallbutton-wrapper'>
+							<span class="fa-solid fa-server glyph-dark"></span>
+						</div>
+						<div class='library-name filter-menu-text'>${mb.serverList[serverId].name}</div>
+					</li>
+					<li class="filter-item filter-item-menu">
+						<div class='smallbutton-wrapper'>
+							<span class="fa-solid fa-link glyph-dark"></span>
+						</div>
+						<div class='library-name filter-menu-text'>${mb.serverList[serverId].url}</div>
+					</li>
+					<li class="filter-item filter-item-menu">
+						<div class='smallbutton-wrapper'>
+							<span class="fa-solid fa-user glyph-dark"></span>
+						</div>
+						<div class='library-name filter-menu-text'>${mb.serverList[serverId].username}</div>
+					</li>
+				</ul>
+			`, [
+				{
+					label: 'modal.ok', runfunction: () => {
+						delete mb.serverList[serverId];
+						localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
+						localStorage.removeItem('mbCurrentServerId');
+						deleteUserPass(serverId, '');
+						if (mb.currentServerId != false) {
+							systemRestart();
+						} else {
+							serversDialog();
+						}
+					}, high: true
+				},
+				{ label: 'modal.cancel', runfunction: () => serversDialog() }
+
+			]);
+
+		}
+
+		function expandServer(idName) {
+			const target = document.getElementById(idName);
+			const isOpen = target.classList.contains('expand');
+
+			// Collapse all
+			document.querySelectorAll('.server-data')
+				.forEach(el => el.classList.remove('expand'));
+
+			// Re-open only if it was not already open
+			if (!isOpen) {
+				target.classList.add('expand');
+			}
+		}
+
+
 		function buildServersDialog() {
 			let out = `<span data-i18n="servers.title">${t('servers.title')}</span>`;
-			/*
 			out = out + '<ul class="filter-menu" id="languageMenu">';
+			Object.entries(mb.serverList).forEach(([id, server]) => {
+				let isSelected = false;
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
+									<div class='library-name filter-menu-text'>${server.name}</div>
+									<div class='smallbutton-wrapper server-button' onClick="editServer('${id}')">
+										<span class="fa-solid fa-pen glyph-dark"></span>
+									</div>
+									<div class='smallbutton-wrapper server-button' onClick="deleteServer('${id}')">
+										<span class="fa-solid fa-trash-can glyph-dark"></span>
+									</div>
+									<div class='smallbutton-wrapper server-button' onClick="loginToServer(event, '${id}', false)">
+										<span class="fa-solid fa-play glyph-dark"></span>
+									</div>
+								</li>
+								<li class="server-data" id="item_${id}_data">
+									<div style="margin-top:10px; width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+										<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${server.url}</span>
+									</div>
+									<div style="width:100%; padding-top:10px; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+										<span class="fa-solid fa-user"></span><span>${server.username}</span>
+									</div>
+								</li>
+			`
+			});
+			/*
 			mb.languages.forEach((language, index) => {
 				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
@@ -1367,15 +1511,18 @@
 									</div>
 									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
 								</li>`
-			out = out + "</ul>";
 			*/
+			out = out + "</ul>";
 			return (out)
 		}
 
 		function serversDialog() {
 			showModal('', false, buildServersDialog(), [
 				{ label: 'servers.add', runfunction: () => addServer() },
-				{ label: 'modal.ok', runfunction: () => closeModal(), high: true }
+				{ label: 'modal.ok', runfunction: () => {
+					if (mb.currentServerId) hideLoginDialog();
+					closeModal()
+				}, high: true }
 			]);
 		}
 
@@ -1435,6 +1582,7 @@
 			mb.webtoonScale = Number(localStorage.getItem('c_webtoonScale') ?? 100);
 			mb.readerScale = Number(localStorage.getItem('c_readerScale') ?? 100);
 			mb.readerAnimation = Number(localStorage.getItem('c_readerAnimation') ?? 1)
+
 		}
 
 
@@ -1623,6 +1771,8 @@
 							navigateTo('#dashboard');
 							await executeFaderGradient(1);
 
+							//TODO FOrse questo serve nel caso web
+							/*
 							try {
 								if (mb.baseUrl) {
 									await fetch(`${mb.baseUrl}/api/logout`, {
@@ -1638,13 +1788,19 @@
 								console.warn('Logout API call failed:', error);
 								// We continue cleanup anyway
 							}
+							*/
 
+							//Non cancella più la password usando:
+							// await deleteUserPass(mb.loggedUser);
+							// ma marchia il server come "askPassword"
+							mb.serverList[mb.currentServerId].askPassword = true;
+							localStorage.removeItem('mbCurrentServerId');
 
-							if (isElectron || isCapacitor) await deleteUserPass(mb.loggedUser);
+							// Save the serverlist with the modified askpassword
+							localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
 
-							//sectionHide(stickyContainer);
-							//sectionShow(blanker);
-
+							// Delete cached calls
+							// TODO Controllare c'eranod ei parametri che iniziavano con c_
 							Object.keys(localStorage).forEach(key => {
 								if (key.startsWith('c_')) {
 									localStorage.removeItem(key);
@@ -1659,6 +1815,11 @@
 							systemRestart();
 
 						}, high: true
+					},
+					{
+						label: t('servers.switchserver'), runfunction: async () => {
+							serversDialog(true)
+						}
 					},
 					{
 						// No need to use translateDOM because modals are modal and spawned each time
@@ -2907,7 +3068,7 @@
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = await buildRequest(mb.loggedUser, 'GET', null)
+			let request = await buildRequest('GET', null)
 
 			let bookData = {
 				bookId: bookId,
@@ -3073,7 +3234,7 @@
 			}
 
 			try {
-				const response = await fetch(url, await buildRequestMedia(mb.loggedUser, 'GET', null));
+				const response = await fetch(url, await buildRequestMedia('GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();

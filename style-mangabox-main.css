@@ -342,8 +342,10 @@ body {
 }
 
 #modalMessage {
+	/*
 	padding-left: var(--mb-dialog-padding);
 	padding-right: var(--mb-dialog-padding);
+	*/
 	margin-top: calc(0.5 * var(--mb-dialog-padding));
 	margin-bottom: var(--mb-dialog-padding);
 }
@@ -903,6 +905,8 @@ a {
 }
 
 .filter-menu {
+	list-style-type: none;
+
 	padding-left: 0px;
 }
 
