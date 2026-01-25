@@ -110,7 +110,7 @@ async function loadUserPass(serverId) {
 
 	console.log(pass)
 	if (pass) {
-		console.log('PASS OK')
+		console.log('PASS OK: ' + pass)
 		return (pass);
 	} else {
 		console.log('PASS EMPTY')
@@ -199,9 +199,9 @@ async function sessionCheck() {
 	// --- 3. Try validating the token
 	let fetchPayload
 	if (!isWeb) {
-		const username = mb.loggedUser;
+		const username = mb.serverList[mb.currentServerId].username;
 		const password = await loadUserPass(mb.currentServerId);
-
+console.log("LOGGING IN: "+username+" "+password);
 		fetchPayload = {
 			method: 'GET',
 			headers: {
