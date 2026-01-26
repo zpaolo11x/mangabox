@@ -392,8 +392,8 @@ async function loginToServer(event, serverId, test) {
 async function login(serverId, test, fromDialog) {
 
 	if (serverId == 'mb0'){
-		mb.serverList[0].url = loginBaseUrl.value;
-		mb.serverList[0].username = loginUsername.value;
+		mb.serverList['mb0'].url = loginBaseUrl.value;
+		mb.serverList['mb0'].username = loginUsername.value;
 	}
 
 	console.log("LOGGING:" + serverId);
@@ -488,8 +488,8 @@ function applyScenario(modeName, serverId) {
 	});
 
 	if (modeName == 'firstboot') {
-		mb.editServerId = 0;
-		mb.editServerData = mb.serverList[0];
+		mb.editServerId = 'mb0';
+		mb.editServerData = mb.serverList['mb0'];
 	}
 
 	setServerFields(serverId);
