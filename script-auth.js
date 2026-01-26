@@ -82,7 +82,7 @@ async function checkSavedUser() {
 	return user;
 }
 
-async function saveUserPass(serverId, user, pass) {
+async function saveUserPass(serverId, pass) {
 	if (isWeb) {
 		localStorage.setItem(serverId, pass);
 		return
@@ -118,7 +118,7 @@ async function loadUserPass(serverId) {
 	}
 }
 
-async function deleteUserPass(serverId, user) {
+async function deleteUserPass(serverId) {
 	if (isWeb) {
 		localStorage.removeItem(serverId);
 		return
@@ -198,10 +198,11 @@ async function sessionCheck() {
 
 	// --- 3. Try validating the token
 	let fetchPayload
-	if (!isWeb) {
+	if (!isWeb || isWeb) {
+		console.log("X-A")
 		const username = mb.serverList[mb.currentServerId].username;
 		const password = await loadUserPass(mb.currentServerId);
-console.log("LOGGING IN: "+username+" "+password);
+		console.log("LOGGING IN: "+username+" "+password);
 		fetchPayload = {
 			method: 'GET',
 			headers: {
@@ -211,6 +212,7 @@ console.log("LOGGING IN: "+username+" "+password);
 			}
 		}
 	} else {
+		console.log("X-B")
 		fetchPayload = {
 			method: 'GET',
 			credentials: 'include',
@@ -222,7 +224,7 @@ console.log("LOGGING IN: "+username+" "+password);
 	}
 
 	try {
-		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+		const response = await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
 
 		if (response.ok) {
 			debugPrint("Session valid (server confirmed).");
@@ -422,7 +424,7 @@ async function login(serverId, test, fromDialog) {
 
 	fetch(test
 		? `${baseUrlVal}/api/v2/users/me`
-		: `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
+		: `${baseUrlVal}/api/v2/users/me`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -435,23 +437,30 @@ async function login(serverId, test, fromDialog) {
 		const token = response.headers.get('X-Auth-Token');
 
 		if (response.ok && token) {
+			console.log("LOG-A")
 			if (!test) {
 				await executeFaderGradient(1);
 				localStorage.setItem('mbBaseUrl', baseUrlVal);
 				mb.currentServerId = serverId
 				localStorage.setItem('mbCurrentServerId', mb.currentServerId);
-				if (serverId != 0) mb.serverList[serverId].askPassword = false;
+				mb.serverList[serverId].askPassword = false;
 				localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
+				
+				//TODO Magari resettare la password quando anche user 0 fa logout?
+				if (serverId == 0) saveUserPass(serverId, passwordVal)
 				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
+				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
 				showModal('', false, 'Sever Connection OK', [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-			loginError.textContent = `Invalid username or password.`;
+				console.log("LOG-B")
+		loginError.textContent = `Invalid username or password.`;
 			loginError.classList.toggle('auth-hidden', false);
 		} else {
-			loginError.textContent = `Login failed`;
+				console.log("LOG-C")
+		loginError.textContent = `Login failed`;
 			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {

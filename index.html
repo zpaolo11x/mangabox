@@ -1084,11 +1084,11 @@
 		}
 
 		async function buildRequestMedia(method, body) {
-			const basicHeaders = !isWeb ? await basicHeader() : {};
+			const basicHeaders = (!isWeb || isWeb) ? await basicHeader() : {};
 
 			const requestTable = {
 				method: method,
-				...(isWeb && { credentials: 'include' }),
+				//...(isWeb && { credentials: 'include' }),
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
@@ -1387,7 +1387,7 @@
 
 			localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
 
-			saveUserPass(mb.editServerId, '', loginPassword.value)
+			saveUserPass(mb.editServerId, loginPassword.value)
 
 			showLoginDialog('firstboot', 0)
 			serversDialog();
@@ -1440,7 +1440,7 @@
 						delete mb.serverList[serverId];
 						localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
 						localStorage.removeItem('mbCurrentServerId');
-						deleteUserPass(serverId, '');
+						deleteUserPass(serverId);
 						if (mb.currentServerId != false) {
 							systemRestart();
 						} else {
@@ -1474,8 +1474,9 @@
 			out = out + '<ul class="filter-menu" id="languageMenu">';
 			Object.entries(mb.serverList).forEach(([id, server]) => {
 				let isSelected = mb.currentServerId == id;
+				console.log("***"+server.name)
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
-									<div class='library-name filter-menu-text'>${server.name}</div>
+									<div class='library-name filter-menu-text'>${id == 0 ? t(server.name) : server.name}</div>
 									<div class='smallbutton-wrapper server-button' onClick="editServer('${id}')">
 										<span class="fa-solid fa-pen glyph-dark"></span>
 									</div>
@@ -1802,7 +1803,7 @@
 
 							// Save the serverlist with the modified askpassword
 							localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
-
+							if (mb.currentServerId == 0) deleteUserPass(0)
 							// Delete cached calls
 							// TODO Controllare c'eranod ei parametri che iniziavano con c_
 							Object.keys(localStorage).forEach(key => {
