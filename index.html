@@ -1012,7 +1012,7 @@
 					loginMode: '',
 
 					serverList: JSON.parse(localStorage.getItem('mbServerList')) ?? {
-						0: {
+						mb0: {
 							name: 'servers.unsaved',
 							url: '',
 							username: '',
@@ -1361,7 +1361,7 @@
 			console.log('MOD:'+mb.loginMode);
 			if (!mb.currentServerId) {
 				console.log("A")
-				showLoginDialog('firstboot', 0)
+				showLoginDialog('firstboot', 'mb0')
 			} else if (mb.loginMode == 'enterpassword'){
 				console.log("B")
 				hideLoginDialog()
@@ -1389,7 +1389,7 @@
 
 			saveUserPass(mb.editServerId, loginPassword.value)
 
-			showLoginDialog('firstboot', 0)
+			showLoginDialog('firstboot', 'mb0')
 			serversDialog();
 
 			//TODO Save the password to secure storage
@@ -1406,7 +1406,7 @@
 
 		function addServer() {
 			[mb.editServerId, mb.editServerData] = initServer();
-			showLoginDialog('editserver', 0);
+			showLoginDialog('editserver', 'mb0');
 			closeModal();
 		}
 
@@ -1476,7 +1476,7 @@
 				let isSelected = mb.currentServerId == id;
 				console.log("***"+server.name)
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
-									<div class='library-name filter-menu-text'>${id == 0 ? t(server.name) : server.name}</div>
+									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
 									<div class='smallbutton-wrapper server-button' onClick="editServer('${id}')">
 										<span class="fa-solid fa-pen glyph-dark"></span>
 									</div>
@@ -1799,11 +1799,11 @@
 							localStorage.removeItem('mbCurrentServerId');
 							
 							// Always clean temp server
-							mb.serverList[0].username = '';
+							mb.serverList['mb0'].username = '';
 
 							// Save the serverlist with the modified askpassword
 							localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
-							if (mb.currentServerId == 0) deleteUserPass(0)
+							if (mb.currentServerId == 'mb0') deleteUserPass(0)
 							// Delete cached calls
 							// TODO Controllare c'eranod ei parametri che iniziavano con c_
 							Object.keys(localStorage).forEach(key => {

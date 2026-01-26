@@ -174,7 +174,7 @@ async function sessionCheck() {
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId)) {
 		debugPrint("Missing base URL or auth token");
-		showLoginDialog('firstboot', 0);
+		showLoginDialog('firstboot', 'mb0');
 		await executeFaderGradient(0);
 		return;
 	}
@@ -190,7 +190,7 @@ async function sessionCheck() {
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog('firstboot', 0);
+			showLoginDialog('firstboot', 'mb0');
 			await executeFaderGradient(0);
 		}
 		return;
@@ -237,7 +237,7 @@ async function sessionCheck() {
 			debugPrint("Token invalid or expired.");
 			console.log("Token invalid or expired.");
 			localStorage.removeItem("sessionValid");
-			showLoginDialog('firstboot', 0);
+			showLoginDialog('firstboot', 'mb0');
 			await executeFaderGradient(0);
 
 		} else {
@@ -249,7 +249,7 @@ async function sessionCheck() {
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog('firstboot', 0);
+				showLoginDialog('firstboot', 'mb0');
 				await executeFaderGradient(0);
 			}
 		}
@@ -265,7 +265,7 @@ async function sessionCheck() {
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog('firstboot', 0);
+			showLoginDialog('firstboot', 'mb0');
 			await executeFaderGradient(0);
 
 		}
@@ -276,10 +276,10 @@ async function setServerFields(serverId) {
 	console.log("SET FIELDS")
 	console.log(serverId)
 	console.log(mb.serverList[serverId].name)
-	loginServerName.value = (serverId == 0) ? t(mb.serverList[serverId].name) : mb.serverList[serverId].name;
+	loginServerName.value = (serverId == 'mb0') ? t(mb.serverList[serverId].name) : mb.serverList[serverId].name;
 	loginBaseUrl.value = mb.serverList[serverId].url;
 	loginUsername.value = mb.serverList[serverId].username;
-	if (serverId == 0 || mb.serverList[serverId].askPassword) {
+	if (serverId == 'mb0' || mb.serverList[serverId].askPassword) {
 		loginPassword.value = ''
 	} else {
 		let localPass = await loadUserPass(serverId);
@@ -302,7 +302,7 @@ async function systemRestart() {
 	loginScreen.classList = "auth-hidden logo-pattern";
 	// Clear login dialog content
 
-	setServerFields(0)
+	setServerFields('mb0')
 
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);	
@@ -391,7 +391,7 @@ async function loginToServer(event, serverId, test) {
 
 async function login(serverId, test, fromDialog) {
 
-	if (serverId == 0){
+	if (serverId == 'mb0'){
 		mb.serverList[0].url = loginBaseUrl.value;
 		mb.serverList[0].username = loginUsername.value;
 	}
@@ -447,7 +447,7 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
 				
 				//TODO Magari resettare la password quando anche user 0 fa logout?
-				if (serverId == 0) saveUserPass(serverId, passwordVal)
+				if (serverId == 'mb0') saveUserPass(serverId, passwordVal)
 				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
