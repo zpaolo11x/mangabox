@@ -339,7 +339,7 @@
 					<button id="serverSave" class="action login-button" onclick="saveServer()">
 						<span>Save</login>
 					</button>
-					<button id="loginButton" class="action login-button" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 0 : mb.currentServerId), false, true)">
+					<button id="loginButton" class="action login-button" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
 						<span>Login</login>
 					</button>
 				</div>
