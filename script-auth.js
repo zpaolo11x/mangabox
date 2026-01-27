@@ -368,6 +368,13 @@ async function systemRestart() {
 
 async function loginToServer(event, serverId, test) {
 
+	if (serverId == 'mb0'){
+		mb.currentServerId = serverId;
+		closeModal();
+		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
+		return
+	}
+
 	mb.loggingServerId = serverId;
 
 	event.stopPropagation();
@@ -382,11 +389,13 @@ async function loginToServer(event, serverId, test) {
 	}
 
 	return
+	/*
 	if (mb.serverList[serverId].askPassword) {
 		showLoginDialog('firstboot', serverId)
 	} else {
 		login(serverId, test, false)
 	}
+	*/
 }
 
 async function login(serverId, test, fromDialog) {

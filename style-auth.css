@@ -341,3 +341,8 @@
 .server-button:active{
 	scale: 0.8;
 }
+
+.server-buttons-disabled{
+	pointer-events: none;
+	opacity: 0.1;
+}

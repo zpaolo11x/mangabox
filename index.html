@@ -1459,6 +1459,8 @@
 		}
 
 		function expandServer(idName) {
+			if (idName == 'item_mb0_data') return
+
 			const target = document.getElementById(idName);
 			const isOpen = target.classList.contains('expand');
 
@@ -1479,12 +1481,13 @@
 			Object.entries(mb.serverList).forEach(([id, server]) => {
 				let isSelected = mb.currentServerId == id;
 				console.log("***"+server.name)
+				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
-									<div class='smallbutton-wrapper server-button' onClick="editServer('${id}')">
+									<div class='smallbutton-wrapper server-button ${extraClass}' onClick="editServer('${id}')">
 										<span class="fa-solid fa-pen glyph-dark"></span>
 									</div>
-									<div class='smallbutton-wrapper server-button' onClick="deleteServer('${id}')">
+									<div class='smallbutton-wrapper server-button ${extraClass}' onClick="deleteServer('${id}')">
 										<span class="fa-solid fa-trash-can glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button' onClick="loginToServer(event, '${id}', false)">
