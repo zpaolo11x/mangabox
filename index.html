@@ -387,7 +387,7 @@
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
 		const webPWD = false;
-		
+
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
@@ -1089,11 +1089,11 @@
 		}
 
 		async function buildRequestMedia(method, body) {
-			const basicHeaders = (!isWeb || isWeb) ? await basicHeader() : {};
+			const basicHeaders = (!isWeb || webPWD) ? await basicHeader() : {};
 
 			const requestTable = {
 				method: method,
-				//...(isWeb && { credentials: 'include' }),
+				...((isWeb && !webPWD) && { credentials: 'include' }),
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
@@ -1822,7 +1822,7 @@
 							});
 
 							await clearIndexedDB();
-							localStorage.removeItem('sessionValid');
+							localStorage.removeItem('mbSessionValid');
 
 							mainLoader.classList.add('hidden');
 

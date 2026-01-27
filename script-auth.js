@@ -83,7 +83,7 @@ async function checkSavedUser() {
 }
 
 async function saveUserPass(serverId, pass) {
-	if (isWeb) {
+	if (isWeb && webPWD) {
 		localStorage.setItem(serverId, pass);
 		return
 	}
@@ -97,7 +97,7 @@ async function saveUserPass(serverId, pass) {
 
 async function loadUserPass(serverId) {
 	let pass = '';
-	if (isWeb) {
+	if (isWeb && webPWD) {
 		console.log(serverId)
 		pass = localStorage.getItem(serverId) || '';
 	}
@@ -119,7 +119,7 @@ async function loadUserPass(serverId) {
 }
 
 async function deleteUserPass(serverId) {
-	if (isWeb) {
+	if (isWeb && webPWD) {
 		localStorage.removeItem(serverId);
 		return
 	}
@@ -180,7 +180,7 @@ async function sessionCheck() {
 	}
 
 	// --- 2. Connectivity check (optional for immediate offline mode)
-	const sessionWasValid = localStorage.getItem("sessionValid") === "true";
+	const sessionWasValid = localStorage.getItem("mbSessionValid") === "true";
 	let offline = !navigator.onLine;
 
 	if (offline) {
@@ -198,8 +198,7 @@ async function sessionCheck() {
 
 	// --- 3. Try validating the token
 	let fetchPayload
-	if (!isWeb || isWeb) {
-		console.log("X-A")
+	if (!isWeb || (isWeb && webPWD)) {
 		const username = mb.serverList[mb.currentServerId].username;
 		const password = await loadUserPass(mb.currentServerId);
 		console.log("LOGGING IN: "+username+" "+password);
@@ -212,7 +211,6 @@ async function sessionCheck() {
 			}
 		}
 	} else {
-		console.log("X-B")
 		fetchPayload = {
 			method: 'GET',
 			credentials: 'include',
@@ -229,14 +227,14 @@ async function sessionCheck() {
 		if (response.ok) {
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
-			localStorage.setItem("sessionValid", "true");
+			localStorage.setItem("mbSessionValid", "true");
 			hideLoginDialog();
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
 			debugPrint("Token invalid or expired.");
 			console.log("Token invalid or expired.");
-			localStorage.removeItem("sessionValid");
+			localStorage.removeItem("mbSessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 
@@ -279,7 +277,7 @@ async function setServerFields(serverId, serverData) {
 	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
 	loginBaseUrl.value = serverData.url;
 	loginUsername.value = serverData.username;
-	if (serverId == 'mb0' || serverData.askPassword) {
+	if (serverId == 'mb0' || serverData.askPassword || (isWeb && !webPWD)) {
 		loginPassword.value = ''
 	} else {
 		let localPass = await loadUserPass(serverId);
@@ -379,7 +377,7 @@ async function loginToServer(event, serverId, test) {
 
 	event.stopPropagation();
 
-	if (mb.serverList[serverId].askPassword) {
+	if (mb.serverList[serverId].askPassword || (isWeb && !webPWD)) {
 		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
 		closeModal();
 	} else {
