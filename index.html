@@ -999,6 +999,10 @@
 							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
 							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
 						},
+						addserver: {
+							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
+							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
+						},
 						editserver: {
 							inputs: ['divServerName', 'divBaseUrl', 'divUsername', 'divPassword'],
 							buttons: ['languageButton', 'serverTest', 'serverSave', 'serverCancel']
@@ -1361,7 +1365,7 @@
 			console.log('MOD:'+mb.loginMode);
 			if (!mb.currentServerId) {
 				console.log("A")
-				showLoginDialog('firstboot', 'mb0')
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			} else if (mb.loginMode == 'enterpassword'){
 				console.log("B")
 				hideLoginDialog()
@@ -1389,7 +1393,7 @@
 
 			saveUserPass(mb.editServerId, loginPassword.value)
 
-			showLoginDialog('firstboot', 'mb0')
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			serversDialog();
 
 			//TODO Save the password to secure storage
@@ -1400,13 +1404,13 @@
 			console.log(mb.serverList[serverId])
 			mb.editServerId = serverId;
 			mb.editServerData = mb.serverList[serverId];
-			showLoginDialog('editserver', serverId);
+			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
 			closeModal();
 		}
 
 		function addServer() {
 			[mb.editServerId, mb.editServerData] = initServer();
-			showLoginDialog('editserver', 'mb0');
+			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
 			closeModal();
 		}
 

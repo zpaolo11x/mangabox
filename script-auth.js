@@ -174,7 +174,7 @@ async function sessionCheck() {
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId)) {
 		debugPrint("Missing base URL or auth token");
-		showLoginDialog('firstboot', 'mb0');
+		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 		await executeFaderGradient(0);
 		return;
 	}
@@ -190,7 +190,7 @@ async function sessionCheck() {
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog('firstboot', 'mb0');
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 		}
 		return;
@@ -237,7 +237,7 @@ async function sessionCheck() {
 			debugPrint("Token invalid or expired.");
 			console.log("Token invalid or expired.");
 			localStorage.removeItem("sessionValid");
-			showLoginDialog('firstboot', 'mb0');
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 
 		} else {
@@ -249,7 +249,7 @@ async function sessionCheck() {
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog('firstboot', 'mb0');
+				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 				await executeFaderGradient(0);
 			}
 		}
@@ -265,21 +265,21 @@ async function sessionCheck() {
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog('firstboot', 'mb0');
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 
 		}
 	}
 }
 
-async function setServerFields(serverId) {
+async function setServerFields(serverId, serverData) {
 	console.log("SET FIELDS")
 	console.log(serverId)
-	console.log(mb.serverList[serverId].name)
-	loginServerName.value = (serverId == 'mb0') ? t(mb.serverList[serverId].name) : mb.serverList[serverId].name;
-	loginBaseUrl.value = mb.serverList[serverId].url;
-	loginUsername.value = mb.serverList[serverId].username;
-	if (serverId == 'mb0' || mb.serverList[serverId].askPassword) {
+	console.log(serverData.name)
+	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
+	loginBaseUrl.value = serverData.url;
+	loginUsername.value = serverData.username;
+	if (serverId == 'mb0' || serverData.askPassword) {
 		loginPassword.value = ''
 	} else {
 		let localPass = await loadUserPass(serverId);
@@ -302,7 +302,7 @@ async function systemRestart() {
 	loginScreen.classList = "auth-hidden logo-pattern";
 	// Clear login dialog content
 
-	setServerFields('mb0')
+	setServerFields('mb0', mb.serverList['mb0'])
 
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);	
@@ -373,7 +373,7 @@ async function loginToServer(event, serverId, test) {
 	event.stopPropagation();
 
 	if (mb.serverList[serverId].askPassword) {
-		showLoginDialog('enterpassword', mb.loggingServerId);
+		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
 		closeModal();
 	} else {
 		mb.currentServerId = serverId;
@@ -476,7 +476,7 @@ async function login(serverId, test, fromDialog) {
 	}
 }
 
-function applyScenario(modeName, serverId) {
+function applyScenario(modeName, serverId, serverData) {
 	const buttonsEnable = new Set(mb.loginModes[modeName].buttons || []);
 	document.querySelectorAll(".action").forEach(btn => {
 		btn.style.display = !buttonsEnable.has(btn.id) ? 'none' : '';
@@ -492,10 +492,10 @@ function applyScenario(modeName, serverId) {
 		mb.editServerData = mb.serverList['mb0'];
 	}
 
-	setServerFields(serverId);
+	setServerFields(serverId, serverData);
 }
 
-function showLoginDialog(dialogMode, serverId) {
+function showLoginDialog(dialogMode, serverId, serverData) {
 
 	mb.loginMode = dialogMode;
 
@@ -503,15 +503,15 @@ function showLoginDialog(dialogMode, serverId) {
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
 	
-	applyScenario(dialogMode, serverId)
+	applyScenario(dialogMode, serverId, serverData)
 
 	loginPassword.type = 'password';
 	viewPassword.classList.toggle('fa-eye', true);
 	viewPassword.classList.toggle('fa-eye-slash', false);
 
 	dragbar.classList.add('onLogin');
-	debugPrint("showLoginDialog...")
-	console.log("showLoginDialog...")
+	debugPrint("show Login Dialog...")
+	console.log("show Login Dialog...")
 	loginScreen.classList.toggle('auth-hidden', false);
 }
 
@@ -519,8 +519,8 @@ function hideLoginDialog() {
 	mb.loginMode = '';
 
 	dragbar.classList.remove('onLogin');
-	debugPrint("hideLoginDialog...")
-	console.log("hideLoginDialog...")
+	debugPrint("hide Login Dialog...")
+	console.log("hide Login Dialog...")
 	loginScreen.classList.toggle('auth-hidden', true);
 }
 
