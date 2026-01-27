@@ -274,10 +274,14 @@ async function setServerFields(serverId, serverData) {
 	console.log("SET FIELDS")
 	console.log(serverId)
 	console.log(serverData.name)
+
 	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
 	loginBaseUrl.value = serverData.url;
-	loginUsername.value = serverData.username;
-	if (serverId == 'mb0' || serverData.askPassword || (isWeb && !webPWD)) {
+	loginUsername.value = (serverId == 'mb0') ? '' : serverData.username;
+	
+	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0')){
+		// When password is requested, the password field is always EMPTY
+		// same in web mode, the password is never shown ever
 		loginPassword.value = ''
 	} else {
 		let localPass = await loadUserPass(serverId);
