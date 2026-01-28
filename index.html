@@ -879,7 +879,7 @@
 					libMenuVisible: null,
 					swatchMenuVisible: false,
 
-					baseUrl: localStorage.getItem('mbBaseUrl'),
+					baseUrl: localStorage.getItem('mb00BaseUrl'),
 					loggedUser: false,
 
 					basePath: '', //'/mangabox/'
@@ -1016,7 +1016,7 @@
 
 					loginMode: '',
 
-					serverList: JSON.parse(localStorage.getItem('mbServerList')) ?? {
+					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {
 						mb0: {
 							name: 'servers.unsaved',
 							url: '',
@@ -1146,7 +1146,7 @@
 
 			// Sets auto language to false then tries to load a saved language
 			mb.languageAuto = false;
-			const stored = localStorage.getItem('mbLanguage');
+			const stored = localStorage.getItem('mb00Language');
 
 			if (stored) {
 				mb.languageVal = stored;
@@ -1390,7 +1390,7 @@
 
 			console.log(mb.serverList);
 
-			localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
+			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 			saveUserPass(mb.editServerId, loginPassword.value)
 
@@ -1443,8 +1443,8 @@
 				{
 					label: 'modal.ok', runfunction: () => {
 						delete mb.serverList[serverId];
-						localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
-						localStorage.removeItem('mbCurrentServerId');
+						localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
+						localStorage.removeItem('mb00CurrentServerId');
 						deleteUserPass(serverId);
 						if (mb.currentServerId != false) {
 							systemRestart();
@@ -1804,14 +1804,14 @@
 							// await deleteUserPass(mb.loggedUser);
 							// ma marchia il server come "askPassword"
 							mb.serverList[mb.currentServerId].askPassword = true;
-							localStorage.removeItem('mbCurrentServerId');
+							localStorage.removeItem('mb00CurrentServerId');
 							
 							// Always clean temp server
 							mb.serverList['mb0'].username = '';
 							
 
 							// Save the serverlist with the modified askpassword
-							localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
+							localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 							if (mb.currentServerId == 'mb0') deleteUserPass('mb0')
 							// Delete cached calls
 							// TODO Controllare c'eranod ei parametri che iniziavano con c_
@@ -1822,7 +1822,7 @@
 							});
 
 							await clearIndexedDB();
-							localStorage.removeItem('mbSessionValid');
+							localStorage.removeItem('mb00SessionValid');
 
 							mainLoader.classList.add('hidden');
 
@@ -2466,7 +2466,7 @@
 			[...languageMenu.children].forEach((li, index) => {
 				li.classList.toggle('highlighted', index === valueIndex);
 			});
-			localStorage.setItem('mbLanguage', language);
+			localStorage.setItem('mb00Language', language);
 			applyLanguage();
 
 		}
@@ -2477,7 +2477,7 @@
 			[...languageMenu.children].forEach((li, index) => {
 				li.classList.toggle('highlighted', index === menuLength - 1);
 			});
-			localStorage.removeItem('mbLanguage');
+			localStorage.removeItem('mb00Language');
 			applyLanguage();
 
 		}

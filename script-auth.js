@@ -166,7 +166,7 @@ async function sessionCheck() {
 	loginBaseUrl.value = mb.baseUrl;
 
 	// Load stored token (e.g. from Electron storage)
-	mb.currentServerId = localStorage.getItem('mbCurrentServerId') || false;
+	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
 
 	console.log("Z - loggedServer:" + mb.currentServerId)
 	debugPrint("Z - loggedServer:" + mb.currentServerId)
@@ -180,7 +180,7 @@ async function sessionCheck() {
 	}
 
 	// --- 2. Connectivity check (optional for immediate offline mode)
-	const sessionWasValid = localStorage.getItem("mbSessionValid") === "true";
+	const sessionWasValid = localStorage.getItem("mb00SessionValid") === "true";
 	let offline = !navigator.onLine;
 
 	if (offline) {
@@ -227,14 +227,14 @@ async function sessionCheck() {
 		if (response.ok) {
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
-			localStorage.setItem("mbSessionValid", "true");
+			localStorage.setItem("mb00SessionValid", "true");
 			hideLoginDialog();
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
 			debugPrint("Token invalid or expired.");
 			console.log("Token invalid or expired.");
-			localStorage.removeItem("mbSessionValid");
+			localStorage.removeItem("mb00SessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 
@@ -451,11 +451,11 @@ async function login(serverId, test, fromDialog) {
 			console.log("LOG-A")
 			if (!test) {
 				await executeFaderGradient(1);
-				localStorage.setItem('mbBaseUrl', baseUrlVal);
+				localStorage.setItem('mb00BaseUrl', baseUrlVal);
 				mb.currentServerId = serverId
-				localStorage.setItem('mbCurrentServerId', mb.currentServerId);
+				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				mb.serverList[serverId].askPassword = false;
-				localStorage.setItem('mbServerList', JSON.stringify(mb.serverList));
+				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 				
 				//TODO Magari resettare la password quando anche user 0 fa logout?
 				if (serverId == 'mb0') saveUserPass(serverId, passwordVal)
