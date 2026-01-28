@@ -1497,10 +1497,10 @@
 								</li>
 								<li class="server-data" id="item_${id}_data">
 									<div style="margin-top:10px; width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${server.url}</span>
+										<span style="width:20px; min-width:20px;" class="fa-solid fa-link"></span><span style="word-break: break-all;">${server.url}</span>
 									</div>
 									<div style="width:100%; padding-top:10px; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span class="fa-solid fa-user"></span><span>${server.username}</span>
+										<span style="width:20px; min-width:20px;" class="fa-solid fa-user"></span><span>${server.username}</span>
 									</div>
 								</li>
 			`
@@ -1764,13 +1764,16 @@
 			}
 			let dialogText = `
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span class="fa-solid fa-user"></span><span>${currentUser.email}</span>
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-server"></span><span>${t(mb.serverList[mb.currentServerId].name)}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-link"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+			</div>
+			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-user"></span><span>${currentUser.email}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;" onClick="languageDialog()">
-				<span class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
 			showModal('', true, dialogText,
