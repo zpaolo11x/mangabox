@@ -222,7 +222,9 @@ async function sessionCheck() {
 	}
 
 	try {
-		const response = await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
+		const response = (isWeb && !webPWD) 
+			? await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload)
+			: await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
 
 		if (response.ok) {
 			debugPrint("Session valid (server confirmed).");
@@ -407,7 +409,7 @@ async function login(serverId, test, fromDialog) {
 		mb.serverList['mb0'].username = loginUsername.value;
 	}
 
-	console.log("LOGGING:" + serverId);
+	console.log("LOGGING:" + serverId + (fromDialog ? " fromdialog" :""));
 
 	debugPrint("login...")
 	console.log("login...")
@@ -433,21 +435,21 @@ async function login(serverId, test, fromDialog) {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
 
-	fetch(test
+	fetch((test || (isWeb && !webPWD))
 		? `${baseUrlVal}/api/v2/users/me`
-		: `${baseUrlVal}/api/v2/users/me`, {
+		: `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
 		method: 'GET',
-		credentials: 'include',
+		//credentials: 'include',
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
-			'X-Auth-Token': '',
+			//'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
 		}
 	}).then(async response => {
-		const token = response.headers.get('X-Auth-Token');
+		//const token = response.headers.get('X-Auth-Token');
 
-		if (response.ok && token) {
+		if (response.ok) {
 			console.log("LOG-A")
 			if (!test) {
 				await executeFaderGradient(1);
@@ -479,7 +481,7 @@ async function login(serverId, test, fromDialog) {
 		loginError.textContent = `Cannot reach server. Check the address or your connection. ${error}`;
 		loginError.classList.toggle('auth-hidden', false);
 	});
-
+	
 	// Reset login credentials
 	if (!test) {
 		loginPassword.value = null;
