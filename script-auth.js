@@ -435,21 +435,25 @@ async function login(serverId, test, fromDialog) {
 
 	let mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
 
-	fetch((test || (isWeb && !webPWD))
-		? `${baseUrlVal}/api/v2/users/me`
-		: `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
+	let fetchString = (isWeb && !webPWD)
+		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
+		: `${baseUrlVal}/api/v2/users/me`;
+	
+		console.log("Let's Fetch: "+fetchString)
+
+	fetch(fetchString, {
 		method: 'GET',
-		//credentials: 'include',
+		credentials: 'include',
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
-			//'X-Auth-Token': '',
+			'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
 		}
 	}).then(async response => {
-		//const token = response.headers.get('X-Auth-Token');
+		const token = response.headers.get('X-Auth-Token');
 
-		if (response.ok) {
+		if (response.ok && token) {
 			console.log("LOG-A")
 			if (!test) {
 				await executeFaderGradient(1);
