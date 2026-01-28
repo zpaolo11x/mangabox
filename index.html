@@ -322,25 +322,25 @@
 
 			<div class="login-buttons">
 				<div class="login-buttons-left">
-					<button id="languageButton" class="action login-button-round" onclick="languageDialog()">
+					<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
 						<i class="fas fa-earth"></i>
 					</button>
-					<button id="serverTest" class="action login-button-round" onclick="login('mb0', true, true)">
+					<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
 						<i class="fas fa-globe"></i>
 					</button>
-					<button id="serverList" class="action login-button-round" onclick="serversDialog()">
+					<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
 						<i class="fas fa-server"></i>
 					</button>
 				</div>
 				<div class="login-buttons-right">
-					<button id="serverCancel" class="action login-button" onclick="cancelServer()">
-						<span>Cancel</login>
+					<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
+						<span data-i18n="modal.cancel">Cancel</span>
 					</button>
-					<button id="serverSave" class="action login-button" onclick="saveServer()">
-						<span>Save</login>
+					<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
+						<span data-i18n="button.save">Save</span>
 					</button>
-					<button id="loginButton" class="action login-button" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
-						<span>Login</login>
+					<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
+						<span data-i18n="button.login">Login</span>
 					</button>
 				</div>
 			</div>
@@ -1485,13 +1485,13 @@
 				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
-									<div class='smallbutton-wrapper server-button ${extraClass}' onClick="editServer('${id}')">
+									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
 										<span class="fa-solid fa-pen glyph-dark"></span>
 									</div>
-									<div class='smallbutton-wrapper server-button ${extraClass}' onClick="deleteServer('${id}')">
+									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
 										<span class="fa-solid fa-trash-can glyph-dark"></span>
 									</div>
-									<div class='smallbutton-wrapper server-button' onClick="loginToServer(event, '${id}', false)">
+									<div class='smallbutton-wrapper server-button' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
 										<span class="fa-solid fa-play glyph-dark"></span>
 									</div>
 								</li>
@@ -1776,7 +1776,7 @@
 			showModal('', true, dialogText,
 				[
 					{
-						label: t('button.logout'), runfunction: async () => {
+						label: 'button.logout', runfunction: async () => {
 							closeModal();
 							navigateTo('#dashboard');
 							await executeFaderGradient(1);
@@ -1831,13 +1831,13 @@
 						}, high: true
 					},
 					{
-						label: t('button.serverslist'), runfunction: async () => {
+						label: 'button.serverslist', runfunction: async () => {
 							serversDialog(true)
 						}
 					},
 					{
 						// No need to use translateDOM because modals are modal and spawned each time
-						label: t('modal.cancel'), runfunction: closeModal, high: false
+						label: 'modal.cancel', runfunction: closeModal, high: false
 					}
 				]
 			);
@@ -2072,7 +2072,7 @@
 			} catch (err) {
 				console.error('Error converting image:', err);
 				showModal('circle-mark-svg.svg', true, t('modal.imageloadfail'),
-					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+					[{ label: 'modal.ok', runfunction: cancelUpdate, high: true }]);
 			}
 		}
 
@@ -2573,7 +2573,7 @@
 					saveLibraryFilters();
 				})
 				addLongPressListener(button.item, 'filter-item', async () => {
-					showModal('', false, buildFilterDialog(button, index), [{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
+					showModal('', false, buildFilterDialog(button, index), [{ label: 'modal.ok', runfunction: closeModal, high: true }]);
 				}, 500)
 			});
 
@@ -3400,7 +3400,7 @@
 
 			if (mb.libraryError) {
 				showModal('circle-mark-svg.svg', true, t('modal.analyzewarning') + mb.libraryNames,
-					[{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
+					[{ label: 'modal.ok', runfunction: closeModal, high: true }]);
 				return;
 			}
 
@@ -4395,7 +4395,7 @@
 				if (!fileOrBase64.type.startsWith('image/')) {
 					debugPrint('----But is not a valid image file')
 					showModal('circle-mark-svg.svg', true, t('modal.validimage'),
-						[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
+						[{ label: 'modal.ok', runfunction: cancelUpdate, high: true }]);
 					return;
 				}
 				base64 = await readFileAsBase64(fileOrBase64);
@@ -4412,14 +4412,14 @@
 				debugPrint('----Input is not valid')
 				debugPrint(fileOrBase64);
 				showModal('circle-mark-svg.svg', true, t('modal.validimage'),
-					[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
+					[{ label: 'modal.ok', runfunction: cancelUpdate, high: true }]);
 				return;
 			}
 
 			// Show confirmation modal
 			showModal(base64, false, t('modal.confirmimage'),
 				[{
-					label: t('modal.ok'),
+					label: 'modal.ok',
 					runfunction: async () => {
 						mb.libraryIcons[libraryId] = base64;
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
@@ -4428,7 +4428,7 @@
 					},
 					high: true,
 				}, {
-					label: t('modal.cancel'), runfunction: cancelUpdate, high: false
+					label: 'modal.cancel', runfunction: cancelUpdate, high: false
 				}
 				]);
 		}
@@ -4529,26 +4529,26 @@
 						if (isCapacitor) {
 							showModal('', true, generatePics(libraryId, t('modal.selectopenimage')),
 								[{
-									label: t('modal.gallery'),
+									label: 'modal.gallery',
 									runfunction: async () => { await pickImage(libraryId); },
 									high: true
 								}, {
-									label: t('modal.files'),
+									label: 'modal.files',
 									runfunction: async () => { await pickFile(libraryId); },
 									high: true
 								}, {
-									label: t('modal.cancel'),
+									label: 'modal.cancel',
 									runfunction: closeModal,
 									high: false
 								}]);
 
 						} else {
-							showModal('', false, generatePics(libraryId, t('modal.selectordrag')), [{ label: t('modal.ok'), runfunction: () => closeModal(), high: true }]);
+							showModal('', false, generatePics(libraryId, t('modal.selectordrag')), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 						}
 					} else {
 						showModal(mb.libraryIcons[libraryId], false, t('modal.removethumb'), [
 							{
-								label: t('modal.ok'),
+								label: 'modal.ok',
 								runfunction: async () => {
 									await delete mb.libraryIcons[libraryId];
 									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
@@ -4558,7 +4558,7 @@
 								},
 								high: true
 							},
-							{ label: t('modal.cancel'), runfunction: cancelUpdate, high: false }
+							{ label: 'modal.cancel', runfunction: cancelUpdate, high: false }
 						]);
 
 					}

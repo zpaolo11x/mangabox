@@ -130,5 +130,12 @@
 	"servers.add": "Add Server",
 	"servers.delete": "Confirm Delete Server",
 	"servers.unsaved": "Temporary Server",
-	"button.serverslist": "Servers List"
+	"button.serverslist": "Servers List",
+	"button.login": "Login",
+	"button.delete": "Delete",
+	"button.edit": "Edit",
+	"button.testserver": "Test Server",
+	"button.saveserver": "Save Server",
+	"button.save": "Save",
+	"server.connectionok": "Sever Connection OK"
 }

@@ -130,5 +130,13 @@
 	"servers.add": "Aggiungi server",
 	"servers.delete": "Conferma eliminazione server",
 	"servers.unsaved": "Server temporaneo",
-	"button.serverslist": "Lista server"
+	"button.serverslist": "Lista server",
+	"button.login": "Login",
+	"button.delete": "Elimina",
+	"button.edit": "Modifica",
+	"button.testserver": "Prova Server",
+	"button.saveserver": "Salva Server",
+	"button.save": "Salva",
+	"server.connectionok": "Connessione al Server OK"
+
 }

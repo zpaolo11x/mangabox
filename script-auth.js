@@ -463,7 +463,7 @@ async function login(serverId, test, fromDialog) {
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
-				showModal('', false, 'Sever Connection OK', [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
+				showModal('', false, 'server.connectionok', [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
 				console.log("LOG-B")
