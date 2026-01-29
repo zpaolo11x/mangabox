@@ -1829,6 +1829,8 @@
 
 							mainLoader.classList.add('hidden');
 
+							await callAPI(null, `/api/logout`, 'GET', null, false);
+
 							systemRestart();
 
 						}, high: true
