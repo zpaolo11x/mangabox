@@ -297,7 +297,7 @@ async function setServerFields(serverId, serverData) {
 async function systemRestart() {
 	//TODO: This works and is quite good but it would be better to implement a navigateTo "login" for the login screen
 	//TODO: and externalise the functions that are hear in a function that is called at boot or at login screen show
-
+console.log("SYSRESTART")
 	// Reapply boot theme
 	await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
