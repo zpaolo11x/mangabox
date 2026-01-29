@@ -386,7 +386,7 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
-		const webPWD = false;
+		const webPWD = true;//WARNING
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -1492,7 +1492,7 @@
 										<span class="fa-solid fa-trash-can glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
-										<span class="fa-solid fa-play glyph-dark"></span>
+										<span class="fa-solid ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'fa-key' : 'fa-play'} glyph-dark"></span>
 									</div>
 								</li>
 								<li class="server-data" id="item_${id}_data">

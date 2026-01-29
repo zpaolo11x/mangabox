@@ -447,13 +447,14 @@ async function login(serverId, test, fromDialog) {
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
-			'X-Auth-Token': '',
+			//'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
 		}
 	}).then(async response => {
-		const token = response.headers.get('X-Auth-Token');
+		//const token = response.headers.get('X-Auth-Token');
 
-		if (response.ok && token) {
+		//if (response.ok && token) {
+		if (response.ok) {
 			console.log("LOG-A")
 			if (!test) {
 				await executeFaderGradient(1);
@@ -469,7 +470,7 @@ async function login(serverId, test, fromDialog) {
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
-				showModal('', false, 'server.connectionok', [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
+				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
 				console.log("LOG-B")
