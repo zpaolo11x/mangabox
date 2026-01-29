@@ -137,6 +137,6 @@
 	"button.testserver": "Prova Server",
 	"button.saveserver": "Salva Server",
 	"button.save": "Salva",
-	"server.connectionok": "Connessione al Server OK"
-
+	"server.connectionok": "Connessione al Server OK",
+	"servers.logoutall": "Disconnetti tutti"
 }

@@ -138,5 +138,5 @@
 	"button.saveserver": "Save Server",
 	"button.save": "Save",
 	"server.connectionok": "Sever Connection OK",
-	"server.logoutall": "Logout All"
+	"servers.logoutall": "Logout All"
 }
