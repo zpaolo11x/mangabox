@@ -131,32 +131,6 @@ async function deleteUserPass(serverId) {
 	}
 }
 
-async function saveToken(token) {
-	debugPrint("saveToken...")
-	console.log("saveToken...")
-	await window.secureStore.setCredentials('auth', token);
-}
-
-async function loadToken() {
-	debugPrint("loadToken...")
-	console.log("loadToken...")
-	const token = await window.secureStore.getCredentials('auth');
-	debugPrint("Retrieved Token:" + token);
-	console.log("Retrieved Token:" + token);
-	if (token) {
-		return (token);
-	} else {
-		return (false);
-	}
-}
-
-async function deleteToken() {
-	debugPrint("deleteToken...")
-	console.log("deleteToken...")
-
-	await window.secureStore.deleteCredentials('auth');
-}
-
 async function sessionCheck() {
 	await executeFaderGradient(1);
 
@@ -165,7 +139,6 @@ async function sessionCheck() {
 
 	loginBaseUrl.value = mb.baseUrl;
 
-	// Load stored token (e.g. from Electron storage)
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
 
 	console.log("Z - loggedServer:" + mb.currentServerId)
@@ -173,7 +146,7 @@ async function sessionCheck() {
 
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId)) {
-		debugPrint("Missing base URL or auth token");
+		debugPrint("Missing base URL or login data");
 		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 		await executeFaderGradient(0);
 		return;
@@ -196,7 +169,7 @@ async function sessionCheck() {
 		return;
 	}
 
-	// --- 3. Try validating the token
+	// --- 3. Try validating the login
 	let fetchPayload
 	if (!isWeb || (isWeb && webPWD)) {
 		const username = mb.serverList[mb.currentServerId].username;
@@ -234,8 +207,8 @@ async function sessionCheck() {
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
-			debugPrint("Token invalid or expired.");
-			console.log("Token invalid or expired.");
+			debugPrint("Credentials invalid or expired.");
+			console.log("Credentials invalid or expired.");
 			localStorage.removeItem("mb00SessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
@@ -447,13 +420,9 @@ async function login(serverId, test, fromDialog) {
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
-			//'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
 		}
 	}).then(async response => {
-		//const token = response.headers.get('X-Auth-Token');
-
-		//if (response.ok && token) {
 		if (response.ok) {
 			console.log("LOG-A")
 			if (!test) {
