@@ -1361,14 +1361,13 @@
 		}
 
 		function cancelServer() {
-			console.log('LOG:' + mb.currentServerId)
-			console.log('LOG:' + mb.loggingServerId)
-			console.log('MOD:' + mb.loginMode);
 			if (!mb.currentServerId) {
 				console.log("A")
 				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			} else if (mb.loginMode == 'enterpassword') {
 				console.log("B")
+				hideLoginDialog()
+			} else {
 				hideLoginDialog()
 			}
 			serversDialog()
@@ -2051,11 +2050,12 @@
 		//MB Modal Dialog
 		let modalGlobal = [];
 
-		function showModal(image, bg, message, itemsArray) {
+		function showModal(image, imagebg, message, itemsArray) {
+			
 			document.querySelectorAll('.modal-button').forEach(el => {
 				el.remove();
 			});			//modalFunctionsGlobal = functionArray;
-			modalWrapper.style.backgroundImage = bg ? '' : 'none';
+			modalWrapper.style.backgroundImage = imagebg ? '' : 'none';
 			modalImage.src = image;
 			modalMessage.innerHTML = message;
 

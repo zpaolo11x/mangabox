@@ -16,6 +16,14 @@
 	background-position: 50% 50%, calc(50% - 450px) calc(50% - 100px), center;
 }
 
+.no-logo-pattern {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
 #loginScreen {
 	z-index: 5000;
 	transition: background-color 0.3s;

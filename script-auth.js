@@ -174,7 +174,7 @@ async function sessionCheck() {
 	if (!isWeb || (isWeb && webPWD)) {
 		const username = mb.serverList[mb.currentServerId].username;
 		const password = await loadUserPass(mb.currentServerId);
-		console.log("LOGGING IN: "+username+" "+password);
+		console.log("LOGGING IN: " + username + " " + password);
 		fetchPayload = {
 			method: 'GET',
 			headers: {
@@ -195,7 +195,7 @@ async function sessionCheck() {
 	}
 
 	try {
-		const response = (isWeb && !webPWD) 
+		const response = (isWeb && !webPWD)
 			? await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload)
 			: await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
 
@@ -253,8 +253,8 @@ async function setServerFields(serverId, serverData) {
 	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
 	loginBaseUrl.value = serverData.url;
 	loginUsername.value = (serverId == 'mb0') ? '' : serverData.username;
-	
-	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0')){
+
+	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0')) {
 		// When password is requested, the password field is always EMPTY
 		// same in web mode, the password is never shown ever
 		loginPassword.value = ''
@@ -265,12 +265,14 @@ async function setServerFields(serverId, serverData) {
 		loginPassword.value = localPass;
 		//TODO Eliminare la variabile ora
 	}
+
+
 }
 
 async function systemRestart() {
 	//TODO: This works and is quite good but it would be better to implement a navigateTo "login" for the login screen
 	//TODO: and externalise the functions that are hear in a function that is called at boot or at login screen show
-console.log("SYSRESTART")
+	console.log("SYSRESTART")
 	// Reapply boot theme
 	await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
@@ -282,7 +284,7 @@ console.log("SYSRESTART")
 	setServerFields('mb0', mb.serverList['mb0'])
 
 	loginError.textContent = '';
-	loginError.classList.toggle('auth-hidden', true);	
+	loginError.classList.toggle('auth-hidden', true);
 	executeFade(1);
 
 	if (isStatusBar) {
@@ -345,7 +347,7 @@ console.log("SYSRESTART")
 
 async function loginToServer(event, serverId, test) {
 
-	if (serverId == 'mb0'){
+	if (serverId == 'mb0') {
 		mb.currentServerId = serverId;
 		closeModal();
 		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
@@ -378,12 +380,12 @@ async function loginToServer(event, serverId, test) {
 
 async function login(serverId, test, fromDialog) {
 
-	if (serverId == 'mb0'){
+	if (serverId == 'mb0') {
 		mb.serverList['mb0'].url = loginBaseUrl.value;
 		mb.serverList['mb0'].username = loginUsername.value;
 	}
 
-	console.log("LOGGING:" + serverId + (fromDialog ? " fromdialog" :""));
+	console.log("LOGGING:" + serverId + (fromDialog ? " fromdialog" : ""));
 
 	debugPrint("login...")
 	console.log("login...")
@@ -412,8 +414,8 @@ async function login(serverId, test, fromDialog) {
 	let fetchString = (isWeb && !webPWD)
 		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
 		: `${baseUrlVal}/api/v2/users/me`;
-	
-		console.log("Let's Fetch: "+fetchString)
+
+	console.log("Let's Fetch: " + fetchString)
 
 	fetch(fetchString, {
 		method: 'GET',
@@ -433,7 +435,7 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				mb.serverList[serverId].askPassword = false;
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
-				
+
 				//TODO Magari resettare la password quando anche user 0 fa logout?
 				if (serverId == 'mb0') saveUserPass(serverId, passwordVal)
 				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
@@ -443,12 +445,12 @@ async function login(serverId, test, fromDialog) {
 				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-				console.log("LOG-B")
-		loginError.textContent = `Invalid username or password.`;
+			console.log("LOG-B")
+			loginError.textContent = `Invalid username or password.`;
 			loginError.classList.toggle('auth-hidden', false);
 		} else {
-				console.log("LOG-C")
-		loginError.textContent = `Login failed`;
+			console.log("LOG-C")
+			loginError.textContent = `Login failed`;
 			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
@@ -456,7 +458,7 @@ async function login(serverId, test, fromDialog) {
 		loginError.textContent = `Cannot reach server. Check the address or your connection. ${error}`;
 		loginError.classList.toggle('auth-hidden', false);
 	});
-	
+
 	// Reset login credentials
 	if (!test) {
 		loginPassword.value = null;
@@ -480,6 +482,17 @@ function applyScenario(modeName, serverId, serverData) {
 		mb.editServerData = mb.serverList['mb0'];
 	}
 
+	if ((modeName == 'editserver') && (isWeb && !webPWD)){
+		divPassword.classList.toggle('disabled-input', true);
+	}
+	
+	if (mb.loginMode == 'enterpassword') {
+		setTimeout(() => {
+			loginPassword.focus();
+			loginPassword.select(); // optional
+		}, 0);
+	}
+
 	setServerFields(serverId, serverData);
 }
 
@@ -490,7 +503,7 @@ function showLoginDialog(dialogMode, serverId, serverData) {
 	//dialogMode = 'firstboot'
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
-	
+
 	applyScenario(dialogMode, serverId, serverData)
 
 	loginPassword.type = 'password';
@@ -500,6 +513,8 @@ function showLoginDialog(dialogMode, serverId, serverData) {
 	dragbar.classList.add('onLogin');
 	debugPrint("show Login Dialog...")
 	console.log("show Login Dialog...")
+	loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
+	loginScreen.classList.toggle('no-logo-pattern', mb.currentServerId)
 	loginScreen.classList.toggle('auth-hidden', false);
 }
 
