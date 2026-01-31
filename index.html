@@ -2051,31 +2051,36 @@
 		let modalGlobal = [];
 
 		function showModal(image, imagebg, message, itemsArray) {
-			
-			document.querySelectorAll('.modal-button').forEach(el => {
-				el.remove();
-			});			//modalFunctionsGlobal = functionArray;
-			modalWrapper.style.backgroundImage = imagebg ? '' : 'none';
-			modalImage.src = image;
-			modalMessage.innerHTML = message;
+			if (isModalVisible()){
+				closeModal();
+			}
+			setTimeout(() => {
+				document.querySelectorAll('.modal-button').forEach(el => {
+					el.remove();
+				});			//modalFunctionsGlobal = functionArray;
+				modalWrapper.style.backgroundImage = imagebg ? '' : 'none';
+				modalImage.src = image;
+				modalMessage.innerHTML = message;
 
-			modalWrapper.style.display = image == '' ? 'none' : 'block';
-			//myModal.style.display = 'flex';
+				modalWrapper.style.display = image == '' ? 'none' : 'block';
+				//myModal.style.display = 'flex';
 
-			itemsArray.forEach(item => {
-				let uiButton = addItem('button', {
-					innerText: t(item.label),
-					dataset: {
-						i18n: item.label,
-					},
-					className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
-				})
-				addPressEvents(uiButton, pressDown, pressUp);
-				uiButton.addEventListener('click', item.runfunction);
-				modalContent.append(uiButton);
-			});
+				itemsArray.forEach(item => {
+					let uiButton = addItem('button', {
+						innerText: t(item.label),
+						dataset: {
+							i18n: item.label,
+						},
+						className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
+					})
+					addPressEvents(uiButton, pressDown, pressUp);
+					uiButton.addEventListener('click', item.runfunction);
+					modalContent.append(uiButton);
+				});
 
-			myModal.classList.add('visible');
+				myModal.classList.add('visible');
+			}, isModalVisible() ? 221 : 0)
+
 		}
 
 		function isModalVisible() {
@@ -2094,7 +2099,7 @@
 				document.querySelectorAll('.modal-button').forEach(el => {
 					el.remove();
 				});
-			}, 300);
+			}, 220);
 		}
 
 

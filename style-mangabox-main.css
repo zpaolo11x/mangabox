@@ -154,6 +154,7 @@
 
 	--mb-page-color: #f5f5f5;
 	--mb-card-color: #ffffff;
+	--mb-modal-border: #e0e0e0;
 
 	--mb-placeholder-color: #fafafa;
 	--mb-gear-color: #fdfdfd;
@@ -194,6 +195,7 @@
 
 	--mb-page-color: #202020;
 	--mb-card-color: #353535;
+	--mb-modal-border: #505050;
 
 	--mb-placeholder-color: #252525;
 	--mb-gear-color: #252525;
@@ -344,6 +346,7 @@ body {
 	width: 260px;
 	color: var(--mb-text-color);
 	font-size: 18px;
+	border: 1px solid var(--mb-modal-border);
 }
 
 #modalMessage {
