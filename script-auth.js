@@ -360,8 +360,9 @@ async function loginToServer(event, serverId, test) {
 		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
 		closeModal();
 	} else {
-		mb.currentServerId = serverId;
+		//mb.currentServerId = serverId;
 		closeModal();
+		showLoginDialog('editserver', serverId, mb.serverList[serverId])
 		login(serverId, test, false);
 	}
 
