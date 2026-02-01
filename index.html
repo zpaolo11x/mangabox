@@ -1414,7 +1414,7 @@
 			closeModal();
 		}
 
-		async function logOutFromServer(serverList) {
+		async function logoutFromServer(serverList) {
 			console.log("START LOGOUT PROCESS")
 			closeModal();
 			if (isLoginScreenHidden()) navigateTo('#dashboard');
@@ -1559,6 +1559,8 @@
 				let isSelected = mb.currentServerId == id;
 				console.log("***" + server.name)
 				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
+				let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
+
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
@@ -1567,7 +1569,7 @@
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
 										<span class="fa-solid fa-trash-can glyph-dark"></span>
 									</div>
-									<div class='smallbutton-wrapper server-button' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
+									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
 										<span class="fa-solid ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'fa-key' : 'fa-play'} glyph-dark"></span>
 									</div>
 								</li>
@@ -1603,9 +1605,13 @@
 		}
 
 		function serversDialog() {
+			let noLogoutAll = ((isWeb && !webPWD) && (mb.currentServerId != false))
+
 			showModal('', false, buildServersDialog(), [
 				{ label: 'servers.add', runfunction: () => addServer() },
-				{ label: 'servers.logoutall', runfunction: async () => await logOutFromServer(mb.serverList) },
+					...(!noLogoutAll 
+					? [{ label: 'servers.logoutall', runfunction: async () => await logoutFromServer(mb.serverList) }]
+					: []),
 				{
 					label: 'modal.ok', runfunction: () => {
 						if (mb.currentServerId) hideLoginDialog();
@@ -1863,7 +1869,7 @@
 
 							serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
 
-							logOutFromServer(serverTable)
+							logoutFromServer(serverTable)
 
 						}, high: true
 					},
