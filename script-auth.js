@@ -98,7 +98,6 @@ async function saveUserPass(serverId, pass) {
 async function loadUserPass(serverId) {
 	let pass = '';
 	if (isWeb && webPWD) {
-		console.log(serverId)
 		pass = localStorage.getItem(serverId) || '';
 	}
 	if (isElectron) {
@@ -108,12 +107,9 @@ async function loadUserPass(serverId) {
 		pass = await getCredentialsCap(serverId);
 	}
 
-	console.log(pass)
 	if (pass) {
-		console.log('PASS OK: ' + pass)
 		return (pass);
 	} else {
-		console.log('PASS EMPTY')
 		return ('');
 	}
 }
@@ -139,13 +135,15 @@ async function sessionCheck() {
 
 	loginBaseUrl.value = mb.baseUrl;
 
+	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
+	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
 
 	console.log("Z - loggedServer:" + mb.currentServerId)
 	debugPrint("Z - loggedServer:" + mb.currentServerId)
 
 	// --- 1. Missing credentials → login
-	if ((!mb.baseUrl) || (!mb.currentServerId)) {
+	if ((!mb.baseUrl) || (!mb.currentServerId) || (!mb.currentUserId)) {
 		debugPrint("Missing base URL or login data");
 		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 		await executeFaderGradient(0);
@@ -195,11 +193,19 @@ async function sessionCheck() {
 	}
 
 	try {
-		const response = (isWeb && !webPWD)
-			? await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload)
-			: await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
+		const response = await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
+		
+		//TODO Magari usare callAPI invece?
+		const rawBody = await response.text();
+		let parsed = null;
+		try {
+			parsed = JSON.parse(rawBody);
+		} catch (e) {
+			console.warn(`BODY IS NOT JSON`);
+		}
 
 		if (response.ok) {
+			if (isWeb && !webPWD) await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
 			localStorage.setItem("mb00SessionValid", "true");
@@ -209,6 +215,7 @@ async function sessionCheck() {
 		} else if (response.status === 401 || response.status === 403) {
 			debugPrint("Credentials invalid or expired.");
 			console.log("Credentials invalid or expired.");
+			mb.currentUserId = false;
 			localStorage.removeItem("mb00SessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
@@ -365,7 +372,16 @@ async function loginToServer(event, serverId, test) {
 		//mb.currentServerId = serverId;
 		closeModal();
 		showLoginDialog('editserver', serverId, mb.serverList[serverId])
-		login(serverId, test, false);
+		
+		mb.currentServerId = serverId;
+		mb.currentUserId = mb.serverList[serverId].userId;
+
+		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
+		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
+
+
+		systemRestart();
+		//login(serverId, test, false);
 	}
 
 	return
@@ -428,11 +444,17 @@ async function login(serverId, test, fromDialog) {
 	}).then(async response => {
 		if (response.ok) {
 			console.log("LOG-A")
+			let parsed = await response.json();
 			if (!test) {
 				await executeFaderGradient(1);
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
-				mb.currentServerId = serverId
+				
+				mb.currentServerId = serverId;
+				mb.currentUserId = parsed.id;
+
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
+				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
+				mb.serverList[serverId].userId = mb.currentUserId;
 				mb.serverList[serverId].askPassword = false;
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
@@ -482,10 +504,10 @@ function applyScenario(modeName, serverId, serverData) {
 		mb.editServerData = mb.serverList['mb0'];
 	}
 
-	if ((modeName == 'editserver') && (isWeb && !webPWD)){
+	if ((modeName == 'editserver') && (isWeb && !webPWD)) {
 		divPassword.classList.toggle('disabled-input', true);
 	}
-	
+
 	if (mb.loginMode == 'enterpassword') {
 		setTimeout(() => {
 			loginPassword.focus();

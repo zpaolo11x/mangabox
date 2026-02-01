@@ -386,7 +386,7 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
-		const webPWD = false;
+		const webPWD = true;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -1023,12 +1023,14 @@
 							username: '',
 							password: '',
 							createdAt: 0,
+							userId: false,
 							askPassword: true,
 						}
 					},
 					editServerData: {}, //data structure of the server being edited
 					editServerId: 'mb0', //ID of the server that is edited by the dialog
 					currentServerId: 'mb0', //ID of the server passed to login and other auth functions
+					currentUserId: false,
 					loggingServerId: 'mb0', //ID of the server passed to login and other auth functions
 				}
 			)
@@ -1063,9 +1065,7 @@
 		async function basicHeader() {
 			let username = mb.serverList[mb.currentServerId].username;
 			let password = await loadUserPass(mb.currentServerId);
-			console.log("----------------")
-			console.log(username + " " + password)
-			console.log("----------------")
+
 			const out = { 'Authorization': 'Basic ' + btoa(`${username}:${password}`) }
 			username = null;
 			password = null;
@@ -1351,6 +1351,7 @@
 				username: '',
 				password: '',
 				createdAt: Date.now(),
+				userId: false,
 				askPassword: true //When logged is true the password is taken from the table, if is logged out the password is requested. But the password is always in the table unless the server is deleted
 			};
 			return ['mbUser_' + serverID, server];
@@ -1471,15 +1472,18 @@
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 			if (mb.currentServerId == 'mb0') deleteUserPass('mb0')
 
-			// Delete cached calls
-			// TODO Controllare c'eranod ei parametri che iniziavano con c_
+			// delte c_ storage keys 
+			// //TODO REMOVED FOR MULTISERVER, cHECK!
+			/*
 			Object.keys(localStorage).forEach(key => {
 				if (key.startsWith('c_')) {
 					localStorage.removeItem(key);
 				}
 			});
-
-			await clearIndexedDB();
+*/
+			// Delete cached calls
+			//TODO REMOVED FOR MULTISERVER, CHECK!
+			// await clearIndexedDB();
 			localStorage.removeItem('mb00SessionValid');
 
 			mainLoader.classList.add('hidden');
@@ -1609,7 +1613,7 @@
 
 			showModal('', false, buildServersDialog(), [
 				{ label: 'servers.add', runfunction: () => addServer() },
-					...(!noLogoutAll 
+				...(!noLogoutAll
 					? [{ label: 'servers.logoutall', runfunction: async () => await logoutFromServer(mb.serverList) }]
 					: []),
 				{
@@ -1674,9 +1678,9 @@
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
 
 			// Local storage variable setup
-			mb.webtoonScale = Number(localStorage.getItem('c_webtoonScale') ?? 100);
-			mb.readerScale = Number(localStorage.getItem('c_readerScale') ?? 100);
-			mb.readerAnimation = Number(localStorage.getItem('c_readerAnimation') ?? 1)
+			mb.webtoonScale = Number(localStorage.getItem(`c_${mb.currentUserId}_webtoonScale`) ?? 100);
+			mb.readerScale = Number(localStorage.getItem(`c_${mb.currentUserId}_readerScale`) ?? 100);
+			mb.readerAnimation = Number(localStorage.getItem(`c_${mb.currentUserId}_readerAnimation`) ?? 1)
 
 		}
 
@@ -2057,7 +2061,7 @@
 		let modalGlobal = [];
 
 		function showModal(image, imagebg, message, itemsArray) {
-			if (isModalVisible()){
+			if (isModalVisible()) {
 				closeModal();
 			}
 			setTimeout(() => {
@@ -3228,10 +3232,14 @@
 			});
 		}
 
+		function keyUser(key){
+			return (`c_${mb.currentUserId}_` + key.slice(2));
+		}
+
 		function cacheData(db, key, content) {
 			return new Promise((resolve, reject) => {
 				const tx = db.transaction('data', 'readwrite');
-				tx.objectStore('data').put(content, key);
+				tx.objectStore('data').put(content, keyUser(key));
 				tx.oncomplete = () => resolve();
 				tx.onerror = () => reject(tx.error);
 			});
@@ -3240,7 +3248,7 @@
 		function getCachedData(db, key) {
 			return new Promise((resolve, reject) => {
 				const tx = db.transaction('data', 'readonly');
-				const req = tx.objectStore('data').get(key);
+				const req = tx.objectStore('data').get(keyUser(key));
 				req.onsuccess = () => resolve(req.result || null);
 				req.onerror = () => reject(req.error);
 			});
@@ -5756,7 +5764,7 @@
 			rd.turnScrollDelay = rd.turnScrollDelay0 * mb.readerAnimation;
 			rd.turnScrollTime = rd.turnScrollTime0 * mb.readerAnimation;
 
-			localStorage.setItem('c_readerAnimation', JSON.stringify(mb.readerAnimation))
+			localStorage.setItem(`c_${mb.currentUserId}_readerAnimation`, JSON.stringify(mb.readerAnimation))
 		}
 
 		function changeReaderTheme() {
@@ -6160,7 +6168,7 @@
 			const newScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
 			mb.webtoonScale = newScale;
 
-			localStorage.setItem('c_webtoonScale', JSON.stringify(newScale))
+			localStorage.setItem(`c_${mb.currentUserId}_webtoonScale`, JSON.stringify(newScale))
 			scaleVal.innerText = newScale + '%';
 
 			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
@@ -6171,7 +6179,7 @@
 			const newScale = Math.min(110, Math.max(50, mb.readerScale + inc));
 			mb.readerScale = newScale;
 
-			localStorage.setItem('c_readerScale', JSON.stringify(newScale))
+			localStorage.setItem(`c_${mb.currentUserId}_readerScale`, JSON.stringify(newScale))
 			scaleVal.innerText = newScale + '%';
 
 			animateReaderScale(oldScale, newScale, 200, t => t * (2 - t));
