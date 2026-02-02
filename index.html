@@ -3066,26 +3066,51 @@
 		}
 
 		function obAddBookToTable(book) {
+			//V039
+			// determine starting page safely
 			let page = 1;
-			if (book.readProgress) {
-				page = (book.readProgress.page == book.media.pagesCount)
-					? page = book.media.pagesCount
-					: page = book.readProgress.page
+
+			if (book.readProgress?.page) {
+				page = (book.readProgress.page >= book.media.pagesCount)
+					? book.media.pagesCount
+					: book.readProgress.page;
 			}
 
-			mb.offlineBooks[book.id] = {
-				status: 'downloading',
-				percent: 0,
+			// ensure root table exists
+			mb.offlineBooks ??= {};
 
+			// create book entry ONLY if missing
+			if (!mb.offlineBooks[book.id]) {
+				mb.offlineBooks[book.id] = {
+					status: 'downloading',
+					percent: 0,
+					pages: book.media.pagesCount,
+					users: {}
+				};
+			}
+
+			// add / update ONLY the current user
+			mb.offlineBooks[book.id].users[mb.currentUserId] = {
 				updated: false,
 				page: page,
-				pages: book.media.pagesCount,
 			};
+
 			obSaveTable();
 		}
 
 		function obRemoveBookFromTable(bookId) {
-			delete mb.offlineBooks[bookId];
+			//V039
+			const bookEntry = mb.offlineBooks?.[bookId];
+			if (!bookEntry) return;
+
+			// remove current user
+			delete bookEntry.users?.[mb.currentUserId];
+
+			// if no users left, remove the book entirely
+			if (!bookEntry.users || Object.keys(bookEntry.users).length === 0) {
+				delete mb.offlineBooks[bookId];
+			}
+
 			obSaveTable();
 		}
 
@@ -3112,15 +3137,17 @@
 		}
 
 		function obIsBookCompleted(bookId) {
-			if (!mb.offlineBooks) return false;
-			const book = mb.offlineBooks[bookId];
-			return book && book.status === 'completed';
+			//V309
+			const book = mb.offlineBooks?.[bookId];
+			if (!book?.users?.[mb.currentUserId]) return false;
+			return book.status === 'completed';
 		}
 
 		function obIsBookDownloading(bookId) {
-			if (!mb.offlineBooks) return false;
-			const book = mb.offlineBooks[bookId];
-			return book && book.status === 'downloading';
+			//V309
+			const book = mb.offlineBooks?.[bookId];
+			if (!book?.users?.[mb.currentUserId]) return false;
+			return book.status === 'downloading';
 		}
 
 		function obIsAnyBookDownloading() {
@@ -3149,7 +3176,13 @@
 		}
 
 		async function obDeleteBookData(bookId) {
+			//V039
 			let result = null
+			// If the book entry is still in the table, no need to do anything
+			if (mb.offlineBooks?.[bookId]) {
+				return null;
+			}
+
 			if (isElectron) result = await window.offlineAPI.deleteOfflineBookData(bookId)
 			if (isCapacitor) result = await capacitorDeleteBookData(bookId)
 
@@ -3158,8 +3191,7 @@
 			} else {
 				console.warn(`Failed to delete offline book ${bookId}: ${result.message}`);
 			}
-			delete mb.offlineBooks[bookId];
-			obSaveTable();
+
 			return result;
 		}
 
@@ -3178,8 +3210,9 @@
 		}
 
 		function obRestoreDownloadOnBoot() {
+			//V039
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				if (item.status == 'downloading') {
+				if (item.status === 'downloading' && item.users?.[mb.currentUserId]) {
 					obSetSpinner(true);
 					obDownloadBook(bookId);
 				}
@@ -3187,12 +3220,20 @@
 		}
 
 		async function obRefreshReadStatus() {
-			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				if (item.updated) {
-					callAPI(null, `/api/v1/books/${bookId}/read-progress`, 'PATCH', JSON.stringify({ page: item.page }), false)
-					item.updated = false;
+			//V039
+			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
+				const userData = item.users?.[mb.currentUserId];
+				if (userData?.updated) {
+					await callAPI(
+						null,
+						`/api/v1/books/${bookId}/read-progress`,
+						'PATCH',
+						JSON.stringify({ page: userData.page }),
+						false
+					);
+					userData.updated = false;
 				}
-			});
+			}
 		}
 
 		//MB Media Cache 
@@ -3232,7 +3273,7 @@
 			});
 		}
 
-		function keyUser(key){
+		function keyUser(key) {
 			return (`c_${mb.currentUserId}_` + key.slice(2));
 		}
 
@@ -6855,10 +6896,14 @@
 					.catch(error => console.error('Error:', error));
 			}
 
+			//V039						
 			if (obIsBookCompleted(rd.bookId)) {
-				mb.offlineBooks[rd.bookId].page = rd.currentPage;
-				if (offlineSession) mb.offlineBooks[rd.bookId].updated = true;
-				obSaveTable();
+				const userData = mb.offlineBooks[rd.bookId]?.users?.[mb.currentUserId];
+				if (userData) {
+					userData.page = rd.currentPage;
+					if (offlineSession) userData.updated = true;
+					obSaveTable();			
+				}
 			}
 
 			return (stringOut);
