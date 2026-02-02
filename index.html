@@ -386,7 +386,7 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
-		const webPWD = false;
+		const webPWD = true;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -1035,10 +1035,10 @@
 				}
 			)
 		}
-					console.log("iA:" + mb.currentUserId)
 
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = initMB();
+					console.log("iA:" + mb.currentUserId)
 		console.log("XXXXXXXXXX")
 		console.log(mb.serverList)
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
