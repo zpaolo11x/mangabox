@@ -138,7 +138,7 @@ async function sessionCheck() {
 	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
 	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
-
+console.log("A:" + mb.currentUserId)
 	console.log("Z - loggedServer:" + mb.currentServerId)
 	debugPrint("Z - loggedServer:" + mb.currentServerId)
 
@@ -216,6 +216,8 @@ async function sessionCheck() {
 			debugPrint("Credentials invalid or expired.");
 			console.log("Credentials invalid or expired.");
 			mb.currentUserId = false;
+			console.log("B:" + mb.currentUserId)
+
 			localStorage.removeItem("mb00SessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
@@ -375,6 +377,7 @@ async function loginToServer(event, serverId, test) {
 
 		mb.currentServerId = serverId;
 		mb.currentUserId = mb.serverList[serverId].userId;
+			console.log("C:" + mb.currentUserId)
 
 		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
@@ -457,6 +460,7 @@ async function login(serverId, test, fromDialog) {
 
 				mb.currentServerId = serverId;
 				mb.currentUserId = parsed.id;
+			console.log("D:" + mb.currentUserId)
 
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
