@@ -386,7 +386,7 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
-		const webPWD = true;
+		const webPWD = false;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -1563,6 +1563,7 @@
 				let isSelected = mb.currentServerId == id;
 				console.log("***" + server.name)
 				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
+				alert(mb.currentServerId);
 				let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
 
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">

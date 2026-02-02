@@ -194,7 +194,7 @@ async function sessionCheck() {
 
 	try {
 		const response = await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
-		
+
 		//TODO Magari usare callAPI invece?
 		const rawBody = await response.text();
 		let parsed = null;
@@ -372,7 +372,7 @@ async function loginToServer(event, serverId, test) {
 		//mb.currentServerId = serverId;
 		closeModal();
 		showLoginDialog('editserver', serverId, mb.serverList[serverId])
-		
+
 		mb.currentServerId = serverId;
 		mb.currentUserId = mb.serverList[serverId].userId;
 
@@ -431,9 +431,7 @@ async function login(serverId, test, fromDialog) {
 		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
 		: `${baseUrlVal}/api/v2/users/me`;
 
-	console.log("Let's Fetch: " + fetchString)
-
-	fetch(fetchString, {
+	fetch(`${baseUrlVal}/api/v2/users/me`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
@@ -444,11 +442,19 @@ async function login(serverId, test, fromDialog) {
 	}).then(async response => {
 		if (response.ok) {
 			console.log("LOG-A")
-			let parsed = await response.json();
+
+			const rawBody = await response.text();
+			let parsed = null;
+			try {
+				parsed = JSON.parse(rawBody);
+			} catch (e) {
+				console.warn(`BODY IS NOT JSON`);
+			}
+
 			if (!test) {
 				await executeFaderGradient(1);
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
-				
+
 				mb.currentServerId = serverId;
 				mb.currentUserId = parsed.id;
 
@@ -461,6 +467,16 @@ async function login(serverId, test, fromDialog) {
 				//TODO Magari resettare la password quando anche user 0 fa logout?
 				if (serverId == 'mb0') saveUserPass(serverId, passwordVal)
 				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
+
+				if (isWeb && !webPWD) await fetch(`${baseUrlVal}/api/v1/login/set-cookie`, {
+					method: 'GET',
+					credentials: 'include',
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest',
+						'skip_zrok_interstitial': '1'
+					}
+				});
+
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
