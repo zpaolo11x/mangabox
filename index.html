@@ -386,7 +386,7 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
-		const webPWD = true;
+		const webPWD = false;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -1038,9 +1038,7 @@
 
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = initMB();
-					console.log("iA:" + mb.currentUserId)
-		console.log("XXXXXXXXXX")
-		console.log(mb.serverList)
+
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
 		const colorValues = getComputedStyle(document.documentElement)
 			.getPropertyValue('--mb-swatches-hi')
@@ -1365,10 +1363,8 @@
 
 		function cancelServer() {
 			if (!mb.currentServerId) {
-				console.log("A")
 				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			} else if (mb.loginMode == 'enterpassword') {
-				console.log("B")
 				hideLoginDialog()
 			} else {
 				hideLoginDialog()
@@ -1377,7 +1373,6 @@
 		}
 
 		function saveServer() {
-			console.log(loginPassword.value)
 
 			// Populate mb.editServerData with the data
 			mb.editServerData.name = loginServerName.value;
@@ -1390,8 +1385,6 @@
 				...mb.editServerData
 			};
 
-			console.log(mb.serverList);
-
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 			saveUserPass(mb.editServerId, loginPassword.value)
@@ -1403,8 +1396,6 @@
 		}
 
 		function editServer(serverId) {
-			console.log("EDIT SERVER:" + serverId)
-			console.log(mb.serverList[serverId])
 			mb.editServerId = serverId;
 			mb.editServerData = mb.serverList[serverId];
 			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
@@ -1433,7 +1424,7 @@
 					if (!isWeb || (isWeb && webPWD)) {
 						const username = mb.serverList[id].username;
 						const password = await loadUserPass(id);
-						console.log("LOGGING OUT: " + username + " " + password);
+
 						fetchPayload = {
 							method: 'POST',
 							headers: {
@@ -1563,7 +1554,7 @@
 			out = out + '<ul class="filter-menu" id="languageMenu">';
 			Object.entries(mb.serverList).forEach(([id, server]) => {
 				let isSelected = mb.currentServerId == id;
-				console.log("***" + server.name)
+
 				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
 
 				let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';

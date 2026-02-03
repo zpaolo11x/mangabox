@@ -140,7 +140,6 @@ async function sessionCheck() {
 
 	loginBaseUrl.value = mb.baseUrl;
 
-	console.log("A:" + mb.currentUserId)
 	console.log("Z - loggedServer:" + mb.currentServerId)
 	debugPrint("Z - loggedServer:" + mb.currentServerId)
 
@@ -174,7 +173,7 @@ async function sessionCheck() {
 	if (!isWeb || (isWeb && webPWD)) {
 		const username = mb.serverList[mb.currentServerId].username;
 		const password = await loadUserPass(mb.currentServerId);
-		console.log("LOGGING IN: " + username + " " + password);
+
 		fetchPayload = {
 			method: 'GET',
 			headers: {
@@ -218,7 +217,6 @@ async function sessionCheck() {
 			debugPrint("Credentials invalid or expired.");
 			console.log("Credentials invalid or expired.");
 			mb.currentUserId = false;
-			console.log("B:" + mb.currentUserId)
 
 			localStorage.removeItem("mb00SessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
@@ -257,9 +255,6 @@ async function sessionCheck() {
 }
 
 async function setServerFields(serverId, serverData) {
-	console.log("SET FIELDS")
-	console.log(serverId)
-	console.log(serverData.name)
 
 	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
 	loginBaseUrl.value = serverData.url;
@@ -271,8 +266,7 @@ async function setServerFields(serverId, serverData) {
 		loginPassword.value = ''
 	} else {
 		let localPass = await loadUserPass(serverId);
-		console.log("LOCALPASS")
-		console.log(localPass)
+
 		loginPassword.value = localPass;
 		//TODO Eliminare la variabile ora
 	}
@@ -387,8 +381,6 @@ async function loginToServer(event, serverId, test) {
 		mb.currentServerId = serverId;
 		mb.currentUserId = mb.serverList[serverId].userId;
 		
-		console.log("C:" + mb.currentUserId)
-
 		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
 		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
@@ -429,8 +421,6 @@ async function login(serverId, test, fromDialog) {
 		mb.serverList['mb0'].username = loginUsername.value;
 	}
 
-	console.log("LOGGING:" + serverId + (fromDialog ? " fromdialog" : ""));
-
 	debugPrint("login...")
 	console.log("login...")
 
@@ -439,10 +429,6 @@ async function login(serverId, test, fromDialog) {
 	let baseUrlVal = fromDialog ? loginBaseUrl.value : mb.serverList[serverId].url;
 	let usernameVal = fromDialog ? loginUsername.value : mb.serverList[serverId].username;
 	let passwordVal = fromDialog ? loginPassword.value : await loadUserPass(serverId);
-
-	console.log(baseUrlVal)
-	console.log(usernameVal)
-	console.log(passwordVal)
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
@@ -469,7 +455,6 @@ async function login(serverId, test, fromDialog) {
 		}
 	}).then(async response => {
 		if (response.ok) {
-			console.log("LOG-A")
 
 			const rawBody = await response.text();
 			let parsed = null;
@@ -485,7 +470,6 @@ async function login(serverId, test, fromDialog) {
 
 				mb.currentServerId = serverId;
 				mb.currentUserId = parsed.id;
-			console.log("D:" + mb.currentUserId)
 
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
@@ -515,11 +499,9 @@ async function login(serverId, test, fromDialog) {
 				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-			console.log("LOG-B")
 			loginError.textContent = `Invalid username or password.`;
 			loginError.classList.toggle('auth-hidden', false);
 		} else {
-			console.log("LOG-C")
 			loginError.textContent = `Login failed`;
 			loginError.classList.toggle('auth-hidden', false);
 		}
