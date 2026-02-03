@@ -265,7 +265,7 @@ async function setServerFields(serverId, serverData) {
 	loginBaseUrl.value = serverData.url;
 	loginUsername.value = (serverId == 'mb0') ? '' : serverData.username;
 
-	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0')) {
+	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0') || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
 		// When password is requested, the password field is always EMPTY
 		// same in web mode, the password is never shown ever
 		loginPassword.value = ''
@@ -379,6 +379,7 @@ async function loginToServer(event, serverId, test) {
 
 
 		//TODO CHECK IF THIS IS REALLY NEEDED
+		//TODO Agguyngere questo solo per web???
 		//let serverTable = {}
 		//serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
 		//await logoutFromServer(serverTable);
