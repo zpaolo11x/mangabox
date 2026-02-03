@@ -133,12 +133,14 @@ async function sessionCheck() {
 	debugPrint("sessionCheck...");
 	console.log("sessionCheck...");
 
-	loginBaseUrl.value = mb.baseUrl;
-
 	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
 	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
-console.log("A:" + mb.currentUserId)
+	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
+
+	loginBaseUrl.value = mb.baseUrl;
+
+	console.log("A:" + mb.currentUserId)
 	console.log("Z - loggedServer:" + mb.currentServerId)
 	debugPrint("Z - loggedServer:" + mb.currentServerId)
 
@@ -376,6 +378,7 @@ async function loginToServer(event, serverId, test) {
 		showLoginDialog('editserver', serverId, mb.serverList[serverId])
 
 
+		//TODO CHECK IF THIS IS REALLY NEEDED
 		let serverTable = {}
 		serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
 		await logoutFromServer(serverTable);
@@ -387,7 +390,7 @@ async function loginToServer(event, serverId, test) {
 
 		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
-
+		localStorage.serItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
 
 		//TODO It was this 
 		// systemRestart();
@@ -485,8 +488,11 @@ async function login(serverId, test, fromDialog) {
 
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
+				localStorage.serItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
+		
 				mb.serverList[serverId].userId = mb.currentUserId;
 				mb.serverList[serverId].askPassword = false;
+		
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 				//TODO Magari resettare la password quando anche user 0 fa logout?
