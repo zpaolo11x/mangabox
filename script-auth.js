@@ -379,9 +379,9 @@ async function loginToServer(event, serverId, test) {
 
 
 		//TODO CHECK IF THIS IS REALLY NEEDED
-		let serverTable = {}
-		serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
-		await logoutFromServer(serverTable);
+		//let serverTable = {}
+		//serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
+		//await logoutFromServer(serverTable);
 
 		mb.currentServerId = serverId;
 		mb.currentUserId = mb.serverList[serverId].userId;
