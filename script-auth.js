@@ -390,7 +390,7 @@ async function loginToServer(event, serverId, test) {
 
 		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
-		localStorage.serItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
+		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
 
 		//TODO It was this 
 		// systemRestart();
@@ -488,7 +488,7 @@ async function login(serverId, test, fromDialog) {
 
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
-				localStorage.serItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
+				localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
 		
 				mb.serverList[serverId].userId = mb.currentUserId;
 				mb.serverList[serverId].askPassword = false;
