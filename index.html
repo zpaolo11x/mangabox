@@ -3216,6 +3216,7 @@
 			//V039
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
 				if (item.status === 'downloading' && item.users?.[mb.currentUserId]) {
+					alert("restore book:"+bookId)
 					obSetSpinner(true);
 					obDownloadBook(bookId);
 				}
