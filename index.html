@@ -3149,12 +3149,6 @@
 			return Object.values(mb.offlineBooks).some(book => book.status === 'downloading');
 		}
 
-		function obDownloadsInProgress() {
-			if (!mb.offlineBooks) return false;
-			const book = mb.offlineBooks[bookId];
-			return book && book.status === 'downloading';
-		}
-
 		async function obDownloadBook(bookId) {
 			let request = await buildRequest('GET', null)
 
@@ -3205,8 +3199,11 @@
 
 		function obRestoreDownloadOnBoot() {
 			//V039
+			console.log("--------------------- RESTORE DOWNLOAD ON BOOT")
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
+				console.log("--------------------- Check " + bookId)
 				if (item.status === 'downloading' && item.users?.[mb.currentUserId]) {
+					console.log("--------------------- downloading!")
 					//alert("restore book:"+bookId)
 					obSetSpinner(true);
 					obDownloadBook(bookId);
