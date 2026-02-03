@@ -772,7 +772,6 @@
 				console.log(`No element found for ${bookId}.`);
 			}
 
-
 			const percent = Math.round((completed / total) * 100);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
@@ -806,11 +805,19 @@
 		if (!isWeb) {
 			window.addEventListener('download-progress', (event) => {
 				const { bookId, completed, total } = event.detail;
+				
+				const book = mb.offlineBooks?.[bookId];
+				if (!book?.users?.[mb.currentUserId]) return false;
+
 				obUpdateProgressResponse(bookId, completed, total);
 			});
 
 			window.addEventListener('download-complete', (event) => {
 				const { bookId, completed, total } = event.detail;
+				
+				const book = mb.offlineBooks?.[bookId];
+				if (!book?.users?.[mb.currentUserId]) return false;
+
 				obDownloaDcompleteResponse(bookId, completed, total)
 			});
 		}
