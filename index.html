@@ -403,7 +403,7 @@
 		const isWeb = !(isElectron || isCapacitor);
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
-		const isEdgeToEdge = false;//isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
+		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
 		debugPrint(isSecureStorage);
 		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar;
