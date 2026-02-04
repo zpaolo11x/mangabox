@@ -563,7 +563,7 @@ function showLoginDialog(dialogMode, serverId, serverData) {
 	viewPassword.classList.toggle('fa-eye', true);
 	viewPassword.classList.toggle('fa-eye-slash', false);
 
-	if (mb.currentServerId != false) dragbar.classList.toggle('onLogin', true);
+	if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
 	console.log("show Login Dialog...")
 	loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
