@@ -353,9 +353,13 @@ async function systemRestart() {
 async function loginToServer(event, serverId, test) {
 
 	if (serverId == 'mb0') {
-		mb.currentServerId = serverId;
+		//mb.currentServerId = serverId;
+		localStorage.removeItem('mb00CurrentServerId');
+		localStorage.removeItem('mb00CurrentUserId');
 		closeModal();
-		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
+		systemRestart()
+		
+		//showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
 		return
 	}
 
@@ -393,7 +397,7 @@ async function loginToServer(event, serverId, test) {
 		// so either I make login work in offline, or
 		// I need to save the user id even in this logintoserver if it's not there
 		// OR I can check if the id is there or not.
-		history.pushState(null, '', mb.basePath + 'dashboard');
+		history.pushState(null, '', mb.basePath + '#dashboard');
 		
 		if (mb.currentUserId == false){
 			login(serverId, test, false);
