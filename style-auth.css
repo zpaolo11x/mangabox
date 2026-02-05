@@ -99,6 +99,7 @@
 	position: relative;
 	width: 100%;
 	height: var(--mb-dialog-button-height);
+	min-height: var(--mb-dialog-button-height);
 	margin-top: var(--mb-dialog-padding);
 	border: 1px var(--mb-login-border-color) solid;
 	border-radius: var(--mb-dialog-button-radius);

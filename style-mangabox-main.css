@@ -347,6 +347,22 @@ body {
 	color: var(--mb-text-color);
 	font-size: 18px;
 	border: 1px solid var(--mb-modal-border);
+	max-height: calc(100vh - 50px);
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+
+.modal-content {
+	scrollbar-width: none;
+	/* Firefox */
+	-ms-overflow-style: none;
+	/* IE & Edge (legacy) */
+}
+
+.modal-content::-webkit-scrollbar {
+	display: none;
+	/* Chrome, Safari, and new Edge */
 }
 
 #modalMessage {
