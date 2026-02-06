@@ -352,10 +352,13 @@
 	</div>
 
 	<div id="myModal" class="modal">
-		<div id="modalContent" class="modal-content">
-			<div id="modalWrapper"><img id="modalImage"></div>
-			<div id="modalMessage">This is the message content.</div>
-
+		<div class="modal-container">
+			<div class="modal-spacer-top"></div>
+			<div id="modalContent" class="modal-content">
+				<div id="modalWrapper"><img id="modalImage"></div>
+				<div id="modalMessage">This is the message content.</div>
+			</div>
+			<div class="modal-spacer-bottom"></div>
 		</div>
 	</div>
 
@@ -805,7 +808,7 @@
 		if (!isWeb) {
 			window.addEventListener('download-progress', (event) => {
 				const { bookId, completed, total } = event.detail;
-				
+
 				const book = mb.offlineBooks?.[bookId];
 				if (!book?.users?.[mb.currentUserId]) return false;
 
@@ -814,7 +817,7 @@
 
 			window.addEventListener('download-complete', (event) => {
 				const { bookId, completed, total } = event.detail;
-				
+
 				const book = mb.offlineBooks?.[bookId];
 				if (!book?.users?.[mb.currentUserId]) return false;
 
@@ -6879,7 +6882,7 @@
 				if (userData) {
 					userData.page = rd.currentPage;
 					if (offlineSession) userData.updated = true;
-					obSaveTable();			
+					obSaveTable();
 				}
 			}
 
