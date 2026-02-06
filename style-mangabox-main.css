@@ -336,25 +336,7 @@ body {
 	pointer-events: none;
 }
 
-.modal-spacer-top {
-	width: 100%;
-	height: 0px;
-	background: transparent;
-	position: relative;
-}
-
-.modal-spacer-top::after {
-	top: 0px;
-	position: absolute;
-	content: '';
-	width: 100%;
-	height: 100px;
-	box-shadow: inset 0 0 5px 10px var(--mb-card-color);
-	border-radius: calc(var(--mb-dialog-padding) + 20px);
-	clip-path: inset(0 0 50% 0);
-	z-index: 11000;
-}
-
+.modal-spacer-top,
 .modal-spacer-bottom {
 	width: 100%;
 	height: 0px;
@@ -362,16 +344,26 @@ body {
 	position: relative;
 }
 
+.modal-spacer-top::after,
 .modal-spacer-bottom::after {
-	bottom: 0px;
 	position: absolute;
 	content: '';
 	width: 100%;
 	height: 100px;
 	box-shadow: inset 0 0 5px 10px var(--mb-card-color);
-	border-radius: calc(var(--mb-dialog-padding) + 20px);
-	clip-path: inset(50% 0 0 0);
+	border-radius: calc(var(--mb-dialog-padding) + 16px);
 	z-index: 11000;
+	pointer-events: none;
+}
+
+.modal-spacer-top::after {
+	top: 0px;
+	clip-path: inset(0 0 50% 0);
+}
+
+.modal-spacer-bottom::after {
+	bottom: 0px;
+	clip-path: inset(50% 0 0 0);
 }
 
 .modal-container {
@@ -380,13 +372,11 @@ body {
 	box-shadow: var(--mb-modal-shadow);
 	border: 1px solid var(--mb-modal-border);
 	overflow: hidden;
-
 }
 
 .modal-content {
 	padding: var(--mb-dialog-padding);
 	text-align: center;
-	/*max-width: 400px;*/
 	width: 260px;
 	color: var(--mb-text-color);
 	font-size: 18px;
