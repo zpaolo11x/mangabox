@@ -372,6 +372,7 @@ body {
 	box-shadow: var(--mb-modal-shadow);
 	border: 1px solid var(--mb-modal-border);
 	overflow: hidden;
+	min-height:70px;
 }
 
 .modal-content {
@@ -383,6 +384,8 @@ body {
 	max-height: calc(100vh - 50px);
 	overflow-y: scroll;
 	overflow-x: hidden;
+		min-height:70px;
+
 }
 
 
