@@ -1054,7 +1054,7 @@
 		colorValues.forEach((value, index) => {
 			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
-				className: 'color-swatch press-flat-button', //TODO tornare ai vecchi modi?
+				className: 'color-swatch press-flat-button',
 				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
 				style: {
 					backgroundColor: value,
@@ -1274,7 +1274,7 @@
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
-				await onlineCheck() //TODO forse qui await?
+				await onlineCheck()
 			};
 
 			if (offlineSession) {
@@ -1398,8 +1398,6 @@
 
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			serversDialog();
-
-			//TODO Save the password to secure storage
 		}
 
 		function editServer(serverId) {
@@ -1495,7 +1493,6 @@
 
 
 		function deleteServer(serverId) {
-			//TODO add code to delete password from key
 			showModal('', false, `
 				<span data-i18n="servers.delete">${t('servers.delete')}</span>
 				<ul class="filter-menu">
@@ -2160,7 +2157,7 @@
 			if (searchString.includes('d:')) {
 
 				const unFilteredBooks = await callAPI('c_bookslistall',
-					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
+					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
 				);
 				unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
@@ -2653,7 +2650,6 @@
 
 		buildFilters();
 
-		//TODO Check what happens for webtoons since readerScale should be 100 for them?
 		function isReaderHorizontal(screenAR) {
 			return (screenAR / (mb.readerMaxRatio * mb.readerScale / 100) > rd.orientationThresholdRatio);
 		}
@@ -2672,7 +2668,7 @@
 				document.documentElement.style.setProperty('--mb-reader-scale', mb.readerScale);
 
 				return;
-*/
+				*/
 				let newReaderHorizontal = isReaderHorizontal(newScreenAR);
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
@@ -3477,15 +3473,7 @@
 				}
 			});
 			mb.libraryNames = mb.libraryNames + '</ul>';
-			//TODO
-			/*
-			if (libraryError){
-				showModal('circle-mark-svg.svg', true, "Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames,
-							[{ label: 'Ok', runfunction: closeModal, high: true }]);
-						return;
-			}		
-			alert("Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames)
-			*/
+
 			await displayLibraries(libraries);
 
 			translateDOM(librariesList);
@@ -3872,8 +3860,8 @@
 			item.mbBooksCount = serie.booksCount;
 
 			item.mbSeriesRead = (unreadCount == 0);
-			//TODO This is for filtering purposes, to fix
-			item.mbSeriesDirection = (serie.metadata.readingDirection);
+
+			item.mbSeriesDirection = serie.metadata.readingDirection;
 			item.mbSeriesLanguage = serie.metadata.language;
 
 			seriesItem.append(
@@ -4110,7 +4098,7 @@
 				renderSeriesChunk(series, target, focusId);
 
 			} else {
-				// TODO Ripulire questa parte che in parte viene da sopra
+				//TODO Ripulire questa parte che in parte viene da sopra
 				while (target.firstChild) {
 					target.removeChild(target.firstChild);
 				}
@@ -4133,7 +4121,7 @@
 
 		async function displayReadlists(series, target) {
 
-			// TODO Ripulire questa parte che in parte viene da sopra
+			//TODO Ripulire questa parte che in parte viene da sopra
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
@@ -4154,7 +4142,7 @@
 
 		async function displayCollections(series, target) {
 
-			// TODO Ripulire questa parte che in parte viene da sopra
+			//TODO Ripulire questa parte che in parte viene da sopra
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
@@ -4863,9 +4851,6 @@
 			let offline = {};
 
 			if (useOfflineCopy) {
-				//TODO Alternative way: when read status change, and the book 
-				// is offline, update the saved metadata so it will always be in sync
-				// but will this sync with the reading offline? No
 
 				// Load saved metadata, the function also apply the new page position
 				offline = await obLoadOfflineBook(book.id);
@@ -5528,7 +5513,7 @@
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
-			preloadCount: isCapacitor ? 1 : 5,			// TODO SET BACK TO 15 Image preload count
+			preloadCount: isCapacitor ? 1 : 5,			//Used to be 15 Image preload count, but it stutters
 
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
@@ -5896,8 +5881,6 @@
 			setThumbZoom(!rd.thumbZoom);
 		});
 		addPressEvents(thumbStripButtonWT, scaleDown, scaleUp);
-
-		//TODO This code is flexible and usable for both, an alternative is splitting all the code for the two WT and !WT
 
 		const resizeObserver = new ResizeObserver(entries => {
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
@@ -6670,10 +6653,6 @@
 
 			});
 
-			//TODO Qui non funziona bene, spostato dopo initviewer, si può togliere?
-			//TODO Tolto, verificare
-			//spreadSetFocus(getSpreadFocus(rd.currentSpreadIndex));
-
 			return pageData;
 		}
 
@@ -7024,7 +7003,7 @@
 				{ duration: duration, easing: ease }
 			]);
 		}
-		//TODO Tutta quella stringa complicata col calc potrebbe essere sostituita conoscendo larghezza e altezza in pixel? boh
+
 		function animShadowBWD(align, duration, ease) {
 			return ([
 				[{ [align]: '100%', width: '0', opacity: '0' },
@@ -7346,7 +7325,7 @@
 			rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.blobUrl;
 			rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.blobUrl;
 				*/
-			// TODO
+			//TODO
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
 			// This adds a slight delay when jumping cover to cover
@@ -7750,7 +7729,7 @@
 					const img = entry.target;
 					img.classList.add('loading');
 
-					// TODO Set the actual src from lazySrc, check if needed
+					//TODO Set the actual src from lazySrc, check if needed
 					const imageUrl = await fetchMedia(img.lazySrc);
 					img.src = imageUrl;
 

@@ -1,5 +1,4 @@
 // script.js
-//TODO ALLO STATO ATTUALE NON FUNZIONA IL LOGOUT!
 
 async function checkCredentialsCap() {
 	debugPrint('check Credentials Capacitor')
@@ -67,7 +66,7 @@ async function getCredentialsCap(serverId) {
 	return result.value;
 }
 
-//TODO NON USATA DA NESSUNA PARTE!
+//This is an old orphane function!
 async function checkSavedUser() {
 	let user = 'cookie'
 	if (isWeb) {
@@ -268,7 +267,8 @@ async function setServerFields(serverId, serverData) {
 		let localPass = await loadUserPass(serverId);
 
 		loginPassword.value = localPass;
-		//TODO Eliminare la variabile ora
+		
+		localPass = null;
 	}
 
 
