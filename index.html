@@ -92,9 +92,9 @@
 						</div>
 						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" data-i18n-placeholder="button.searchtext">
 					</li>
-					<li id="logOut" data-i18n-title="button.logout" class="library-item press-button">
+					<li id="logOut" data-i18n-title="button.serversusers" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-arrow-right-from-bracket glyph-dark"></span>
+							<span class="fa-solid fa-user-group glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
@@ -293,55 +293,83 @@
 	</div>
 
 	<div id="loginScreen" class="auth-hidden logo-pattern">
-		<div id="loginDialog" class="dialog">
-			<img id="logoIcon" src="logo/mangabox-logo-new.svg">
-			<img id="logoName" src="logo/mangabox-logoname.svg">
-			<div class="version-note">v0.3.8</div>
+		<div class="login-container">
+			<div class="login-spacer-top"></div>
+			<div id="loginDialog" class="dialog">
+				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
+				<img id="logoName" src="logo/mangabox-logoname.svg">
+				<div class="version-note">v0.3.9</div>
 
-			<div class="input-wrapper" title="Server Address">
-				<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
-				<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
+				<div id="divServerName" class="input-wrapper" title="Server Name">
+					<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
+					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
+				</div>
+
+				<div id="divBaseUrl" class="input-wrapper" title="Server Address">
+					<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
+					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
+				</div>
+
+				<div id="divUsername" class="input-wrapper" title="Username">
+					<i class="fas fa-user"></i> <!-- Icon for username -->
+					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
+				</div>
+
+				<div id="divPassword" class="input-wrapper pwd" title="Password">
+					<i class="fas fa-lock"></i> <!-- Icon for password -->
+					<!--<i id="passIcon" class="fas fa-eye"></i>  -->
+					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+					<span id="viewPassword" class="fas fa-eye right"></span>
+				</div>
+
+				<div class="login-buttons">
+					<div class="login-buttons-left">
+						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
+							<i class="fas fa-earth"></i>
+						</button>
+						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
+							<i class="fas fa-globe"></i>
+						</button>
+						<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
+							<i class="fas fa-server"></i>
+						</button>
+					</div>
+					<div class="login-buttons-right">
+						<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
+							<span data-i18n="modal.cancel">Cancel</span>
+						</button>
+						<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
+							<span data-i18n="button.save">Save</span>
+						</button>
+						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
+							<span data-i18n="button.login">Login</span>
+						</button>
+					</div>
+				</div>
+
+				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
+
+				<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
 			</div>
-
-			<div class="input-wrapper" title="Username">
-				<i class="fas fa-user"></i> <!-- Icon for username -->
-				<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
-			</div>
-
-			<div class="input-wrapper" title="Password">
-				<i class="fas fa-lock"></i> <!-- Icon for password -->
-				<!--<i id="passIcon" class="fas fa-eye"></i>  -->
-				<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
-			</div>
-
-			<div class="login-buttons">
-				<button id="languageButton" class="login-button-round" onclick="languageDialog()">
-					<i class="fas fa-earth"></i>
-				</button>
-				<button id="loginButton" class="login-button" onclick="login()">
-					<i class="fas fa-play"></i>
-					<span>Login</login>
-				</button>
-			</div>
-
-			<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
-
-			<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
+			<div class="login-spacer-bottom"></div>
 		</div>
 	</div>
 
 	<div id="myModal" class="modal">
-		<div id="modalContent" class="modal-content">
-			<div id="modalWrapper"><img id="modalImage"></div>
-			<div id="modalMessage">This is the message content.</div>
-
+		<div class="modal-container">
+			<div class="modal-spacer-top"></div>
+			<div id="modalContent" class="modal-content">
+				<div id="modalWrapper"><img id="modalImage"></div>
+				<div id="modalMessage">This is the message content.</div>
+			</div>
+			<div class="modal-spacer-bottom"></div>
 		</div>
 	</div>
 
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.3.8</h1>
+		<h1>MangaBox v0.3.9</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -365,21 +393,26 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
+		const webPWD = false;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
-			? text => (debuggerObj.innerText += text + "\n")
+			? text => (debuggerObj.innerText += text + '\n')
 			: () => { };
 
 
 		const isElectron = !!window.electronAPI;
 		const isCapacitor = !!window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
 
+		const isWeb = !(isElectron || isCapacitor);
+
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
+		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
+		debugPrint(isSecureStorage);
 		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar;
 
 		let capacitorPlatform = null;
@@ -403,7 +436,7 @@
 			enableDownload = false;
 		}
 
-		debugPrint("enabledownload" + enableDownload)
+		debugPrint('enabledownload' + enableDownload)
 
 	</script>
 
@@ -411,11 +444,11 @@
 	<script src="script-auth.js"></script>
 
 	<script>
-		if ("serviceWorker" in navigator) {
-			window.addEventListener("load", () => {
-				navigator.serviceWorker.register("/script-sw.js")
-					.then(reg => console.log("Service Worker registered:", reg.scope))
-					.catch(err => console.error("Service Worker registration failed:", err));
+		if ('serviceWorker' in navigator) {
+			window.addEventListener('load', () => {
+				navigator.serviceWorker.register('/script-sw.js')
+					.then(reg => console.log('Service Worker registered:', reg.scope))
+					.catch(err => console.error('Service Worker registration failed:', err));
 			});
 		}
 
@@ -423,7 +456,7 @@
 		executeFade(1);
 
 		function isOrientationLandscape() {
-			return window.matchMedia("(orientation: landscape)").matches;
+			return window.matchMedia('(orientation: landscape)').matches;
 		}
 
 		function getSharpCornerIphone() {
@@ -485,8 +518,8 @@
 		//MB Pinch To Zoom
 		// Two-Finger Pinch + Pan
 
-		//const page = document.getElementById("touchPanel");
-		//const pageTarget = document.getElementById("readerContainer");
+		//const page = document.getElementById('touchPanel');
+		//const pageTarget = document.getElementById('readerContainer');
 
 		function getDistance(touches) {
 			if (touches.length === 1) {
@@ -582,7 +615,7 @@
 			// --------------------------
 			// Touch handlers
 			// --------------------------
-			page.addEventListener("touchstart", e => {
+			page.addEventListener('touchstart', e => {
 				if (e.touches.length === 2) {
 					pageTarget.style.transformOrigin = `0 0`;
 					rd.touchLock = false;
@@ -609,7 +642,7 @@
 				}
 			}, { passive: false });
 
-			page.addEventListener("touchmove", e => {
+			page.addEventListener('touchmove', e => {
 
 				if (e.touches.length == 2) {
 					rd.touchLock = false;
@@ -658,7 +691,7 @@
 				}
 			}, { passive: false });
 
-			page.addEventListener("touchend", e => {
+			page.addEventListener('touchend', e => {
 				if (e.touches.length == 1) {
 					rd.touchLock = false;
 					if (rd.scale > 1) {
@@ -746,7 +779,6 @@
 				console.log(`No element found for ${bookId}.`);
 			}
 
-
 			const percent = Math.round((completed / total) * 100);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
@@ -777,14 +809,22 @@
 			tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 		}
 
-		if (isCapacitor || isElectron) {
+		if (!isWeb) {
 			window.addEventListener('download-progress', (event) => {
 				const { bookId, completed, total } = event.detail;
+
+				const book = mb.offlineBooks?.[bookId];
+				if (!book?.users?.[mb.currentUserId]) return false;
+
 				obUpdateProgressResponse(bookId, completed, total);
 			});
 
 			window.addEventListener('download-complete', (event) => {
 				const { bookId, completed, total } = event.detail;
+
+				const book = mb.offlineBooks?.[bookId];
+				if (!book?.users?.[mb.currentUserId]) return false;
+
 				obDownloaDcompleteResponse(bookId, completed, total)
 			});
 		}
@@ -848,12 +888,12 @@
 					languageVal: '',
 
 					libraryError: false,
-					libraryNames: "",
+					libraryNames: '',
 
 					libMenuVisible: null,
 					swatchMenuVisible: false,
 
-					baseUrl: localStorage.getItem('mbBaseUrl'),
+					baseUrl: localStorage.getItem('mb00BaseUrl'),
 					loggedUser: false,
 
 					basePath: '', //'/mangabox/'
@@ -967,11 +1007,49 @@
 					webtoonScale: 100,
 					readerScale: 100,
 
-					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}')
+					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}'),
 
+					loginModes: {
+						firstboot: {
+							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
+							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
+						},
+						addserver: {
+							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
+							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
+						},
+						editserver: {
+							inputs: ['divServerName', 'divBaseUrl', 'divUsername', 'divPassword'],
+							buttons: ['languageButton', 'serverTest', 'serverSave', 'serverCancel']
+						},
+						enterpassword: {
+							inputs: ['divPassword'],
+							buttons: ['languageButton', 'serverList', 'loginButton', 'serverCancel']
+						},
+					},
+
+					loginMode: '',
+
+					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {
+						mb0: {
+							name: 'servers.unsaved',
+							url: '',
+							username: '',
+							password: '',
+							createdAt: 0,
+							userId: false,
+							askPassword: true,
+						}
+					},
+					editServerData: {}, //data structure of the server being edited
+					editServerId: 'mb0', //ID of the server that is edited by the dialog
+					currentServerId: 'mb0', //ID of the server passed to login and other auth functions
+					currentUserId: false,
+					loggingServerId: 'mb0', //ID of the server passed to login and other auth functions
 				}
 			)
 		}
+
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = initMB();
 
@@ -983,7 +1061,7 @@
 		colorValues.forEach((value, index) => {
 			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
-				className: 'color-swatch press-flat-button', //TODO tornare ai vecchi modi?
+				className: 'color-swatch press-flat-button',
 				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
 				style: {
 					backgroundColor: value,
@@ -998,40 +1076,42 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
-		async function electronHeader() {
-			const username = mb.loggedUser;
-			const password = await loadUserPass(mb.loggedUser);
+		async function basicHeader() {
+			let username = mb.serverList[mb.currentServerId].username;
+			let password = await loadUserPass(mb.currentServerId);
+
 			const out = { 'Authorization': 'Basic ' + btoa(`${username}:${password}`) }
+			username = null;
+			password = null;
 			return (out)
 		}
 
-		async function buildRequest(loggedUser, method, body) {
-			const electronHeaders = isElectron ? await electronHeader() : {};
+		async function buildRequest(method, body) {
+			const basicHeaders = await basicHeader();
 
 			const requestTable = {
 				method: method,
-				...(!isElectron && { credentials: 'include' }),
 				headers: {
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...electronHeaders
+					...basicHeaders
 				},
 				...(body && { body }),
 			}
 			return requestTable
 		}
 
-		async function buildRequestMedia(loggedUser, method, body) {
-			const electronHeaders = isElectron ? await electronHeader() : {};
+		async function buildRequestMedia(method, body) {
+			const basicHeaders = (!isWeb || webPWD) ? await basicHeader() : {};
 
 			const requestTable = {
 				method: method,
-				...(!isElectron && { credentials: 'include' }),
+				...((isWeb && !webPWD) && { credentials: 'include' }),
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...electronHeaders
+					...basicHeaders
 				},
 			}
 			return requestTable
@@ -1057,10 +1137,10 @@
 					setNetworkStatus('online');
 				}
 			} catch (err) {
-				console.error("onlineCheck ERROR:", err);
-				console.error("name:", err?.name);
-				console.error("message:", err?.message);
-				console.error("stack:", err?.stack);
+				console.error('onlineCheck ERROR:', err);
+				console.error('name:', err?.name);
+				console.error('message:', err?.message);
+				console.error('stack:', err?.stack);
 				// still offline, ignore
 			}
 		}
@@ -1070,8 +1150,8 @@
 
 		let i18n = {};
 		let i18n_en = {};
-		
-		async function loadFallbackLanguage(){	
+
+		async function loadFallbackLanguage() {
 			const res_en = await fetch(`./i18n/en.json`);
 			i18n_en = await res_en.json();
 		}
@@ -1080,7 +1160,7 @@
 
 			// Sets auto language to false then tries to load a saved language
 			mb.languageAuto = false;
-			const stored = localStorage.getItem('mbLanguage');
+			const stored = localStorage.getItem('mb00Language');
 
 			if (stored) {
 				mb.languageVal = stored;
@@ -1146,7 +1226,7 @@
 			try {
 				return JSON.parse(raw);
 			} catch {
-				console.warn("Invalid i18n vars:", raw);
+				console.warn('Invalid i18n vars:', raw);
 				return undefined;
 			}
 		}
@@ -1154,8 +1234,8 @@
 		function translateDOM(root = document) {
 			const elements =
 				root === document
-					? document.querySelectorAll("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
-					: root.matches("[data-i18n], [data-i18n-title], [data-i18n-placeholder]")
+					? document.querySelectorAll('[data-i18n], [data-i18n-title], [data-i18n-placeholder]')
+					: root.matches('[data-i18n], [data-i18n-title], [data-i18n-placeholder]')
 						? [root]
 						: [];
 
@@ -1163,21 +1243,21 @@
 				if (el.dataset.i18n) {
 					el.textContent = t(
 						el.dataset.i18n,
-						getI18nVars(el, "i18n")
+						getI18nVars(el, 'i18n')
 					);
 				}
 
 				if (el.dataset.i18nTitle) {
 					el.title = t(
 						el.dataset.i18nTitle,
-						getI18nVars(el, "i18nTitle")
+						getI18nVars(el, 'i18nTitle')
 					);
 				}
 
 				if (el.dataset.i18nPlaceholder) {
 					el.placeholder = t(
 						el.dataset.i18nPlaceholder,
-						getI18nVars(el, "i18nPlaceholder")
+						getI18nVars(el, 'i18nPlaceholder')
 					);
 				}
 			});
@@ -1191,7 +1271,7 @@
 			// Translate the DOM
 			translateDOM();
 		}
-		
+
 		loadFallbackLanguage();
 		applyLanguage();
 
@@ -1201,7 +1281,7 @@
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
-				await onlineCheck() //TODO forse qui await?
+				await onlineCheck()
 			};
 
 			if (offlineSession) {
@@ -1219,7 +1299,7 @@
 			}
 
 			try {
-				const req = await buildRequest(mb.loggedUser, method, body);
+				const req = await buildRequest(method, body);
 
 				const response = await fetch(`${mb.baseUrl}${API_url}`, req);
 
@@ -1277,6 +1357,278 @@
 		}
 		*/
 
+		function initServer() {
+			const serverID = crypto.randomUUID();
+			const server = {
+				name: '',
+				url: '',
+				username: '',
+				password: '',
+				createdAt: Date.now(),
+				userId: false,
+				askPassword: true //When logged is true the password is taken from the table, if is logged out the password is requested. But the password is always in the table unless the server is deleted
+			};
+			return ['mbUser_' + serverID, server];
+		}
+
+		function setServerProperty(id, property, value) {
+			mb.serversList[id][property] = value;
+		}
+
+		function cancelServer() {
+			if (!mb.currentServerId) {
+				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			} else if (mb.loginMode == 'enterpassword') {
+				hideLoginDialog()
+			} else {
+				hideLoginDialog()
+			}
+			serversDialog()
+		}
+
+		function saveServer() {
+
+			// Populate mb.editServerData with the data
+			mb.editServerData.name = loginServerName.value;
+			mb.editServerData.url = loginBaseUrl.value;
+			mb.editServerData.username = loginUsername.value;
+			mb.editServerData.askPassword = false;
+
+			mb.serverList[mb.editServerId] = {
+				...(mb.serverList[mb.editServerId] ?? {}),
+				...mb.editServerData
+			};
+
+			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
+
+			saveUserPass(mb.editServerId, loginPassword.value)
+
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			serversDialog();
+		}
+
+		function editServer(serverId) {
+			mb.editServerId = serverId;
+			mb.editServerData = mb.serverList[serverId];
+			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
+			closeModal();
+		}
+
+		function addServer() {
+			[mb.editServerId, mb.editServerData] = initServer();
+			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
+			closeModal();
+		}
+
+		async function logoutFromServer(serverList) {
+			console.log("START LOGOUT PROCESS")
+			closeModal();
+			if (isLoginScreenHidden()) navigateTo('#dashboard');
+			await executeFaderGradient(1);
+
+			Object.entries(serverList).forEach(async ([id, server]) => {
+
+				if ((id != 'mb0') && (!server.askPassword)) {
+					mb.serverList[id].askPassword = true;
+
+					let fetchPayload
+					if (!isWeb || (isWeb && webPWD)) {
+						const username = mb.serverList[id].username;
+						const password = await loadUserPass(id);
+
+						fetchPayload = {
+							method: 'POST',
+							headers: {
+								'Authorization': 'Basic ' + btoa(`${username}:${password}`),
+								'X-Requested-With': 'XMLHttpRequest',
+								'skip_zrok_interstitial': '1'
+							}
+						}
+					} else {
+						fetchPayload = {
+							method: 'POST',
+							credentials: 'include',
+							headers: {
+								'X-Requested-With': 'XMLHttpRequest',
+								'skip_zrok_interstitial': '1'
+							}
+						}
+					}
+
+					try {
+						await fetch(`${mb.serverList[id].url}/api/logout`, fetchPayload);
+					} catch (error) {
+						console.warn('Logout API call failed:', error);
+						// We continue cleanup anyway
+					}
+
+				}
+			});
+			//Non cancella più la password usando:
+			// await deleteUserPass(mb.loggedUser);
+			// ma marchia il server come "askPassword"
+			localStorage.removeItem('mb00CurrentServerId');
+
+			// Always clean temp server
+			mb.serverList['mb0'].username = '';
+
+			// Save the serverlist with the modified askpassword
+			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
+			if (mb.currentServerId == 'mb0') deleteUserPass('mb0')
+
+			// delte c_ storage keys 
+			// //TODO REMOVED FOR MULTISERVER, cHECK!
+			/*
+			Object.keys(localStorage).forEach(key => {
+				if (key.startsWith('c_')) {
+					localStorage.removeItem(key);
+				}
+			});
+*/
+			// Delete cached calls
+			//TODO REMOVED FOR MULTISERVER, CHECK!
+			// await clearIndexedDB();
+			localStorage.removeItem('mb00SessionValid');
+
+			mainLoader.classList.add('hidden');
+
+			//await callAPI(null, `/api/logout`, 'GET', null, false); //TODO da autenticare, vedi codice sopra!
+
+			console.log("LOGOUT PROCESS ENDED, RESTARTING")
+			systemRestart();
+		}
+
+
+		function deleteServer(serverId) {
+			showModal('', false, `
+				<span data-i18n="servers.delete">${t('servers.delete')}</span>
+				<ul class="filter-menu">
+					<li class="filter-item filter-item-menu">
+						<div class='smallbutton-wrapper'>
+							<span class="fa-solid fa-server glyph-dark"></span>
+						</div>
+						<div class='library-name filter-menu-text'>${mb.serverList[serverId].name}</div>
+					</li>
+					<li class="filter-item filter-item-menu">
+						<div class='smallbutton-wrapper'>
+							<span class="fa-solid fa-link glyph-dark"></span>
+						</div>
+						<div class='library-name filter-menu-text'>${mb.serverList[serverId].url}</div>
+					</li>
+					<li class="filter-item filter-item-menu">
+						<div class='smallbutton-wrapper'>
+							<span class="fa-solid fa-user glyph-dark"></span>
+						</div>
+						<div class='library-name filter-menu-text'>${mb.serverList[serverId].username}</div>
+					</li>
+				</ul>
+			`, [
+				{
+					label: 'modal.ok', runfunction: () => {
+						delete mb.serverList[serverId];
+						localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
+						localStorage.removeItem('mb00CurrentServerId');
+						deleteUserPass(serverId);
+						if (mb.currentServerId != false) {
+							systemRestart();
+						} else {
+							serversDialog();
+						}
+					}, high: true
+				},
+				{ label: 'modal.cancel', runfunction: () => serversDialog() }
+
+			]);
+
+		}
+
+		function expandServer(idName) {
+			if (idName == 'item_mb0_data') return
+
+			const target = document.getElementById(idName);
+			const isOpen = target.classList.contains('expand');
+
+			// Collapse all
+			document.querySelectorAll('.server-data')
+				.forEach(el => el.classList.remove('expand'));
+
+			// Re-open only if it was not already open
+			if (!isOpen) {
+				target.classList.add('expand');
+			}
+		}
+
+
+		function buildServersDialog() {
+			let out = `<span data-i18n="servers.title">${t('servers.title')}</span>`;
+			out = out + '<ul class="filter-menu" id="languageMenu">';
+			Object.entries(mb.serverList).forEach(([id, server]) => {
+				let isSelected = mb.currentServerId == id;
+
+				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
+
+				let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
+
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
+									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
+									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
+										<span class="fa-solid fa-pen glyph-dark"></span>
+									</div>
+									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
+										<span class="fa-solid fa-trash-can glyph-dark"></span>
+									</div>
+									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
+										<span class="fa-solid ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'fa-key' : 'fa-play'} glyph-dark"></span>
+									</div>
+								</li>
+								<li class="server-data" id="item_${id}_data">
+									<div style="margin-top:10px; width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+										<span style="width:20px; min-width:20px;" class="fa-solid fa-link"></span><span style="word-break: break-all;">${server.url}</span>
+									</div>
+									<div style="width:100%; padding-top:10px; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+										<span style="width:20px; min-width:20px;" class="fa-solid fa-user"></span><span>${server.username}</span>
+									</div>
+								</li>
+			`
+			});
+			/*
+			mb.languages.forEach((language, index) => {
+				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
+				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
+									<div class='smallbutton-wrapper'>
+										<span style="background-image:url('flags/${language}.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
+									</div>
+									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
+								</li>`
+			});
+			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
+									<div class='smallbutton-wrapper'>
+										<span class="fa-solid fa-robot glyph-dark"></span>
+									</div>
+									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
+								</li>`
+			*/
+			out = out + "</ul>";
+			return (out)
+		}
+
+		function serversDialog() {
+			let noLogoutAll = ((isWeb && !webPWD) && (mb.currentServerId != false))
+
+			showModal('', false, buildServersDialog(), [
+				{ label: 'servers.add', runfunction: () => addServer() },
+				...(!noLogoutAll
+					? [{ label: 'servers.logoutall', runfunction: async () => await logoutFromServer(mb.serverList) }]
+					: []),
+				{
+					label: 'modal.ok', runfunction: () => {
+						if (mb.currentServerId) hideLoginDialog();
+						closeModal()
+					}, high: true
+				}
+			]);
+		}
+
 		async function getUserSettings() {
 			let mangaboxFlat = null;
 			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
@@ -1330,9 +1682,10 @@
 			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
 
 			// Local storage variable setup
-			mb.webtoonScale = Number(localStorage.getItem('c_webtoonScale') ?? 100);
-			mb.readerScale = Number(localStorage.getItem('c_readerScale') ?? 100);
-			mb.readerAnimation = Number(localStorage.getItem('c_readerAnimation') ?? 1)
+			mb.webtoonScale = Number(localStorage.getItem(`c_${mb.currentUserId}_webtoonScale`) ?? 100);
+			mb.readerScale = Number(localStorage.getItem(`c_${mb.currentUserId}_readerScale`) ?? 100);
+			mb.readerAnimation = Number(localStorage.getItem(`c_${mb.currentUserId}_readerAnimation`) ?? 1)
+
 		}
 
 
@@ -1478,6 +1831,17 @@
 				navigateTo(`#offlinebooks`);
 			});
 		}
+
+		viewPassword.addEventListener('click', () => {
+			const isPassword = loginPassword.type === 'password';
+			const showPassword = loginPassword.type === 'password';
+
+			loginPassword.type = isPassword ? 'text' : 'password';
+
+			viewPassword.classList.toggle('fa-eye', !showPassword);
+			viewPassword.classList.toggle('fa-eye-slash', showPassword);
+
+		})
 		/*
 			readlistsButton2.addEventListener('click', () => {
 				navigateTo(`#readlists`);
@@ -1493,63 +1857,38 @@
 			}
 			let dialogText = `
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span class="fa-solid fa-user"></span><span>${currentUser.email}</span>
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-server"></span><span>${t(mb.serverList[mb.currentServerId].name)}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span class="fa-solid fa-server"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-link"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+			</div>
+			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-user"></span><span>${currentUser.email}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;" onClick="languageDialog()">
-				<span class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
 			showModal('', true, dialogText,
 				[
 					{
-						label: t('button.logout'), runfunction: async () => {
-							closeModal();
-							navigateTo('#dashboard');
-							await executeFaderGradient(1);
+						label: 'button.logout', runfunction: async () => {
+							let serverTable = {};
 
-							try {
-								if (mb.baseUrl) {
-									await fetch(`${mb.baseUrl}/api/logout`, {
-										method: 'POST',
-										credentials: 'include',
-										headers: {
-											'X-Requested-With': 'XMLHttpRequest',
-											'skip_zrok_interstitial': '1',
-										},
-									});
-								}
-							} catch (error) {
-								console.warn('Logout API call failed:', error);
-								// We continue cleanup anyway
-							}
+							serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
 
-
-							if (isElectron) await deleteUserPass(mb.loggedUser);
-
-							//sectionHide(stickyContainer);
-							//sectionShow(blanker);
-
-							Object.keys(localStorage).forEach(key => {
-								if (key.startsWith("c_")) {
-									localStorage.removeItem(key);
-								}
-							});
-
-							await clearIndexedDB();
-							localStorage.removeItem("sessionValid");
-
-							mainLoader.classList.add('hidden');
-
-							systemRestart();
+							logoutFromServer(serverTable)
 
 						}, high: true
 					},
 					{
+						label: 'button.serverslist', runfunction: async () => {
+							serversDialog()
+						}
+					},
+					{
 						// No need to use translateDOM because modals are modal and spawned each time
-						label: t('modal.cancel'), runfunction: closeModal, high: false
+						label: 'modal.cancel', runfunction: closeModal, high: false
 					}
 				]
 			);
@@ -1725,31 +2064,37 @@
 		//MB Modal Dialog
 		let modalGlobal = [];
 
-		function showModal(image, bg, message, itemsArray) {
-			document.querySelectorAll('.modal-button').forEach(el => {
-				el.remove();
-			});			//modalFunctionsGlobal = functionArray;
-			modalWrapper.style.backgroundImage = bg ? '' : 'none';
-			modalImage.src = image;
-			modalMessage.innerHTML = message;
+		function showModal(image, imagebg, message, itemsArray) {
+			if (isModalVisible()) {
+				closeModal();
+			}
+			setTimeout(() => {
+				document.querySelectorAll('.modal-button').forEach(el => {
+					el.remove();
+				});			//modalFunctionsGlobal = functionArray;
+				modalWrapper.style.backgroundImage = imagebg ? '' : 'none';
+				modalImage.src = image;
+				modalMessage.innerHTML = message;
 
-			modalWrapper.style.display = image == '' ? 'none' : 'block';
-			//myModal.style.display = 'flex';
+				modalWrapper.style.display = image == '' ? 'none' : 'block';
+				//myModal.style.display = 'flex';
 
-			itemsArray.forEach(item => {
-				let uiButton = addItem('button', {
-					innerText: t(item.label),
-					dataset: {
-						i18n: item.label,
-					},
-					className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
-				})
-				addPressEvents(uiButton, pressDown, pressUp);
-				uiButton.addEventListener('click', item.runfunction);
-				modalContent.append(uiButton);
-			});
+				itemsArray.forEach(item => {
+					let uiButton = addItem('button', {
+						innerText: t(item.label),
+						dataset: {
+							i18n: item.label,
+						},
+						className: (item.high ? 'ok' : 'cancel') + ' dialog-button press-button modal-button',
+					})
+					addPressEvents(uiButton, pressDown, pressUp);
+					uiButton.addEventListener('click', item.runfunction);
+					modalContent.append(uiButton);
+				});
 
-			myModal.classList.add('visible');
+				myModal.classList.add('visible');
+			}, isModalVisible() ? 221 : 0)
+
 		}
 
 		function isModalVisible() {
@@ -1764,11 +2109,11 @@
 				// Optional: if you still want to hide it completely from screen readers / tab order
 				myModal.classList.remove('visible');
 				myModal.classList.remove('unfade');
-				modalMessage.innerHTML = "";
+				modalMessage.innerHTML = '';
 				document.querySelectorAll('.modal-button').forEach(el => {
 					el.remove();
 				});
-			}, 300);
+			}, 220);
 		}
 
 
@@ -1782,15 +2127,15 @@
 				applyLibraryImage(libraryId, base64);
 
 			} catch (err) {
-				console.error("Error converting image:", err);
+				console.error('Error converting image:', err);
 				showModal('circle-mark-svg.svg', true, t('modal.imageloadfail'),
-					[{ label: 'Ok', runfunction: cancelUpdate, high: true }]);
+					[{ label: 'modal.ok', runfunction: cancelUpdate, high: true }]);
 			}
 		}
 
 		function generatePics(libraryId, text) {
-			let thumbNames = ["Manga", "Comics", "Girls", "Shojo", "Fantasy", "Puppet", "Robots", "Space", "Western", "Horror", "Detective", "Humor"];
-			let out = "";
+			let thumbNames = ['Manga', 'Comics', 'Girls', 'Shojo', 'Fantasy', 'Puppet', 'Robots', 'Space', 'Western', 'Horror', 'Detective', 'Humor'];
+			let out = '';
 			thumbNames.forEach(thumbName => {
 				out = out + `
 				<img class="mini-thumb press-button" src="library-thumbnails/${thumbName}.svg"
@@ -1819,7 +2164,7 @@
 			if (searchString.includes('d:')) {
 
 				const unFilteredBooks = await callAPI('c_bookslistall',
-					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`, //TODO sort by relevance with new filtering search?
+					`/api/v1/books/list?page=0&unpaged=true&sort=metadata.numberSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
 				);
 				unFilteredBooks.content.sort((a, b) => a.seriesTitle.localeCompare(b.seriesTitle))
@@ -2068,7 +2413,7 @@
 		mb.filterTable = initFilterTable();
 
 		function languageName(tag, locale = mb.languageVal) {
-			return new Intl.DisplayNames([locale], { type: "language" }).of(tag);
+			return new Intl.DisplayNames([locale], { type: 'language' }).of(tag);
 		}
 
 		async function buildLanguageList() {
@@ -2161,7 +2506,7 @@
 				}
 			});
 
-			seriesGrid.innerHTML = "";
+			seriesGrid.innerHTML = '';
 			if (!boot) {
 				divs.forEach(div => {
 					if (div.infilter) seriesGrid.appendChild(div)
@@ -2178,7 +2523,7 @@
 			[...languageMenu.children].forEach((li, index) => {
 				li.classList.toggle('highlighted', index === valueIndex);
 			});
-			localStorage.setItem('mbLanguage', language);
+			localStorage.setItem('mb00Language', language);
 			applyLanguage();
 
 		}
@@ -2189,7 +2534,7 @@
 			[...languageMenu.children].forEach((li, index) => {
 				li.classList.toggle('highlighted', index === menuLength - 1);
 			});
-			localStorage.removeItem('mbLanguage');
+			localStorage.removeItem('mb00Language');
 			applyLanguage();
 
 		}
@@ -2285,7 +2630,7 @@
 					saveLibraryFilters();
 				})
 				addLongPressListener(button.item, 'filter-item', async () => {
-					showModal('', false, buildFilterDialog(button, index), [{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
+					showModal('', false, buildFilterDialog(button, index), [{ label: 'modal.ok', runfunction: closeModal, high: true }]);
 				}, 500)
 			});
 
@@ -2312,7 +2657,6 @@
 
 		buildFilters();
 
-		//TODO Check what happens for webtoons since readerScale should be 100 for them?
 		function isReaderHorizontal(screenAR) {
 			return (screenAR / (mb.readerMaxRatio * mb.readerScale / 100) > rd.orientationThresholdRatio);
 		}
@@ -2331,7 +2675,7 @@
 				document.documentElement.style.setProperty('--mb-reader-scale', mb.readerScale);
 
 				return;
-*/
+				*/
 				let newReaderHorizontal = isReaderHorizontal(newScreenAR);
 				if (newReaderHorizontal != mb.readerHorizontal) {
 					mb.screenAR = newScreenAR;
@@ -2573,7 +2917,7 @@
 						recursive: true
 					});
 				} catch (err) {
-					debugPrint("Error creating " + path);
+					debugPrint('Error creating ' + path);
 					//if (!String(err.message).includes('exists')) throw err;
 				}
 			}
@@ -2589,7 +2933,7 @@
 			try {
 				debugPrint(`Downloading metadata for ${bookId}`);
 
-				debugPrint("Get Book Data")
+				debugPrint('Get Book Data')
 				// Book metadata
 				let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
 				if (!res.ok) debugPrint(res.status)
@@ -2604,7 +2948,7 @@
 				});
 
 
-				debugPrint("Get Series Data")
+				debugPrint('Get Series Data')
 				// Series metadata
 				res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
 				if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
@@ -2616,7 +2960,7 @@
 					encoding: 'utf8'
 				});
 
-				debugPrint("Get Pages Data")
+				debugPrint('Get Pages Data')
 				// Pages metadata
 				res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
 				if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
@@ -2725,26 +3069,51 @@
 		}
 
 		function obAddBookToTable(book) {
+			//V039
+			// determine starting page safely
 			let page = 1;
-			if (book.readProgress) {
-				page = (book.readProgress.page == book.media.pagesCount)
-					? page = book.media.pagesCount
-					: page = book.readProgress.page
+
+			if (book.readProgress?.page) {
+				page = (book.readProgress.page >= book.media.pagesCount)
+					? book.media.pagesCount
+					: book.readProgress.page;
 			}
 
-			mb.offlineBooks[book.id] = {
-				status: 'downloading',
-				percent: 0,
+			// ensure root table exists
+			mb.offlineBooks ??= {};
 
+			// create book entry ONLY if missing
+			if (!mb.offlineBooks[book.id]) {
+				mb.offlineBooks[book.id] = {
+					status: 'downloading',
+					percent: 0,
+					pages: book.media.pagesCount,
+					users: {}
+				};
+			}
+
+			// add / update ONLY the current user
+			mb.offlineBooks[book.id].users[mb.currentUserId] = {
 				updated: false,
 				page: page,
-				pages: book.media.pagesCount,
 			};
+
 			obSaveTable();
 		}
 
 		function obRemoveBookFromTable(bookId) {
-			delete mb.offlineBooks[bookId];
+			//V039
+			const bookEntry = mb.offlineBooks?.[bookId];
+			if (!bookEntry) return;
+
+			// remove current user
+			delete bookEntry.users?.[mb.currentUserId];
+
+			// if no users left, remove the book entirely
+			if (!bookEntry.users || Object.keys(bookEntry.users).length === 0) {
+				delete mb.offlineBooks[bookId];
+			}
+
 			obSaveTable();
 		}
 
@@ -2771,15 +3140,17 @@
 		}
 
 		function obIsBookCompleted(bookId) {
-			if (!mb.offlineBooks) return false;
-			const book = mb.offlineBooks[bookId];
-			return book && book.status === 'completed';
+			//V309
+			const book = mb.offlineBooks?.[bookId];
+			if (!book?.users?.[mb.currentUserId]) return false;
+			return book.status === 'completed';
 		}
 
 		function obIsBookDownloading(bookId) {
-			if (!mb.offlineBooks) return false;
-			const book = mb.offlineBooks[bookId];
-			return book && book.status === 'downloading';
+			//V309
+			const book = mb.offlineBooks?.[bookId];
+			if (!book?.users?.[mb.currentUserId]) return false;
+			return book.status === 'downloading';
 		}
 
 		function obIsAnyBookDownloading() {
@@ -2787,14 +3158,8 @@
 			return Object.values(mb.offlineBooks).some(book => book.status === 'downloading');
 		}
 
-		function obDownloadsInProgress() {
-			if (!mb.offlineBooks) return false;
-			const book = mb.offlineBooks[bookId];
-			return book && book.status === 'downloading';
-		}
-
 		async function obDownloadBook(bookId) {
-			let request = await buildRequest(mb.loggedUser, 'GET', null)
+			let request = await buildRequest('GET', null)
 
 			let bookData = {
 				bookId: bookId,
@@ -2808,7 +3173,13 @@
 		}
 
 		async function obDeleteBookData(bookId) {
+			//V039
 			let result = null
+			// If the book entry is still in the table, no need to do anything
+			if (mb.offlineBooks?.[bookId]) {
+				return null;
+			}
+
 			if (isElectron) result = await window.offlineAPI.deleteOfflineBookData(bookId)
 			if (isCapacitor) result = await capacitorDeleteBookData(bookId)
 
@@ -2817,8 +3188,7 @@
 			} else {
 				console.warn(`Failed to delete offline book ${bookId}: ${result.message}`);
 			}
-			delete mb.offlineBooks[bookId];
-			obSaveTable();
+
 			return result;
 		}
 
@@ -2837,8 +3207,13 @@
 		}
 
 		function obRestoreDownloadOnBoot() {
+			//V039
+			console.log("--------------------- RESTORE DOWNLOAD ON BOOT")
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				if (item.status == 'downloading') {
+				console.log("--------------------- Check " + bookId)
+				if (item.status === 'downloading' && item.users?.[mb.currentUserId]) {
+					console.log("--------------------- downloading!")
+					//alert("restore book:"+bookId)
 					obSetSpinner(true);
 					obDownloadBook(bookId);
 				}
@@ -2846,12 +3221,20 @@
 		}
 
 		async function obRefreshReadStatus() {
-			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				if (item.updated) {
-					callAPI(null, `/api/v1/books/${bookId}/read-progress`, 'PATCH', JSON.stringify({ page: item.page }), false)
-					item.updated = false;
+			//V039
+			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
+				const userData = item.users?.[mb.currentUserId];
+				if (userData?.updated) {
+					await callAPI(
+						null,
+						`/api/v1/books/${bookId}/read-progress`,
+						'PATCH',
+						JSON.stringify({ page: userData.page }),
+						false
+					);
+					userData.updated = false;
 				}
-			});
+			}
 		}
 
 		//MB Media Cache 
@@ -2891,10 +3274,14 @@
 			});
 		}
 
+		function keyUser(key) {
+			return (`c_${mb.currentUserId}_` + key.slice(2));
+		}
+
 		function cacheData(db, key, content) {
 			return new Promise((resolve, reject) => {
 				const tx = db.transaction('data', 'readwrite');
-				tx.objectStore('data').put(content, key);
+				tx.objectStore('data').put(content, keyUser(key));
 				tx.oncomplete = () => resolve();
 				tx.onerror = () => reject(tx.error);
 			});
@@ -2903,7 +3290,7 @@
 		function getCachedData(db, key) {
 			return new Promise((resolve, reject) => {
 				const tx = db.transaction('data', 'readonly');
-				const req = tx.objectStore('data').get(key);
+				const req = tx.objectStore('data').get(keyUser(key));
 				req.onsuccess = () => resolve(req.result || null);
 				req.onerror = () => reject(req.error);
 			});
@@ -2960,7 +3347,7 @@
 			}
 
 			try {
-				const response = await fetch(url, await buildRequestMedia(mb.loggedUser, 'GET', null));
+				const response = await fetch(url, await buildRequestMedia('GET', null));
 
 				if (response.ok) {
 					const blob = await response.blob();
@@ -3085,23 +3472,15 @@
 			libraries.sort((a, b) => a.name.localeCompare(b.name));
 
 			mb.libraryError = false;
-			mb.libraryNames = "<ul>";
+			mb.libraryNames = '<ul>';
 			Array.from(libraries).forEach(libItem => {
 				if (libItem.analyzeDimensions == false) {
 					mb.libraryError = true;
 					mb.libraryNames = mb.libraryNames + "<li style='text-align:left'>" + libItem.name + "</li>"
 				}
 			});
-			mb.libraryNames = mb.libraryNames + "</ul>";
-			//TODO
-			/*
-			if (libraryError){
-				showModal('circle-mark-svg.svg', true, "Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames,
-							[{ label: 'Ok', runfunction: closeModal, high: true }]);
-						return;
-			}		
-			alert("Please enable 'Analyze pages dimensions' on the following libraries to avoid issues with MangaBox reader:\n\n"+libraryNames)
-			*/
+			mb.libraryNames = mb.libraryNames + '</ul>';
+
 			await displayLibraries(libraries);
 
 			translateDOM(librariesList);
@@ -3112,7 +3491,7 @@
 
 			if (mb.libraryError) {
 				showModal('circle-mark-svg.svg', true, t('modal.analyzewarning') + mb.libraryNames,
-					[{ label: t('modal.ok'), runfunction: closeModal, high: true }]);
+					[{ label: 'modal.ok', runfunction: closeModal, high: true }]);
 				return;
 			}
 
@@ -3395,7 +3774,7 @@
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == "N/A" ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
@@ -3488,8 +3867,8 @@
 			item.mbBooksCount = serie.booksCount;
 
 			item.mbSeriesRead = (unreadCount == 0);
-			//TODO This is for filtering purposes, to fix
-			item.mbSeriesDirection = (serie.metadata.readingDirection);
+
+			item.mbSeriesDirection = serie.metadata.readingDirection;
 			item.mbSeriesLanguage = serie.metadata.language;
 
 			seriesItem.append(
@@ -3726,7 +4105,7 @@
 				renderSeriesChunk(series, target, focusId);
 
 			} else {
-				// TODO Ripulire questa parte che in parte viene da sopra
+				//TODO Ripulire questa parte che in parte viene da sopra
 				while (target.firstChild) {
 					target.removeChild(target.firstChild);
 				}
@@ -3749,7 +4128,7 @@
 
 		async function displayReadlists(series, target) {
 
-			// TODO Ripulire questa parte che in parte viene da sopra
+			//TODO Ripulire questa parte che in parte viene da sopra
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
@@ -3770,7 +4149,7 @@
 
 		async function displayCollections(series, target) {
 
-			// TODO Ripulire questa parte che in parte viene da sopra
+			//TODO Ripulire questa parte che in parte viene da sopra
 			while (target.firstChild) {
 				target.removeChild(target.firstChild);
 			}
@@ -3952,7 +4331,7 @@
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
-			const isFA = imagePath?.startsWith("fa-");
+			const isFA = imagePath?.startsWith('fa-');
 
 			const listItem = addItem('li', {
 				id: itemId,
@@ -4103,11 +4482,11 @@
 
 			// Case 1: It's a File
 			if (fileOrBase64 instanceof File) {
-				debugPrint("----Input is a file")
+				debugPrint('----Input is a file')
 				if (!fileOrBase64.type.startsWith('image/')) {
-					debugPrint("----But it's not a valid image file")
+					debugPrint('----But is not a valid image file')
 					showModal('circle-mark-svg.svg', true, t('modal.validimage'),
-						[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
+						[{ label: 'modal.ok', runfunction: cancelUpdate, high: true }]);
 					return;
 				}
 				base64 = await readFileAsBase64(fileOrBase64);
@@ -4115,23 +4494,23 @@
 
 			// Case 2: It's already a base64 string
 			else if (typeof fileOrBase64 === 'string' && fileOrBase64.startsWith('data:image/')) {
-				debugPrint("----Input is a string")
+				debugPrint('----Input is a string')
 				base64 = fileOrBase64;
 			}
 
 			// Case 3: Not valid
 			else {
-				debugPrint("----Input is not valid")
+				debugPrint('----Input is not valid')
 				debugPrint(fileOrBase64);
 				showModal('circle-mark-svg.svg', true, t('modal.validimage'),
-					[{ label: t('modal.ok'), runfunction: cancelUpdate, high: true }]);
+					[{ label: 'modal.ok', runfunction: cancelUpdate, high: true }]);
 				return;
 			}
 
 			// Show confirmation modal
 			showModal(base64, false, t('modal.confirmimage'),
 				[{
-					label: t('modal.ok'),
+					label: 'modal.ok',
 					runfunction: async () => {
 						mb.libraryIcons[libraryId] = base64;
 						await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons));
@@ -4140,14 +4519,14 @@
 					},
 					high: true,
 				}, {
-					label: t('modal.cancel'), runfunction: cancelUpdate, high: false
+					label: 'modal.cancel', runfunction: cancelUpdate, high: false
 				}
 				]);
 		}
 
 
 		async function pickImage(libraryId) {
-			debugPrint("PickImage");
+			debugPrint('PickImage');
 			try {
 				const image = await Capacitor.Plugins.Camera.getPhoto({
 					quality: 90,
@@ -4160,12 +4539,12 @@
 				applyLibraryImage(libraryId, base64);
 
 			} catch (err) {
-				debugPrint("Image picking failed:\n" + err);
+				debugPrint('Image picking failed:\n' + err);
 			}
 		}
 
 		async function pickFile(libraryId) {
-			debugPrint("PickFile");
+			debugPrint('PickFile');
 			try {
 				const result = await Capacitor.Plugins.FilePicker.pickFiles({
 					extensions: ['png', 'jpg', 'jpeg', 'heic'], // common formats on iOS
@@ -4189,7 +4568,7 @@
 				}
 
 			} catch (err) {
-				debugPrint("Image picking failed:\n" + err);
+				debugPrint('Image picking failed:\n' + err);
 			}
 		}
 
@@ -4241,26 +4620,26 @@
 						if (isCapacitor) {
 							showModal('', true, generatePics(libraryId, t('modal.selectopenimage')),
 								[{
-									label: t('modal.gallery'),
+									label: 'modal.gallery',
 									runfunction: async () => { await pickImage(libraryId); },
 									high: true
 								}, {
-									label: t('modal.files'),
+									label: 'modal.files',
 									runfunction: async () => { await pickFile(libraryId); },
 									high: true
 								}, {
-									label: t('modal.cancel'),
+									label: 'modal.cancel',
 									runfunction: closeModal,
 									high: false
 								}]);
 
 						} else {
-							showModal('', false, generatePics(libraryId, t('modal.selectordrag')), [{ label: t('modal.ok'), runfunction: () => closeModal(), high: true }]);
+							showModal('', false, generatePics(libraryId, t('modal.selectordrag')), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 						}
 					} else {
 						showModal(mb.libraryIcons[libraryId], false, t('modal.removethumb'), [
 							{
-								label: t('modal.ok'),
+								label: 'modal.ok',
 								runfunction: async () => {
 									await delete mb.libraryIcons[libraryId];
 									await setUserSettings('mangabox.ui.libraryicons', JSON.stringify(mb.libraryIcons))
@@ -4270,7 +4649,7 @@
 								},
 								high: true
 							},
-							{ label: t('modal.cancel'), runfunction: cancelUpdate, high: false }
+							{ label: 'modal.cancel', runfunction: cancelUpdate, high: false }
 						]);
 
 					}
@@ -4353,11 +4732,11 @@
 
 			const summary = (isReadlist ?
 				summaryData :
-				(serie.metadata.summary != "")
+				(serie.metadata.summary != '')
 					? serie.metadata.summary.replace(/\n/g, '<br>')
-					: (serie.booksMetadata.summary != ""
-						? `<u><span data-i18n="seriesheader.summary" data-i18n-vars='${JSON.stringify({summarysource: serie.booksMetadata.summaryNumber})}'></span></u><br>` + serie.booksMetadata.summary.replace(/\n/g, '<br>')
-						: ""
+					: (serie.booksMetadata.summary != ''
+						? `<u><span data-i18n="seriesheader.summary" data-i18n-vars='${JSON.stringify({ summarysource: serie.booksMetadata.summaryNumber })}'></span></u><br>` + serie.booksMetadata.summary.replace(/\n/g, '<br>')
+						: ''
 					)
 			)
 
@@ -4439,7 +4818,7 @@
 		}
 
 		async function showBookDetails(book) {
-			bookDetailCover.className = "book-thumbnail hidden";
+			bookDetailCover.className = 'book-thumbnail hidden';
 			bookDetailsTitle.style.opacity = 0;
 			bookDetailsSummary.style.opacity = 0;
 
@@ -4479,9 +4858,6 @@
 			let offline = {};
 
 			if (useOfflineCopy) {
-				//TODO Alternative way: when read status change, and the book 
-				// is offline, update the saved metadata so it will always be in sync
-				// but will this sync with the reading offline? No
 
 				// Load saved metadata, the function also apply the new page position
 				offline = await obLoadOfflineBook(book.id);
@@ -4512,8 +4888,8 @@
 			}
 
 			if (bookIsDownloading) {
-				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + "%";
-				bookDownloadUI.innerText = mb.offlineBooks[book.id].percent + "%";
+				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + '%';
+				bookDownloadUI.innerText = mb.offlineBooks[book.id].percent + '%';
 			}
 
 			const mainRow = addItem('div', {
@@ -5144,7 +5520,7 @@
 
 			orientationThresholdRatio: 1.0,		//Orientation threshold
 
-			preloadCount: isCapacitor ? 1 : 5,			// TODO SET BACK TO 15 Image preload count
+			preloadCount: isCapacitor ? 1 : 5,			//Used to be 15 Image preload count, but it stutters
 
 			preloadPicDelay: 300,	// Delay before adding new spreads to the preload stack
 			loadDelay: 100,			// Delay used when jumping to a spread before really updating
@@ -5419,7 +5795,7 @@
 			rd.turnScrollDelay = rd.turnScrollDelay0 * mb.readerAnimation;
 			rd.turnScrollTime = rd.turnScrollTime0 * mb.readerAnimation;
 
-			localStorage.setItem('c_readerAnimation', JSON.stringify(mb.readerAnimation))
+			localStorage.setItem(`c_${mb.currentUserId}_readerAnimation`, JSON.stringify(mb.readerAnimation))
 		}
 
 		function changeReaderTheme() {
@@ -5435,7 +5811,7 @@
 			//TODO Is this used???
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
-			//rd.titleBarColor = "black";
+			//rd.titleBarColor = 'black';
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -5512,8 +5888,6 @@
 			setThumbZoom(!rd.thumbZoom);
 		});
 		addPressEvents(thumbStripButtonWT, scaleDown, scaleUp);
-
-		//TODO This code is flexible and usable for both, an alternative is splitting all the code for the two WT and !WT
 
 		const resizeObserver = new ResizeObserver(entries => {
 			clientSize = rd.webtoon ? 'clientHeight' : 'clientWidth';
@@ -5609,8 +5983,8 @@
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
 			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
 
-			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add("hidden");
-			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add("hidden");
+			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden');
+			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden');
 
 			const noCover = bookData.metadata.tags.includes('no-cover');
 			const noWhitePage = bookData.metadata.tags.includes('no-blank-page');
@@ -5672,7 +6046,7 @@
 		}
 
 		// Add this once when initializing the viewer
-		//readerViewer.style.transition = "left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease";
+		//readerViewer.style.transition = 'left 0.3s ease, border-width 0.3s ease, border-image-slice 0.3s ease';
 
 		function buildForeEdge(index, total) {
 			// book size is a parabola based on number of spreads capped at 400 spreads
@@ -5690,7 +6064,7 @@
 
 		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
 			// I put the image item and container item in the array so I can target them for changes
-			// and I put all the metadata like "hasSrc" in the object metadata instead of in a separate item.
+			// and I put all the metadata like 'hasSrc' in the object metadata instead of in a separate item.
 			if (!rd.webtoon) {
 				return ({
 					// dom object, spread div and its content
@@ -5768,8 +6142,8 @@
 							aspectRatio: isHidden ? '0.001' : pageData.AR,
 						}
 				}),
-				hasSrc: (isBlank || isHidden) ? true : false,
-				lazySrc: (isBlank || isHidden) ? '' : pageData.url,
+				hasSrc: isHidden ? true : false,
+				lazySrc: isHidden ? '' : (isBlank ? 'mangablankw.png' : pageData.url),
 				size: (isBlank || isHidden) ? 0 : pageData.size,
 				pageNum: (isBlank || isHidden) ? '' : pageData.pageNum,
 				isCurrent: (isBlank || isHidden) ? false : pageData.isCurrent,
@@ -5823,8 +6197,8 @@
 			const newScale = Math.min(100, Math.max(20, mb.webtoonScale + inc));
 			mb.webtoonScale = newScale;
 
-			localStorage.setItem('c_webtoonScale', JSON.stringify(newScale))
-			scaleVal.innerText = newScale + "%";
+			localStorage.setItem(`c_${mb.currentUserId}_webtoonScale`, JSON.stringify(newScale))
+			scaleVal.innerText = newScale + '%';
 
 			animateWebtoonScale(oldScale, newScale, 200, t => t * (2 - t));
 		}
@@ -5834,8 +6208,8 @@
 			const newScale = Math.min(110, Math.max(50, mb.readerScale + inc));
 			mb.readerScale = newScale;
 
-			localStorage.setItem('c_readerScale', JSON.stringify(newScale))
-			scaleVal.innerText = newScale + "%";
+			localStorage.setItem(`c_${mb.currentUserId}_readerScale`, JSON.stringify(newScale))
+			scaleVal.innerText = newScale + '%';
 
 			animateReaderScale(oldScale, newScale, 200, t => t * (2 - t));
 		}
@@ -6286,10 +6660,6 @@
 
 			});
 
-			//TODO Qui non funziona bene, spostato dopo initviewer, si può togliere?
-			//TODO Tolto, verificare
-			//spreadSetFocus(getSpreadFocus(rd.currentSpreadIndex));
-
 			return pageData;
 		}
 
@@ -6484,7 +6854,7 @@
 
 			const currentPage = lastSpread ? spreadObject.spreadRefPage + 1 : spreadObject.spreadRefPage;
 
-			let pageNumText = rd.webtoon ? spreadObject.pageNumL + "" : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
+			let pageNumText = rd.webtoon ? spreadObject.pageNumL + '' : spreadObject.pageNumL + ' ' + spreadObject.pageNumR;
 
 			pageNumText = pageNumText.trim().replace(' ', '￨')
 
@@ -6510,10 +6880,14 @@
 					.catch(error => console.error('Error:', error));
 			}
 
+			//V039						
 			if (obIsBookCompleted(rd.bookId)) {
-				mb.offlineBooks[rd.bookId].page = rd.currentPage;
-				if (offlineSession) mb.offlineBooks[rd.bookId].updated = true;
-				obSaveTable();
+				const userData = mb.offlineBooks[rd.bookId]?.users?.[mb.currentUserId];
+				if (userData) {
+					userData.page = rd.currentPage;
+					if (offlineSession) userData.updated = true;
+					obSaveTable();
+				}
 			}
 
 			return (stringOut);
@@ -6636,7 +7010,7 @@
 				{ duration: duration, easing: ease }
 			]);
 		}
-		//TODO Tutta quella stringa complicata col calc potrebbe essere sostituita conoscendo larghezza e altezza in pixel? boh
+
 		function animShadowBWD(align, duration, ease) {
 			return ([
 				[{ [align]: '100%', width: '0', opacity: '0' },
@@ -6958,7 +7332,7 @@
 			rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjL.uiPage.blobUrl;
 			rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.src = rd.spreadsArray[localNewSpreadIndex].pageObjR.uiPage.blobUrl;
 				*/
-			// TODO
+			//TODO
 			// It always call spreadSetFocusSmoothDelay, because when in horiontal mode the target is 
 			// center and there's no scrolling happening in that case, page turn is treated separately 
 			// This adds a slight delay when jumping cover to cover
@@ -7362,7 +7736,7 @@
 					const img = entry.target;
 					img.classList.add('loading');
 
-					// TODO Set the actual src from lazySrc, check if needed
+					//TODO Set the actual src from lazySrc, check if needed
 					const imageUrl = await fetchMedia(img.lazySrc);
 					img.src = imageUrl;
 
@@ -7430,7 +7804,7 @@
 
 			function handleTouchStart(event) {
 				if (getDerivedScale() > 1.01) return;
-				debugPrint("HandleTouchStart noscale")
+				debugPrint('HandleTouchStart noscale')
 				if (event.touches.length > 1) {
 					item.SingleTouch = false; // Multiple touches: ignore for swipe
 					return;

@@ -124,5 +124,19 @@
 	"language.automatic": "Idioma del sistema",
 	"login.username": "Usuario",
 	"login.password": "Contraseña",
-	"login.serverurl": "URL del servidor"
+	"login.serverurl": "URL del servidor",
+	"login.servername": "Nombre del servidor",
+	"servers.title": "Lista de servidores",
+	"servers.add": "Agregar servidor",
+	"servers.delete": "Confirmar eliminación del servidor",
+	"servers.unsaved": "Servidor temporal",
+	"servers.serverslist": "Lista de servidores",
+	"button.login": "Login",
+	"button.delete": "Eliminar",
+	"button.edit": "Editar",
+	"button.testserver": "Probar el servidor",
+	"button.saveserver": "Guardar el servidor",
+	"button.save": "Guardar",
+	"server.connectionok": "Conexión al servidor correcta",
+	"servers.logoutall": "Cerrar sesión en todos"
 }

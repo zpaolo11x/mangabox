@@ -1,51 +1,129 @@
 // script.js
 
+async function checkCredentialsCap() {
+	debugPrint('check Credentials Capacitor')
+	const creds = await Capacitor.Plugins.SecureStoragePlugin.keys()
+	try {
+		debugPrint(JSON.stringify(creds));
+	} catch (err) { debugPrint('error in keys') }
+
+	const value = creds.value;
+
+	if (!value || value.length === 0) {
+		return null;
+	}
+	if (value.length > 1) {
+		await Capacitor.Plugins.SecureStoragePlugin.clear()
+		console.warn('Multiple credentials found, cleaned');
+	}
+	return value[0];
+}
+
+async function setCredentialsCap(serverId, password) {
+	debugPrint("Saving Credentials:" + serverId + " " + password)
+
+	try {
+		const result = await Capacitor.Plugins.SecureStoragePlugin.set({
+			key: serverId,
+			value: password
+		});
+
+		debugPrint(`SecureStorage set result: ${result?.value === true ? 'OK' : 'FAILED'}`);
+	} catch (err) {
+		debugPrint(`SecureStorage error while saving credentials for ${serverId}`, err);
+		throw err;
+	}
+}
+async function deleteCredentialsCap(serverId) {
+	debugPrint("Deleting Credentials:" + serverId)
+
+	try {
+		const result = await Capacitor.Plugins.SecureStoragePlugin.remove({
+			key: serverId
+		});
+
+		debugPrint(`SecureStorage del result: ${result?.value === true ? 'OK' : 'FAILED'}`);
+	} catch (err) {
+		debugPrint(`SecureStorage error while deleting credentials for ${serverId}`, err);
+		throw err;
+	}
+}
+
+async function getCredentialsCap(serverId) {
+	let result = null;
+	try {
+		result = await Capacitor.Plugins.SecureStoragePlugin.get({
+			key: serverId
+		});
+		debugPrint(JSON.stringify(result));
+		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
+	} catch (err) {
+		debugPrint(`SecureStorage error while loading credentials for ${serverId}`, err);
+		throw err;
+	}
+	if (!result) return null;
+
+	return result.value;
+}
+
+//This is an old orphane function!
 async function checkSavedUser() {
-	const user = await window.secureStore.checkCredentials2();
+	let user = 'cookie'
+	if (isWeb) {
+		//NO action
+	}
+	if (isElectron) {
+		user = await window.secureStore.checkCredentials2()
+	}
+	if (isCapacitor) {
+		user = await checkCredentialsCap();
+	}
 	return user;
 }
 
-async function saveUserPass(user, pass) {
-	await window.secureStore.setCredentials2(user, pass);
+async function saveUserPass(serverId, pass) {
+	if (isWeb && webPWD) {
+		localStorage.setItem(serverId, pass);
+		return
+	}
+	if (isElectron) {
+		await window.secureStore.setCredentials2(serverId, pass);
+	}
+	if (isCapacitor) {
+		await setCredentialsCap(serverId, pass);
+	}
 }
 
-async function loadUserPass(user) {
-	const pass = await window.secureStore.getCredentials2(user);
+async function loadUserPass(serverId) {
+	let pass = '';
+	if (isWeb && webPWD) {
+		pass = localStorage.getItem(serverId) || '';
+	}
+	if (isElectron) {
+		pass = await window.secureStore.getCredentials2(serverId);
+	}
+	if (isCapacitor) {
+		pass = await getCredentialsCap(serverId);
+	}
+
 	if (pass) {
 		return (pass);
 	} else {
-		return (false);
+		return ('');
 	}
 }
 
-async function deleteUserPass(user) {
-	await window.secureStore.deleteCredentials2(user);
-}
-
-async function saveToken(token) {
-	debugPrint("saveToken...")
-	console.log("saveToken...")
-	await window.secureStore.setCredentials('auth', token);
-}
-
-async function loadToken() {
-	debugPrint("loadToken...")
-	console.log("loadToken...")
-	const token = await window.secureStore.getCredentials('auth');
-	debugPrint("Retrieved Token:" + token);
-	console.log("Retrieved Token:" + token);
-	if (token) {
-		return (token);
-	} else {
-		return (false);
+async function deleteUserPass(serverId) {
+	if (isWeb && webPWD) {
+		localStorage.removeItem(serverId);
+		return
 	}
-}
-
-async function deleteToken() {
-	debugPrint("deleteToken...")
-	console.log("deleteToken...")
-
-	await window.secureStore.deleteCredentials('auth');
+	if (isElectron) {
+		await window.secureStore.deleteCredentials2(serverId);
+	}
+	if (isCapacitor) {
+		await deleteCredentialsCap(serverId)
+	}
 }
 
 async function sessionCheck() {
@@ -54,24 +132,26 @@ async function sessionCheck() {
 	debugPrint("sessionCheck...");
 	console.log("sessionCheck...");
 
+	// At session start load current server and current user Id
+	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
+	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
+	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
+
 	loginBaseUrl.value = mb.baseUrl;
 
-	// Load stored token (e.g. from Electron storage)
-	mb.loggedUser = 'cookie';
-	if (isElectron) mb.loggedUser = await checkSavedUser();
-
-	console.log("Z - loggedUser:" + mb.loggedUser)
+	console.log("Z - loggedServer:" + mb.currentServerId)
+	debugPrint("Z - loggedServer:" + mb.currentServerId)
 
 	// --- 1. Missing credentials → login
-	if ((!mb.baseUrl) || (!mb.loggedUser)) {
-		debugPrint("Missing base URL or auth token");
-		showLoginDialog();
+	if ((!mb.baseUrl) || (!mb.currentServerId) || (!mb.currentUserId)) {
+		debugPrint("Missing base URL or login data");
+		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 		await executeFaderGradient(0);
 		return;
 	}
 
 	// --- 2. Connectivity check (optional for immediate offline mode)
-	const sessionWasValid = localStorage.getItem("sessionValid") === "true";
+	const sessionWasValid = localStorage.getItem("mb00SessionValid") === "true";
 	let offline = !navigator.onLine;
 
 	if (offline) {
@@ -81,18 +161,17 @@ async function sessionCheck() {
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog();
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 		}
 		return;
 	}
 
-	// --- 3. Try validating the token
+	// --- 3. Try validating the login
 	let fetchPayload
-	if (isElectron) {
-
-		const username = mb.loggedUser;
-		const password = await loadUserPass(mb.loggedUser);
+	if (!isWeb || (isWeb && webPWD)) {
+		const username = mb.serverList[mb.currentServerId].username;
+		const password = await loadUserPass(mb.currentServerId);
 
 		fetchPayload = {
 			method: 'GET',
@@ -114,20 +193,32 @@ async function sessionCheck() {
 	}
 
 	try {
-		const response = await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
+		const response = await fetch(`${mb.baseUrl}/api/v2/users/me`, fetchPayload);
+
+		//TODO Magari usare callAPI invece?
+		const rawBody = await response.text();
+		let parsed = null;
+		try {
+			parsed = JSON.parse(rawBody);
+		} catch (e) {
+			console.warn(`BODY IS NOT JSON`);
+		}
 
 		if (response.ok) {
+			if (isWeb && !webPWD) await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
-			localStorage.setItem("sessionValid", "true");
+			localStorage.setItem("mb00SessionValid", "true");
 			hideLoginDialog();
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
-			debugPrint("Token invalid or expired.");
-			console.log("Token invalid or expired.");
-			localStorage.removeItem("sessionValid");
-			showLoginDialog();
+			debugPrint("Credentials invalid or expired.");
+			console.log("Credentials invalid or expired.");
+			mb.currentUserId = false;
+
+			localStorage.removeItem("mb00SessionValid");
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 
 		} else {
@@ -139,7 +230,7 @@ async function sessionCheck() {
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog();
+				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 				await executeFaderGradient(0);
 			}
 		}
@@ -155,17 +246,38 @@ async function sessionCheck() {
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog();
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			await executeFaderGradient(0);
 
 		}
 	}
 }
 
+async function setServerFields(serverId, serverData) {
+
+	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
+	loginBaseUrl.value = serverData.url;
+	loginUsername.value = (serverId == 'mb0') ? '' : serverData.username;
+
+	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0') || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
+		// When password is requested, the password field is always EMPTY
+		// same in web mode, the password is never shown ever
+		loginPassword.value = ''
+	} else {
+		let localPass = await loadUserPass(serverId);
+
+		loginPassword.value = localPass;
+		
+		localPass = null;
+	}
+
+
+}
+
 async function systemRestart() {
 	//TODO: This works and is quite good but it would be better to implement a navigateTo "login" for the login screen
 	//TODO: and externalise the functions that are hear in a function that is called at boot or at login screen show
-
+	console.log("SYSRESTART")
 	// Reapply boot theme
 	await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
@@ -173,14 +285,11 @@ async function systemRestart() {
 
 	loginScreen.classList = "auth-hidden logo-pattern";
 	// Clear login dialog content
-	loginBaseUrl.value = "";
-	loginPassword.value = "";
-	loginUsername.value = "";
+
+	setServerFields('mb0', mb.serverList['mb0'])
 
 	loginError.textContent = '';
-	if (!loginError.classList.contains('auth-hiden')) {
-		loginError.classList.add('auth-hidden');
-	}
+	loginError.classList.toggle('auth-hidden', true);
 	executeFade(1);
 
 	if (isStatusBar) {
@@ -241,69 +350,238 @@ async function systemRestart() {
 	sessionCheck();
 }
 
+async function loginToServer(event, serverId, test) {
 
-async function login() {
+	if (serverId == 'mb0') {
+		//mb.currentServerId = serverId;
+		localStorage.removeItem('mb00CurrentServerId');
+		localStorage.removeItem('mb00CurrentUserId');
+		closeModal();
+		systemRestart()
+		
+		//showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
+		return
+	}
+
+	mb.loggingServerId = serverId;
+
+	event.stopPropagation();
+
+	if (mb.serverList[serverId].askPassword || (isWeb && !webPWD)) {
+		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
+		closeModal();
+	} else {
+		//mb.currentServerId = serverId;
+		closeModal();
+		showLoginDialog('editserver', serverId, mb.serverList[serverId])
+
+
+		//TODO CHECK IF THIS IS REALLY NEEDED
+		//TODO Agguyngere questo solo per web???
+		//let serverTable = {}
+		//serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
+		//await logoutFromServer(serverTable);
+
+		mb.currentServerId = serverId;
+		mb.currentUserId = mb.serverList[serverId].userId;
+		
+		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
+		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
+		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
+
+		//TODO It was this 
+		// systemRestart();
+		// and was changed back to this:
+		// login(serverId, test, false);
+		// The problem is that login doesn't work when in offline mode
+		// so either I make login work in offline, or
+		// I need to save the user id even in this logintoserver if it's not there
+		// OR I can check if the id is there or not.
+		history.pushState(null, '', mb.basePath + '#dashboard');
+		
+		if (mb.currentUserId == false){
+			login(serverId, test, false);
+		} else {
+			systemRestart();
+		}
+
+	//		login(serverId, test, false);
+
+	}
+
+	return
+	/*
+	if (mb.serverList[serverId].askPassword) {
+		showLoginDialog('firstboot', serverId)
+	} else {
+		login(serverId, test, false)
+	}
+	*/
+}
+
+async function login(serverId, test, fromDialog) {
+
+	if (serverId == 'mb0') {
+		mb.serverList['mb0'].url = loginBaseUrl.value;
+		mb.serverList['mb0'].username = loginUsername.value;
+	}
+
 	debugPrint("login...")
 	console.log("login...")
 
-	loginError.classList.remove('auth-hidden');
-	loginError.classList.add('auth-hidden');
+	loginError.classList.toggle('auth-hidden', true);
 
-	let baseUrlVal = loginBaseUrl.value;
+	let baseUrlVal = fromDialog ? loginBaseUrl.value : mb.serverList[serverId].url;
+	let usernameVal = fromDialog ? loginUsername.value : mb.serverList[serverId].username;
+	let passwordVal = fromDialog ? loginPassword.value : await loadUserPass(serverId);
 
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
 	}
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
-	let mbAuthHeader = 'Basic ' + btoa(`${loginUsername.value}:${loginPassword.value}`);
+	//TODO Questo funziona per i test con server 0 e per gli edit quando i valori del server da modificare si portano
+	// in editserver e quindi sono già nei field. Funziona anche con l'enter della password perché i field sono popolati
+	// Ma funzionerò quando la password è automatica, e non voglio passare per i field???
 
-	fetch(`${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`, {
+	let mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
+
+	let fetchString = (isWeb && !webPWD)
+		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
+		: `${baseUrlVal}/api/v2/users/me`;
+
+	fetch(`${baseUrlVal}/api/v2/users/me`, {
 		method: 'GET',
 		credentials: 'include',
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
-			'X-Auth-Token': '',
 			'skip_zrok_interstitial': '1'
 		}
 	}).then(async response => {
-		const token = response.headers.get('X-Auth-Token');
-		if (response.ok && token) {
-			await executeFaderGradient(1);
-			localStorage.setItem('mbBaseUrl', baseUrlVal);
-			if (isElectron) {
-				await saveUserPass(loginUsername.value, loginPassword.value);
+		if (response.ok) {
+
+			const rawBody = await response.text();
+			let parsed = null;
+			try {
+				parsed = JSON.parse(rawBody);
+			} catch (e) {
+				console.warn(`BODY IS NOT JSON`);
 			}
-			systemRestart();
+
+			if (!test) {
+				await executeFaderGradient(1);
+				localStorage.setItem('mb00BaseUrl', baseUrlVal);
+
+				mb.currentServerId = serverId;
+				mb.currentUserId = parsed.id;
+
+				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
+				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
+				localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
+		
+				mb.serverList[serverId].userId = mb.currentUserId;
+				mb.serverList[serverId].askPassword = false;
+		
+				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
+
+				//TODO Magari resettare la password quando anche user 0 fa logout?
+				if (serverId == 'mb0') saveUserPass(serverId, passwordVal)
+				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
+
+				if (isWeb && !webPWD) await fetch(`${baseUrlVal}/api/v1/login/set-cookie`, {
+					method: 'GET',
+					credentials: 'include',
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest',
+						'skip_zrok_interstitial': '1'
+					}
+				});
+
+				console.log("LOG-SYSTEM RESTART")
+				systemRestart();
+			} else {
+				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
+			}
 		} else if (response.status === 401) {
 			loginError.textContent = `Invalid username or password.`;
-			loginError.classList.remove('auth-hidden');
+			loginError.classList.toggle('auth-hidden', false);
 		} else {
 			loginError.textContent = `Login failed`;
-			loginError.classList.remove('auth-hidden');
+			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
 		console.error('Login error:', error);
 		loginError.textContent = `Cannot reach server. Check the address or your connection. ${error}`;
-		loginError.classList.remove('auth-hidden');
+		loginError.classList.toggle('auth-hidden', false);
 	});
 
+	// Reset login credentials
+	if (!test) {
+		loginPassword.value = null;
+		mbAuthHeader = null;
+	}
 }
 
+function applyScenario(modeName, serverId, serverData) {
+	const buttonsEnable = new Set(mb.loginModes[modeName].buttons || []);
+	document.querySelectorAll(".action").forEach(btn => {
+		btn.style.display = !buttonsEnable.has(btn.id) ? 'none' : '';
+	});
 
-function showLoginDialog() {
-	dragbar.classList.add('onLogin');
-	debugPrint("showLoginDialog...")
-	console.log("showLoginDialog...")
-	loginScreen.classList.remove('auth-hidden');
+	const inputsEnable = new Set(mb.loginModes[modeName].inputs || []);
+	document.querySelectorAll(".input-wrapper").forEach(inp => {
+		inp.classList.toggle('disabled-input', !inputsEnable.has(inp.id));
+	});
+
+	if (modeName == 'firstboot') {
+		mb.editServerId = 'mb0';
+		mb.editServerData = mb.serverList['mb0'];
+	}
+
+	if ((modeName == 'editserver') && (isWeb && !webPWD)) {
+		divPassword.classList.toggle('disabled-input', true);
+	}
+
+	if (mb.loginMode == 'enterpassword') {
+		setTimeout(() => {
+			loginPassword.focus();
+			loginPassword.select(); // optional
+		}, 0);
+	}
+
+	setServerFields(serverId, serverData);
+}
+
+function showLoginDialog(dialogMode, serverId, serverData) {
+
+	mb.loginMode = dialogMode;
+
+	//dialogMode = 'firstboot'
+	loginError.textContent = '';
+	loginError.classList.toggle('auth-hidden', true);
+
+	applyScenario(dialogMode, serverId, serverData)
+
+	loginPassword.type = 'password';
+	viewPassword.classList.toggle('fa-eye', true);
+	viewPassword.classList.toggle('fa-eye-slash', false);
+
+	if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
+	debugPrint("show Login Dialog...")
+	console.log("show Login Dialog...")
+	loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
+	loginScreen.classList.toggle('no-logo-pattern', mb.currentServerId)
+	loginScreen.classList.toggle('auth-hidden', false);
 }
 
 function hideLoginDialog() {
-	dragbar.classList.remove('onLogin');
-	debugPrint("hideLoginDialog...")
-	console.log("hideLoginDialog...")
-	loginScreen.classList.add('auth-hidden');
+	mb.loginMode = '';
+
+	dragbar.classList.toggle('onLogin', false);
+	debugPrint("hide Login Dialog...")
+	console.log("hide Login Dialog...")
+	loginScreen.classList.toggle('auth-hidden', true);
 }
 
 function isLoginScreenHidden() {

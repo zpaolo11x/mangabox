@@ -124,5 +124,19 @@
 	"language.automatic": "Systemsprache",
 	"login.username": "Benutzername",
 	"login.password": "Passwort",
-	"login.serverurl": "Server-URL"
+	"login.serverurl": "Server-URL",
+	"login.servername": "Servername",
+	"servers.title": "Serverliste",
+	"servers.add": "Server hinzufügen",
+	"servers.delete": "Löschen des Servers bestätigen",
+	"servers.unsaved": "Temporärer Server",
+	"servers.serverslist": "Serverliste",
+	"button.login": "Anmelden",
+	"button.delete": "Löschen",
+	"button.edit": "Bearbeiten",
+	"button.testserver": "Server testen",
+	"button.saveserver": "Server speichern",
+	"button.save": "Speichern",
+	"server.connectionok": "Serververbindung erfolgreich",
+	"servers.logoutall": "Alle abmelden"
 }

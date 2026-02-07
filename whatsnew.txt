@@ -1,7 +1,8 @@
 Main UI
-- Long press on filters open filters or sort menu
-- Added UI translations for Italian, French, Deutsch and Spanish
-- Rearranged search field so it enlarges when the screen is small
+- Introduced support for multiple users and multiple servers
+- Added test server and server list buttons to login screen
+- Added server management to logout button
+- Added icon to show/hide the password at login screen
 
-Fixes
-- Fixed issue when sorting by date
+Reader UI
+- Customised the blank page added by "no_blank_page" book tag

@@ -247,6 +247,9 @@ jobs:
       - name: iOS - Install Capacitor StatusBar plugin
         run: npm install @capacitor/status-bar@7
 
+      - name: Install Capacitor Secure Storage plugin
+        run: npm install capacitor-secure-storage-plugin@0.12.0
+
       - name: Install Capacitor Camera plugin
         run: npm install @capacitor/camera@7
 

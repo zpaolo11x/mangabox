@@ -10,6 +10,7 @@
 	"button.search": "Cerca",
 	"button.searchtext": "Cerca…",
 	"button.logout": "Logout",
+	"button.serversusers": "Utente e server",
 	"header.keepreading": "Continua a leggere",
 	"header.ondeck": "Prossime letture",
 	"header.lastaddedbooks": "Libri aggiunti",
@@ -124,5 +125,19 @@
 	"language.automatic": "Lingua di sistema",
 	"login.username": "Nome utente",
 	"login.password": "Password",
-	"login.serverurl": "URL del server"
+	"login.serverurl": "URL del server",
+	"login.servername": "Nome del server",
+	"servers.title": "Lista server",
+	"servers.add": "Aggiungi server",
+	"servers.delete": "Conferma eliminazione server",
+	"servers.unsaved": "Server temporaneo",
+	"button.serverslist": "Lista server",
+	"button.login": "Login",
+	"button.delete": "Elimina",
+	"button.edit": "Modifica",
+	"button.testserver": "Prova Server",
+	"button.saveserver": "Salva Server",
+	"button.save": "Salva",
+	"server.connectionok": "Connessione al Server OK",
+	"servers.logoutall": "Disconnetti tutti"
 }

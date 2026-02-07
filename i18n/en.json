@@ -10,6 +10,7 @@
 	"button.search": "Search",
 	"button.searchtext": "Search…",
 	"button.logout": "Logout",
+	"button.serversusers": "User and Server",
 	"header.keepreading": "Keep Reading",
 	"header.ondeck": "On Deck",
 	"header.lastaddedbooks": "Last Added Books",
@@ -124,5 +125,19 @@
 	"language.automatic": "System Language",
 	"login.username": "Username",
 	"login.password": "Password",
-	"login.serverurl": "Server URL"
+	"login.serverurl": "Server URL",
+	"login.servername": "Server Name",
+	"servers.title": "Servers List",
+	"servers.add": "Add Server",
+	"servers.delete": "Confirm Delete Server",
+	"servers.unsaved": "Temporary Server",
+	"button.serverslist": "Servers List",
+	"button.login": "Login",
+	"button.delete": "Delete",
+	"button.edit": "Edit",
+	"button.testserver": "Test Server",
+	"button.saveserver": "Save Server",
+	"button.save": "Save",
+	"server.connectionok": "Sever Connection OK",
+	"servers.logoutall": "Logout All"
 }
