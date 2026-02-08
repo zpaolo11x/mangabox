@@ -1,8 +1,11 @@
 Main UI
-- Introduced support for multiple users and multiple servers
-- Added test server and server list buttons to login screen
-- Added server management to logout button
-- Added icon to show/hide the password at login screen
+- 
 
 Reader UI
-- Customised the blank page added by "no_blank_page" book tag
+- 
+
+Buil
+- 
+
+Fixes
+- 
