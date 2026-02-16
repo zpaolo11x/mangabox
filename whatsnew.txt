@@ -1,5 +1,5 @@
 Main UI
-- 
+- Login buttons size reduced on small screens
 
 Reader UI
 - 
