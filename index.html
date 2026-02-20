@@ -6881,10 +6881,15 @@
 
 			//V039						
 			if (obIsBookCompleted(rd.bookId)) {
+				console.log ("----- book "+rd.bookId+" is downloaded")
 				const userData = mb.offlineBooks[rd.bookId]?.users?.[mb.currentUserId];
 				if (userData) {
+					console.log ("----- userdata")
+					console.log(userdata)
 					userData.page = rd.currentPage;
 					if (offlineSession) userData.updated = true;
+					console.log ("----- ob table")
+					console.log (mb.offlineBooks[rd.bookId])
 					obSaveTable();
 				}
 			}
