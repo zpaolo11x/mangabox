@@ -3223,7 +3223,10 @@
 			//V039
 			console.log ("refreshreadstatus")
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
+				console.log ("bookId:"+bookId)
 				const userData = item.users?.[mb.currentUserId];
+				console.log ("userData:")
+				console.log(userData)
 				if (userData?.updated) {
 					await callAPI(
 						null,
