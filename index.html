@@ -396,11 +396,11 @@
 		const webPWD = false;
 
 		// Enable for live debug on the main UI
-		const enableDebugPrint = false;
+		const enableDebugPrint = true;
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
-			? text => (console.log(text); debuggerObj.innerText += text + '\n')
+			? text => (debuggerObj.innerText += text + '\n')
 			: () => { };
 
 
