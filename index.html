@@ -400,7 +400,7 @@
 		debuggerObj.style.display = enableDebugPrint ? 'block' : 'none';
 
 		const debugPrint = enableDebugPrint
-			? text => (debuggerObj.innerText += text + '\n')
+			? text => (console.log(text); debuggerObj.innerText += text + '\n')
 			: () => { };
 
 
@@ -3221,6 +3221,7 @@
 
 		async function obRefreshReadStatus() {
 			//V039
+			console.log ("refreshreadstatus")
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
 				const userData = item.users?.[mb.currentUserId];
 				if (userData?.updated) {
