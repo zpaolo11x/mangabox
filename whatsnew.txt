@@ -8,4 +8,4 @@ Buil
 - 
 
 Fixes
-- 
+- Fixed offline books reading sync
