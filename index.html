@@ -3200,14 +3200,8 @@
 			if (!bookData.bookMetadata.readProgress) {
 				bookData.bookMetadata.readProgress = {};
 			}
+			bookData.bookMetadata.readProgress.page = mb.offlineBooks[bookId].users[mb.currentUserId].page;
 
-			bookData.bookMetadata.readProgress.page = mb.offlineBooks[bookId].page;
-console.log("XXX BOKDATA XXX");
-console.log(bookData);
-console.log("XXX OFFLINEBOOKS XXX");
-console.log(bookId);
-console.log(mb.offlineBooks);
-console.log(mb.offlineBooks[bookId]);
 			return bookData;
 		}
 
@@ -3411,7 +3405,7 @@ console.log(mb.offlineBooks[bookId]);
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 
 				if (obIsBookCompleted(rd.bookId)) {
-					mb.offlineBooks[bookId].page = mb.offlineBooks[bookId].pages;
+					mb.offlineBooks[bookId].users[mb.currentUserId].page = mb.offlineBooks[bookId].pages;
 					obSaveTable();
 				}
 
