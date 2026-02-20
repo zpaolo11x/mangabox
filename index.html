@@ -3228,6 +3228,7 @@
 				console.log ("userData:")
 				console.log(userData)
 				if (userData?.updated) {
+					console.log("A")
 					await callAPI(
 						null,
 						`/api/v1/books/${bookId}/read-progress`,
@@ -3237,6 +3238,7 @@
 					);
 					userData.updated = false;
 				}
+			console.log("B")
 			}
 		}
 
