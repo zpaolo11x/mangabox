@@ -1277,7 +1277,7 @@
 
 		//MB API Call Function 
 
-		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
+		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true, obfetch = false) {
 			console.log("-1")
 			const db = await openIndexedDB();
 			console.log("-2")
@@ -1300,7 +1300,7 @@
 			}
 			console.log("-5")
 
-			if (!offlineSession) {
+			if (!offlineSession && !obfetch) {
 				await obRefreshReadStatus();
 			}
 			console.log("-6")
@@ -3241,7 +3241,8 @@
 						`/api/v1/books/${bookId}/read-progress`,
 						'PATCH',
 						JSON.stringify({ page: userData.page }),
-						false
+						false,
+						true
 					);
 					userData.updated = false;
 				}
