@@ -1278,13 +1278,18 @@
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
+			console.log("-1")
 			const db = await openIndexedDB();
+			console.log("-2")
 
 			if (offlineSession) {
 				await onlineCheck()
 			};
+			console.log("-3")
 
 			if (offlineSession) {
+							console.log("-4")
+
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
 					const cached = await getCachedData(db, cacheKey);
@@ -1293,10 +1298,12 @@
 				console.warn(`No cached data for ${API_url} while offline`);
 				return null; // or throw if needed
 			}
+			console.log("-5")
 
 			if (!offlineSession) {
 				await obRefreshReadStatus();
 			}
+			console.log("-6")
 
 			try {
 				const req = await buildRequest(method, body);
@@ -3238,7 +3245,7 @@
 					);
 					userData.updated = false;
 				}
-			console.log("B")
+				console.log("B")
 			}
 		}
 
