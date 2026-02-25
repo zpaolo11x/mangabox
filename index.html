@@ -767,7 +767,7 @@
 
 		//MB Offline Events Response
 
-		function obUpdateProgressResponse(bookId, completed, total) {
+		function obUpdateProgressResponse(bookId, downloadedPages, total) {
 			//DEBUG THIS IS CHECK FOR DOUBLE ELEMENTS
 			let duplicates = document.querySelectorAll(`#${CSS.escape(bookId)}`);
 
@@ -779,7 +779,7 @@
 				console.log(`No element found for ${bookId}.`);
 			}
 
-			const percent = Math.round((completed / total) * 100);
+			const percent = Math.round((downloadedPages / total) * 100);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
 
@@ -795,7 +795,7 @@
 
 		}
 
-		function obDownloaDcompleteResponse(bookId, completed, total) {
+		function obDownloaDcompleteResponse(bookId, downloadedPages, total) {
 			let tempDiv = document.getElementById(bookId);
 
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
@@ -811,21 +811,21 @@
 
 		if (!isWeb) {
 			window.addEventListener('download-progress', (event) => {
-				const { bookId, completed, total } = event.detail;
+				const { bookId, downloadedPages, total } = event.detail;
 
 				const book = mb.offlineBooks?.[bookId];
 				if (!book?.users?.[mb.currentUserId]) return false;
 
-				obUpdateProgressResponse(bookId, completed, total);
+				obUpdateProgressResponse(bookId, downloadedPages, total);
 			});
 
 			window.addEventListener('download-complete', (event) => {
-				const { bookId, completed, total } = event.detail;
+				const { bookId, downloadedPages, total } = event.detail;
 
 				const book = mb.offlineBooks?.[bookId];
 				if (!book?.users?.[mb.currentUserId]) return false;
 
-				obDownloaDcompleteResponse(bookId, completed, total)
+				obDownloaDcompleteResponse(bookId, downloadedPages, total)
 			});
 		}
 
@@ -2935,7 +2935,7 @@
 			await ensureDir(pagesFolder);
 			await ensureDir(thumbsFolder);
 
-			let completed = 0;
+			let downloadedPages = 0;
 
 			try {
 				debugPrint(`Downloading metadata for ${bookId}`);
@@ -3043,16 +3043,16 @@
 					} else {
 						console.log(`Thumb ${page.number} already exists, skipping.`);
 					}
-					completed++;
+					downloadedPages++;
 					// You can dispatch a custom event to your UI
 					window.dispatchEvent(new CustomEvent('download-progress', {
-						detail: { bookId, completed, total: bookMeta.media.pagesCount }
+						detail: { bookId, downloadedPages, total: bookMeta.media.pagesCount }
 					}));
 				}
 
 				debugPrint(`Downloaded book "${bookTitle}" (${bookId})`);
 				window.dispatchEvent(new CustomEvent('download-complete', {
-					detail: { bookId, completed, total: bookMeta.media.pagesCount }
+					detail: { bookId, downloadedPages, total: bookMeta.media.pagesCount }
 				}));
 
 				return { ok: true, path: bookFolder };
