@@ -6897,11 +6897,16 @@
 
 			//V039						
 			if (obIsBookCompleted(rd.bookId)) {
+
+				console.log ("----- initial book status")
+				console.log (mb.offlineBooks[rd.bookId])
 				console.log ("----- book "+rd.bookId+" is downloaded")
 				const userData = mb.offlineBooks[rd.bookId]?.users?.[mb.currentUserId];
 				if (userData) {
 					console.log ("----- userdata")
 					console.log(userData)
+					console.log ("----- currentpage")
+					console.log (rd.currentPage)
 					userData.page = rd.currentPage;
 					if (offlineSession) {
 						console.log("----- UPDATE to TRUE")
