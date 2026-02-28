@@ -6903,7 +6903,10 @@
 					console.log ("----- userdata")
 					console.log(userData)
 					userData.page = rd.currentPage;
-					if (offlineSession) userData.updated = true;
+					if (offlineSession) {
+						console.log("----- UPDATE to TRUE")
+						userData.updated = true;
+					}
 					console.log ("----- ob table")
 					console.log (mb.offlineBooks[rd.bookId])
 					if (userData.page == mb.offlineBooks[rd.bookId].total){
