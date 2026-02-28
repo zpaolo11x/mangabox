@@ -153,7 +153,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		'image/gif': '.gif',
 	};
 
-	let completed = 0;
+	let downloadedPages = 0;
 
 	try {
 
@@ -238,11 +238,11 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 				console.log(`Thumb ${page.number} already exists, skipping.`);
 			}
 
-			completed++;
+			downloadedPages++;
 
 			win.webContents.send('download-progress', {
 				bookId,
-				completed,
+				downloadedPages,
 				total: bookMeta.media.pagesCount,
 			});
 		}
@@ -250,7 +250,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		console.log(`Downloaded and stored book: ${bookTitle} (${bookId})`);
 		win.webContents.send('download-complete', {
 			bookId,
-			completed,
+			downloadedPages,
 			total: bookMeta.media.pagesCount,
 		});
 
