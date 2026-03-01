@@ -3084,6 +3084,10 @@
 				page = (book.readProgress.page >= book.media.pagesCount)
 					? book.media.pagesCount
 					: book.readProgress.page;
+				
+				if (book.readProgress.completed){
+					page = book.media.pagesCount
+				}
 			}
 
 			// ensure root table exists
