@@ -1278,18 +1278,13 @@
 		//MB API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true, obfetch = false) {
-			console.log("-1")
 			const db = await openIndexedDB();
-			console.log("-2")
 
 			if (offlineSession) {
 				await onlineCheck()
 			};
-			console.log("-3")
 
 			if (offlineSession) {
-							console.log("-4")
-
 				console.log(`Offline mode: using cache for ${API_url}`);
 				if (cacheKey != null) {
 					const cached = await getCachedData(db, cacheKey);
@@ -1298,12 +1293,10 @@
 				console.warn(`No cached data for ${API_url} while offline`);
 				return null; // or throw if needed
 			}
-			console.log("-5")
 
 			if (!offlineSession && !obfetch) {
 				await obRefreshReadStatus();
 			}
-			console.log("-6")
 
 			try {
 				const req = await buildRequest(method, body);
@@ -3218,11 +3211,8 @@
 
 		function obRestoreDownloadOnBoot() {
 			//V039
-			console.log("--------------------- RESTORE DOWNLOAD ON BOOT")
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				console.log("--------------------- Check " + bookId)
 				if (item.status === 'downloading' && item.users?.[mb.currentUserId]) {
-					console.log("--------------------- downloading!")
 					//alert("restore book:"+bookId)
 					obSetSpinner(true);
 					obDownloadBook(bookId);
@@ -3232,14 +3222,9 @@
 
 		async function obRefreshReadStatus() {
 			//V039
-			console.log ("refreshreadstatus")
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
-				console.log ("bookId:"+bookId)
 				const userData = item.users?.[mb.currentUserId];
-				console.log ("userData:")
-				console.log(userData)
 				if (userData?.updated) {
-					console.log("A")
 					await callAPI(
 						null,
 						`/api/v1/books/${bookId}/read-progress`,
@@ -6906,22 +6891,12 @@
 			//V039						
 			if (obIsBookCompleted(rd.bookId)) {
 
-				console.log ("----- initial book status")
-				console.log (mb.offlineBooks[rd.bookId])
-				console.log ("----- book "+rd.bookId+" is downloaded")
 				const userData = mb.offlineBooks[rd.bookId]?.users?.[mb.currentUserId];
 				if (userData) {
-					console.log ("----- userdata")
-					console.log(userData)
-					console.log ("----- currentpage")
-					console.log (rd.currentPage)
 					userData.page = rd.currentPage;
 					if (offlineSession) {
-						console.log("----- UPDATE to TRUE")
 						userData.updated = true;
 					}
-					console.log ("----- ob table")
-					console.log (mb.offlineBooks[rd.bookId])
 					if (userData.page == mb.offlineBooks[rd.bookId].total){
 						userData.readProgress.completed = true
 					} else if (userData?.readProgress?.completed == true) {

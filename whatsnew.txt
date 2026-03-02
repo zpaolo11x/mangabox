@@ -4,7 +4,7 @@ Main UI
 Reader UI
 - 
 
-Buil
+Build
 - 
 
 Fixes
