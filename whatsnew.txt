@@ -1,6 +1,11 @@
 Main UI
-- Login buttons size reduced on small screens
+- 
+
+Reader UI
+- 
+
+Build
+- 
 
 Fixes
-- Fixed offline books reading sync
-- Fixed login screen hang
+- 
