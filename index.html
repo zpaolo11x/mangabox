@@ -298,7 +298,7 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.3.9</div>
+				<div class="version-note">v0.4.0</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
@@ -336,13 +336,13 @@
 					</div>
 					<div class="login-buttons-right">
 						<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
-							<span data-i18n="modal.cancel">Cancel</span>
+							<i class="input-glyph fas fa-arrow-rotate-left"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
 						</button>
 						<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
-							<span data-i18n="button.save">Save</span>
+							<i class="input-glyph fas fa-floppy-disk"></i><span class="input-text" data-i18n="button.save">Save</span>
 						</button>
 						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
-							<span data-i18n="button.login">Login</span>
+							<i class="input-glyph fas fa-play"></i><span class="input-text" data-i18n="button.login">Login</span>
 						</button>
 					</div>
 				</div>
@@ -369,7 +369,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.3.9</h1>
+		<h1>MangaBox v0.4.0</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -767,7 +767,7 @@
 
 		//MB Offline Events Response
 
-		function obUpdateProgressResponse(bookId, completed, total) {
+		function obUpdateProgressResponse(bookId, downloadedPages, total) {
 			//DEBUG THIS IS CHECK FOR DOUBLE ELEMENTS
 			let duplicates = document.querySelectorAll(`#${CSS.escape(bookId)}`);
 
@@ -779,7 +779,7 @@
 				console.log(`No element found for ${bookId}.`);
 			}
 
-			const percent = Math.round((completed / total) * 100);
+			const percent = Math.round((downloadedPages / total) * 100);
 			obSetBookProgress(bookId, percent);
 			obSetSpinner(true);
 
@@ -795,7 +795,7 @@
 
 		}
 
-		function obDownloaDcompleteResponse(bookId, completed, total) {
+		function obDownloaDcompleteResponse(bookId, downloadedPages, total) {
 			let tempDiv = document.getElementById(bookId);
 
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
@@ -811,21 +811,21 @@
 
 		if (!isWeb) {
 			window.addEventListener('download-progress', (event) => {
-				const { bookId, completed, total } = event.detail;
+				const { bookId, downloadedPages, total } = event.detail;
 
 				const book = mb.offlineBooks?.[bookId];
 				if (!book?.users?.[mb.currentUserId]) return false;
 
-				obUpdateProgressResponse(bookId, completed, total);
+				obUpdateProgressResponse(bookId, downloadedPages, total);
 			});
 
 			window.addEventListener('download-complete', (event) => {
-				const { bookId, completed, total } = event.detail;
+				const { bookId, downloadedPages, total } = event.detail;
 
 				const book = mb.offlineBooks?.[bookId];
 				if (!book?.users?.[mb.currentUserId]) return false;
 
-				obDownloaDcompleteResponse(bookId, completed, total)
+				obDownloaDcompleteResponse(bookId, downloadedPages, total)
 			});
 		}
 
@@ -1277,7 +1277,7 @@
 
 		//MB API Call Function 
 
-		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true) {
+		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true, obfetch = false) {
 			const db = await openIndexedDB();
 
 			if (offlineSession) {
@@ -1294,7 +1294,7 @@
 				return null; // or throw if needed
 			}
 
-			if (!offlineSession) {
+			if (!offlineSession && !obfetch) {
 				await obRefreshReadStatus();
 			}
 
@@ -2928,7 +2928,7 @@
 			await ensureDir(pagesFolder);
 			await ensureDir(thumbsFolder);
 
-			let completed = 0;
+			let downloadedPages = 0;
 
 			try {
 				debugPrint(`Downloading metadata for ${bookId}`);
@@ -3036,16 +3036,16 @@
 					} else {
 						console.log(`Thumb ${page.number} already exists, skipping.`);
 					}
-					completed++;
+					downloadedPages++;
 					// You can dispatch a custom event to your UI
 					window.dispatchEvent(new CustomEvent('download-progress', {
-						detail: { bookId, completed, total: bookMeta.media.pagesCount }
+						detail: { bookId, downloadedPages, total: bookMeta.media.pagesCount }
 					}));
 				}
 
 				debugPrint(`Downloaded book "${bookTitle}" (${bookId})`);
 				window.dispatchEvent(new CustomEvent('download-complete', {
-					detail: { bookId, completed, total: bookMeta.media.pagesCount }
+					detail: { bookId, downloadedPages, total: bookMeta.media.pagesCount }
 				}));
 
 				return { ok: true, path: bookFolder };
@@ -3077,6 +3077,10 @@
 				page = (book.readProgress.page >= book.media.pagesCount)
 					? book.media.pagesCount
 					: book.readProgress.page;
+				
+				if (book.readProgress.completed){
+					page = book.media.pagesCount
+				}
 			}
 
 			// ensure root table exists
@@ -3200,19 +3204,15 @@
 			if (!bookData.bookMetadata.readProgress) {
 				bookData.bookMetadata.readProgress = {};
 			}
-
-			bookData.bookMetadata.readProgress.page = mb.offlineBooks[bookId].page;
+			bookData.bookMetadata.readProgress.page = mb.offlineBooks[bookId].users[mb.currentUserId].page;
 
 			return bookData;
 		}
 
 		function obRestoreDownloadOnBoot() {
 			//V039
-			console.log("--------------------- RESTORE DOWNLOAD ON BOOT")
 			Object.entries(mb.offlineBooks).forEach(([bookId, item]) => {
-				console.log("--------------------- Check " + bookId)
 				if (item.status === 'downloading' && item.users?.[mb.currentUserId]) {
-					console.log("--------------------- downloading!")
 					//alert("restore book:"+bookId)
 					obSetSpinner(true);
 					obDownloadBook(bookId);
@@ -3230,10 +3230,14 @@
 						`/api/v1/books/${bookId}/read-progress`,
 						'PATCH',
 						JSON.stringify({ page: userData.page }),
-						false
+						false,
+						true
 					);
 					userData.updated = false;
+					obSaveTable();
+
 				}
+				console.log("B")
 			}
 		}
 
@@ -3406,7 +3410,11 @@
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 
 				if (obIsBookCompleted(rd.bookId)) {
-					mb.offlineBooks[bookId].page = mb.offlineBooks[bookId].pages;
+					if (read){
+						mb.offlineBooks[bookId].users[mb.currentUserId].page = mb.offlineBooks[bookId].pages;
+					} else {
+						mb.offlineBooks[bookId].users[mb.currentUserId].page = 1;
+					}
 					obSaveTable();
 				}
 
@@ -6882,10 +6890,18 @@
 
 			//V039						
 			if (obIsBookCompleted(rd.bookId)) {
+
 				const userData = mb.offlineBooks[rd.bookId]?.users?.[mb.currentUserId];
 				if (userData) {
 					userData.page = rd.currentPage;
-					if (offlineSession) userData.updated = true;
+					if (offlineSession) {
+						userData.updated = true;
+					}
+					if (userData.page == mb.offlineBooks[rd.bookId].total){
+						userData.readProgress.completed = true
+					} else if (userData?.readProgress?.completed == true) {
+						userData.readProgress.completed = false
+					}
 					obSaveTable();
 				}
 			}
