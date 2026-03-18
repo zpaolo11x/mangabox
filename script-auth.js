@@ -136,6 +136,7 @@ async function sessionCheck() {
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
 	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
 	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
+	mb.baseUrl = cleanBaseUrlVal(mb.baseUrl)
 
 	loginBaseUrl.value = mb.baseUrl;
 
@@ -419,6 +420,15 @@ async function loginToServer(event, serverId, test) {
 	*/
 }
 
+function cleanBaseUrlVal(baseUrlVal){
+	if (!/^https?:\/\//i.test(baseUrlVal)) {
+		baseUrlVal = 'https://' + baseUrlVal;
+	}
+	baseUrlVal = baseUrlVal.replace(/\/$/, '');
+
+	return baseUrlVal
+}
+
 async function login(serverId, test, fromDialog) {
 
 	if (serverId == 'mb0') {
@@ -435,10 +445,7 @@ async function login(serverId, test, fromDialog) {
 	let usernameVal = fromDialog ? loginUsername.value : mb.serverList[serverId].username;
 	let passwordVal = fromDialog ? loginPassword.value : await loadUserPass(serverId);
 
-	if (!/^https?:\/\//i.test(baseUrlVal)) {
-		baseUrlVal = 'https://' + baseUrlVal;
-	}
-	baseUrlVal = baseUrlVal.replace(/\/$/, '');
+	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
 
 	//TODO Questo funziona per i test con server 0 e per gli edit quando i valori del server da modificare si portano
 	// in editserver e quindi sono già nei field. Funziona anche con l'enter della password perché i field sono popolati
