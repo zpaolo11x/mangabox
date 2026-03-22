@@ -1,11 +1,2 @@
 Main UI
 - Fixed issue when server url is missing http or https 
-
-Reader UI
-- 
-
-Build
-- 
-
-Fixes
-- 
