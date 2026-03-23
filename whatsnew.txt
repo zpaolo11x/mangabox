@@ -2,4 +2,7 @@ Main UI
 - Fixed issue when server url is missing http or https
 
 Reader UI
-- Fixed aspect of Next Book and Prev Book buttons
+- Restored border to Next Book and Prev Book buttons
+
+Fixes
+- Fixed Next and Prev Book button disappearing

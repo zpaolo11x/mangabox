@@ -7300,7 +7300,7 @@
 		}
 
 		async function jumpToSpread(targetSpreadIndex, targetSpreadFocus = null, skipHistory = false, smoothWebtoon = false) {
-
+			console.log("TARGETSPREAD:"+targetSpreadIndex)
 			if (rd.isDraggingProgressBar) {
 				updateProgressBar(targetSpreadIndex);
 				return;
@@ -7308,6 +7308,10 @@
 
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
+
+			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
+				return;
+			}
 
 			if (rd.nextBook != null) {
 				if (targetSpreadIndex == spreadsTotal() - 1) {
@@ -7324,9 +7328,6 @@
 				}
 			}
 
-			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
-				return;
-			}
 
 			if (targetSpreadFocus == null) {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
