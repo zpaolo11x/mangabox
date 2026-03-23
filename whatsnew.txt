@@ -1,2 +1,5 @@
 Main UI
-- Fixed issue when server url is missing http or https 
+- Fixed issue when server url is missing http or https
+
+Reader UI
+- Fixed aspect of Next Book and Prev Book buttons

@@ -429,6 +429,34 @@ body {
 	display: none;
 }
 
+.modal-content-2 {
+	background: var(--mb-card-color);
+	padding: var(--mb-dialog-padding);
+	border-radius: calc(var(--mb-dialog-padding) + 20px);
+	text-align: center;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	/*max-width: 400px;*/
+	width: 260px;
+	color: var(--mb-text-color);
+	font-size: 18px;
+}
+
+
+.modal-content-2 button {
+	width: 100%;
+	margin-top: calc(0.5 * var(--mb-dialog-padding));
+}
+
+.modal-content-2 button.ok {
+	background: var(--mb-accent);
+	color: white;
+}
+
+.modal-content-2 button.cancel {
+	background: var(--mb-bar-color);
+	color: var(--mb-text-color);
+}
+
 .mini-thumb {
 	width: 45px;
 	height: 45px;
