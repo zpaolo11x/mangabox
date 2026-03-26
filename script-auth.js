@@ -219,7 +219,7 @@ async function sessionCheck() {
 			mb.currentUserId = false;
 			
 			//TODO Verifica se questa funzione fa già più di quel che fa il resto
-			await logoutFromServer(mb.serverList)
+			await logOutFromCurrentServer()
 
 			localStorage.removeItem("mb00SessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);

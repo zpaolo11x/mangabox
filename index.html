@@ -1850,6 +1850,13 @@
 				navigateTo(`#collections`);
 			});
 */
+
+		function logOutFromCurrentServer() {
+			let serverTable = {};
+			serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
+			logoutFromServer(serverTable)
+		}
+
 		logOut.addEventListener('click', async () => {
 			let currentUser = await callAPI(null, '/api/v2/users/me')
 			if (currentUser == null) currentUser = {
@@ -1873,12 +1880,7 @@
 				[
 					{
 						label: 'button.logout', runfunction: async () => {
-							let serverTable = {};
-
-							serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
-
-							logoutFromServer(serverTable)
-
+							logOutFromCurrentServer()
 						}, high: true
 					},
 					{
@@ -3077,8 +3079,8 @@
 				page = (book.readProgress.page >= book.media.pagesCount)
 					? book.media.pagesCount
 					: book.readProgress.page;
-				
-				if (book.readProgress.completed){
+
+				if (book.readProgress.completed) {
 					page = book.media.pagesCount
 				}
 			}
@@ -3409,7 +3411,7 @@
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 
 				if (obIsBookCompleted(rd.bookId)) {
-					if (read){
+					if (read) {
 						mb.offlineBooks[bookId].users[mb.currentUserId].page = mb.offlineBooks[bookId].pages;
 					} else {
 						mb.offlineBooks[bookId].users[mb.currentUserId].page = 1;
@@ -6896,7 +6898,7 @@
 					if (offlineSession) {
 						userData.updated = true;
 					}
-					if (userData.page == mb.offlineBooks[rd.bookId].total){
+					if (userData.page == mb.offlineBooks[rd.bookId].total) {
 						userData.readProgress.completed = true
 					} else if (userData?.readProgress?.completed == true) {
 						userData.readProgress.completed = false
