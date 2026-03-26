@@ -217,6 +217,9 @@ async function sessionCheck() {
 			debugPrint("Credentials invalid or expired.");
 			console.log("Credentials invalid or expired.");
 			mb.currentUserId = false;
+			
+			//TODO Verifica se questa funzione fa già più di quel che fa il resto
+			await logoutFromServer(mb.serverList)
 
 			localStorage.removeItem("mb00SessionValid");
 			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);

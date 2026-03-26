@@ -6,3 +6,4 @@ Reader UI
 
 Fixes
 - Fixed Next and Prev Book button disappearing
+- Fixed Komga logout blocking MangaBox login on web build
