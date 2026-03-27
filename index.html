@@ -2251,6 +2251,9 @@
 				item.metadata.summary.toLowerCase().includes(searchString) ||
 				item.metadata.tags.some(
 					tagIn => tagIn.toLowerCase().includes(searchString)
+				) ||
+				item.metadata.authors.some(
+					a => a.name.toLowerCase().includes(searchString.toLowerCase())
 				)
 			);
 			displayBooks(filteredBooks, homeStripBooksResults, 'full', 'top');
@@ -4727,7 +4730,6 @@
 				);
 				altTitle.art = bookWriter ? bookWriter.name : 'N/A';
 			}
-			console.log(altTitle)
 			return altTitle;
 
 		}
