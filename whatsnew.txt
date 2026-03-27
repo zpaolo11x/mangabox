@@ -1,6 +1,9 @@
 Main UI
-- Login buttons size reduced on small screens
+- Fixed issue when server url is missing http or https
+
+Reader UI
+- Restored border to Next Book and Prev Book buttons
 
 Fixes
-- Fixed offline books reading sync
-- Fixed login screen hang
+- Fixed Next and Prev Book button disappearing
+- Fixed Komga logout blocking MangaBox login on web build

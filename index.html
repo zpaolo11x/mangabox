@@ -263,11 +263,11 @@
 				<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
 			</div>
 
-			<div id="nextBookPanel" class="modal-content hidden blankstart">
+			<div id="nextBookPanel" class="modal-content-2 hidden blankstart">
 				<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
 			</div>
 
-			<div id="prevBookPanel" class="modal-content hidden blankstart">
+			<div id="prevBookPanel" class="modal-content-2 hidden blankstart">
 				<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
 			</div>
 
@@ -298,7 +298,7 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.0</div>
+				<div class="version-note">v0.4.1</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
@@ -369,7 +369,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.0</h1>
+		<h1>MangaBox v0.4.1</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -1850,6 +1850,13 @@
 				navigateTo(`#collections`);
 			});
 */
+
+		function logOutFromCurrentServer() {
+			let serverTable = {};
+			serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
+			logoutFromServer(serverTable)
+		}
+
 		logOut.addEventListener('click', async () => {
 			let currentUser = await callAPI(null, '/api/v2/users/me')
 			if (currentUser == null) currentUser = {
@@ -1873,12 +1880,7 @@
 				[
 					{
 						label: 'button.logout', runfunction: async () => {
-							let serverTable = {};
-
-							serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
-
-							logoutFromServer(serverTable)
-
+							logOutFromCurrentServer()
 						}, high: true
 					},
 					{
@@ -3077,8 +3079,8 @@
 				page = (book.readProgress.page >= book.media.pagesCount)
 					? book.media.pagesCount
 					: book.readProgress.page;
-				
-				if (book.readProgress.completed){
+
+				if (book.readProgress.completed) {
 					page = book.media.pagesCount
 				}
 			}
@@ -3237,7 +3239,6 @@
 					obSaveTable();
 
 				}
-				console.log("B")
 			}
 		}
 
@@ -3410,7 +3411,7 @@
 				await callAPI(null, `/api/v1/books/${bookId}/read-progress`, read ? 'PATCH' : 'DELETE', read ? JSON.stringify({ completed: true }) : null, false);
 
 				if (obIsBookCompleted(rd.bookId)) {
-					if (read){
+					if (read) {
 						mb.offlineBooks[bookId].users[mb.currentUserId].page = mb.offlineBooks[bookId].pages;
 					} else {
 						mb.offlineBooks[bookId].users[mb.currentUserId].page = 1;
@@ -6897,7 +6898,7 @@
 					if (offlineSession) {
 						userData.updated = true;
 					}
-					if (userData.page == mb.offlineBooks[rd.bookId].total){
+					if (userData.page == mb.offlineBooks[rd.bookId].total) {
 						userData.readProgress.completed = true
 					} else if (userData?.readProgress?.completed == true) {
 						userData.readProgress.completed = false
@@ -7310,6 +7311,10 @@
 			const localOldSpreadIndex = skipHistory ? 0 : rd.currentSpreadIndex;
 			const localNewSpreadIndex = targetSpreadIndex;
 
+			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
+				return;
+			}
+
 			if (rd.nextBook != null) {
 				if (targetSpreadIndex == spreadsTotal() - 1) {
 					nextBookPanel.classList.remove('hidden')
@@ -7325,9 +7330,6 @@
 				}
 			}
 
-			if ((targetSpreadIndex < 0) || (targetSpreadIndex >= spreadsTotal()) || (!skipHistory && (localOldSpreadIndex == localNewSpreadIndex))) {
-				return;
-			}
 
 			if (targetSpreadFocus == null) {
 				targetSpreadFocus = getSpreadFocus(localNewSpreadIndex);
