@@ -2233,8 +2233,8 @@
 			const filteredSeries = unFilteredSeries.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||
 				item.metadata.titleSort.toLowerCase().includes(searchString) ||
-				item.metadata.alternateTitles.some(
-					titleIn => titleIn.title.toLowerCase().includes(searchString)
+				Object.values(getAltTitles(item)).some(
+					v => v.toLowerCase().includes(searchString)
 				)
 			);
 			displaySeries(filteredSeries, homeStripSeriesResults, null, false);
@@ -4727,6 +4727,7 @@
 				);
 				altTitle.art = bookWriter ? bookWriter.name : 'N/A';
 			}
+			console.log(altTitle)
 			return altTitle;
 
 		}
