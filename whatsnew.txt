@@ -6,3 +6,4 @@ Fixes
 - Fixed search for authors
 
 Build
+- Added Indonesian translation thanks to Arif Budiman
