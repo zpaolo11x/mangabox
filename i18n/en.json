@@ -138,6 +138,6 @@
 	"button.testserver": "Test Server",
 	"button.saveserver": "Save Server",
 	"button.save": "Save",
-	"server.connectionok": "Sever Connection OK",
+	"server.connectionok": "Server Connection OK",
 	"servers.logoutall": "Logout All"
 }

@@ -131,7 +131,7 @@
 	"servers.add": "Tambah Server",
 	"servers.delete": "Konfirmasi Hapus Server",
 	"servers.unsaved": "Server Sementara",
-	"servers.serverslist": "Daftar Server",
+	"button.serverslist": "Daftar Server",
 	"button.login": "Masuk",
 	"button.delete": "Hapus",
 	"button.edit": "Edit",

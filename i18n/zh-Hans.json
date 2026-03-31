@@ -125,5 +125,19 @@
 	"about.features.sync": "与服务器同步阅读进度",
 	"about.features.offline": "下载书籍以便离线阅读",
 	"about.features.filter": "可快速按语言、阅读状态和阅读方向筛选书库",
-	"about.features.search": "支持系列与卷册的全局搜索"
+	"about.features.search": "支持系列与卷册的全局搜索",
+	"login.servername": "服务器名称",
+	"servers.title": "服务器列表",
+	"servers.add": "添加服务器",
+	"servers.delete": "确认删除服务器",
+	"servers.unsaved": "临时服务器",
+	"button.serverslist": "服务器列表",
+	"button.login": "登录",
+	"button.delete": "删除",
+	"button.edit": "编辑",
+	"button.testserver": "测试服务器",
+	"button.saveserver": "保存服务器",
+	"button.save": "保存",
+	"server.connectionok": "服务器连接成功",
+	"servers.logoutall": "全部登出"
 }

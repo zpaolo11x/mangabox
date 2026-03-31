@@ -1,4 +1,5 @@
 Main UI
+- Completed translations of strings
 
 Reader UI
 

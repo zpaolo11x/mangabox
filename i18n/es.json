@@ -131,7 +131,7 @@
 	"servers.add": "Agregar servidor",
 	"servers.delete": "Confirmar eliminación del servidor",
 	"servers.unsaved": "Servidor temporal",
-	"servers.serverslist": "Lista de servidores",
+	"button.serverslist": "Lista de servidores",
 	"button.login": "Login",
 	"button.delete": "Eliminar",
 	"button.edit": "Editar",

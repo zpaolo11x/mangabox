@@ -131,7 +131,7 @@
 	"servers.add": "添加服务器",
 	"servers.delete": "确认删除服务器",
 	"servers.unsaved": "临时服务器",
-	"servers.serverslist": "服务器列表",
+	"button.serverslist": "服务器列表",
 	"button.login": "登录",
 	"button.delete": "删除",
 	"button.edit": "编辑",

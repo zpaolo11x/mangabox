@@ -131,7 +131,7 @@
 	"servers.add": "サーバーを追加",
 	"servers.delete": "サーバーの削除を",
 	"servers.unsaved": "一時サーバー",
-	"servers.serverslist": "サーバー一覧",
+	"button.serverslist": "サーバー一覧",
 	"button.login": "ログイン",
 	"button.delete": "削除",
 	"button.edit": "編集",
