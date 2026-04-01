@@ -8,3 +8,4 @@ Fixes
 
 Build
 - Added Indonesian translation thanks to Arif Budiman
+- Added Brazilian Portuguese translation
