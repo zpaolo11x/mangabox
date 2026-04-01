@@ -1176,7 +1176,7 @@
 			i18n_en = await resFallback.json();
 
 			try {
-				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				const res = await fetch(`./i18n/${mb.languageVal.replace("-","_")}.json`);
 				i18n = await res.json();
 			} catch {
 				console.warn(`Missing language ${mb.languageVal}, falling back to en`);
@@ -1190,7 +1190,7 @@
 		async function loadLanguage() {
 			i18n = {};
 			try {
-				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				const res = await fetch(`./i18n/${mb.languageVal.replace("-","_")}.json`);
 				i18n = await res.json();
 			} catch {
 				console.warn(`Missing language ${mb.languageVal}, using en only`);
