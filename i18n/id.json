@@ -10,7 +10,6 @@
 	"button.search": "Cari",
 	"button.searchtext": "Cari…",
 	"button.logout": "Keluar",
-	"button.serversusers": "Pengguna dan Server",
 	"header.keepreading": "Terus Membaca",
 	"header.ondeck": "Sedang Dibaca",
 	"header.lastaddedbooks": "Buku Terbaru Ditambahkan",
@@ -131,7 +130,7 @@
 	"servers.add": "Tambah Server",
 	"servers.delete": "Konfirmasi Hapus Server",
 	"servers.unsaved": "Server Sementara",
-	"button.serverslist": "Daftar Server",
+	"servers.serverslist": "Daftar Server",
 	"button.login": "Masuk",
 	"button.delete": "Hapus",
 	"button.edit": "Edit",
@@ -139,5 +138,10 @@
 	"button.saveserver": "Simpan Server",
 	"button.save": "Simpan",
 	"server.connectionok": "Koneksi Server OK",
-	"servers.logoutall": "Keluar Semua"
+	"servers.logoutall": "Keluar Semua",
+	"button.serversusers": "Pengguna dan Server",
+	"button.serverslist": "Daftar Server",
+	"server.invalidlogindata": "Nama pengguna atau kata sandi tidak valid",
+	"server.loginfailed": "Gagal masuk",
+	"server.cannotreach": "Tidak dapat terhubung ke server. Periksa alamat atau koneksi Anda."
 }

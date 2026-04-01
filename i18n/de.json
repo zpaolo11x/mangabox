@@ -10,7 +10,6 @@
 	"button.search": "Suchen",
 	"button.searchtext": "Suchen…",
 	"button.logout": "Abmelden",
-	"button.serversusers": "Benutzer und Server",
 	"header.keepreading": "Weiterlesen",
 	"header.ondeck": "Als Nächstes",
 	"header.lastaddedbooks": "Neue Bücher",
@@ -54,7 +53,7 @@
 	"readertheme.black": "Schwarz",
 	"readeranimation.no": "Keine Seitenanimation",
 	"readeranimation.yes": "Seiten animieren",
-	"modal.ok": "OK",
+	"modal.ok": "Ok",
 	"modal.cancel": "Abbrechen",
 	"modal.imageloadfail": "Bild konnte nicht geladen werden",
 	"modal.analizewarning": "Bitte aktiviere<br><b>„Seitendimensionen analysieren“</b><br>für die folgenden Bibliotheken, um Leseprobleme zu vermeiden:<br>",
@@ -131,7 +130,7 @@
 	"servers.add": "Server hinzufügen",
 	"servers.delete": "Löschen des Servers bestätigen",
 	"servers.unsaved": "Temporärer Server",
-	"button.serverslist": "Serverliste",
+	"servers.serverslist": "Serverliste",
 	"button.login": "Anmelden",
 	"button.delete": "Löschen",
 	"button.edit": "Bearbeiten",
@@ -139,5 +138,10 @@
 	"button.saveserver": "Server speichern",
 	"button.save": "Speichern",
 	"server.connectionok": "Serververbindung erfolgreich",
-	"servers.logoutall": "Alle abmelden"
+	"servers.logoutall": "Alle abmelden",
+	"button.serversusers": "Benutzer und Server",
+	"button.serverslist": "Serverliste",
+	"server.invalidlogindata": "Benutzername oder Passwort ungültig",
+	"server.loginfailed": "Anmeldung fehlgeschlagen",
+	"server.cannotreach": "Server nicht erreichbar. Überprüfen Sie die Adresse oder Ihre Verbindung."
 }

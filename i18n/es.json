@@ -10,7 +10,6 @@
 	"button.search": "Buscar",
 	"button.searchtext": "Buscar…",
 	"button.logout": "Cerrar sesión",
-	"button.serversusers": "Usuario y servidor",
 	"header.keepreading": "Seguir leyendo",
 	"header.ondeck": "En cola",
 	"header.lastaddedbooks": "Libros añadidos",
@@ -131,7 +130,7 @@
 	"servers.add": "Agregar servidor",
 	"servers.delete": "Confirmar eliminación del servidor",
 	"servers.unsaved": "Servidor temporal",
-	"button.serverslist": "Lista de servidores",
+	"servers.serverslist": "Lista de servidores",
 	"button.login": "Login",
 	"button.delete": "Eliminar",
 	"button.edit": "Editar",
@@ -139,5 +138,10 @@
 	"button.saveserver": "Guardar el servidor",
 	"button.save": "Guardar",
 	"server.connectionok": "Conexión al servidor correcta",
-	"servers.logoutall": "Cerrar sesión en todos"
+	"servers.logoutall": "Cerrar sesión en todos",
+	"button.serversusers": "Usuario y servidor",
+	"button.serverslist": "Lista de servidores",
+	"server.invalidlogindata": "Nombre de usuario o contraseña incorrectos",
+	"server.loginfailed": "Error de inicio de sesión",
+	"server.cannotreach": "No se puede conectar al servidor. Comprueba la dirección o tu conexión."
 }

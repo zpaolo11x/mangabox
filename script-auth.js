@@ -514,15 +514,15 @@ async function login(serverId, test, fromDialog) {
 				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-			loginError.textContent = `Invalid username or password.`;
+			loginError.textContent = t(`server.invalidlogindata`);
 			loginError.classList.toggle('auth-hidden', false);
 		} else {
-			loginError.textContent = `Login failed`;
+			loginError.textContent = t(`server.loginfailed`);
 			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
 		console.error('Login error:', error);
-		loginError.textContent = `Cannot reach server. Check the address or your connection. ${error}`;
+		loginError.textContent = t("server.cannotreach") + `${error}`;
 		loginError.classList.toggle('auth-hidden', false);
 	});
 

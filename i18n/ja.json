@@ -10,7 +10,6 @@
 	"button.search": "検索",
 	"button.searchtext": "検索…",
 	"button.logout": "ログアウト",
-	"button.serversusers": "ユーザーとサーバー",
 	"header.keepreading": "読書を続ける",
 	"header.ondeck": "次に読む",
 	"header.lastaddedbooks": "最近追加の本",
@@ -131,7 +130,7 @@
 	"servers.add": "サーバーを追加",
 	"servers.delete": "サーバーの削除を",
 	"servers.unsaved": "一時サーバー",
-	"button.serverslist": "サーバー一覧",
+	"servers.serverslist": "サーバー一覧",
 	"button.login": "ログイン",
 	"button.delete": "削除",
 	"button.edit": "編集",
@@ -139,5 +138,10 @@
 	"button.saveserver": "サーバーを保存",
 	"button.save": "保存",
 	"server.connectionok": "サーバー接続成功",
-	"servers.logoutall": "全ログアウト"
+	"servers.logoutall": "全ログアウト",
+	"button.serversusers": "ユーザーとサーバー",
+	"button.serverslist": "サーバー一覧",
+	"server.invalidlogindata": "ユーザー名またはパスワードが正しくありません",
+	"server.loginfailed": "ログインに失敗しました",
+	"server.cannotreach": "サーバーに接続できません。アドレスまたは接続を確認してください。"
 }

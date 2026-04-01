@@ -10,7 +10,6 @@
 	"button.search": "Buscar",
 	"button.searchtext": "Buscar…",
 	"button.logout": "Sair",
-	"button.serversusers": "Utilizador e servidor",
 	"header.keepreading": "Continuar",
 	"header.ondeck": "Próximos",
 	"header.lastaddedbooks": "Últimos livros",
@@ -131,7 +130,7 @@
 	"servers.add": "Adicionar servidor",
 	"servers.delete": "Confirmar exclusão do servidor",
 	"servers.unsaved": "Servidor temporário",
-	"button.serverslist": "Lista de servidores",
+	"servers.serverslist": "Lista de servidores",
 	"button.login": "Entrar",
 	"button.delete": "Excluir",
 	"button.edit": "Editar",
@@ -139,5 +138,10 @@
 	"button.saveserver": "Salvar servidor",
 	"button.save": "Salvar",
 	"server.connectionok": "Conexão com o servidor OK",
-	"servers.logoutall": "Desconectar de todos"
+	"servers.logoutall": "Desconectar de todos",
+	"button.serversusers": "Utilizador e servidor",
+	"button.serverslist": "Lista de servidores",
+	"server.invalidlogindata": "Nome de utilizador ou palavra-passe inválidos",
+	"server.loginfailed": "Falha na autenticação",
+	"server.cannotreach": "Não foi possível contactar o servidor. Verifique o endereço ou a ligação."
 }

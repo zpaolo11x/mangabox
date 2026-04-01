@@ -10,7 +10,6 @@
 	"button.search": "搜索",
 	"button.searchtext": "搜索…",
 	"button.logout": "退出登录",
-	"button.serversusers": "用户和服务器",
 	"header.keepreading": "继续阅读",
 	"header.ondeck": "待阅",
 	"header.lastaddedbooks": "最新添加的书籍",
@@ -131,7 +130,7 @@
 	"servers.add": "添加服务器",
 	"servers.delete": "确认删除服务器",
 	"servers.unsaved": "临时服务器",
-	"button.serverslist": "服务器列表",
+	"servers.serverslist": "服务器列表",
 	"button.login": "登录",
 	"button.delete": "删除",
 	"button.edit": "编辑",
@@ -139,5 +138,10 @@
 	"button.saveserver": "保存服务器",
 	"button.save": "保存",
 	"server.connectionok": "服务器连接成功",
-	"servers.logoutall": "全部登出"
+	"servers.logoutall": "全部登出",
+	"button.serversusers": "用户和服务器",
+	"button.serverslist": "服务器列表",
+	"server.invalidlogindata": "使用者名稱或密碼錯誤",
+	"server.loginfailed": "登入失敗",
+	"server.cannotreach": "無法連線到伺服器。請檢查地址或您的網路連線。"
 }
