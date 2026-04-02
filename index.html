@@ -1318,7 +1318,16 @@
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
 				}
+if (response.status === 401){
+	console.log ("FORCE LOGOUT HERE")
+				mb.currentUserId = false;
+			await logOutFromCurrentServer()
 
+			localStorage.removeItem("mb00SessionValid");
+			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			await executeFaderGradient(0);
+return null
+}
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
 				setNetworkStatus('online');
