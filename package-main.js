@@ -137,6 +137,13 @@ ipcMain.handle('read-file', async (_, filePath) => {
 
 ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData }) => {
 	const win = BrowserWindow.getFocusedWindow(); // or keep a ref to your main window
+	const mediaRequestData = {
+		...requestData,
+		headers: {
+			...(requestData?.headers || {}),
+			Accept: 'image/*',
+		},
+	};
 
 	const baseDir = path.join(app.getPath('userData'), 'offline-books');
 	await fs.mkdir(baseDir, { recursive: true });
@@ -213,7 +220,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			if (!pageExists) {
 				const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
 				console.log(`Downloading page ${page.number}...`);
-				const res = await fetch(pageUrl, requestData);
+				const res = await fetch(pageUrl, mediaRequestData);
 				if (!res.ok) throw new Error(`Failed to fetch page ${page.number}: ${res.status}`);
 				const buffer = Buffer.from(await res.arrayBuffer());
 				await fs.writeFile(pageFile, buffer);
@@ -230,7 +237,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			if (!thumbExists) {
 				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
 				console.log(`Downloading thumb ${page.number}...`);
-				const res2 = await fetch(thumbUrl, requestData);
+				const res2 = await fetch(thumbUrl, mediaRequestData);
 				if (!res2.ok) throw new Error(`Failed to fetch thumbnail ${page.number}: ${res.status}`);
 				const buffer2 = Buffer.from(await res2.arrayBuffer());
 				await fs.writeFile(thumbFile, buffer2);
@@ -260,4 +267,3 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 		return { ok: false, error: err.message };
 	}
 });
-

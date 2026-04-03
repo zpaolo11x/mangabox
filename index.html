@@ -1109,6 +1109,7 @@
 				method: method,
 				...((isWeb && !webPWD) && { credentials: 'include' }),
 				headers: {
+					'Accept': 'image/*',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
 					...basicHeaders
@@ -2904,6 +2905,7 @@
 				'image/webp': '.webp',
 				'image/gif': '.gif',
 			};
+			const mediaRequestData = await buildRequestMedia('GET', null);
 
 			const baseDir = 'offline-books';
 			const bookFolder = `${baseDir}/${bookId}`;
@@ -3004,7 +3006,7 @@
 
 					if (!pageExists) {
 						const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
-						const pageRes = await fetch(pageUrl, requestData);
+						const pageRes = await fetch(pageUrl, mediaRequestData);
 						if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
 						const pageBuffer = await pageRes.arrayBuffer();
 						await Capacitor.Plugins.Filesystem.writeFile({
@@ -3027,7 +3029,7 @@
 
 					if (!thumbExists) {
 						const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
-						const thumbRes = await fetch(thumbPageUrl, requestData);
+						const thumbRes = await fetch(thumbPageUrl, mediaRequestData);
 						if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
 						const thumbPageBuffer = await thumbRes.arrayBuffer();
 						await Capacitor.Plugins.Filesystem.writeFile({
