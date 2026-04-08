@@ -1109,6 +1109,7 @@
 				method: method,
 				...((isWeb && !webPWD) && { credentials: 'include' }),
 				headers: {
+					'Accept': 'image/*',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
 					...basicHeaders
@@ -3177,7 +3178,7 @@ return null
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = await buildRequest('GET', null)
+			let request = await buildRequestMedia('GET', null)
 
 			let bookData = {
 				bookId: bookId,
