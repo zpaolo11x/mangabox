@@ -798,6 +798,8 @@
 		function obDownloaDcompleteResponse(bookId, downloadedPages, total) {
 			let tempDiv = document.getElementById(bookId);
 
+			if (tempDiv == null) return
+			
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
 			tempDivChild.innerText = '100%';
 			tempDivChild.classList.add('done');
