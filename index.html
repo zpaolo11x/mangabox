@@ -1088,7 +1088,7 @@
 			return (out)
 		}
 
-		async function buildRequest(method, body) {
+		async function buildRequest(method, body, forceimage = false) {
 			const basicHeaders = await basicHeader();
 
 			const requestTable = {
@@ -1097,7 +1097,8 @@
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...basicHeaders
+					...basicHeaders,
+					...(forceimage && { 'Accept': 'image/*' })
 				},
 				...(body && { body }),
 			}
@@ -3180,7 +3181,7 @@ return null
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = await buildRequest('GET', null)
+			let request = await buildRequest('GET', null, true)
 
 			let bookData = {
 				bookId: bookId,
