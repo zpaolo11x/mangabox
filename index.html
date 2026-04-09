@@ -2913,7 +2913,7 @@ return null
 		}
 
 
-		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
+		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData, requestMedia }) {
 			const mimeToExt = {
 				'image/jpeg': '.jpg',
 				'image/png': '.png',
@@ -2992,7 +2992,7 @@ return null
 
 				// Book thumbnail
 				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
-				res = await fetch(thumbUrl, requestData);
+				res = await fetch(thumbUrl, requestMedia);
 				if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
 
 				const thumbBuffer = await res.arrayBuffer();
@@ -3020,7 +3020,7 @@ return null
 
 					if (!pageExists) {
 						const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
-						const pageRes = await fetch(pageUrl, requestData);
+						const pageRes = await fetch(pageUrl, requestMedia);
 						if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
 						const pageBuffer = await pageRes.arrayBuffer();
 						await Capacitor.Plugins.Filesystem.writeFile({
@@ -3043,7 +3043,7 @@ return null
 
 					if (!thumbExists) {
 						const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
-						const thumbRes = await fetch(thumbPageUrl, requestData);
+						const thumbRes = await fetch(thumbPageUrl, requestMedia);
 						if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
 						const thumbPageBuffer = await thumbRes.arrayBuffer();
 						await Capacitor.Plugins.Filesystem.writeFile({
