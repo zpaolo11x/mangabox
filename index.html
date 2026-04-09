@@ -799,7 +799,7 @@
 			let tempDiv = document.getElementById(bookId);
 
 			if (tempDiv == null) return
-			
+
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
 			tempDivChild.innerText = '100%';
 			tempDivChild.classList.add('done');
@@ -1111,6 +1111,7 @@
 				method: method,
 				...((isWeb && !webPWD) && { credentials: 'include' }),
 				headers: {
+					'Accept': 'image/*',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
 					...basicHeaders
