@@ -1088,6 +1088,11 @@
 			return (out)
 		}
 
+		//TODO Now we have buildrequest with a force image switch, and buildrequestmedia that always
+		//forces image media. There's an option to change the download function that now is using just 
+		//buildrequest with the switch, so tht it uses one of the two depending if it's getting metadata
+		//or images. But how will it fare with authentication and multi-users?
+		
 		async function buildRequest(method, body, forceimage = false) {
 			const basicHeaders = await basicHeader();
 
