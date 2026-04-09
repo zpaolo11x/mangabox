@@ -3181,12 +3181,14 @@ return null
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = await buildRequest('GET', null, true)
+			let requestData = await buildRequest('GET', null)
+			let requestMedia = await buildRequest('GET', null, true)
 
 			let bookData = {
 				bookId: bookId,
 				baseUrl: `${mb.baseUrl}`,
-				requestData: request
+				requestData: requestData,
+				requestMedia: requestMedia
 			};
 
 			if (isElectron) await window.offlineAPI.downloadBook(bookData);
