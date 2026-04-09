@@ -1115,6 +1115,8 @@
 					...basicHeaders
 				},
 			}
+			console.log("REQUESTTABLE")
+			console.log(requestTable)
 			return requestTable
 		}
 
@@ -3179,7 +3181,8 @@ return null
 
 		async function obDownloadBook(bookId) {
 			let request = await buildRequestMedia('GET', null)
-
+			console.log("DDDDDDD")
+console.log(request);
 			let bookData = {
 				bookId: bookId,
 				baseUrl: `${mb.baseUrl}`,
