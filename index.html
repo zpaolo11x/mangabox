@@ -1092,7 +1092,7 @@
 		//forces image media. There's an option to change the download function that now is using just 
 		//buildrequest with the switch, so tht it uses one of the two depending if it's getting metadata
 		//or images. But how will it fare with authentication and multi-users?
-		
+
 		async function buildRequest(method, body, forceimage = false) {
 			const basicHeaders = await basicHeader();
 
@@ -1185,7 +1185,7 @@
 			i18n_en = await resFallback.json();
 
 			try {
-				const res = await fetch(`./i18n/${mb.languageVal.replace("-","_")}.json`);
+				const res = await fetch(`./i18n/${mb.languageVal.replace("-", "_")}.json`);
 				i18n = await res.json();
 			} catch {
 				console.warn(`Missing language ${mb.languageVal}, falling back to en`);
@@ -1199,7 +1199,7 @@
 		async function loadLanguage() {
 			i18n = {};
 			try {
-				const res = await fetch(`./i18n/${mb.languageVal.replace("-","_")}.json`);
+				const res = await fetch(`./i18n/${mb.languageVal.replace("-", "_")}.json`);
 				i18n = await res.json();
 			} catch {
 				console.warn(`Missing language ${mb.languageVal}, using en only`);
@@ -1327,16 +1327,16 @@
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
 				}
-if (response.status === 401){
-	console.log ("FORCE LOGOUT HERE")
-				mb.currentUserId = false;
-			await logOutFromCurrentServer()
+				if (response.status === 401) {
+					console.log("FORCE LOGOUT HERE")
+					mb.currentUserId = false;
+					await logOutFromCurrentServer()
 
-			localStorage.removeItem("mb00SessionValid");
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
-			await executeFaderGradient(0);
-return null
-}
+					localStorage.removeItem("mb00SessionValid");
+					showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+					await executeFaderGradient(0);
+					return null
+				}
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
 				setNetworkStatus('online');
