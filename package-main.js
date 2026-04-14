@@ -239,12 +239,13 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			}
 
 			downloadedPages++;
-
+/*
 			win.webContents.send('download-progress', {
 				bookId,
 				downloadedPages,
 				total: bookMeta.media.pagesCount,
 			});
+*/
 		}
 
 		console.log(`Downloaded and stored book: ${bookTitle} (${bookId})`);
