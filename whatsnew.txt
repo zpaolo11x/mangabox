@@ -10,3 +10,4 @@ Fixes
 Build
 - Added Indonesian translation (thanks to Arif Budiman on Weblate)
 - Added Brazilian Portuguese translation
+- Updated GitHub CI
