@@ -216,7 +216,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 				const res = await fetch(pageUrl, requestMedia);
 				if (!res.ok) throw new Error(`Failed to fetch page ${page.number}: ${res.status}`);
 				const buffer = Buffer.from(await res.arrayBuffer());
-				await fs.writeFile(pageFile, buffer);
+				fs.writeFile(pageFile, buffer);
 			} else {
 				console.log(`Page ${page.number} already exists, skipping.`);
 			}
@@ -233,7 +233,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 				const res2 = await fetch(thumbUrl, requestMedia);
 				if (!res2.ok) throw new Error(`Failed to fetch thumbnail ${page.number}: ${res.status}`);
 				const buffer2 = Buffer.from(await res2.arrayBuffer());
-				await fs.writeFile(thumbFile, buffer2);
+				fs.writeFile(thumbFile, buffer2);
 			} else {
 				console.log(`Thumb ${page.number} already exists, skipping.`);
 			}
