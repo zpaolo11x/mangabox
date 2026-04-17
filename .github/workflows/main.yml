@@ -16,7 +16,7 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -32,7 +32,7 @@ jobs:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - name: Checkout code
-#        uses: actions/checkout@v4
+#        uses: actions/checkout@v5
 #
 #      - name: Install icon generator
 #        run: |
@@ -91,7 +91,7 @@ jobs:
             name: Windows-arm64
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js 22
         uses: actions/setup-node@v4
@@ -163,7 +163,7 @@ jobs:
       version: ${{ needs.version.outputs.version }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Prepare web artifact (rsync version)
         run: |
@@ -209,7 +209,7 @@ jobs:
             name: Android-aab
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -417,7 +417,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Read "whatsnew.txt"
         id: read_whatsnew
