@@ -298,7 +298,7 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.1</div>
+				<div class="version-note">v0.4.2</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
@@ -369,7 +369,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.1</h1>
+		<h1>MangaBox v0.4.2</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -798,6 +798,8 @@
 		function obDownloaDcompleteResponse(bookId, downloadedPages, total) {
 			let tempDiv = document.getElementById(bookId);
 
+			if (tempDiv == null) return
+
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
 			tempDivChild.innerText = '100%';
 			tempDivChild.classList.add('done');
@@ -883,7 +885,7 @@
 
 			return (
 				{
-					languages: ['de', 'en', 'es', 'fr', 'it', 'ja', 'pt', 'zh-Hans'],
+					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'pt', 'pt-BR', 'zh-Hans'],
 					languageAuto: false,
 					languageVal: '',
 
@@ -1086,7 +1088,12 @@
 			return (out)
 		}
 
-		async function buildRequest(method, body) {
+		//TODO Now we have buildrequest with a force image switch, and buildrequestmedia that always
+		//forces image media. There's an option to change the download function that now is using just 
+		//buildrequest with the switch, so tht it uses one of the two depending if it's getting metadata
+		//or images. But how will it fare with authentication and multi-users?
+
+		async function buildRequest(method, body, forceimage = false) {
 			const basicHeaders = await basicHeader();
 
 			const requestTable = {
@@ -1095,7 +1102,8 @@
 					'Content-Type': 'application/json',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
-					...basicHeaders
+					...basicHeaders,
+					...(forceimage && { 'Accept': 'image/*' })
 				},
 				...(body && { body }),
 			}
@@ -1109,6 +1117,7 @@
 				method: method,
 				...((isWeb && !webPWD) && { credentials: 'include' }),
 				headers: {
+					'Accept': 'image/*',
 					'X-Requested-With': 'XMLHttpRequest',
 					'skip_zrok_interstitial': '1',
 					...basicHeaders
@@ -1176,7 +1185,7 @@
 			i18n_en = await resFallback.json();
 
 			try {
-				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				const res = await fetch(`./i18n/${mb.languageVal.replace("-", "_")}.json`);
 				i18n = await res.json();
 			} catch {
 				console.warn(`Missing language ${mb.languageVal}, falling back to en`);
@@ -1190,7 +1199,7 @@
 		async function loadLanguage() {
 			i18n = {};
 			try {
-				const res = await fetch(`./i18n/${mb.languageVal}.json`);
+				const res = await fetch(`./i18n/${mb.languageVal.replace("-", "_")}.json`);
 				i18n = await res.json();
 			} catch {
 				console.warn(`Missing language ${mb.languageVal}, using en only`);
@@ -1318,7 +1327,16 @@
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
 				}
+				if (response.status === 401) {
+					console.log("FORCE LOGOUT HERE")
+					mb.currentUserId = false;
+					await logOutFromCurrentServer()
 
+					localStorage.removeItem("mb00SessionValid");
+					showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+					await executeFaderGradient(0);
+					return null
+				}
 				if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
 
 				setNetworkStatus('online');
@@ -2233,8 +2251,8 @@
 			const filteredSeries = unFilteredSeries.content.filter(item =>
 				item.metadata.title.toLowerCase().includes(searchString) ||
 				item.metadata.titleSort.toLowerCase().includes(searchString) ||
-				item.metadata.alternateTitles.some(
-					titleIn => titleIn.title.toLowerCase().includes(searchString)
+				Object.values(getAltTitles(item)).some(
+					v => v.toLowerCase().includes(searchString)
 				)
 			);
 			displaySeries(filteredSeries, homeStripSeriesResults, null, false);
@@ -2251,6 +2269,9 @@
 				item.metadata.summary.toLowerCase().includes(searchString) ||
 				item.metadata.tags.some(
 					tagIn => tagIn.toLowerCase().includes(searchString)
+				) ||
+				item.metadata.authors.some(
+					a => a.name.toLowerCase().includes(searchString.toLowerCase())
 				)
 			);
 			displayBooks(filteredBooks, homeStripBooksResults, 'full', 'top');
@@ -2897,7 +2918,7 @@
 		}
 
 
-		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData }) {
+		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData, requestMedia }) {
 			const mimeToExt = {
 				'image/jpeg': '.jpg',
 				'image/png': '.png',
@@ -2976,7 +2997,7 @@
 
 				// Book thumbnail
 				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
-				res = await fetch(thumbUrl, requestData);
+				res = await fetch(thumbUrl, requestMedia);
 				if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
 
 				const thumbBuffer = await res.arrayBuffer();
@@ -3004,7 +3025,7 @@
 
 					if (!pageExists) {
 						const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
-						const pageRes = await fetch(pageUrl, requestData);
+						const pageRes = await fetch(pageUrl, requestMedia);
 						if (!pageRes.ok) throw new Error(`Page ${page.number} failed: ${pageRes.status}`);
 						const pageBuffer = await pageRes.arrayBuffer();
 						await Capacitor.Plugins.Filesystem.writeFile({
@@ -3027,7 +3048,7 @@
 
 					if (!thumbExists) {
 						const thumbPageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
-						const thumbRes = await fetch(thumbPageUrl, requestData);
+						const thumbRes = await fetch(thumbPageUrl, requestMedia);
 						if (!thumbRes.ok) throw new Error(`Thumb ${page.number} failed: ${thumbRes.status}`);
 						const thumbPageBuffer = await thumbRes.arrayBuffer();
 						await Capacitor.Plugins.Filesystem.writeFile({
@@ -3165,12 +3186,14 @@
 		}
 
 		async function obDownloadBook(bookId) {
-			let request = await buildRequest('GET', null)
+			let requestData = await buildRequest('GET', null)
+			let requestMedia = await buildRequest('GET', null, true)
 
 			let bookData = {
 				bookId: bookId,
 				baseUrl: `${mb.baseUrl}`,
-				requestData: request
+				requestData: requestData,
+				requestMedia: requestMedia
 			};
 
 			if (isElectron) await window.offlineAPI.downloadBook(bookData);

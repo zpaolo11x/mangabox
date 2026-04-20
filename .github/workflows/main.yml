@@ -16,12 +16,12 @@ jobs:
     outputs:
       version: ${{ steps.get_version.outputs.version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
 
       - id: get_version
         run: |
@@ -32,7 +32,7 @@ jobs:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - name: Checkout code
-#        uses: actions/checkout@v3
+#        uses: actions/checkout@v5
 #
 #      - name: Install icon generator
 #        run: |
@@ -56,7 +56,7 @@ jobs:
 #        run: ls build/icons -lRa
 #
 #      - name: Upload icons artifact
-#        uses: actions/upload-artifact@v4
+#        uses: @v4
 #        with:
 #          name: generated-icons
 #          path: build/icons
@@ -91,12 +91,12 @@ jobs:
             name: Windows-arm64
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v3
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies
         run: npm install
@@ -149,7 +149,7 @@ jobs:
           fi
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
@@ -163,7 +163,7 @@ jobs:
       version: ${{ needs.version.outputs.version }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Prepare web artifact (rsync version)
         run: |
@@ -182,7 +182,7 @@ jobs:
                     ./ webdeploy/mangabox
 
       - name: Upload web artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: MangaBox-Web-${{ env.version }}
           path: webdeploy/
@@ -209,23 +209,23 @@ jobs:
             name: Android-aab
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
 
       # 👇 New step: make sure Android build uses JDK 21
       - name: Set up JDK 21
         if: ${{ matrix.sys == 'android' }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 21
 
       - name: Download webdeploy artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: MangaBox-Web-${{ env.version }}
           path: dist
@@ -400,7 +400,7 @@ jobs:
           zip -r $GITHUB_WORKSPACE/output/MangaBox-${{ env.version }}-${{ matrix.name }}.ipa Payload
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
@@ -417,7 +417,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Read "whatsnew.txt"
         id: read_whatsnew
@@ -440,18 +440,18 @@ jobs:
           git push origin v${{ env.version }}
 
  #     - name: Download build artifacts
- #       uses: actions/download-artifact@v4
+ #       uses: actions/download-artifact@v7
  #       with:
  #         path: dist
 
 #      - name: Download web artifact
-#        uses: actions/download-artifact@v4
+#        uses: actions/download-artifact@v7
 #        with:
 #          name: MangaBox-Web-${{ env.version }}
 #          path: webdeploy
 
       - name: Download All artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: output
 

@@ -138,5 +138,10 @@
 	"button.saveserver": "サーバーを保存",
 	"button.save": "保存",
 	"server.connectionok": "サーバー接続成功",
-	"servers.logoutall": "全ログアウト"
+	"servers.logoutall": "全ログアウト",
+	"button.serversusers": "ユーザーとサーバー",
+	"button.serverslist": "サーバー一覧",
+	"server.invalidlogindata": "ユーザー名またはパスワードが正しくありません",
+	"server.loginfailed": "ログインに失敗しました",
+	"server.cannotreach": "サーバーに接続できません。アドレスまたは接続を確認してください。"
 }

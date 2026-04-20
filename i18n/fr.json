@@ -138,5 +138,10 @@
 	"button.saveserver": "Enregistrer le serveur",
 	"button.save": "Enregistrer",
 	"server.connectionok": "Connexion au serveur OK",
-	"servers.logoutall": "Tout déconnecter"
+	"servers.logoutall": "Tout déconnecter",
+	"button.serversusers": "Utilisateur et serveur",
+	"button.serverslist": "Liste des serveurs",
+	"server.invalidlogindata": "Nom d'utilisateur ou mot de passe incorrect",
+	"server.loginfailed": "Échec de la connexion",
+	"server.cannotreach": "Impossible de joindre le serveur. Vérifiez l'adresse ou votre connexion."
 }

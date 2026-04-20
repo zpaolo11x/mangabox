@@ -135,7 +135,7 @@ ipcMain.handle('read-file', async (_, filePath) => {
 	}
 });
 
-ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData }) => {
+ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData, requestMedia }) => {
 	const win = BrowserWindow.getFocusedWindow(); // or keep a ref to your main window
 
 	const baseDir = path.join(app.getPath('userData'), 'offline-books');
@@ -194,7 +194,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 
 		const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/thumbnail`;
 		console.log(`Downloading book thumbnail`);
-		res = await fetch(thumbUrl, requestData);
+		res = await fetch(thumbUrl, requestMedia);
 		if (!res.ok) throw new Error(`Failed to fetch thumbnail: ${res.status}`);
 		const buffer = Buffer.from(await res.arrayBuffer());
 		await fs.writeFile(path.join(bookFolder, 'thumbnail.jpg'), buffer);
@@ -213,7 +213,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			if (!pageExists) {
 				const pageUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}`;
 				console.log(`Downloading page ${page.number}...`);
-				const res = await fetch(pageUrl, requestData);
+				const res = await fetch(pageUrl, requestMedia);
 				if (!res.ok) throw new Error(`Failed to fetch page ${page.number}: ${res.status}`);
 				const buffer = Buffer.from(await res.arrayBuffer());
 				await fs.writeFile(pageFile, buffer);
@@ -230,7 +230,7 @@ ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl
 			if (!thumbExists) {
 				const thumbUrl = `${baseUrl}/api/v1/books/${bookId}/pages/${page.number}/thumbnail`;
 				console.log(`Downloading thumb ${page.number}...`);
-				const res2 = await fetch(thumbUrl, requestData);
+				const res2 = await fetch(thumbUrl, requestMedia);
 				if (!res2.ok) throw new Error(`Failed to fetch thumbnail ${page.number}: ${res.status}`);
 				const buffer2 = Buffer.from(await res2.arrayBuffer());
 				await fs.writeFile(thumbFile, buffer2);

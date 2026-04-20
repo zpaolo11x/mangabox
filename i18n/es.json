@@ -138,5 +138,10 @@
 	"button.saveserver": "Guardar el servidor",
 	"button.save": "Guardar",
 	"server.connectionok": "Conexión al servidor correcta",
-	"servers.logoutall": "Cerrar sesión en todos"
+	"servers.logoutall": "Cerrar sesión en todos",
+	"button.serversusers": "Usuario y servidor",
+	"button.serverslist": "Lista de servidores",
+	"server.invalidlogindata": "Nombre de usuario o contraseña incorrectos",
+	"server.loginfailed": "Error de inicio de sesión",
+	"server.cannotreach": "No se puede conectar al servidor. Comprueba la dirección o tu conexión."
 }
