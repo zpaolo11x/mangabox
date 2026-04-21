@@ -1,13 +1,11 @@
 Main UI
-- Completed translations of strings
+- 
 
 Reader UI
-- PDF media now loads correctly (thanks to Epawse on GitHub)
+- 
 
 Fixes
-- Fixed search for authors
+- 
 
 Build
-- Added Indonesian translation (thanks to Arif Budiman on Weblate)
-- Added Brazilian Portuguese translation
-- Updated GitHub CI
+- 
