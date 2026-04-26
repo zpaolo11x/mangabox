@@ -265,10 +265,16 @@
 
 			<div id="nextBookPanel" class="modal-content-2 hidden blankstart">
 				<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
+				<div id="nextBookThumbnailWrapper" class="prevnextbook-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+					<img id="nextBookCover" class="book-thumbnail" src="transparent.png">
+				</div>
 			</div>
 
 			<div id="prevBookPanel" class="modal-content-2 hidden blankstart">
 				<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
+				<div id="prevBookThumbnailWrapper" class="prevnextbook-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+					<img id="prevBookCover" class="book-thumbnail" src="transparent.png">
+				</div>
 			</div>
 
 		</div>
@@ -6012,8 +6018,13 @@
 
 			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 
+			prevBookCover.src = "transparent.png";
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
+			if (rd.prevBook) prevBookCover.src = `${mb.baseUrl}/api/v1/books/${rd.prevBook.id}/thumbnail`;
+
+			nextBookCover.src = "transparent.png";
 			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
+			if (rd.nextBook) nextBookCover.src = `${mb.baseUrl}/api/v1/books/${rd.nextBook.id}/thumbnail`;
 
 			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden');
 			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden');

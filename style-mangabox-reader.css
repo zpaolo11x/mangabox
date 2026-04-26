@@ -912,6 +912,24 @@ div.single-page {
 	transform: translate(-50%, 0);
 	transition: opacity 0.5s ease;
 	z-index: 15;
+	height: 307px;
+	width:180px;
+}
+
+.prevnextbook-thumbnail-wrapper {
+	position: absolute;
+	box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+	width: 180px;
+	height: 252px;
+	bottom: 80px;
+	top: 15px;
+	aspect-ratio: var(--mb-cover-aspect);
+	overflow: hidden;
+	border-radius: 20px;
+
+	cursor: pointer;
+	left: 50%;
+	transform: translateX(-50%);
 }
 
 #controlPanel.hidden #nextBookPanel,
@@ -926,7 +944,7 @@ div.single-page {
 
 #nextBookButton,
 #prevBookButton {
-	margin-top: 0px;
+	margin-top: 267px;
 }
 
 #nextBookPanel.hidden,
