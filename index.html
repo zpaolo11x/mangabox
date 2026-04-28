@@ -416,10 +416,8 @@
 		const isWeb = !(isElectron || isCapacitor);
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
-		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
 		debugPrint(isSecureStorage);
-		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar;
 
 		let capacitorPlatform = null;
 
@@ -436,6 +434,10 @@
 				filesFolder = 'DATA';
 			}
 		}
+
+		//Android only plugins
+		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
+		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge && capacitorPlatform == 'android';
 
 		if (!isElectron && !isCapacitor && !fullDebugMode) {
 			offlineLibrary.remove();
