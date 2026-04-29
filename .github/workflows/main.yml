@@ -228,7 +228,7 @@ jobs:
         run: npm install @capawesome/capacitor-android-edge-to-edge-support@7
 
       - name: Install navigation bar plugin (Android)
-        #if: ${{ matrix.sys == 'android' }}
+        if: ${{ matrix.sys == 'android' }}
         run: npm install @ethion/capacitor-navigation-bar
 
       - name: Add iOS Info.plist permissions
