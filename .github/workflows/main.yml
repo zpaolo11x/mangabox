@@ -28,39 +28,6 @@ jobs:
           VERSION=$(node -p 'require("./package.json").version')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-#  icons:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v5
-#
-#      - name: Install icon generator
-#        run: |
-#          npm install -g app-iconset-generator
-#          npm install -g png2icons
-#
-#      - name: Check current directory
-#        run: pwd
-#
-#      - name: List files
-#        run: ls -la
-#
-#      - name: Generate icons
-#        run: |
-#          mkdir -p build/icons
-#          png2icons ./assets/icon-squircle/icon.png ./build/icons/mangabox -icns -i
-#          png2icons ./assets/icon-transparent/icon.png ./build/icons/mangabox -ico -i
-#          app-iconset-generator -i ./assets/icon-red/icon.png -o ./build/icons
-#
-#      - name: List icon files
-#        run: ls build/icons -lRa
-#
-#      - name: Upload icons artifact
-#        uses: @v4
-#        with:
-#          name: generated-icons
-#          path: build/icons
-
   electron:
     needs: version
     runs-on: ${{ matrix.os }}
@@ -204,9 +171,6 @@ jobs:
           - os: ubuntu-latest
             sys: android
             name: Android-apk
-          - os: ubuntu-latest
-            sys: android
-            name: Android-aab
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -260,11 +224,11 @@ jobs:
         run: npm install @capawesome/capacitor-file-picker@7
 
       - name: Install edge management plugin (Android)
-        if: ${{ matrix.sys == 'android' }}
+        #if: ${{ matrix.sys == 'android' }}
         run: npm install @capawesome/capacitor-android-edge-to-edge-support@7
 
       - name: Install navigation bar plugin (Android)
-        if: ${{ matrix.sys == 'android' }}
+        #if: ${{ matrix.sys == 'android' }}
         run: npm install @ethion/capacitor-navigation-bar
 
       - name: Add iOS Info.plist permissions
@@ -338,17 +302,6 @@ jobs:
         run: |
           mv android/app/build/outputs/apk/debug/app-debug.apk output/MangaBox-${{ env.version }}-${{ matrix.name }}.apk
 
-      - name: Android-aab - Build app
-        if: ${{ matrix.name == 'Android-aab' }}
-        run: |
-          cd android
-          ./gradlew bundleRelease
-
-      - name: Android-aab - Move aab to target
-        if: ${{ matrix.name == 'Android-aab' }}
-        run: |
-          mv android/app/build/outputs/bundle/release/app-release.aab output/MangaBox-${{ env.version }}-${{ matrix.name }}.aab
-
       - name: iOS app - Build app for simulator
         if: ${{ matrix.name == 'iOS-app'}}
         run: |
@@ -405,7 +358,6 @@ jobs:
           name: MangaBox-${{ matrix.name }}-${{ env.version }}
           path: |
             output/*.apk
-            output/*.aab
             output/*.app
             output/*.ipa
 
