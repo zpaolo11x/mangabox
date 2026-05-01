@@ -152,7 +152,7 @@
 #webtoonContainer {
 	position: absolute;
 	top: 0;
-	margin-top:var(--mb-top-spacer);
+	margin-top: var(--mb-top-spacer);
 	overflow: hidden;
 	bottom: 0;
 	/*height:100vh;*/
@@ -224,7 +224,7 @@ img.page:not([src]) {
 	display: block;
 }
 
-.spread-layout{
+.spread-layout {
 	contain: layout style paint;
 }
 
@@ -874,7 +874,8 @@ div.single-page {
 #readerContainer.hidden #bottomControls,
 #controlPanel.hidden #zoomControls,
 #readerContainer.hidden #zoomControls {
-	bottom: -100px !important; /*TODO Added !important to fix dependance from webtoon vs book, maybe can be avoided*/
+	bottom: -100px !important;
+	/*TODO Added !important to fix dependance from webtoon vs book, maybe can be avoided*/
 }
 
 #controlPanel.hidden #thumbStrip,
@@ -910,10 +911,10 @@ div.single-page {
 	left: 50%;
 	top: 100px;
 	transform: translate(-50%, 0);
-	transition: opacity 0.5s ease;
 	z-index: 15;
 	height: 307px;
-	width:180px;
+	width: 180px;
+	transition: opacity 0.5s ease, height 0.3s;
 }
 
 .prevnextbook-thumbnail-wrapper {
@@ -930,6 +931,24 @@ div.single-page {
 	cursor: pointer;
 	left: 50%;
 	transform: translateX(-50%);
+	transition: height 0.3s, opacity 0.3s;
+}
+
+@media (max-height: 500px) {
+	.prevnextbook-thumbnail-wrapper {
+		opacity: 0;
+		height: 40px;
+	}
+
+	#nextBookPanel,
+	#prevBookPanel {
+		height: 40px;
+	}
+
+	#prevBookButton,
+	#nextBookButton {
+		margin-top: 0px !important;
+	}
 }
 
 #controlPanel.hidden #nextBookPanel,
@@ -945,6 +964,7 @@ div.single-page {
 #nextBookButton,
 #prevBookButton {
 	margin-top: 267px;
+	transition: margin 0.3s;
 }
 
 #nextBookPanel.hidden,
@@ -954,7 +974,7 @@ div.single-page {
 }
 
 #nextBookPanel.hidden #nextBookButton,
-#prevBookPanel.hidden #prevBookButton{
+#prevBookPanel.hidden #prevBookButton {
 	pointer-events: none;
 }
 
@@ -992,7 +1012,7 @@ div.single-page {
 }
 
 #readerPage {
-  
+
 	width: fit-content;
 	min-width: 30px;
 	height: 30px;
@@ -1107,14 +1127,14 @@ div.single-page {
 	/*box-shadow: inset green 0px 0px 15px;*/
 	grid-template-columns: 1fr 1.5fr 1fr;
 	/*z-index: 1002;*/
-	z-index:1003;
+	z-index: 1003;
 	box-sizing: border-box;
 	border-bottom: 5px solid transparent;
 
 	transition: border 0.3s;
 }
 
-#touchPanel.hidden{
+#touchPanel.hidden {
 	pointer-events: none;
 }
 
