@@ -2,10 +2,10 @@ Main UI
 - 
 
 Reader UI
-- 
+- Added cover thumbnail for next and previous book
 
 Fixes
-- 
+- Fixed insets on Android 15 devices
 
 Build
 - 

@@ -20,10 +20,10 @@
 	--mb-android-inset-left: 0px;
 	--mb-android-inset-right: 0px;
 
-	--mb-inset-top: calc(env(safe-area-inset-top) + var(--mb-android-inset-top));
-	--mb-inset-bottom: calc(env(safe-area-inset-bottom) + var(--mb-android-inset-top));
-	--mb-inset-left: calc(env(safe-area-inset-left) + var(--mb-android-inset-left));
-	--mb-inset-right: calc(env(safe-area-inset-right) + var(--mb-android-inset-right));
+	--mb-inset-top: max(env(safe-area-inset-top), var(--mb-android-inset-top));
+	--mb-inset-bottom: max(env(safe-area-inset-bottom), var(--mb-android-inset-top));
+	--mb-inset-left: max(env(safe-area-inset-left), var(--mb-android-inset-left));
+	--mb-inset-right: max(env(safe-area-inset-right), var(--mb-android-inset-right));
 
 	--mb-area-padding: 20px;
 	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), var(--mb-inset-left)));
