@@ -70,7 +70,7 @@
 					</li>
 					<li id="languageChanger" data-i18n-title="button.language" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-earth glyph-dark"></span>
+							<span class="fa-solid fa-language glyph-dark"></span>
 						</div>
 					</li>
 					<li id="offlineLibrary" data-i18n-title="button.offlinebooks" class="library-item no-grow press-button">
@@ -331,7 +331,7 @@
 				<div class="login-buttons">
 					<div class="login-buttons-left">
 						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
-							<i class="fas fa-earth"></i>
+							<i class="fas fa-language"></i>
 						</button>
 						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
 							<i class="fas fa-globe"></i>
@@ -1899,7 +1899,7 @@
 				<span style="width:25px; min-width:25px;" class="fa-solid fa-user"></span><span>${currentUser.email}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;" onClick="languageDialog()">
-				<span style="width:25px; min-width:25px;" class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
+				<span style="width:25px; min-width:25px;" class="fa-solid fa-language"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
 			showModal('', true, dialogText,
@@ -2433,7 +2433,7 @@
 							caption: 'filterlanguage.all',
 							longCaption: 'filterLanguage.all.long',
 
-							iconClass: 'fa-solid fa-earth-europe glyph-dark',
+							iconClass: 'fa-solid fa-language glyph-dark',
 							filterFunction: (a) => true
 						}
 					],
