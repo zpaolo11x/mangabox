@@ -5360,6 +5360,7 @@
 			sectionShow(stripGridContainer);
 
 			stripGridHeader.innerHTML = dashboardElements[element].headerCode;
+			translateDOM();
 			const data = await dashboardElements[element].getItems(page, 50);
 
 			const array = data.content;
