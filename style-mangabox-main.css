@@ -1609,10 +1609,10 @@ a {
 
 #stripPrevPage,
 #stripNextPage {
-	margin-left: 10px;
+	margin-left: 5px;
 	cursor: pointer;
 	transition: opacity 0.2s;
-	width:15px;
+	width:20px;
 	height:20px;
 }
 
