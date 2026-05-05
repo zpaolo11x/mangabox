@@ -1458,6 +1458,13 @@ a {
 
 }
 
+.mini-buttons .fa-solid,
+.mini-buttons .fa-regular{
+	font-size: 25px;
+	height: 25px;
+	width: 25px;
+}
+
 .flip-horizontal {
 	scale: -1 1;
 }
@@ -1787,6 +1794,11 @@ a {
 	font-weight: 500;
 }
 
+.strip-header .fa-solid,
+.strip-header .fa-regular{
+	width: 20px;
+}
+
 .custom-scrollbar input[type="range"] {
 	width: 100%;
 	appearance: none;
@@ -2112,6 +2124,13 @@ book-item {
 	padding: 0px 2px;
 }
 
+.data-row .fa-solid,
+.data-row .fa-regular{
+	font-size:14px;
+	height: 14px;
+	width: 14px;
+}
+
 .title-row {
 	display: flex;
 	flex-direction: row;
@@ -2168,6 +2187,12 @@ book-item {
 	padding-bottom: 0px;
 	font-size: 15px;
 	/*XXX MAGARI 14.5px XXX*/
+}
+.top-row .fa-solid,
+.top-row .fa-regular{
+	font-size:15px;
+	height: 15px;
+	width: 15px;
 }
 
 .info-row {
@@ -2386,6 +2411,9 @@ span.mini-title {
 	border-radius: 15%;
 	box-shadow: inset 0 0 0px 1px var(--mb-glyph-color);
 	background-size: cover;
+	font-size: 15px;
+	width: 15px;
+	height: 15px;
 }
 
 .glyph-flag-button {
