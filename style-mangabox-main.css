@@ -1612,6 +1612,8 @@ a {
 	margin-left: 10px;
 	cursor: pointer;
 	transition: opacity 0.2s;
+	width:15px;
+	height:20px;
 }
 
 #stripPrevPage.disabled,
