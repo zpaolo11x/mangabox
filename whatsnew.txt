@@ -6,6 +6,7 @@ Reader UI
 
 Fixes
 - Fixed insets on Android 15 devices
+- Fixed translation of header in view all page
 
 Build
 - 
