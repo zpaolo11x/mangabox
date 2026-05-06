@@ -1076,6 +1076,7 @@ a {
 	width: auto;
 }
 
+
 .libglyph,
 .library-item span.fa-solid,
 .library-item span.fa-regular {
@@ -2715,4 +2716,10 @@ body.offline #stickyContainer {
  .scrollbox-scrollbar:hover .scrollbox-thumb {
 	background: var(--mb-accent);
  }
+*/
+
+/*
+.fas,.far,.fa-solid,.fa-regular{
+	background-color:pink!important;
+}
 */
