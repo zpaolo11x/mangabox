@@ -3720,7 +3720,7 @@
 			const orientedBook = {
 				RIGHT_TO_LEFT: '<span class="fa-solid fa-book fa-flip-horizontal glyph-dark"></span>',
 				LEFT_TO_RIGHT: '<span class="fa-solid fa-book glyph-dark"></span>',
-				WEBTOON: '<span class="fa-solid fa-mobile glyph-dark"></span>',
+				WEBTOON: '<span class="fa-solid fa-mobile-screen glyph-dark"></span>',
 				VERTICAL: '<span class="fa-solid fa-mobile glyph-dark"></span>',
 			
 			}
@@ -3744,8 +3744,6 @@ console.log(LTRbook);
 				innerHTML: `
 								<div class="title-row data-row top-row">
 									<div style="flex-grow:1" class="series-title">${preventHyphenBreaks(serie.metadata.title)}</div>
-									<div class="glyph-dark" style="text-align:right">${LTR}</div>
-										${spacer}
 									<div class="glyph-div" style="text-align:right">${LNG}</div>
 								</div>`
 			});
