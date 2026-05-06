@@ -150,6 +150,7 @@
 .input-wrapper.disabled-input {
 	opacity: 0.3;
 	pointer-events: none;
+	/*display: none;*/
 }
 
 .input-wrapper i {
