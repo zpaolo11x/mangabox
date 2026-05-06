@@ -3717,6 +3717,14 @@
 				VERTICAL: '<span class="fa-solid fa-mobile glyph-dark" style="margin-left:2px;"></span>',
 			}
 
+			const orientedBook = {
+				RIGHT_TO_LEFT: '<span class="fa-solid fa-book fa-flip-horizontal glyph-dark"></span>',
+				LEFT_TO_RIGHT: '<span class="fa-solid fa-book glyph-dark"></span>',
+				WEBTOON: '<span class="fa-solid fa-mobile glyph-dark"></span>',
+				VERTICAL: '<span class="fa-solid fa-mobile glyph-dark"></span>',
+			
+			}
+
 			item.childNodes[0]?.remove();
 
 			//item.title = 'Open series';
@@ -3730,6 +3738,8 @@
 			const LTR = serie.metadata?.readingDirection ? LTRvals[serie.metadata.readingDirection] : '';
 			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
 
+			const LTRbook = serie.metadata?.readingDirection ? orientedBook[serie.metadata.readingDirection] : orientedBook["LEFT_TO_RIGHT"];
+console.log(LTRbook);
 			const seriesTitle = addItem('div', {
 				innerHTML: `
 								<div class="title-row data-row top-row">
@@ -3830,7 +3840,7 @@
 			})
 
 			const booksLabel = addItem('span', {
-				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
+				innerHTML: `${LTRbook}&nbsp;${bookCount}`
 			});
 
 			const artistRow = addItem('div', {
