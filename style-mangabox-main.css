@@ -2737,3 +2737,23 @@ body.offline #stickyContainer {
 	background-color:var(--mb-calendar-color);
 	border:none;
 }
+
+.question:after{
+	content:'?';
+	position:absolute;
+	top:50%;
+	left:70%;
+	width:12px;
+	height:18px;
+	transform: translate(-50%, -50%);
+	font-weight:bold;
+	font-size:18px;
+	line-height:18px;
+	color:var(--mb-glyph-color);
+	background-color:var(--mb-login-button-color);
+	border:none;
+	border-radius: 50%;
+	font-weight: bold;
+	font-family: 'Outfit';
+
+}
