@@ -171,6 +171,7 @@
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
+	--mb-calendar-color: rgb(76,76,76);
 	--mb-bar-color: #dddddd;
 
 	--mb-red-hover: var(--mb-accent-a50);
@@ -213,6 +214,7 @@
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
 	--mb-glyph-color: rgba(255, 255, 255, 0.75);
+	--mb-calendar-color: rgba(255, 255, 255, 0.0);
 	--mb-bar-color: #606060;
 
 	--mb-red-hover: var(--mb-accent-light);
@@ -2723,3 +2725,15 @@ body.offline #stickyContainer {
 	background-color:pink!important;
 }
 */
+.fa-calendar:after{
+	content:'';
+	display:block;
+	position:relative;
+	top:-13px;
+	left:2px;
+	width:12px;
+	height:3px;
+	font-size:10px;
+	background-color:var(--mb-calendar-color);
+	border:none;
+}
