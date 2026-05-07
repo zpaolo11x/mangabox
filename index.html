@@ -3822,7 +3822,7 @@ console.log(LTRbook);
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='fa-solid fa-calendar-week glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',

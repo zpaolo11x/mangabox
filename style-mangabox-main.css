@@ -2129,9 +2129,9 @@ book-item {
 
 .data-row .fa-solid,
 .data-row .fa-regular{
-	font-size:14px;
-	height: 14px;
-	width: 14px;
+	font-size:16px;
+	height: 16px;
+	width: 16px;
 }
 
 .title-row {
@@ -2193,9 +2193,9 @@ book-item {
 }
 .top-row .fa-solid,
 .top-row .fa-regular{
-	font-size:15px;
-	height: 15px;
-	width: 15px;
+	font-size:16px;
+	height: 16px;
+	width: 16px;
 }
 
 .info-row {
