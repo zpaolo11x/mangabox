@@ -372,7 +372,7 @@ body {
 	box-shadow: var(--mb-modal-shadow);
 	border: 1px solid var(--mb-modal-border);
 	overflow: hidden;
-	min-height:70px;
+	min-height: 70px;
 }
 
 .modal-content {
@@ -384,7 +384,7 @@ body {
 	max-height: calc(100vh - 50px);
 	overflow-y: scroll;
 	overflow-x: hidden;
-		min-height:70px;
+	min-height: 70px;
 
 }
 
@@ -1076,17 +1076,31 @@ a {
 	width: auto;
 }
 
+.ico {
+	font-variation-settings: 'FILL' 0;
+}
+
+.icofill {
+	font-variation-settings: 'FILL' 1;
+}
+
+.icoflip {
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
 
 .libglyph,
+.library-item span.ico,
 .library-item span.fa-solid,
 .library-item span.fa-regular {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
-	font-size: 25px;
+	font-size: 28px;
 	border-radius: 50%;
 }
 
+.filter-item span.ico,
 .filter-item span.fa-solid,
 .filter-item span.fa-regular {
 	width: var(--mb-filter-span-size);
@@ -1104,7 +1118,7 @@ a {
 	transform: translate(-50%, -50%);
 	min-width: var(--mb-button-size);
 	height: var(--mb-button-size);
-	z-index: 10;
+	z-index: 0;
 	border-radius: 50%;
 	transition: border-color 0.3s;
 	padding: 0;
@@ -1116,7 +1130,7 @@ a {
 #downloadSpinner span {
 	grid-area: 1 / 1;
 	/* makes them all overlap */
-	font-size: 38px;
+	font-size: 40px;
 	width: 100%;
 	height: 100%;
 	line-height: var(--mb-button-size);
@@ -1460,7 +1474,7 @@ a {
 }
 
 .mini-buttons .fa-solid,
-.mini-buttons .fa-regular{
+.mini-buttons .fa-regular {
 	font-size: 25px;
 	height: 25px;
 	width: 25px;
@@ -1613,8 +1627,8 @@ a {
 	margin-left: 5px;
 	cursor: pointer;
 	transition: opacity 0.2s;
-	width:20px;
-	height:20px;
+	width: 20px;
+	height: 20px;
 }
 
 #stripPrevPage.disabled,
@@ -1798,7 +1812,7 @@ a {
 }
 
 .strip-header .fa-solid,
-.strip-header .fa-regular{
+.strip-header .fa-regular {
 	width: 20px;
 }
 
@@ -2127,9 +2141,16 @@ book-item {
 	padding: 0px 2px;
 }
 
+.data-row .ico {
+	font-size: 17px;
+	vertical-align: -3px;
+	height: 14px;
+	width: 15px;
+}
+
 .data-row .fa-solid,
-.data-row .fa-regular{
-	font-size:14px;
+.data-row .fa-regular {
+	font-size: 14px;
 	height: 14px;
 	width: 14px;
 }
@@ -2191,9 +2212,11 @@ book-item {
 	font-size: 15px;
 	/*XXX MAGARI 14.5px XXX*/
 }
+
+.top-row .ico,
 .top-row .fa-solid,
-.top-row .fa-regular{
-	font-size:15px;
+.top-row .fa-regular {
+	font-size: 15px;
 	height: 15px;
 	width: 15px;
 }

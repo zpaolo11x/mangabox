@@ -26,6 +26,8 @@
 	<link rel="stylesheet" href="style-mangabox-main.css">
 	<link rel="stylesheet" href="style-mangabox-reader.css">
 
+	<!--<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />-->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,700,0..1,200" rel="stylesheet" />
 	<script>
 		let mbPrefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 		let toDark = mbPrefersDarkMode.matches ? true : false
@@ -35,7 +37,7 @@
 </head>
 
 <body>
-	<div id="mainLoader" class="hidden"><span class="fa-solid fa-gear"></span></div>
+	<div id="mainLoader" class="hidden"><span class="material-symbols-rounded ico icofill">settings</span></div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -55,38 +57,42 @@
 					-->
 					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
-							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
+							<span id="fullscreenLabel" class="material-symbols-rounded ico glyph-dark">fullscreen</span>
 						</div>
 					</li>
 					<li id="themeChanger" data-i18n-title="button.lightdark" class="library-item press-button">
 						<div class="button-wrapper">
-							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+							<span id="themeLabel" class="theme-label material-symbols-rounded ico glyph-dark">routine</span>
 						</div>
 					</li>
 					<li id="colorChanger" data-i18n-title="button.themecolor" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+							<span id="fullscreenLabel" class="material-symbols-rounded ico icofill glyph-dark mb-accent">imagesearch_roller</span>
 						</div>
 					</li>
 					<li id="languageChanger" data-i18n-title="button.language" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-language glyph-dark"></span>
+							<span class="material-symbols-rounded ico glyph-dark">translate</span>
 						</div>
 					</li>
 					<li id="offlineLibrary" data-i18n-title="button.offlinebooks" class="library-item no-grow press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid fa-download glyph-dark"></span>
-						</div>
 						<div id="downloadSpinner" class="download-overlay">
+							<span class="material-symbols-rounded ico glyph-dark mb-accent">filter_tilt_shift</span>
+							<!--
 							<span class="fa-solid fa-spinner glyph-dark mb-accent"></span>
 							<span class="fa-solid fa-spinner glyph-dark mb-accent layer"></span>
+							-->
 						</div>
+
+						<div class="button-wrapper">
+							<span class="material-symbols-rounded ico icofill glyph-dark">download_2</span>
+						</div>
+
 					</li>
 					<li id="searchField" data-i18n-title="button.search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
-							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+							<span class="material-symbols-rounded ico glyph-dark">search</span>
 						</div>
-						<!--<span id="clearSearchBtn" class="clear-btn fa-solid fa-xmark"></span>-->
 						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button">
 							<span class="x-btn lib-override fa-solid fa-xmark"></span>
 						</div>
@@ -94,7 +100,7 @@
 					</li>
 					<li id="logOut" data-i18n-title="button.serversusers" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-user-group glyph-dark"></span>
+							<span class="material-symbols-rounded ico icofill glyph-dark">group</span>
 						</div>
 					</li>
 				</ul>
@@ -307,53 +313,52 @@
 				<div class="version-note">v0.4.3</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
-					<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
+					<span class="material-symbols-rounded ico">storage</span>
 					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
 				</div>
 
 				<div id="divBaseUrl" class="input-wrapper" title="Server Address">
-					<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
+					<span class="material-symbols-rounded ico">link_2</span>
 					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 				</div>
 
 				<div id="divUsername" class="input-wrapper" title="Username">
-					<i class="fas fa-user"></i> <!-- Icon for username -->
+					<span class="material-symbols-rounded icofill ico">person</span>
 					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 				</div>
 
 				<div id="divPassword" class="input-wrapper pwd" title="Password">
-					<i class="fas fa-lock"></i> <!-- Icon for password -->
-					<!--<i id="passIcon" class="fas fa-eye"></i>  -->
+					<span class="material-symbols-rounded ico">password</span>
 					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
-					<span id="viewPassword" class="fas fa-eye right"></span>
+					<span id="viewPassword" class="material-symbols-rounded icofill ico right">visibility</span>
 				</div>
 
 				<div class="login-buttons">
 					<div class="login-buttons-left">
 						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
-							<i class="fas fa-language"></i>
+							<span class="material-symbols-rounded ico icofill">translate</span>
 						</button>
 						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
-							<i class="fas fa-globe"></i>
+							<span class="material-symbols-rounded ico icofill">globe_2_question</span>
 						</button>
 						<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
-							<i class="fas fa-server"></i>
+							<span class="material-symbols-rounded ico">storage</span>
 						</button>
 					</div>
 					<div class="login-buttons-right">
 						<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
-							<i class="input-glyph fas fa-arrow-rotate-left"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
+							<span class="material-symbols-rounded ico icofill input-glyph">replay</span><span class="input-text" data-i18n="modal.cancel">Cancel</span>
 						</button>
 						<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
-							<i class="input-glyph fas fa-floppy-disk"></i><span class="input-text" data-i18n="button.save">Save</span>
+							<span class="material-symbols-rounded ico icofill input-glyph">save</span><span class="input-text" data-i18n="button.save">Save</span>
 						</button>
 						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
-							<i class="input-glyph fas fa-play"></i><span class="input-text" data-i18n="button.login">Login</span>
+							<span class="material-symbols-rounded ico icofill input-glyph">play_arrow</span><span class="input-text" data-i18n="button.login">Login</span>
 						</button>
 					</div>
 				</div>
 
-				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
+				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><span class="material-symbols-rounded ico glyph-dark">question_mark</span></button>
 
 				<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
 			</div>
@@ -398,7 +403,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = false;
+		const fullDebugMode = true;
 		const webPWD = false;
 
 		// Enable for live debug on the main UI
@@ -945,14 +950,20 @@
 						{
 							label: 'theme.light',
 							icon: 'fa-sun',
+							text: 'sunny',
+							icofill: false,
 							isDark: 0
 						}, {
 							label: 'theme.dark',
 							icon: 'fa-moon',
+							text: 'dark_mode',
+							icofill: true,
 							isDark: 1
 						}, {
 							label: 'theme.system',
 							icon: 'fa-wand-magic-sparkles',
+							text: 'wand_stars',
+							icofill: false,
 							isDark: 2
 						}
 					],
@@ -1598,21 +1609,21 @@
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
-										<span class="fa-solid fa-pen glyph-dark"></span>
+										<span style="font-size:24px" class="material-symbols-rounded ico icofill glyph-dark">stylus</span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
-										<span class="fa-solid fa-trash-can glyph-dark"></span>
+										<span style="font-size:24px" class="material-symbols-rounded ico icofill glyph-dark">delete_forever</span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
-										<span class="fa-solid ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'fa-key' : 'fa-play'} glyph-dark"></span>
+										<span style="font-size:24px" class="material-symbols-rounded ico icofill glyph-dark">${(id == 'mb0' || mb.serverList[id].askPassword) ? 'vpn_key' : 'play_arrow'}</span>
 									</div>
 								</li>
 								<li class="server-data" id="item_${id}_data">
 									<div style="margin-top:10px; width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span style="width:20px; min-width:20px;" class="fa-solid fa-link"></span><span style="word-break: break-all;">${server.url}</span>
+										<span style="width:20px; min-width:20px;" class="material-symbols-rounded ico icofill">link</span><span style="word-break: break-all;">${server.url}</span>
 									</div>
 									<div style="width:100%; padding-top:10px; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span style="width:20px; min-width:20px;" class="fa-solid fa-user"></span><span>${server.username}</span>
+										<span style="width:20px; min-width:20px;" class="material-symbols-rounded ico icofill">person</span><span>${server.username}</span>
 									</div>
 								</li>
 			`
@@ -1762,12 +1773,19 @@
 			// Set css theme to dark or light
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
+			/*
 			mb.themeControl.forEach(item => {
 				themeLabel.classList.remove(item.icon);
 			});
+			*/
 
-			themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
+			//themeLabel.classList.add(mb.themeControl[mb.themePrefs].icon);
+			
+			themeLabel.innerText = mb.themeControl[mb.themePrefs].text;
+			themeLabel.classList.toggle('icofill', mb.themeControl[mb.themePrefs].icofill);
+
 			themeChanger.dataset.i18nTitle = mb.themeControl[mb.themePrefs].label;
+
 			translateDOM(themeChanger)
 
 			// Change fa icons for light or dark theme
@@ -1864,8 +1882,7 @@
 
 			loginPassword.type = isPassword ? 'text' : 'password';
 
-			viewPassword.classList.toggle('fa-eye', !showPassword);
-			viewPassword.classList.toggle('fa-eye-slash', showPassword);
+			viewPassword.innerText = showPassword ? 'visibility_off' : 'visibility';
 
 		})
 		/*
@@ -3718,10 +3735,10 @@
 			}
 
 			const orientedBook = {
-				RIGHT_TO_LEFT: '<span class="fa-solid fa-book fa-flip-horizontal glyph-dark"></span>',
-				LEFT_TO_RIGHT: '<span class="fa-solid fa-book glyph-dark"></span>',
-				WEBTOON: '<span class="fa-solid fa-mobile-screen glyph-dark"></span>',
-				VERTICAL: '<span class="fa-solid fa-mobile glyph-dark"></span>',
+				RIGHT_TO_LEFT: '<span class="material-symbols-rounded ico icoflip icofill glyph-dark">book_2</span>',
+				LEFT_TO_RIGHT: '<span class="material-symbols-rounded ico icofill glyph-dark">book_2</span>',
+				WEBTOON: '<span class="material-symbols-rounded ico glyph-dark">mobile_3</span>',
+				VERTICAL: '<span class="material-symbols-rounded ico glyph-dark">mobile_3</span>',
 			
 			}
 
@@ -3822,7 +3839,7 @@ console.log(LTRbook);
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='fa-solid fa-calendar-week glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='material-symbols-rounded ico icofill glyph-dark'>calendar_today</span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
@@ -3848,7 +3865,7 @@ console.log(LTRbook);
 			if (altTitle.story != altTitle.art) {
 				if (altTitle.story != 'N/A') {
 					const storyLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid fa-pen-clip glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='material-symbols-rounded ico icofill glyph-dark'>ink_pen</span>&nbsp;${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.story}`,
 						dataset: {
@@ -3868,7 +3885,7 @@ console.log(LTRbook);
 
 				if (altTitle.art != 'N/A') {
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
-						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						innerHTML: `<span class='material-symbols-rounded ico icofill glyph-dark'>palette</span>&nbsp;${altTitle.art}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.art}`
 						dataset: {
@@ -3888,7 +3905,7 @@ console.log(LTRbook);
 			} else {
 				if (altTitle.story != 'N/A') {
 					const artistLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='material-symbols-rounded ico icofill glyph-dark'>person</span>&nbsp;${altTitle.story}`,
 						//title: `Filter artist: ${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						dataset: {
@@ -4954,7 +4971,7 @@ console.log(LTRbook);
 					//innerHTML: `<span data-i18n="book.book"></span> ${book.metadata.number}`,
 				});
 				const pagesLabel = addItem('span', {
-					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+					innerHTML: `<span class="material-symbols-rounded ico ${mb.darkTheme ? 'icofill' : ''} glyph-dark">draft</span>&nbsp;${book.media.pagesCount}`,
 				});
 				translateDOM(volumeNumberLabel);
 				mainRow.append(volumeNumberLabel, pagesLabel);
@@ -4983,7 +5000,7 @@ console.log(LTRbook);
 					}
 				});
 				const pagesLabel = addItem('span', {
-					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+					innerHTML: `<span class="material-symbols-rounded ico ${mb.darkTheme ? 'icofill' : ''} glyph-dark">draft</span>&nbsp;${book.media.pagesCount}`,
 				});
 				translateDOM(volumeNumberLabel);
 				secondRow.append(volumeNumberLabel, pagesLabel);
@@ -5005,7 +5022,8 @@ console.log(LTRbook);
 					//innerHTML: `Bk.${book.metadata.number}`
 				});
 				const timeLabel = addItem('span', {
-					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
+					
+					innerHTML: `<span class="material-symbols-rounded ico ${mb.darkTheme ? 'icofill' : ''} glyph-dark">schedule</span>&nbsp;${dateString}`
 				});
 				translateDOM(volumeNumberLabelShort);
 

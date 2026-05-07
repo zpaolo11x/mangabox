@@ -153,34 +153,31 @@
 	/*display: none;*/
 }
 
-.input-wrapper i {
+.input-wrapper .ico {
 	position: absolute;
 	left: 20px;
 	top: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, -52%);
 	color: var(--mb-glyph-color);
 
-	font-size: var(--mb-dialog-font-size);
+	font-size: calc(var(--mb-dialog-font-size)*1.2);
 	pointer-events: none;
 	/* Make the icon not respond to hover directly */
 	transition: all 0.3s;
 }
 
 
-.pwd span.right {
-	position: absolute;
-	display: inline-block;
-	/* or block */
-	text-align: center;
-	right: 0px;
-	top: 20px;
-	width: 40px;
-	text-align: middle;
-	transform: translate(0, -50%);
+.pwd span.right{
+	position: unset;
+	display:block;
+	margin-top:18px;
+	margin-left:auto;
 	color: var(--mb-login-border-color);
-	font-size: var(--mb-dialog-font-size);
+	font-size: calc(var(--mb-dialog-font-size)*1.2);
 	/* Make the icon not respond to hover directly */
 	transition: all 0.3s;
+	pointer-events:unset;
+
 }
 
 .pwd span.right:hover {
@@ -188,11 +185,11 @@
 
 }
 
-.input-wrapper:hover i {
+.input-wrapper:hover .ico {
 	border-color: var(--mb-accent);
 }
 
-.input-wrapper:focus-within i {
+.input-wrapper:focus-within .ico:not(.right) {
 	color: white;
 }
 
@@ -234,7 +231,7 @@
 }
 
 .pwd .login-input {
-	padding-right: calc(var(--mb-dialog-button-height));
+	padding-right:20px;
 }
 
 .input-wrapper:hover {
@@ -312,12 +309,12 @@
 }
 
 
-.login-button-round i {
+.login-button-round .ico {
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	transform: translate(-50%, -50%);
-	font-size: var(--mb-dialog-font-size);
+	transform: translate(-50%, -52%);
+	font-size: calc(var(--mb-dialog-font-size) * 1.2);
 	line-height: var(--mb-dialog-button-height);
 	pointer-events: none;
 	transition: all 0.3s;
