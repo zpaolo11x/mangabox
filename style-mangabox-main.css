@@ -1078,10 +1078,8 @@ a {
 	width: auto;
 }
 
-
 .libglyph,
-.library-item span.fa-solid,
-.library-item span.fa-regular {
+.library-item span.ico {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
@@ -1089,8 +1087,7 @@ a {
 	border-radius: 50%;
 }
 
-.filter-item span.fa-solid,
-.filter-item span.fa-regular {
+.filter-item span.ico {
 	width: var(--mb-filter-span-size);
 	height: var(--mb-filter-span-size);
 	line-height: var(--mb-filter-span-size);
@@ -1163,12 +1160,11 @@ a {
 	position: relative;
 }
 
-#readlistsButton2.highlighted span.fa-solid,
-#collectionsButton2.highlighted span.fa-solid,
-#offlineLibrary.highlighted span.fa-solid,
-.library-item.search-field.highlighted span.fa-solid:not(.lib-override),
-.filter-item.highlighted span.fa-solid,
-.filter-item.highlighted span.fa-regular {
+#readlistsButton2.highlighted span.ico,
+#collectionsButton2.highlighted span.ico,
+#offlineLibrary.highlighted span.ico,
+.library-item.search-field.highlighted span.ico:not(.lib-override),
+.filter-item.highlighted span.ico {
 	color: white;
 	opacity: 1;
 	border-radius: 50%;
@@ -1375,8 +1371,7 @@ a {
 	font-size: 16px;
 }
 
-.dialog-button span.fa-solid,
-.dialog-button span.fa-regular {
+.dialog-button span.ico {
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
 	line-height: var(--mb-dialog-button-height);
@@ -1461,8 +1456,7 @@ a {
 
 }
 
-.mini-buttons .fa-solid,
-.mini-buttons .fa-regular{
+.mini-buttons .ico {
 	font-size: 25px;
 	height: 25px;
 	width: 25px;
@@ -1678,8 +1672,7 @@ a {
 	padding: 0px;
 }
 
-.strip-all .fa-solid,
-.strip-all .fa-regular {
+.strip-all .ico {
 	text-align: center;
 	width: 44px;
 	margin-left: 0px;
@@ -1799,8 +1792,7 @@ a {
 	font-weight: 500;
 }
 
-.strip-header .fa-solid,
-.strip-header .fa-regular{
+.strip-header .ico{
 	width: 20px;
 }
 
@@ -2129,8 +2121,7 @@ book-item {
 	padding: 0px 2px;
 }
 
-.data-row .fa-solid,
-.data-row .fa-regular{
+.data-row .ico {
 	font-size:16px;
 	height: 16px;
 	width: 16px;
@@ -2193,8 +2184,7 @@ book-item {
 	font-size: 15px;
 	/*XXX MAGARI 14.5px XXX*/
 }
-.top-row .fa-solid,
-.top-row .fa-regular{
+.top-row .ico {
 	font-size:16px;
 	height: 16px;
 	width: 16px;
@@ -2714,17 +2704,6 @@ body.offline #stickyContainer {
 	text-transform: uppercase;
 }
 
-/*
- .scrollbox-scrollbar:hover .scrollbox-thumb {
-	background: var(--mb-accent);
- }
-*/
-
-/*
-.fas,.far,.fa-solid,.fa-regular{
-	background-color:pink!important;
-}
-*/
 .fa-calendar:after{
 	content:'';
 	display:block;
