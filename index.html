@@ -3822,7 +3822,7 @@ console.log(LTRbook);
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-calendar glyph-dark'></span>${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico icoleftlabel fa-calendar glyph-dark'></span>${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
@@ -3851,7 +3851,7 @@ console.log(timeLabel)
 			if (altTitle.story != altTitle.art) {
 				if (altTitle.story != 'N/A') {
 					const storyLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid ico fa-pen-clip glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='fa-solid ico icoleftlabel fa-pen-clip glyph-dark'></span>&nbsp;${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.story}`,
 						dataset: {
@@ -3871,7 +3871,7 @@ console.log(timeLabel)
 
 				if (altTitle.art != 'N/A') {
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
-						innerHTML: `<span class='fa-solid ico fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						innerHTML: `<span class='fa-solid ico icoleftlabel fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.art}`
 						dataset: {
@@ -3891,7 +3891,7 @@ console.log(timeLabel)
 			} else {
 				if (altTitle.story != 'N/A') {
 					const artistLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid ico fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='fa-solid ico icoleftlabel fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
 						//title: `Filter artist: ${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						dataset: {

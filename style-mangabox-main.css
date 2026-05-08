@@ -1089,6 +1089,7 @@ a {
 	padding: 0;
 	margin: 0;
 	border: none;
+	/*background:pink;*/
 }
 
 .libglyph,
@@ -2134,14 +2135,18 @@ book-item {
 	padding: 0px 2px;
 }
 
-.data-row:not(.top-row){
+.data-row.info-row,
+.data-row.artist-row div{
 	height:22px;
 }
 
 .data-row .ico {
-	--icosize: 20px;
+	--icosize: 19px;
 	height: 22px;
 	width: 22px;
+}
+.icoleftlabel{
+	margin-left:-4px;
 }
 
 .title-row {
