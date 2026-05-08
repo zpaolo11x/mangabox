@@ -1089,6 +1089,7 @@ a {
 	padding: 0;
 	margin: 0;
 	border: none;
+	position:relative;
 	/*background:pink;*/
 }
 
@@ -2141,12 +2142,12 @@ book-item {
 }
 
 .data-row .ico {
-	--icosize: 19px;
+	--icosize: 20px;
 	height: 22px;
 	width: 22px;
 }
 .icoleftlabel{
-	margin-left:-4px;
+	margin-left:-3px;
 }
 
 .title-row {
@@ -2727,20 +2728,20 @@ body.offline #stickyContainer {
 	text-transform: uppercase;
 }
 
-/*
+
 .fa-calendar:after {
 	content: '';
 	display: block;
-	position: relative;
-	top: -13px;
-	left: 2px;
-	width: 12px;
-	height: 3px;
+	position: absolute;
+	top: 30%;
+	left: 20%;
+	width: 60%;
+	height: 15%;
 	font-size: 10px;
 	background-color: var(--mb-calendar-color);
 	border: none;
 }
-*/
+
 .question:after {
 	content: '?';
 	position: absolute;
