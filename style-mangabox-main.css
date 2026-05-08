@@ -2741,7 +2741,7 @@ body.offline #stickyContainer {
 	content: '';
 	display: block;
 	position: absolute;
-	top: 30%;
+	top: 28%;
 	left: 20%;
 	width: 60%;
 	height: 15%;
