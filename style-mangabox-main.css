@@ -171,7 +171,7 @@
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
-	--mb-calendar-color: rgb(76,76,76);
+	--mb-calendar-color: rgb(76, 76, 76);
 	--mb-bar-color: #dddddd;
 
 	--mb-red-hover: var(--mb-accent-a50);
@@ -374,7 +374,7 @@ body {
 	box-shadow: var(--mb-modal-shadow);
 	border: 1px solid var(--mb-modal-border);
 	overflow: hidden;
-	min-height:70px;
+	min-height: 70px;
 }
 
 .modal-content {
@@ -386,7 +386,7 @@ body {
 	max-height: calc(100vh - 50px);
 	overflow-y: scroll;
 	overflow-x: hidden;
-		min-height:70px;
+	min-height: 70px;
 
 }
 
@@ -1078,21 +1078,28 @@ a {
 	width: auto;
 }
 
+.ico {
+	font-size: calc(0.8 * var(--icosize));
+	width: var(--icosize);
+	aspect-ratio: 1/1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .libglyph,
 .library-item span.ico {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
-	line-height: var(--mb-span-size);
-	font-size: 25px;
 	border-radius: 50%;
+	--icosize: 31px; /*ICOSIZE Library Buttons*/
 }
 
 .filter-item span.ico {
 	width: var(--mb-filter-span-size);
 	height: var(--mb-filter-span-size);
-	line-height: var(--mb-filter-span-size);
-	font-size: 20px;
 	border-radius: 50%;
+	--icosize: 25px; /*ICOSIZE Filter Buttons*/
 }
 
 #downloadSpinner {
@@ -1609,8 +1616,8 @@ a {
 	margin-left: 5px;
 	cursor: pointer;
 	transition: opacity 0.2s;
-	width:20px;
-	height:20px;
+	width: 20px;
+	height: 20px;
 }
 
 #stripPrevPage.disabled,
@@ -1792,7 +1799,7 @@ a {
 	font-weight: 500;
 }
 
-.strip-header .ico{
+.strip-header .ico {
 	width: 20px;
 }
 
@@ -2122,7 +2129,7 @@ book-item {
 }
 
 .data-row .ico {
-	font-size:16px;
+	font-size: 16px;
 	height: 16px;
 	width: 16px;
 }
@@ -2184,8 +2191,9 @@ book-item {
 	font-size: 15px;
 	/*XXX MAGARI 14.5px XXX*/
 }
+
 .top-row .ico {
-	font-size:16px;
+	font-size: 16px;
 	height: 16px;
 	width: 16px;
 }
@@ -2704,33 +2712,33 @@ body.offline #stickyContainer {
 	text-transform: uppercase;
 }
 
-.fa-calendar:after{
-	content:'';
-	display:block;
-	position:relative;
-	top:-13px;
-	left:2px;
-	width:12px;
-	height:3px;
-	font-size:10px;
-	background-color:var(--mb-calendar-color);
-	border:none;
+.fa-calendar:after {
+	content: '';
+	display: block;
+	position: relative;
+	top: -13px;
+	left: 2px;
+	width: 12px;
+	height: 3px;
+	font-size: 10px;
+	background-color: var(--mb-calendar-color);
+	border: none;
 }
 
-.question:after{
-	content:'?';
-	position:absolute;
-	top:50%;
-	left:70%;
-	width:12px;
-	height:18px;
+.question:after {
+	content: '?';
+	position: absolute;
+	top: 50%;
+	left: 70%;
+	width: 12px;
+	height: 18px;
 	transform: translate(-50%, -50%);
-	font-weight:bold;
-	font-size:18px;
-	line-height:18px;
-	color:var(--mb-glyph-color);
-	background-color:var(--mb-login-button-color);
-	border:none;
+	font-weight: bold;
+	font-size: 18px;
+	line-height: 18px;
+	color: var(--mb-glyph-color);
+	background-color: var(--mb-login-button-color);
+	border: none;
 	border-radius: 50%;
 	font-weight: bold;
 	font-family: 'Outfit';
