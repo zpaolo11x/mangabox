@@ -3822,15 +3822,18 @@ console.log(LTRbook);
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-calendar glyph-dark'></span>${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
 					i18nTitleVars: JSON.stringify({ time: altTitle.time })
 				}
 			});
-
+			console.log("A")
+console.log(timeLabel)
 			translateDOM(timeLabel);
+			console.log("B")
+console.log(timeLabel)
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;

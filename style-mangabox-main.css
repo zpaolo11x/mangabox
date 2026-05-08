@@ -1085,6 +1085,10 @@ a {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	display: inline-flex;
+	padding: 0;
+	margin: 0;
+	border: none;
 }
 
 .libglyph,
@@ -1092,14 +1096,16 @@ a {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	border-radius: 50%;
-	--icosize: 31px; /*ICOSIZE Library Buttons*/
+	--icosize: 31px;
+	/*ICOSIZE Library Buttons*/
 }
 
 .filter-item span.ico {
 	width: var(--mb-filter-span-size);
 	height: var(--mb-filter-span-size);
 	border-radius: 50%;
-	--icosize: 25px; /*ICOSIZE Filter Buttons*/
+	--icosize: 25px;
+	/*ICOSIZE Filter Buttons*/
 }
 
 #downloadSpinner {
@@ -2128,10 +2134,14 @@ book-item {
 	padding: 0px 2px;
 }
 
+.data-row:not(.top-row){
+	height:22px;
+}
+
 .data-row .ico {
-	font-size: 16px;
-	height: 16px;
-	width: 16px;
+	--icosize: 20px;
+	height: 22px;
+	width: 22px;
 }
 
 .title-row {
@@ -2712,6 +2722,7 @@ body.offline #stickyContainer {
 	text-transform: uppercase;
 }
 
+/*
 .fa-calendar:after {
 	content: '';
 	display: block;
@@ -2724,7 +2735,7 @@ body.offline #stickyContainer {
 	background-color: var(--mb-calendar-color);
 	border: none;
 }
-
+*/
 .question:after {
 	content: '?';
 	position: absolute;
