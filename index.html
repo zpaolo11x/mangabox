@@ -3818,7 +3818,7 @@ console.log(LTRbook);
 			const bookCount = serie.booksCount;
 
 			const infoRow = addItem('div', {
-				className: 'data-row info-row'
+				className: 'data-row info-row fix22'
 			});
 
 			const timeLabel = addItem('span', {
@@ -3852,7 +3852,7 @@ console.log(timeLabel)
 				if (altTitle.story != 'N/A') {
 					const storyLabel = addItem('div', {
 						innerHTML: `<span class='fa-solid ico icoleftlabel fa-pen-clip glyph-dark'></span>${altTitle.story}`,
-						className: 'red data-label search-trigger',
+						className: 'red data-label search-trigger fix22',
 						//title: `Filter artist: ${altTitle.story}`,
 						dataset: {
 							i18nTitle: 'series.filterartist',
@@ -3872,7 +3872,7 @@ console.log(timeLabel)
 				if (altTitle.art != 'N/A') {
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
 						innerHTML: `<span class='fa-solid ico icoleftlabel fa-palette glyph-dark'></span>${altTitle.art}`,
-						className: 'red data-label search-trigger',
+						className: 'red data-label search-trigger fix22',
 						//title: `Filter artist: ${altTitle.art}`
 						dataset: {
 							i18nTitle: 'series.filterartist',
@@ -3893,7 +3893,7 @@ console.log(timeLabel)
 					const artistLabel = addItem('div', {
 						innerHTML: `<span class='fa-solid ico icoleftlabel fa-user glyph-dark'></span>${altTitle.story}`,
 						//title: `Filter artist: ${altTitle.story}`,
-						className: 'red data-label search-trigger',
+						className: 'red data-label search-trigger fix22',
 						dataset: {
 							i18nTitle: 'series.filterartist',
 							i18nTitleVars: JSON.stringify({ name: altTitle.story })
@@ -4020,7 +4020,7 @@ console.log(timeLabel)
 			const bookCount = serie[items].length;
 
 			const infoRow = addItem('div', {
-				className: 'data-row info-row'
+				className: 'data-row info-row fix22'
 			});
 
 			const booksLabel = addItem('span', {
@@ -4972,11 +4972,12 @@ console.log(timeLabel)
 			}
 
 			const secondRow = addItem('div', {
-				className: 'data-row',
+				className: 'data-row fix22',
 			});
 
 			if (format == 'longname') {
 				secondRow.classList.add('info-row');
+				secondRow.classList.remove('fix22');
 				secondRow.textContent = book.metadata.title;
 			} else if ((format == 'compact') || (format == 'full')) {
 				const volumeNumberLabel = addItem('span', {
@@ -5020,7 +5021,7 @@ console.log(timeLabel)
 				thirdRow = addItem('div', {
 					className: 'data-row',
 				});
-				thirdRow.classList.add('info-row');
+				thirdRow.classList.add('info-row fix22');
 				thirdRow.textContent = book.metadata.title;
 			}
 

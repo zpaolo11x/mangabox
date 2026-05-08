@@ -1090,6 +1090,8 @@ a {
 	margin: 0;
 	border: none;
 	position:relative;
+	vertical-align: -1px;
+
 	/*background:pink;*/
 }
 
@@ -1098,7 +1100,7 @@ a {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	border-radius: 50%;
-	--icosize: 31px;
+	--icosize: 30px;
 	/*ICOSIZE Library Buttons*/
 }
 
@@ -2136,9 +2138,13 @@ book-item {
 	padding: 0px 2px;
 }
 
-.data-row.info-row,
-.data-row.artist-row div{
+.data-row.fix22,
+.data-row.fix22 span {
 	height:22px;
+}
+
+.fiz22{
+	vertical-align:middle
 }
 
 .data-row .ico {
