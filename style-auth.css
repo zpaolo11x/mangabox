@@ -312,8 +312,9 @@
 }
 
 
-.login-button-round i {
-	position: absolute;
+.login-button-round i,
+.login-button i {
+	position: relative;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
