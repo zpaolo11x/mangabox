@@ -2138,14 +2138,16 @@ book-item {
 	padding: 0px 2px;
 }
 
+/*
 .data-row.fix22,
 .data-row.fix22 span {
 	height:22px;
 }
 
-.fiz22{
+.fix22{
 	vertical-align:middle
 }
+*/
 
 .data-row .ico {
 	--icosize: 20px;
