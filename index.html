@@ -6031,11 +6031,16 @@
 
 			prevBookCover.src = "transparent.png";
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
-			if (rd.prevBook) prevBookCover.src = `${mb.baseUrl}/api/v1/books/${rd.prevBook.id}/thumbnail`;
-
+			if (rd.prevBook) {
+				const blobPrevUrl = await fetchMedia(`${mb.baseUrl}/api/v1/books/${rd.prevBook.id}/thumbnail`, false);
+				prevBookCover.src = blobPrevUrl;
+			}
 			nextBookCover.src = "transparent.png";
-			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
-			if (rd.nextBook) nextBookCover.src = `${mb.baseUrl}/api/v1/books/${rd.nextBook.id}/thumbnail`;
+			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;			
+			if (rd.nextBook) {
+				const blobNextUrl = await fetchMedia(`${mb.baseUrl}/api/v1/books/${rd.nextBook.id}/thumbnail`, false);
+				nextBookCover.src = blobNextUrl;
+			}
 
 			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden');
 			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden');
