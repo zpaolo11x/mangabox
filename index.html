@@ -307,53 +307,53 @@
 				<div class="version-note">v0.4.3</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
-					<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
+					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
 					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
 				</div>
 
 				<div id="divBaseUrl" class="input-wrapper" title="Server Address">
-					<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
+					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
 					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 				</div>
 
 				<div id="divUsername" class="input-wrapper" title="Username">
-					<i class="fas fa-user"></i> <!-- Icon for username -->
+					<i class="ico icon-user-round"></i> <!-- Icon for username -->
 					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 				</div>
 
 				<div id="divPassword" class="input-wrapper pwd" title="Password">
-					<i class="fas fa-lock"></i> <!-- Icon for password -->
+					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
 					<!--<i id="passIcon" class="fas fa-eye"></i>  -->
 					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
-					<span id="viewPassword" class="fas fa-eye right"></span>
+					<span id="viewPassword" class="ico icon-eye right"></span>
 				</div>
 
 				<div class="login-buttons">
 					<div class="login-buttons-left">
 						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
-							<i class="fas fa-language"></i>
+							<i class="ico icon-languages"></i>
 						</button>
 						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
-							<i class="fas fa-earth-americas question"></i>
+							<i class="ico icon-globe question"></i>
 						</button>
 						<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
-							<i class="fas fa-server"></i>
+							<i class="ico icon-server"></i>
 						</button>
 					</div>
 					<div class="login-buttons-right">
 						<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
-							<i class="input-glyph fas fa-arrow-rotate-left"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
+							<i class="input-glyph ico icon-undo-2"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
 						</button>
 						<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
-							<i class="input-glyph fas fa-floppy-disk"></i><span class="input-text" data-i18n="button.save">Save</span>
+							<i class="input-glyph ico icon-save"></i><span class="input-text" data-i18n="button.save">Save</span>
 						</button>
 						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
-							<i class="input-glyph fas fa-play"></i><span class="input-text" data-i18n="button.login">Login</span>
+							<i class="input-glyph ico icon-play"></i><span class="input-text" data-i18n="button.login">Login</span>
 						</button>
 					</div>
 				</div>
 
-				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
+				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="ico icon-circle-question-mark"></i></button>
 
 				<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
 			</div>
@@ -1598,13 +1598,13 @@
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
-										<span class="fa-solid ico fa-pen glyph-dark"></span>
+										<span class="ico icon-pencil glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
-										<span class="fa-solid ico fa-trash-can glyph-dark"></span>
+										<span class="ico icon-trash-2 glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
-										<span class="fa-solid ico ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'fa-key' : 'fa-play'} glyph-dark"></span>
+										<span class="ico ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'icon-key-round' : 'icon-play'} glyph-dark"></span>
 									</div>
 								</li>
 								<li class="server-data" id="item_${id}_data">
@@ -1864,8 +1864,8 @@
 
 			loginPassword.type = isPassword ? 'text' : 'password';
 
-			viewPassword.classList.toggle('fa-eye', !showPassword);
-			viewPassword.classList.toggle('fa-eye-slash', showPassword);
+			viewPassword.classList.toggle('icon-eye', !showPassword);
+			viewPassword.classList.toggle('icon-eye-off', showPassword);
 
 		})
 		/*
@@ -1890,16 +1890,16 @@
 			}
 			let dialogText = `
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span style="width:25px; min-width:25px;" class="fa-solid ico fa-server"></span><span>${t(mb.serverList[mb.currentServerId].name)}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-server"></span><span>${t(mb.serverList[mb.currentServerId].name)}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span style="width:25px; min-width:25px;" class="fa-solid ico fa-link"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-link"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
 			</div>
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span style="width:25px; min-width:25px;" class="fa-solid ico fa-user"></span><span>${currentUser.email}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-user-round"></span><span>${currentUser.email}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;" onClick="languageDialog()">
-				<span style="width:25px; min-width:25px;" class="fa-solid ico fa-language"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-languages"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
 			showModal('', true, dialogText,
@@ -2304,49 +2304,49 @@
 							name: 'a_to_z',
 							caption: 'sort.titleaz',
 							longCaption: 'sort.titleaz.long',
-							iconClass: 'fa-solid ico fa-arrow-down-a-z glyph-dark',
+							iconClass: 'ico icon-arrow-down-a-z glyph-dark',
 							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 						}, {
 							name: 'z_to_a',
 							caption: 'sort.titleza',
 							longCaption: 'sort.titleza.long',
-							iconClass: 'fa-solid ico fa-arrow-down-z-a glyph-dark',
+							iconClass: 'ico icon-arrow-down-z-a glyph-dark',
 							sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 						}, {
 							name: '9_to_1',
 							caption: 'sort.startnewtoold',
 							longCaption: 'sort.startnewtoold.long',
-							iconClass: 'fa-solid ico fa-arrow-down-9-1 glyph-dark',
+							iconClass: 'ico icon-arrow-down-1-0 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 						}, {
 							name: '1_to_9',
 							caption: 'sort.startoldtonew',
 							longCaption: 'sort.startoldtonew.long',
-							iconClass: 'fa-solid ico fa-arrow-down-1-9 glyph-dark',
+							iconClass: 'ico icon-arrow-down-0-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
 						}, {
 							name: '9_to_1',
 							caption: 'sort.stopnewtoold',
 							longCaption: 'sort.stopnewtoold.long',
-							iconClass: 'fa-solid ico fa-arrow-down-9-1 glyph-dark',
+							iconClass: 'ico icon-arrow-down-1-0 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
 							caption: 'sort.stopoldtonew',
 							longCaption: 'sort.stopoldtonew.long',
-							iconClass: 'fa-solid ico fa-arrow-down-1-9 glyph-dark',
+							iconClass: 'ico icon-arrow-down-0-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
 							caption: 'sort.booksdecreasing',
 							longCaption: 'sort.booksdecreasing.long',
-							iconClass: 'fa-solid ico fa-cubes-stacked fa-flip-vertical glyph-dark',
+							iconClass: 'ico icon-arrow-down-wide-narrow glyph-dark',
 							sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
 						}, {
 							name: '9_to_1',
 							caption: 'sort.booksincreasing',
 							longCaption: 'sort.booksincreasing.long',
-							iconClass: 'fa-solid ico fa-cubes-stacked glyph-dark',
+							iconClass: 'ico icon-arrow-down-narrow-wide glyph-dark',
 							sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
 						}
 					],
@@ -2364,19 +2364,19 @@
 							name: 'all',
 							caption: 'filterread.all',
 							longCaption: 'filterread.all.long',
-							iconClass: 'fa-solid ico fa-circle-half-stroke glyph-dark',
+							iconClass: 'ico icon-circle-equal glyph-dark',
 							filterFunction: (a) => true
 						}, {
 							name: 'unread',
 							caption: 'filterread.unread',
 							longCaption: 'filterread.unread.long',
-							iconClass: 'fa-regular ico fa-circle glyph-dark',
+							iconClass: 'ico icon-circle-x glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == false)
 						}, {
 							name: 'read',
 							caption: 'filterread.read',
 							longCaption: 'filterread.read.long',
-							iconClass: 'fa-solid ico fa-circle glyph-dark',
+							iconClass: 'ico icon-circle-check glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == true)
 						}
 					],
@@ -2394,27 +2394,27 @@
 							name: 'all',
 							caption: 'filterdirection.all',
 							longCaption: 'filterdirection.all.long',
-							iconClass: 'fa-solid ico fa-arrow-right-arrow-left glyph-dark',
+							iconClass: 'ico icon-arrow-left-right glyph-dark',
 							filterFunction: (a) => true
 
 						}, {
 							name: 'l_to_r',
 							caption: 'filterdirection.l2r',
 							longCaption: 'filterdirection.l2r.long',
-							iconClass: 'fa-solid ico fa-arrow-right glyph-dark',
+							iconClass: 'ico icon-arrow-right glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
 						}, {
 							name: 'r_to_l',
 							caption: 'filterdirection.r2l',
 							longCaption: 'filterdirection.r2l.long',
-							iconClass: 'fa-solid ico fa-arrow-left glyph-dark',
+							iconClass: 'ico icon-arrow-left glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
 						}, {
 							name: 'webtoon',
 							caption: 'filterdirection.webtoon',
 							longCaption: 'filterdirection.webtoon.long',
-							iconClass: 'fa-solid ico fa-arrow-down glyph-dark',
+							iconClass: 'ico icon-arrow-down glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
 						}
 					],
@@ -2433,7 +2433,7 @@
 							caption: 'filterlanguage.all',
 							longCaption: 'filterLanguage.all.long',
 
-							iconClass: 'fa-solid ico fa-language glyph-dark',
+							iconClass: 'ico icon-languages glyph-dark',
 							filterFunction: (a) => true
 						}
 					],
@@ -2669,7 +2669,7 @@
 				//title: 'Reset filters and sorting',
 				className: `filter-item press-button`,
 				innerHTML: `<div class="smallbutton-wrapper">
-								<span class="fa-solid ico fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
+								<span class="ico icon-refresh-ccw glyph-dark"></span>
 							</div>`,
 				onclick: async () => {
 					await executeFade(1);
@@ -5300,7 +5300,7 @@
 
 
 			onDeck: {
-				headerCode: '<span class="fa-solid ico fa-inbox glyph-dark"></span>&nbsp;<span data-i18n="header.ondeck"></span>',
+				headerCode: '<span class="ico icon-inbox glyph-dark"></span>&nbsp;<span data-i18n="header.ondeck"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_ondeck`, `/api/v1/books/ondeck`));
 				},
@@ -5310,7 +5310,7 @@
 			},
 
 			recentBooks: {
-				headerCode: '<span class="fa-solid ico fa-book glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
+				headerCode: '<span class="ico icon-book glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
@@ -5323,7 +5323,7 @@
 			},
 
 			recentSeries: {
-				headerCode: '<span class="fa-solid ico fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedseries"></span>',
+				headerCode: '<span class="ico icon-library-big glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
@@ -5333,7 +5333,7 @@
 			},
 
 			updatedSeries: {
-				headerCode: '<span class="fa-solid ico fa-bullhorn glyph-dark"></span>&nbsp;<span data-i18n="header.lastupdatedseries"></span>',
+				headerCode: '<span class="ico icon-megaphone glyph-dark"></span>&nbsp;<span data-i18n="header.lastupdatedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
@@ -5343,7 +5343,7 @@
 			},
 
 			readBooks: {
-				headerCode: '<span class="fa-solid ico fa-square-check glyph-dark"></span>&nbsp;<span data-i18n="header.lastreadbooks"></span>',
+				headerCode: '<span class="ico icon-book-check glyph-dark"></span>&nbsp;<span data-i18n="header.lastreadbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_readbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
@@ -5404,7 +5404,7 @@
 			});
 			item.gridButton = addItem('div', {
 				className: 'strip-all press-flat-button strip-button',
-				innerHTML: '<span class="fa-solid ico fa-grip glyph-dark"></span>',
+				innerHTML: '<span class="ico icon-grip-horizontal glyph-dark"></span>',
 				dataset: {
 					i18nTitle: 'navigation.all'
 				}

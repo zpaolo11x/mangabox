@@ -153,14 +153,15 @@
 	/*display: none;*/
 }
 
-.input-wrapper i {
+.input-wrapper i,
+.input-wrapper .ico {
 	position: absolute;
 	left: 20px;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	color: var(--mb-glyph-color);
 
-	font-size: var(--mb-dialog-font-size);
+	font-size: 21px;
 	pointer-events: none;
 	/* Make the icon not respond to hover directly */
 	transition: all 0.3s;
@@ -168,12 +169,14 @@
 
 
 .pwd span.right {
-	position: absolute;
-	display: inline-block;
+	position: relative;
+	display: block;
 	/* or block */
-	text-align: center;
-	right: 0px;
-	top: 20px;
+	text-align: left;
+	margin-right:20px;
+	line-height:40px;
+	right: 120px;
+	top: 18px;
 	width: 40px;
 	text-align: middle;
 	transform: translate(0, -50%);
@@ -234,7 +237,7 @@
 }
 
 .pwd .login-input {
-	padding-right: calc(var(--mb-dialog-button-height));
+	padding-right: var(--mb-dialog-button-height);
 }
 
 .input-wrapper:hover {
@@ -313,17 +316,20 @@
 
 
 .login-button-round i,
-.login-button i {
+.login-button i,
+.login-button-round .ico,
+.login-butotn .ico {
 	position: relative;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	font-size: var(--mb-dialog-font-size);
+	font-size: 20px;
 	line-height: var(--mb-dialog-button-height);
 	pointer-events: none;
 	transition: all 0.3s;
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
+
 }
 
 
