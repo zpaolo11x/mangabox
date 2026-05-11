@@ -1848,8 +1848,9 @@ a {
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
 
-	will-change: transform;
+	/*will-change: transform;*/
 	contain: layout style;
+
 	/*XXX WAS layout style paint and removed overflow-y:auto*/
 
 }
@@ -2016,9 +2017,10 @@ a {
 .series-container,
 .book-container {
 	background-color: transparent;
-	will-change: transform;
 	transform: translateZ(0);
 	backface-visibility: hidden;
+
+	/*will-change: transform;*/
 	contain: layout style;
 
 }
