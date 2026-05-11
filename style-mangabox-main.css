@@ -1799,11 +1799,11 @@ a {
 	font-weight: 500;
 }
 
-.strip-header .ico{
+.strip-header span.ico{
 	width: 20px;
 	font-size:22px;
-	height:20px;
-	line-height:20px;
+	height:18px;
+	line-height:18px;
 	top:3px;
 }
 
