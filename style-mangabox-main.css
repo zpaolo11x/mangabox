@@ -2735,10 +2735,22 @@ body.offline #stickyContainer {
 	line-height:5px;
 	background-color: var(--mb-patch-color);
 	color: var(--mb-card-color);
-	border:none;
 	border-left:1px var(--mb-card-color) solid
 }
-
+.fa-book.shortdot:after{
+	content:'';
+	display:block;
+	position:absolute;
+	top:2px;
+	left:7px;
+	width:6px;
+	height:8px;
+	font-size:10px;
+	font-weight:900;
+	line-height:5px;
+	background-color: var(--mb-patch-color);
+	color: var(--mb-card-color);
+}
 .question:after{
 	content:'?';
 	position:absolute;
