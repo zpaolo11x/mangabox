@@ -20,7 +20,7 @@
 	<link rel="manifest" href="manifest.json">
 	<link rel="stylesheet" type="text/css" href="style-auth.css">
 
-	<link rel="stylesheet" href="fontawesome/all.min.css">
+	<link rel="stylesheet" href="lucide-font/lucide.css">
 
 	<link rel="stylesheet" href="style-mangabox-blankstart.css">
 	<link rel="stylesheet" href="style-mangabox-main.css">
@@ -960,7 +960,7 @@
 					readerThemeControl: [
 						{
 							label: 'readertheme.classic',
-							icon: 'fa-palette',
+							icon: 'icon-palette',
 							style: 'classic'
 						}, {
 							label: 'readertheme.dark',
@@ -3718,7 +3718,7 @@
 			}
 
 			const orientedBook = {
-				RIGHT_TO_LEFT: '<span class="fa-solid ico fa-book high fa-flip-horizontal glyph-dark"></span>',
+				RIGHT_TO_LEFT: '<span class="ico icon-book glyph-dark"></span>',
 				LEFT_TO_RIGHT: '<span class="fa-solid ico fa-book high glyph-dark"></span>',
 				WEBTOON: '<span class="fa-solid ico fa-mobile-screen glyph-dark"></span>',
 				VERTICAL: '<span class="fa-solid ico fa-mobile glyph-dark"></span>',
@@ -3822,7 +3822,7 @@
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico icon-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
@@ -3848,7 +3848,7 @@
 			if (altTitle.story != altTitle.art) {
 				if (altTitle.story != 'N/A') {
 					const storyLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid ico fa-pen-clip glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='fa-solid ico icon-notebook-pen glyph-dark'></span>&nbsp;${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.story}`,
 						dataset: {
@@ -3868,7 +3868,7 @@
 
 				if (altTitle.art != 'N/A') {
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
-						innerHTML: `<span class='fa-solid ico fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						innerHTML: `<span class='fa-solid ico icon-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.art}`
 						dataset: {

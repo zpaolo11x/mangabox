@@ -1080,6 +1080,12 @@ a {
 	width: auto;
 }
 
+.ico{
+	display: inline-block;
+	position: relative;
+	top: 2px;
+}
+
 .libglyph,
 .library-item span.ico {
 	width: var(--mb-span-size);
