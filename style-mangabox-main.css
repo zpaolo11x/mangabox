@@ -1083,7 +1083,6 @@ a {
 .ico{
 	display: inline-block;
 	position: relative;
-	top: 2px;
 }
 
 .libglyph,
@@ -1091,7 +1090,7 @@ a {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
-	font-size: 24px;
+	font-size: 30px;
 	border-radius: 50%;
 }
 
@@ -2135,6 +2134,9 @@ book-item {
 	font-size:16px;
 	height: 16px;
 	width: 16px;
+	line-height:16px;
+		top: 2px;
+
 }
 
 .title-row {
