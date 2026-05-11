@@ -172,6 +172,7 @@
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
 	--mb-calendar-color: rgb(76,76,76);
+	--mb-patch-color:rgb(76,76,76);
 	--mb-bar-color: #dddddd;
 
 	--mb-red-hover: var(--mb-accent-a50);
@@ -215,6 +216,7 @@
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
 	--mb-glyph-color: rgba(255, 255, 255, 0.75);
 	--mb-calendar-color: rgba(255, 255, 255, 0.0);
+	--mb-patch-color:rgb(204,204,204);
 	--mb-bar-color: #606060;
 
 	--mb-red-hover: var(--mb-accent-light);
@@ -2715,6 +2717,26 @@ body.offline #stickyContainer {
 	font-size:10px;
 	background-color:var(--mb-calendar-color);
 	border:none;
+}
+
+.fa-book{
+	position:relative;
+}
+.fa-book.high:after{
+	content:'';
+	display:block;
+	position:absolute;
+	top:2px;
+	left:4px;
+	width:9px;
+	height:8px;
+	font-size:10px;
+	font-weight:900;
+	line-height:5px;
+	background-color: var(--mb-patch-color);
+	color: var(--mb-card-color);
+	border:none;
+	border-left:1px var(--mb-card-color) solid
 }
 
 .question:after{
