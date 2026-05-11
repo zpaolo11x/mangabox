@@ -55,12 +55,12 @@
 					-->
 					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
-							<span id="fullscreenLabel" class="fa-expand fa-solid ico glyph-dark"></span>
+							<span id="fullscreenLabel" class="icon-maximize ico glyph-dark"></span>
 						</div>
 					</li>
 					<li id="themeChanger" data-i18n-title="button.lightdark" class="library-item press-button">
 						<div class="button-wrapper">
-							<span id="themeLabel" class="theme-label fa-solid ico glyph-dark"></span>
+							<span id="themeLabel" class="theme-label ico glyph-dark"></span>
 						</div>
 					</li>
 					<li id="colorChanger" data-i18n-title="button.themecolor" class="library-item press-button">
@@ -84,7 +84,7 @@
 					</li>
 					<li id="searchField" data-i18n-title="button.search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
-							<span class="fa-solid ico fa-magnifying-glass glyph-dark"></span>
+							<span class="ico icon-search glyph-dark"></span>
 						</div>
 						<!--<span id="clearSearchBtn" class="clear-btn fa-solid ico fa-xmark"></span>-->
 						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button">
@@ -94,7 +94,7 @@
 					</li>
 					<li id="logOut" data-i18n-title="button.serversusers" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid ico fa-user-group glyph-dark"></span>
+							<span class="ico icon-users-round glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
@@ -884,8 +884,8 @@
 
 		function updateFullscreenLabel() {
 			const isFull = !!document.fullscreenElement;
-			fullscreenLabel.classList.toggle('fa-compress', isFull);
-			fullscreenLabel.classList.toggle('fa-expand', !isFull);
+			fullscreenLabel.classList.toggle('icon-minimize', isFull);
+			fullscreenLabel.classList.toggle('icon-maximize', !isFull);
 		}
 
 		//MB Main Variable Setup 
@@ -944,15 +944,15 @@
 					themeControl: [
 						{
 							label: 'theme.light',
-							icon: 'fa-sun',
+							icon: 'icon-sun',
 							isDark: 0
 						}, {
 							label: 'theme.dark',
-							icon: 'fa-moon',
+							icon: 'icon-moon',
 							isDark: 1
 						}, {
 							label: 'theme.system',
-							icon: 'fa-wand-magic-sparkles',
+							icon: 'icon-wand-sparkles',
 							isDark: 2
 						}
 					],
@@ -3888,7 +3888,7 @@
 			} else {
 				if (altTitle.story != 'N/A') {
 					const artistLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid ico fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='ico icon-user-round glyph-dark'></span>&nbsp;${altTitle.story}`,
 						//title: `Filter artist: ${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						dataset: {
@@ -4010,7 +4010,7 @@
 
 
 			const timeLabel = addItem('span', {
-				innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-clock glyph-dark'></span>&nbsp;${dateString}`
+				innerHTML: `<span class='ico icon-clock glyph-dark'></span>&nbsp;${dateString}`
 			});
 
 			// Fetch and display the number of books and alternate title
@@ -4954,7 +4954,7 @@
 					//innerHTML: `<span data-i18n="book.book"></span> ${book.metadata.number}`,
 				});
 				const pagesLabel = addItem('span', {
-					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+					innerHTML: `<span class="ico icon-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
 				translateDOM(volumeNumberLabel);
 				mainRow.append(volumeNumberLabel, pagesLabel);
@@ -4983,7 +4983,7 @@
 					}
 				});
 				const pagesLabel = addItem('span', {
-					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+					innerHTML: `<span class="ico icon-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
 				translateDOM(volumeNumberLabel);
 				secondRow.append(volumeNumberLabel, pagesLabel);
@@ -5005,7 +5005,7 @@
 					//innerHTML: `Bk.${book.metadata.number}`
 				});
 				const timeLabel = addItem('span', {
-					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico fa-clock glyph-dark'></span>&nbsp;${dateString}`
+					innerHTML: `<span class='ico icon-clock glyph-dark'></span>&nbsp;${dateString}`
 				});
 				translateDOM(volumeNumberLabelShort);
 
@@ -5281,7 +5281,7 @@
 
 		dashboardElements = {
 			keepReading: {
-				headerCode: '<span class="fa-solid ico fa-book-bookmark glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
+				headerCode: '<span class="ico icon-book-marked glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
 				getItems: async (page, size) => {
 					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,

@@ -1090,7 +1090,7 @@ a {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
-	font-size: 30px;
+	font-size: 28px;
 	border-radius: 50%;
 }
 
@@ -1801,6 +1801,10 @@ a {
 
 .strip-header .ico{
 	width: 20px;
+	font-size:22px;
+	height:20px;
+	line-height:20px;
+	top:3px;
 }
 
 .custom-scrollbar input[type="range"] {
@@ -2135,8 +2139,7 @@ book-item {
 	height: 16px;
 	width: 16px;
 	line-height:16px;
-		top: 2px;
-
+	top: 2px;
 }
 
 .title-row {
