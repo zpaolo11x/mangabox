@@ -2768,19 +2768,6 @@ body.offline #stickyContainer {
 	text-transform: uppercase;
 }
 
-.fa-calendar:after{
-	content:'';
-	display:block;
-	position:relative;
-	top:-13px;
-	left:2px;
-	width:12px;
-	height:3px;
-	font-size:10px;
-	background-color:var(--mb-calendar-color);
-	border:none;
-}
-
 .icon-book{
 	position:relative;
 }

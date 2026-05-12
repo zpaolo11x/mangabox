@@ -574,8 +574,8 @@ function showLoginDialog(dialogMode, serverId, serverData) {
 	applyScenario(dialogMode, serverId, serverData)
 
 	loginPassword.type = 'password';
-	viewPassword.classList.toggle('fa-eye', true);
-	viewPassword.classList.toggle('fa-eye-slash', false);
+	viewPassword.classList.toggle('icon-eye', true);
+	viewPassword.classList.toggle('icon-eye-off', false);
 
 	if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
