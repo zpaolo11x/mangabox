@@ -1085,6 +1085,10 @@ a {
 	position: relative;
 }
 
+.ico-mirror-h{
+	transform: scaleX(-1);
+}
+
 .libglyph,
 .library-item span.ico {
 	width: var(--mb-span-size);
@@ -2383,6 +2387,9 @@ span.mini-title {
 .glyph-div {
 	top: 0;
 	bottom: 0;
+	min-width:22px;
+	min-height:22px;
+	position:relative;
 }
 
 .glyph-right {
@@ -2417,22 +2424,34 @@ span.mini-title {
 }
 
 .glyph-flag {
+	/*
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+	*/
+		position:absolute;
+	top:50%;
+	left:50%;
+		transform: translate(-50%, -50%);
+
+	width: 15px;
+	height: 15px;
+	min-width:15px;
+	min-height:15px;
+	
 	border-radius: 15%;
 	box-shadow: inset 0 0 0px 1px var(--mb-glyph-color);
 	background-size: cover;
-	font-size: 15px;
-	width: 15px;
-	height: 15px;
+	background-size: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .glyph-flag-button {
-	width:22px;
-	height:22px;
-	min-width:22px;
-	min-height:22px;
+	width:20px;
+	height:20px;
+	min-width:20px;
+	min-height:20px;
 	position:absolute;
 	top:50%;
 	left:50%;
@@ -2442,6 +2461,7 @@ span.mini-title {
 	background-size: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
+	border:1px solid var(--mb-glyph-color);
 		/*
 	background-clip: text;
 	-webkit-background-clip: text;
@@ -2746,38 +2766,24 @@ body.offline #stickyContainer {
 	border:none;
 }
 
-.fa-book{
+.icon-book{
 	position:relative;
 }
-.fa-book.high:after{
-	content:'';
+.icon-book.high:after{
+	content:"\e4d6";
+	font-family:lucide;
 	display:block;
 	position:absolute;
-	top:2px;
-	left:4px;
-	width:9px;
-	height:8px;
-	font-size:10px;
-	font-weight:900;
-	line-height:5px;
-	background-color: var(--mb-patch-color);
-	color: var(--mb-card-color);
-	border-left:1px var(--mb-card-color) solid
+	top:0px;
+	left:3px;
+	width:12px;
+	height:12px;
+	font-size:12px;
+	line-height:12px;
+	color: var(--mb-glyph-color);
+	/*border-left:1px var(--mb-glyph-color) solid*/
 }
-.fa-book.shortdot:after{
-	content:'';
-	display:block;
-	position:absolute;
-	top:2px;
-	left:7px;
-	width:6px;
-	height:8px;
-	font-size:10px;
-	font-weight:900;
-	line-height:5px;
-	background-color: var(--mb-patch-color);
-	color: var(--mb-card-color);
-}
+
 .question:after{
 	content:'?';
 	position:absolute;
