@@ -695,7 +695,7 @@ a {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	font-size: 200px;
+	font-size: 240px;
 	color: var(--mb-gear-color);
 	transition: color 0.3s;
 }
@@ -1464,7 +1464,7 @@ a {
 }
 
 .mini-buttons .ico {
-	font-size: 25px;
+	font-size: 27px;
 	height: 25px;
 	width: 25px;
 }

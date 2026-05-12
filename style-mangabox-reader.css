@@ -1049,7 +1049,9 @@ div.single-page {
 	text-align: center;
 	vertical-align: middle;
 }
-
+.reader-buttons.ico{
+	font-size: 28px;
+}
 
 .bar-note {
 	width: var(--mb-dialog-button-height);

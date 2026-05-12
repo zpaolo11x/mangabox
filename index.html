@@ -35,7 +35,7 @@
 </head>
 
 <body>
-	<div id="mainLoader" class="hidden"><span class="fa-solid ico fa-gear"></span></div>
+	<div id="mainLoader" class="hidden"><span class="ico icon-cog"></span></div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -75,11 +75,10 @@
 					</li>
 					<li id="offlineLibrary" data-i18n-title="button.offlinebooks" class="library-item no-grow press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid ico fa-download glyph-dark"></span>
+							<span class="ico icon-hard-drive-download glyph-dark"></span>
 						</div>
 						<div id="downloadSpinner" class="download-overlay">
-							<span class="fa-solid ico fa-spinner glyph-dark mb-accent"></span>
-							<span class="fa-solid ico fa-spinner glyph-dark mb-accent layer"></span>
+							<span class="ico icon-circle-dashed glyph-dark mb-accent"></span>
 						</div>
 					</li>
 					<li id="searchField" data-i18n-title="button.search" class="library-item search-field no-grow press-button">
@@ -219,9 +218,9 @@
 				</div>
 			</div>
 			<div id="thumbStripButton">
-				<span class="thumb-arrow fa-solid ico fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid ico fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid ico fa-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
 			</div>
 
 			<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
@@ -233,34 +232,34 @@
 				</div>
 			</div>
 			<div id="thumbStripButtonWT">
-				<span class="thumb-arrow fa-solid ico fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid ico fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid ico fa-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
 			</div>
 
 			<div id="topControls">
-				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle fa-solid ico fa-xmark"></span>
+				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle ico icon-x"></span>
 				<span id="bookName"></span>
-				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left fa-solid ico"></span>
-				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button fa-solid ico"></span>
-				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right fa-solid ico fa-ghost"></span>
+				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left ico"></span>
+				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button ico"></span>
+				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right ico icon-ghost"></span>
 			</div>
 
 			<div id="zoomControls">
-				<span id="scaleDown" data-i18n-title="reader.scaledown" class="reader-buttons press-button corner-left fa-solid ico fa-minus" onclick="readerScaleDown()"></span>
+				<span id="scaleDown" data-i18n-title="reader.scaledown" class="reader-buttons press-button corner-left ico icon-minus" onclick="readerScaleDown()"></span>
 				<span id="scaleVal" class="reader-buttons">100%</span>
-				<span id="scaleUp" data-i18n-title="reader.scaleup" class="reader-buttons press-button corner-right fa-solid ico fa-plus" onclick="readerScaleUp()"></span>
+				<span id="scaleUp" data-i18n-title="reader.scaleup" class="reader-buttons press-button corner-right ico icon-plus" onclick="readerScaleUp()"></span>
 			</div>
 
 			<div id="bottomControls">
-				<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid ico fa-caret-left"></span>
+				<span id="leftArrow" class="reader-buttons press-button corner-left ico icon-chevron-left"></span>
 				<span id="leftLimit" class="bar-note press-button corner-right"></span>
 				<div id="readerProgressBar" onclick="seek(event)">
 					<div id="readerProgress"></div>
 					<div id="readerPage"></div>
 				</div>
 				<span id="rightLimit" class="bar-note press-button corner-left"></span>
-				<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid ico fa-caret-right"></span>
+				<span id="rightArrow" class="reader-buttons press-button corner-right ico icon-chevron-right"></span>
 			</div>
 
 			<div id="nextBookPanel" class="modal-content-2 hidden blankstart">
@@ -398,7 +397,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = false;
+		const fullDebugMode = true;
 		const webPWD = false;
 
 		// Enable for live debug on the main UI
@@ -964,23 +963,23 @@
 							style: 'classic'
 						}, {
 							label: 'readertheme.dark',
-							icon: 'fa-moon',
+							icon: 'icon-moon',
 							style: 'dark-accent'
 						}, {
 							label: 'readertheme.light',
-							icon: 'fa-sun',
+							icon: 'icon-sun',
 							style: 'light-accent'
 						}, {
 							label: 'readertheme.transparent',
-							icon: 'fa-square',
+							icon: 'icon-blend',
 							style: 'transparent'
 						}, {
 							label: 'readertheme.white',
-							icon: 'fa-w',
+							icon: 'icon-lightbulb',
 							style: 'white'
 						}, {
 							label: 'readertheme.black',
-							icon: 'fa-b',
+							icon: 'icon-lightbulb-off',
 							style: 'black'
 						}
 					],
@@ -988,11 +987,11 @@
 					readerAnimationControl: [
 						{
 							label: 'readeranimation.no',
-							icon: 'fa-pause',
+							icon: 'icon-square-pause',
 							value: 0
 						}, {
 							label: 'readeranimation.yes',
-							icon: 'fa-right-left',
+							icon: 'icon-arrow-right-left',
 							value: 1
 						}
 					],
@@ -3170,7 +3169,7 @@
 				return ('<span class="fa-solid ico fa-xmark"></span>')
 			}
 			else {
-				return ('<span class="fa-solid ico fa-download"></span>')
+				return ('<span class="ico icon-hard-drive-download"></span>')
 			}
 		}
 
@@ -3786,7 +3785,7 @@
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
 				title: 'Mark series as read',
-				innerHTML: `<span class="fa-regular ico fa-circle-check"></span>`,
+				innerHTML: `<span class="ico icon-circle-check"></span>`,
 				dataset: {
 					i18nTitle: 'series.markasread'
 				}
@@ -3798,7 +3797,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				innerHTML: `<span class="fa-regular ico fa-circle-xmark"></span>`,
+				innerHTML: `<span class="ico icon-circle-x"></span>`,
 				dataset: {
 					i18nTitle: 'series.markasunread'
 				}
@@ -5051,7 +5050,7 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				innerHTML: `<span class="fa-regular ico fa-circle-check"></span>`,
+				innerHTML: `<span class="ico icon-circle-check"></span>`,
 				dataset: {
 					i18nTitle: 'book.markasread'
 				}
@@ -5064,7 +5063,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				innerHTML: `<span class="fa-regular ico fa-circle-xmark"></span>`,
+				innerHTML: `<span class="ico icon-circle-x"></span>`,
 				dataset: {
 					i18nTitle: 'book.markasunread'
 				}
@@ -5081,7 +5080,7 @@
 			//if (book.metadata.summary != '') {
 			const bookDetails = addItem('div', {
 				className: 'mini-buttons book-details',
-				innerHTML: `<span class="fa-solid ico fa-align-justify"></span>`,
+				innerHTML: `<span class="ico icon-square-menu"></span>`,
 				dataset: {
 					i18nTitle: 'book.details'
 				}
