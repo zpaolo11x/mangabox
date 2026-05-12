@@ -533,10 +533,10 @@ body {
 	position: absolute;
 	z-index: 10000;
 	color: red;
-	font-size: 12px;
+	font-size: 22px;
 	font-weight: bold;
-	bottom: 5px;
-	right: 10px;
+	top: 4px;
+	right: 4px;
 	/*
 	background-color: rgba(200, 0, 0, 0.85);
 	border-radius:50%;
