@@ -309,7 +309,7 @@
 
 				<div id="divPassword" class="input-wrapper pwd" title="Password">
 					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
-					<!--<i id="passIcon" class="fas fa-eye"></i>  -->
+
 					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 					<span id="viewPassword" class="ico icon-eye right"></span>
 				</div>
@@ -740,13 +740,13 @@
 			});
 
 			window.electronAPI.onMaximize(() => {
-				dragbarMaxBtn.classList.remove('fa-window-maximize');
-				dragbarMaxBtn.classList.add('fa-window-restore');
+				dragbarMaxBtn.classList.remove('icon-app-window-mac');
+				dragbarMaxBtn.classList.add('icon-picture-in-picture-2');
 			});
 
 			window.electronAPI.onUnmaximize(() => {
-				dragbarMaxBtn.classList.remove('fa-window-restore');
-				dragbarMaxBtn.classList.add('fa-window-maximize');
+				dragbarMaxBtn.classList.remove('icon-picture-in-picture-2');
+				dragbarMaxBtn.classList.add('icon-app-window-mac');
 			});
 
 			window.electronAPI.getAppVersion().then(version => {
@@ -1517,19 +1517,19 @@
 				<ul class="filter-menu">
 					<li class="filter-item filter-item-menu">
 						<div class='smallbutton-wrapper'>
-							<span class="fa-solid ico fa-server glyph-dark"></span>
+							<span class="ico icon-server glyph-dark"></span>
 						</div>
 						<div class='library-name filter-menu-text'>${mb.serverList[serverId].name}</div>
 					</li>
 					<li class="filter-item filter-item-menu">
 						<div class='smallbutton-wrapper'>
-							<span class="fa-solid ico fa-link glyph-dark"></span>
+							<span class="ico icon-link glyph-dark"></span>
 						</div>
 						<div class='library-name filter-menu-text'>${mb.serverList[serverId].url}</div>
 					</li>
 					<li class="filter-item filter-item-menu">
 						<div class='smallbutton-wrapper'>
-							<span class="fa-solid ico fa-user glyph-dark"></span>
+							<span class="ico icon-user-round glyph-dark"></span>
 						</div>
 						<div class='library-name filter-menu-text'>${mb.serverList[serverId].username}</div>
 					</li>
@@ -1595,10 +1595,10 @@
 								</li>
 								<li class="server-data" id="item_${id}_data">
 									<div style="margin-top:10px; width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span style="width:20px; min-width:20px;" class="fa-solid ico fa-link"></span><span style="word-break: break-all;">${server.url}</span>
+										<span style="width:20px; min-width:20px;" class="ico icon-link"></span><span style="word-break: break-all;">${server.url}</span>
 									</div>
 									<div style="width:100%; padding-top:10px; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span style="width:20px; min-width:20px;" class="fa-solid ico fa-user"></span><span>${server.username}</span>
+										<span style="width:20px; min-width:20px;" class="ico icon-user-round"></span><span>${server.username}</span>
 									</div>
 								</li>
 			`
@@ -1740,12 +1740,6 @@
 			themeChanger.dataset.i18nTitle = mb.themeControl[mb.themePrefs].label;
 			translateDOM(themeChanger)
 
-			// Change fa icons for light or dark theme
-			/*
-			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
-			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
-			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
-			*/
 			// Save theme setting in local storage
 			setUserSettings('mangabox.ui.themeprefs', mb.themePrefs);
 
@@ -2265,7 +2259,7 @@
 				sorting: {
 					name: 'sorting',
 					selected: 0,
-					iconClass: 'fa-solid ico fa-heading glyph-dark',
+					iconClass: 'ico icon-square glyph-dark',
 					item: null,
 					icon: null,
 					caption: null,
@@ -2325,7 +2319,7 @@
 				filter_by_read: {
 					name: 'filter_by_read',
 					selected: 0,
-					iconClass: 'fa-regular ico fa-circle-check glyph-dark no-theme-icon',
+					iconClass: 'ico icon-circle glyph-dark no-theme-icon',
 					item: null,
 					icon: null,
 					caption: null,
@@ -2355,7 +2349,7 @@
 				filter_by_direction: {
 					name: 'filter_by_direction',
 					selected: 0,
-					iconClass: 'fa-regular ico fa-circle-check glyph-dark no-theme-icon',
+					iconClass: 'ico icon-circle glyph-dark no-theme-icon',
 					item: null,
 					icon: null,
 					caption: null,
@@ -2393,7 +2387,7 @@
 				filter_by_language: {
 					name: 'filter_by_language',
 					selected: 0,
-					iconClass: 'fa-regular ico fa-circle-check glyph-dark no-theme-icon',
+					iconClass: 'ico icon-circle glyph-dark no-theme-icon',
 					item: null,
 					icon: null,
 					caption: null,
@@ -3681,12 +3675,6 @@
 		}
 
 		async function buildSeriesItem(item, serie, target, dynamic = false) {
-			const LTRvals = {
-				RIGHT_TO_LEFT: '',
-				LEFT_TO_RIGHT: '<span class="fa-solid ico fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>',
-				WEBTOON: '<span class="fa-solid ico fa-mobile glyph-dark" style="margin-left:2px;"></span>',
-				VERTICAL: '<span class="fa-solid ico fa-mobile glyph-dark" style="margin-left:2px;"></span>',
-			}
 
 			const orientedBook = {
 				RIGHT_TO_LEFT: '<span class="ico icon-book ico-mirror-h high glyph-dark"></span>',
@@ -3706,8 +3694,7 @@
 				className: 'series-item'
 			});
 			const LNG = serie.metadata?.language ? ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="glyph-dark glyph-flag"></span>` : '') : '';
-			const LTR = serie.metadata?.readingDirection ? LTRvals[serie.metadata.readingDirection] : '';
-			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
+			const spacer = (LNG != '') ? '&nbsp;' : '';
 
 			const LTRbook = serie.metadata?.readingDirection ? orientedBook[serie.metadata.readingDirection] : orientedBook["LEFT_TO_RIGHT"];
 
@@ -4350,7 +4337,6 @@
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
-			const isFA = imagePath?.startsWith('fa-');
 
 			const listItem = addItem('li', {
 				id: itemId,
@@ -4372,18 +4358,13 @@
 				? `library-thumbnails/${libraryName}.svg`
 				: imagePath);
 
-
-			const libraryThumbnail = isFA ?
-				addItem('i', {
-					className: `fa-solid ico ${imagePath} glyph-dark libglyph`,
-				}) :
-				addItem('img', {
+			const libraryThumbnail = addItem('img', {
 					className: 'library-thumbnail',
 					src: imageSrc,
 					alt: isLib ? `${libraryName} Cover` : libraryName,
 				})
 
-			if (isLib && !isFA) {
+			if (isLib) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
 					libraryThumbnail.src = `library-letters/${transliterate(libraryName.charAt(0)).charAt(0).toUpperCase()}.png`
@@ -4407,7 +4388,7 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: 'fa-solid ico ' + menuClassDown + ' is-lib-menu'
+					className: 'ico ' + menuClassDown + ' is-lib-menu'
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {

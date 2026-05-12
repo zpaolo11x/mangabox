@@ -380,7 +380,10 @@
 	font-size: 16px;
 	padding-left: 10px;
 	padding-right: 10px;
+}
 
+.server-data .ico{
+	font-size: 18px;
 }
 
 .server-data.expand {
