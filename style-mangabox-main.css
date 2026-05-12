@@ -1088,6 +1088,12 @@ a {
 .ico-mirror-h{
 	transform: scaleX(-1);
 }
+.ico-mirror-v{
+	transform: scaleY(-1);
+}
+.ico-rotate-90ccw{
+transform: rotate(-90deg);
+}
 
 .libglyph,
 .library-item span.ico {
@@ -1095,6 +1101,14 @@ a {
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
 	font-size: 28px;
+	border-radius: 50%;
+}
+
+.library-item span.is-lib-menu.ico {
+	width: var(--mb-span-size);
+	height: var(--mb-span-size);
+	line-height: var(--mb-span-size);
+	font-size: 22px;
 	border-radius: 50%;
 }
 
@@ -1386,7 +1400,7 @@ a {
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
 	line-height: var(--mb-dialog-button-height);
-	font-size: 25px;
+	font-size: 28px;
 	border-radius: 50%;
 }
 
@@ -1521,8 +1535,8 @@ a {
 	color: var(--mb-glyph-color);
 	width: 100%;
 	height: 20px;
-	line-height: 20px;
-	font-size: 20px;
+	line-height: 26px;
+	font-size: 26px;
 	display: flex;
 	justify-content: center;
 	align-items: center;

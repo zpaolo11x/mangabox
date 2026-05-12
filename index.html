@@ -41,18 +41,6 @@
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
 				<ul id="librariesRightBlock">
-					<!--
-					<li id="readlistsButton2" title="Read Lists" class="library-item no-grow press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid ico fa-book-bookmark glyph-dark"></span>
-						</div>
-					</li>
-					<li id="collectionsButton2" title="Collections" class="library-item no-grow press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid ico fa-box-archive glyph-dark"></span>
-						</div>
-					</li>
-					-->
 					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
 							<span id="fullscreenLabel" class="icon-maximize ico glyph-dark"></span>
@@ -85,7 +73,6 @@
 						<div id="searchIcon" class="button-wrapper">
 							<span class="ico icon-search glyph-dark"></span>
 						</div>
-						<!--<span id="clearSearchBtn" class="clear-btn fa-solid ico fa-xmark"></span>-->
 						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button">
 							<span class="x-btn lib-override ico icon-x"></span>
 						</div>
@@ -122,11 +109,11 @@
 					<div id="stripGrid" class="strip-grid"></div>
 					<div id="stripGridHeaderContainer" class="stripgrid-header-container">
 						<div id="stripGridHeader" class="strip-header">
-							<span class="fa-solid ico fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+							<span class="ico icon-book-marked glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
-							<span id="stripPrevPage" data-i18n-title="navigation.prevpage" class="disabled fa-solid ico fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
-							<span id="stripNextPage" data-i18n-title="navigation.nextpage" class="disabled fa-solid ico fa-play glyph-dark strip-button press-flat-button"></span>
+							<span id="stripPrevPage" data-i18n-title="navigation.prevpage" class="disabled ico icon-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
+							<span id="stripNextPage" data-i18n-title="navigation.nextpage" class="disabled ico icon-play glyph-dark strip-button press-flat-button"></span>
 						</div>
 					</div>
 				</div>
@@ -140,14 +127,14 @@
 					<div class="home-strip-parent">
 						<div id="homeStripSeriesResults" class="series-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid ico fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="search.seriesresults"></span></div>
+							<div class="strip-header"><span class="ico icon-library-big glyph-dark"></span>&nbsp;<span data-i18n="search.seriesresults"></span></div>
 						</div>
 					</div>
 
 					<div class="home-strip-parent">
 						<div id="homeStripBooksResults" class="books-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid ico fa-book glyph-dark"></span>&nbsp;<span data-i18n="search.booksresults"></span></div>
+							<div class="strip-header"><span class="ico icon-book-text glyph-dark"></span>&nbsp;<span data-i18n="search.booksresults"></span></div>
 						</div>
 					</div>
 				</div>
@@ -160,13 +147,13 @@
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
 							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.prevbook" onclick="jumpBookDetailsPrev()">
-								<span class="fa-solid ico fa-chevron-left"></span>
+								<span class="ico icon-chevron-left"></span>
 							</div>
 							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.gotolib" onclick="jumpBookLibrary()">
-								<span class="fa-solid ico fa-layer-group"></span>
+								<span class="ico icon-library-big"></span>
 							</div>
 							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.nextbook" onclick="jumpBookDetailsNext()">
-								<span class="fa-solid ico fa-chevron-right"></span>
+								<span class="ico icon-chevron-right"></span>
 							</div>
 						</div>
 						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
@@ -181,7 +168,7 @@
 						</div>
 					</div>
 					<div class="close-details dialog-button press-button" onclick="closeBookDetails()">
-						<span class="fa-solid ico fa-xmark"></span>
+						<span class="ico icon-x"></span>
 					</div>
 				</div>
 
@@ -291,9 +278,9 @@
 		<!--<img id="barLogo" src="logo/mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
 		<div id="windowControls" , class="window-controls no-drag">
-			<span class="fa-solid ico fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
-			<span class="fa-regular ico fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
-			<span class="fa-solid ico fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
+			<span class="ico icon-tally-1 ico-rotate-90ccw glyph-dark" id="dragbarMinBtn"></span>
+			<span class="ico icon-app-window glyph-dark" id="dragbarMaxBtn"></span>
+			<span class="ico icon-x glyph-dark" id="dragbarCloseBtn"></span>
 		</div>
 	</div>
 
@@ -397,7 +384,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = true;
+		const fullDebugMode = false;
 		const webPWD = false;
 
 		// Enable for live debug on the main UI
@@ -769,7 +756,7 @@
 
 		// Hide dragbar in PWA mode
 		(function () {
-			enableDragbar(isElectron);
+			enableDragbar(true || isElectron); //ROLLBACK
 		})();
 
 		//MB Offline Events Response
@@ -1754,10 +1741,11 @@
 			translateDOM(themeChanger)
 
 			// Change fa icons for light or dark theme
+			/*
 			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
 			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
-
+			*/
 			// Save theme setting in local storage
 			setUserSettings('mangabox.ui.themeprefs', mb.themePrefs);
 
@@ -2440,7 +2428,7 @@
 					get longCaption() {
 						return languageName(this.langTag);
 					},
-					iconClass: 'fa-solid ico fa-square glyph-dark glyph-flag-button',
+					iconClass: 'glyph-dark glyph-flag-button',
 					iconStyle: `background-image:url('flags/${item}.svg')`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
 				})
@@ -3148,9 +3136,9 @@
 
 		function obRedrawDownloadButton(bookId) {
 			if (obIsBookCompleted(bookId)) {
-				return ('<span class="fa-regular ico fa-trash-can"></span>')
+				return ('<span class="ico icon-trash-2"></span>')
 			} else if (obIsBookDownloading(bookId)) {
-				return ('<span class="fa-solid ico fa-xmark"></span>')
+				return ('<span class="ico icon-x"></span>')
 			}
 			else {
 				return ('<span class="ico icon-hard-drive-download"></span>')
@@ -3805,7 +3793,7 @@
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} ico icon-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='ico icon-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
@@ -3831,7 +3819,7 @@
 			if (altTitle.story != altTitle.art) {
 				if (altTitle.story != 'N/A') {
 					const storyLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid ico icon-notebook-pen glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='ico icon-notebook-pen glyph-dark'></span>&nbsp;${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.story}`,
 						dataset: {
@@ -3851,7 +3839,7 @@
 
 				if (altTitle.art != 'N/A') {
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
-						innerHTML: `<span class='fa-solid ico icon-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						innerHTML: `<span class='ico icon-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.art}`
 						dataset: {
@@ -3938,11 +3926,11 @@
 		}
 
 		async function buildCollectionsItem(item, serie, target) {
-			buildContainerItem(item, serie, target, 'collections', 'seriesIds', 'fa-layer-group')
+			buildContainerItem(item, serie, target, 'collections', 'seriesIds', 'icon-library-big')
 		}
 
 		async function buildReadlistsItem(item, serie, target) {
-			buildContainerItem(item, serie, target, 'readlists', 'bookIds', 'fa-book')
+			buildContainerItem(item, serie, target, 'readlists', 'bookIds', 'icon-book-text')
 		}
 
 		async function buildContainerItem(item, serie, target, container, items, icon) {
@@ -4004,7 +3992,7 @@
 			});
 
 			const booksLabel = addItem('span', {
-				innerHTML: `<span class='fa-solid ico ${icon} glyph-dark'></span>&nbsp;${bookCount}`
+				innerHTML: `<span class='ico ${icon} glyph-dark'></span>&nbsp;${bookCount}`
 			});
 
 			item.mbSeriesTitle = serie.name ?? '';
@@ -4269,8 +4257,8 @@
 			displayCollections(collections, seriesGrid);
 		}
 
-		const menuClassUp = 'fa-caret-up';
-		const menuClassDown = 'fa-caret-down'
+		const menuClassUp = 'icon-chevron-up';
+		const menuClassDown = 'icon-chevron-down'
 
 		function libMenuClear(item) {
 			item.classList.remove(menuClassUp);
