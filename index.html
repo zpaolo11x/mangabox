@@ -278,8 +278,8 @@
 		<!--<img id="barLogo" src="logo/mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
 		<div id="windowControls" , class="window-controls no-drag">
-			<span class="ico icon-tally-1 ico-rotate-90ccw glyph-dark" id="dragbarMinBtn"></span>
-			<span class="ico icon-app-window glyph-dark" id="dragbarMaxBtn"></span>
+			<span style="top:-1px;" class="ico icon-tally-1 ico-rotate-90ccw glyph-dark" id="dragbarMinBtn"></span>
+			<span class="ico icon-app-window-mac glyph-dark" id="dragbarMaxBtn"></span>
 			<span class="ico icon-x glyph-dark" id="dragbarCloseBtn"></span>
 		</div>
 	</div>
@@ -756,7 +756,7 @@
 
 		// Hide dragbar in PWA mode
 		(function () {
-			enableDragbar(true || isElectron); //ROLLBACK
+			enableDragbar(isElectron); 
 		})();
 
 		//MB Offline Events Response

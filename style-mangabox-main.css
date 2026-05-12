@@ -769,7 +769,7 @@ a {
 	gap: 5px;
 	-webkit-app-region: no-drag;
 	position: absolute;
-	top: 8px;
+	top: 6px;
 	right: 8px;
 	font-size: 14px;
 	transition: opacity 0.3s ease;
@@ -782,6 +782,7 @@ a {
 	margin: 0px;
 	padding: 0px;
 	transition: 0.3s;
+	font-size: 17px;
 }
 
 .window-controls span:hover {
