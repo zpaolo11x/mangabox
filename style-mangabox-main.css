@@ -2387,8 +2387,8 @@ span.mini-title {
 .glyph-div {
 	top: 0;
 	bottom: 0;
-	min-width:22px;
-	min-height:22px;
+	min-width:15px;
+	min-height:15px;
 	position:relative;
 }
 
@@ -2432,7 +2432,7 @@ span.mini-title {
 		position:absolute;
 	top:50%;
 	left:50%;
-		transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 
 	width: 15px;
 	height: 15px;
