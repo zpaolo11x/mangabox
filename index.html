@@ -87,7 +87,7 @@
 						</div>
 						<!--<span id="clearSearchBtn" class="clear-btn fa-solid ico fa-xmark"></span>-->
 						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button">
-							<span class="x-btn lib-override fa-solid ico fa-xmark"></span>
+							<span class="x-btn lib-override ico icon-x"></span>
 						</div>
 						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" data-i18n-placeholder="button.searchtext">
 					</li>
@@ -1616,23 +1616,7 @@
 								</li>
 			`
 			});
-			/*
-			mb.languages.forEach((language, index) => {
-				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
-				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
-									<div class='smallbutton-wrapper'>
-										<span style="background-image:url('flags/${language}.svg')" class="fa-solid ico fa-square glyph-dark glyph-flag-button"></span>
-									</div>
-									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
-								</li>`
-			});
-			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
-									<div class='smallbutton-wrapper'>
-										<span class="fa-solid ico fa-robot glyph-dark"></span>
-									</div>
-									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
-								</li>`
-			*/
+
 			out = out + "</ul>";
 			return (out)
 		}
@@ -2593,14 +2577,14 @@
 				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
 									<div class='smallbutton-wrapper'>
-										<span style="background-image:url('flags/${language}.svg')" class="fa-solid ico fa-square glyph-dark glyph-flag-button"></span>
+										<span style="background-image:url('flags/${language}.svg')" class="glyph-dark glyph-flag-button"></span>
 									</div>
 									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
 								</li>`
 			});
 			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
 									<div class='smallbutton-wrapper'>
-										<span class="fa-solid ico fa-robot glyph-dark"></span>
+										<span class="ico icon-bot glyph-dark"></span>
 									</div>
 									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
 								</li>`

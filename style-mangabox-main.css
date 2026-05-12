@@ -2429,16 +2429,28 @@ span.mini-title {
 }
 
 .glyph-flag-button {
+	width:24px;
+	height:24px;
+	min-width:24px;
+	min-height:24px;
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	border-radius:3px;
+	background-size: cover;
+	background-size: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+		/*
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-size: cover;
 	background-size: 60%;
-	/* Scale the background to 80% */
 	background-position: center;
-	/* Center the background */
 	background-repeat: no-repeat;
-	/* Prevent the background from repeating */
+	*/
 }
 
 .glyph-ltr {
