@@ -109,7 +109,7 @@
 					<div id="stripGrid" class="strip-grid"></div>
 					<div id="stripGridHeaderContainer" class="stripgrid-header-container">
 						<div id="stripGridHeader" class="strip-header">
-							<span class="ico icon-book-marked glyph-dark"></span>&nbsp;Keep Reading
+							<span class="ico icon-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
 							<span id="stripPrevPage" data-i18n-title="navigation.prevpage" class="disabled ico icon-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
@@ -5233,7 +5233,7 @@
 
 		dashboardElements = {
 			keepReading: {
-				headerCode: '<span class="ico icon-book-marked glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
+				headerCode: '<span class="ico icon-bookmark glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
 				getItems: async (page, size) => {
 					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
@@ -5262,7 +5262,7 @@
 			},
 
 			recentBooks: {
-				headerCode: '<span class="ico icon-book glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
+				headerCode: '<span class="ico icon-book-alert glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
