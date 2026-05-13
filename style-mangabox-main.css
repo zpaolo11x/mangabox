@@ -279,7 +279,7 @@ body {
 
 }
 
-.icon-apple {
+.ico-colormark {
 	width: 100%;
 	color: var(--mb-card-color);
 	text-align: left;
@@ -532,7 +532,7 @@ body {
 	pointer-events: none;
 	position: absolute;
 	z-index: 10000;
-	color: red;
+	color: hsl(0, 80%, 45%);
 	font-size: 22px;
 	font-weight: bold;
 	bottom: 44px;
