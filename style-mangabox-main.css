@@ -1095,6 +1095,9 @@ a {
 .ico-rotate-90ccw{
 transform: rotate(-90deg);
 }
+.ico-rotate-90cw{
+transform: rotate(90deg);
+}
 
 .libglyph,
 .library-item span.ico {
@@ -1482,7 +1485,7 @@ transform: rotate(-90deg);
 
 }
 
-.mini-buttons .ico {
+.mini-buttons span.ico {
 	font-size: 27px;
 	height: 25px;
 	width: 25px;
@@ -1698,7 +1701,7 @@ transform: rotate(-90deg);
 	padding: 0px;
 }
 
-.strip-all .ico {
+.strip-all span.ico {
 	text-align: center;
 	width: 44px;
 	margin-left: 0px;
@@ -1807,7 +1810,7 @@ transform: rotate(-90deg);
 	}
 }
 
-@media (max-width: 500px) {
+@media (max-width: 510px) {
 	.strip-header-container {
 		grid-template-columns: auto 70px 54px;
 	}
@@ -1818,14 +1821,20 @@ transform: rotate(-90deg);
 	padding: 0px;
 	font-size: 20px;
 	font-weight: 500;
+	height: 25px;
+}
+
+.strip-header span.header{
+	padding-left:27px;
 }
 
 .strip-header span.ico{
-	width: 20px;
-	font-size:22px;
-	height:18px;
-	line-height:18px;
-	top:3px;
+	position:absolute;
+	top:0px;
+	width: 24px;
+	height:25px;
+	font-size:24px;
+	line-height:25px;	
 }
 
 .custom-scrollbar input[type="range"] {
@@ -2155,7 +2164,7 @@ book-item {
 	padding: 0px 2px;
 }
 
-.data-row .ico {
+.data-row span.ico {
 	font-size:16px;
 	height: 16px;
 	width: 16px;
@@ -2220,7 +2229,7 @@ book-item {
 	font-size: 15px;
 	/*XXX MAGARI 14.5px XXX*/
 }
-.top-row .ico {
+.top-row span.ico {
 	font-size:16px;
 	height: 16px;
 	width: 16px;

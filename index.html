@@ -127,14 +127,14 @@
 					<div class="home-strip-parent">
 						<div id="homeStripSeriesResults" class="series-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="ico icon-library-big glyph-dark"></span>&nbsp;<span data-i18n="search.seriesresults"></span></div>
+							<div class="strip-header"><span class="ico icon-library-big glyph-dark"></span><span class="header" data-i18n="search.seriesresults"></span></div>
 						</div>
 					</div>
 
 					<div class="home-strip-parent">
 						<div id="homeStripBooksResults" class="books-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="ico icon-book-text glyph-dark"></span>&nbsp;<span data-i18n="search.booksresults"></span></div>
+							<div class="strip-header"><span class="ico icon-book-text glyph-dark"></span><span class="header" data-i18n="search.booksresults"></span></div>
 						</div>
 					</div>
 				</div>
@@ -5233,7 +5233,7 @@
 
 		dashboardElements = {
 			keepReading: {
-				headerCode: '<span class="ico icon-bookmark glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
+				headerCode: '<span class="ico icon-bookmark glyph-dark"></span><span class="header" data-i18n="header.keepreading"></span>',
 				getItems: async (page, size) => {
 					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
@@ -5252,7 +5252,7 @@
 
 
 			onDeck: {
-				headerCode: '<span class="ico icon-inbox glyph-dark"></span>&nbsp;<span data-i18n="header.ondeck"></span>',
+				headerCode: '<span class="ico icon-inbox glyph-dark"></span><span class="header" data-i18n="header.ondeck"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_ondeck`, `/api/v1/books/ondeck`));
 				},
@@ -5262,7 +5262,7 @@
 			},
 
 			recentBooks: {
-				headerCode: '<span class="ico icon-book-alert glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
+				headerCode: '<span class="ico icon-book-alert glyph-dark"></span><span class="header" data-i18n="header.lastaddedbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
@@ -5275,7 +5275,7 @@
 			},
 
 			recentSeries: {
-				headerCode: '<span class="ico icon-library-big glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedseries"></span>',
+				headerCode: '<span class="ico icon-library-big glyph-dark"></span><span class="header" data-i18n="header.lastaddedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
@@ -5285,7 +5285,7 @@
 			},
 
 			updatedSeries: {
-				headerCode: '<span class="ico icon-megaphone glyph-dark"></span>&nbsp;<span data-i18n="header.lastupdatedseries"></span>',
+				headerCode: '<span class="ico icon-megaphone glyph-dark"></span><span class="header" data-i18n="header.lastupdatedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
@@ -5295,7 +5295,7 @@
 			},
 
 			readBooks: {
-				headerCode: '<span class="ico icon-book-check glyph-dark"></span>&nbsp;<span data-i18n="header.lastreadbooks"></span>',
+				headerCode: '<span class="ico icon-book-check glyph-dark"></span><span class="header" data-i18n="header.lastreadbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_readbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
