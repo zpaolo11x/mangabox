@@ -1829,12 +1829,20 @@ transform: rotate(90deg);
 }
 
 .strip-header span.ico{
-	position:absolute;
-	top:0px;
 	width: 24px;
 	height:25px;
 	font-size:24px;
 	line-height:25px;	
+}
+
+.strip-header span.ico.header-left{
+	position:absolute;
+	top:0px;
+}
+
+#stripGridHeader span.ico.header-left{
+	position:absolute;
+	top:10px;
 }
 
 .custom-scrollbar input[type="range"] {
