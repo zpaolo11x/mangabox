@@ -424,12 +424,19 @@
 		//Android only plugins
 		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
 		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge && capacitorPlatform == 'android';
+		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
 
 		if (!isElectron && !isCapacitor && !fullDebugMode) {
 			offlineLibrary.remove();
 			enableDownload = false;
 		}
 
+		if (isBackButton) {
+			Capacitor.Plugins.App.addListener('backButton', () => {
+				window.history.back();
+			});
+		};
+		
 		debugPrint('enabledownload' + enableDownload)
 
 	</script>
@@ -756,7 +763,7 @@
 
 		// Hide dragbar in PWA mode
 		(function () {
-			enableDragbar(isElectron); 
+			enableDragbar(isElectron);
 		})();
 
 		//MB Offline Events Response
@@ -3681,7 +3688,7 @@
 				LEFT_TO_RIGHT: '<span class="ico icon-book high glyph-dark"></span>',
 				WEBTOON: '<span class="ico icon-smartphone glyph-dark"></span>',
 				VERTICAL: '<span class="ico icon-smartphone glyph-dark"></span>',
-			
+
 			}
 
 			item.childNodes[0]?.remove();
@@ -4359,10 +4366,10 @@
 				: imagePath);
 
 			const libraryThumbnail = addItem('img', {
-					className: 'library-thumbnail',
-					src: imageSrc,
-					alt: isLib ? `${libraryName} Cover` : libraryName,
-				})
+				className: 'library-thumbnail',
+				src: imageSrc,
+				alt: isLib ? `${libraryName} Cover` : libraryName,
+			})
 
 			if (isLib) {
 				libraryThumbnail.onerror = () => {
@@ -5988,7 +5995,7 @@
 				prevBookCover.src = blobPrevUrl;
 			}
 			nextBookCover.src = "transparent.png";
-			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;			
+			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
 			if (rd.nextBook) {
 				const blobNextUrl = await fetchMedia(`${mb.baseUrl}/api/v1/books/${rd.nextBook.id}/thumbnail`, false);
 				nextBookCover.src = blobNextUrl;

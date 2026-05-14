@@ -223,13 +223,14 @@ jobs:
       - name: Install File Picker plugin
         run: npm install @capawesome/capacitor-file-picker@7
 
-      - name: Install edge management plugin (Android)
-        #if: ${{ matrix.sys == 'android' }}
+      - name: Install edge management plugin
         run: npm install @capawesome/capacitor-android-edge-to-edge-support@7
 
-      - name: Install navigation bar plugin (Android)
-        #if: ${{ matrix.sys == 'android' }}
+      - name: Install navigation bar plugin
         run: npm install @ethion/capacitor-navigation-bar@7
+
+      - name: Install app management plugin
+        run: npm install @capacitor/app@7
 
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
