@@ -1,5 +1,6 @@
 Main UI
 - Introduced Lucide icons for UI glyphs
+- Added support for Android "back" button
 
 Reader UI
 - Added cover thumbnail for next and previous book
@@ -7,6 +8,7 @@ Reader UI
 Fixes
 - Fixed insets on Android 15 devices
 - Fixed translation of header in view all page
+- Fixed zooming issue when restoring iOS app
 
 Build
 - Updated website with new icons

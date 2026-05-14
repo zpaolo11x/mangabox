@@ -426,9 +426,21 @@
 		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge && capacitorPlatform == 'android';
 		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
 
+		//iOS only plugins
+		const isFixZoom = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'ios';
+
 		if (!isElectron && !isCapacitor && !fullDebugMode) {
 			offlineLibrary.remove();
 			enableDownload = false;
+		}
+
+		if (isFixZoom) {
+			Capacitor.Plugins.App.addListener('appStateChange', ({ isActive }) => {
+            if (isActive && !isSectionHidden(readerContainer)) {
+                toggleMenu();
+                toggleMenu();
+            }
+          });
 		}
 
 		if (isBackButton) {
