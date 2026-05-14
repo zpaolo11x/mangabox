@@ -433,10 +433,13 @@
 
 		if (isBackButton) {
 			Capacitor.Plugins.App.addListener('backButton', () => {
-				window.history.back();
+				if (!isSectionHidden(readerContainer))
+					handleCloseReader();
+				else
+					window.history.back();
 			});
 		};
-		
+
 		debugPrint('enabledownload' + enableDownload)
 
 	</script>
