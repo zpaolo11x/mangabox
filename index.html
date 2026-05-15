@@ -436,19 +436,31 @@
 
 		if (isFixZoom) {
 			Capacitor.Plugins.App.addListener('appStateChange', ({ isActive }) => {
-            if (isActive && !isSectionHidden(readerContainer)) {
-                toggleMenu();
-                toggleMenu();
-            }
-          });
+				if (isActive && !isSectionHidden(readerContainer)) {
+					toggleMenu();
+					toggleMenu();
+				}
+			});
+		}
+
+		function goBack() {
+			if (isModalVisible()) {
+				closeModal();
+			} else if (!isSectionHidden(readerContainer)){
+				if (!isSectionHidden(controlPanel)){
+					toggleMenu()
+				} else {
+					handleCloseReader();
+				}
+			}
+			else {
+				window.history.back();
+			}
 		}
 
 		if (isBackButton) {
 			Capacitor.Plugins.App.addListener('backButton', () => {
-				if (!isSectionHidden(readerContainer))
-					handleCloseReader();
-				else
-					window.history.back();
+				goBack();
 			});
 		};
 
@@ -2703,11 +2715,17 @@
 			}
 		}
 
+		
 		// Set the slider max value and grpahics properties based on the scroll width
-		function updateSliderProperties() {
+		function updateSliderProperties(retain = null) {
 			if (isSectionHidden(homeStripsContainer)) return;
 
 			Object.entries(dashboardElements).forEach(([name, item]) => {
+				if (name == retain) {
+					item.homeStrip.scrollLeft = item.scrollInput.value;
+				} else {
+					item.scrollInput.value = item.homeStrip.scrollLeft;
+				}
 
 				item.scrollInput.max = item.homeStrip.scrollWidth - item.homeStrip.clientWidth;
 				const isOverflowing = item.homeStrip.scrollWidth > item.homeStrip.clientWidth;
@@ -3924,6 +3942,8 @@
 
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
+				//TODO: Maybe using history replace there's no need to manage target from library button?
+				if (!target?.binName) history.replaceState({},'',`#library?library_id=${serie.libraryId}&series_id=${serie.id}`)
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
@@ -7596,6 +7616,11 @@
 					
 					break;
 				*/
+				
+				case 'b':
+					goBack();
+					break;
+				
 				/*
 				case 'D':
 					mb.screenAR = getScreenAR();
@@ -7688,6 +7713,7 @@
 							const y = dashboardElements[mb.dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop - 10;
 
 							mainContainer.scrollTo({ top: y });
+							updateSliderProperties(mb.dashboardBin);
 							mb.dashboardBin = '';
 						}
 					} else {
