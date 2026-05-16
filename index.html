@@ -3547,7 +3547,9 @@
 		function libraryHighlight(libraryId, withMenu) {
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('highlighted'));
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('with-menu'));
-			document.getElementById(libraryId).classList.add('highlighted');
+			
+			document.getElementById(libraryId)?.classList.add('highlighted');
+			
 			if (withMenu) document.getElementById(libraryId).classList.add('with-menu');
 		}
 
