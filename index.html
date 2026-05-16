@@ -3404,7 +3404,7 @@
 					}
 
 					if (offlineCache) {
-						await cacheMedia(db, url, blob);
+						try{await cacheMedia(db, url, blob)} catch (error){console.log("Cache dB Error")};
 					}
 
 					return objectURL;
