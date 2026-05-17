@@ -22,7 +22,7 @@
 
 	--mb-inset-top: max(env(safe-area-inset-top), var(--mb-android-inset-top));
 	--mb-inset-bottom: max(env(safe-area-inset-bottom), var(--mb-android-inset-top));
-	--mb-inset-left: max(env(safe-area-inset-left), var(--mb-android-inset-left));
+	--mb-inset-left: max( env(safe-area-inset-left), var(--mb-android-inset-left));
 	--mb-inset-right: max(env(safe-area-inset-right), var(--mb-android-inset-right));
 
 	--mb-area-padding: 20px;
@@ -1552,6 +1552,17 @@ transform: rotate(90deg);
 	opacity: 0.7;
 }
 
+#backButton{
+	background-color: var(--mb-accent);
+	color: white;
+
+	position: absolute;
+	left: calc(max(10px, var(--mb-button-safe-left)));
+	bottom: calc(10px + var(--mb-bottom-spacer));
+
+	z-index:21000;
+}
+
 #bookDetailsContainer .close-details {
 	background-color: var(--mb-accent);
 	color: white;
@@ -1684,6 +1695,7 @@ transform: rotate(90deg);
 .home-strip {
 	scrollbar-width: none;
 }
+
 
 #homeStripsContainer {
 	padding-top: 10px;
@@ -1900,6 +1912,19 @@ transform: rotate(90deg);
 
 	/*XXX WAS layout style paint and removed overflow-y:auto*/
 
+}
+
+#homeStripsContainer,
+#searchStripsContainer{
+	padding-bottom:calc(50px + var(--mb-bottom-spacer));
+}
+
+#stripsGridContainer,
+#seriesGrid, 
+#booksGrid,
+#offlineGrid,
+#stripGrid {
+	padding-bottom:calc(50px + var(--mb-area-padding) + var(--mb-bottom-spacer));
 }
 
 #homeStripSeriesResults,

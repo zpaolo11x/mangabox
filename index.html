@@ -358,6 +358,10 @@
 		</div>
 	</div>
 
+	<div id="navigationControls" class="dialog-button">
+		<span id="backButton" data-i18n-title="navigate.back" class="press-button ico icon-undo-2" onclick="goBack()"></span>
+	</div>
+
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
@@ -446,8 +450,8 @@
 		function goBack() {
 			if (isModalVisible()) {
 				closeModal();
-			} else if (!isSectionHidden(readerContainer)){
-				if (!isSectionHidden(controlPanel)){
+			} else if (!isSectionHidden(readerContainer)) {
+				if (!isSectionHidden(controlPanel)) {
 					toggleMenu()
 				} else {
 					handleCloseReader();
@@ -2715,7 +2719,7 @@
 			}
 		}
 
-		
+
 		// Set the slider max value and grpahics properties based on the scroll width
 		function updateSliderProperties(retain = null) {
 			if (isSectionHidden(homeStripsContainer)) return;
@@ -3404,7 +3408,7 @@
 					}
 
 					if (offlineCache) {
-						try{await cacheMedia(db, url, blob)} catch (error){console.log("Cache dB Error")};
+						try { await cacheMedia(db, url, blob) } catch (error) { console.log("Cache dB Error") };
 					}
 
 					return objectURL;
@@ -3547,9 +3551,9 @@
 		function libraryHighlight(libraryId, withMenu) {
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('highlighted'));
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('with-menu'));
-			
+
 			document.getElementById(libraryId)?.classList.add('highlighted');
-			
+
 			if (withMenu) document.getElementById(libraryId).classList.add('with-menu');
 		}
 
@@ -3945,7 +3949,7 @@
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				//TODO: Maybe using history replace there's no need to manage target from library button?
-				if (!target?.binName) history.replaceState({},'',`#library?library_id=${serie.libraryId}&series_id=${serie.id}`)
+				if (!target?.binName) history.replaceState({}, '', `#library?library_id=${serie.libraryId}&series_id=${serie.id}`)
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 

@@ -619,6 +619,7 @@ div.single-page {
 #bottomControls {
 	border-bottom: var(--mb-card-color) solid var(--mb-bottom-spacer);
 	box-sizing: content-box;
+	padding-left: calc(50px + max(10px, var(--mb-button-safe-left)));
 }
 
 #topControls {
