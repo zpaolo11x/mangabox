@@ -359,7 +359,7 @@
 	</div>
 
 	<div id="navigationControls" class="dialog-button">
-		<span id="backButton" data-i18n-title="navigate.back" class="press-button ico icon-undo-2" onclick="goBack()"></span>
+		<span id="backButton" data-i18n-title="navigate.back" class="press-button ico icon-undo-2 hidden" onclick="goBack()"></span>
 	</div>
 
 	<div id="fader" class="logo-pattern"></div>
@@ -458,7 +458,11 @@
 				}
 			}
 			else {
-				window.history.back();
+				//window.history.back();
+				if (mb.historyStack.length > 1){
+					mb.historyStack.pop();
+					navigateTo(mb.historyStack.pop())
+				}
 			}
 		}
 
@@ -920,6 +924,8 @@
 					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'pt', 'pt-BR', 'zh-Hans'],
 					languageAuto: false,
 					languageVal: '',
+
+					historyStack: [window.location.href],
 
 					libraryError: false,
 					libraryNames: '',
@@ -3950,6 +3956,7 @@
 				if (target?.binName) mb.dashboardBin = target.binName;
 				//TODO: Maybe using history replace there's no need to manage target from library button?
 				if (!target?.binName) history.replaceState({}, '', `#library?library_id=${serie.libraryId}&series_id=${serie.id}`)
+				mb.historyStack[mb.historyStack.length - 1] = `#library?library_id=${serie.libraryId}&series_id=${serie.id}`
 				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
 			});
 
@@ -6926,8 +6933,7 @@
 
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-
-			const stringOut = `${mb.basePath}#bookread
+			const stringOut = `#bookread
 			?library_id=${rd.libraryId}
 			&series_id=${rd.seriesId}
 			&book_id=${rd.bookId}
@@ -7432,7 +7438,12 @@
 
 			updateProgressBar();
 
-			if (!skipHistory) history.replaceState(null, '', jumpString());
+			if (!skipHistory) {
+				const jumpValue = jumpString();
+				history.replaceState(null, '', jumpValue);
+				mb.historyStack[mb.historyStack.length - 1] = jumpValue;
+
+			}
 		}
 
 		function jumpToSpreadSkipHistory(targetSpreadIndex) {
@@ -7463,6 +7474,7 @@
 
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
+			backButton.classList.toggle('faded')
 		}
 
 		function hideMenu() {
@@ -7711,7 +7723,6 @@
 				case '':
 				case 'dashboard':
 					clearSearchField();
-
 					setIncognito(false);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
@@ -7725,6 +7736,8 @@
 					} else {
 						dashboardAll(params.get('all'), params.get('page'));
 					}
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'library':
 					mb.dashboardBin = '';
@@ -7732,12 +7745,16 @@
 
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'series':
 					clearSearchField();
 
 					setIncognito(false);
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'readlists':
 					mb.dashboardBin = '';
@@ -7745,12 +7762,16 @@
 
 					setIncognito(false);
 					await openReadlists();
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'readlistsitem':
 					clearSearchField();
 
 					setIncognito(false);
 					await openReadlist(params.get('item_id'));
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'collections':
 					mb.dashboardBin = '';
@@ -7758,26 +7779,36 @@
 
 					setIncognito(false);
 					await openCollections();
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'collectionsitem':
 					clearSearchField();
 
 					setIncognito(false);
 					await openCollection(params.get('item_id'));
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'search':
 					setIncognito(false);
 					searchInput.value = params.get('search_string');
 					await performSearch(params.get('search_string'));
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				case 'bookread':
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pg'));
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', true)
 					break;
 				case 'offlinebooks':
 					clearSearchField();
 
 					setIncognito(false);
 					await openOfflineBooks(params?.get('book_id'));
+					backButton.classList.toggle('hidden', false)
+					backButton.classList.toggle('faded', false)
 					break;
 				default:
 					console.log('no selection');
@@ -7790,7 +7821,9 @@
 		// This is the most important function, it updates the history and then passes the path to the loadContent function that does all the work
 		// In MB the navigateTo function with a proper path form will open the different sections and activate various states.
 		function navigateTo(path) {
-			history.pushState(null, '', mb.basePath + path);
+			history.pushState(null, '', path);
+			mb.historyStack.push(path);
+			console.log(mb.historyStack)
 			loadContent();
 		}
 

@@ -547,6 +547,7 @@ function applyScenario(modeName, serverId, serverData) {
 	if (modeName == 'firstboot') {
 		mb.editServerId = 'mb0';
 		mb.editServerData = mb.serverList['mb0'];
+		backButton.classList.toggle('hidden', true);
 	}
 
 	if ((modeName == 'editserver') && (isWeb && !webPWD)) {

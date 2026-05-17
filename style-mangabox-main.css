@@ -1559,8 +1559,17 @@ transform: rotate(90deg);
 	position: absolute;
 	left: calc(max(10px, var(--mb-button-safe-left)));
 	bottom: calc(10px + var(--mb-bottom-spacer));
-
+	opacity: 1;
 	z-index:21000;
+}
+
+#backButton.hidden{
+	opacity:0.0;
+	pointer-events: none;
+}
+
+#backButton.faded{
+	opacity:0.2;
 }
 
 #bookDetailsContainer .close-details {
