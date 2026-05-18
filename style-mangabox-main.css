@@ -1,5 +1,4 @@
-:root {
-
+:root {	
 	--mb-h: 348;
 	--mb-s: 92%;
 	--mb-l: 38%;
@@ -2870,4 +2869,43 @@ body.offline #stickyContainer {
 	font-weight: bold;
 	font-family: 'Outfit';
 
+}
+
+#librariesLeft{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:40px;
+	min-width:40px;
+	min-height:60px;
+	height:60px;
+	background: linear-gradient(90deg, var(--mb-card-color) 10%, transparent);
+	opacity: 1;
+}
+
+#librariesRight{
+	position:absolute;
+	top:0px;
+	right:0px;
+	width:40px;
+	min-width:40px;
+	min-height:60px;
+	height:60px;
+	background: linear-gradient(270deg, var(--mb-card-color) 10%, transparent);
+	opacity: 1;
+}
+
+#librariesLeft .ico,
+#librariesRight .ico{
+	position:absolute;
+	left:50%;
+	top:50%;
+	transform:translate(-50%,-50%);
+	font-size: 26px;
+}
+
+#librariesLeft.hidden,
+#librariesRight.hidden{
+	pointer-events: none;
+	opacity: 0.2;
 }

@@ -40,6 +40,8 @@
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
+				<div id="librariesLeft" onclick="librariesScroll(-100)"><span class="ico icon-chevron-left glyph-dark"></span></div>
+				<div id="librariesRight" onclick="librariesScroll(100)"><span class="ico icon-chevron-right glyph-dark"></span></div>
 				<ul id="librariesRightBlock">
 					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
@@ -459,7 +461,7 @@
 			}
 			else {
 				//window.history.back();
-				if (mb.historyStack.length > 1){
+				if (mb.historyStack.length > 1) {
 					mb.historyStack.pop();
 					navigateTo(mb.historyStack.pop())
 				}
@@ -2760,9 +2762,12 @@
 		addPressEvents(stripPrevPage, scaleDown, scaleUp);
 		addPressEvents(stripNextPage, scaleDown, scaleUp);
 
+		addPressEvents(librariesLeft, scaleDown, scaleUp);
+		addPressEvents(librariesRight, scaleDown, scaleUp);
+
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
-
+			let twoRows = false;
 			document.body.classList.remove('sticky-medium', 'sticky-small', 'sticky-hybrid', 'sticky-tworows');
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
@@ -2773,6 +2778,9 @@
 				document.body.classList.add('sticky-small');
 			} else {
 				document.body.classList.add('sticky-tworows');
+
+				twoRows = true;
+
 				if (containerWidth - mb.libSizer.large >= 10) {
 					//nothing happens
 				} else if (containerWidth - mb.libSizer.medium >= 10) {
@@ -2789,8 +2797,12 @@
 			} else {
 				extraButtons.classList.add('filter-small')
 			}
+			
+			librariesArrowsUpdate();
 
 		}
+
+
 
 		window.addEventListener('resize', () => {
 			clearTimeout(mb.resizeTimeout);
@@ -3561,6 +3573,7 @@
 			document.getElementById(libraryId)?.classList.add('highlighted');
 
 			if (withMenu) document.getElementById(libraryId).classList.add('with-menu');
+			centerLibrary(document.getElementById(libraryId))
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
@@ -4627,6 +4640,15 @@
 			}
 		}
 
+		function centerLibrary(libraryItem) {
+			setTimeout(() => {
+				librariesList.scrollTo({
+					left: libraryItem.offsetLeft + 90 - 0.5 * (librariesList.clientWidth),
+					behavior: 'smooth'
+				});
+			}, 300)
+		}
+
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -4634,6 +4656,7 @@
 			dashboard.classList.add('shrink-first');
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
+				//centerLibrary(dashboard);
 				navigateTo('#dashboard');
 			});
 
@@ -4641,6 +4664,7 @@
 			readlists.classList.add('shrink-first');
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
+				//centerLibrary(readlists);
 				navigateTo('#readlists');
 			});
 
@@ -4655,6 +4679,7 @@
 			collections.classList.add('shrink-first');
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
+				//centerLibrary(collections);
 				navigateTo('#collections');
 			});
 
@@ -4737,13 +4762,47 @@
 					else {
 						navigateTo(`#library?library_id=${library.id}`);
 					}
+					//centerLibrary(listItem);
 				});
 
 				librariesList.append(listItem);
 
 			});
-
+			librariesList.addEventListener('scroll', () => {
+				librariesArrowsUpdate();
+			})
 			translateDOM();
+		}
+
+
+		function librariesScroll(amount){
+			librariesList.scrollTo({
+				left:librariesList.scrollLeft + amount,
+				behavior: 'smooth'
+			})
+		}
+
+		function librariesArrowsUpdate() {
+			setTimeout(() => {
+				let librariesWidth = librariesList.getBoundingClientRect().width;
+				let librariesPos = librariesList.scrollLeft;
+				let librariesFull = librariesList.scrollWidth;
+				let twoRows = document.body.classList.contains('sticky-tworows')
+				
+				console.log("---")
+				console.log(librariesWidth + " " + librariesPos + " " + librariesFull)
+				console.log((librariesWidth + librariesPos) + " " + librariesFull)
+
+				if (librariesWidth >= librariesFull) {
+					librariesLeft.classList.toggle('hidden', true);
+					librariesRight.classList.toggle('hidden', true);
+				} else {
+					librariesLeft.classList.toggle('hidden', (librariesPos <= 0));
+					librariesRight.classList.toggle('hidden', (librariesWidth + librariesPos >= librariesFull));
+				}
+
+				librariesRight.style.right = twoRows ? '0px' : librariesRightBlock.getBoundingClientRect().width + 'px';
+			}, 0)
 		}
 
 		function getAltTitles(serie) {
