@@ -361,7 +361,7 @@
 	</div>
 
 	<div id="navigationControls" class="dialog-button">
-		<span id="backButton" data-i18n-title="navigate.back" class="press-button ico icon-undo-2 hidden" onclick="goBack()"></span>
+		<span id="backButton" data-i18n-title="navigate.back" class="press-button ico icon-move-left hidden" onclick="goBack()"></span>
 	</div>
 
 	<div id="fader" class="logo-pattern"></div>
@@ -452,12 +452,8 @@
 		function goBack() {
 			if (isModalVisible()) {
 				closeModal();
-			} else if (!isSectionHidden(readerContainer)) {
-				if (!isSectionHidden(controlPanel)) {
-					toggleMenu()
-				} else {
-					handleCloseReader();
-				}
+			} else if (!isSectionHidden(readerContainer) && !isSectionHidden(controlPanel)) {
+				toggleMenu()
 			}
 			else {
 				//window.history.back();
@@ -2797,7 +2793,7 @@
 			} else {
 				extraButtons.classList.add('filter-small')
 			}
-			
+
 			librariesArrowsUpdate();
 
 		}
@@ -4775,9 +4771,9 @@
 		}
 
 
-		function librariesScroll(amount){
+		function librariesScroll(amount) {
 			librariesList.scrollTo({
-				left:librariesList.scrollLeft + amount,
+				left: librariesList.scrollLeft + amount,
 				behavior: 'smooth'
 			})
 		}
@@ -4788,9 +4784,9 @@
 				let librariesPos = librariesList.scrollLeft;
 				let librariesFull = librariesList.scrollWidth;
 				let twoRows = document.body.classList.contains('sticky-tworows')
-				
+
 				console.log("---")
-				console.log("twoRows:"+twoRows);
+				console.log("twoRows:" + twoRows);
 				console.log(librariesWidth + " " + librariesPos + " " + librariesFull)
 				console.log((librariesWidth + librariesPos) + " " + librariesFull)
 
@@ -5253,26 +5249,28 @@
 
 			addTouchScaler(booksItem, async () => {
 				if (offlineSession && !bookIsOffline) return;
-
 				const seriesData = useOfflineCopy ? offline.seriesMetadata : await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
 				if (target == booksGrid) {
-					rd.historyPath = window.location.hash.split('&book_id=')[0] + '&book_id=' + book.id;
+					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0] + '&book_id=' + book.id;
 				} else if (target == offlineGrid) {
-					rd.historyPath = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
+					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
 				} else {
-					rd.historyPath = window.location.hash.split('&book_id=')[0];
+					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0];
 				}
 
 				setIncognito(false);
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#bookread
-						?library_id=${book.libraryId}
-						&series_id=${book.seriesId}
-						&book_id=${book.id}
-						&dir=${readingDirection}
-						&pg=${(book.readProgress ? book.readProgress.page : 1)}`);
+
+				const params = new URLSearchParams({
+					library_id: book.libraryId,
+					series_id: book.seriesId,
+					book_id: book.id,
+					dir: readingDirection,
+					pg: (book.readProgress ? book.readProgress.page : 1)
+				});
+				navigateTo(`#bookread?${params.toString()}`);
 			});
 
 			item.append(booksItem);
@@ -5668,7 +5666,6 @@
 			seriesId: 0,
 			bookId: 0,
 
-			historyPath: '',
 			bookPath: '',
 
 			incognito: false,
@@ -5725,12 +5722,16 @@
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
 		function navigateToReadBook(book, readingDirection, force = false) {
 			setIncognito(false);
-			navigateTo(`#bookread
-						?library_id=${book.libraryId}
-						&series_id=${book.seriesId}
-						&book_id=${book.id}
-						&dir=${readingDirection}
-						&pg=${force ? 1 : (book.readProgress ? book.readProgress.page : 1)}`);
+			const params = new URLSearchParams({
+				library_id: book.libraryId,
+				series_id: book.seriesId,
+				book_id: book.id,
+				dir: readingDirection,
+				pg: force ? 1 : (book.readProgress ? book.readProgress.page : 1)
+			});
+
+			navigateTo(`#bookread?${params.toString()}`);
+
 		}
 
 		// Function that setups the reader for a specific book, this is not run directly
@@ -5884,8 +5885,11 @@
 			purgeLoading();
 			clearAllTimeouts();
 
-			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
-
+			showBackButton(false)
+				
+			if (mb.historyStack.length == 1) mb.historyStack=["#dashboard",mb.historyStack[0]]
+			goBack()
+			
 			if (isStatusBar && !isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.show();
 			}
@@ -6993,12 +6997,14 @@
 
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-			const stringOut = `#bookread
-			?library_id=${rd.libraryId}
-			&series_id=${rd.seriesId}
-			&book_id=${rd.bookId}
-			&dir=${rd.direction}
-			&pg=${rd.currentPage}`;
+			const params = new URLSearchParams({
+				library_id: rd.libraryId,
+				series_id: rd.seriesId,
+				book_id: rd.bookId,
+				dir: rd.direction,
+				pg: rd.currentPage,
+			});
+			const stringOut = `#bookread?${params.toString()}`
 
 			if (!rd.incognito) {
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
@@ -7534,7 +7540,7 @@
 
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
-			backButton.classList.toggle('faded')
+			showBackButton(!backButton.classList.contains('faded'))
 		}
 
 		function hideMenu() {
@@ -7758,6 +7764,21 @@
 			return { path, params };
 		}
 
+		function showBackButton(fadeButton = false) {
+			if (mb.historyStack.length == 1){
+				backButton.classList.toggle('hidden', true)
+				backButton.classList.toggle('faded', false)
+			} else {
+				backButton.classList.toggle('hidden', false)
+				backButton.classList.toggle('faded', fadeButton)
+			}
+
+		}
+
+		function hideBackButton() {
+			backButton.classList.toggle('hidden', true)
+		}
+
 		async function loadContent() {
 			const { path, params } = getHashAndParams();
 
@@ -7796,8 +7817,7 @@
 					} else {
 						dashboardAll(params.get('all'), params.get('page'));
 					}
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'library':
 					mb.dashboardBin = '';
@@ -7805,16 +7825,14 @@
 
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'series':
 					clearSearchField();
 
 					setIncognito(false);
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'readlists':
 					mb.dashboardBin = '';
@@ -7822,16 +7840,14 @@
 
 					setIncognito(false);
 					await openReadlists();
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'readlistsitem':
 					clearSearchField();
 
 					setIncognito(false);
 					await openReadlist(params.get('item_id'));
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'collections':
 					mb.dashboardBin = '';
@@ -7839,36 +7855,31 @@
 
 					setIncognito(false);
 					await openCollections();
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'collectionsitem':
 					clearSearchField();
 
 					setIncognito(false);
 					await openCollection(params.get('item_id'));
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'search':
 					setIncognito(false);
 					searchInput.value = params.get('search_string');
 					await performSearch(params.get('search_string'));
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				case 'bookread':
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pg'));
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', true)
+					showBackButton(true);
 					break;
 				case 'offlinebooks':
 					clearSearchField();
 
 					setIncognito(false);
 					await openOfflineBooks(params?.get('book_id'));
-					backButton.classList.toggle('hidden', false)
-					backButton.classList.toggle('faded', false)
+					showBackButton();
 					break;
 				default:
 					console.log('no selection');
