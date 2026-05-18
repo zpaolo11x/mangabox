@@ -4790,6 +4790,7 @@
 				let twoRows = document.body.classList.contains('sticky-tworows')
 				
 				console.log("---")
+				console.log("twoRows:"+twoRows);
 				console.log(librariesWidth + " " + librariesPos + " " + librariesFull)
 				console.log((librariesWidth + librariesPos) + " " + librariesFull)
 
@@ -4802,7 +4803,7 @@
 				}
 
 				librariesRight.style.right = twoRows ? '0px' : librariesRightBlock.getBoundingClientRect().width + 'px';
-			}, 0)
+			}, 500)
 		}
 
 		function getAltTitles(serie) {
