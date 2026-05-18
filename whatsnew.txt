@@ -1,6 +1,8 @@
 Main UI
 - Introduced Lucide icons for UI glyphs
+- Added floating "back" button on the main UI
 - Added support for Android "back" button
+- Arrows to navigate overflowing library list
 
 Reader UI
 - Added cover thumbnail for next and previous book
