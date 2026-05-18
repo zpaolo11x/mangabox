@@ -40,8 +40,8 @@
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
-				<div id="librariesLeft" onclick="librariesScroll(-100)"><span class="ico icon-chevron-left glyph-dark"></span></div>
-				<div id="librariesRight" onclick="librariesScroll(100)"><span class="ico icon-chevron-right glyph-dark"></span></div>
+				<div id="librariesLeft" onclick="librariesScroll(-100)"><span class="ico icon-chevron-left glyph-dark hidden"></span></div>
+				<div id="librariesRight" onclick="librariesScroll(100)"><span class="ico icon-chevron-right glyph-dark hidden"></span></div>
 				<ul id="librariesRightBlock">
 					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
@@ -2762,8 +2762,8 @@
 		addPressEvents(stripPrevPage, scaleDown, scaleUp);
 		addPressEvents(stripNextPage, scaleDown, scaleUp);
 
-		addPressEvents(librariesLeft, scaleDown, scaleUp);
-		addPressEvents(librariesRight, scaleDown, scaleUp);
+		//addPressEvents(librariesLeft, scaleDown, scaleUp);
+		//addPressEvents(librariesRight, scaleDown, scaleUp);
 
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;

@@ -2875,30 +2875,39 @@ body.offline #stickyContainer {
 	position:absolute;
 	top:0px;
 	left:0px;
-	width:40px;
-	min-width:40px;
+	width:60px;
+	min-width:60px;
 	min-height:60px;
 	height:60px;
-	background: linear-gradient(90deg, var(--mb-card-color) 10%, transparent);
+	background: linear-gradient(90deg, var(--mb-card-color) 30%, transparent);
 	opacity: 1;
+	transition:opacity 0.3s;
 }
 
 #librariesRight{
 	position:absolute;
 	top:0px;
 	right:0px;
-	width:40px;
-	min-width:40px;
+	width:60px;
+	min-width:60px;
 	min-height:60px;
 	height:60px;
-	background: linear-gradient(270deg, var(--mb-card-color) 10%, transparent);
+	background: linear-gradient(270deg, var(--mb-card-color) 30%, transparent);
 	opacity: 1;
+	transition:opacity 0.3s;
 }
 
-#librariesLeft .ico,
+#librariesLeft .ico{
+	position:absolute;
+	left:20%;
+	top:50%;
+	transform:translate(-50%,-50%);
+	font-size: 26px;
+}
+
 #librariesRight .ico{
 	position:absolute;
-	left:50%;
+	left:80%;
 	top:50%;
 	transform:translate(-50%,-50%);
 	font-size: 26px;
@@ -2907,5 +2916,5 @@ body.offline #stickyContainer {
 #librariesLeft.hidden,
 #librariesRight.hidden{
 	pointer-events: none;
-	opacity: 0.2;
+	opacity: 0;
 }
