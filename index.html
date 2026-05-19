@@ -1875,14 +1875,6 @@
 			viewPassword.classList.toggle('icon-eye-off', showPassword);
 
 		})
-		/*
-			readlistsButton2.addEventListener('click', () => {
-				navigateTo(`#readlists`);
-			});
-						collectionsButton2.addEventListener('click', () => {
-				navigateTo(`#collections`);
-			});
-*/
 
 		function logOutFromCurrentServer() {
 			let serverTable = {};
@@ -1966,12 +1958,12 @@
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
 				mb.dashboardBin = '';
-				if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
+				if (searchInput.value != '') navigateTo('#search', { search_string: searchInput.value.toLowerCase() });
 			}
 		});
 
 		searchIcon.addEventListener('click', () => {
-			if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
+			if (searchInput.value != '') navigateTo('#search', { search_string: searchInput.value.toLowerCase() });
 		})
 
 		//MB Scroll Bars
@@ -2749,7 +2741,10 @@
 
 		function stepPageChange(increment) {
 			const { path, params } = getHashAndParams();
-			navigateTo('#dashboard?all=' + params.get('all') + '&page=' + (parseInt(params.get('page')) + increment));
+			navigateTo('#dashboard', {
+				all: params.get('all'),
+				page: parseInt(params.get('page')) + increment
+			})
 		}
 
 		addClickPointerEvents(stripPrevPage, () => stepPageChange(-1));
@@ -3853,7 +3848,7 @@
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#search?search_string=y:${altTitle.time}`);
+				navigateTo('#search', { search_string: altTitle.time });
 			})
 
 			const booksLabel = addItem('span', {
@@ -3881,7 +3876,8 @@
 
 					addClickPointerEvents(storyLabel, async () => {
 						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+
+						navigateTo('#search', { search_string: altTitle.story.toLowerCase() });
 					});
 				}
 
@@ -3900,7 +3896,7 @@
 
 					addClickPointerEvents(artLabel, async () => {
 						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
+						navigateTo('#search', { search_string: altTitle.art.toLowerCase() });
 					});
 				}
 
@@ -3921,7 +3917,8 @@
 
 					addClickPointerEvents(artistLabel, async () => {
 						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+						navigateTo('#search', { search_string: altTitle.story.toLowerCase() });
+
 					});
 				}
 			}
@@ -3964,9 +3961,16 @@
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
 				//TODO: Maybe using history replace there's no need to manage target from library button?
-				if (!target?.binName) history.replaceState({}, '', `#library?library_id=${serie.libraryId}&series_id=${serie.id}`)
-				mb.historyStack[mb.historyStack.length - 1] = `#library?library_id=${serie.libraryId}&series_id=${serie.id}`
-				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
+				let pathHistoryValue = pathBuilder('#library', {
+					library_id: serie.libraryId,
+					series_id: serie.id
+				})
+				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
+				mb.historyStack[mb.historyStack.length - 1] = pathHistoryValue;
+				navigateTo('#series', {
+					library_id: serie.libraryId,
+					series_id: serie.id
+				});
 			});
 
 			if (dynamic) {
@@ -4753,10 +4757,15 @@
 				listItem.addEventListener('click', () => {
 					const { path, params } = getHashAndParams();
 					if ((path == 'series') && (params.get('library_id') == library.id)) {
-						navigateTo(`#library?library_id=${library.id}&series_id=${params.get('series_id')}`);
+						navigateTo('#library', {
+							library_id: library.id,
+							series_id: params.get('series_id')
+						});
 					}
 					else {
-						navigateTo(`#library?library_id=${library.id}`);
+						navigateTo('#library', {
+							library_id: library.id,
+						});
 					}
 					//centerLibrary(listItem);
 				});
@@ -4925,7 +4934,11 @@
 			}
 		}
 		function jumpBookLibrary() {
-			navigateTo(`#series?library_id=${mb.currentBook.libraryId}&series_id=${mb.currentBook.seriesId}&book_id=${mb.currentBook.id}`)
+			navigateTo('#series', {
+				library_id: mb.currentBook.libraryId,
+				series_id: mb.currentBook.seriesId,
+				book_id: mb.currentBook.id
+			});
 		}
 
 		async function showBookDetails(book) {
@@ -5027,8 +5040,12 @@
 				mainRow.textContent = book.seriesTitle;
 				addClickPointerEvents(mainRow, () => {
 					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
-				})
+					navigateTo('#series', {
+						library_id: book.libraryId,
+						series_id: book.seriesId,
+						book_id: book.id
+					});
+				});
 			}
 
 			const secondRow = addItem('div', {
@@ -5263,14 +5280,13 @@
 				setIncognito(false);
 				if (target?.binName) mb.dashboardBin = target.binName;
 
-				const params = new URLSearchParams({
+				navigateTo('#bookread', {
 					library_id: book.libraryId,
 					series_id: book.seriesId,
 					book_id: book.id,
 					dir: readingDirection,
 					pg: (book.readProgress ? book.readProgress.page : 1)
 				});
-				navigateTo(`#bookread?${params.toString()}`);
 			});
 
 			item.append(booksItem);
@@ -5722,16 +5738,14 @@
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
 		function navigateToReadBook(book, readingDirection, force = false) {
 			setIncognito(false);
-			const params = new URLSearchParams({
+
+			navigateTo('#bookread', {
 				library_id: book.libraryId,
 				series_id: book.seriesId,
 				book_id: book.id,
 				dir: readingDirection,
 				pg: force ? 1 : (book.readProgress ? book.readProgress.page : 1)
 			});
-
-			navigateTo(`#bookread?${params.toString()}`);
-
 		}
 
 		// Function that setups the reader for a specific book, this is not run directly
@@ -5886,10 +5900,10 @@
 			clearAllTimeouts();
 
 			showBackButton(false)
-				
-			if (mb.historyStack.length == 1) mb.historyStack=["#dashboard",mb.historyStack[0]]
+
+			if (mb.historyStack.length == 1) mb.historyStack = ['#dashboard', mb.historyStack[0]]
 			goBack()
-			
+
 			if (isStatusBar && !isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.show();
 			}
@@ -7765,7 +7779,7 @@
 		}
 
 		function showBackButton(fadeButton = false) {
-			if (mb.historyStack.length == 1){
+			if (mb.historyStack.length == 1) {
 				backButton.classList.toggle('hidden', true)
 				backButton.classList.toggle('faded', false)
 			} else {
@@ -7889,9 +7903,19 @@
 			await executeFade(0);
 		}
 
+		function pathBuilder(base, params) {
+			let outString = base;
+			let outParams = new URLSearchParams(params);
+			return (outString + "?" + outParams.toString())
+		}
+
 		// This is the most important function, it updates the history and then passes the path to the loadContent function that does all the work
 		// In MB the navigateTo function with a proper path form will open the different sections and activate various states.
-		function navigateTo(path) {
+		function navigateTo(path, params = null) {
+			if (params) {
+				path = pathBuilder(path, params);
+			}
+			console.log(path)
 			history.pushState(null, '', path);
 			mb.historyStack.push(path);
 			console.log(mb.historyStack)
