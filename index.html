@@ -4794,11 +4794,6 @@
 				let librariesFull = librariesList.scrollWidth;
 				let twoRows = document.body.classList.contains('sticky-tworows')
 
-				console.log("---")
-				console.log("twoRows:" + twoRows);
-				console.log(librariesWidth + " " + librariesPos + " " + librariesFull)
-				console.log((librariesWidth + librariesPos) + " " + librariesFull)
-
 				if (librariesWidth >= librariesFull) {
 					librariesLeft.classList.toggle('hidden', true);
 					librariesRight.classList.toggle('hidden', true);
@@ -7915,10 +7910,8 @@
 			if (params) {
 				path = pathBuilder(path, params);
 			}
-			console.log(path)
 			history.pushState(null, '', path);
 			mb.historyStack.push(path);
-			console.log(mb.historyStack)
 			loadContent();
 		}
 
