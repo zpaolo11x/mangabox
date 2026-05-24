@@ -273,6 +273,7 @@ Notebook to Tablet height: 0.868
 		.grid-text {
 			display: grid;
 			grid-template-rows: 30px auto;
+			padding-top:4px;
 		}
 
 		.grid-item {
@@ -406,6 +407,11 @@ Notebook to Tablet height: 0.868
 
 		#imageCarousel>div:nth-child(even) {
 			grid-row: 2;
+		}
+
+		i.ico {
+			vertical-align: top;
+			font-size:24px;
 		}
 
 		.carousel-note {

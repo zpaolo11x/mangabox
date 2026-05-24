@@ -142,5 +142,6 @@
 	"server.connectionok": "Server Connection OK",
 	"server.invalidlogindata": "Invalid Username or Password",
 	"server.loginfailed": "Login failed",
-	"server.cannotreach": "Cannot reach server. Check the address or your connection."
+	"server.cannotreach": "Cannot reach server. Check the address or your connection.",
+	"navigate.back": "Back"
 }

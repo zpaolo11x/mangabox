@@ -12,9 +12,10 @@ MangaBox is a multiplatform, web technology based client for <a href="https://ko
 	- Linux (AppImage)
 
 - Capacitor mobile application
-	- Android APK - Debug APK, you can manually install on Android devices
-	- iOS/ipadOS .ipa - Unsigned app for Apple devices, you can sideload it with AltStore or similar
-	- iOS/ipadOS .app - App bundle for testing on XCode simulator (universal binary)
+	- Android APK - Signed APK, you can manually install on Android devices
+	- iOS/ipadOS - The app is on the app store https://apps.apple.com/us/app/mangabox/id6754503588
+	
+More unsigned and debug versions are on the release section.
 
 ## Installation notes
 
@@ -22,7 +23,7 @@ MangaBox is a multiplatform, web technology based client for <a href="https://ko
 
 - Electron version is not limited by CORS and it will work with any Komga server.
 
-- The macOS binaries are not signed, so they won't run by default. You can allow them to run on Intel macs by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script that will do the hard work for you:
+- The macOS binaries in the release are signed and should work out of the box. Unsigned binaries are provided as backup. You can allow them to run on Intel macs by right-click/open but on Apple Silicon you'll need to ad-hoc sign the binary. This is a simple bash script that will do the hard work for you:
 
   ```
   #!/bin/bash

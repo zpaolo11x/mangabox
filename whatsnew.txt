@@ -1,13 +1,16 @@
 Main UI
-- Completed translations of strings
+- Introduced Lucide icons for UI glyphs
+- Added floating "back" button on the main UI
+- Added support for Android "back" button
+- Arrows to navigate overflowing library list
 
 Reader UI
-- PDF media now loads correctly (thanks to Epawse on GitHub)
+- Added cover thumbnail for next and previous book
 
 Fixes
-- Fixed search for authors
+- Fixed insets on Android 15 devices
+- Fixed translation of header in view all page
+- Fixed zooming issue when restoring iOS app
 
 Build
-- Added Indonesian translation (thanks to Arif Budiman on Weblate)
-- Added Brazilian Portuguese translation
-- Updated GitHub CI
+- Updated website with new icons

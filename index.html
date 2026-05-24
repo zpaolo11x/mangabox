@@ -12,7 +12,6 @@
 	<link rel="icon" href="logo/mangabox-logo-new-favicon.svg" type="image/svg+xml">
 	<link rel="apple-touch-icon" href="logo/mangabox-logo-new-red.png">
 
-
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -20,7 +19,7 @@
 	<link rel="manifest" href="manifest.json">
 	<link rel="stylesheet" type="text/css" href="style-auth.css">
 
-	<link rel="stylesheet" href="fontawesome/all.min.css">
+	<link rel="stylesheet" href="lucide-font/lucide.css">
 
 	<link rel="stylesheet" href="style-mangabox-blankstart.css">
 	<link rel="stylesheet" href="style-mangabox-main.css">
@@ -35,70 +34,58 @@
 </head>
 
 <body>
-	<div id="mainLoader" class="hidden"><span class="fa-solid fa-gear"></span></div>
+	<div id="mainLoader" class="hidden"><span class="ico icon-cog"></span></div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
 				<ul id="librariesList"></ul>
+				<div id="librariesLeft" onclick="librariesScroll(-100)"><span class="ico icon-chevron-left glyph-dark hidden"></span></div>
+				<div id="librariesRight" onclick="librariesScroll(100)"><span class="ico icon-chevron-right glyph-dark hidden"></span></div>
 				<ul id="librariesRightBlock">
-					<!--
-					<li id="readlistsButton2" title="Read Lists" class="library-item no-grow press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid fa-book-bookmark glyph-dark"></span>
-						</div>
-					</li>
-					<li id="collectionsButton2" title="Collections" class="library-item no-grow press-button">
-						<div class="button-wrapper">
-							<span class="fa-solid fa-box-archive glyph-dark"></span>
-						</div>
-					</li>
-					-->
 					<li id="fullscreenChanger" data-i18n-title="button.fullscreen" class="library-item press-button">
 						<div class="button-wrapper">
-							<span id="fullscreenLabel" class="fa-expand fa-solid glyph-dark"></span>
+							<span id="fullscreenLabel" class="icon-maximize ico glyph-dark"></span>
 						</div>
 					</li>
 					<li id="themeChanger" data-i18n-title="button.lightdark" class="library-item press-button">
 						<div class="button-wrapper">
-							<span id="themeLabel" class="theme-label fa-solid glyph-dark"></span>
+							<span id="themeLabel" class="theme-label ico glyph-dark"></span>
 						</div>
 					</li>
 					<li id="colorChanger" data-i18n-title="button.themecolor" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-paint-roller glyph-dark mb-accent"></span>
+							<span class="ico icon-paint-roller glyph-dark mb-accent"></span>
 						</div>
 					</li>
 					<li id="languageChanger" data-i18n-title="button.language" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-earth glyph-dark"></span>
+							<span class="ico icon-languages glyph-dark"></span>
 						</div>
 					</li>
 					<li id="offlineLibrary" data-i18n-title="button.offlinebooks" class="library-item no-grow press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-download glyph-dark"></span>
+							<span class="ico icon-hard-drive-download glyph-dark"></span>
 						</div>
 						<div id="downloadSpinner" class="download-overlay">
-							<span class="fa-solid fa-spinner glyph-dark mb-accent"></span>
-							<span class="fa-solid fa-spinner glyph-dark mb-accent layer"></span>
+							<span class="ico icon-circle-dashed glyph-dark mb-accent"></span>
 						</div>
 					</li>
 					<li id="searchField" data-i18n-title="button.search" class="library-item search-field no-grow press-button">
 						<div id="searchIcon" class="button-wrapper">
-							<span class="fa-solid fa-magnifying-glass glyph-dark"></span>
+							<span class="ico icon-search glyph-dark"></span>
 						</div>
-						<!--<span id="clearSearchBtn" class="clear-btn fa-solid fa-xmark"></span>-->
 						<div id="clearSearchBtn" class="clear-btn mini-buttons-2 press-flat-button">
-							<span class="x-btn lib-override fa-solid fa-xmark"></span>
+							<span class="x-btn lib-override ico icon-x"></span>
 						</div>
 						<input id="searchInput" type="search" autocomplete="off" role="searchbox" class="search-input" data-i18n-placeholder="button.searchtext">
 					</li>
 					<li id="logOut" data-i18n-title="button.serversusers" class="library-item press-button">
 						<div class="button-wrapper">
-							<span class="fa-solid fa-user-group glyph-dark"></span>
+							<span class="ico icon-users-round glyph-dark"></span>
 						</div>
 					</li>
 				</ul>
-				<div id="offlineLed">OFFLINE</div>
+				<div id="offlineLed"><span class="ico icon-wifi-off"></span></div>
 			</div>
 
 			<div id="filtersBar" class="extra-bar hidden blankstart">
@@ -123,11 +110,11 @@
 					<div id="stripGrid" class="strip-grid"></div>
 					<div id="stripGridHeaderContainer" class="stripgrid-header-container">
 						<div id="stripGridHeader" class="strip-header">
-							<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;Keep Reading
+							<span class="ico icon-bookmark glyph-dark"></span>&nbsp;Keep Reading
 						</div>
 						<div id="stripGridRight" class="stripgrid-all">
-							<span id="stripPrevPage" data-i18n-title="navigation.prevpage" class="disabled fa-solid fa-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
-							<span id="stripNextPage" data-i18n-title="navigation.nextpage" class="disabled fa-solid fa-play glyph-dark strip-button press-flat-button"></span>
+							<span id="stripPrevPage" data-i18n-title="navigation.prevpage" class="disabled ico icon-play flip-horizontal glyph-dark strip-button press-flat-button"></span>
+							<span id="stripNextPage" data-i18n-title="navigation.nextpage" class="disabled ico icon-play glyph-dark strip-button press-flat-button"></span>
 						</div>
 					</div>
 				</div>
@@ -141,14 +128,14 @@
 					<div class="home-strip-parent">
 						<div id="homeStripSeriesResults" class="series-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="search.seriesresults"></span></div>
+							<div class="strip-header"><span class="ico header-left icon-library-big glyph-dark"></span><span class="header" data-i18n="search.seriesresults"></span></div>
 						</div>
 					</div>
 
 					<div class="home-strip-parent">
 						<div id="homeStripBooksResults" class="books-results search-results"></div>
 						<div class="strip-header-container">
-							<div class="strip-header"><span class="fa-solid fa-book glyph-dark"></span>&nbsp;<span data-i18n="search.booksresults"></span></div>
+							<div class="strip-header"><span class="ico header-left icon-book-text glyph-dark"></span><span class="header" data-i18n="search.booksresults"></span></div>
 						</div>
 					</div>
 				</div>
@@ -161,13 +148,13 @@
 					<div class="book-details-pic-container">
 						<div class="mini-controls">
 							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.prevbook" onclick="jumpBookDetailsPrev()">
-								<span class="fa-solid fa-chevron-left"></span>
+								<span class="ico icon-chevron-left"></span>
 							</div>
 							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.gotolib" onclick="jumpBookLibrary()">
-								<span class="fa-solid fa-layer-group"></span>
+								<span class="ico icon-library-big"></span>
 							</div>
 							<div class="mini-buttons-2 press-flat-button" data-i18n-title="bookdetails.nextbook" onclick="jumpBookDetailsNext()">
-								<span class="fa-solid fa-chevron-right"></span>
+								<span class="ico icon-chevron-right"></span>
 							</div>
 						</div>
 						<div id="bookDetailsContainerThumbnailWrapper" class="book-details-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
@@ -182,7 +169,7 @@
 						</div>
 					</div>
 					<div class="close-details dialog-button press-button" onclick="closeBookDetails()">
-						<span class="fa-solid fa-xmark"></span>
+						<span class="ico icon-x"></span>
 					</div>
 				</div>
 
@@ -219,9 +206,9 @@
 				</div>
 			</div>
 			<div id="thumbStripButton">
-				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
 			</div>
 
 			<div id="thumbStripWT" class="scrollbox" data-scroll-direction="vertical">
@@ -233,42 +220,48 @@
 				</div>
 			</div>
 			<div id="thumbStripButtonWT">
-				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
-				<span class="thumb-arrow fa-solid fa-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
+				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
 			</div>
 
 			<div id="topControls">
-				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle fa-solid fa-xmark"></span>
+				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle ico icon-x"></span>
 				<span id="bookName"></span>
-				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left fa-solid"></span>
-				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button fa-solid"></span>
-				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right fa-solid fa-ghost"></span>
+				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left ico"></span>
+				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button ico"></span>
+				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right ico icon-ghost"></span>
 			</div>
 
 			<div id="zoomControls">
-				<span id="scaleDown" data-i18n-title="reader.scaledown" class="reader-buttons press-button corner-left fa-solid fa-minus" onclick="readerScaleDown()"></span>
+				<span id="scaleDown" data-i18n-title="reader.scaledown" class="reader-buttons press-button corner-left ico icon-minus" onclick="readerScaleDown()"></span>
 				<span id="scaleVal" class="reader-buttons">100%</span>
-				<span id="scaleUp" data-i18n-title="reader.scaleup" class="reader-buttons press-button corner-right fa-solid fa-plus" onclick="readerScaleUp()"></span>
+				<span id="scaleUp" data-i18n-title="reader.scaleup" class="reader-buttons press-button corner-right ico icon-plus" onclick="readerScaleUp()"></span>
 			</div>
 
 			<div id="bottomControls">
-				<span id="leftArrow" class="reader-buttons press-button corner-left fa-solid fa-caret-left"></span>
+				<span id="leftArrow" class="reader-buttons press-button corner-left ico icon-chevron-left"></span>
 				<span id="leftLimit" class="bar-note press-button corner-right"></span>
 				<div id="readerProgressBar" onclick="seek(event)">
 					<div id="readerProgress"></div>
 					<div id="readerPage"></div>
 				</div>
 				<span id="rightLimit" class="bar-note press-button corner-left"></span>
-				<span id="rightArrow" class="reader-buttons press-button corner-right fa-solid fa-caret-right"></span>
+				<span id="rightArrow" class="reader-buttons press-button corner-right ico icon-chevron-right"></span>
 			</div>
 
 			<div id="nextBookPanel" class="modal-content-2 hidden blankstart">
 				<button id="nextBookButton" class="ok dialog-button press-button" onclick="handleCloseReader(); setTimeout(()=>{navigateToReadBook(rd.nextBook, rd.direction, true)},500)">GO TO NEXT BOOK</button>
+				<div id="nextBookThumbnailWrapper" class="prevnextbook-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+					<img id="nextBookCover" class="book-thumbnail" src="transparent.png">
+				</div>
 			</div>
 
 			<div id="prevBookPanel" class="modal-content-2 hidden blankstart">
 				<button id="prevBookButton" class="ok dialog-button press-button" onclick="handleCloseReader();setTimeout(()=>{navigateToReadBook(rd.prevBook, rd.direction, true)},500)">GO TO PREV BOOK</button>
+				<div id="prevBookThumbnailWrapper" class="prevnextbook-thumbnail-wrapper" data-i18n-title="bookdetails.openbook" onclick="navigateToReadBook(mb.currentBook, mb.seriesData.metadata.readingDirection)">
+					<img id="prevBookCover" class="book-thumbnail" src="transparent.png">
+				</div>
 			</div>
 
 		</div>
@@ -286,9 +279,9 @@
 		<!--<img id="barLogo" src="logo/mangabox-logo-new.svg">-->
 		<span id="dragbarAppTitle">MangaBox</span>
 		<div id="windowControls" , class="window-controls no-drag">
-			<span class="fa-solid fa-window-minimize glyph-dark" id="dragbarMinBtn"></span>
-			<span class="fa-regular fa-window-maximize glyph-dark" id="dragbarMaxBtn"></span>
-			<span class="fa-solid fa-xmark glyph-dark" id="dragbarCloseBtn"></span>
+			<span style="top:-1px;" class="ico icon-tally-1 ico-rotate-90ccw glyph-dark" id="dragbarMinBtn"></span>
+			<span class="ico icon-app-window-mac glyph-dark" id="dragbarMaxBtn"></span>
+			<span class="ico icon-x glyph-dark" id="dragbarCloseBtn"></span>
 		</div>
 	</div>
 
@@ -298,56 +291,56 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.2</div>
+				<div class="version-note">v0.4.3</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
-					<i class="fas fa-server"></i> <!-- Example icon for the base URL -->
+					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
 					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
 				</div>
 
 				<div id="divBaseUrl" class="input-wrapper" title="Server Address">
-					<i class="fas fa-link"></i> <!-- Example icon for the base URL -->
+					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
 					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 				</div>
 
 				<div id="divUsername" class="input-wrapper" title="Username">
-					<i class="fas fa-user"></i> <!-- Icon for username -->
+					<i class="ico icon-user-round"></i> <!-- Icon for username -->
 					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 				</div>
 
 				<div id="divPassword" class="input-wrapper pwd" title="Password">
-					<i class="fas fa-lock"></i> <!-- Icon for password -->
-					<!--<i id="passIcon" class="fas fa-eye"></i>  -->
+					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
+
 					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
-					<span id="viewPassword" class="fas fa-eye right"></span>
+					<span id="viewPassword" class="ico icon-eye right"></span>
 				</div>
 
 				<div class="login-buttons">
 					<div class="login-buttons-left">
 						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
-							<i class="fas fa-earth"></i>
+							<i class="ico icon-languages"></i>
 						</button>
 						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
-							<i class="fas fa-globe"></i>
+							<i class="ico icon-globe question"></i>
 						</button>
 						<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
-							<i class="fas fa-server"></i>
+							<i class="ico icon-server"></i>
 						</button>
 					</div>
 					<div class="login-buttons-right">
 						<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
-							<i class="input-glyph fas fa-arrow-rotate-left"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
+							<i class="input-glyph ico icon-undo-2"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
 						</button>
 						<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
-							<i class="input-glyph fas fa-floppy-disk"></i><span class="input-text" data-i18n="button.save">Save</span>
+							<i class="input-glyph ico icon-save"></i><span class="input-text" data-i18n="button.save">Save</span>
 						</button>
 						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
-							<i class="input-glyph fas fa-play"></i><span class="input-text" data-i18n="button.login">Login</span>
+							<i class="input-glyph ico icon-play"></i><span class="input-text" data-i18n="button.login">Login</span>
 						</button>
 					</div>
 				</div>
 
-				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="fas fa-question"></i></button>
+				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="ico icon-circle-question-mark"></i></button>
 
 				<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
 			</div>
@@ -366,10 +359,14 @@
 		</div>
 	</div>
 
+	<div id="navigationControls" class="dialog-button">
+		<span id="backButton" data-i18n-title="navigate.back" class="press-button ico icon-move-left hidden" onclick="goBack()"></span>
+	</div>
+
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.2</h1>
+		<h1>MangaBox v0.4.3</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -410,10 +407,8 @@
 		const isWeb = !(isElectron || isCapacitor);
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
-		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge;
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
 		debugPrint(isSecureStorage);
-		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar;
 
 		let capacitorPlatform = null;
 
@@ -431,10 +426,48 @@
 			}
 		}
 
+		//Android only plugins
+		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
+		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge && capacitorPlatform == 'android';
+		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
+
+		//iOS only plugins
+		const isFixZoom = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'ios';
+
 		if (!isElectron && !isCapacitor && !fullDebugMode) {
 			offlineLibrary.remove();
 			enableDownload = false;
 		}
+
+		if (isFixZoom) {
+			Capacitor.Plugins.App.addListener('appStateChange', ({ isActive }) => {
+				if (isActive && !isSectionHidden(readerContainer)) {
+					toggleMenu();
+					toggleMenu();
+				}
+			});
+		}
+
+		function goBack() {
+			if (isModalVisible()) {
+				closeModal();
+			} else if (!isSectionHidden(readerContainer) && !isSectionHidden(controlPanel)) {
+				toggleMenu()
+			}
+			else {
+				//window.history.back();
+				if (mb.historyStack.length > 1) {
+					mb.historyStack.pop();
+					navigateTo(mb.historyStack.pop())
+				}
+			}
+		}
+
+		if (isBackButton) {
+			Capacitor.Plugins.App.addListener('backButton', () => {
+				goBack();
+			});
+		};
 
 		debugPrint('enabledownload' + enableDownload)
 
@@ -746,13 +779,13 @@
 			});
 
 			window.electronAPI.onMaximize(() => {
-				dragbarMaxBtn.classList.remove('fa-window-maximize');
-				dragbarMaxBtn.classList.add('fa-window-restore');
+				dragbarMaxBtn.classList.remove('icon-app-window-mac');
+				dragbarMaxBtn.classList.add('icon-picture-in-picture-2');
 			});
 
 			window.electronAPI.onUnmaximize(() => {
-				dragbarMaxBtn.classList.remove('fa-window-restore');
-				dragbarMaxBtn.classList.add('fa-window-maximize');
+				dragbarMaxBtn.classList.remove('icon-picture-in-picture-2');
+				dragbarMaxBtn.classList.add('icon-app-window-mac');
 			});
 
 			window.electronAPI.getAppVersion().then(version => {
@@ -876,8 +909,8 @@
 
 		function updateFullscreenLabel() {
 			const isFull = !!document.fullscreenElement;
-			fullscreenLabel.classList.toggle('fa-compress', isFull);
-			fullscreenLabel.classList.toggle('fa-expand', !isFull);
+			fullscreenLabel.classList.toggle('icon-minimize', isFull);
+			fullscreenLabel.classList.toggle('icon-maximize', !isFull);
 		}
 
 		//MB Main Variable Setup 
@@ -888,6 +921,8 @@
 					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'pt', 'pt-BR', 'zh-Hans'],
 					languageAuto: false,
 					languageVal: '',
+
+					historyStack: [window.location.href],
 
 					libraryError: false,
 					libraryNames: '',
@@ -936,15 +971,15 @@
 					themeControl: [
 						{
 							label: 'theme.light',
-							icon: 'fa-sun',
+							icon: 'icon-sun',
 							isDark: 0
 						}, {
 							label: 'theme.dark',
-							icon: 'fa-moon',
+							icon: 'icon-moon',
 							isDark: 1
 						}, {
 							label: 'theme.system',
-							icon: 'fa-wand-magic-sparkles',
+							icon: 'icon-wand-sparkles',
 							isDark: 2
 						}
 					],
@@ -952,27 +987,27 @@
 					readerThemeControl: [
 						{
 							label: 'readertheme.classic',
-							icon: 'fa-palette',
+							icon: 'icon-palette',
 							style: 'classic'
 						}, {
 							label: 'readertheme.dark',
-							icon: 'fa-moon',
+							icon: 'icon-moon',
 							style: 'dark-accent'
 						}, {
 							label: 'readertheme.light',
-							icon: 'fa-sun',
+							icon: 'icon-sun',
 							style: 'light-accent'
 						}, {
 							label: 'readertheme.transparent',
-							icon: 'fa-square',
+							icon: 'icon-blend',
 							style: 'transparent'
 						}, {
 							label: 'readertheme.white',
-							icon: 'fa-w',
+							icon: 'icon-lightbulb',
 							style: 'white'
 						}, {
 							label: 'readertheme.black',
-							icon: 'fa-b',
+							icon: 'icon-lightbulb-off',
 							style: 'black'
 						}
 					],
@@ -980,11 +1015,11 @@
 					readerAnimationControl: [
 						{
 							label: 'readeranimation.no',
-							icon: 'fa-pause',
+							icon: 'icon-square-pause',
 							value: 0
 						}, {
 							label: 'readeranimation.yes',
-							icon: 'fa-right-left',
+							icon: 'icon-arrow-right-left',
 							value: 1
 						}
 					],
@@ -1064,7 +1099,7 @@
 			const appleColor = [0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 1];
 			const colorSwatch = addItem('span', {
 				className: 'color-swatch press-flat-button',
-				innerHTML: appleColor[index] == 1 ? '<i class="fa-brands fa-apple"></i>' : '',
+				innerHTML: appleColor[index] == 1 ? '<span class="ico ico-colormark icon-asterisk"></span>' : '',
 				style: {
 					backgroundColor: value,
 				},
@@ -1523,19 +1558,19 @@
 				<ul class="filter-menu">
 					<li class="filter-item filter-item-menu">
 						<div class='smallbutton-wrapper'>
-							<span class="fa-solid fa-server glyph-dark"></span>
+							<span class="ico icon-server glyph-dark"></span>
 						</div>
 						<div class='library-name filter-menu-text'>${mb.serverList[serverId].name}</div>
 					</li>
 					<li class="filter-item filter-item-menu">
 						<div class='smallbutton-wrapper'>
-							<span class="fa-solid fa-link glyph-dark"></span>
+							<span class="ico icon-link glyph-dark"></span>
 						</div>
 						<div class='library-name filter-menu-text'>${mb.serverList[serverId].url}</div>
 					</li>
 					<li class="filter-item filter-item-menu">
 						<div class='smallbutton-wrapper'>
-							<span class="fa-solid fa-user glyph-dark"></span>
+							<span class="ico icon-user-round glyph-dark"></span>
 						</div>
 						<div class='library-name filter-menu-text'>${mb.serverList[serverId].username}</div>
 					</li>
@@ -1590,42 +1625,26 @@
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
-										<span class="fa-solid fa-pen glyph-dark"></span>
+										<span class="ico icon-pencil glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
-										<span class="fa-solid fa-trash-can glyph-dark"></span>
+										<span class="ico icon-trash-2 glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
-										<span class="fa-solid ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'fa-key' : 'fa-play'} glyph-dark"></span>
+										<span class="ico ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'icon-key-round' : 'icon-play'} glyph-dark"></span>
 									</div>
 								</li>
 								<li class="server-data" id="item_${id}_data">
 									<div style="margin-top:10px; width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span style="width:20px; min-width:20px;" class="fa-solid fa-link"></span><span style="word-break: break-all;">${server.url}</span>
+										<span style="width:20px; min-width:20px;" class="ico icon-link"></span><span style="word-break: break-all;">${server.url}</span>
 									</div>
 									<div style="width:100%; padding-top:10px; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-										<span style="width:20px; min-width:20px;" class="fa-solid fa-user"></span><span>${server.username}</span>
+										<span style="width:20px; min-width:20px;" class="ico icon-user-round"></span><span>${server.username}</span>
 									</div>
 								</li>
 			`
 			});
-			/*
-			mb.languages.forEach((language, index) => {
-				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
-				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
-									<div class='smallbutton-wrapper'>
-										<span style="background-image:url('flags/${language}.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
-									</div>
-									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
-								</li>`
-			});
-			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
-									<div class='smallbutton-wrapper'>
-										<span class="fa-solid fa-robot glyph-dark"></span>
-									</div>
-									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
-								</li>`
-			*/
+
 			out = out + "</ul>";
 			return (out)
 		}
@@ -1762,11 +1781,6 @@
 			themeChanger.dataset.i18nTitle = mb.themeControl[mb.themePrefs].label;
 			translateDOM(themeChanger)
 
-			// Change fa icons for light or dark theme
-			swapThemeClass('fa-file', 'fa-regular', 'fa-solid', toDark);
-			swapThemeClass('fa-calendar', 'fa-regular', 'fa-solid', toDark);
-			swapThemeClass('fa-clock', 'fa-regular', 'fa-solid', toDark);
-
 			// Save theme setting in local storage
 			setUserSettings('mangabox.ui.themeprefs', mb.themePrefs);
 
@@ -1856,18 +1870,10 @@
 
 			loginPassword.type = isPassword ? 'text' : 'password';
 
-			viewPassword.classList.toggle('fa-eye', !showPassword);
-			viewPassword.classList.toggle('fa-eye-slash', showPassword);
+			viewPassword.classList.toggle('icon-eye', !showPassword);
+			viewPassword.classList.toggle('icon-eye-off', showPassword);
 
 		})
-		/*
-			readlistsButton2.addEventListener('click', () => {
-				navigateTo(`#readlists`);
-			});
-						collectionsButton2.addEventListener('click', () => {
-				navigateTo(`#collections`);
-			});
-*/
 
 		function logOutFromCurrentServer() {
 			let serverTable = {};
@@ -1882,16 +1888,16 @@
 			}
 			let dialogText = `
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span style="width:25px; min-width:25px;" class="fa-solid fa-server"></span><span>${t(mb.serverList[mb.currentServerId].name)}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-server"></span><span>${t(mb.serverList[mb.currentServerId].name)}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span style="width:25px; min-width:25px;" class="fa-solid fa-link"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-link"></span><span style="word-break: break-all;">${mb.baseUrl}</span>
 			</div>
 			<div style="width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;">
-				<span style="width:25px; min-width:25px;" class="fa-solid fa-user"></span><span>${currentUser.email}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-user-round"></span><span>${currentUser.email}</span>
 			</div>
 			<div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--mb-accent); width:100%; text-align:left; display: inline-flex; align-items: center; gap: 10px;" onClick="languageDialog()">
-				<span style="width:25px; min-width:25px;" class="fa-solid fa-earth"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
+				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-languages"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
 			showModal('', true, dialogText,
@@ -1951,12 +1957,12 @@
 		searchInput.addEventListener('keydown', (event) => {
 			if (event.key === 'Enter') {
 				mb.dashboardBin = '';
-				if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
+				if (searchInput.value != '') navigateTo('#search', { search_string: searchInput.value.toLowerCase() });
 			}
 		});
 
 		searchIcon.addEventListener('click', () => {
-			if (searchInput.value != '') navigateTo(`#search?search_string=${searchInput.value.toLowerCase()}`);
+			if (searchInput.value != '') navigateTo('#search', { search_string: searchInput.value.toLowerCase() });
 		})
 
 		//MB Scroll Bars
@@ -2286,7 +2292,7 @@
 				sorting: {
 					name: 'sorting',
 					selected: 0,
-					iconClass: 'fa-solid fa-heading glyph-dark',
+					iconClass: 'ico icon-square glyph-dark',
 					item: null,
 					icon: null,
 					caption: null,
@@ -2296,49 +2302,49 @@
 							name: 'a_to_z',
 							caption: 'sort.titleaz',
 							longCaption: 'sort.titleaz.long',
-							iconClass: 'fa-solid fa-arrow-down-a-z glyph-dark',
+							iconClass: 'ico icon-arrow-down-a-z glyph-dark',
 							sortFunction: (a, b) => a.mbSeriesTitle.localeCompare(b.mbSeriesTitle)
 						}, {
 							name: 'z_to_a',
 							caption: 'sort.titleza',
 							longCaption: 'sort.titleza.long',
-							iconClass: 'fa-solid fa-arrow-down-z-a glyph-dark',
+							iconClass: 'ico icon-arrow-down-z-a glyph-dark',
 							sortFunction: (a, b) => b.mbSeriesTitle.localeCompare(a.mbSeriesTitle)
 						}, {
 							name: '9_to_1',
 							caption: 'sort.startnewtoold',
 							longCaption: 'sort.startnewtoold.long',
-							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+							iconClass: 'ico icon-arrow-down-1-0 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)) - (Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)))
 						}, {
 							name: '1_to_9',
 							caption: 'sort.startoldtonew',
 							longCaption: 'sort.startoldtonew.long',
-							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							iconClass: 'ico icon-arrow-down-0-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(a.mbSeriesStart) * 10000 + Number(a.mbSeriesStop)) - (Number(b.mbSeriesStart) * 10000 + Number(b.mbSeriesStop)))
 						}, {
 							name: '9_to_1',
 							caption: 'sort.stopnewtoold',
 							longCaption: 'sort.stopnewtoold.long',
-							iconClass: 'fa-solid fa-arrow-down-9-1 glyph-dark',
+							iconClass: 'ico icon-arrow-down-1-0 glyph-dark',
 							sortFunction: (a, b) => ((Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)) - (Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
 							caption: 'sort.stopoldtonew',
 							longCaption: 'sort.stopoldtonew.long',
-							iconClass: 'fa-solid fa-arrow-down-1-9 glyph-dark',
+							iconClass: 'ico icon-arrow-down-0-1 glyph-dark',
 							sortFunction: (a, b) => ((Number(a.mbSeriesStop) * 10000 + Number(a.mbSeriesStart)) - (Number(b.mbSeriesStop) * 10000 + Number(b.mbSeriesStart)))
 						}, {
 							name: '1_to_9',
 							caption: 'sort.booksdecreasing',
 							longCaption: 'sort.booksdecreasing.long',
-							iconClass: 'fa-solid fa-cubes-stacked fa-flip-vertical glyph-dark',
+							iconClass: 'ico icon-arrow-down-wide-narrow glyph-dark',
 							sortFunction: (a, b) => (Number(b.mbBooksCount) - Number(a.mbBooksCount))
 						}, {
 							name: '9_to_1',
 							caption: 'sort.booksincreasing',
 							longCaption: 'sort.booksincreasing.long',
-							iconClass: 'fa-solid fa-cubes-stacked glyph-dark',
+							iconClass: 'ico icon-arrow-down-narrow-wide glyph-dark',
 							sortFunction: (a, b) => (Number(a.mbBooksCount) - Number(b.mbBooksCount))
 						}
 					],
@@ -2346,7 +2352,7 @@
 				filter_by_read: {
 					name: 'filter_by_read',
 					selected: 0,
-					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					iconClass: 'ico icon-circle glyph-dark no-theme-icon',
 					item: null,
 					icon: null,
 					caption: null,
@@ -2356,19 +2362,19 @@
 							name: 'all',
 							caption: 'filterread.all',
 							longCaption: 'filterread.all.long',
-							iconClass: 'fa-solid fa-circle-half-stroke glyph-dark',
+							iconClass: 'ico icon-circle-equal glyph-dark',
 							filterFunction: (a) => true
 						}, {
 							name: 'unread',
 							caption: 'filterread.unread',
 							longCaption: 'filterread.unread.long',
-							iconClass: 'fa-regular fa-circle glyph-dark',
+							iconClass: 'ico icon-circle-x glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == false)
 						}, {
 							name: 'read',
 							caption: 'filterread.read',
 							longCaption: 'filterread.read.long',
-							iconClass: 'fa-solid fa-circle glyph-dark',
+							iconClass: 'ico icon-circle-check glyph-dark',
 							filterFunction: (a) => (a.mbSeriesRead == true)
 						}
 					],
@@ -2376,7 +2382,7 @@
 				filter_by_direction: {
 					name: 'filter_by_direction',
 					selected: 0,
-					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					iconClass: 'ico icon-circle glyph-dark no-theme-icon',
 					item: null,
 					icon: null,
 					caption: null,
@@ -2386,27 +2392,27 @@
 							name: 'all',
 							caption: 'filterdirection.all',
 							longCaption: 'filterdirection.all.long',
-							iconClass: 'fa-solid fa-arrow-right-arrow-left glyph-dark',
+							iconClass: 'ico icon-arrow-left-right glyph-dark',
 							filterFunction: (a) => true
 
 						}, {
 							name: 'l_to_r',
 							caption: 'filterdirection.l2r',
 							longCaption: 'filterdirection.l2r.long',
-							iconClass: 'fa-solid fa-arrow-right glyph-dark',
+							iconClass: 'ico icon-arrow-right glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'LEFT_TO_RIGHT')
 
 						}, {
 							name: 'r_to_l',
 							caption: 'filterdirection.r2l',
 							longCaption: 'filterdirection.r2l.long',
-							iconClass: 'fa-solid fa-arrow-left glyph-dark',
+							iconClass: 'ico icon-arrow-left glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'RIGHT_TO_LEFT')
 						}, {
 							name: 'webtoon',
 							caption: 'filterdirection.webtoon',
 							longCaption: 'filterdirection.webtoon.long',
-							iconClass: 'fa-solid fa-arrow-down glyph-dark',
+							iconClass: 'ico icon-arrow-down glyph-dark',
 							filterFunction: (a) => (a.mbSeriesDirection == 'WEBTOON')
 						}
 					],
@@ -2414,7 +2420,7 @@
 				filter_by_language: {
 					name: 'filter_by_language',
 					selected: 0,
-					iconClass: 'fa-regular fa-circle-check glyph-dark no-theme-icon',
+					iconClass: 'ico icon-circle glyph-dark no-theme-icon',
 					item: null,
 					icon: null,
 					caption: null,
@@ -2425,7 +2431,7 @@
 							caption: 'filterlanguage.all',
 							longCaption: 'filterLanguage.all.long',
 
-							iconClass: 'fa-solid fa-earth-europe glyph-dark',
+							iconClass: 'ico icon-languages glyph-dark',
 							filterFunction: (a) => true
 						}
 					],
@@ -2449,7 +2455,7 @@
 					get longCaption() {
 						return languageName(this.langTag);
 					},
-					iconClass: 'fa-solid fa-square glyph-dark glyph-flag-button',
+					iconClass: 'glyph-dark glyph-flag-button',
 					iconStyle: `background-image:url('flags/${item}.svg')`,
 					filterFunction: (a) => a.mbSeriesLanguage == item
 				})
@@ -2586,14 +2592,14 @@
 				let isSelected = ((mb.languageVal == language) && !mb.languageAuto);
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="setLanguageValue(${index},'${language}')">
 									<div class='smallbutton-wrapper'>
-										<span style="background-image:url('flags/${language}.svg')" class="fa-solid fa-square glyph-dark glyph-flag-button"></span>
+										<span style="background-image:url('flags/${language}.svg')" class="glyph-dark glyph-flag-button"></span>
 									</div>
 									<div class='library-name filter-menu-text capitalize-first'>${languageName(language, language)}</div>
 								</li>`
 			});
 			out = out + `<li class="filter-item filter-item-menu press-button ${mb.languageAuto ? 'highlighted' : ''}" onClick="setLanguageAuto()">
 									<div class='smallbutton-wrapper'>
-										<span class="fa-solid fa-robot glyph-dark"></span>
+										<span class="ico icon-bot glyph-dark"></span>
 									</div>
 									<div class='library-name filter-menu-text' data-i18n="language.automatic">${t('language.automatic')}</div>
 								</li>`
@@ -2661,7 +2667,7 @@
 				//title: 'Reset filters and sorting',
 				className: `filter-item press-button`,
 				innerHTML: `<div class="smallbutton-wrapper">
-								<span class="fa-solid fa-arrows-rotate fa-flip-horizontal glyph-dark"></span>
+								<span class="ico icon-refresh-ccw glyph-dark"></span>
 							</div>`,
 				onclick: async () => {
 					await executeFade(1);
@@ -2708,11 +2714,17 @@
 			}
 		}
 
+
 		// Set the slider max value and grpahics properties based on the scroll width
-		function updateSliderProperties() {
+		function updateSliderProperties(retain = null) {
 			if (isSectionHidden(homeStripsContainer)) return;
 
 			Object.entries(dashboardElements).forEach(([name, item]) => {
+				if (name == retain) {
+					item.homeStrip.scrollLeft = item.scrollInput.value;
+				} else {
+					item.scrollInput.value = item.homeStrip.scrollLeft;
+				}
 
 				item.scrollInput.max = item.homeStrip.scrollWidth - item.homeStrip.clientWidth;
 				const isOverflowing = item.homeStrip.scrollWidth > item.homeStrip.clientWidth;
@@ -2728,7 +2740,10 @@
 
 		function stepPageChange(increment) {
 			const { path, params } = getHashAndParams();
-			navigateTo('#dashboard?all=' + params.get('all') + '&page=' + (parseInt(params.get('page')) + increment));
+			navigateTo('#dashboard', {
+				all: params.get('all'),
+				page: parseInt(params.get('page')) + increment
+			})
 		}
 
 		addClickPointerEvents(stripPrevPage, () => stepPageChange(-1));
@@ -2737,9 +2752,12 @@
 		addPressEvents(stripPrevPage, scaleDown, scaleUp);
 		addPressEvents(stripNextPage, scaleDown, scaleUp);
 
+		//addPressEvents(librariesLeft, scaleDown, scaleUp);
+		//addPressEvents(librariesRight, scaleDown, scaleUp);
+
 		function updateStickyMenu() {
 			const containerWidth = mainUI.getBoundingClientRect().width;
-
+			let twoRows = false;
 			document.body.classList.remove('sticky-medium', 'sticky-small', 'sticky-hybrid', 'sticky-tworows');
 
 			if (containerWidth - mb.libSizer.rightmin - mb.libSizer.large >= 60) {
@@ -2750,6 +2768,9 @@
 				document.body.classList.add('sticky-small');
 			} else {
 				document.body.classList.add('sticky-tworows');
+
+				twoRows = true;
+
 				if (containerWidth - mb.libSizer.large >= 10) {
 					//nothing happens
 				} else if (containerWidth - mb.libSizer.medium >= 10) {
@@ -2767,7 +2788,11 @@
 				extraButtons.classList.add('filter-small')
 			}
 
+			librariesArrowsUpdate();
+
 		}
+
+
 
 		window.addEventListener('resize', () => {
 			clearTimeout(mb.resizeTimeout);
@@ -3157,12 +3182,12 @@
 
 		function obRedrawDownloadButton(bookId) {
 			if (obIsBookCompleted(bookId)) {
-				return ('<span class="fa-regular fa-trash-can"></span>')
+				return ('<span class="ico icon-trash-2"></span>')
 			} else if (obIsBookDownloading(bookId)) {
-				return ('<span class="fa-solid fa-xmark"></span>')
+				return ('<span class="ico icon-x"></span>')
 			}
 			else {
-				return ('<span class="fa-solid fa-download"></span>')
+				return ('<span class="ico icon-hard-drive-download"></span>')
 			}
 		}
 
@@ -3391,7 +3416,7 @@
 					}
 
 					if (offlineCache) {
-						await cacheMedia(db, url, blob);
+						try { await cacheMedia(db, url, blob) } catch (error) { console.log("Cache dB Error") };
 					}
 
 					return objectURL;
@@ -3534,8 +3559,11 @@
 		function libraryHighlight(libraryId, withMenu) {
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('highlighted'));
 			document.querySelectorAll('.library-item').forEach(section => section.classList.remove('with-menu'));
-			document.getElementById(libraryId).classList.add('highlighted');
+
+			document.getElementById(libraryId)?.classList.add('highlighted');
+
 			if (withMenu) document.getElementById(libraryId).classList.add('with-menu');
+			centerLibrary(document.getElementById(libraryId))
 		}
 
 		async function getFilteredSeries(filterTitle, serieId) {
@@ -3702,11 +3730,13 @@
 		}
 
 		async function buildSeriesItem(item, serie, target, dynamic = false) {
-			const LTRvals = {
-				RIGHT_TO_LEFT: '',
-				LEFT_TO_RIGHT: '<span class="fa-solid fa-clapperboard fa-rotate-270 glyph-dark" style="margin-left:2px;"></span>',
-				WEBTOON: '<span class="fa-solid fa-mobile glyph-dark" style="margin-left:2px;"></span>',
-				VERTICAL: '<span class="fa-solid fa-mobile glyph-dark" style="margin-left:2px;"></span>',
+
+			const orientedBook = {
+				RIGHT_TO_LEFT: '<span class="ico icon-book ico-mirror-h high glyph-dark"></span>',
+				LEFT_TO_RIGHT: '<span class="ico icon-book high glyph-dark"></span>',
+				WEBTOON: '<span class="ico icon-smartphone glyph-dark"></span>',
+				VERTICAL: '<span class="ico icon-smartphone glyph-dark"></span>',
+
 			}
 
 			item.childNodes[0]?.remove();
@@ -3718,16 +3748,15 @@
 			const seriesItem = addItem('div', {
 				className: 'series-item'
 			});
-			const LNG = serie.metadata?.language ? ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="fa-solid fa-square-full glyph-dark glyph-flag"></span>` : '') : '';
-			const LTR = serie.metadata?.readingDirection ? LTRvals[serie.metadata.readingDirection] : '';
-			const spacer = ((LNG != '') && (LTR != '')) ? '&nbsp;' : '';
+			const LNG = serie.metadata?.language ? ((serie.metadata.language != 'en') ? `<span style="background-image:url('flags/${serie.metadata.language}.svg')" class="glyph-dark glyph-flag"></span>` : '') : '';
+			const spacer = (LNG != '') ? '&nbsp;' : '';
+
+			const LTRbook = serie.metadata?.readingDirection ? orientedBook[serie.metadata.readingDirection] : orientedBook["LEFT_TO_RIGHT"];
 
 			const seriesTitle = addItem('div', {
 				innerHTML: `
 								<div class="title-row data-row top-row">
 									<div style="flex-grow:1" class="series-title">${preventHyphenBreaks(serie.metadata.title)}</div>
-									<div class="glyph-dark" style="text-align:right">${LTR}</div>
-										${spacer}
 									<div class="glyph-div" style="text-align:right">${LNG}</div>
 								</div>`
 			});
@@ -3770,7 +3799,7 @@
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
 				title: 'Mark series as read',
-				innerHTML: `<span class="fa-regular fa-circle-check"></span>`,
+				innerHTML: `<span class="ico icon-circle-check"></span>`,
 				dataset: {
 					i18nTitle: 'series.markasread'
 				}
@@ -3782,7 +3811,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`,
+				innerHTML: `<span class="ico icon-circle-x"></span>`,
 				dataset: {
 					i18nTitle: 'series.markasunread'
 				}
@@ -3806,7 +3835,7 @@
 			});
 
 			const timeLabel = addItem('span', {
-				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
+				innerHTML: altTitle.time == 'N/A' ? '' : `<span class='ico icon-calendar glyph-dark'></span>&nbsp;${altTitle.time}`,
 				className: 'red search-trigger',
 				dataset: {
 					i18nTitle: 'series.filtertime',
@@ -3818,11 +3847,11 @@
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#search?search_string=y:${altTitle.time}`);
+				navigateTo('#search', { search_string: altTitle.time });
 			})
 
 			const booksLabel = addItem('span', {
-				innerHTML: `<span class='fa-solid fa-book glyph-dark'></span>&nbsp;${bookCount}`
+				innerHTML: `${LTRbook}&nbsp;${bookCount}`
 			});
 
 			const artistRow = addItem('div', {
@@ -3832,7 +3861,7 @@
 			if (altTitle.story != altTitle.art) {
 				if (altTitle.story != 'N/A') {
 					const storyLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid fa-pen-to-square glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='ico icon-notebook-pen glyph-dark'></span>&nbsp;${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.story}`,
 						dataset: {
@@ -3846,13 +3875,14 @@
 
 					addClickPointerEvents(storyLabel, async () => {
 						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+
+						navigateTo('#search', { search_string: altTitle.story.toLowerCase() });
 					});
 				}
 
 				if (altTitle.art != 'N/A') {
 					const artLabel = altTitle.art == 'N/A' ? '' : addItem('div', {
-						innerHTML: `<span class='fa-solid fa-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
+						innerHTML: `<span class='ico icon-palette glyph-dark'></span>&nbsp;${altTitle.art}`,
 						className: 'red data-label search-trigger',
 						//title: `Filter artist: ${altTitle.art}`
 						dataset: {
@@ -3865,14 +3895,14 @@
 
 					addClickPointerEvents(artLabel, async () => {
 						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.art.toLowerCase()}`);
+						navigateTo('#search', { search_string: altTitle.art.toLowerCase() });
 					});
 				}
 
 			} else {
 				if (altTitle.story != 'N/A') {
 					const artistLabel = addItem('div', {
-						innerHTML: `<span class='fa-solid fa-user glyph-dark'></span>&nbsp;${altTitle.story}`,
+						innerHTML: `<span class='ico icon-user-round glyph-dark'></span>&nbsp;${altTitle.story}`,
 						//title: `Filter artist: ${altTitle.story}`,
 						className: 'red data-label search-trigger',
 						dataset: {
@@ -3886,7 +3916,8 @@
 
 					addClickPointerEvents(artistLabel, async () => {
 						if (target?.binName) mb.dashboardBin = target.binName;
-						navigateTo(`#search?search_string=${altTitle.story.toLowerCase()}`);
+						navigateTo('#search', { search_string: altTitle.story.toLowerCase() });
+
 					});
 				}
 			}
@@ -3928,7 +3959,17 @@
 
 			addTouchScaler(seriesItem, () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#series?library_id=${serie.libraryId}&series_id=${serie.id}`)
+				//TODO: Maybe using history replace there's no need to manage target from library button?
+				let pathHistoryValue = pathBuilder('#library', {
+					library_id: serie.libraryId,
+					series_id: serie.id
+				})
+				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
+				mb.historyStack[mb.historyStack.length - 1] = pathHistoryValue;
+				navigateTo('#series', {
+					library_id: serie.libraryId,
+					series_id: serie.id
+				});
 			});
 
 			if (dynamic) {
@@ -3939,11 +3980,11 @@
 		}
 
 		async function buildCollectionsItem(item, serie, target) {
-			buildContainerItem(item, serie, target, 'collections', 'seriesIds', 'fa-layer-group')
+			buildContainerItem(item, serie, target, 'collections', 'seriesIds', 'icon-library-big')
 		}
 
 		async function buildReadlistsItem(item, serie, target) {
-			buildContainerItem(item, serie, target, 'readlists', 'bookIds', 'fa-book')
+			buildContainerItem(item, serie, target, 'readlists', 'bookIds', 'icon-book-text')
 		}
 
 		async function buildContainerItem(item, serie, target, container, items, icon) {
@@ -3994,7 +4035,7 @@
 
 
 			const timeLabel = addItem('span', {
-				innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
+				innerHTML: `<span class='ico icon-clock glyph-dark'></span>&nbsp;${dateString}`
 			});
 
 			// Fetch and display the number of books and alternate title
@@ -4005,7 +4046,7 @@
 			});
 
 			const booksLabel = addItem('span', {
-				innerHTML: `<span class='fa-solid ${icon} glyph-dark'></span>&nbsp;${bookCount}`
+				innerHTML: `<span class='ico ${icon} glyph-dark'></span>&nbsp;${bookCount}`
 			});
 
 			item.mbSeriesTitle = serie.name ?? '';
@@ -4270,8 +4311,8 @@
 			displayCollections(collections, seriesGrid);
 		}
 
-		const menuClassUp = 'fa-caret-up';
-		const menuClassDown = 'fa-caret-down'
+		const menuClassUp = 'icon-chevron-up';
+		const menuClassDown = 'icon-chevron-down'
 
 		function libMenuClear(item) {
 			item.classList.remove(menuClassUp);
@@ -4363,7 +4404,6 @@
 
 		function buildLibraryItem(itemId, libraryName, imagePath = null) {
 			const isLib = (imagePath == null);
-			const isFA = imagePath?.startsWith('fa-');
 
 			const listItem = addItem('li', {
 				id: itemId,
@@ -4385,18 +4425,13 @@
 				? `library-thumbnails/${libraryName}.svg`
 				: imagePath);
 
+			const libraryThumbnail = addItem('img', {
+				className: 'library-thumbnail',
+				src: imageSrc,
+				alt: isLib ? `${libraryName} Cover` : libraryName,
+			})
 
-			const libraryThumbnail = isFA ?
-				addItem('i', {
-					className: `fa-solid ${imagePath} glyph-dark libglyph`,
-				}) :
-				addItem('img', {
-					className: 'library-thumbnail',
-					src: imageSrc,
-					alt: isLib ? `${libraryName} Cover` : libraryName,
-				})
-
-			if (isLib && !isFA) {
+			if (isLib) {
 				libraryThumbnail.onerror = () => {
 					libraryThumbnail.onerror = null;
 					libraryThumbnail.src = `library-letters/${transliterate(libraryName.charAt(0)).charAt(0).toUpperCase()}.png`
@@ -4420,7 +4455,7 @@
 
 			if (isLib) {
 				mb.libraryMenuButtons[itemId] = addItem('span', {
-					className: 'fa-solid ' + menuClassDown + ' is-lib-menu'
+					className: 'ico ' + menuClassDown + ' is-lib-menu'
 				})
 
 				const thumbnailWrapperMenu = addItem('div', {
@@ -4604,6 +4639,15 @@
 			}
 		}
 
+		function centerLibrary(libraryItem) {
+			setTimeout(() => {
+				librariesList.scrollTo({
+					left: libraryItem.offsetLeft + 90 - 0.5 * (librariesList.clientWidth),
+					behavior: 'smooth'
+				});
+			}, 300)
+		}
+
 		function displayLibraries(libraries) {
 			librariesList.innerHTML = '';
 
@@ -4611,6 +4655,7 @@
 			dashboard.classList.add('shrink-first');
 			librariesList.append(dashboard);
 			homeButton.addEventListener('click', () => {
+				//centerLibrary(dashboard);
 				navigateTo('#dashboard');
 			});
 
@@ -4618,6 +4663,7 @@
 			readlists.classList.add('shrink-first');
 			librariesList.append(readlists);
 			readlistsButton.addEventListener('click', () => {
+				//centerLibrary(readlists);
 				navigateTo('#readlists');
 			});
 
@@ -4632,6 +4678,7 @@
 			collections.classList.add('shrink-first');
 			librariesList.append(collections);
 			collectionsButton.addEventListener('click', () => {
+				//centerLibrary(collections);
 				navigateTo('#collections');
 			});
 
@@ -4709,18 +4756,53 @@
 				listItem.addEventListener('click', () => {
 					const { path, params } = getHashAndParams();
 					if ((path == 'series') && (params.get('library_id') == library.id)) {
-						navigateTo(`#library?library_id=${library.id}&series_id=${params.get('series_id')}`);
+						navigateTo('#library', {
+							library_id: library.id,
+							series_id: params.get('series_id')
+						});
 					}
 					else {
-						navigateTo(`#library?library_id=${library.id}`);
+						navigateTo('#library', {
+							library_id: library.id,
+						});
 					}
+					//centerLibrary(listItem);
 				});
 
 				librariesList.append(listItem);
 
 			});
-
+			librariesList.addEventListener('scroll', () => {
+				librariesArrowsUpdate();
+			})
 			translateDOM();
+		}
+
+
+		function librariesScroll(amount) {
+			librariesList.scrollTo({
+				left: librariesList.scrollLeft + amount,
+				behavior: 'smooth'
+			})
+		}
+
+		function librariesArrowsUpdate() {
+			setTimeout(() => {
+				let librariesWidth = librariesList.getBoundingClientRect().width;
+				let librariesPos = librariesList.scrollLeft;
+				let librariesFull = librariesList.scrollWidth;
+				let twoRows = document.body.classList.contains('sticky-tworows')
+
+				if (librariesWidth >= librariesFull) {
+					librariesLeft.classList.toggle('hidden', true);
+					librariesRight.classList.toggle('hidden', true);
+				} else {
+					librariesLeft.classList.toggle('hidden', (librariesPos <= 0));
+					librariesRight.classList.toggle('hidden', (librariesWidth + librariesPos >= librariesFull));
+				}
+
+				librariesRight.style.right = twoRows ? '0px' : librariesRightBlock.getBoundingClientRect().width + 'px';
+			}, 500)
 		}
 
 		function getAltTitles(serie) {
@@ -4846,7 +4928,11 @@
 			}
 		}
 		function jumpBookLibrary() {
-			navigateTo(`#series?library_id=${mb.currentBook.libraryId}&series_id=${mb.currentBook.seriesId}&book_id=${mb.currentBook.id}`)
+			navigateTo('#series', {
+				library_id: mb.currentBook.libraryId,
+				series_id: mb.currentBook.seriesId,
+				book_id: mb.currentBook.id
+			});
 		}
 
 		async function showBookDetails(book) {
@@ -4938,7 +5024,7 @@
 					//innerHTML: `<span data-i18n="book.book"></span> ${book.metadata.number}`,
 				});
 				const pagesLabel = addItem('span', {
-					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+					innerHTML: `<span class="ico icon-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
 				translateDOM(volumeNumberLabel);
 				mainRow.append(volumeNumberLabel, pagesLabel);
@@ -4948,8 +5034,12 @@
 				mainRow.textContent = book.seriesTitle;
 				addClickPointerEvents(mainRow, () => {
 					if (target?.binName) mb.dashboardBin = target.binName;
-					navigateTo(`#series?library_id=${book.libraryId}&series_id=${book.seriesId}&book_id=${book.id}`);
-				})
+					navigateTo('#series', {
+						library_id: book.libraryId,
+						series_id: book.seriesId,
+						book_id: book.id
+					});
+				});
 			}
 
 			const secondRow = addItem('div', {
@@ -4967,7 +5057,7 @@
 					}
 				});
 				const pagesLabel = addItem('span', {
-					innerHTML: `<span class="${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
+					innerHTML: `<span class="ico icon-file glyph-dark"></span>&nbsp;${book.media.pagesCount}`,
 				});
 				translateDOM(volumeNumberLabel);
 				secondRow.append(volumeNumberLabel, pagesLabel);
@@ -4989,7 +5079,7 @@
 					//innerHTML: `Bk.${book.metadata.number}`
 				});
 				const timeLabel = addItem('span', {
-					innerHTML: `<span class='${mb.darkTheme ? 'fa-solid' : 'fa-regular'} fa-clock glyph-dark'></span>&nbsp;${dateString}`
+					innerHTML: `<span class='ico icon-clock glyph-dark'></span>&nbsp;${dateString}`
 				});
 				translateDOM(volumeNumberLabelShort);
 
@@ -5035,7 +5125,7 @@
 
 			const markAsRead = addItem('div', {
 				className: 'mini-buttons mark-as-read',
-				innerHTML: `<span class="fa-regular fa-circle-check"></span>`,
+				innerHTML: `<span class="ico icon-circle-check"></span>`,
 				dataset: {
 					i18nTitle: 'book.markasread'
 				}
@@ -5048,7 +5138,7 @@
 
 			const markAsUnread = addItem('div', {
 				className: 'mini-buttons mark-as-unread',
-				innerHTML: `<span class="fa-regular fa-circle-xmark"></span>`,
+				innerHTML: `<span class="ico icon-circle-x"></span>`,
 				dataset: {
 					i18nTitle: 'book.markasunread'
 				}
@@ -5065,7 +5155,7 @@
 			//if (book.metadata.summary != '') {
 			const bookDetails = addItem('div', {
 				className: 'mini-buttons book-details',
-				innerHTML: `<span class="fa-solid fa-align-justify"></span>`,
+				innerHTML: `<span class="ico icon-square-menu"></span>`,
 				dataset: {
 					i18nTitle: 'book.details'
 				}
@@ -5170,26 +5260,27 @@
 
 			addTouchScaler(booksItem, async () => {
 				if (offlineSession && !bookIsOffline) return;
-
 				const seriesData = useOfflineCopy ? offline.seriesMetadata : await callAPI(`c_seriesdata${book.seriesId}`, `/api/v1/series/${book.seriesId}`);
 				const readingDirection = seriesData.metadata.readingDirection;
 
 				if (target == booksGrid) {
-					rd.historyPath = window.location.hash.split('&book_id=')[0] + '&book_id=' + book.id;
+					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0] + '&book_id=' + book.id;
 				} else if (target == offlineGrid) {
-					rd.historyPath = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
+					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
 				} else {
-					rd.historyPath = window.location.hash.split('&book_id=')[0];
+					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0];
 				}
 
 				setIncognito(false);
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo(`#bookread
-						?library_id=${book.libraryId}
-						&series_id=${book.seriesId}
-						&book_id=${book.id}
-						&dir=${readingDirection}
-						&pg=${(book.readProgress ? book.readProgress.page : 1)}`);
+
+				navigateTo('#bookread', {
+					library_id: book.libraryId,
+					series_id: book.seriesId,
+					book_id: book.id,
+					dir: readingDirection,
+					pg: (book.readProgress ? book.readProgress.page : 1)
+				});
 			});
 
 			item.append(booksItem);
@@ -5265,7 +5356,7 @@
 
 		dashboardElements = {
 			keepReading: {
-				headerCode: '<span class="fa-solid fa-book-bookmark glyph-dark"></span>&nbsp;<span data-i18n="header.keepreading"></span>',
+				headerCode: '<span class="ico header-left icon-bookmark glyph-dark"></span><span class="header" data-i18n="header.keepreading"></span>',
 				getItems: async (page, size) => {
 					const out = await callAPI(`c_keepreading`,
 						`/api/v1/books/list?page=0&unpaged=true&sort=readProgress.readDate,desc`,
@@ -5284,7 +5375,7 @@
 
 
 			onDeck: {
-				headerCode: '<span class="fa-solid fa-inbox glyph-dark"></span>&nbsp;<span data-i18n="header.ondeck"></span>',
+				headerCode: '<span class="ico header-left icon-inbox glyph-dark"></span><span class="header" data-i18n="header.ondeck"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_ondeck`, `/api/v1/books/ondeck`));
 				},
@@ -5294,7 +5385,7 @@
 			},
 
 			recentBooks: {
-				headerCode: '<span class="fa-solid fa-book glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedbooks"></span>',
+				headerCode: '<span class="ico header-left icon-book-alert glyph-dark"></span><span class="header" data-i18n="header.lastaddedbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=created,desc`,
@@ -5307,7 +5398,7 @@
 			},
 
 			recentSeries: {
-				headerCode: '<span class="fa-solid fa-layer-group glyph-dark"></span>&nbsp;<span data-i18n="header.lastaddedseries"></span>',
+				headerCode: '<span class="ico header-left icon-library-big glyph-dark"></span><span class="header" data-i18n="header.lastaddedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_recentseries`, `/api/v1/series/new?page=${page}&size=${size}`));
 				},
@@ -5317,7 +5408,7 @@
 			},
 
 			updatedSeries: {
-				headerCode: '<span class="fa-solid fa-bullhorn glyph-dark"></span>&nbsp;<span data-i18n="header.lastupdatedseries"></span>',
+				headerCode: '<span class="ico header-left icon-megaphone glyph-dark"></span><span class="header" data-i18n="header.lastupdatedseries"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_updatedseries`, `/api/v1/series/updated?page=${page}&size=${size}`));
 				},
@@ -5327,7 +5418,7 @@
 			},
 
 			readBooks: {
-				headerCode: '<span class="fa-solid fa-square-check glyph-dark"></span>&nbsp;<span data-i18n="header.lastreadbooks"></span>',
+				headerCode: '<span class="ico header-left icon-book-check glyph-dark"></span><span class="header" data-i18n="header.lastreadbooks"></span>',
 				getItems: async (page, size) => {
 					return (await callAPI(`c_readbooks`,
 						`/api/v1/books/list?page=${page}&size=${size}&sort=readProgress.readDate,desc`,
@@ -5352,6 +5443,7 @@
 			sectionShow(stripGridContainer);
 
 			stripGridHeader.innerHTML = dashboardElements[element].headerCode;
+			translateDOM();
 			const data = await dashboardElements[element].getItems(page, 50);
 
 			const array = data.content;
@@ -5387,7 +5479,7 @@
 			});
 			item.gridButton = addItem('div', {
 				className: 'strip-all press-flat-button strip-button',
-				innerHTML: '<span class="fa-solid fa-grip glyph-dark"></span>',
+				innerHTML: '<span class="ico icon-grip-horizontal glyph-dark"></span>',
 				dataset: {
 					i18nTitle: 'navigation.all'
 				}
@@ -5584,7 +5676,6 @@
 			seriesId: 0,
 			bookId: 0,
 
-			historyPath: '',
 			bookPath: '',
 
 			incognito: false,
@@ -5599,12 +5690,12 @@
 
 			turnTime: 500,				// Duration of turning page animation
 			scrollSpeed: 500,			// Duration of spread page scrolling
-			turnScrollDelay: 300,	// Delay of spread page scrolling during page turn
+			turnScrollDelay: 250,	// Delay of spread page scrolling during page turn
 			turnScrollTime: 500,		// Duration of spread page scrolling during page turn
 
 			turnTime0: 500,				// Duration of turning page animation
 			scrollSpeed0: 500,			// Duration of spread page scrolling
-			turnScrollDelay0: 300,		// Delay of spread page scrolling during page turn
+			turnScrollDelay0: 250,		// Delay of spread page scrolling during page turn
 			turnScrollTime0: 500,		// Duration of spread page scrolling during page turn
 
 			pageShadowOpacityFWD: '0.4',
@@ -5641,12 +5732,14 @@
 		// Function that prepares the page for reading a book, once the url is setup, navigateTo triggers openBookReader function
 		function navigateToReadBook(book, readingDirection, force = false) {
 			setIncognito(false);
-			navigateTo(`#bookread
-						?library_id=${book.libraryId}
-						&series_id=${book.seriesId}
-						&book_id=${book.id}
-						&dir=${readingDirection}
-						&pg=${force ? 1 : (book.readProgress ? book.readProgress.page : 1)}`);
+
+			navigateTo('#bookread', {
+				library_id: book.libraryId,
+				series_id: book.seriesId,
+				book_id: book.id,
+				dir: readingDirection,
+				pg: force ? 1 : (book.readProgress ? book.readProgress.page : 1)
+			});
 		}
 
 		// Function that setups the reader for a specific book, this is not run directly
@@ -5800,7 +5893,10 @@
 			purgeLoading();
 			clearAllTimeouts();
 
-			navigateTo(rd.historyPath == '' ? '#dashboard' : rd.historyPath);
+			showBackButton(false)
+
+			if (mb.historyStack.length == 1) mb.historyStack = ['#dashboard', mb.historyStack[0]]
+			goBack()
 
 			if (isStatusBar && !isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.show();
@@ -6012,8 +6108,18 @@
 
 			const bookData = useOfflineCopy ? offline.bookMetadata : await callAPI(`c_bookdata${rd.bookId}`, `/api/v1/books/${rd.bookId}`);
 
+			prevBookCover.src = "transparent.png";
 			rd.prevBook = await callAPI(`c_books${rd.bookId}prev`, `/api/v1/books/${rd.bookId}/previous`) || null;
+			if (rd.prevBook) {
+				const blobPrevUrl = await fetchMedia(`${mb.baseUrl}/api/v1/books/${rd.prevBook.id}/thumbnail`, false);
+				prevBookCover.src = blobPrevUrl;
+			}
+			nextBookCover.src = "transparent.png";
 			rd.nextBook = await callAPI(`c_books${rd.bookId}next`, `/api/v1/books/${rd.bookId}/next`) || null;
+			if (rd.nextBook) {
+				const blobNextUrl = await fetchMedia(`${mb.baseUrl}/api/v1/books/${rd.nextBook.id}/thumbnail`, false);
+				nextBookCover.src = blobNextUrl;
+			}
 
 			if (!prevBookPanel.classList.contains('hidden')) prevBookPanel.classList.add('hidden');
 			if (!nextBookPanel.classList.contains('hidden')) nextBookPanel.classList.add('hidden');
@@ -6899,13 +7005,14 @@
 
 		//TODO con newpage calcoalto dalla funzione esterna e a ogni bar update, ripulire se serve questa cosa
 		function jumpString() {
-
-			const stringOut = `${mb.basePath}#bookread
-			?library_id=${rd.libraryId}
-			&series_id=${rd.seriesId}
-			&book_id=${rd.bookId}
-			&dir=${rd.direction}
-			&pg=${rd.currentPage}`;
+			const params = new URLSearchParams({
+				library_id: rd.libraryId,
+				series_id: rd.seriesId,
+				book_id: rd.bookId,
+				dir: rd.direction,
+				pg: rd.currentPage,
+			});
+			const stringOut = `#bookread?${params.toString()}`
 
 			if (!rd.incognito) {
 				callAPI(null, `/api/v1/books/${rd.bookId}/read-progress`, 'PATCH', JSON.stringify({ page: rd.currentPage }), false)
@@ -7405,7 +7512,12 @@
 
 			updateProgressBar();
 
-			if (!skipHistory) history.replaceState(null, '', jumpString());
+			if (!skipHistory) {
+				const jumpValue = jumpString();
+				history.replaceState(null, '', jumpValue);
+				mb.historyStack[mb.historyStack.length - 1] = jumpValue;
+
+			}
 		}
 
 		function jumpToSpreadSkipHistory(targetSpreadIndex) {
@@ -7436,6 +7548,7 @@
 
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
+			showBackButton(!backButton.classList.contains('faded'))
 		}
 
 		function hideMenu() {
@@ -7596,6 +7709,11 @@
 					break;
 				*/
 				/*
+				case 'b':
+					goBack();
+					break;
+				*/
+				/*
 				case 'D':
 					mb.screenAR = getScreenAR();
 					mb.readerScale = mb.screenAR / mb.readerMaxRatio * 100 - 1;
@@ -7654,6 +7772,21 @@
 			return { path, params };
 		}
 
+		function showBackButton(fadeButton = false) {
+			if (mb.historyStack.length == 1) {
+				backButton.classList.toggle('hidden', true)
+				backButton.classList.toggle('faded', false)
+			} else {
+				backButton.classList.toggle('hidden', false)
+				backButton.classList.toggle('faded', fadeButton)
+			}
+
+		}
+
+		function hideBackButton() {
+			backButton.classList.toggle('hidden', true)
+		}
+
 		async function loadContent() {
 			const { path, params } = getHashAndParams();
 
@@ -7679,7 +7812,6 @@
 				case '':
 				case 'dashboard':
 					clearSearchField();
-
 					setIncognito(false);
 					if ((params == null) || (params.size == 0)) {
 						await selectHome();
@@ -7687,11 +7819,13 @@
 							const y = dashboardElements[mb.dashboardBin].element.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop - 10;
 
 							mainContainer.scrollTo({ top: y });
+							updateSliderProperties(mb.dashboardBin);
 							mb.dashboardBin = '';
 						}
 					} else {
 						dashboardAll(params.get('all'), params.get('page'));
 					}
+					showBackButton();
 					break;
 				case 'library':
 					mb.dashboardBin = '';
@@ -7699,12 +7833,14 @@
 
 					setIncognito(false);
 					await openLibrary(params.get('library_id'), params.get('series_id'));
+					showBackButton();
 					break;
 				case 'series':
 					clearSearchField();
 
 					setIncognito(false);
 					await openSeries(params.get('library_id'), params.get('series_id'), params.get('book_id'));
+					showBackButton();
 					break;
 				case 'readlists':
 					mb.dashboardBin = '';
@@ -7712,12 +7848,14 @@
 
 					setIncognito(false);
 					await openReadlists();
+					showBackButton();
 					break;
 				case 'readlistsitem':
 					clearSearchField();
 
 					setIncognito(false);
 					await openReadlist(params.get('item_id'));
+					showBackButton();
 					break;
 				case 'collections':
 					mb.dashboardBin = '';
@@ -7725,26 +7863,31 @@
 
 					setIncognito(false);
 					await openCollections();
+					showBackButton();
 					break;
 				case 'collectionsitem':
 					clearSearchField();
 
 					setIncognito(false);
 					await openCollection(params.get('item_id'));
+					showBackButton();
 					break;
 				case 'search':
 					setIncognito(false);
 					searchInput.value = params.get('search_string');
 					await performSearch(params.get('search_string'));
+					showBackButton();
 					break;
 				case 'bookread':
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pg'));
+					showBackButton(true);
 					break;
 				case 'offlinebooks':
 					clearSearchField();
 
 					setIncognito(false);
 					await openOfflineBooks(params?.get('book_id'));
+					showBackButton();
 					break;
 				default:
 					console.log('no selection');
@@ -7754,10 +7897,20 @@
 			await executeFade(0);
 		}
 
+		function pathBuilder(base, params) {
+			let outString = base;
+			let outParams = new URLSearchParams(params);
+			return (outString + "?" + outParams.toString())
+		}
+
 		// This is the most important function, it updates the history and then passes the path to the loadContent function that does all the work
 		// In MB the navigateTo function with a proper path form will open the different sections and activate various states.
-		function navigateTo(path) {
-			history.pushState(null, '', mb.basePath + path);
+		function navigateTo(path, params = null) {
+			if (params) {
+				path = pathBuilder(path, params);
+			}
+			history.pushState(null, '', path);
+			mb.historyStack.push(path);
 			loadContent();
 		}
 

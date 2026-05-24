@@ -1,5 +1,4 @@
-:root {
-
+:root {	
 	--mb-h: 348;
 	--mb-s: 92%;
 	--mb-l: 38%;
@@ -20,10 +19,10 @@
 	--mb-android-inset-left: 0px;
 	--mb-android-inset-right: 0px;
 
-	--mb-inset-top: calc(env(safe-area-inset-top) + var(--mb-android-inset-top));
-	--mb-inset-bottom: calc(env(safe-area-inset-bottom) + var(--mb-android-inset-top));
-	--mb-inset-left: calc(env(safe-area-inset-left) + var(--mb-android-inset-left));
-	--mb-inset-right: calc(env(safe-area-inset-right) + var(--mb-android-inset-right));
+	--mb-inset-top: max(env(safe-area-inset-top), var(--mb-android-inset-top));
+	--mb-inset-bottom: max(env(safe-area-inset-bottom), var(--mb-android-inset-top));
+	--mb-inset-left: max( env(safe-area-inset-left), var(--mb-android-inset-left));
+	--mb-inset-right: max(env(safe-area-inset-right), var(--mb-android-inset-right));
 
 	--mb-area-padding: 20px;
 	--mb-area-safe-padding-left: calc(max(var(--mb-area-padding), var(--mb-inset-left)));
@@ -171,6 +170,8 @@
 	--mb-text-color: rgba(0, 0, 0, 0.85);
 	--mb-text-color-hi: rgba(0, 0, 0, 0.95);
 	--mb-glyph-color: rgba(0, 0, 0, 0.7);
+	--mb-calendar-color: rgb(76,76,76);
+	--mb-patch-color:rgb(76,76,76);
 	--mb-bar-color: #dddddd;
 
 	--mb-red-hover: var(--mb-accent-a50);
@@ -213,6 +214,8 @@
 	--mb-text-color: rgba(255, 255, 255, 0.85);
 	--mb-text-color-hi: rgba(255, 255, 255, 0.95);
 	--mb-glyph-color: rgba(255, 255, 255, 0.75);
+	--mb-calendar-color: rgba(255, 255, 255, 0.0);
+	--mb-patch-color:rgb(204,204,204);
 	--mb-bar-color: #606060;
 
 	--mb-red-hover: var(--mb-accent-light);
@@ -275,7 +278,7 @@ body {
 
 }
 
-.fa-apple {
+.ico-colormark {
 	width: 100%;
 	color: var(--mb-card-color);
 	text-align: left;
@@ -528,11 +531,11 @@ body {
 	pointer-events: none;
 	position: absolute;
 	z-index: 10000;
-	color: red;
-	font-size: 12px;
+	color: hsl(0, 80%, 45%);
+	font-size: 22px;
 	font-weight: bold;
-	bottom: 5px;
-	right: 10px;
+	bottom: 44px;
+	right: 4px;
 	/*
 	background-color: rgba(200, 0, 0, 0.85);
 	border-radius:50%;
@@ -691,7 +694,7 @@ a {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	font-size: 200px;
+	font-size: 240px;
 	color: var(--mb-gear-color);
 	transition: color 0.3s;
 }
@@ -765,7 +768,7 @@ a {
 	gap: 5px;
 	-webkit-app-region: no-drag;
 	position: absolute;
-	top: 8px;
+	top: 6px;
 	right: 8px;
 	font-size: 14px;
 	transition: opacity 0.3s ease;
@@ -778,6 +781,7 @@ a {
 	margin: 0px;
 	padding: 0px;
 	transition: 0.3s;
+	font-size: 17px;
 }
 
 .window-controls span:hover {
@@ -1076,22 +1080,46 @@ a {
 	width: auto;
 }
 
+.ico{
+	display: inline-block;
+	position: relative;
+}
+
+.ico-mirror-h{
+	transform: scaleX(-1);
+}
+.ico-mirror-v{
+	transform: scaleY(-1);
+}
+.ico-rotate-90ccw{
+transform: rotate(-90deg);
+}
+.ico-rotate-90cw{
+transform: rotate(90deg);
+}
+
 .libglyph,
-.library-item span.fa-solid,
-.library-item span.fa-regular {
+.library-item span.ico {
 	width: var(--mb-span-size);
 	height: var(--mb-span-size);
 	line-height: var(--mb-span-size);
-	font-size: 25px;
+	font-size: 28px;
 	border-radius: 50%;
 }
 
-.filter-item span.fa-solid,
-.filter-item span.fa-regular {
+.library-item span.is-lib-menu.ico {
+	width: var(--mb-span-size);
+	height: var(--mb-span-size);
+	line-height: var(--mb-span-size);
+	font-size: 22px;
+	border-radius: 50%;
+}
+
+.filter-item span.ico {
 	width: var(--mb-filter-span-size);
 	height: var(--mb-filter-span-size);
 	line-height: var(--mb-filter-span-size);
-	font-size: 20px;
+	font-size: 24px;
 	border-radius: 50%;
 }
 
@@ -1160,12 +1188,11 @@ a {
 	position: relative;
 }
 
-#readlistsButton2.highlighted span.fa-solid,
-#collectionsButton2.highlighted span.fa-solid,
-#offlineLibrary.highlighted span.fa-solid,
-.library-item.search-field.highlighted span.fa-solid:not(.lib-override),
-.filter-item.highlighted span.fa-solid,
-.filter-item.highlighted span.fa-regular {
+#readlistsButton2.highlighted span.ico,
+#collectionsButton2.highlighted span.ico,
+#offlineLibrary.highlighted span.ico,
+.library-item.search-field.highlighted span.ico:not(.lib-override),
+.filter-item.highlighted span.ico {
 	color: white;
 	opacity: 1;
 	border-radius: 50%;
@@ -1372,12 +1399,11 @@ a {
 	font-size: 16px;
 }
 
-.dialog-button span.fa-solid,
-.dialog-button span.fa-regular {
+.dialog-button span.ico {
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
 	line-height: var(--mb-dialog-button-height);
-	font-size: 25px;
+	font-size: 28px;
 	border-radius: 50%;
 }
 
@@ -1453,9 +1479,15 @@ a {
 	color: white;
 	opacity: 0;
 	transition: opacity 0.3s ease 0.2s, text-shadow 0.3s ease;
-	text-shadow: 0px 0px 12px rgba(255, 255, 255, 0.0), 0px 0px 5px rgba(255, 255, 255, 0.0);
+	text-shadow: 0px 0px 12px var(--mb-accent), 0px 0px 5px var(--mb-accent);
 	will-change: transform;
 
+}
+
+.mini-buttons span.ico {
+	font-size: 27px;
+	height: 25px;
+	width: 25px;
 }
 
 .flip-horizontal {
@@ -1463,7 +1495,7 @@ a {
 }
 
 .mini-buttons:hover {
-	text-shadow: 0px 0px 12px rgba(255, 255, 255, 1.0), 0px 0px 5px rgba(255, 255, 255, 0.8);
+	text-shadow: 0px 0px 12px var(--mb-accent), 0px 0px 5px rgba(255, 255, 255, 1.8);
 }
 
 
@@ -1506,8 +1538,8 @@ a {
 	color: var(--mb-glyph-color);
 	width: 100%;
 	height: 20px;
-	line-height: 20px;
-	font-size: 20px;
+	line-height: 26px;
+	font-size: 26px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -1517,6 +1549,26 @@ a {
 
 .mini-buttons-2:hover {
 	opacity: 0.7;
+}
+
+#backButton{
+	background-color: var(--mb-accent);
+	color: white;
+
+	position: absolute;
+	left: calc(max(10px, var(--mb-button-safe-left)));
+	bottom: calc(10px + var(--mb-bottom-spacer));
+	opacity: 1;
+	z-index:21000;
+}
+
+#backButton.hidden{
+	opacity:0.0;
+	pointer-events: none;
+}
+
+#backButton.faded{
+	opacity:0.2;
 }
 
 #bookDetailsContainer .close-details {
@@ -1602,9 +1654,11 @@ a {
 
 #stripPrevPage,
 #stripNextPage {
-	margin-left: 10px;
+	margin-left: 5px;
 	cursor: pointer;
 	transition: opacity 0.2s;
+	width:20px;
+	height:20px;
 }
 
 #stripPrevPage.disabled,
@@ -1650,6 +1704,7 @@ a {
 	scrollbar-width: none;
 }
 
+
 #homeStripsContainer {
 	padding-top: 10px;
 }
@@ -1666,14 +1721,15 @@ a {
 	padding: 0px;
 }
 
-.strip-all .fa-solid,
-.strip-all .fa-regular {
+.strip-all span.ico {
 	text-align: center;
 	width: 44px;
 	margin-left: 0px;
 	vertical-align: top;
 	margin-top: 0px;
 	cursor: pointer;
+	font-size:32px;
+	top:-5px;
 }
 
 .book-downloader {
@@ -1774,7 +1830,7 @@ a {
 	}
 }
 
-@media (max-width: 500px) {
+@media (max-width: 510px) {
 	.strip-header-container {
 		grid-template-columns: auto 70px 54px;
 	}
@@ -1784,7 +1840,29 @@ a {
 	margin-left: calc(max(25px, var(--mb-inset-left)));
 	padding: 0px;
 	font-size: 20px;
-	font-weight: 500;
+	font-weight: 450;
+	height: 25px;
+}
+
+.strip-header span.header{
+	padding-left:27px;
+}
+
+.strip-header span.ico{
+	width: 24px;
+	height:25px;
+	font-size:24px;
+	line-height:25px;	
+}
+
+.strip-header span.ico.header-left{
+	position:absolute;
+	top:0px;
+}
+
+#stripGridHeader span.ico.header-left{
+	position:absolute;
+	top:10px;
 }
 
 .custom-scrollbar input[type="range"] {
@@ -1837,10 +1915,24 @@ a {
 	padding-right: var(--mb-area-safe-padding-right);
 	transition: opacity 0.3s ease;
 
-	will-change: transform;
+	/*will-change: transform;*/
 	contain: layout style;
+
 	/*XXX WAS layout style paint and removed overflow-y:auto*/
 
+}
+
+#homeStripsContainer,
+#searchStripsContainer{
+	padding-bottom:calc(50px + var(--mb-bottom-spacer));
+}
+
+#stripsGridContainer,
+#seriesGrid, 
+#booksGrid,
+#offlineGrid,
+#stripGrid {
+	padding-bottom:calc(50px + var(--mb-area-padding) + var(--mb-bottom-spacer));
 }
 
 #homeStripSeriesResults,
@@ -2005,9 +2097,10 @@ a {
 .series-container,
 .book-container {
 	background-color: transparent;
-	will-change: transform;
 	transform: translateZ(0);
 	backface-visibility: hidden;
+
+	/*will-change: transform;*/
 	contain: layout style;
 
 }
@@ -2112,6 +2205,14 @@ book-item {
 	padding: 0px 2px;
 }
 
+.data-row span.ico {
+	font-size:16px;
+	height: 16px;
+	width: 16px;
+	line-height:16px;
+	top: 2px;
+}
+
 .title-row {
 	display: flex;
 	flex-direction: row;
@@ -2168,6 +2269,11 @@ book-item {
 	padding-bottom: 0px;
 	font-size: 15px;
 	/*XXX MAGARI 14.5px XXX*/
+}
+.top-row span.ico {
+	font-size:16px;
+	height: 16px;
+	width: 16px;
 }
 
 .info-row {
@@ -2346,6 +2452,9 @@ span.mini-title {
 .glyph-div {
 	top: 0;
 	bottom: 0;
+	min-width:15px;
+	min-height:15px;
+	position:relative;
 }
 
 .glyph-right {
@@ -2380,25 +2489,53 @@ span.mini-title {
 }
 
 .glyph-flag {
+	/*
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
+	*/
+		position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+
+	width: 15px;
+	height: 15px;
+	min-width:15px;
+	min-height:15px;
+	
 	border-radius: 15%;
 	box-shadow: inset 0 0 0px 1px var(--mb-glyph-color);
 	background-size: cover;
+	background-size: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
 }
 
 .glyph-flag-button {
+	width:20px;
+	height:20px;
+	min-width:20px;
+	min-height:20px;
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+	border-radius:3px;
+	background-size: cover;
+	background-size: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	border:1px solid var(--mb-glyph-color);
+		/*
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-size: cover;
 	background-size: 60%;
-	/* Scale the background to 80% */
 	background-position: center;
-	/* Center the background */
 	background-repeat: no-repeat;
-	/* Prevent the background from repeating */
+	*/
 }
 
 .glyph-ltr {
@@ -2681,8 +2818,103 @@ body.offline #stickyContainer {
 	text-transform: uppercase;
 }
 
-/*
- .scrollbox-scrollbar:hover .scrollbox-thumb {
-	background: var(--mb-accent);
- }
-*/
+.icon-book{
+	position:relative;
+}
+.icon-book.high:after{
+	content:"\e4d6";
+	font-family:lucide;
+	display:block;
+	position:absolute;
+	top:0px;
+	left:3px;
+	width:12px;
+	height:12px;
+	font-size:12px;
+	line-height:12px;
+	color: var(--mb-glyph-color);
+	/*border-left:1px var(--mb-glyph-color) solid*/
+}
+
+.icon-paint-roller:after{
+	content:"";
+	font-family:lucide;
+	display:block;
+	position:absolute;
+	top:12px;
+	left:8px;
+	width:19px;
+	height:3px;
+	border-radius:2px;
+	background-color: var(--mb-accent);
+	transition:background-color 0.3s;
+	/*border-left:1px var(--mb-glyph-color) solid*/
+}
+
+.question:after{
+	content:'?';
+	position:absolute;
+	top:50%;
+	left:70%;
+	width:12px;
+	height:18px;
+	transform: translate(-50%, -50%);
+	font-weight:bold;
+	font-size:18px;
+	line-height:18px;
+	color:var(--mb-glyph-color);
+	background-color:var(--mb-login-button-color);
+	border:none;
+	border-radius: 50%;
+	font-weight: bold;
+	font-family: 'Outfit';
+
+}
+
+#librariesLeft{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:60px;
+	min-width:60px;
+	min-height:60px;
+	height:60px;
+	background: linear-gradient(90deg, var(--mb-card-color) 30%, transparent);
+	opacity: 1;
+	transition:opacity 0.3s;
+}
+
+#librariesRight{
+	position:absolute;
+	top:0px;
+	right:0px;
+	width:60px;
+	min-width:60px;
+	min-height:60px;
+	height:60px;
+	background: linear-gradient(270deg, var(--mb-card-color) 30%, transparent);
+	opacity: 1;
+	transition:opacity 0.3s;
+}
+
+#librariesLeft .ico{
+	position:absolute;
+	left:20%;
+	top:50%;
+	transform:translate(-50%,-50%);
+	font-size: 26px;
+}
+
+#librariesRight .ico{
+	position:absolute;
+	left:80%;
+	top:50%;
+	transform:translate(-50%,-50%);
+	font-size: 26px;
+}
+
+#librariesLeft.hidden,
+#librariesRight.hidden{
+	pointer-events: none;
+	opacity: 0;
+}

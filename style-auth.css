@@ -134,8 +134,8 @@
 	box-sizing: border-box;
 	background-color: var(--mb-login-button-color);
 	background-image: linear-gradient(90deg, transparent 40px, var(--mb-input-color) 40px);
-	padding: 0;
-	margin: 0;
+	padding: 0px;
+	margin: 0px;
 	position: relative;
 	width: 100%;
 	height: var(--mb-dialog-button-height);
@@ -150,16 +150,18 @@
 .input-wrapper.disabled-input {
 	opacity: 0.3;
 	pointer-events: none;
+	/*display: none;*/
 }
 
-.input-wrapper i {
+.input-wrapper i,
+.input-wrapper .ico {
 	position: absolute;
 	left: 20px;
-	top: 20px;
+	top: 50%;
 	transform: translate(-50%, -50%);
 	color: var(--mb-glyph-color);
 
-	font-size: var(--mb-dialog-font-size);
+	font-size: 21px;
 	pointer-events: none;
 	/* Make the icon not respond to hover directly */
 	transition: all 0.3s;
@@ -168,18 +170,19 @@
 
 .pwd span.right {
 	position: absolute;
-	display: inline-block;
+	display: block;
 	/* or block */
-	text-align: center;
-	right: 0px;
-	top: 20px;
+	line-height:40px;
+	left: calc(100% - 40px);
+	top: 18px;
 	width: 40px;
-	text-align: middle;
+	text-align: center;
 	transform: translate(0, -50%);
 	color: var(--mb-login-border-color);
 	font-size: var(--mb-dialog-font-size);
 	/* Make the icon not respond to hover directly */
 	transition: all 0.3s;
+	pointer-events: unset;
 }
 
 .pwd span.right:hover {
@@ -233,7 +236,7 @@
 }
 
 .pwd .login-input {
-	padding-right: calc(var(--mb-dialog-button-height));
+	margin-right:40px;
 }
 
 .input-wrapper:hover {
@@ -311,17 +314,21 @@
 }
 
 
-.login-button-round i {
-	position: absolute;
+.login-button-round i,
+.login-button i,
+.login-button-round .ico,
+.login-butotn .ico {
+	position: relative;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	font-size: var(--mb-dialog-font-size);
+	font-size: 20px;
 	line-height: var(--mb-dialog-button-height);
 	pointer-events: none;
 	transition: all 0.3s;
 	width: var(--mb-dialog-button-height);
 	height: var(--mb-dialog-button-height);
+
 }
 
 
@@ -373,7 +380,10 @@
 	font-size: 16px;
 	padding-left: 10px;
 	padding-right: 10px;
+}
 
+.server-data .ico{
+	font-size: 18px;
 }
 
 .server-data.expand {
