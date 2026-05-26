@@ -619,7 +619,7 @@ div.single-page {
 #bottomControls {
 	border-bottom: var(--mb-card-color) solid var(--mb-bottom-spacer);
 	box-sizing: content-box;
-	padding-left: calc(50px + max(10px, var(--mb-button-safe-left)));
+	padding-left: calc(max(10px, var(--mb-button-safe-left)));
 }
 
 #topControls {
@@ -840,7 +840,7 @@ div.single-page {
 	grid-template-columns: var(--mb-pill-width) 50px var(--mb-pill-width);
 	box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.15);
 	width: calc(var(--mb-pill-width) + 50px + var(--mb-pill-width));
-	left: 20px;
+	left: max(20px, calc(20px + calc(var(--mb-button-safe-left))));
 	bottom: calc(80px + var(--mb-bottom-spacer));
 	border-radius: var(--mb-dialog-box-radius);
 	padding-left: 10px;

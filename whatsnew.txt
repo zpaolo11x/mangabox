@@ -1,8 +1,10 @@
 Main UI
-- 
+- todo:	WIP: 	move back button right when there's a left margin
+- todo: 	WIP:	fix library arrows when there's a left margin
 
 Reader UI
-- 
+- todo:	WIP: remove back button and reader history
+- todo:	WIP: fix +/- when there's a left margin
 
 Fixes
 - 
