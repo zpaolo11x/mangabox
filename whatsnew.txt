@@ -1,16 +1,11 @@
 Main UI
-- Introduced Lucide icons for UI glyphs
-- Added floating "back" button on the main UI
-- Added support for Android "back" button
-- Arrows to navigate overflowing library list
+- 
 
 Reader UI
-- Added cover thumbnail for next and previous book
+- 
 
 Fixes
-- Fixed insets on Android 15 devices
-- Fixed translation of header in view all page
-- Fixed zooming issue when restoring iOS app
+- 
 
 Build
-- Updated website with new icons
+- 
