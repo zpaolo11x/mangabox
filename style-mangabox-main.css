@@ -2873,7 +2873,7 @@ body.offline #stickyContainer {
 
 #librariesLeft{
 	position:absolute;
-	top:0px;
+	top:var(--mb-top-spacer);
     left:0px;
 	width:60px;
 	min-width:60px;
@@ -2887,7 +2887,7 @@ body.offline #stickyContainer {
 
 #librariesRight{
 	position:absolute;
-	top:0px;
+    top:var(--mb-top-spacer);
 	right:0px;
 	width:60px;
 	min-width:60px;
