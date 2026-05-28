@@ -402,7 +402,7 @@ async function loginToServer(event, serverId, test) {
 		// I need to save the user id even in this logintoserver if it's not there
 		// OR I can check if the id is there or not.
 		history.pushState(null, '', mb.basePath + '#dashboard');
-		
+
 		if (mb.currentUserId == false){
 			login(serverId, test, false);
 		} else {

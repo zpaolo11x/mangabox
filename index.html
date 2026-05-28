@@ -915,14 +915,15 @@
 
 		//MB Main Variable Setup 
 		function initMB() {
-
+			console.log("initMB")
+			console.log(window.location.href)
 			return (
 				{
 					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'pt', 'pt-BR', 'zh-Hans'],
 					languageAuto: false,
 					languageVal: '',
 
-					historyStack: [window.location.href],
+historyStack: [window.location.hash || "#dashboard"],
 
 					libraryError: false,
 					libraryNames: '',
@@ -1089,6 +1090,9 @@
 
 		// Main MangaBox data structure, for variables that are common to the whole app
 		let mb = initMB();
+
+console.log("INITIALIZE")
+console.log(mb.historyStack)
 
 		//TODO: make this a function that repsonds to theme changes and create/colorizes the blocks? and maybe use it at bootsequence
 		const colorValues = getComputedStyle(document.documentElement)
@@ -5264,10 +5268,14 @@
 				const readingDirection = seriesData.metadata.readingDirection;
 
 				if (target == booksGrid) {
+					console.log("A")
 					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0] + '&book_id=' + book.id;
 				} else if (target == offlineGrid) {
+					console.log("B")
 					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
 				} else {
+						console.log("C HASH")
+						console.log(window.location.hash)
 					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0];
 				}
 
@@ -5894,9 +5902,13 @@
 			clearAllTimeouts();
 
 			showBackButton(false)
-
-			if (mb.historyStack.length == 1) mb.historyStack = ['#dashboard', mb.historyStack[0]]
+			console.log(mb.historyStack)
+			if (mb.historyStack.length == 1) {
+				console.log("XXX")
+				mb.historyStack = ['#dashboard', mb.historyStack[0]]
+			}
 			goBack()
+			console.log(mb.historyStack)
 
 			if (isStatusBar && !isSharpCornerIphone) {
 				Capacitor.Plugins.StatusBar.show();
@@ -7910,7 +7922,9 @@
 				path = pathBuilder(path, params);
 			}
 			history.pushState(null, '', path);
-			mb.historyStack.push(path);
+			if (path != mb.historyStack[mb.historyStack.length - 1]) mb.historyStack.push(path);
+			console.log("NAVIGATE TO")
+			console.log(mb.historyStack)
 			loadContent();
 		}
 
