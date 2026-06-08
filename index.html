@@ -1444,7 +1444,7 @@
 			mb.editServerData.name = loginServerName.value;
 			mb.editServerData.url = loginBaseUrl.value;
 			mb.editServerData.username = loginUsername.value;
-			mb.editServerData.askPassword = false;
+			mb.editServerData.askPassword = !(!isWeb || (isWeb && webPWD));
 
 			mb.serverList[mb.editServerId] = {
 				...(mb.serverList[mb.editServerId] ?? {}),
@@ -1479,8 +1479,9 @@
 			await executeFaderGradient(1);
 
 			Object.entries(serverList).forEach(async ([id, server]) => {
-
-				if ((id != 'mb0') && (!server.askPassword)) {
+				console.log(id)
+				console.log(server.askPassword)
+				if ((!server.askPassword)) {
 					mb.serverList[id].askPassword = true;
 
 					let fetchPayload
