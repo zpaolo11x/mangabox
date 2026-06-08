@@ -217,7 +217,7 @@ async function sessionCheck() {
 			debugPrint("Credentials invalid or expired.");
 			console.log("Credentials invalid or expired.");
 			mb.currentUserId = false;
-			
+
 			//TODO Verifica se questa funzione fa già più di quel che fa il resto
 			await logOutFromCurrentServer()
 
@@ -271,7 +271,7 @@ async function setServerFields(serverId, serverData) {
 		let localPass = await loadUserPass(serverId);
 
 		loginPassword.value = localPass;
-		
+
 		localPass = null;
 	}
 
@@ -362,7 +362,7 @@ async function loginToServer(event, serverId, test) {
 		localStorage.removeItem('mb00CurrentUserId');
 		closeModal();
 		systemRestart()
-		
+
 		//showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
 		return
 	}
@@ -388,7 +388,7 @@ async function loginToServer(event, serverId, test) {
 
 		mb.currentServerId = serverId;
 		mb.currentUserId = mb.serverList[serverId].userId;
-		
+
 		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
 		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
@@ -403,13 +403,13 @@ async function loginToServer(event, serverId, test) {
 		// OR I can check if the id is there or not.
 		history.pushState(null, '', mb.basePath + '#dashboard');
 
-		if (mb.currentUserId == false){
+		if (mb.currentUserId == false) {
 			login(serverId, test, false);
 		} else {
 			systemRestart();
 		}
 
-	//		login(serverId, test, false);
+		//		login(serverId, test, false);
 
 	}
 
@@ -423,7 +423,7 @@ async function loginToServer(event, serverId, test) {
 	*/
 }
 
-function cleanBaseUrlVal(baseUrlVal){
+function cleanBaseUrlVal(baseUrlVal) {
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
 	}
@@ -470,7 +470,7 @@ async function login(serverId, test, fromDialog) {
 		}
 	}).then(async response => {
 		if (response.ok) {
-
+			console.log("XXXXXXXXXXXX A")
 			const rawBody = await response.text();
 			let parsed = null;
 			try {
@@ -489,10 +489,10 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
 				localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
-		
+
 				mb.serverList[serverId].userId = mb.currentUserId;
 				mb.serverList[serverId].askPassword = false;
-		
+
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 				//TODO Magari resettare la password quando anche user 0 fa logout?
@@ -514,13 +514,19 @@ async function login(serverId, test, fromDialog) {
 				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
+						console.log("XXXXXXXXXXXX B")
 			loginError.textContent = t(`server.invalidlogindata`);
 			loginError.classList.toggle('auth-hidden', false);
 		} else {
+						console.log("XXXXXXXXXXXX C")
+
 			loginError.textContent = t(`server.loginfailed`);
 			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
+
+		mb.currentServerId = false
+
 		console.error('Login error:', error);
 		loginError.textContent = t("server.cannotreach") + `${error}`;
 		loginError.classList.toggle('auth-hidden', false);
@@ -565,9 +571,8 @@ function applyScenario(modeName, serverId, serverData) {
 }
 
 function showLoginDialog(dialogMode, serverId, serverData) {
-
 	mb.loginMode = dialogMode;
-
+console.log(dialogMode)
 	//dialogMode = 'firstboot'
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
