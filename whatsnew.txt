@@ -1,9 +1,10 @@
 Main UI
-- todo:	WIP: 	move back button right when there's a left margin
-- todo: 	WIP:	fix library arrows when there's a left margin
+- Moved back button right when there's a left margin
+- Adjusted library arrows position when there's a left margin
+- Back button from series goes back to serch page or collection page
 
 Reader UI
-- todo:	WIP: remove back button and reader history
+- Remove back button and reader history
 - todo:	WIP: fix +/- when there's a left margin
 
 Fixes

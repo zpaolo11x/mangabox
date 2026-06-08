@@ -3957,14 +3957,36 @@
 			seriesItem.classList.add('touch-scaler')
 
 			addTouchScaler(seriesItem, () => {
+				const { path, params } = getHashAndParams();
+				console.log(path)
 				if (target?.binName) mb.dashboardBin = target.binName;
 				//TODO: Maybe using history replace there's no need to manage target from library button?
-				let pathHistoryValue = pathBuilder('#library', {
-					library_id: serie.libraryId,
-					series_id: serie.id
-				})
+
+				let pathHistoryValue = ""
+				switch (path) {
+					case "library":
+						pathHistoryValue = pathBuilder('#library', {
+							library_id: serie.libraryId,
+							series_id: serie.id
+						});
+						break;
+					case "collectionsitem":
+						pathHistoryValue = "#"+window.location.hash.substring(1);
+						break;
+					case "search":
+						pathHistoryValue = "#"+window.location.hash.substring(1);
+						break;
+					default:
+						pathHistoryValue = pathBuilder('#library', {
+							library_id: serie.libraryId,
+							series_id: serie.id
+						});
+						break;						
+				}
+				console.log(pathHistoryValue)
 				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
 				mb.historyStack[mb.historyStack.length - 1] = pathHistoryValue;
+
 				navigateTo('#series', {
 					library_id: serie.libraryId,
 					series_id: serie.id
