@@ -1431,11 +1431,11 @@
 			if (!mb.currentServerId) {
 				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			} else if (mb.loginMode == 'enterpassword') {
-							console.log("X_X_A")
+				console.log("X_X_A")
 
 				hideLoginDialog()
 			} else {
-							console.log("X_X_B")
+				console.log("X_X_B")
 
 				hideLoginDialog()
 			}
@@ -1664,7 +1664,7 @@
 				{
 					label: 'modal.ok', runfunction: () => {
 						if (mb.currentServerId) {
-									console.log("X_X_C")
+							console.log("X_X_C")
 
 							hideLoginDialog();
 						}
@@ -3982,17 +3982,17 @@
 						});
 						break;
 					case "collectionsitem":
-						pathHistoryValue = "#"+window.location.hash.substring(1);
+						pathHistoryValue = "#" + window.location.hash.substring(1);
 						break;
 					case "search":
-						pathHistoryValue = "#"+window.location.hash.substring(1);
+						pathHistoryValue = "#" + window.location.hash.substring(1);
 						break;
 					default:
 						pathHistoryValue = pathBuilder('#library', {
 							library_id: serie.libraryId,
 							series_id: serie.id
 						});
-						break;						
+						break;
 				}
 				console.log(pathHistoryValue)
 				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
