@@ -357,6 +357,7 @@ async function systemRestart() {
 async function loginToServer(event, serverId, test) {
 
 	if (serverId == 'mb0') {
+		console.log("------------ LOGIN TO mb0")
 		//mb.currentServerId = serverId;
 		localStorage.removeItem('mb00CurrentServerId');
 		localStorage.removeItem('mb00CurrentUserId');
@@ -366,15 +367,18 @@ async function loginToServer(event, serverId, test) {
 		//showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
 		return
 	}
+		console.log("------------ LOGIN TO server:"+serverId)
 
 	mb.loggingServerId = serverId;
 
 	event.stopPropagation();
 
 	if (mb.serverList[serverId].askPassword || (isWeb && !webPWD)) {
+		console.log("------------ A")
 		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
 		closeModal();
 	} else {
+		console.log("------------ B")
 		//mb.currentServerId = serverId;
 		closeModal();
 		showLoginDialog('editserver', serverId, mb.serverList[serverId])
@@ -404,9 +408,11 @@ async function loginToServer(event, serverId, test) {
 		history.pushState(null, '', mb.basePath + '#dashboard');
 
 		if (mb.currentUserId == false) {
+			console.log("---------------------- C")
 			login(serverId, test, false);
 		} else {
-			systemRestart();
+					console.log("---------------------- D")
+	systemRestart();
 		}
 
 		//		login(serverId, test, false);
@@ -430,6 +436,10 @@ function cleanBaseUrlVal(baseUrlVal) {
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
 	return baseUrlVal
+}
+
+async function veryfyServerReach(){
+
 }
 
 async function login(serverId, test, fromDialog) {
@@ -524,12 +534,20 @@ async function login(serverId, test, fromDialog) {
 			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
+		//TODO Check and fix this
 
-		mb.currentServerId = false
+		//localStorage.removeItem('mb00BaseUrl');
+		//localStorage.removeItem('mb00CurrentServerId');
+		//localStorage.removeItem('mb00CurrentUserId');
+		//closeModal();
+		//systemRestart()
+		
+		//mb.currentServerId = false
 
 		console.error('Login error:', error);
 		loginError.textContent = t("server.cannotreach") + `${error}`;
 		loginError.classList.toggle('auth-hidden', false);
+		
 	});
 
 	// Reset login credentials

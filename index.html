@@ -390,7 +390,7 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
-		const webPWD = false;
+		const webPWD = true;//false;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -1670,6 +1670,8 @@
 			let mangaboxFlat = null;
 			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
 
+			if (settings == null) return null
+
 			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
 					.filter(([key]) => key.startsWith('mangabox'))
@@ -1712,11 +1714,11 @@
 
 		function applyUserSettings() {
 			// Server user variable setup
-			mb.accentColor = Number(userSettings['mangabox.ui.accentcolor'] ?? 0);
-			mb.themePrefs = Number(userSettings['mangabox.ui.themeprefs'] ?? 0);
-			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
-			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
-			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
+			mb.accentColor = Number(userSettings?.['mangabox.ui.accentcolor'] ?? 0);
+			mb.themePrefs = Number(userSettings?.['mangabox.ui.themeprefs'] ?? 0);
+			mb.readerThemePrefs = Number(userSettings?.['mangabox.ui.readerthemeprefs'] ?? 0);
+			mb.libraryFilters = JSON.parse(userSettings?.['mangabox.ui.libraryfilters'] || '{}');
+			mb.libraryIcons = JSON.parse(userSettings?.['mangabox.ui.libraryicons'] || '{}');
 
 			// Local storage variable setup
 			mb.webtoonScale = Number(localStorage.getItem(`c_${mb.currentUserId}_webtoonScale`) ?? 100);
