@@ -1431,8 +1431,12 @@
 			if (!mb.currentServerId) {
 				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			} else if (mb.loginMode == 'enterpassword') {
+							console.log("X_X_A")
+
 				hideLoginDialog()
 			} else {
+							console.log("X_X_B")
+
 				hideLoginDialog()
 			}
 			serversDialog()
@@ -1659,7 +1663,11 @@
 					: []),
 				{
 					label: 'modal.ok', runfunction: () => {
-						if (mb.currentServerId) hideLoginDialog();
+						if (mb.currentServerId) {
+									console.log("X_X_C")
+
+							hideLoginDialog();
+						}
 						closeModal()
 					}, high: true
 				}
