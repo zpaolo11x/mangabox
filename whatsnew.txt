@@ -5,10 +5,7 @@ Main UI
 
 Reader UI
 - Remove back button and reader history
-- todo:	WIP: fix +/- when there's a left margin
-
-Fixes
-- 
+- Reposition zoom buttons when there's a left margin
 
 Build
-- 
+- Added compatibility with tailscale MagicDNS domains
