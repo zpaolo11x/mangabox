@@ -1431,12 +1431,8 @@
 			if (!mb.currentServerId) {
 				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
 			} else if (mb.loginMode == 'enterpassword') {
-				console.log("X_X_A")
-
 				hideLoginDialog()
 			} else {
-				console.log("X_X_B")
-
 				hideLoginDialog()
 			}
 			serversDialog()
@@ -1483,8 +1479,6 @@
 			await executeFaderGradient(1);
 
 			Object.entries(serverList).forEach(async ([id, server]) => {
-				console.log(id)
-				console.log(server.askPassword)
 				if ((!server.askPassword)) {
 					mb.serverList[id].askPassword = true;
 
@@ -1664,8 +1658,6 @@
 				{
 					label: 'modal.ok', runfunction: () => {
 						if (mb.currentServerId) {
-							console.log("X_X_C")
-
 							hideLoginDialog();
 						}
 						closeModal()
@@ -3969,7 +3961,7 @@
 
 			addTouchScaler(seriesItem, () => {
 				const { path, params } = getHashAndParams();
-				console.log(path)
+
 				if (target?.binName) mb.dashboardBin = target.binName;
 				//TODO: Maybe using history replace there's no need to manage target from library button?
 
@@ -3994,7 +3986,7 @@
 						});
 						break;
 				}
-				console.log(pathHistoryValue)
+
 				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
 				mb.historyStack[mb.historyStack.length - 1] = pathHistoryValue;
 

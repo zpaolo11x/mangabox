@@ -134,7 +134,7 @@ async function sessionCheck() {
 
 	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
-	console.log("--------->"+mb.currentServerId);
+
 	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
 	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
 	mb.baseUrl = cleanBaseUrlVal(mb.baseUrl)
@@ -160,7 +160,6 @@ async function sessionCheck() {
 		debugPrint("Offline mode detected.");
 		console.log("Offline mode detected.")
 		if (sessionWasValid) {
-			console.log("X_A")
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
@@ -212,8 +211,6 @@ async function sessionCheck() {
 			debugPrint("Session valid (server confirmed).");
 			console.log("Session valid (server confirmed).");
 			localStorage.setItem("mb00SessionValid", "true");
-						console.log("X_B")
-
 			hideLoginDialog();
 			bootSequence('online');
 
@@ -233,8 +230,6 @@ async function sessionCheck() {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			console.log(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			if (sessionWasValid) {
-							console.log("X_C")
-
 				hideLoginDialog();
 				bootSequence('offline');
 				await executeFaderGradient(0);
@@ -251,8 +246,6 @@ async function sessionCheck() {
 		console.log("Treating as temporary network/server issue.");
 
 		if (sessionWasValid) {
-						console.log("X_D")
-
 			hideLoginDialog();
 			bootSequence('offline');
 			await executeFaderGradient(0);
@@ -369,8 +362,6 @@ logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di lo
 
 */ 
 async function loginToServer(event, serverId, test) {
-		console.log("------------ LOGIN TO server:"+serverId)
-
 
 	/* 
 	First step: if you are trying to log into the "temp" server it clears current server 
@@ -379,7 +370,7 @@ async function loginToServer(event, serverId, test) {
 	*/
 
 	if (serverId == 'mb0') {
-		console.log("------------ LOGIN TO mb0")
+		//TODO Maybe add here a cleanup of server temporary name?
 		localStorage.removeItem('mb00CurrentServerId');
 		localStorage.removeItem('mb00CurrentUserId');
 		closeModal();
@@ -400,12 +391,10 @@ async function loginToServer(event, serverId, test) {
 		// In askPassword mode it shows the login dialog and closes the modal
 		// so it basically always work because with the login dialog present there is no risk
 		// of faux login
-		console.log("------------ A")
 		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
 		closeModal();
 	} else {
 		// This is the part to tune
-		console.log("------------ B")
 		closeModal();
 		showLoginDialog('editserver', serverId, mb.serverList[serverId])
 
@@ -417,10 +406,9 @@ async function loginToServer(event, serverId, test) {
 		//await logoutFromServer(serverTable);
 
 		mb.currentServerId = serverId;
-			console.log("--------->"+mb.currentServerId);
 
 		mb.currentUserId = mb.serverList[serverId].userId;
-console.log("currentUserId:"+mb.currentUserId)
+
 		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
 		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
@@ -437,10 +425,8 @@ console.log("currentUserId:"+mb.currentUserId)
 
 		if (mb.currentUserId == false) {
 			// There is no currently logged in user on any server so it can just do the login
-			console.log("---------------------- C")
 			login(serverId, test, false);
 		} else {
-			console.log("---------------------- D")
 			systemRestart();
 		}
 
@@ -509,7 +495,7 @@ async function login(serverId, test, fromDialog) {
 		}
 	}).then(async response => {
 		if (response.ok) {
-			console.log("XXXXXXXXXXXX A")
+
 			const rawBody = await response.text();
 			let parsed = null;
 			try {
@@ -523,8 +509,6 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
 
 				mb.currentServerId = serverId;
-					console.log("--------->"+mb.currentServerId);
-
 				mb.currentUserId = parsed.id;
 
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
@@ -555,12 +539,9 @@ async function login(serverId, test, fromDialog) {
 				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-						console.log("XXXXXXXXXXXX B")
 			loginError.textContent = t(`server.invalidlogindata`);
 			loginError.classList.toggle('auth-hidden', false);
 		} else {
-						console.log("XXXXXXXXXXXX C")
-
 			loginError.textContent = t(`server.loginfailed`);
 			loginError.classList.toggle('auth-hidden', false);
 		}
@@ -575,8 +556,6 @@ async function login(serverId, test, fromDialog) {
 		
 		//mb.currentServerId = false
 mb.currentServerId = false;
-	console.log("--------->"+mb.currentServerId);
-
 		console.error('Login error:', error);
 		loginError.textContent = t("server.cannotreach") + `${error}`;
 		loginError.classList.toggle('auth-hidden', false);
@@ -623,7 +602,7 @@ function applyScenario(modeName, serverId, serverData) {
 
 function showLoginDialog(dialogMode, serverId, serverData) {
 	mb.loginMode = dialogMode;
-console.log(dialogMode)
+
 	//dialogMode = 'firstboot'
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
