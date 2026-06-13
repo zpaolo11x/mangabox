@@ -7,5 +7,8 @@ Reader UI
 - Remove back button and reader history
 - Reposition zoom buttons when there's a left margin
 
+Fixes
+- Fxied time span serach from series
+
 Build
-- Added compatibility with tailscale MagicDNS domains
+- Added compatibility with http tailscale MagicDNS domains

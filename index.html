@@ -2211,7 +2211,6 @@
 			*/
 
 			if (searchString.includes('y:')) {
-
 				const unFilteredSeries = await callAPI('c_serieslistall',
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
@@ -3849,7 +3848,7 @@
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo('#search', { search_string: altTitle.time });
+				navigateTo('#search', { search_string: "y:"+altTitle.time });
 			})
 
 			const booksLabel = addItem('span', {
