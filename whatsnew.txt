@@ -9,6 +9,7 @@ Reader UI
 
 Fixes
 - Fxied time span serach from series
+- Fixed z-order of scrollbar
 
 Build
 - Added compatibility with http tailscale MagicDNS domains
