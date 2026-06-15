@@ -291,7 +291,7 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.3</div>
+				<div class="version-note">v0.4.4</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
@@ -366,7 +366,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.3</h1>
+		<h1>MangaBox v0.4.4</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -915,14 +915,13 @@
 
 		//MB Main Variable Setup 
 		function initMB() {
-
 			return (
 				{
 					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'pt', 'pt-BR', 'zh-Hans'],
 					languageAuto: false,
 					languageVal: '',
 
-					historyStack: [window.location.href],
+					historyStack: [window.location.hash || "#dashboard"],
 
 					libraryError: false,
 					libraryNames: '',
@@ -1445,7 +1444,7 @@
 			mb.editServerData.name = loginServerName.value;
 			mb.editServerData.url = loginBaseUrl.value;
 			mb.editServerData.username = loginUsername.value;
-			mb.editServerData.askPassword = false;
+			mb.editServerData.askPassword = !(!isWeb || (isWeb && webPWD));
 
 			mb.serverList[mb.editServerId] = {
 				...(mb.serverList[mb.editServerId] ?? {}),
@@ -1480,8 +1479,7 @@
 			await executeFaderGradient(1);
 
 			Object.entries(serverList).forEach(async ([id, server]) => {
-
-				if ((id != 'mb0') && (!server.askPassword)) {
+				if ((!server.askPassword)) {
 					mb.serverList[id].askPassword = true;
 
 					let fetchPayload
@@ -1659,7 +1657,9 @@
 					: []),
 				{
 					label: 'modal.ok', runfunction: () => {
-						if (mb.currentServerId) hideLoginDialog();
+						if (mb.currentServerId) {
+							hideLoginDialog();
+						}
 						closeModal()
 					}, high: true
 				}
@@ -1669,6 +1669,8 @@
 		async function getUserSettings() {
 			let mangaboxFlat = null;
 			const settings = await callAPI('c_usersettings', '/api/v1/client-settings/user/list', 'GET');
+
+			if (settings == null) return null
 
 			mangaboxFlat = Object.fromEntries(
 				Object.entries(settings)
@@ -1712,11 +1714,11 @@
 
 		function applyUserSettings() {
 			// Server user variable setup
-			mb.accentColor = Number(userSettings['mangabox.ui.accentcolor'] ?? 0);
-			mb.themePrefs = Number(userSettings['mangabox.ui.themeprefs'] ?? 0);
-			mb.readerThemePrefs = Number(userSettings['mangabox.ui.readerthemeprefs'] ?? 0);
-			mb.libraryFilters = JSON.parse(userSettings['mangabox.ui.libraryfilters'] || '{}');
-			mb.libraryIcons = JSON.parse(userSettings['mangabox.ui.libraryicons'] || '{}');
+			mb.accentColor = Number(userSettings?.['mangabox.ui.accentcolor'] ?? 0);
+			mb.themePrefs = Number(userSettings?.['mangabox.ui.themeprefs'] ?? 0);
+			mb.readerThemePrefs = Number(userSettings?.['mangabox.ui.readerthemeprefs'] ?? 0);
+			mb.libraryFilters = JSON.parse(userSettings?.['mangabox.ui.libraryfilters'] || '{}');
+			mb.libraryIcons = JSON.parse(userSettings?.['mangabox.ui.libraryicons'] || '{}');
 
 			// Local storage variable setup
 			mb.webtoonScale = Number(localStorage.getItem(`c_${mb.currentUserId}_webtoonScale`) ?? 100);
@@ -2209,7 +2211,6 @@
 			*/
 
 			if (searchString.includes('y:')) {
-
 				const unFilteredSeries = await callAPI('c_serieslistall',
 					`/api/v1/series/list?page=0&unpaged=true&sort=metadata.titleSort,asc`,
 					'POST', `{"condition": {"allOf": []}}`
@@ -3847,7 +3848,7 @@
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo('#search', { search_string: altTitle.time });
+				navigateTo('#search', { search_string: "y:"+altTitle.time });
 			})
 
 			const booksLabel = addItem('span', {
@@ -3958,14 +3959,36 @@
 			seriesItem.classList.add('touch-scaler')
 
 			addTouchScaler(seriesItem, () => {
+				const { path, params } = getHashAndParams();
+
 				if (target?.binName) mb.dashboardBin = target.binName;
 				//TODO: Maybe using history replace there's no need to manage target from library button?
-				let pathHistoryValue = pathBuilder('#library', {
-					library_id: serie.libraryId,
-					series_id: serie.id
-				})
+
+				let pathHistoryValue = ""
+				switch (path) {
+					case "library":
+						pathHistoryValue = pathBuilder('#library', {
+							library_id: serie.libraryId,
+							series_id: serie.id
+						});
+						break;
+					case "collectionsitem":
+						pathHistoryValue = "#" + window.location.hash.substring(1);
+						break;
+					case "search":
+						pathHistoryValue = "#" + window.location.hash.substring(1);
+						break;
+					default:
+						pathHistoryValue = pathBuilder('#library', {
+							library_id: serie.libraryId,
+							series_id: serie.id
+						});
+						break;
+				}
+
 				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
 				mb.historyStack[mb.historyStack.length - 1] = pathHistoryValue;
+
 				navigateTo('#series', {
 					library_id: serie.libraryId,
 					series_id: serie.id
@@ -5268,7 +5291,7 @@
 				} else if (target == offlineGrid) {
 					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('?book_id=')[0] + '?book_id=' + book.id;
 				} else {
-					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0];
+					mb.historyStack[mb.historyStack.length - 1] = window.location.hash.split('&book_id=')[0] || '#dashboard';
 				}
 
 				setIncognito(false);
@@ -5894,8 +5917,9 @@
 			clearAllTimeouts();
 
 			showBackButton(false)
-
-			if (mb.historyStack.length == 1) mb.historyStack = ['#dashboard', mb.historyStack[0]]
+			if (mb.historyStack.length == 1) {
+				mb.historyStack = ['#dashboard', mb.historyStack[0]]
+			}
 			goBack()
 
 			if (isStatusBar && !isSharpCornerIphone) {
@@ -7515,7 +7539,7 @@
 			if (!skipHistory) {
 				const jumpValue = jumpString();
 				history.replaceState(null, '', jumpValue);
-				mb.historyStack[mb.historyStack.length - 1] = jumpValue;
+				//mb.historyStack[mb.historyStack.length - 1] = jumpValue;
 
 			}
 		}
@@ -7910,7 +7934,7 @@
 				path = pathBuilder(path, params);
 			}
 			history.pushState(null, '', path);
-			mb.historyStack.push(path);
+			if (path != mb.historyStack[mb.historyStack.length - 1]) mb.historyStack.push(path);
 			loadContent();
 		}
 

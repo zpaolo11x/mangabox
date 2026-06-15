@@ -134,6 +134,7 @@ async function sessionCheck() {
 
 	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
+
 	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
 	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
 	mb.baseUrl = cleanBaseUrlVal(mb.baseUrl)
@@ -217,7 +218,7 @@ async function sessionCheck() {
 			debugPrint("Credentials invalid or expired.");
 			console.log("Credentials invalid or expired.");
 			mb.currentUserId = false;
-			
+
 			//TODO Verifica se questa funzione fa già più di quel che fa il resto
 			await logOutFromCurrentServer()
 
@@ -271,7 +272,7 @@ async function setServerFields(serverId, serverData) {
 		let localPass = await loadUserPass(serverId);
 
 		loginPassword.value = localPass;
-		
+
 		localPass = null;
 	}
 
@@ -354,28 +355,46 @@ async function systemRestart() {
 	sessionCheck();
 }
 
+//TODO ZZZZZZZZ Ecco l'idea:
+/*
+
+logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di login forzato per poi lanciare di nuovo il login SENZA TEST
+
+*/ 
 async function loginToServer(event, serverId, test) {
 
+	/* 
+	First step: if you are trying to log into the "temp" server it clears current server 
+	and user id and basically restarts the system. Removing those two files means that
+	at boot it will go to the login dialog
+	*/
+
 	if (serverId == 'mb0') {
-		//mb.currentServerId = serverId;
+		//TODO Maybe add here a cleanup of server temporary name?
 		localStorage.removeItem('mb00CurrentServerId');
 		localStorage.removeItem('mb00CurrentUserId');
 		closeModal();
 		systemRestart()
-		
-		//showLoginDialog('firstboot', 'mb0', mb.serverList['mb0'])
+
 		return
 	}
+
+	/*
+	loggingServerId is the TEMPORARY server you are trying to log in
+	*/
 
 	mb.loggingServerId = serverId;
 
 	event.stopPropagation();
 
 	if (mb.serverList[serverId].askPassword || (isWeb && !webPWD)) {
+		// In askPassword mode it shows the login dialog and closes the modal
+		// so it basically always work because with the login dialog present there is no risk
+		// of faux login
 		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
 		closeModal();
 	} else {
-		//mb.currentServerId = serverId;
+		// This is the part to tune
 		closeModal();
 		showLoginDialog('editserver', serverId, mb.serverList[serverId])
 
@@ -387,8 +406,9 @@ async function loginToServer(event, serverId, test) {
 		//await logoutFromServer(serverTable);
 
 		mb.currentServerId = serverId;
+
 		mb.currentUserId = mb.serverList[serverId].userId;
-		
+
 		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
 		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
@@ -402,14 +422,15 @@ async function loginToServer(event, serverId, test) {
 		// I need to save the user id even in this logintoserver if it's not there
 		// OR I can check if the id is there or not.
 		history.pushState(null, '', mb.basePath + '#dashboard');
-		
-		if (mb.currentUserId == false){
+
+		if (mb.currentUserId == false) {
+			// There is no currently logged in user on any server so it can just do the login
 			login(serverId, test, false);
 		} else {
 			systemRestart();
 		}
 
-	//		login(serverId, test, false);
+		//		login(serverId, test, false);
 
 	}
 
@@ -423,13 +444,17 @@ async function loginToServer(event, serverId, test) {
 	*/
 }
 
-function cleanBaseUrlVal(baseUrlVal){
+function cleanBaseUrlVal(baseUrlVal) {
 	if (!/^https?:\/\//i.test(baseUrlVal)) {
 		baseUrlVal = 'https://' + baseUrlVal;
 	}
 	baseUrlVal = baseUrlVal.replace(/\/$/, '');
 
 	return baseUrlVal
+}
+
+async function veryfyServerLogin(serverId){
+	login(serverId, test, fromDialog)
 }
 
 async function login(serverId, test, fromDialog) {
@@ -489,10 +514,10 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
 				localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
 				localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
-		
+
 				mb.serverList[serverId].userId = mb.currentUserId;
 				mb.serverList[serverId].askPassword = false;
-		
+
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 				//TODO Magari resettare la password quando anche user 0 fa logout?
@@ -521,9 +546,20 @@ async function login(serverId, test, fromDialog) {
 			loginError.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
+		//TODO Check and fix this
+
+		localStorage.removeItem('mb00BaseUrl');
+		localStorage.removeItem('mb00CurrentServerId');
+		localStorage.removeItem('mb00CurrentUserId');
+		//closeModal();
+		//systemRestart()
+		
+		//mb.currentServerId = false
+mb.currentServerId = false;
 		console.error('Login error:', error);
 		loginError.textContent = t("server.cannotreach") + `${error}`;
 		loginError.classList.toggle('auth-hidden', false);
+		
 	});
 
 	// Reset login credentials
@@ -565,7 +601,6 @@ function applyScenario(modeName, serverId, serverData) {
 }
 
 function showLoginDialog(dialogMode, serverId, serverData) {
-
 	mb.loginMode = dialogMode;
 
 	//dialogMode = 'firstboot'
