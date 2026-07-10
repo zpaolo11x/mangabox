@@ -3,5 +3,6 @@ Main UI
 Reader UI
 
 Fixes
+- Fixed sync of read position for offline books
 
 Build

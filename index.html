@@ -5727,7 +5727,10 @@
 
 			//TODO cosa succede se questo viene lanciato in offline mode???
 			console.log("************** CHECK OFFLINE READ STATUS FROM BOOT")
-			if (enableDownload && !offlineSession) await obRefreshReadStatus();
+			if (enableDownload && !offlineSession) {
+				await obRefreshReadStatus();
+				await obUpdateMetadata();
+			}
 
 			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
 			const fakerSeries = callAPI('c_serieslistall',
