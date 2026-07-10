@@ -1338,6 +1338,7 @@
 			}
 
 			if (!offlineSession && !obfetch) {
+				console.log("************** CHECK READ STATUS AT API CALL")
 				await obRefreshReadStatus();
 			}
 
@@ -3025,7 +3026,7 @@
 					//if (!String(err.message).includes('exists')) throw err;
 				}
 			}
-			
+
 			await ensureDir(baseDir);
 			await ensureDir(bookFolder);
 			await ensureDir(pagesFolder);
@@ -3346,6 +3347,8 @@
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
 				const userData = item.users?.[mb.currentUserId];
 				if (userData?.updated) {
+								console.log("************** USERDATA UPDATED")
+
 					await callAPI(
 						null,
 						`/api/v1/books/${bookId}/read-progress`,
@@ -5713,6 +5716,8 @@
 				el.classList.remove('hidestrip');
 			});
 
+			//TODO cosa succede se questo viene lanciato in offline mode???
+			console.log("************** CHECK OFFLINE READ STATUS FROM BOOT")
 			if (enableDownload) await obRefreshReadStatus();
 
 			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
