@@ -1,15 +1,7 @@
 Main UI
-- Moved back button right when there's a left margin
-- Adjusted library arrows position when there's a left margin
-- Back button from series goes back to serch page or collection page
 
 Reader UI
-- Remove back button and reader history
-- Reposition zoom buttons when there's a left margin
 
 Fixes
-- Fxied time span serach from series
-- Fixed z-order of scrollbar
 
 Build
-- Added compatibility with http tailscale MagicDNS domains
