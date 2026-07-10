@@ -3269,6 +3269,7 @@
 		async function obUpdateMetadata(bookId) {
 			Object.entries(mb.offlineBooks).forEach(async ([bookId, item]) => {
 				if (item.status === 'completed' && item.users?.[mb.currentUserId]) {
+					console.log("SYNCING METADATA FOR "+bookId)
 					let requestData = await buildRequest('GET', null)
 					let requestMedia = await buildRequest('GET', null, true)
 
