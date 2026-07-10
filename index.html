@@ -2967,7 +2967,6 @@
 					encoding: 'utf8'
 				});
 
-
 				debugPrint('Get Series Data')
 				// Series metadata
 				res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
@@ -2991,7 +2990,6 @@
 					directory: filesFolder,
 					encoding: 'utf8'
 				});
-
 				return { ok: true, path: bookFolder };
 			} catch (err) {
 				debugPrint('Error in safeWriteFile:');
@@ -3027,8 +3025,7 @@
 					//if (!String(err.message).includes('exists')) throw err;
 				}
 			}
-
-
+			
 			await ensureDir(baseDir);
 			await ensureDir(bookFolder);
 			await ensureDir(pagesFolder);
