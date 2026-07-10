@@ -3346,8 +3346,10 @@
 			//V039
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
 				const userData = item.users?.[mb.currentUserId];
+				console.log("BOOK USERDATA PRE")
+				console.log(userData);
 				if (userData?.updated) {
-								console.log("************** USERDATA UPDATED")
+					console.log("************** USERDATA UPDATED")
 
 					await callAPI(
 						null,
@@ -3361,6 +3363,8 @@
 					obSaveTable();
 
 				}
+				console.log("BOOK USERDATA POST")
+				console.log(userData);
 			}
 		}
 
