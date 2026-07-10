@@ -2943,6 +2943,63 @@
 			}
 		}
 
+		async function capacitorUpdateMetadata({ bookId, bookTitle, baseUrl, requestData, requestMedia }) {
+	
+			const baseDir = 'offline-books';
+			const bookFolder = `${baseDir}/${bookId}`;
+			const pagesFolder = `${bookFolder}/pages`;
+			const thumbsFolder = `${bookFolder}/thumbs`;
+
+			try {
+				debugPrint(`Downloading metadata for ${bookId}`);
+
+				debugPrint('Get Book Data')
+				// Book metadata
+				let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+				if (!res.ok) debugPrint(res.status)
+				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
+				const bookMeta = await res.json();
+
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-book.json`,
+					data: JSON.stringify(bookMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+
+				debugPrint('Get Series Data')
+				// Series metadata
+				res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
+				if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
+				const seriesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-series.json`,
+					data: JSON.stringify(seriesMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				debugPrint('Get Pages Data')
+				// Pages metadata
+				res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
+				if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
+				const pagesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-pages.json`,
+					data: JSON.stringify(pagesMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				return { ok: true, path: bookFolder };
+			} catch (err) {
+				debugPrint('Error in safeWriteFile:');
+				debugPrint(err);
+				console.error('Update metadata:', err);
+				return { ok: false, error: err.message };
+			}
+		}
 
 		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData, requestMedia }) {
 			const mimeToExt = {
@@ -3211,6 +3268,21 @@
 			return Object.values(mb.offlineBooks).some(book => book.status === 'downloading');
 		}
 
+		async function obUpdateMetadata(bookId){
+			let requestData = await buildRequest('GET', null)
+			let requestMedia = await buildRequest('GET', null, true)
+
+			let bookData = {
+				bookId: bookId,
+				baseUrl: `${mb.baseUrl}`,
+				requestData: requestData,
+				requestMedia: requestMedia
+			};
+
+			if (isElectron) await window.offlineAPI.updateMetadata(bookData);
+			if (isCapacitor) await capacitorUpdateMetadata(bookData);
+		}
+
 		async function obDownloadBook(bookId) {
 			let requestData = await buildRequest('GET', null)
 			let requestMedia = await buildRequest('GET', null, true)
@@ -3272,6 +3344,7 @@
 		}
 
 		async function obRefreshReadStatus() {
+		console.log(mb.offlineBooks)
 			//V039
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
 				const userData = item.users?.[mb.currentUserId];
