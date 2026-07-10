@@ -2945,7 +2945,7 @@
 		}
 
 		async function capacitorUpdateMetadata({ bookId, bookTitle, baseUrl, requestData, requestMedia }) {
-	
+
 			const baseDir = 'offline-books';
 			const bookFolder = `${baseDir}/${bookId}`;
 			const pagesFolder = `${bookFolder}/pages`;
@@ -3266,19 +3266,24 @@
 			return Object.values(mb.offlineBooks).some(book => book.status === 'downloading');
 		}
 
-		async function obUpdateMetadata(bookId){
-			let requestData = await buildRequest('GET', null)
-			let requestMedia = await buildRequest('GET', null, true)
+		async function obUpdateMetadata(bookId) {
+			Object.entries(mb.offlineBooks).forEach(async ([bookId, item]) => {
+				if (item.status === 'completed' && item.users?.[mb.currentUserId]) {
+					let requestData = await buildRequest('GET', null)
+					let requestMedia = await buildRequest('GET', null, true)
 
-			let bookData = {
-				bookId: bookId,
-				baseUrl: `${mb.baseUrl}`,
-				requestData: requestData,
-				requestMedia: requestMedia
-			};
+					let bookData = {
+						bookId: bookId,
+						baseUrl: `${mb.baseUrl}`,
+						requestData: requestData,
+						requestMedia: requestMedia
+					};
 
-			if (isElectron) await window.offlineAPI.updateMetadata(bookData);
-			if (isCapacitor) await capacitorUpdateMetadata(bookData);
+					if (isElectron) await window.offlineAPI.updateMetadata(bookData);
+					if (isCapacitor) await capacitorUpdateMetadata(bookData);
+
+				}
+			});
 		}
 
 		async function obDownloadBook(bookId) {
@@ -3342,7 +3347,7 @@
 		}
 
 		async function obRefreshReadStatus() {
-		console.log(mb.offlineBooks)
+			console.log(mb.offlineBooks)
 			//V039
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
 				const userData = item.users?.[mb.currentUserId];
@@ -3925,7 +3930,7 @@
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo('#search', { search_string: "y:"+altTitle.time });
+				navigateTo('#search', { search_string: "y:" + altTitle.time });
 			})
 
 			const booksLabel = addItem('span', {
@@ -5722,7 +5727,7 @@
 
 			//TODO cosa succede se questo viene lanciato in offline mode???
 			console.log("************** CHECK OFFLINE READ STATUS FROM BOOT")
-			if (enableDownload) await obRefreshReadStatus();
+			if (enableDownload && !offlineSession) await obRefreshReadStatus();
 
 			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
 			const fakerSeries = callAPI('c_serieslistall',
