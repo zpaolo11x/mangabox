@@ -3348,14 +3348,11 @@
 		}
 
 		async function obRefreshReadStatus() {
-			console.log(mb.offlineBooks)
 			//V039
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
 				const userData = item.users?.[mb.currentUserId];
-				console.log("BOOK USERDATA PRE")
-				console.log(userData);
+
 				if (userData?.updated) {
-					console.log("************** USERDATA UPDATED")
 
 					await callAPI(
 						null,
@@ -3369,8 +3366,6 @@
 					obSaveTable();
 
 				}
-				console.log("BOOK USERDATA POST")
-				console.log(userData);
 			}
 		}
 
@@ -5726,8 +5721,6 @@
 				el.classList.remove('hidestrip');
 			});
 
-			//TODO cosa succede se questo viene lanciato in offline mode???
-			console.log("************** CHECK OFFLINE READ STATUS FROM BOOT")
 			if (enableDownload && !offlineSession) {
 				await obRefreshReadStatus();
 				await obUpdateMetadata();
@@ -5743,7 +5736,7 @@
 				'POST', `{"condition": {"allOf": []}}`
 			);
 
-			if (enableDownload) obRestoreDownloadOnBoot();
+			if (enableDownload && !offlineSession) obRestoreDownloadOnBoot();
 
 		}
 
