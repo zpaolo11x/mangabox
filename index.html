@@ -389,7 +389,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = true;
+		const fullDebugMode = false;
 		const webPWD = false;
 
 		// Enable for live debug on the main UI
@@ -5316,6 +5316,9 @@
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '0%';
 						bookDownloadUI.innerText = '0%';
+						bookDownloadUI.style.overflowY = 'hidden';
+						bookDownloadUI.style.alignItems = 'end';
+
 						obAddBookToTable(book);
 						obSetSpinner(true);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
