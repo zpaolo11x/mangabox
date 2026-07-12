@@ -5307,7 +5307,8 @@
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '100%';
 						bookDownloadUI.innerText = '0%';
-						obRemoveBookFromTable(book.id);
+						bookDownloadUI.style.overflowY = 'hidden';
+						bookDownloadUI.style.alignItems = 'end';						obRemoveBookFromTable(book.id);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 						obDeleteBookData(book.id);
 						obSetSpinner(false);
@@ -5316,8 +5317,7 @@
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '0%';
 						bookDownloadUI.innerText = '0%';
-						bookDownloadUI.style.overflowY = 'hidden';
-						bookDownloadUI.style.alignItems = 'end';
+
 
 						obAddBookToTable(book);
 						obSetSpinner(true);
