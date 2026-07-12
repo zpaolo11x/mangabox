@@ -1745,13 +1745,12 @@ transform: rotate(90deg);
 	/* horizontal centering */
 	justify-content: center;
 	/* vertical centering */
-	align-items:start;
+	align-items: end;
 	border-radius: var(--mb-cover-radius) var(--mb-cover-radius) 0px var(--mb-cover-radius);
 	font-size: 40px;
 	transition: bottom 0.3s;
 	text-shadow: rgba(0, 0, 0, 0.5) 0px 2px 6px;
 	color: white;
-	overflow-y:visible;
 }
 
 .book-downloader.done {
