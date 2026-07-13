@@ -1753,6 +1753,14 @@ transform: rotate(90deg);
 	color: white;
 }
 
+.book-downloader-span {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 100%;
+}
+
 .book-downloader.done {
 	position: absolute;
 	top: 20px;
