@@ -825,7 +825,7 @@
 const containerHeight = tempDivChild.clientHeight;
 const textHeight = tempDivChild.scrollHeight;
 
-				if (containerHeight <= textHeight + 4) { // 4px = small margin
+				if ((percent > 75) && (containerHeight <= textHeight + 4)) { // 4px = small margin
     tempDivChild.style.overflowY = 'visible';
     tempDivChild.style.alignItems = 'start';
 } else {
