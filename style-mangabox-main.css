@@ -1786,6 +1786,11 @@ transform: rotate(90deg);
 	text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px
 }
 
+.book-downloader.done .book-downloader-span{
+	top:0;
+	height:100%;
+}
+
 .download-glyph {
 	position: absolute;
 	top: 50%;

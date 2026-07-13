@@ -7880,7 +7880,17 @@
 				*/
 				//XXXXXXXXXXXXXXXXXXXREMOVETHIS
 				case 'd':
-					obUpdateProgressResponse('0M0543Y7G3TB5', tempi += 1, 100)
+							let tempDiv = document.getElementById('0M0543Y7G3TB5');
+
+
+			let tempDivChild = tempDiv.querySelector('.book-downloader');
+			let tempDivChildText = tempDiv.querySelector('.book-downloader-span');
+
+			tempDivChildText.innerText = '100%';
+			tempDivChild.classList.add('done');
+	
+				
+				//obUpdateProgressResponse('0M0543Y7G3TB5', tempi += 1, 100)
 					break;
 
 				case ' ':
