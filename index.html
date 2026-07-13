@@ -389,7 +389,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = true; //XXXXXXXXXXXXREMOVETHIS SET TO FALSE
+		const fullDebugMode = false;
 		const webPWD = false;
 
 		// Enable for live debug on the main UI
@@ -825,41 +825,15 @@
 				tempDivChild.style.bottom = percent + '%';
 				tempDivChildText.innerText = percent + '%';
 
-
 				const offset = Math.max(
 					0,
 					tempDivChildText.offsetHeight - tempDivChild.clientHeight
 				);
-
 				tempDivChildText.style.bottom = `-${offset}px`;
-				console.log("-----------------OFFSET:" + offset)
-				console.log("parent:" + tempDivChild.clientHeight)
-				console.log("child:" + tempDivChildText.offsetHeight)
-
-
-
-
-
-				//tempDivChildText.style.bottom = `-${offset}px`;
-
-				/*
-				if (percent <= 75) {
-					tempDivChild.style.bottom = percent + '%';
-
-					tempDivChildText.innerText = percent + '%';
-				} else {
-					tempDivChild.style.overflowY = 'visible';
-					tempDivChild.style.bottom = percent + '%';
-					tempDivChild.style.alignItems = 'start';
-
-					tempDivChildText.innerText = percent + '%';
-				}
-*/
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 			}
-
 		}
 
 		function obDownloaDcompleteResponse(bookId, downloadedPages, total) {
@@ -1374,7 +1348,6 @@
 			}
 
 			if (!offlineSession && !obfetch) {
-				console.log("************** CHECK READ STATUS AT API CALL")
 				await obRefreshReadStatus();
 			}
 
@@ -3305,7 +3278,6 @@
 		async function obUpdateMetadata(bookId) {
 			Object.entries(mb.offlineBooks).forEach(async ([bookId, item]) => {
 				if (item.status === 'completed' && item.users?.[mb.currentUserId]) {
-					console.log("SYNCING METADATA FOR " + bookId)
 					let requestData = await buildRequest('GET', null)
 					let requestMedia = await buildRequest('GET', null, true)
 
@@ -7817,9 +7789,6 @@
 			}
 		});
 
-		//XXXXXXXXXXXREMOVETHIS
-		let tempi = 0;
-
 		//TODO: RIMUOVERE ASYNC DA QUI
 		document.addEventListener('keydown', async (event) => {
 			const readerVisible = !isSectionHidden(readerContainer);
@@ -7878,20 +7847,6 @@
 					updateReaderOrientation()
 					break;
 				*/
-				//XXXXXXXXXXXXXXXXXXXREMOVETHIS
-				case 'd':
-							let tempDiv = document.getElementById('0M0543Y7G3TB5');
-
-
-			let tempDivChild = tempDiv.querySelector('.book-downloader');
-			let tempDivChildText = tempDiv.querySelector('.book-downloader-span');
-
-			tempDivChildText.innerText = '100%';
-			tempDivChild.classList.add('done');
-	
-				
-				//obUpdateProgressResponse('0M0543Y7G3TB5', tempi += 1, 100)
-					break;
 
 				case ' ':
 					if (readerVisible) {
