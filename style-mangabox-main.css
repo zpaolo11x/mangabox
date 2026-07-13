@@ -1753,12 +1753,20 @@ transform: rotate(90deg);
 	color: white;
 }
 
-.book-downloader-span{
+.book-downloader-span {
 	position: absolute;
-	left: 0;
+	left: 50%;
 	top: 0;
-	right: 0;
-	bottom: 100%;
+	height: max(100%, 50px);
+	width: 80px;
+	transform: translateX(-50%);
+
+	display: flex;
+	justify-content: center;
+	align-items: end;
+
+	padding-bottom: 0;
+	box-sizing: border-box;
 }
 
 .book-downloader.done {

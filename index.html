@@ -389,7 +389,7 @@
 
 	<script>
 		// Set to true to disable per-device and per-platform feature select
-		const fullDebugMode = false;
+		const fullDebugMode = true; //XXXXXXXXXXXXREMOVETHIS SET TO FALSE
 		const webPWD = false;
 
 		// Enable for live debug on the main UI
@@ -817,13 +817,35 @@
 			obSetSpinner(true);
 
 			let tempDiv = document.getElementById(bookId);
-			
+
 			if (tempDiv) {
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
 				let tempDivChildText = tempDiv.querySelector('.book-downloader-span');
-				if (percent <= 75){
+
+				tempDivChild.style.bottom = percent + '%';
+				tempDivChildText.innerText = percent + '%';
+
+
+				const offset = Math.max(
+					0,
+					tempDivChildText.offsetHeight - tempDivChild.clientHeight
+				);
+
+				tempDivChildText.style.bottom = `-${offset}px`;
+				console.log("-----------------OFFSET:" + offset)
+				console.log("parent:" + tempDivChild.clientHeight)
+				console.log("child:" + tempDivChildText.offsetHeight)
+
+
+
+
+
+				//tempDivChildText.style.bottom = `-${offset}px`;
+
+				/*
+				if (percent <= 75) {
 					tempDivChild.style.bottom = percent + '%';
-					
+
 					tempDivChildText.innerText = percent + '%';
 				} else {
 					tempDivChild.style.overflowY = 'visible';
@@ -832,7 +854,7 @@
 
 					tempDivChildText.innerText = percent + '%';
 				}
-
+*/
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
@@ -846,8 +868,8 @@
 			if (tempDiv == null) return
 
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
-				let tempDivChildText = tempDiv.querySelector('.book-downloader-span');
-			
+			let tempDivChildText = tempDiv.querySelector('.book-downloader-span');
+
 			tempDivChildText.innerText = '100%';
 			tempDivChild.classList.add('done');
 
@@ -3283,7 +3305,7 @@
 		async function obUpdateMetadata(bookId) {
 			Object.entries(mb.offlineBooks).forEach(async ([bookId, item]) => {
 				if (item.status === 'completed' && item.users?.[mb.currentUserId]) {
-					console.log("SYNCING METADATA FOR "+bookId)
+					console.log("SYNCING METADATA FOR " + bookId)
 					let requestData = await buildRequest('GET', null)
 					let requestMedia = await buildRequest('GET', null, true)
 
@@ -5115,7 +5137,7 @@
 				//innerText: '100%'
 			});
 
-			const bookDownloadUISpan = addItem('span',{
+			const bookDownloadUISpan = addItem('span', {
 				className: 'book-downloader-span',
 			});
 
@@ -5302,7 +5324,7 @@
 				});
 
 				addClickPointerEvents(downloadButton, () => {
-			
+
 					if (obIsBookCompleted(book.id)) {
 						// Book is finished, you can delete the book!
 						bookDownloadUI.classList.remove('done');
@@ -7795,6 +7817,9 @@
 			}
 		});
 
+		//XXXXXXXXXXXREMOVETHIS
+		let tempi = 0;
+
 		//TODO: RIMUOVERE ASYNC DA QUI
 		document.addEventListener('keydown', async (event) => {
 			const readerVisible = !isSectionHidden(readerContainer);
@@ -7853,6 +7878,11 @@
 					updateReaderOrientation()
 					break;
 				*/
+				//XXXXXXXXXXXXXXXXXXXREMOVETHIS
+				case 'd':
+					obUpdateProgressResponse('0M0543Y7G3TB5', tempi += 1, 100)
+					break;
+
 				case ' ':
 					if (readerVisible) {
 						event.preventDefault();
