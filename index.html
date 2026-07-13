@@ -817,21 +817,19 @@
 			obSetSpinner(true);
 
 			let tempDiv = document.getElementById(bookId);
-
+			
 			if (tempDiv) {
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				if (percent <= 75){
 					tempDivChild.style.bottom = percent + '%';
 					tempDivChild.innerText = percent + '%';
-const containerHeight = tempDivChild.clientHeight;
-const textHeight = tempDivChild.scrollHeight;
+				} else {
+					tempDivChild.style.overflowY = 'visible';
+					tempDivChild.style.bottom = percent + '%';
+					tempDivChild.style.alignItems = 'start';
 
-				if ((percent > 75) && (containerHeight <= textHeight + 4)) { // 4px = small margin
-    tempDivChild.style.overflowY = 'visible';
-    tempDivChild.style.alignItems = 'start';
-} else {
-    tempDivChild.style.overflowY = 'hidden';
-    tempDivChild.style.alignItems = 'end';
-}
+					tempDivChild.innerText = percent + '%';
+				}
 
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
