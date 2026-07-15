@@ -74,6 +74,9 @@ contextBridge.exposeInMainWorld('offlineAPI', {
 	downloadBook: (info) =>
 		ipcRenderer.invoke('download-and-store-book', info),
 
+	updateMetadata: (info) =>
+		ipcRenderer.invoke('updated-downloaded-metadata', info),
+
 	onDownloadError: (callback) =>
 		ipcRenderer.on('download-error', (_, data) => callback(data)),
 

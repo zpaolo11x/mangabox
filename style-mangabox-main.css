@@ -1753,6 +1753,22 @@ transform: rotate(90deg);
 	color: white;
 }
 
+.book-downloader-span {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	height: max(100%, 50px);
+	width: 80px;
+	transform: translateX(-50%);
+
+	display: flex;
+	justify-content: center;
+	align-items: end;
+
+	padding-bottom: 0;
+	box-sizing: border-box;
+}
+
 .book-downloader.done {
 	position: absolute;
 	top: 20px;
@@ -1768,6 +1784,11 @@ transform: rotate(90deg);
 	transform: translate(-50%, -50%) rotate(45deg);
 	box-shadow: 0 0px 3px rgba(0, 0, 0, 0.2);
 	text-shadow: rgba(0, 0, 0, 0.3) 0px 1px 3px
+}
+
+.book-downloader.done .book-downloader-span{
+	top:0;
+	height:100%;
 }
 
 .download-glyph {

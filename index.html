@@ -291,7 +291,7 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.4</div>
+				<div class="version-note">v0.4.5</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
@@ -366,7 +366,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.4</h1>
+		<h1>MangaBox v0.4.5</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -817,15 +817,23 @@
 			obSetSpinner(true);
 
 			let tempDiv = document.getElementById(bookId);
+
 			if (tempDiv) {
 				let tempDivChild = tempDiv.querySelector('.book-downloader');
+				let tempDivChildText = tempDiv.querySelector('.book-downloader-span');
+
 				tempDivChild.style.bottom = percent + '%';
-				tempDivChild.innerText = percent + '%';
+				tempDivChildText.innerText = percent + '%';
+
+				const offset = Math.max(
+					0,
+					tempDivChildText.offsetHeight - tempDivChild.clientHeight
+				);
+				tempDivChildText.style.bottom = `-${offset}px`;
 
 				let tempDivChild2 = tempDiv.querySelector('.download-book');
 				tempDivChild2.innerHTML = obRedrawDownloadButton(bookId);
 			}
-
 		}
 
 		function obDownloaDcompleteResponse(bookId, downloadedPages, total) {
@@ -834,7 +842,9 @@
 			if (tempDiv == null) return
 
 			let tempDivChild = tempDiv.querySelector('.book-downloader');
-			tempDivChild.innerText = '100%';
+			let tempDivChildText = tempDiv.querySelector('.book-downloader-span');
+
+			tempDivChildText.innerText = '100%';
 			tempDivChild.classList.add('done');
 
 			obSetBookCompleted(bookId);
@@ -2943,6 +2953,61 @@
 			}
 		}
 
+		async function capacitorUpdateMetadata({ bookId, bookTitle, baseUrl, requestData, requestMedia }) {
+
+			const baseDir = 'offline-books';
+			const bookFolder = `${baseDir}/${bookId}`;
+			const pagesFolder = `${bookFolder}/pages`;
+			const thumbsFolder = `${bookFolder}/thumbs`;
+
+			try {
+				debugPrint(`Downloading metadata for ${bookId}`);
+
+				debugPrint('Get Book Data')
+				// Book metadata
+				let res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+				if (!res.ok) debugPrint(res.status)
+				if (!res.ok) throw new Error(`Book metadata failed: ${res.status}`);
+				const bookMeta = await res.json();
+
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-book.json`,
+					data: JSON.stringify(bookMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				debugPrint('Get Series Data')
+				// Series metadata
+				res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
+				if (!res.ok) throw new Error(`Series metadata failed: ${res.status}`);
+				const seriesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-series.json`,
+					data: JSON.stringify(seriesMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+
+				debugPrint('Get Pages Data')
+				// Pages metadata
+				res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
+				if (!res.ok) throw new Error(`Pages metadata failed: ${res.status}`);
+				const pagesMeta = await res.json();
+				await Capacitor.Plugins.Filesystem.writeFile({
+					path: `${bookFolder}/metadata-pages.json`,
+					data: JSON.stringify(pagesMeta, null, 2),
+					directory: filesFolder,
+					encoding: 'utf8'
+				});
+				return { ok: true, path: bookFolder };
+			} catch (err) {
+				debugPrint('Error in safeWriteFile:');
+				debugPrint(err);
+				console.error('Update metadata:', err);
+				return { ok: false, error: err.message };
+			}
+		}
 
 		async function capacitorDownloadBook({ bookId, bookTitle, baseUrl, requestData, requestMedia }) {
 			const mimeToExt = {
@@ -2970,7 +3035,6 @@
 					//if (!String(err.message).includes('exists')) throw err;
 				}
 			}
-
 
 			await ensureDir(baseDir);
 			await ensureDir(bookFolder);
@@ -3211,6 +3275,26 @@
 			return Object.values(mb.offlineBooks).some(book => book.status === 'downloading');
 		}
 
+		async function obUpdateMetadata(bookId) {
+			Object.entries(mb.offlineBooks).forEach(async ([bookId, item]) => {
+				if (item.status === 'completed' && item.users?.[mb.currentUserId]) {
+					let requestData = await buildRequest('GET', null)
+					let requestMedia = await buildRequest('GET', null, true)
+
+					let bookData = {
+						bookId: bookId,
+						baseUrl: `${mb.baseUrl}`,
+						requestData: requestData,
+						requestMedia: requestMedia
+					};
+
+					if (isElectron) await window.offlineAPI.updateMetadata(bookData);
+					if (isCapacitor) await capacitorUpdateMetadata(bookData);
+
+				}
+			});
+		}
+
 		async function obDownloadBook(bookId) {
 			let requestData = await buildRequest('GET', null)
 			let requestMedia = await buildRequest('GET', null, true)
@@ -3275,7 +3359,9 @@
 			//V039
 			for (const [bookId, item] of Object.entries(mb.offlineBooks || {})) {
 				const userData = item.users?.[mb.currentUserId];
+
 				if (userData?.updated) {
+
 					await callAPI(
 						null,
 						`/api/v1/books/${bookId}/read-progress`,
@@ -3848,7 +3934,7 @@
 
 			addClickPointerEvents(timeLabel, async () => {
 				if (target?.binName) mb.dashboardBin = target.binName;
-				navigateTo('#search', { search_string: "y:"+altTitle.time });
+				navigateTo('#search', { search_string: "y:" + altTitle.time });
 			})
 
 			const booksLabel = addItem('span', {
@@ -5023,14 +5109,18 @@
 				//innerText: '100%'
 			});
 
+			const bookDownloadUISpan = addItem('span', {
+				className: 'book-downloader-span',
+			});
+
 			if (bookIsOffline) {
-				bookDownloadUI.innerText = '100%';
+				bookDownloadUISpan.innerText = '100%';
 				bookDownloadUI.classList.add('done');
 			}
 
 			if (bookIsDownloading) {
 				bookDownloadUI.style.bottom = mb.offlineBooks[book.id].percent + '%';
-				bookDownloadUI.innerText = mb.offlineBooks[book.id].percent + '%';
+				bookDownloadUISpan.innerText = mb.offlineBooks[book.id].percent + '%';
 			}
 
 			const mainRow = addItem('div', {
@@ -5206,11 +5296,14 @@
 				});
 
 				addClickPointerEvents(downloadButton, () => {
+
 					if (obIsBookCompleted(book.id)) {
 						// Book is finished, you can delete the book!
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '100%';
-						bookDownloadUI.innerText = '0%';
+						bookDownloadUISpan.innerText = '0%';
+						bookDownloadUI.style.overflowY = 'hidden';
+						bookDownloadUI.style.alignItems = 'end';
 						obRemoveBookFromTable(book.id);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 						obDeleteBookData(book.id);
@@ -5218,7 +5311,9 @@
 						// Book is downloading, you can cancel the process
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '100%';
-						bookDownloadUI.innerText = '0%';
+						bookDownloadUISpan.innerText = '0%';
+						bookDownloadUI.style.overflowY = 'hidden';
+						bookDownloadUI.style.alignItems = 'end';
 						obRemoveBookFromTable(book.id);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
 						obDeleteBookData(book.id);
@@ -5227,7 +5322,9 @@
 						// Download the book!
 						bookDownloadUI.classList.remove('done');
 						bookDownloadUI.style.bottom = '0%';
-						bookDownloadUI.innerText = '0%';
+						bookDownloadUISpan.innerText = '0%';
+
+
 						obAddBookToTable(book);
 						obSetSpinner(true);
 						downloadButton.innerHTML = obRedrawDownloadButton(book.id);
@@ -5268,6 +5365,8 @@
 			if (format == 'full') {
 				booksItem.append(thirdRow)
 			}
+
+			bookDownloadUI.append(bookDownloadUISpan);
 
 			thumbnailWrapper.append(
 				bookThumbnail,
@@ -5643,7 +5742,10 @@
 				el.classList.remove('hidestrip');
 			});
 
-			if (enableDownload) await obRefreshReadStatus();
+			if (enableDownload && !offlineSession) {
+				await obRefreshReadStatus();
+				await obUpdateMetadata();
+			}
 
 			// Asynchronous loading of series and books, there's no await, because it's not used unless in offline mode
 			const fakerSeries = callAPI('c_serieslistall',
@@ -5655,7 +5757,7 @@
 				'POST', `{"condition": {"allOf": []}}`
 			);
 
-			if (enableDownload) obRestoreDownloadOnBoot();
+			if (enableDownload && !offlineSession) obRestoreDownloadOnBoot();
 
 		}
 
@@ -7745,6 +7847,7 @@
 					updateReaderOrientation()
 					break;
 				*/
+
 				case ' ':
 					if (readerVisible) {
 						event.preventDefault();

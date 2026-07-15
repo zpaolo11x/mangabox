@@ -135,6 +135,52 @@ ipcMain.handle('read-file', async (_, filePath) => {
 	}
 });
 
+ipcMain.handle('updated-downloaded-metadata', async (_, { bookId, bookTitle, baseUrl, requestData, requestMedia }) => {
+	const baseDir = path.join(app.getPath('userData'), 'offline-books');
+	const bookFolder = path.join(baseDir, bookId);
+
+	try {
+		console.log('Downloading book metadata for', bookId);
+		res = await fetch(`${baseUrl}/api/v1/books/${bookId}`, requestData);
+		console.log('Fetch response status:', res.status);
+		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+		// Get JSON from server
+		const bookMeta = await res.json();
+		// Save the full metadata to the folder
+		const bookMetaPath = path.join(bookFolder, 'metadata-book.json');
+		await fs.writeFile(bookMetaPath, JSON.stringify(bookMeta, null, 2));
+		console.log('Book metadata saved to', bookMetaPath);
+
+		console.log('Downloading series metadata for', bookId);
+		res = await fetch(`${baseUrl}/api/v1/series/${bookMeta.seriesId}`, requestData);
+		console.log('Fetch response status:', res.status);
+		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+		// Get JSON from server
+		const seriesMeta = await res.json();
+		// Save the full metadata to the folder
+		const seriesMetaPath = path.join(bookFolder, 'metadata-series.json');
+		await fs.writeFile(seriesMetaPath, JSON.stringify(seriesMeta, null, 2));
+		console.log('Series metadata saved to', seriesMetaPath);
+
+		console.log('Downloading pages metadata for', bookId);
+		res = await fetch(`${baseUrl}/api/v1/books/${bookId}/pages`, requestData);
+		console.log('Fetch response status:', res.status);
+		if (!res.ok) throw new Error(`Failed to download: ${res.status}`);
+		// Get JSON from server
+		const pagesMeta = await res.json();
+		// Save the full metadata to the folder
+		const pagesMetaPath = path.join(bookFolder, 'metadata-pages.json');
+		await fs.writeFile(pagesMetaPath, JSON.stringify(pagesMeta, null, 2));
+		console.log('Book metadata saved to', pagesMetaPath);
+
+		return { ok: true, path: bookFolder };
+	} catch (err) {
+		console.error('Metadata update failed:', err);
+		return { ok: false, error: err.message };
+	}
+
+});
+
 ipcMain.handle('download-and-store-book', async (_, { bookId, bookTitle, baseUrl, requestData, requestMedia }) => {
 	const win = BrowserWindow.getFocusedWindow(); // or keep a ref to your main window
 
