@@ -1,5 +1,6 @@
 Main UI
-- Fixed translations
+- Added Thai and Dutch translation
+- Fixed translation strings
 
 Reader UI
 -
