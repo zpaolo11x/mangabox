@@ -1,5 +1,5 @@
 Main UI
-- 
+- Fixed translations
 
 Reader UI
 -
