@@ -152,7 +152,7 @@
 			aspect-ratio: 1808 / 1239;
 			z-index: 0;
 			background:rgba(0, 0, 0, 0.2);
-			background-image: url("screens/mac-library.jpg"), url("macos.jpg");
+			background-image: url("screens/mac-library.png"), url("macos.jpg");
 			background-repeat: no-repeat, no-repeat;
 			background-position: center calc(50% - 20%), center calc(50% - 30%);
 			background-size: 76%, 91%;
