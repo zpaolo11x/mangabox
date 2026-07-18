@@ -4072,6 +4072,9 @@
 					case "search":
 						pathHistoryValue = "#" + window.location.hash.substring(1);
 						break;
+					case "dashboard":
+						pathHistoryValue = "#" + window.location.hash.substring(1);
+						break;
 					default:
 						pathHistoryValue = pathBuilder('#library', {
 							library_id: serie.libraryId,
@@ -4080,7 +4083,9 @@
 						break;
 				}
 
-				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
+				if (!target?.binName) {
+					history.replaceState({}, '', pathHistoryValue);
+				}
 				mb.historyStack[mb.historyStack.length - 1] = pathHistoryValue;
 
 				navigateTo('#series', {
