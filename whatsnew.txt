@@ -6,7 +6,7 @@ Reader UI
 -
 
 Fixes
-- 
+- Selected series now shows scaled in library view
 
 Build
 -
