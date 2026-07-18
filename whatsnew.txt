@@ -7,6 +7,7 @@ Reader UI
 
 Fixes
 - Selected series now shows scaled in library view
+- Back button goes back to dashboard when opening a series from there
 
 Build
 -
