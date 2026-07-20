@@ -291,7 +291,7 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.5</div>
+				<div class="version-note">v0.4.6</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
@@ -366,7 +366,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.5</h1>
+		<h1>MangaBox v0.4.6</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -927,7 +927,7 @@
 		function initMB() {
 			return (
 				{
-					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'pt', 'pt-BR', 'zh-Hans'],
+					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'nl', 'pt', 'th', 'pt-BR', 'zh-Hans'],
 					languageAuto: false,
 					languageVal: '',
 
@@ -3779,8 +3779,16 @@
 						seriesItemProxy[entry.target.id] = await buildSeriesItem(entry.target, entry.target.dat_serie, entry.target.dat_target, true)
 					}
 
-					entry.target.append(seriesItemProxy[entry.target.id])
+
+					entry.target.append(seriesItemProxy[entry.target.id]);
 					entry.target.classList.remove('unattached');
+
+					if (mb.pendingScale === entry.target) {
+						mb.currentlyScaled = seriesItemProxy[entry.target.id];
+						mb.currentlyScaled.classList.add('scaled');
+						mb.pendingScale = null;
+					}
+
 					let frameRect = seriesItemProxy[entry.target.id].getBoundingClientRect()
 					entry.target.style.aspectRatio = frameRect.width / frameRect.height
 				} else {
@@ -4064,6 +4072,9 @@
 					case "search":
 						pathHistoryValue = "#" + window.location.hash.substring(1);
 						break;
+					case "dashboard":
+						pathHistoryValue = "#" + window.location.hash.substring(1);
+						break;
 					default:
 						pathHistoryValue = pathBuilder('#library', {
 							library_id: serie.libraryId,
@@ -4072,7 +4083,9 @@
 						break;
 				}
 
-				if (!target?.binName) history.replaceState({}, '', pathHistoryValue);
+				if (!target?.binName) {
+					history.replaceState({}, '', pathHistoryValue);
+				}
 				mb.historyStack[mb.historyStack.length - 1] = pathHistoryValue;
 
 				navigateTo('#series', {
@@ -4367,24 +4380,29 @@
 			if (focus == 'top') {
 				mainContainer.scrollTo({ top: 0 });
 			} else if (focus) {
-				var item = document.getElementById(focus);
-
-				if (item == null) {
+				const item = document.getElementById(focus);
+				if (!item) {
 					mainContainer.scrollTo({ top: 0 });
 					return;
 				}
 
 				const yOffset = -150;
-				const y = item.getBoundingClientRect().top - mainContainer.getBoundingClientRect().top + mainContainer.scrollTop + yOffset;
+				const y = item.getBoundingClientRect().top -
+					mainContainer.getBoundingClientRect().top +
+					mainContainer.scrollTop +
+					yOffset;
 
 				mainContainer.scrollTo({ top: y });
 
-				mb.currentlyScaled = item.firstChild;
-
-				if (item.firstChild != null) {
-					item.firstChild.classList.add('scaled');
-				}
 				item.classList.add('top-pop');
+
+				const child = item.firstElementChild;
+				if (child) {
+					mb.currentlyScaled = child;
+					child.classList.add('scaled');
+				} else {
+					mb.pendingScale = item;
+				}
 			}
 		}
 

@@ -1,6 +1,7 @@
 Main UI
-- Percentage of downloaded book is always visible up to 100%
+- Added Thai and Dutch translation
+- Fixed translation strings
 
 Fixes
-- Fixed sync of read position for offline books
-- Fixed metadata syncing for offline books
+- Last opened series now shows scaled in library view
+- Back button goes back to dashboard when opening a series from there
