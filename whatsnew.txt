@@ -2,12 +2,6 @@ Main UI
 - Added Thai and Dutch translation
 - Fixed translation strings
 
-Reader UI
--
-
 Fixes
-- Selected series now shows scaled in library view
+- Last opened series now shows scaled in library view
 - Back button goes back to dashboard when opening a series from there
-
-Build
--
