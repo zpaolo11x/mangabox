@@ -408,7 +408,12 @@
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
-		debugPrint(isSecureStorage);
+		const isVolumeButtons = isCapacitor && !!Capacitor.Plugins.VolumeButtons;
+		
+
+		console.log("--- VOLUME BUTTONS ---")
+		console.log(isVolumeButtons);
+		console.log(Capacitor.Plugins.VolumeButtons)
 
 		let capacitorPlatform = null;
 
