@@ -409,11 +409,6 @@
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
 		const isVolumeButtons = isCapacitor && !!Capacitor.Plugins.VolumeButtons;
-		
-
-		console.log("--- VOLUME BUTTONS ---")
-		console.log(isVolumeButtons);
-		console.log(Capacitor.Plugins.VolumeButtons)
 
 		let capacitorPlatform = null;
 
@@ -430,6 +425,51 @@
 				filesFolder = 'DATA';
 			}
 		}
+
+		let volumeOptions = null;
+
+		if (isVolumeButtons) {
+			if (capacitorPlatform == 'ios') {
+				volumeOptions = {
+					disableSystemVolumeHandler: true
+				}
+			}
+			if (capacitorPlatform == 'nadroid') {
+				volumeOptions = {
+					suppressVolumeIndicator: true
+				}
+			}
+		}
+
+		async function initVolumeButtons() {
+			await Capacitor.Plugins.VolumeButtons.watchVolume(
+				volumeOptions,
+				(result) => {
+					if (result.direction == 'up') {
+						handleRightArrow();
+					} else if (result.direction == 'down') {
+						handleLeftArrow();
+					}
+					debugPrint(JSON.stringify(result));
+				}
+			);
+		}
+
+		async function isWatchingVolumeButtons() {
+			const out = await Capacitor.Plugins.VolumeButtons.isWatching();
+			debugPrint("Volume?" + JSON.stringify(out));
+		}
+        
+		async function clearVolumeButtons() {
+			await Capacitor.Plugins.VolumeButtons.clearWatch();
+		}
+
+		/*
+		if (isVolumeButtons) {
+			initVolumeButtons();
+			isWatchingVolumeButtons();
+		}
+		*/
 
 		//Android only plugins
 		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
@@ -5959,8 +5999,10 @@
 			if (isNavBar) {
 				Capacitor.Plugins.NavigationBar.hide();
 			}
+			if (isVolumeButtons) {
+				initVolumeButtons();
+			}
 			initViewer();
-
 		}
 
 		// Reader cleanup functions to remove all dangling spreads and pages
@@ -6052,6 +6094,9 @@
 			}
 			if (isNavBar) {
 				Capacitor.Plugins.NavigationBar.show();
+			}
+			if (isVolumeButtons){
+				clearVolumeButtons()
 			}
 		}
 
