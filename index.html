@@ -6832,9 +6832,13 @@
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
-			const firstNonCover = coverIsPageOne ? 2 : 1;
-
+			let firstNonCover = coverIsPageOne ? 2 : 1;
 			rd.realFirstPage = coverIsPageOne ? '1' : 'C';
+
+			if (noCover) {
+				firstNonCover = 0;
+				rd.realFirstPage = '1';
+			}
 
 			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {

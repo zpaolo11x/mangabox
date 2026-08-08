@@ -6,7 +6,7 @@ Reader UI
 - Show Next Book panel when moving beyond book limits
 
 Fixes
-- 
+- Fixed page count with "no-cover" tag
 
 Platform
 -
