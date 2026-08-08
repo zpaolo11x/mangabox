@@ -225,11 +225,12 @@
 				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
 			</div>
 
-			<div id="topControls">
+			<div id="topControls" class="buttons4">
 				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle ico icon-x"></span>
 				<span id="bookName"></span>
 				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left ico"></span>
 				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button ico"></span>
+				<span id="readerVolumeButtons" data-i18n-title="reader.volumebuttons" class="reader-buttons press-button ico"></span>
 				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right ico icon-ghost"></span>
 			</div>
 
@@ -434,7 +435,7 @@
 					disableSystemVolumeHandler: true
 				}
 			}
-			if (capacitorPlatform == 'nadroid') {
+			if (capacitorPlatform == 'android') {
 				volumeOptions = {
 					suppressVolumeIndicator: true
 				}
@@ -446,9 +447,9 @@
 				volumeOptions,
 				(result) => {
 					if (result.direction == 'up') {
-						handleRightArrow();
-					} else if (result.direction == 'down') {
 						handleLeftArrow();
+					} else if (result.direction == 'down') {
+						handleRightArrow();
 					}
 					debugPrint(JSON.stringify(result));
 				}
@@ -1074,6 +1075,18 @@
 						}, {
 							label: 'readeranimation.yes',
 							icon: 'icon-arrow-right-left',
+							value: 1
+						}
+					],
+
+					readerVolumeButtonsControl: [
+						{
+							label: 'readervolumes.updown',//TODO TRANSLATE
+							icon: 'icon-square',
+							value: 0
+						},{
+							label: 'readervolumes.downup',//TODO TRANSLATE
+							icon: 'icon-circle',
 							value: 1
 						}
 					],
@@ -1779,6 +1792,7 @@
 			mb.webtoonScale = Number(localStorage.getItem(`c_${mb.currentUserId}_webtoonScale`) ?? 100);
 			mb.readerScale = Number(localStorage.getItem(`c_${mb.currentUserId}_readerScale`) ?? 100);
 			mb.readerAnimation = Number(localStorage.getItem(`c_${mb.currentUserId}_readerAnimation`) ?? 1)
+			mb.readerVolumeButtons = Number(localStorage.getItem(`c_${mb.currentUserId}_readerVolumeButtons`) ?? 0)
 
 		}
 
@@ -5988,6 +6002,7 @@
 
 			changeReaderTheme();
 			changeReaderAnimation();
+			changeReaderVolumeButtons();
 
 			sectionShow(readerContainer);
 			sectionShow(readerOverlay);
@@ -6120,6 +6135,17 @@
 			localStorage.setItem(`c_${mb.currentUserId}_readerAnimation`, JSON.stringify(mb.readerAnimation))
 		}
 
+		function changeReaderVolumeButtons() {
+			mb.readerVolumeButtonsControl.forEach(item => {
+				readerVolumeButtons.classList.remove(item.icon);
+			});
+			readerVolumeButtons.classList.add(mb.readerVolumeButtonsControl[mb.readerVolumeButtons].icon);
+			readerVolumeButtons.dataset.i18nTitle = mb.readerVolumeButtonsControl[mb.readerVolumeButtons].label;
+			translateDOM(readerVolumeButtons)
+
+			localStorage.setItem(`c_${mb.currentUserId}_readerVolumeButtons`, JSON.stringify(mb.readerVolumeButtons))
+		}
+
 		function changeReaderTheme() {
 			mb.readerThemeControl.forEach(item => {
 				readerTheme.classList.remove(item.icon);
@@ -6147,6 +6173,11 @@
 		readerAnimation.addEventListener('click', () => {
 			mb.readerAnimation = (mb.readerAnimation + 1) % mb.readerAnimationControl.length;
 			changeReaderAnimation();
+		});
+
+		readerVolumeButtons.addEventListener('click', () => {
+			mb.readerVolumeButtons = (mb.readerVolumeButtons + 1) % mb.readerVolumeButtonsControl.length;
+			changeReaderVolumeButtons();
 		});
 
 		// Setup incognito button
