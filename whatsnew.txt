@@ -2,7 +2,7 @@ Main UI
 - 
 
 Reader UI
-- 
+- Improved page turning control code
 
 Fixes
 - 

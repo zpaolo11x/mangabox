@@ -459,7 +459,7 @@
 			const out = await Capacitor.Plugins.VolumeButtons.isWatching();
 			debugPrint("Volume?" + JSON.stringify(out));
 		}
-        
+
 		async function clearVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.clearWatch();
 		}
@@ -6095,7 +6095,7 @@
 			if (isNavBar) {
 				Capacitor.Plugins.NavigationBar.show();
 			}
-			if (isVolumeButtons){
+			if (isVolumeButtons) {
 				clearVolumeButtons()
 			}
 		}
@@ -7124,48 +7124,66 @@
 				return
 			}
 
-			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
-			const newSpread = rd.currentSpreadIndex + delta;
-			
 			const firstSpreadIndex = 0;
 			const lastSpreadIndex = spreadsTotal() - 1;
 
+			const firstSpreadIsCover = rd.spreadsArray[firstSpreadIndex].spreadKind == 'cover-page'
+			const lastSpreadIsCover = rd.spreadsArray[lastSpreadIndex].spreadKind == 'back-cover'
 
+			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
 
-			// When page animation is turning right a right arrow registers
-			// it doesn't trigger any action. Pages direction can swap
-			// only after an animation is completed.
+			// Skip conditions when we are at the beginning or end of spread list:
+
+			//book starts or ends with a cover and we are moving past it
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && firstSpreadIsCover) return;
+			if	((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && lastSpreadIsCover) return;
+
+			//book starts or ends with a spreads, reader is in 2 pages spread, and we move past
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') return;
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') return;
+			
+			//book starts or ends with a spreads, reader is in single page, we are on the last page, and we move past
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (!rd.rtl ? 'focus-left-page' : 'focus-right-page')) return;
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (rd.rtl ? 'focus-left-page' : 'focus-right-page')) return;
+			
+			//If none of the above triggers, calculate new spread index
+			const newSpread = rd.currentSpreadIndex + delta;
+
+			// Avoid page turn direction to change during a page turn animation
 			if (rd.pageTurning === direction) return;
 
-console.log("newSpread:"+newSpread);
-console.log(rd.spreadFocus);
-/*
-			if (newSpread < 0) toggleMenu();
-			if ((newSpread > spreadsTotal()-1) && (rd.spreadFocus == 'focus-center')) toggleMenu();
-			if ((newSpread == spreadsTotal()) && (rd.spreadFocus == (rd.rtl ? 'focus-right-page' : 'focus-left-page'))) toggleMenu();
-*/
-			if (newSpread < 0 || newSpread > spreadsTotal()) return;
-			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
+			console.log("newSpread:" + newSpread);
+			console.log(rd.spreadFocus);
 
+			//			if (newSpread < 0 || newSpread > spreadsTotal()) return;
+			//			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
+
+			// SPECIAL CASE when just shifting focus is enough
 			const edgeFocus = isDirectionLeft ? 'focus-right-page' : 'focus-left-page';
 			const targetFocus = isDirectionLeft ? 'focus-left-page' : 'focus-right-page';
-
 			if (!mb.readerHorizontal && newSpread === spreadsTotal() && rd.spreadFocus === edgeFocus) {
 				return spreadSetFocusSmooth(targetFocus);
 			}
 
-			if ((newSpread === 0 || newSpread === spreadsTotal() - 1) && rd.pageTurning) return;
+			// Wait for the last page to be completely loaded before moving to the cover or back cover
+			if ((newSpread === firstSpreadIndex) && firstSpreadIsCover && rd.pageTurning) return;
+			if ((newSpread === lastSpreadIndex) && lastSpreadIsCover && rd.pageTurning) return;
 
-			const earlyTurnBlock = (isDirectionLeft !== rd.rtl) && rd.currentSpreadIndex === spreadsTotal() - 2;
-			const lateTurnBlock = (isDirectionLeft === rd.rtl) && rd.currentSpreadIndex === 1;
+			// Always wait for the first page after the cover (or last before the back cover)
+			// to load completely before moving away from that, to avoid animation glitches
+			const earlyTurnBlock = (isDirectionLeft !== rd.rtl) && (rd.currentSpreadIndex === spreadsTotal() - 2) && lastSpreadIsCover;
+			const lateTurnBlock = (isDirectionLeft === rd.rtl) && (rd.currentSpreadIndex === 1) && firstSpreadIsCover;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
-
+console.log (">>>>>>>>>>>>>>>ProcessJUMP")
 			if (mb.readerHorizontal) {
+				console.log("A")
 				jumpToSpread(newSpread);
 			} else if (rd.spreadFocus === edgeFocus) {
+				console.log("B")
 				spreadSetFocusSmooth(targetFocus);
 			} else {
+				console.log("C")
 				jumpToSpread(newSpread, edgeFocus);
 			}
 		}
