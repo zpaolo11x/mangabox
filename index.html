@@ -7135,16 +7135,16 @@
 			// Skip conditions when we are at the beginning or end of spread list:
 
 			//book starts or ends with a cover and we are moving past it
-			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && firstSpreadIsCover) return;
-			if	((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && lastSpreadIsCover) return;
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && firstSpreadIsCover) {toggleMenu(); return};
+			if	((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && lastSpreadIsCover) {toggleMenu(); return};
 
 			//book starts or ends with a spreads, reader is in 2 pages spread, and we move past
-			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') return;
-			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') return;
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') {toggleMenu(); return};
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') {toggleMenu(); return};
 			
 			//book starts or ends with a spreads, reader is in single page, we are on the last page, and we move past
-			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (!rd.rtl ? 'focus-left-page' : 'focus-right-page')) return;
-			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (rd.rtl ? 'focus-left-page' : 'focus-right-page')) return;
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (!rd.rtl ? 'focus-left-page' : 'focus-right-page')) {toggleMenu(); return};
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (rd.rtl ? 'focus-left-page' : 'focus-right-page')) {toggleMenu(); return};
 			
 			//If none of the above triggers, calculate new spread index
 			const newSpread = rd.currentSpreadIndex + delta;

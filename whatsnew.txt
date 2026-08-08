@@ -3,6 +3,7 @@ Main UI
 
 Reader UI
 - Improved page turning control code
+- Show Next Book panel when moving beyond book limits
 
 Fixes
 - 
