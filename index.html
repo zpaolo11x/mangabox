@@ -7118,15 +7118,32 @@
 
 		function handleArrow(direction) {
 			const isDirectionLeft = (direction === 'left');
-			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
-			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.webtoon) {
-				jumpToSpread(newSpread);
+				jumpToSpread(rd.currentSpreadIndex + (isDirectionLeft ? -1 : 1));
 				return
 			}
 
+			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
+			const newSpread = rd.currentSpreadIndex + delta;
+			
+			const firstSpreadIndex = 0;
+			const lastSpreadIndex = spreadsTotal() - 1;
+
+
+
+			// When page animation is turning right a right arrow registers
+			// it doesn't trigger any action. Pages direction can swap
+			// only after an animation is completed.
 			if (rd.pageTurning === direction) return;
+
+console.log("newSpread:"+newSpread);
+console.log(rd.spreadFocus);
+/*
+			if (newSpread < 0) toggleMenu();
+			if ((newSpread > spreadsTotal()-1) && (rd.spreadFocus == 'focus-center')) toggleMenu();
+			if ((newSpread == spreadsTotal()) && (rd.spreadFocus == (rd.rtl ? 'focus-right-page' : 'focus-left-page'))) toggleMenu();
+*/
 			if (newSpread < 0 || newSpread > spreadsTotal()) return;
 			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
 
