@@ -3554,7 +3554,7 @@
 					return objectURL;
 				} else {
 					console.error(`Failed to load media from ${url}`, response.status);
-					return 'fallback-image.png';
+					return 'fallback-image-2.png';
 				}
 			} catch (error) {
 				console.warn(`Offline? Loading cached media for ${url}`);
@@ -3562,7 +3562,7 @@
 				if (fallbackBlob) {
 					return URL.createObjectURL(fallbackBlob);
 				}
-				return 'fallback-image.png';
+				return 'fallback-image-2.png';
 
 			}
 		}
