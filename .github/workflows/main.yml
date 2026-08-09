@@ -318,7 +318,7 @@ jobs:
             -arch x86_64 -arch arm64 \
             -derivedDataPath build \
             ONLY_ACTIVE_ARCH=NO
-            
+
       - name: iOS app - Move app to target
         if: ${{ matrix.name == 'iOS-app' }}
         run: mv ios/App/build/Build/Products/Debug-iphonesimulator/*.app output/MangaBox-${{ env.version }}-${{ matrix.name }}.app
@@ -333,7 +333,7 @@ jobs:
         run: |
           cd ios/App
           xcodebuild \
-            -workspace App.xcworkspace \
+            -project App.xcodeproj \
             -scheme App \
             -configuration Release \
             -sdk iphoneos \
@@ -343,7 +343,7 @@ jobs:
             ONLY_ACTIVE_ARCH=NO \
             archive \
             -archivePath build/App.xcarchive
-
+            
       - name: iOS ipa - Replace icons for iOS26
         if: ${{ matrix.name == 'iOS-ipa' }}
         run: |
