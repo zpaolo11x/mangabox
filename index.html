@@ -442,6 +442,10 @@
 			}
 		}
 
+        async function isWatchingVolumeButtons() {
+            const out = await Capacitor.Plugins.VolumeButtons.isWatching();
+            debugPrint("Volume\n" + JSON.stringify(out));
+        }
 		async function initVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.watchVolume(
 				volumeOptions,
@@ -454,11 +458,6 @@
 					debugPrint(JSON.stringify(result));
 				}
 			);
-		}
-
-		async function isWatchingVolumeButtons() {
-			const out = await Capacitor.Plugins.VolumeButtons.isWatching();
-			debugPrint("Volume?" + JSON.stringify(out));
 		}
 
 		async function clearVolumeButtons() {
