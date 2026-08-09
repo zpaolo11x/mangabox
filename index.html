@@ -225,7 +225,7 @@
 				<span class="thumb-arrow ico icon-circle glyph-dark"></span>
 			</div>
 
-			<div id="topControls" class="buttons4">
+			<div id="topControls">
 				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle ico icon-x"></span>
 				<span id="bookName"></span>
 				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left ico"></span>
@@ -427,9 +427,13 @@
 			}
 		}
 
+		topControls.classList.add(isVolumeButtons ? 'buttons4' : 'buttons3')
+		if (!isVolumeButtons) readerVolumeButtons.style = 'display: none'
+
 		let volumeOptions = null;
 
 		if (isVolumeButtons) {
+
 			if (capacitorPlatform == 'ios') {
 				volumeOptions = {
 					disableSystemVolumeHandler: true
@@ -442,10 +446,10 @@
 			}
 		}
 
-        async function isWatchingVolumeButtons() {
-            const out = await Capacitor.Plugins.VolumeButtons.isWatching();
-            debugPrint("Volume\n" + JSON.stringify(out));
-        }
+		async function isWatchingVolumeButtons() {
+			const out = await Capacitor.Plugins.VolumeButtons.isWatching();
+			debugPrint("Volume\n" + JSON.stringify(out));
+		}
 		async function initVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.watchVolume(
 				volumeOptions,
@@ -1083,7 +1087,7 @@
 							label: 'readervolumes.updown',//TODO TRANSLATE
 							icon: 'icon-toggle-right',
 							value: 0
-						},{
+						}, {
 							label: 'readervolumes.downup',//TODO TRANSLATE
 							icon: 'icon-toggle-left',
 							value: 1
@@ -7169,17 +7173,17 @@
 			// Skip conditions when we are at the beginning or end of spread list:
 
 			//book starts or ends with a cover and we are moving past it
-			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && firstSpreadIsCover) {toggleMenu(); return};
-			if	((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && lastSpreadIsCover) {toggleMenu(); return};
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && firstSpreadIsCover) { toggleMenu(); return };
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && lastSpreadIsCover) { toggleMenu(); return };
 
 			//book starts or ends with a spreads, reader is in 2 pages spread, and we move past
-			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') {toggleMenu(); return};
-			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') {toggleMenu(); return};
-			
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') { toggleMenu(); return };
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') { toggleMenu(); return };
+
 			//book starts or ends with a spreads, reader is in single page, we are on the last page, and we move past
-			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (!rd.rtl ? 'focus-left-page' : 'focus-right-page')) {toggleMenu(); return};
-			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (rd.rtl ? 'focus-left-page' : 'focus-right-page')) {toggleMenu(); return};
-			
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (!rd.rtl ? 'focus-left-page' : 'focus-right-page')) { toggleMenu(); return };
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (rd.rtl ? 'focus-left-page' : 'focus-right-page')) { toggleMenu(); return };
+
 			//If none of the above triggers, calculate new spread index
 			const newSpread = rd.currentSpreadIndex + delta;
 
@@ -7209,7 +7213,7 @@
 			const lateTurnBlock = (isDirectionLeft === rd.rtl) && (rd.currentSpreadIndex === 1) && firstSpreadIsCover;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
-console.log (">>>>>>>>>>>>>>>ProcessJUMP")
+			console.log(">>>>>>>>>>>>>>>ProcessJUMP")
 			if (mb.readerHorizontal) {
 				console.log("A")
 				jumpToSpread(newSpread);
