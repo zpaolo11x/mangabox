@@ -1081,7 +1081,6 @@ div.single-page {
 	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
 	padding-right: var(--mb-pill-pad);
 	transform-origin: center left;
-
 }
 
 .corner-left {
@@ -1089,9 +1088,14 @@ div.single-page {
 	width: calc(var(--mb-pill-width) - var(--mb-pill-pad));
 	padding-left: var(--mb-pill-pad);
 	transform-origin: center right;
-
 }
 
+.pill-mid {
+	margin-left:-0.5px;
+	border-left:0.5px solid var(--mb-accent);
+	border-right:0.5px solid var(--mb-accent);
+	width: var(--mb-pill-width);
+}
 
 .reader-buttons.incognito {
 	/*

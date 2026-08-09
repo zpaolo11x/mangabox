@@ -1092,10 +1092,10 @@ a {
 	transform: scaleY(-1);
 }
 .ico-rotate-90ccw{
-transform: rotate(-90deg);
+	transform: rotate(-90deg);
 }
 .ico-rotate-90cw{
-transform: rotate(90deg);
+	transform: rotate(90deg);
 }
 
 .libglyph,
