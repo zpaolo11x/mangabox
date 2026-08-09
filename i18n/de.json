@@ -143,5 +143,7 @@
 	"sort.titleza": "Titel",
 	"theme.dark": "Dunkles Theme",
 	"theme.light": "Helles Theme",
-	"theme.system": "System-Theme"
+	"theme.system": "System-Theme",
+	"readervolumes.updown": "Lautstärke+ = hoch/links",
+	"readervolumes.downup": "Lautstärke+ = runter/rechts"	
 }

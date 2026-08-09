@@ -5,6 +5,7 @@ Reader UI
 - Added page turn control using volume buttons
 - Improved page turning control code
 - Show Next Book panel when moving beyond book limits
+- Added helper popup text for reader options
 
 Fixes
 - Fixed page count with "no-cover" tag

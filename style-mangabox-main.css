@@ -2943,3 +2943,25 @@ body.offline #stickyContainer {
 	pointer-events: none;
 	opacity: 0;
 }
+
+#helperText{
+	opacity:0;
+	pointer-events: none;
+	z-index: 30000;
+	position: absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	align-content: center;
+	text-align: center;
+	font-size:40px;
+	color:white;
+
+	text-shadow:
+		-1px -1px 1px #555,
+     	1px -1px 1px #555,
+   	-1px  1px 1px #555,
+     	1px  1px 1px #555,
+	  	0px 0px 15px black;
+}

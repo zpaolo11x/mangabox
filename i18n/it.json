@@ -143,5 +143,7 @@
 	"sort.titleza": "x Titolo",
 	"theme.dark": "Tema scuro",
 	"theme.light": "Tema chiaro",
-	"theme.system": "Tema di sistema"
+	"theme.system": "Tema di sistema",
+	"readervolumes.updown": "volume+ = su/sinistra",
+	"readervolumes.downup": "volume+ = giù/destra"
 }

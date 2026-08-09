@@ -143,5 +143,7 @@
 	"sort.titleza": "タイトル",
 	"theme.dark": "ダークテーマ",
 	"theme.light": "ライトテーマ",
-	"theme.system": "システムテーマ"
+	"theme.system": "システムテーマ",
+	"readervolumes.updown": "音量+ = 上/左",
+	"readervolumes.downup": "音量+ = 下/右"
 }

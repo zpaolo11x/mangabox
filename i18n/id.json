@@ -143,5 +143,7 @@
 	"sort.titleza": "berdasarkan Judul",
 	"theme.dark": "Tema Gelap",
 	"theme.light": "Tema Terang",
-	"theme.system": "Tema Sistem"
+	"theme.system": "Tema Sistem",
+	"readervolumes.updown": "volume+ = atas/kiri",
+	"readervolumes.downup": "volume+ = bawah/kanan"
 }

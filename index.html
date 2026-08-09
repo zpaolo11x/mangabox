@@ -35,6 +35,7 @@
 
 <body>
 	<div id="mainLoader" class="hidden"><span class="ico icon-cog"></span></div>
+	<div id="helperText">Helper Text</div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -597,6 +598,24 @@
 		})();
 
 
+		function helperShow(text) {
+			helperText.innerText = t(text);
+
+			helperText.animate(
+				[
+					{ opacity: 0 },
+					{ opacity: 1, offset: 0.05 },
+					{ opacity: 1, offset: 0.8 },
+					{ opacity: 0 }
+				],
+				{
+					duration: 2000,
+					fill: 'forwards',
+					easing: 'ease-in-out'
+				}
+			);
+		}
+
 		//MB Pinch To Zoom
 		// Two-Finger Pinch + Pan
 
@@ -1085,11 +1104,11 @@
 					readerVolumeButtonsControl: [
 						{
 							label: 'readervolumes.updown',//TODO TRANSLATE
-							icon: 'icon-toggle-right',
+							icon: 'icon-toggle-left',
 							value: 0
 						}, {
 							label: 'readervolumes.downup',//TODO TRANSLATE
-							icon: 'icon-toggle-left',
+							icon: 'icon-toggle-right',
 							value: 1
 						}
 					],
@@ -1619,7 +1638,6 @@
 			console.log("LOGOUT PROCESS ENDED, RESTARTING")
 			systemRestart();
 		}
-
 
 		function deleteServer(serverId) {
 			showModal('', false, `
@@ -6122,7 +6140,7 @@
 			handleCloseReader();
 		});
 
-		function changeReaderAnimation() {
+		function changeReaderAnimation(helper = false) {
 			mb.readerAnimationControl.forEach(item => {
 				readerAnimation.classList.remove(item.icon);
 			});
@@ -6135,10 +6153,12 @@
 			rd.turnScrollDelay = rd.turnScrollDelay0 * mb.readerAnimation;
 			rd.turnScrollTime = rd.turnScrollTime0 * mb.readerAnimation;
 
+			if (helper) helperShow(mb.readerAnimationControl[mb.readerAnimation].label);
+
 			localStorage.setItem(`c_${mb.currentUserId}_readerAnimation`, JSON.stringify(mb.readerAnimation))
 		}
 
-		function changeReaderVolumeButtons() {
+		function changeReaderVolumeButtons(helper = false) {
 			mb.readerVolumeButtonsControl.forEach(item => {
 				readerVolumeButtons.classList.remove(item.icon);
 			});
@@ -6146,10 +6166,12 @@
 			readerVolumeButtons.dataset.i18nTitle = mb.readerVolumeButtonsControl[mb.readerVolumeButtons].label;
 			translateDOM(readerVolumeButtons)
 
+			if (helper) helperShow(mb.readerVolumeButtonsControl[mb.readerVolumeButtons].label);
+
 			localStorage.setItem(`c_${mb.currentUserId}_readerVolumeButtons`, JSON.stringify(mb.readerVolumeButtons))
 		}
 
-		function changeReaderTheme() {
+		function changeReaderTheme(helper = false) {
 			mb.readerThemeControl.forEach(item => {
 				readerTheme.classList.remove(item.icon);
 			});
@@ -6163,6 +6185,8 @@
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
 			//rd.titleBarColor = 'black';
+			
+			if (helper) helperShow(mb.readerThemeControl[mb.readerThemePrefs].label);
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -6170,17 +6194,17 @@
 
 		readerTheme.addEventListener('click', () => {
 			mb.readerThemePrefs = (mb.readerThemePrefs + 1) % mb.readerThemeControl.length;
-			changeReaderTheme();
+			changeReaderTheme(true);
 		});
 
 		readerAnimation.addEventListener('click', () => {
 			mb.readerAnimation = (mb.readerAnimation + 1) % mb.readerAnimationControl.length;
-			changeReaderAnimation();
+			changeReaderAnimation(true);
 		});
 
 		readerVolumeButtons.addEventListener('click', () => {
 			mb.readerVolumeButtons = (mb.readerVolumeButtons + 1) % mb.readerVolumeButtonsControl.length;
-			changeReaderVolumeButtons();
+			changeReaderVolumeButtons(true);
 		});
 
 		// Setup incognito button
@@ -6192,6 +6216,7 @@
 
 		readerIncognito.addEventListener('click', () => {
 			setIncognito(!rd.incognito);
+			helperShow(rd.incognito ? "Incognito" : "")
 		})
 
 		window.addEventListener('resize', () => {

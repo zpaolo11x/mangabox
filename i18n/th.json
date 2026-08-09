@@ -143,5 +143,7 @@
 	"sort.titleza": "ชื่อ",
 	"theme.dark": "ธีมมืด",
 	"theme.light": "ธีมสว่าง",
-	"theme.system": "ธีมระบบ"
+	"theme.system": "ธีมระบบ",
+	"readervolumes.updown": "เพิ่มเสียง = ขึ้น/ซ้าย",
+	"readervolumes.downup": "เพิ่มเสียง = ลง/ขวา"
 }
