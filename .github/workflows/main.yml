@@ -209,31 +209,31 @@ jobs:
         run: npx @capacitor/assets generate --assetPath assets/icon-red --android
 
       - name: iOS - Install Capacitor StatusBar plugin
-        run: npm install @capacitor/status-bar@7
+        run: npm install @capacitor/status-bar
 
       - name: Install Capacitor Secure Storage plugin
         run: npm install capacitor-secure-storage-plugin@0.12.0
 
       - name: Install Capacitor Camera plugin
-        run: npm install @capacitor/camera@7
+        run: npm install @capacitor/camera
 
       - name: Install Capacitor Filesystem plugin
-        run: npm install @capacitor/filesystem@7
+        run: npm install @capacitor/filesystem
 
       - name: Install File Picker plugin
-        run: npm install @capawesome/capacitor-file-picker@7
+        run: npm install @capawesome/capacitor-file-picker
 
       - name: Install edge management plugin
-        run: npm install @capawesome/capacitor-android-edge-to-edge-support@7
+        run: npm install @capawesome/capacitor-android-edge-to-edge-support
 
       - name: Install navigation bar plugin
-        run: npm install @ethion/capacitor-navigation-bar@7
+        run: npm install @ethion/capacitor-navigation-bar
 
       - name: Install app management plugin
-        run: npm install @capacitor/app@7
+        run: npm install @capacitor/app
 
       - name: Install voume buttons plugin
-        run: npm install @capacitor-community/volume-buttons@7
+        run: npm install @capacitor-community/volume-buttons
 
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
