@@ -2,11 +2,13 @@ Main UI
 - 
 
 Reader UI
+- Added page turn control using volume buttons
 - Improved page turning control code
 - Show Next Book panel when moving beyond book limits
 
 Fixes
 - Fixed page count with "no-cover" tag
+- Fixed button animation in reader UI
 
 Platform
 -
