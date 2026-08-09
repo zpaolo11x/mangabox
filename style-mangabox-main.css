@@ -2337,7 +2337,7 @@ book-item {
 	padding: 20px var(--mb-area-padding);
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
-	max-height: 175px;
+	/*max-height: 175px;*/
 	display: grid;
 	grid-template-columns: auto 1fr;
 	grid-template-rows: auto 1fr;
@@ -2419,7 +2419,6 @@ span.mini-title {
 }
 
 .header-summary {
-	overflow: scroll;
 	transition: all 0.2s ease;
 }
 

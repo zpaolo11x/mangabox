@@ -1,5 +1,5 @@
 Main UI
-- 
+- Full series summary visible, without need to scroll
 
 Reader UI
 - Added page turn control using volume buttons

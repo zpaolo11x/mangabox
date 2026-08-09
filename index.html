@@ -5095,16 +5095,13 @@
 				<span class="notes">
 				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "<span data-i18n=\"seriesheader.book\"></span>" : "<span data-i18n=\"seriesheader.books\"></span>"}) ${isReadlist ? '' : creditString}</span>
 			</div>
-			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
-				<div class="scrollbox-content">${summary}</div>
-				<div class="scrollbox-scrollbar">
-					<div class="scrollbox-thumb"></div>
-				</div>
+			<div id="bookScrollBox" class="header-summary">
+			${summary}
 			</div>
 			`;
 
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
-			createCustomScrollbar(bookScrollBox);
+
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${title}</span>
 			`
@@ -6186,7 +6183,7 @@
 
 			//rd.titleBarColor = 'black';
 			
-			if (helper) helperShow(mb.readerThemeControl[mb.readerThemePrefs].label);
+			if (helper) helperShow(t("reader.theme")+"\n"+t(mb.readerThemeControl[mb.readerThemePrefs].label));
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -6216,7 +6213,7 @@
 
 		readerIncognito.addEventListener('click', () => {
 			setIncognito(!rd.incognito);
-			helperShow(rd.incognito ? "Incognito" : "")
+			helperShow(rd.incognito ? t("reader.incognito") : "")
 		})
 
 		window.addEventListener('resize', () => {
@@ -7904,11 +7901,12 @@
 
 
 		mainContainer.addEventListener('scroll', function () {
+			const headerHeight = seriesHeader.getBoundingClientRect().height;
 
 			if (!isSectionHidden(seriesMiniHeader)) {
-				if ((mainContainer.scrollTop > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop > headerHeight-20) && (seriesMiniHeader.classList.contains('collapse'))) {
 					seriesMiniHeader.classList.remove('collapse');
-				} else if ((mainContainer.scrollTop < 200) && !seriesMiniHeader.classList.contains('collapse')) {
+				} else if ((mainContainer.scrollTop < headerHeight) && !seriesMiniHeader.classList.contains('collapse')) {
 					seriesMiniHeader.classList.add('collapse');
 				}
 			}
