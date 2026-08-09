@@ -271,11 +271,11 @@ jobs:
           echo "Using custom AndroidManifest.xml:"
           cat android/app/src/main/AndroidManifest.xml
 
-      - name: iOS - Install CocoaPods dependencies
-        if: ${{ matrix.sys == 'ios' }}
-        run: |
-          cd ios/App
-          pod install --repo-update
+#      - name: iOS - Install CocoaPods dependencies
+#        if: ${{ matrix.sys == 'ios' }}
+#        run: |
+#          cd ios/App
+#          pod install --repo-update
 
 #      - name: Android - Copy custom styles.xml
 #        if: ${{ matrix.sys == 'android' }}
