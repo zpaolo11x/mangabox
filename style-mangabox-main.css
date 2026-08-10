@@ -2945,22 +2945,36 @@ body.offline #stickyContainer {
 
 #helperText{
 	opacity:0;
+	background:var(--mb-card-color);
 	pointer-events: none;
 	z-index: 30000;
 	position: absolute;
-	left:0px;
-	right:0px;
-	top:0px;
-	bottom:0px;
+	/*
+	left:50%;
+	top:50%;
+	transform: translate(-50%, -50%);
+	*/
+	left:50%;
+	transform: translate(-50%, 0);
+	top:200px;
+
+	padding:var(--mb-dialog-padding);
+	padding-left:40px;
+	padding-right:40px;
+	border-radius:var(--mb-dialog-box-radius);
+
 	align-content: center;
 	text-align: center;
-	font-size:40px;
-	color:white;
+	font-size:20px;
+	color:var(--mb-text-color);
+	box-shadow: var(--mb-modal-shadow);
 
+	/*
 	text-shadow:
 		-1px -1px 1px #555,
      	1px -1px 1px #555,
    	-1px  1px 1px #555,
      	1px  1px 1px #555,
 	  	0px 0px 15px black;
+		*/
 }

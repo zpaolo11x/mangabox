@@ -604,7 +604,7 @@
 			helperText.animate(
 				[
 					{ opacity: 0 },
-					{ opacity: 1, offset: 0.05 },
+					{ opacity: 1, offset: 0.025 },
 					{ opacity: 1, offset: 0.8 },
 					{ opacity: 0 }
 				],
@@ -2744,6 +2744,11 @@
 				extraButtons.append(button.item);
 				button.item.addEventListener('click', async () => {
 					button.selected = ((button.selected + 1) % button.switches.length);
+
+					//alert(JSON.stringify(button.switches[button.selected.caption]))
+
+					helperShow(t(button.title)+": "+t(button.switches[button.selected].longCaption))
+
 					await executeFade(1);
 					applyLibraryFilters();
 					await executeFade(0);
@@ -5095,7 +5100,7 @@
 				<span class="notes">
 				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "<span data-i18n=\"seriesheader.book\"></span>" : "<span data-i18n=\"seriesheader.books\"></span>"}) ${isReadlist ? '' : creditString}</span>
 			</div>
-			<div id="bookScrollBox" class="header-summary">
+			<div id="headerSummary" class="header-summary">
 			${summary}
 			</div>
 			`;
@@ -6183,7 +6188,7 @@
 
 			//rd.titleBarColor = 'black';
 			
-			if (helper) helperShow(t("reader.theme")+"\n"+t(mb.readerThemeControl[mb.readerThemePrefs].label));
+			if (helper) helperShow(t("reader.theme")+": "+t(mb.readerThemeControl[mb.readerThemePrefs].label));
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
