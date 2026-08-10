@@ -10,6 +10,7 @@ Reader UI
 Fixes
 - Fixed page count with "no-cover" tag
 - Fixed button animation in reader UI
+- Fixed scrollbar z-index (again)
 
 Platform
 -
