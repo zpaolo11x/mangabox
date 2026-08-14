@@ -35,6 +35,7 @@
 
 <body>
 	<div id="mainLoader" class="hidden"><span class="ico icon-cog"></span></div>
+	<div id="helperText">Helper Text</div>
 	<div id="mainUI">
 		<div id="menuBars">
 			<div id="stickyContainer" class="hidden">
@@ -175,7 +176,7 @@
 
 				<div id="blanker" style="opacity:1"></div>
 			</div>
-			<div class="scrollbox-scrollbar">
+			<div class="scrollbox-scrollbar" style="z-index:951">
 				<div class="scrollbox-thumb"></div>
 			</div>
 		</div>
@@ -229,7 +230,8 @@
 				<span id="readerClose" data-i18n-title="reader.close" class="reader-buttons press-button corner-circle ico icon-x"></span>
 				<span id="bookName"></span>
 				<span id="readerTheme" data-i18n-title="reader.theme" class="reader-buttons press-button corner-left ico"></span>
-				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button ico"></span>
+				<span id="readerAnimation" data-i18n-title="reader.animation" class="reader-buttons press-button pill-mid ico"></span>
+				<span id="readerVolumeButtons" data-i18n-title="reader.volumebuttons" class="reader-buttons press-button pill-mid ico"></span>
 				<span id="readerIncognito" data-i18n-title="reader.incognito" class="reader-buttons press-button corner-right ico icon-ghost"></span>
 			</div>
 
@@ -291,7 +293,7 @@
 			<div id="loginDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.6</div>
+				<div class="version-note">v0.4.7</div>
 
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
@@ -366,7 +368,7 @@
 	<div id="fader" class="logo-pattern"></div>
 
 	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.6</h1>
+		<h1>MangaBox v0.4.7</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -408,7 +410,7 @@
 
 		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
-		debugPrint(isSecureStorage);
+		const isVolumeButtons = isCapacitor && !!Capacitor.Plugins.VolumeButtons;
 
 		let capacitorPlatform = null;
 
@@ -425,6 +427,54 @@
 				filesFolder = 'DATA';
 			}
 		}
+
+		topControls.classList.add(isVolumeButtons ? 'buttons4' : 'buttons3')
+		if (!isVolumeButtons) readerVolumeButtons.style = 'display: none'
+
+		let volumeOptions = null;
+
+		if (isVolumeButtons) {
+
+			if (capacitorPlatform == 'ios') {
+				volumeOptions = {
+					disableSystemVolumeHandler: true
+				}
+			}
+			if (capacitorPlatform == 'android') {
+				volumeOptions = {
+					suppressVolumeIndicator: true
+				}
+			}
+		}
+
+		async function isWatchingVolumeButtons() {
+			const out = await Capacitor.Plugins.VolumeButtons.isWatching();
+			debugPrint("Volume\n" + JSON.stringify(out));
+		}
+		async function initVolumeButtons() {
+			await Capacitor.Plugins.VolumeButtons.watchVolume(
+				volumeOptions,
+				(result) => {
+					if (result.direction == 'up') {
+						mb.readerVolumeButtons == 0 ? handleLeftArrow() : handleRightArrow();
+					} else if (result.direction == 'down') {
+						mb.readerVolumeButtons == 0 ? handleRightArrow() : handleLeftArrow();
+					}
+					debugPrint(JSON.stringify(result));
+				}
+			);
+		}
+
+		async function clearVolumeButtons() {
+			await Capacitor.Plugins.VolumeButtons.clearWatch();
+		}
+
+		/*
+		if (isVolumeButtons) {
+			initVolumeButtons();
+			isWatchingVolumeButtons();
+		}
+		*/
 
 		//Android only plugins
 		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
@@ -547,6 +597,24 @@
 			await setAndroidInsets();
 		})();
 
+
+		function helperShow(text) {
+			helperText.innerText = t(text);
+
+			helperText.animate(
+				[
+					{ opacity: 0 },
+					{ opacity: 1, offset: 0.025 },
+					{ opacity: 1, offset: 0.8 },
+					{ opacity: 0 }
+				],
+				{
+					duration: 2000,
+					fill: 'forwards',
+					easing: 'ease-in-out'
+				}
+			);
+		}
 
 		//MB Pinch To Zoom
 		// Two-Finger Pinch + Pan
@@ -1029,6 +1097,18 @@
 						}, {
 							label: 'readeranimation.yes',
 							icon: 'icon-arrow-right-left',
+							value: 1
+						}
+					],
+
+					readerVolumeButtonsControl: [
+						{
+							label: 'readervolumes.updown',//TODO TRANSLATE
+							icon: 'icon-toggle-left',
+							value: 0
+						}, {
+							label: 'readervolumes.downup',//TODO TRANSLATE
+							icon: 'icon-toggle-right',
 							value: 1
 						}
 					],
@@ -1559,7 +1639,6 @@
 			systemRestart();
 		}
 
-
 		function deleteServer(serverId) {
 			showModal('', false, `
 				<span data-i18n="servers.delete">${t('servers.delete')}</span>
@@ -1734,6 +1813,7 @@
 			mb.webtoonScale = Number(localStorage.getItem(`c_${mb.currentUserId}_webtoonScale`) ?? 100);
 			mb.readerScale = Number(localStorage.getItem(`c_${mb.currentUserId}_readerScale`) ?? 100);
 			mb.readerAnimation = Number(localStorage.getItem(`c_${mb.currentUserId}_readerAnimation`) ?? 1)
+			mb.readerVolumeButtons = Number(localStorage.getItem(`c_${mb.currentUserId}_readerVolumeButtons`) ?? 0)
 
 		}
 
@@ -2664,6 +2744,11 @@
 				extraButtons.append(button.item);
 				button.item.addEventListener('click', async () => {
 					button.selected = ((button.selected + 1) % button.switches.length);
+
+					//alert(JSON.stringify(button.switches[button.selected.caption]))
+
+					helperShow(t(button.title)+": "+t(button.switches[button.selected].longCaption))
+
 					await executeFade(1);
 					applyLibraryFilters();
 					await executeFade(0);
@@ -3509,7 +3594,7 @@
 					return objectURL;
 				} else {
 					console.error(`Failed to load media from ${url}`, response.status);
-					return 'fallback-image.png';
+					return 'fallback-image-2.png';
 				}
 			} catch (error) {
 				console.warn(`Offline? Loading cached media for ${url}`);
@@ -3517,7 +3602,7 @@
 				if (fallbackBlob) {
 					return URL.createObjectURL(fallbackBlob);
 				}
-				return 'fallback-image.png';
+				return 'fallback-image-2.png';
 
 			}
 		}
@@ -5015,16 +5100,13 @@
 				<span class="notes">
 				${timeString != '' ? `<a class="red search-trigger" href="javascript:navigateTo('#search?search_string=y:${timeString}');">${timeString}</a>` : ''} (${books} ${books == 1 ? "<span data-i18n=\"seriesheader.book\"></span>" : "<span data-i18n=\"seriesheader.books\"></span>"}) ${isReadlist ? '' : creditString}</span>
 			</div>
-			<div id="bookScrollBox" class="header-summary scrollbox" data-scroll-direction="vertical">
-				<div class="scrollbox-content">${summary}</div>
-				<div class="scrollbox-scrollbar">
-					<div class="scrollbox-thumb"></div>
-				</div>
+			<div id="headerSummary" class="header-summary">
+			${summary}
 			</div>
 			`;
 
 			seriesHeaderThumbnail.src = await fetchMedia(seriesHeaderThumbnail.src);
-			createCustomScrollbar(bookScrollBox);
+
 			seriesMiniHeader.innerHTML = `
 				<span class="mini-title">${title}</span>
 			`
@@ -5943,6 +6025,7 @@
 
 			changeReaderTheme();
 			changeReaderAnimation();
+			changeReaderVolumeButtons();
 
 			sectionShow(readerContainer);
 			sectionShow(readerOverlay);
@@ -5954,8 +6037,10 @@
 			if (isNavBar) {
 				Capacitor.Plugins.NavigationBar.hide();
 			}
+			if (isVolumeButtons) {
+				initVolumeButtons();
+			}
 			initViewer();
-
 		}
 
 		// Reader cleanup functions to remove all dangling spreads and pages
@@ -6048,13 +6133,16 @@
 			if (isNavBar) {
 				Capacitor.Plugins.NavigationBar.show();
 			}
+			if (isVolumeButtons) {
+				clearVolumeButtons()
+			}
 		}
 
 		readerClose.addEventListener('click', () => {
 			handleCloseReader();
 		});
 
-		function changeReaderAnimation() {
+		function changeReaderAnimation(helper = false) {
 			mb.readerAnimationControl.forEach(item => {
 				readerAnimation.classList.remove(item.icon);
 			});
@@ -6067,10 +6155,25 @@
 			rd.turnScrollDelay = rd.turnScrollDelay0 * mb.readerAnimation;
 			rd.turnScrollTime = rd.turnScrollTime0 * mb.readerAnimation;
 
+			if (helper) helperShow(mb.readerAnimationControl[mb.readerAnimation].label);
+
 			localStorage.setItem(`c_${mb.currentUserId}_readerAnimation`, JSON.stringify(mb.readerAnimation))
 		}
 
-		function changeReaderTheme() {
+		function changeReaderVolumeButtons(helper = false) {
+			mb.readerVolumeButtonsControl.forEach(item => {
+				readerVolumeButtons.classList.remove(item.icon);
+			});
+			readerVolumeButtons.classList.add(mb.readerVolumeButtonsControl[mb.readerVolumeButtons].icon);
+			readerVolumeButtons.dataset.i18nTitle = mb.readerVolumeButtonsControl[mb.readerVolumeButtons].label;
+			translateDOM(readerVolumeButtons)
+
+			if (helper) helperShow(mb.readerVolumeButtonsControl[mb.readerVolumeButtons].label);
+
+			localStorage.setItem(`c_${mb.currentUserId}_readerVolumeButtons`, JSON.stringify(mb.readerVolumeButtons))
+		}
+
+		function changeReaderTheme(helper = false) {
 			mb.readerThemeControl.forEach(item => {
 				readerTheme.classList.remove(item.icon);
 			});
@@ -6084,6 +6187,8 @@
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
 			//rd.titleBarColor = 'black';
+			
+			if (helper) helperShow(t("reader.theme")+": "+t(mb.readerThemeControl[mb.readerThemePrefs].label));
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -6091,12 +6196,17 @@
 
 		readerTheme.addEventListener('click', () => {
 			mb.readerThemePrefs = (mb.readerThemePrefs + 1) % mb.readerThemeControl.length;
-			changeReaderTheme();
+			changeReaderTheme(true);
 		});
 
 		readerAnimation.addEventListener('click', () => {
 			mb.readerAnimation = (mb.readerAnimation + 1) % mb.readerAnimationControl.length;
-			changeReaderAnimation();
+			changeReaderAnimation(true);
+		});
+
+		readerVolumeButtons.addEventListener('click', () => {
+			mb.readerVolumeButtons = (mb.readerVolumeButtons + 1) % mb.readerVolumeButtonsControl.length;
+			changeReaderVolumeButtons(true);
 		});
 
 		// Setup incognito button
@@ -6108,6 +6218,7 @@
 
 		readerIncognito.addEventListener('click', () => {
 			setIncognito(!rd.incognito);
+			helperShow(rd.incognito ? t("reader.incognito") : "")
 		})
 
 		window.addEventListener('resize', () => {
@@ -6782,9 +6893,13 @@
 			// one div for the spread contains TWO pages sharing the same image, but with different alignment properties
 			// therefore the pageNums are like [5, 5] and the imageRefs are like (5,6)
 
-			const firstNonCover = coverIsPageOne ? 2 : 1;
-
+			let firstNonCover = coverIsPageOne ? 2 : 1;
 			rd.realFirstPage = coverIsPageOne ? '1' : 'C';
+
+			if (noCover) {
+				firstNonCover = 0;
+				rd.realFirstPage = '1';
+			}
 
 			// Create spreads objects and pages objects
 			while (i_page < pageData.length) {
@@ -7068,37 +7183,72 @@
 
 		function handleArrow(direction) {
 			const isDirectionLeft = (direction === 'left');
-			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
-			const newSpread = rd.currentSpreadIndex + delta;
 
 			if (rd.webtoon) {
-				jumpToSpread(newSpread);
+				jumpToSpread(rd.currentSpreadIndex + (isDirectionLeft ? -1 : 1));
 				return
 			}
 
-			if (rd.pageTurning === direction) return;
-			if (newSpread < 0 || newSpread > spreadsTotal()) return;
-			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
+			const firstSpreadIndex = 0;
+			const lastSpreadIndex = spreadsTotal() - 1;
 
+			const firstSpreadIsCover = rd.spreadsArray[firstSpreadIndex].spreadKind == 'cover-page'
+			const lastSpreadIsCover = rd.spreadsArray[lastSpreadIndex].spreadKind == 'back-cover'
+
+			const delta = (rd.rtl === isDirectionLeft) ? 1 : -1;
+
+			// Skip conditions when we are at the beginning or end of spread list:
+
+			//book starts or ends with a cover and we are moving past it
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && firstSpreadIsCover) { toggleMenu(); return };
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && lastSpreadIsCover) { toggleMenu(); return };
+
+			//book starts or ends with a spreads, reader is in 2 pages spread, and we move past
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') { toggleMenu(); return };
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && mb.readerHorizontal && rd.spreadFocus === 'focus-center') { toggleMenu(); return };
+
+			//book starts or ends with a spreads, reader is in single page, we are on the last page, and we move past
+			if ((delta == -1) && (rd.currentSpreadIndex == firstSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (!rd.rtl ? 'focus-left-page' : 'focus-right-page')) { toggleMenu(); return };
+			if ((delta == 1) && (rd.currentSpreadIndex == lastSpreadIndex) && !mb.readerHorizontal && rd.spreadFocus === (rd.rtl ? 'focus-left-page' : 'focus-right-page')) { toggleMenu(); return };
+
+			//If none of the above triggers, calculate new spread index
+			const newSpread = rd.currentSpreadIndex + delta;
+
+			// Avoid page turn direction to change during a page turn animation
+			if (rd.pageTurning === direction) return;
+
+			console.log("newSpread:" + newSpread);
+			console.log(rd.spreadFocus);
+
+			//			if (newSpread < 0 || newSpread > spreadsTotal()) return;
+			//			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
+
+			// SPECIAL CASE when just shifting focus is enough
 			const edgeFocus = isDirectionLeft ? 'focus-right-page' : 'focus-left-page';
 			const targetFocus = isDirectionLeft ? 'focus-left-page' : 'focus-right-page';
-
 			if (!mb.readerHorizontal && newSpread === spreadsTotal() && rd.spreadFocus === edgeFocus) {
 				return spreadSetFocusSmooth(targetFocus);
 			}
 
-			if ((newSpread === 0 || newSpread === spreadsTotal() - 1) && rd.pageTurning) return;
+			// Wait for the last page to be completely loaded before moving to the cover or back cover
+			if ((newSpread === firstSpreadIndex) && firstSpreadIsCover && rd.pageTurning) return;
+			if ((newSpread === lastSpreadIndex) && lastSpreadIsCover && rd.pageTurning) return;
 
-			const earlyTurnBlock = (isDirectionLeft !== rd.rtl) && rd.currentSpreadIndex === spreadsTotal() - 2;
-			const lateTurnBlock = (isDirectionLeft === rd.rtl) && rd.currentSpreadIndex === 1;
+			// Always wait for the first page after the cover (or last before the back cover)
+			// to load completely before moving away from that, to avoid animation glitches
+			const earlyTurnBlock = (isDirectionLeft !== rd.rtl) && (rd.currentSpreadIndex === spreadsTotal() - 2) && lastSpreadIsCover;
+			const lateTurnBlock = (isDirectionLeft === rd.rtl) && (rd.currentSpreadIndex === 1) && firstSpreadIsCover;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
-
+			console.log(">>>>>>>>>>>>>>>ProcessJUMP")
 			if (mb.readerHorizontal) {
+				console.log("A")
 				jumpToSpread(newSpread);
 			} else if (rd.spreadFocus === edgeFocus) {
+				console.log("B")
 				spreadSetFocusSmooth(targetFocus);
 			} else {
+				console.log("C")
 				jumpToSpread(newSpread, edgeFocus);
 			}
 		}
@@ -7756,11 +7906,12 @@
 
 
 		mainContainer.addEventListener('scroll', function () {
+			const headerHeight = seriesHeader.getBoundingClientRect().height;
 
 			if (!isSectionHidden(seriesMiniHeader)) {
-				if ((mainContainer.scrollTop > 180) && (seriesMiniHeader.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop > headerHeight-20) && (seriesMiniHeader.classList.contains('collapse'))) {
 					seriesMiniHeader.classList.remove('collapse');
-				} else if ((mainContainer.scrollTop < 200) && !seriesMiniHeader.classList.contains('collapse')) {
+				} else if ((mainContainer.scrollTop < headerHeight) && !seriesMiniHeader.classList.contains('collapse')) {
 					seriesMiniHeader.classList.add('collapse');
 				}
 			}

@@ -1092,10 +1092,10 @@ a {
 	transform: scaleY(-1);
 }
 .ico-rotate-90ccw{
-transform: rotate(-90deg);
+	transform: rotate(-90deg);
 }
 .ico-rotate-90cw{
-transform: rotate(90deg);
+	transform: rotate(90deg);
 }
 
 .libglyph,
@@ -2337,7 +2337,7 @@ book-item {
 	padding: 20px var(--mb-area-padding);
 	padding-left: var(--mb-area-safe-padding-left);
 	padding-right: var(--mb-area-safe-padding-right);
-	max-height: 175px;
+	/*max-height: 175px;*/
 	display: grid;
 	grid-template-columns: auto 1fr;
 	grid-template-rows: auto 1fr;
@@ -2419,7 +2419,6 @@ span.mini-title {
 }
 
 .header-summary {
-	overflow: scroll;
 	transition: all 0.2s ease;
 }
 
@@ -2769,7 +2768,7 @@ body.offline #stickyContainer {
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
-	z-index:951;
+	/*z-index:951;*/
 }
 
 .scrollbox-scrollbar.visible {
@@ -2942,4 +2941,40 @@ body.offline #stickyContainer {
 #librariesRight.hidden{
 	pointer-events: none;
 	opacity: 0;
+}
+
+#helperText{
+	opacity:0;
+	background:var(--mb-card-color);
+	pointer-events: none;
+	z-index: 30000;
+	position: absolute;
+	/*
+	left:50%;
+	top:50%;
+	transform: translate(-50%, -50%);
+	*/
+	left:50%;
+	transform: translate(-50%, 0);
+	top:200px;
+
+	padding:var(--mb-dialog-padding);
+	padding-left:40px;
+	padding-right:40px;
+	border-radius:var(--mb-dialog-box-radius);
+
+	align-content: center;
+	text-align: center;
+	font-size:20px;
+	color:var(--mb-text-color);
+	box-shadow: var(--mb-modal-shadow);
+
+	/*
+	text-shadow:
+		-1px -1px 1px #555,
+     	1px -1px 1px #555,
+   	-1px  1px 1px #555,
+     	1px  1px 1px #555,
+	  	0px 0px 15px black;
+		*/
 }

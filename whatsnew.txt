@@ -1,7 +1,14 @@
 Main UI
-- Added Thai and Dutch translation
-- Fixed translation strings
+- Full series summary visible, without need to scroll
+- Added helper popup text for sorting and filtering options
+
+Reader UI
+- Added page turn control using volume buttons
+- Improved page turning control code
+- Show Next Book panel when moving beyond book limits
+- Added helper popup text for reader options
 
 Fixes
-- Last opened series now shows scaled in library view
-- Back button goes back to dashboard when opening a series from there
+- Fixed page count with "no-cover" tag
+- Fixed button animation in reader UI
+- Fixed scrollbar z-index (again)

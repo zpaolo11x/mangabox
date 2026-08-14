@@ -232,6 +232,9 @@ jobs:
       - name: Install app management plugin
         run: npm install @capacitor/app@7
 
+      - name: Install voume buttons plugin
+        run: npm install @capacitor-community/volume-buttons@7
+
       - name: Add iOS Info.plist permissions
         if: ${{ matrix.sys == 'ios' }}
         run: |
