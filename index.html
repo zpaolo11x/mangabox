@@ -478,7 +478,6 @@
 
 		//Android only plugins
 		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
-		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge && capacitorPlatform == 'android';
 		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
 
 		//iOS only plugins
@@ -578,25 +577,6 @@
 				Capacitor.Plugins.StatusBar.show();
 			}
 		}
-
-		async function setAndroidInsets() {
-			if (isEdgeToEdge) {
-				let ratio = window.devicePixelRatio || 1;
-				await Capacitor.Plugins.EdgeToEdge.enable()
-				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
-
-				document.documentElement.style.setProperty('--mb-android-inset-top', (result.top / ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-bottom', (result.bottom / ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-left', (result.left / ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-right', (result.right / ratio) + 'px');
-				Capacitor.Plugins.EdgeToEdge.disable()
-			}
-		}
-
-		(async () => {
-			await setAndroidInsets();
-		})();
-
 
 		function helperShow(text) {
 			helperText.innerText = t(text);
@@ -2918,19 +2898,8 @@
 		fixZoomOnPWA()
 
 		window.addEventListener('orientationchange', async () => {
-			/*
-			if (isCapacitor && (capacitorPlatform == 'android')) {
-				setTimeout(() => {
-					if (isOrientationLandscape()) {
-						Capacitor.Plugins.StatusBar.hide();
-					} else {
-						Capacitor.Plugins.StatusBar.hide();
-					}
-				}, 100)
-			}
-			*/
+
 			fixZoomOnPWA();
-			await setAndroidInsets();
 		});
 
 		document.addEventListener('visibilitychange', (event) => {
