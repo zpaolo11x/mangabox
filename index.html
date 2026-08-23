@@ -408,7 +408,8 @@
 
 		const isWeb = !(isElectron || isCapacitor);
 
-		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
+		const isSystemBars = isCapacitor && !!Capacitor.Plugins.SystemBars;
+
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
 		const isVolumeButtons = isCapacitor && !!Capacitor.Plugins.VolumeButtons;
 
@@ -570,11 +571,11 @@
 
 		const isSharpCornerIphone = getSharpCornerIphone();
 
-		if (isStatusBar) {
+		if (isSystemBars) {
 			if (isSharpCornerIphone) {
-				Capacitor.Plugins.StatusBar.hide();
+				Capacitor.Plugins.SystemBars.hide();
 			} else {
-				Capacitor.Plugins.StatusBar.show();
+				Capacitor.Plugins.SystemBars.show();
 			}
 		}
 
@@ -6000,8 +6001,8 @@
 			sectionShow(readerOverlay);
 			sectionShow(touchPanel);
 
-			if (isStatusBar) {
-				Capacitor.Plugins.StatusBar.hide();
+			if (isSystemBars) {
+				Capacitor.Plugins.SystemBars.hide();
 			}
 			if (isNavBar) {
 				Capacitor.Plugins.NavigationBar.hide();
@@ -6096,8 +6097,8 @@
 			}
 			goBack()
 
-			if (isStatusBar && !isSharpCornerIphone) {
-				Capacitor.Plugins.StatusBar.show();
+			if (isSystemBars && !isSharpCornerIphone) {
+				Capacitor.Plugins.SystemBars.show();
 			}
 			if (isNavBar) {
 				Capacitor.Plugins.NavigationBar.show();
@@ -7794,15 +7795,15 @@
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
-				if (isStatusBar && !isSharpCornerIphone) {
-					Capacitor.Plugins.StatusBar.show();
+				if (isSystemBars && !isSharpCornerIphone) {
+					Capacitor.Plugins.SystemBars.show();
 				}
 				if (isNavBar) {
 					Capacitor.Plugins.NavigationBar.show();
 				}
 			} else {
-				if (isStatusBar) {
-					Capacitor.Plugins.StatusBar.hide();
+				if (isSystemBars) {
+					Capacitor.Plugins.SystemBars.hide();
 				}
 				if (isNavBar) {
 					Capacitor.Plugins.NavigationBar.hide();
