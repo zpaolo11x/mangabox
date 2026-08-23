@@ -469,7 +469,10 @@
 		async function clearVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.clearWatch();
 		}
-
+        const isKeepAwake = isCapacitor && !!Capacitor.Plugins.CapacitorKeepAwake;
+        if (isKeepAwake) {
+            Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
+        }
 		/*
 		if (isVolumeButtons) {
 			initVolumeButtons();
@@ -6010,6 +6013,9 @@
 			if (isVolumeButtons) {
 				initVolumeButtons();
 			}
+            if (isKeepAwake){
+                Capacitor.Plugins.CapacitorKeepAwake.keepAwake();
+            }
 			initViewer();
 		}
 
@@ -6106,6 +6112,9 @@
 			if (isVolumeButtons) {
 				clearVolumeButtons()
 			}
+            if (isKeepAwake){
+                Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
+            }
 		}
 
 		readerClose.addEventListener('click', () => {
