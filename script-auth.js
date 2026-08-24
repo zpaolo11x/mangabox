@@ -297,11 +297,11 @@ async function systemRestart() {
 	loginError.classList.toggle('auth-hidden', true);
 	executeFade(1);
 
-	if (isStatusBar) {
+	if (isSystemBars) {
 		if (isSharpCornerIphone) {
-			Capacitor.Plugins.StatusBar.hide();
+			Capacitor.Plugins.SystemBars.hide();
 		} else {
-			Capacitor.Plugins.StatusBar.show();
+			Capacitor.Plugins.SystemBars.show();
 		}
 	}
 
