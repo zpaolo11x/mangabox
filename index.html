@@ -481,7 +481,6 @@
 		*/
 
 		//Android only plugins
-		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
 		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
 
 		//iOS only plugins
@@ -6007,9 +6006,7 @@
 			if (isSystemBars) {
 				Capacitor.Plugins.SystemBars.hide();
 			}
-			if (isNavBar) {
-				Capacitor.Plugins.NavigationBar.hide();
-			}
+
 			if (isVolumeButtons) {
 				initVolumeButtons();
 			}
@@ -6105,9 +6102,6 @@
 
 			if (isSystemBars && !isSharpCornerIphone) {
 				Capacitor.Plugins.SystemBars.show();
-			}
-			if (isNavBar) {
-				Capacitor.Plugins.NavigationBar.show();
 			}
 			if (isVolumeButtons) {
 				clearVolumeButtons()
@@ -7807,16 +7801,12 @@
 				if (isSystemBars && !isSharpCornerIphone) {
 					Capacitor.Plugins.SystemBars.show();
 				}
-				if (isNavBar) {
-					Capacitor.Plugins.NavigationBar.show();
-				}
+
 			} else {
 				if (isSystemBars) {
 					Capacitor.Plugins.SystemBars.hide();
 				}
-				if (isNavBar) {
-					Capacitor.Plugins.NavigationBar.hide();
-				}
+
 			}
 
 			sectionToggle(controlPanel);

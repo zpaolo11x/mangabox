@@ -226,9 +226,6 @@ jobs:
       - name: Install edge management plugin
         run: npm install @capawesome/capacitor-android-edge-to-edge-support
 
-      - name: Install navigation bar plugin
-        run: npm install @ethion/capacitor-navigation-bar
-
       - name: Install app management plugin
         run: npm install @capacitor/app
 
