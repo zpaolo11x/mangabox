@@ -703,6 +703,12 @@ div.single-page {
 
 .thumb-arrow {
 	font-size: 10px;
+	background-color:var(--mb-bar-color);
+	width: 10px;
+	height:10px;
+	border-radius:50%;
+	color:transparent;
+	box-shadow: inset 1px 1px 5px rgba(0, 0, 0, 0.15);
 }
 
 #thumbStripInner,
