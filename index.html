@@ -469,10 +469,10 @@
 		async function clearVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.clearWatch();
 		}
-        const isKeepAwake = isCapacitor && !!Capacitor.Plugins.CapacitorKeepAwake;
-        if (isKeepAwake) {
-            Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
-        }
+		const isKeepAwake = isCapacitor && !!Capacitor.Plugins.CapacitorKeepAwake;
+		if (isKeepAwake) {
+			Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
+		}
 		/*
 		if (isVolumeButtons) {
 			initVolumeButtons();
@@ -2730,7 +2730,7 @@
 
 					//alert(JSON.stringify(button.switches[button.selected.caption]))
 
-					helperShow(t(button.title)+": "+t(button.switches[button.selected].longCaption))
+					helperShow(t(button.title) + ": " + t(button.switches[button.selected].longCaption))
 
 					await executeFade(1);
 					applyLibraryFilters();
@@ -6010,9 +6010,9 @@
 			if (isVolumeButtons) {
 				initVolumeButtons();
 			}
-            if (isKeepAwake){
-                Capacitor.Plugins.CapacitorKeepAwake.keepAwake();
-            }
+			if (isKeepAwake) {
+				Capacitor.Plugins.CapacitorKeepAwake.keepAwake();
+			}
 			initViewer();
 		}
 
@@ -6106,9 +6106,9 @@
 			if (isVolumeButtons) {
 				clearVolumeButtons()
 			}
-            if (isKeepAwake){
-                Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
-            }
+			if (isKeepAwake) {
+				Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
+			}
 		}
 
 		readerClose.addEventListener('click', () => {
@@ -6160,8 +6160,8 @@
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
 			//rd.titleBarColor = 'black';
-			
-			if (helper) helperShow(t("reader.theme")+": "+t(mb.readerThemeControl[mb.readerThemePrefs].label));
+
+			if (helper) helperShow(t("reader.theme") + ": " + t(mb.readerThemeControl[mb.readerThemePrefs].label));
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -7157,9 +7157,21 @@
 		function handleArrow(direction) {
 			const isDirectionLeft = (direction === 'left');
 
+			/*
 			if (rd.webtoon) {
 				jumpToSpread(rd.currentSpreadIndex + (isDirectionLeft ? -1 : 1));
 				return
+			}
+			*/
+			if (rd.webtoon) {
+
+				const amount = webtoonContainer.clientHeight * 0.75;
+
+				webtoonContainer.scrollTo({
+					top: webtoonContainer.scrollTop + (isDirectionLeft ? -amount : amount),
+					behavior: 'smooth'
+				});
+				return;
 			}
 
 			const firstSpreadIndex = 0;
@@ -7878,7 +7890,7 @@
 			const headerHeight = seriesHeader.getBoundingClientRect().height;
 
 			if (!isSectionHidden(seriesMiniHeader)) {
-				if ((mainContainer.scrollTop > headerHeight-20) && (seriesMiniHeader.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop > headerHeight - 20) && (seriesMiniHeader.classList.contains('collapse'))) {
 					seriesMiniHeader.classList.remove('collapse');
 				} else if ((mainContainer.scrollTop < headerHeight) && !seriesMiniHeader.classList.contains('collapse')) {
 					seriesMiniHeader.classList.add('collapse');
