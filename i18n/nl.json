@@ -73,7 +73,7 @@
 	"login.servername": "Servernaam",
 	"login.serverurl": "Server-URL",
 	"login.username": "Gebruikersnaam",
-	"modal.analizewarning": "Schakel <br><b>'Pagina-afmetingen analyseren'</b><br>in voor de volgende bibliotheken om problemen met de lezer te voorkomen:<br>",
+	"modal.analyzewarning": "Schakel <br><b>'Pagina-afmetingen analyseren'</b><br>in voor de volgende bibliotheken om problemen met de lezer te voorkomen:<br>",
 	"modal.cancel": "Annul.",
 	"modal.confirmimage": "Deze afbeelding instellen als miniatuur van de bibliotheek?",
 	"modal.files": "Bestanden",

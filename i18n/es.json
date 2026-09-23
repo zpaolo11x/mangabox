@@ -73,7 +73,7 @@
 	"login.servername": "Nombre del servidor",
 	"login.serverurl": "URL del servidor",
 	"login.username": "Usuario",
-	"modal.analizewarning": "Por favor, activa<br><b>«Analizar dimensiones de las páginas»</b><br>en las siguientes bibliotecas para evitar problemas en el lector:<br>",
+	"modal.analyzewarning": "Por favor, activa<br><b>«Analizar dimensiones de las páginas»</b><br>en las siguientes bibliotecas para evitar problemas en el lector:<br>",
 	"modal.cancel": "Cancelar",
 	"modal.confirmimage": "¿Establecer esta imagen como miniatura de la biblioteca?",
 	"modal.files": "Archivos",

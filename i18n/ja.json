@@ -73,7 +73,7 @@
 	"login.servername": "サーバー名",
 	"login.serverurl": "サーバーURL",
 	"login.username": "ユーザー名",
-	"modal.analizewarning": "以下のライブラリで<br><b>「ページサイズを解析」</b><br>を有効にして、リーダーの問題を防いでください：<br>",
+	"modal.analyzewarning": "以下のライブラリで<br><b>「ページサイズを解析」</b><br>を有効にして、リーダーの問題を防いでください：<br>",
 	"modal.cancel": "キャンセル",
 	"modal.confirmimage": "この画像をライブラリのサムネイルに設定しますか？",
 	"modal.files": "ファイル",

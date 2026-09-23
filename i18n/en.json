@@ -73,7 +73,7 @@
 	"login.servername": "Server Name",
 	"login.serverurl": "Server URL",
 	"login.username": "Username",
-	"modal.analizewarning": "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>",
+	"modal.analyzewarning": "Please enable<br><b>'Analyze pages dimensions'</b><br>on the following libraries to avoid reader issues:<br>",
 	"modal.cancel": "Cancel",
 	"modal.confirmimage": "Set this image as library thumbnail?",
 	"modal.files": "Files",

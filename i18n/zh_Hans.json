@@ -73,7 +73,7 @@
 	"login.servername": "服务器名称",
 	"login.serverurl": "服务器地址",
 	"login.username": "用户名",
-	"modal.analizewarning": "请在以下书库中启用<br><b>“分析页面尺寸”</b><br>以避免阅读器出现问题：<br>",
+	"modal.analyzewarning": "请在以下书库中启用<br><b>“分析页面尺寸”</b><br>以避免阅读器出现问题：<br>",
 	"modal.cancel": "取消",
 	"modal.confirmimage": "将此图片设为书库缩略图？",
 	"modal.files": "文件",

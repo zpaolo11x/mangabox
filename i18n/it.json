@@ -73,7 +73,7 @@
 	"login.servername": "Nome del server",
 	"login.serverurl": "URL del server",
 	"login.username": "Nome utente",
-	"modal.analizewarning": "Attiva<br><b>'Analyze pages dimensions'</b><br>in queste librerie per evitare problemi nel lettore:<br>",
+	"modal.analyzewarning": "Attiva<br><b>'Analyze pages dimensions'</b><br>in queste librerie per evitare problemi nel lettore:<br>",
 	"modal.cancel": "Annulla",
 	"modal.confirmimage": "Imposta quest'immagine come icona della lbreria?",
 	"modal.files": "File",

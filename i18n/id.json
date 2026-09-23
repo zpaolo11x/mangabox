@@ -73,7 +73,7 @@
 	"login.servername": "Nama Server",
 	"login.serverurl": "URL Server",
 	"login.username": "Nama Pengguna",
-	"modal.analizewarning": "Harap aktifkan<br><b>'Analisis dimensi halaman'</b><br>pada pustaka berikut untuk menghindari masalah pembaca:<br>",
+	"modal.analyzewarning": "Harap aktifkan<br><b>'Analisis dimensi halaman'</b><br>pada pustaka berikut untuk menghindari masalah pembaca:<br>",
 	"modal.cancel": "Batal",
 	"modal.confirmimage": "Jadikan gambar ini sebagai thumbnail pustaka?",
 	"modal.files": "Berkas",
