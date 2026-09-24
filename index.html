@@ -295,6 +295,10 @@
 				<img id="logoName" src="logo/mangabox-logoname.svg">
 				<div class="version-note">v0.4.8</div>
 
+				<button id="divServersList" class="action login-button-wide" title="Servers List" onClick="serversDialog()">
+					</i><span class="input-text" data-i18n="servers.title">Servers List</span>
+				</button>
+
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
 					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
@@ -1120,8 +1124,8 @@
 
 					loginModes: {
 						firstboot: {
-							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
-							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
+							inputs: [],
+							buttons: ['divServersList','languageButton']
 						},
 						addserver: {
 							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],

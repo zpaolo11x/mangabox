@@ -150,7 +150,7 @@
 .input-wrapper.disabled-input {
 	opacity: 0.3;
 	pointer-events: none;
-	/*display: none;*/
+	display: none;
 }
 
 .input-wrapper i,
@@ -294,6 +294,22 @@
 	color: inherit;
 }
 
+.login-button-wide {
+	margin: 0px;
+	padding: 0px;
+
+	appearance: none;
+	background: var(--mb-login-button-color);
+	border: 1px solid var(--mb-login-border-color);
+	border-radius: var(--mb-dialog-button-radius);
+	height: var(--mb-dialog-button-height);
+	width: 100%;
+	margin-top: var(--mb-dialog-padding);
+	transition: 0.3s all;
+	font-size: var(--mb-dialog-font-size);
+	font: inherit;
+	color: inherit;
+}
 
 .login-button-round {
 	box-sizing: border-box;
@@ -316,8 +332,10 @@
 }
 
 
+.login-button-wide i,
 .login-button-round i,
 .login-button i,
+.login-button-wide .ico,
 .login-button-round .ico,
 .login-butotn .ico {
 	position: relative;
@@ -335,12 +353,14 @@
 
 
 .login-button:hover,
+.login-button-wide:hover,
 .login-button-round:hover {
 	border: 1px solid var(--mb-accent);
 	/*background-color:#eee;*/
 }
 
 .login-button:active,
+.login-button-wide:active,
 .login-button-round:active {
 	border: 1px solid var(--mb-accent);
 	background-color: var(--mb-accent);
