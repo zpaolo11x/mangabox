@@ -326,7 +326,7 @@
 						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
 							<i class="ico icon-languages"></i>
 						</button>
-						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
+						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('', true, true)">
 							<i class="ico icon-globe question"></i>
 						</button>
 						<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
@@ -340,7 +340,7 @@
 						<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
 							<i class="input-glyph ico icon-save"></i><span class="input-text" data-i18n="button.save">Save</span>
 						</button>
-						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
+						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? null : mb.currentServerId), false, true)">
 							<i class="input-glyph ico icon-play"></i><span class="input-text" data-i18n="button.login">Login</span>
 						</button>
 					</div>
@@ -1143,7 +1143,8 @@
 
 					loginMode: '',
 
-					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {
+					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {},
+						/*
 						mb0: {
 							name: 'servers.unsaved',
 							url: '',
@@ -1153,12 +1154,13 @@
 							userId: false,
 							askPassword: true,
 						}
-					},
+						*/
+					
 					editServerData: {}, //data structure of the server being edited
-					editServerId: 'mb0', //ID of the server that is edited by the dialog
-					currentServerId: 'mb0', //ID of the server passed to login and other auth functions
+					editServerId: null, //ID of the server that is edited by the dialog
+					currentServerId: null, //ID of the server passed to login and other auth functions
 					currentUserId: false,
-					loggingServerId: 'mb0', //ID of the server passed to login and other auth functions
+					loggingServerId: null, //ID of the server passed to login and other auth functions
 				}
 			)
 		}
@@ -1444,7 +1446,7 @@
 					await logOutFromCurrentServer()
 
 					localStorage.removeItem("mb00SessionValid");
-					showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+					showLoginDialog('firstboot', null, null);
 					await executeFaderGradient(0);
 					return null
 				}
@@ -1506,7 +1508,7 @@
 
 		function cancelServer() {
 			if (!mb.currentServerId) {
-				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+				showLoginDialog('firstboot', null, null);
 			} else if (mb.loginMode == 'enterpassword') {
 				hideLoginDialog()
 			} else {
@@ -1532,7 +1534,7 @@
 
 			saveUserPass(mb.editServerId, loginPassword.value)
 
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			showLoginDialog('firstboot', null, null);
 			serversDialog();
 		}
 
@@ -1598,11 +1600,11 @@
 			localStorage.removeItem('mb00CurrentServerId');
 
 			// Always clean temp server
-			mb.serverList['mb0'].username = '';
+			//XXX mb.serverList['mb0'].username = '';
 
 			// Save the serverlist with the modified askpassword
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
-			if (mb.currentServerId == 'mb0') deleteUserPass('mb0')
+			//XXX if (mb.currentServerId == 'mb0') deleteUserPass('mb0')
 
 			// delte c_ storage keys 
 			// //TODO REMOVED FOR MULTISERVER, cHECK!
@@ -1692,20 +1694,18 @@
 			Object.entries(mb.serverList).forEach(([id, server]) => {
 				let isSelected = mb.currentServerId == id;
 
-				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
-
 				let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
 
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
-									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
-									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
+									<div class='library-name filter-menu-text'>${server.name}</div>
+									<div class='smallbutton-wrapper server-button' title='${t('button.edit')}' onClick="editServer('${id}')">
 										<span class="ico icon-pencil glyph-dark"></span>
 									</div>
-									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
+									<div class='smallbutton-wrapper server-button' title='${t('button.delete')}' onClick="deleteServer('${id}')">
 										<span class="ico icon-trash-2 glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
-										<span class="ico ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'icon-key-round' : 'icon-play'} glyph-dark"></span>
+										<span class="ico ${mb.serverList[id].askPassword ? 'icon-key-round' : 'icon-play'} glyph-dark"></span>
 									</div>
 								</li>
 								<li class="server-data" id="item_${id}_data">

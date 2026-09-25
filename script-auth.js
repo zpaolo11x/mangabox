@@ -147,7 +147,7 @@ async function sessionCheck() {
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId) || (!mb.currentUserId)) {
 		debugPrint("Missing base URL or login data");
-		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+		showLoginDialog('firstboot', null, null);
 		await executeFaderGradient(0);
 		return;
 	}
@@ -163,7 +163,7 @@ async function sessionCheck() {
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			showLoginDialog('firstboot', null, null);
 			await executeFaderGradient(0);
 		}
 		return;
@@ -223,7 +223,7 @@ async function sessionCheck() {
 			await logOutFromCurrentServer()
 
 			localStorage.removeItem("mb00SessionValid");
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			showLoginDialog('firstboot', null, null);
 			await executeFaderGradient(0);
 
 		} else {
@@ -235,7 +235,7 @@ async function sessionCheck() {
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+				showLoginDialog('firstboot', null, null);
 				await executeFaderGradient(0);
 			}
 		}
@@ -251,7 +251,7 @@ async function sessionCheck() {
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			showLoginDialog('firstboot', null, null);
 			await executeFaderGradient(0);
 
 		}
@@ -260,23 +260,19 @@ async function sessionCheck() {
 
 async function setServerFields(serverId, serverData) {
 
-	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
+	loginServerName.value = serverData.name;
 	loginBaseUrl.value = serverData.url;
-	loginUsername.value = (serverId == 'mb0') ? '' : serverData.username;
+	loginUsername.value = serverData.username;
 
-	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0') || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
+	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
 		// When password is requested, the password field is always EMPTY
 		// same in web mode, the password is never shown ever
 		loginPassword.value = ''
 	} else {
 		let localPass = await loadUserPass(serverId);
-
 		loginPassword.value = localPass;
-
 		localPass = null;
 	}
-
-
 }
 
 async function systemRestart() {
@@ -291,7 +287,8 @@ async function systemRestart() {
 	loginScreen.classList = "auth-hidden logo-pattern";
 	// Clear login dialog content
 
-	setServerFields('mb0', mb.serverList['mb0'])
+	//XXX How do you fix this when no mb0 is present? How do I reset the server fields?
+	// setServerFields('mb0', mb.serverList['mb0'])
 
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
@@ -357,27 +354,9 @@ async function systemRestart() {
 
 //TODO ZZZZZZZZ Ecco l'idea:
 /*
-
 logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di login forzato per poi lanciare di nuovo il login SENZA TEST
-
-*/ 
+*/
 async function loginToServer(event, serverId, test) {
-
-	/* 
-	First step: if you are trying to log into the "temp" server it clears current server 
-	and user id and basically restarts the system. Removing those two files means that
-	at boot it will go to the login dialog
-	*/
-
-	if (serverId == 'mb0') {
-		//TODO Maybe add here a cleanup of server temporary name?
-		localStorage.removeItem('mb00CurrentServerId');
-		localStorage.removeItem('mb00CurrentUserId');
-		closeModal();
-		systemRestart()
-
-		return
-	}
 
 	/*
 	loggingServerId is the TEMPORARY server you are trying to log in
@@ -429,19 +408,8 @@ async function loginToServer(event, serverId, test) {
 		} else {
 			systemRestart();
 		}
-
-		//		login(serverId, test, false);
-
 	}
-
 	return
-	/*
-	if (mb.serverList[serverId].askPassword) {
-		showLoginDialog('firstboot', serverId)
-	} else {
-		login(serverId, test, false)
-	}
-	*/
 }
 
 function cleanBaseUrlVal(baseUrlVal) {
@@ -453,38 +421,32 @@ function cleanBaseUrlVal(baseUrlVal) {
 	return baseUrlVal
 }
 
-async function veryfyServerLogin(serverId){
-	login(serverId, test, fromDialog)
-}
-
 async function login(serverId, test, fromDialog) {
-
-	if (serverId == 'mb0') {
-		mb.serverList['mb0'].url = loginBaseUrl.value;
-		mb.serverList['mb0'].username = loginUsername.value;
-	}
 
 	debugPrint("login...")
 	console.log("login...")
 
+	// Hide login error messages
 	loginError.classList.toggle('auth-hidden', true);
 
+	// The "fromdialog" flag is used to determine if the login is being triggered from the login dialog or from the server list
 	let baseUrlVal = fromDialog ? loginBaseUrl.value : mb.serverList[serverId].url;
 	let usernameVal = fromDialog ? loginUsername.value : mb.serverList[serverId].username;
 	let passwordVal = fromDialog ? loginPassword.value : await loadUserPass(serverId);
 
+	// Cleanup the base URL value to ensure it has the correct format
 	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
 
-	//TODO Questo funziona per i test con server 0 e per gli edit quando i valori del server da modificare si portano
-	// in editserver e quindi sono già nei field. Funziona anche con l'enter della password perché i field sono popolati
-	// Ma funzionerò quando la password è automatica, e non voglio passare per i field???
-
+	// Build the basic authentication header using the provided username and password
 	let mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
 
+	//XXX This is not used???
 	let fetchString = (isWeb && !webPWD)
 		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
 		: `${baseUrlVal}/api/v2/users/me`;
 
+
+	//fetches user data to check if the credentials are valid and to retrieve the user ID
 	fetch(`${baseUrlVal}/api/v2/users/me`, {
 		method: 'GET',
 		credentials: 'include',
@@ -495,7 +457,7 @@ async function login(serverId, test, fromDialog) {
 		}
 	}).then(async response => {
 		if (response.ok) {
-
+			// If the response is successful, parse the response body as JSON to retrieve user data
 			const rawBody = await response.text();
 			let parsed = null;
 			try {
@@ -504,6 +466,8 @@ async function login(serverId, test, fromDialog) {
 				console.warn(`BODY IS NOT JSON`);
 			}
 
+			//If we are not in test mode procede to the actual login code
+			//XXX This is parsed even if JSON parsing fails, which could lead to issues. Consider adding error handling for JSON parsing.
 			if (!test) {
 				await executeFaderGradient(1);
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
@@ -521,9 +485,15 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 				//TODO Magari resettare la password quando anche user 0 fa logout?
-				if (serverId == 'mb0') saveUserPass(serverId, passwordVal)
+				
+				//XXX
+				// Keep this if you want to keep the "temporary server" so that password is saved for the next login attempt, 
+				// but it is not needed if you want to clear the password after a successful login or
+				// if we decide to not save passwords for temporary servers (mb0) at all, which is probably a better idea for security reasons.
+				/* if (serverId == 'mb0') saveUserPass(serverId, passwordVal) */
 				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
 
+				// If it's a web login and the password is not saved, we need to set the cookie for the session
 				if (isWeb && !webPWD) await fetch(`${baseUrlVal}/api/v1/login/set-cookie`, {
 					method: 'GET',
 					credentials: 'include',
@@ -536,6 +506,7 @@ async function login(serverId, test, fromDialog) {
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
+				// We are in test mode, so we just show a modal indicating that the connection is OK
 				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
@@ -551,18 +522,15 @@ async function login(serverId, test, fromDialog) {
 		localStorage.removeItem('mb00BaseUrl');
 		localStorage.removeItem('mb00CurrentServerId');
 		localStorage.removeItem('mb00CurrentUserId');
-		//closeModal();
-		//systemRestart()
-		
-		//mb.currentServerId = false
-mb.currentServerId = false;
+
+		mb.currentServerId = false;
 		console.error('Login error:', error);
 		loginError.textContent = t("server.cannotreach") + `${error}`;
 		loginError.classList.toggle('auth-hidden', false);
-		
+
 	});
 
-	// Reset login credentials
+	// Reset login credentials if this is not a "test" login attempt
 	if (!test) {
 		loginPassword.value = null;
 		mbAuthHeader = null;
@@ -581,8 +549,8 @@ function applyScenario(modeName, serverId, serverData) {
 	});
 
 	if (modeName == 'firstboot') {
-		mb.editServerId = 'mb0';
-		mb.editServerData = mb.serverList['mb0'];
+		mb.editServerId = '';
+		mb.editServerData = mb.serverList['mb0']; //XXX Come gestire questo senza mb0? a cosa serve?
 		backButton.classList.toggle('hidden', true);
 	}
 
@@ -603,7 +571,6 @@ function applyScenario(modeName, serverId, serverData) {
 function showLoginDialog(dialogMode, serverId, serverData) {
 	mb.loginMode = dialogMode;
 
-	//dialogMode = 'firstboot'
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
 
