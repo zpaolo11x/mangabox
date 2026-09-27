@@ -460,6 +460,10 @@ async function login(serverId, test, fromDialog) {
 			// If the response is successful, parse the response body as JSON to retrieve user data
 			const rawBody = await response.text();
 			let parsed = null;
+			console.log("-----------RESPONSE----------")
+			console.log(rawBody)
+			console.log("-----------PARSE JS----------")
+			console.log(JSON.parse(rawBody))
 			try {
 				parsed = JSON.parse(rawBody);
 			} catch (e) {
