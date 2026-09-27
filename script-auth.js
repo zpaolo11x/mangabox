@@ -473,6 +473,8 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
 
 				mb.currentServerId = serverId;
+				console.log("------------PARSE--------------")
+				console.log(parsed);
 				mb.currentUserId = parsed.id;
 
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
