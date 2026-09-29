@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "Invalid Username or Password",
 	"server.loginfailed": "Login failed",
 	"servers.add": "Add Server",
+	"servers.edit": "Edit Server",
 	"servers.delete": "Confirm Delete Server",
 	"servers.logoutall": "Logout All",
 	"servers.title": "Servers List",

@@ -1125,7 +1125,7 @@
 					loginModes: {
 						firstboot: {
 							inputs: [],
-							buttons: ['divServersList','languageButton']
+							buttons: ['divServersList', 'languageButton']
 						},
 						addserver: {
 							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
@@ -1144,18 +1144,18 @@
 					loginMode: '',
 
 					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {},
-						/*
-						mb0: {
-							name: 'servers.unsaved',
-							url: '',
-							username: '',
-							password: '',
-							createdAt: 0,
-							userId: false,
-							askPassword: true,
-						}
-						*/
-					
+					/*
+					mb0: {
+						name: 'servers.unsaved',
+						url: '',
+						username: '',
+						password: '',
+						createdAt: 0,
+						userId: false,
+						askPassword: true,
+					}
+					*/
+
 					editServerData: {}, //data structure of the server being edited
 					editServerId: null, //ID of the server that is edited by the dialog
 					currentServerId: null, //ID of the server passed to login and other auth functions
@@ -1520,10 +1520,11 @@
 		function saveServer() {
 
 			// Populate mb.editServerData with the data
-			mb.editServerData.name = loginServerName.value;
-			mb.editServerData.url = loginBaseUrl.value;
-			mb.editServerData.username = loginUsername.value;
+			mb.editServerData.name = loginServerName2.value;
+			mb.editServerData.url = loginBaseUrl2.value;
+			mb.editServerData.username = loginUsername2.value;
 			mb.editServerData.askPassword = !(!isWeb || (isWeb && webPWD));
+
 
 			mb.serverList[mb.editServerId] = {
 				...(mb.serverList[mb.editServerId] ?? {}),
@@ -1534,21 +1535,121 @@
 
 			saveUserPass(mb.editServerId, loginPassword.value)
 
-			showLoginDialog('firstboot', null, null);
+			//XXX Removed this
+			// showLoginDialog('firstboot', null, null);
 			serversDialog();
 		}
 
-		function editServer(serverId) {
+
+		function serverPasswordDialog(serverId, serverData){
+			showModal('', false,
+				`	<span data-i18n="server.password">${t('login.password')}</span>
+
+				<div id="divPassword2" class="input-wrapper pwd" title="Password">
+					<i class="ico icon-rectangle-ellipsis"></i>
+					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
+				</div>
+				<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
+
+			`, [
+				{
+					label: 'modal.cancel', runfunction: () => {
+						serversDialog()
+					}
+				},
+				{
+					label: 'button.login', runfunction: () => {
+						
+						//XXX Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
+						// dovrebbe esserci qualcosa nella funziona login solo che userà il loginscreen
+						login(mb.loggingServerId,false,true)
+						//closeModal()
+
+					}, high: true
+				},
+			]);
+
+			addPasswordEvent()
+		}
+
+		function addPasswordEvent(){
+			viewPassword2.addEventListener('click', () => {
+				const isPassword = loginPassword2.type === 'password';
+				const showPassword = loginPassword2.type === 'password';
+
+				loginPassword2.type = isPassword ? 'text' : 'password';
+
+				viewPassword2.classList.toggle('icon-eye', !showPassword);
+				viewPassword2.classList.toggle('icon-eye-off', showPassword);
+
+			})
+		}
+
+		function serverDataDialog(serverId, serverData, titleString) {
+			showModal('', false,
+				`	<span data-i18n="${titleString}">${t(titleString)}</span>
+				<div id="divServerName2" class="input-wrapper" title="Server Name">
+					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
+					<input type="text" class="login-input" id="loginServerName2" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false" value=${serverData.name}>
+				</div>
+
+				<div id="divBaseUrl2" class="input-wrapper" title="Server Address">
+					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
+					<input type="text" class="login-input" id="loginBaseUrl2" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value=${serverData.url}>
+				</div>
+
+				<div id="divUsername2" class="input-wrapper" title="Username">
+					<i class="ico icon-user-round"></i> <!-- Icon for username -->
+					<input type="email" class="login-input" id="loginUsername2" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value=${serverData.username}>
+				</div>
+
+				<div id="divPassword2" class="input-wrapper pwd" title="Password">
+					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
+
+					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
+				</div>
+				<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
+
+			`, [
+				{
+					label: 'button.testserver', runfunction: () => {
+						login('', true, true)
+						//closeModal()
+					}
+				},
+				{
+					label: 'modal.cancel', runfunction: () => {
+						serversDialog()
+					}
+				},
+				{
+					label: 'button.saveserver', runfunction: () => {
+						saveServer()
+					}, high: true
+				},
+			]);
+
+			addPasswordEvent()
+		}
+
+		function editServer(event, serverId) {
+			event.stopPropagation();
+
 			mb.editServerId = serverId;
 			mb.editServerData = mb.serverList[serverId];
-			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
-			closeModal();
+			//XXX showLoginDialog('editserver', mb.editServerId, mb.editServerData);
+			serverDataDialog(mb.editServerId, mb.editServerData, 'servers.edit')
+
+			//closeModal();
 		}
 
 		function addServer() {
 			[mb.editServerId, mb.editServerData] = initServer();
-			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
-			closeModal();
+			//showLoginDialog('editserver', mb.editServerId, mb.editServerData);
+			serverDataDialog(mb.editServerId, mb.editServerData, 'servers.add')
+			//closeModal();
 		}
 
 		async function logoutFromServer(serverList) {
@@ -1628,7 +1729,9 @@
 			systemRestart();
 		}
 
-		function deleteServer(serverId) {
+		function deleteServer(event, serverId) {
+			event.stopPropagation();
+
 			showModal('', false, `
 				<span data-i18n="servers.delete">${t('servers.delete')}</span>
 				<ul class="filter-menu">
@@ -1698,10 +1801,10 @@
 
 				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${server.name}</div>
-									<div class='smallbutton-wrapper server-button' title='${t('button.edit')}' onClick="editServer('${id}')">
+									<div class='smallbutton-wrapper server-button' title='${t('button.edit')}' onClick="editServer(event, '${id}')">
 										<span class="ico icon-pencil glyph-dark"></span>
 									</div>
-									<div class='smallbutton-wrapper server-button' title='${t('button.delete')}' onClick="deleteServer('${id}')">
+									<div class='smallbutton-wrapper server-button' title='${t('button.delete')}' onClick="deleteServer(event, '${id}')">
 										<span class="ico icon-trash-2 glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
@@ -1943,16 +2046,16 @@
 			});
 		}
 
-		viewPassword.addEventListener('click', () => {
-			const isPassword = loginPassword.type === 'password';
-			const showPassword = loginPassword.type === 'password';
+		function clickPassword(){
+			const isPassword = loginPassword2.type === 'password';
+			const showPassword = loginPassword2.type === 'password';
 
-			loginPassword.type = isPassword ? 'text' : 'password';
+			loginPassword2.type = isPassword ? 'text' : 'password';
 
-			viewPassword.classList.toggle('icon-eye', !showPassword);
-			viewPassword.classList.toggle('icon-eye-off', showPassword);
+			viewPassword2.classList.toggle('icon-eye', !showPassword);
+			viewPassword2.classList.toggle('icon-eye-off', showPassword);
+		}
 
-		})
 
 		function logOutFromCurrentServer() {
 			let serverTable = {};

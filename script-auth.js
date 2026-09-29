@@ -370,12 +370,14 @@ async function loginToServer(event, serverId, test) {
 		// In askPassword mode it shows the login dialog and closes the modal
 		// so it basically always work because with the login dialog present there is no risk
 		// of faux login
-		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
-		closeModal();
+		serverPasswordDialog(mb.loggingServerId, mb.serverList[mb.loggingServerId])
+		//showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
+		//closeModal();
 	} else {
 		// This is the part to tune
 		closeModal();
-		showLoginDialog('editserver', serverId, mb.serverList[serverId])
+		//XXX Removed this should be no more useful
+		//showLoginDialog('editserver', serverId, mb.serverList[serverId])
 
 
 		//TODO CHECK IF THIS IS REALLY NEEDED
@@ -422,6 +424,7 @@ function cleanBaseUrlVal(baseUrlVal) {
 }
 
 async function login(serverId, test, fromDialog) {
+	console.log(loginBaseUrl)
 
 	debugPrint("login...")
 	console.log("login...")
@@ -430,9 +433,13 @@ async function login(serverId, test, fromDialog) {
 	loginError.classList.toggle('auth-hidden', true);
 
 	// The "fromdialog" flag is used to determine if the login is being triggered from the login dialog or from the server list
-	let baseUrlVal = fromDialog ? loginBaseUrl.value : mb.serverList[serverId].url;
-	let usernameVal = fromDialog ? loginUsername.value : mb.serverList[serverId].username;
-	let passwordVal = fromDialog ? loginPassword.value : await loadUserPass(serverId);
+	let baseUrlVal = test ? loginBaseUrl2.value : mb.serverList[serverId].url;
+	let usernameVal = test ? loginUsername2.value : mb.serverList[serverId].username;
+	let passwordVal = (test || fromDialog) ? loginPassword2.value : await loadUserPass(serverId);
+
+	console.log(baseUrlVal)
+	console.log(usernameVal)
+	console.log(passwordVal)
 
 	// Cleanup the base URL value to ensure it has the correct format
 	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
@@ -471,6 +478,7 @@ async function login(serverId, test, fromDialog) {
 			//XXX This is parsed even if JSON parsing fails, which could lead to issues. Consider adding error handling for JSON parsing.
 			if (!test) {
 				await executeFaderGradient(1);
+				await closeModal();
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
 
 				mb.currentServerId = serverId;
@@ -488,7 +496,7 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 				//TODO Magari resettare la password quando anche user 0 fa logout?
-				
+
 				//XXX
 				// Keep this if you want to keep the "temporary server" so that password is saved for the next login attempt, 
 				// but it is not needed if you want to clear the password after a successful login or
@@ -509,15 +517,17 @@ async function login(serverId, test, fromDialog) {
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
+				loginError2.textContent = t("modal.ok");
+				loginError2.classList.toggle('auth-hidden', false);
 				// We are in test mode, so we just show a modal indicating that the connection is OK
-				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
+				//showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-			loginError.textContent = t(`server.invalidlogindata`);
-			loginError.classList.toggle('auth-hidden', false);
+			loginError2.textContent = t(`server.invalidlogindata`);
+			loginError2.classList.toggle('auth-hidden', false);
 		} else {
-			loginError.textContent = t(`server.loginfailed`);
-			loginError.classList.toggle('auth-hidden', false);
+			loginError2.textContent = t(`server.loginfailed`);
+			loginError2.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
 		//TODO Check and fix this
@@ -528,8 +538,8 @@ async function login(serverId, test, fromDialog) {
 
 		mb.currentServerId = false;
 		console.error('Login error:', error);
-		loginError.textContent = t("server.cannotreach") + `${error}`;
-		loginError.classList.toggle('auth-hidden', false);
+		loginError2.textContent = t("server.cannotreach") + `${error}`;
+		loginError2.classList.toggle('auth-hidden', false);
 
 	});
 
