@@ -298,7 +298,7 @@
 				<button id="divServersList" class="action login-button-wide" title="Servers List" onClick="serversDialog()">
 					</i><span class="input-text" data-i18n="servers.title">Servers List</span>
 				</button>
-<!--
+				<!--
 				<div id="divServerName" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> 
 					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
@@ -1545,7 +1545,7 @@
 		}
 
 
-		function serverPasswordDialog(serverId, serverData){
+		function serverPasswordDialog(serverId, serverData) {
 			showModal('', false,
 				`	<span data-i18n="server.password">${t('login.password')}</span>
 
@@ -1564,10 +1564,10 @@
 				},
 				{
 					label: 'button.login', runfunction: () => {
-						
+
 						//XXX Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
 						// dovrebbe esserci qualcosa nella funziona login solo che userà il loginscreen
-						login(mb.loggingServerId,false,true)
+						login(mb.loggingServerId, false, true)
 						//closeModal()
 
 					}, high: true
@@ -1577,7 +1577,7 @@
 			//addPasswordEvent()
 		}
 
-		function addPasswordEvent(){
+		function addPasswordEvent() {
 			console.log("addPasswordEvent")
 			viewPassword2.addEventListener('click', () => {
 				const isPassword = loginPassword2.type === 'password';
@@ -1591,19 +1591,18 @@
 			})
 		}
 
-		async function serverDataDialog(serverId, serverData, titleString) {
-	let loginPasswordValue;
+		async function getPasswordValue(serverId, serverData) {
 
-			if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
-		// When password is requested, the password field is always EMPTY
-		// same in web mode, the password is never shown ever
-		loginPasswordValue = ''
-	} else {
-		let localPass = await loadUserPass(serverId);
-		loginPasswordValue = localPass;
-		localPass = null;
-	}
-alert(loginPasswordValue)
+			if ((isWeb && !webPWD) || serverData.askPassword) {
+				return ('');
+			} else {
+				let localPass = await loadUserPass(serverId);
+				return (localPass);
+			}
+		}
+
+		async function serverDataDialog(serverId, serverData, titleString) {
+
 			showModal('', false,
 				`	<span data-i18n="${titleString}">${t(titleString)}</span>
 				<div id="divServerName2" class="input-wrapper" title="Server Name">
@@ -1624,7 +1623,7 @@ alert(loginPasswordValue)
 				<div id="divPassword2" class="input-wrapper pwd" title="Password">
 					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
 
-					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value=${await getPasswordValue(serverId, serverData)}>
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
 				<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
@@ -1647,8 +1646,6 @@ alert(loginPasswordValue)
 					}, high: true
 				},
 			]);
-
-			//addPasswordEvent()
 		}
 
 		function editServer(event, serverId) {
@@ -1671,7 +1668,7 @@ alert(loginPasswordValue)
 
 		async function logoutFromServer(serverList) {
 			console.log("START LOGOUT PROCESS")
-					console.log("---CM-3---")
+			console.log("---CM-3---")
 
 			closeModal();
 			if (isLoginScreenHidden()) navigateTo('#dashboard');
@@ -1842,7 +1839,7 @@ alert(loginPasswordValue)
 			});
 
 			out = out + "</ul>";
-			out=out+`<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>`
+			out = out + `<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>`
 
 			return (out)
 		}
@@ -1860,7 +1857,7 @@ alert(loginPasswordValue)
 						if (mb.currentServerId) {
 							hideLoginDialog();
 						}
-								console.log("---CM-4---")
+						console.log("---CM-4---")
 
 						closeModal()
 					}, high: true
@@ -2069,7 +2066,7 @@ alert(loginPasswordValue)
 			});
 		}
 
-		function clickPassword(){
+		function clickPassword() {
 			const isPassword = loginPassword2.type === 'password';
 			const showPassword = loginPassword2.type === 'password';
 
@@ -2297,7 +2294,7 @@ alert(loginPasswordValue)
 
 		function showModal(image, imagebg, message, itemsArray) {
 			if (isModalVisible()) {
-						console.log("---CM-0---")
+				console.log("---CM-0---")
 
 				closeModal();
 			}
