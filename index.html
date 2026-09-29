@@ -1591,7 +1591,19 @@
 			})
 		}
 
-		function serverDataDialog(serverId, serverData, titleString) {
+		async function serverDataDialog(serverId, serverData, titleString) {
+	let loginPasswordValue;
+
+			if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
+		// When password is requested, the password field is always EMPTY
+		// same in web mode, the password is never shown ever
+		loginPasswordValue = ''
+	} else {
+		let localPass = await loadUserPass(serverId);
+		loginPasswordValue = localPass;
+		localPass = null;
+	}
+alert(loginPasswordValue)
 			showModal('', false,
 				`	<span data-i18n="${titleString}">${t(titleString)}</span>
 				<div id="divServerName2" class="input-wrapper" title="Server Name">
@@ -1659,6 +1671,8 @@
 
 		async function logoutFromServer(serverList) {
 			console.log("START LOGOUT PROCESS")
+					console.log("---CM-3---")
+
 			closeModal();
 			if (isLoginScreenHidden()) navigateTo('#dashboard');
 			await executeFaderGradient(1);
@@ -1828,6 +1842,8 @@
 			});
 
 			out = out + "</ul>";
+			out=out+`<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>`
+
 			return (out)
 		}
 
@@ -1844,6 +1860,8 @@
 						if (mb.currentServerId) {
 							hideLoginDialog();
 						}
+								console.log("---CM-4---")
+
 						closeModal()
 					}, high: true
 				}
@@ -2279,6 +2297,8 @@
 
 		function showModal(image, imagebg, message, itemsArray) {
 			if (isModalVisible()) {
+						console.log("---CM-0---")
+
 				closeModal();
 			}
 			setTimeout(() => {

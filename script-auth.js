@@ -280,6 +280,10 @@ async function systemRestart() {
 	//TODO: and externalise the functions that are hear in a function that is called at boot or at login screen show
 	console.log("SYSRESTART")
 	// Reapply boot theme
+	
+	//XXX Added recently, maybe can override others?
+	closeModal();
+
 	await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
 	document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
@@ -375,7 +379,8 @@ async function loginToServer(event, serverId, test) {
 		//closeModal();
 	} else {
 		// This is the part to tune
-		closeModal();
+		console.log("---CM-1---")
+		//closeModal();
 		//XXX Removed this should be no more useful
 		//showLoginDialog('editserver', serverId, mb.serverList[serverId])
 
@@ -478,6 +483,8 @@ async function login(serverId, test, fromDialog) {
 			//XXX This is parsed even if JSON parsing fails, which could lead to issues. Consider adding error handling for JSON parsing.
 			if (!test) {
 				await executeFaderGradient(1);
+						console.log("---CM-2---")
+
 				await closeModal();
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
 
@@ -545,7 +552,7 @@ async function login(serverId, test, fromDialog) {
 
 	// Reset login credentials if this is not a "test" login attempt
 	if (!test) {
-		loginPassword.value = null;
+		loginPassword2.value = null;
 		mbAuthHeader = null;
 	}
 }
@@ -588,8 +595,8 @@ function applyScenario(modeName, serverId, serverData) {
 function showLoginDialog(dialogMode, serverId, serverData) {
 	mb.loginMode = dialogMode;
 
-	loginError.textContent = '';
-	loginError.classList.toggle('auth-hidden', true);
+	//loginError.textContent = '';
+	//loginError.classList.toggle('auth-hidden', true);
 
 	//applyScenario(dialogMode, serverId, serverData)
 
