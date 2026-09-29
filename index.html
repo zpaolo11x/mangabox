@@ -2296,7 +2296,7 @@
 			if (isModalVisible()) {
 				console.log("---CM-0---")
 
-				closeModal();
+				closeModal(true);
 			}
 			setTimeout(() => {
 				document.querySelectorAll('.modal-button').forEach(el => {
@@ -2323,7 +2323,7 @@
 				});
 
 				myModal.classList.add('visible');
-			}, isModalVisible() ? 221 : 0)
+			}, isModalVisible() ? 161 : 0)
 
 		}
 
@@ -2331,19 +2331,33 @@
 			return (myModal.classList.contains('visible'))
 		}
 
-		function closeModal() {
-			myModal.classList.add('unfade');
-			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+		function closeModal(onlyContent = false) {
+			if (onlyContent) {
+				modalContent.classList.add('unfade');
+				setTimeout(() => {
+					// Optional: if you still want to hide it completely from screen readers / tab order
+					modalContent.classList.remove('unfade');
+					modalMessage.innerHTML = '';
+					document.querySelectorAll('.modal-button').forEach(el => {
+						el.remove();
+					});
+				}, 160);
 
-			setTimeout(() => {
-				// Optional: if you still want to hide it completely from screen readers / tab order
-				myModal.classList.remove('visible');
-				myModal.classList.remove('unfade');
-				modalMessage.innerHTML = '';
-				document.querySelectorAll('.modal-button').forEach(el => {
-					el.remove();
-				});
-			}, 220);
+			} else {
+				myModal.classList.add('unfade');
+				modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+				setTimeout(() => {
+					// Optional: if you still want to hide it completely from screen readers / tab order
+					myModal.classList.remove('visible');
+					myModal.classList.remove('unfade');
+					modalMessage.innerHTML = '';
+					document.querySelectorAll('.modal-button').forEach(el => {
+						el.remove();
+					});
+				}, 220);
+			}
+
 		}
 
 

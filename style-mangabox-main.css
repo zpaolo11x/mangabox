@@ -329,7 +329,8 @@ body {
 	pointer-events: auto;
 }
 
-.modal.unfade {
+.modal.unfade,
+.modal-content.unfade {
 	opacity: 0;
 	pointer-events: none;
 }
@@ -371,9 +372,12 @@ body {
 	border: 1px solid var(--mb-modal-border);
 	overflow: hidden;
 	min-height:70px;
+	
 }
 
 .modal-content {
+		opacity: 1.0;
+
 	padding: var(--mb-dialog-padding);
 	text-align: center;
 	width: 260px;
@@ -382,7 +386,9 @@ body {
 	max-height: calc(100vh - 50px);
 	overflow-y: scroll;
 	overflow-x: hidden;
-		min-height:70px;
+	min-height:70px;
+	
+	transition: opacity 0.2s ease;
 
 }
 
