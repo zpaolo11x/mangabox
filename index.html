@@ -298,42 +298,45 @@
 				<button id="divServersList" class="action login-button-wide" title="Servers List" onClick="serversDialog()">
 					</i><span class="input-text" data-i18n="servers.title">Servers List</span>
 				</button>
-
+<!--
 				<div id="divServerName" class="input-wrapper" title="Server Name">
-					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
+					<i class="ico icon-server"></i> 
 					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
 				</div>
 
 				<div id="divBaseUrl" class="input-wrapper" title="Server Address">
-					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
+					<i class="ico icon-link"></i> 
 					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
 				</div>
 
 				<div id="divUsername" class="input-wrapper" title="Username">
-					<i class="ico icon-user-round"></i> <!-- Icon for username -->
+					<i class="ico icon-user-round"></i> 
 					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
 				</div>
 
 				<div id="divPassword" class="input-wrapper pwd" title="Password">
-					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
+					<i class="ico icon-rectangle-ellipsis"></i> 
 
 					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 					<span id="viewPassword" class="ico icon-eye right"></span>
 				</div>
-
+-->
 				<div class="login-buttons">
 					<div class="login-buttons-left">
 						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
 							<i class="ico icon-languages"></i>
 						</button>
+						<!--
 						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('', true, true)">
 							<i class="ico icon-globe question"></i>
 						</button>
 						<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
 							<i class="ico icon-server"></i>
 						</button>
+						-->
 					</div>
 					<div class="login-buttons-right">
+						<!--
 						<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
 							<i class="input-glyph ico icon-undo-2"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
 						</button>
@@ -343,6 +346,7 @@
 						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? null : mb.currentServerId), false, true)">
 							<i class="input-glyph ico icon-play"></i><span class="input-text" data-i18n="button.login">Login</span>
 						</button>
+						-->
 					</div>
 				</div>
 
@@ -396,7 +400,7 @@
 	<script>
 		// Set to true to disable per-device and per-platform feature select
 		const fullDebugMode = false;
-		const webPWD = false;
+		const webPWD = true;
 
 		// Enable for live debug on the main UI
 		const enableDebugPrint = false;
@@ -1533,7 +1537,7 @@
 
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
-			saveUserPass(mb.editServerId, loginPassword.value)
+			saveUserPass(mb.editServerId, loginPassword2.value)
 
 			//XXX Removed this
 			// showLoginDialog('firstboot', null, null);
@@ -1570,10 +1574,11 @@
 				},
 			]);
 
-			addPasswordEvent()
+			//addPasswordEvent()
 		}
 
 		function addPasswordEvent(){
+			console.log("addPasswordEvent")
 			viewPassword2.addEventListener('click', () => {
 				const isPassword = loginPassword2.type === 'password';
 				const showPassword = loginPassword2.type === 'password';
@@ -1631,7 +1636,7 @@
 				},
 			]);
 
-			addPasswordEvent()
+			//addPasswordEvent()
 		}
 
 		function editServer(event, serverId) {

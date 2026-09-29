@@ -139,7 +139,7 @@ async function sessionCheck() {
 	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
 	mb.baseUrl = cleanBaseUrlVal(mb.baseUrl)
 
-	loginBaseUrl.value = mb.baseUrl;
+//XXX	loginBaseUrl.value = mb.baseUrl;
 
 	console.log("Z - loggedServer:" + mb.currentServerId)
 	debugPrint("Z - loggedServer:" + mb.currentServerId)
@@ -424,7 +424,7 @@ function cleanBaseUrlVal(baseUrlVal) {
 }
 
 async function login(serverId, test, fromDialog) {
-	console.log(loginBaseUrl)
+//	console.log(loginBaseUrl)
 
 	debugPrint("login...")
 	console.log("login...")
@@ -550,7 +550,11 @@ async function login(serverId, test, fromDialog) {
 	}
 }
 
+
+//XXX .action class can be removed it is used for the login screen
+
 function applyScenario(modeName, serverId, serverData) {
+	return;
 	const buttonsEnable = new Set(mb.loginModes[modeName].buttons || []);
 	document.querySelectorAll(".action").forEach(btn => {
 		btn.style.display = !buttonsEnable.has(btn.id) ? 'none' : '';
@@ -587,17 +591,17 @@ function showLoginDialog(dialogMode, serverId, serverData) {
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
 
-	applyScenario(dialogMode, serverId, serverData)
+	//applyScenario(dialogMode, serverId, serverData)
 
-	loginPassword.type = 'password';
-	viewPassword.classList.toggle('icon-eye', true);
-	viewPassword.classList.toggle('icon-eye-off', false);
+	//loginPassword.type = 'password';
+	//viewPassword.classList.toggle('icon-eye', true);
+	//viewPassword.classList.toggle('icon-eye-off', false);
 
-	if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
+	//if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
 	console.log("show Login Dialog...")
-	loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
-	loginScreen.classList.toggle('no-logo-pattern', mb.currentServerId)
+	//loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
+	//loginScreen.classList.toggle('no-logo-pattern', mb.currentServerId)
 	loginScreen.classList.toggle('auth-hidden', false);
 }
 

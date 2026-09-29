@@ -433,6 +433,7 @@
 	display: none !important;
 }
 
+/*
 @media (max-width: 400px) {
 	.login-button {
 		width: 40px;
@@ -445,5 +446,5 @@
 	.input-glyph {
 		display: block !important;
 	}
-
 }
+*/
