@@ -599,7 +599,8 @@ function showLoginDialog(dialogMode, serverId, serverData) {
 	//viewPassword.classList.toggle('icon-eye', true);
 	//viewPassword.classList.toggle('icon-eye-off', false);
 
-	//if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
+	//if (mb.currentServerId == false) 
+	dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
 
 	//loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
