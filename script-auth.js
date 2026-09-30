@@ -130,7 +130,6 @@ async function sessionCheck() {
 	await executeFaderGradient(1);
 
 	debugPrint("sessionCheck...");
-	console.log("sessionCheck...");
 
 	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
@@ -141,7 +140,6 @@ async function sessionCheck() {
 
 //XXX	loginBaseUrl.value = mb.baseUrl;
 
-	console.log("Z - loggedServer:" + mb.currentServerId)
 	debugPrint("Z - loggedServer:" + mb.currentServerId)
 
 	// --- 1. Missing credentials → login
@@ -158,7 +156,6 @@ async function sessionCheck() {
 
 	if (offline) {
 		debugPrint("Offline mode detected.");
-		console.log("Offline mode detected.")
 		if (sessionWasValid) {
 			hideLoginDialog();
 			bootSequence('offline');
@@ -209,14 +206,12 @@ async function sessionCheck() {
 		if (response.ok) {
 			if (isWeb && !webPWD) await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 			debugPrint("Session valid (server confirmed).");
-			console.log("Session valid (server confirmed).");
 			localStorage.setItem("mb00SessionValid", "true");
 			hideLoginDialog();
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
 			debugPrint("Credentials invalid or expired.");
-			console.log("Credentials invalid or expired.");
 			mb.currentUserId = false;
 
 			//TODO Verifica se questa funzione fa già più di quel che fa il resto
@@ -228,7 +223,6 @@ async function sessionCheck() {
 
 		} else {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
-			console.log(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			if (sessionWasValid) {
 				hideLoginDialog();
 				bootSequence('offline');
@@ -242,8 +236,6 @@ async function sessionCheck() {
 	} catch (error) {
 		debugPrint("Session check failed: " + error);
 		debugPrint("Treating as temporary network/server issue.");
-		console.log("Session check failed: " + error);
-		console.log("Treating as temporary network/server issue.");
 
 		if (sessionWasValid) {
 			hideLoginDialog();
@@ -429,10 +421,8 @@ function cleanBaseUrlVal(baseUrlVal) {
 }
 
 async function login(serverId, test, fromDialog) {
-//	console.log(loginBaseUrl)
 
-	debugPrint("login...")
-	console.log("login...")
+	debugPrint("Login Function - Id:"+serverId+" test:"+test+" fromDialog:"+fromDialog)
 
 	// Hide login error messages
 	loginError.classList.toggle('auth-hidden', true);
@@ -442,9 +432,9 @@ async function login(serverId, test, fromDialog) {
 	let usernameVal = test ? loginUsername2.value : mb.serverList[serverId].username;
 	let passwordVal = (test || fromDialog) ? loginPassword2.value : await loadUserPass(serverId);
 
-	console.log(baseUrlVal)
-	console.log(usernameVal)
-	console.log(passwordVal)
+	debugPrint("baseUrlVal:"+baseUrlVal)
+	debugPrint("usernameVal:"+usernameVal)
+	debugPrint("passwordVal:"+passwordVal)
 
 	// Cleanup the base URL value to ensure it has the correct format
 	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
@@ -468,7 +458,9 @@ async function login(serverId, test, fromDialog) {
 			'skip_zrok_interstitial': '1'
 		}
 	}).then(async response => {
+		debugPrint(JSON.stringify(response))
 		if (response.ok) {
+			debugPrint("response.ok")
 			// If the response is successful, parse the response body as JSON to retrieve user data
 			const rawBody = await response.text();
 			let parsed = null;
@@ -530,14 +522,17 @@ async function login(serverId, test, fromDialog) {
 				//showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
+			debugPrint("NOT response.ok, status 401")
 			loginError2.textContent = t(`server.invalidlogindata`);
 			loginError2.classList.toggle('auth-hidden', false);
 		} else {
+			debugPrint("NOT response.ok, NOT status 401")
 			loginError2.textContent = t(`server.loginfailed`);
 			loginError2.classList.toggle('auth-hidden', false);
 		}
 	}).catch(error => {
 		//TODO Check and fix this
+			debugPrint("fetch ERROR")
 
 		localStorage.removeItem('mb00BaseUrl');
 		localStorage.removeItem('mb00CurrentServerId');
@@ -606,7 +601,7 @@ function showLoginDialog(dialogMode, serverId, serverData) {
 
 	//if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
-	console.log("show Login Dialog...")
+
 	//loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
 	//loginScreen.classList.toggle('no-logo-pattern', mb.currentServerId)
 	loginScreen.classList.toggle('auth-hidden', false);
@@ -617,7 +612,7 @@ function hideLoginDialog() {
 
 	dragbar.classList.toggle('onLogin', false);
 	debugPrint("hide Login Dialog...")
-	console.log("hide Login Dialog...")
+
 	loginScreen.classList.toggle('auth-hidden', true);
 }
 

@@ -408,7 +408,7 @@
 
 		const debugPrint = enableDebugPrint
 			? text => (debuggerObj.innerText += text + '\n')
-			: () => { };
+			: text => (console.log("***** " + text)) ;
 
 
 		const isElectron = !!window.electronAPI;
@@ -1667,19 +1667,24 @@
 		}
 
 		async function logoutFromServer(serverList) {
-			console.log("START LOGOUT PROCESS")
-			console.log("---CM-3---")
+			debugPrint("logoutFromServer")
+			debugPrint(JSON.stringify(serverList))
 
 			closeModal();
 			if (isLoginScreenHidden()) navigateTo('#dashboard');
 			await executeFaderGradient(1);
 
+			debugPrint("	Go through servers")
 			Object.entries(serverList).forEach(async ([id, server]) => {
+				debugPrint("	"+JSON.stringify(server))
 				if ((!server.askPassword)) {
+					debugPrint("		Not askPassword, so the password is saved")
 					mb.serverList[id].askPassword = true;
 
 					let fetchPayload
+					debugPrint("		Create payload")
 					if (!isWeb || (isWeb && webPWD)) {
+						debugPrint("			Get saved password")
 						const username = mb.serverList[id].username;
 						const password = await loadUserPass(id);
 
@@ -1692,6 +1697,7 @@
 							}
 						}
 					} else {
+						debugPrint("			Use token")
 						fetchPayload = {
 							method: 'POST',
 							credentials: 'include',
@@ -1702,6 +1708,7 @@
 						}
 					}
 
+					debugPrint("Start logout fetch")
 					try {
 						await fetch(`${mb.serverList[id].url}/api/logout`, fetchPayload);
 					} catch (error) {
@@ -1715,6 +1722,8 @@
 			// await deleteUserPass(mb.loggedUser);
 			// ma marchia il server come "askPassword"
 			localStorage.removeItem('mb00CurrentServerId');
+			localStorage.removeItem('mb00CurrentUserId');
+			localStorage.removeItem('mb00BaseUrl');
 
 			// Always clean temp server
 			//XXX mb.serverList['mb0'].username = '';
@@ -2116,7 +2125,7 @@
 					},
 					{
 						// No need to use translateDOM because modals are modal and spawned each time
-						label: 'modal.cancel', runfunction: closeModal, high: false
+						label: 'modal.cancel', runfunction: () => closeModal(), high: false
 					}
 				]
 			);
@@ -2332,7 +2341,9 @@
 		}
 
 		function closeModal(onlyContent = false) {
+			console.log("onlycontent:"+ onlyContent)
 			if (onlyContent) {
+				console.log("BK2")
 				modalContent.classList.add('unfade');
 				setTimeout(() => {
 					// Optional: if you still want to hide it completely from screen readers / tab order
@@ -2344,6 +2355,7 @@
 				}, 160);
 
 			} else {
+				console.log("BK1")
 				myModal.classList.add('unfade');
 				modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
@@ -2351,6 +2363,7 @@
 					// Optional: if you still want to hide it completely from screen readers / tab order
 					myModal.classList.remove('visible');
 					myModal.classList.remove('unfade');
+				modalContent.classList.remove('unfade');
 					modalMessage.innerHTML = '';
 					document.querySelectorAll('.modal-button').forEach(el => {
 						el.remove();
@@ -2799,7 +2812,7 @@
 			saveLibraryFilters();
 
 			//TODO Maybe make this smoother instead of reloading the whole menu!
-			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: closeModal, high: true }]);
+			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
 		}
 
 		function buildLanguageDialog() {
@@ -2881,7 +2894,7 @@
 					saveLibraryFilters();
 				})
 				addLongPressListener(button.item, 'filter-item', async () => {
-					showModal('', false, buildFilterDialog(button, index), [{ label: 'modal.ok', runfunction: closeModal, high: true }]);
+					showModal('', false, buildFilterDialog(button, index), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 				}, 500)
 			});
 
@@ -3120,12 +3133,10 @@
 				const bookPath = baseUrl;
 
 				debugPrint(`Successfully loaded offline book data for ${bookId}`)
-				console.log(`Successfully loaded offline book data for ${bookId}`);
 				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath };
 
 			} catch (err) {
 				debugPrint('Failed to read offline book data:', err);
-				console.error('Failed to read offline book data:', err);
 				throw err;
 			}
 		}
@@ -3135,20 +3146,17 @@
 				const baseFolder = `offline-books/${bookId}`;
 
 				debugPrint(`Deleting offline book data for ${bookId}...`);
-				console.log(`Deleting offline book data for ${bookId}...`);
 
 				await Capacitor.Plugins.Filesystem.rmdir({
 					path: baseFolder,
 					directory: filesFolder,
 					recursive: true
 				});
-
 				debugPrint(`Deleted offline book ${bookId} successfully.`);
-				console.log(`Deleted offline book ${bookId} successfully.`);
+
 				return { success: true };
 			} catch (err) {
 				debugPrint(`Failed to delete offline book ${bookId}:`, err);
-				console.error(`Failed to delete offline book ${bookId}:`, err);
 				return { success: false, message: err.message };
 			}
 		}
@@ -3204,7 +3212,6 @@
 			} catch (err) {
 				debugPrint('Error in safeWriteFile:');
 				debugPrint(err);
-				console.error('Update metadata:', err);
 				return { ok: false, error: err.message };
 			}
 		}
@@ -3365,7 +3372,6 @@
 			} catch (err) {
 				debugPrint('Error in safeWriteFile:');
 				debugPrint(err);
-				console.error('Download failed:', err);
 				return { ok: false, error: err.message };
 			}
 		}
@@ -3835,7 +3841,7 @@
 
 			if (mb.libraryError) {
 				showModal('circle-mark-svg.svg', true, t('modal.analyzewarning') + mb.libraryNames,
-					[{ label: 'modal.ok', runfunction: closeModal, high: true }]);
+					[{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 				return;
 			}
 
@@ -5035,7 +5041,7 @@
 									high: true
 								}, {
 									label: 'modal.cancel',
-									runfunction: closeModal,
+									runfunction: () => closeModal(),
 									high: false
 								}]);
 
