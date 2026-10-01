@@ -301,10 +301,10 @@
 
 				<div class="login-buttons">
 					<div class="login-buttons-left">
-						<button id="loginInfo" class="login-button-round press-button" onClick="infoText.classList.toggle('visible')">
+						<button id="loginInfo" class="login-button-round press-button" onClick="toggleShow(infoText)">
 							<i class="ico icon-circle-question-mark"></i>
 						</button>
-							<button id="languageButton" class="action login-button-round press-button" data-i18n-title="button.language" onclick="languageDialog()">
+						<button id="languageButton" class="action login-button-round press-button" data-i18n-title="button.language" onclick="languageDialog()">
 							<i class="ico icon-languages"></i>
 						</button>
 					</div>
@@ -334,7 +334,7 @@
 
 	<div id="fader" class="logo-pattern"></div>
 
-	<div id="infoText" onClick="infoText.classList.toggle('visible')">
+	<div id="infoText" class="show-hidden show-faded" onClick="toggleShow(infoText)">
 		<h1>MangaBox v0.4.8</h1>
 
 		<div data-i18n="about.intro"></div>
@@ -367,7 +367,7 @@
 
 		const debugPrint = enableDebugPrint
 			? text => (debuggerObj.innerText += text + '\n')
-			: text => (console.log("***** " + text)) ;
+			: text => (console.log("***** " + text));
 
 
 		const isElectron = !!window.electronAPI;
@@ -765,6 +765,19 @@
 		createPinchAndPanResponse(touchPanel, readerContainer);
 		createPinchAndPanResponse(webtoonContainer, readerContainer);
 
+		function toggleShow(item, force = false) {
+			if (item.classList.contains('show-hidden') || force === true) {
+				item.classList.toggle('show-hidden', false)
+				setTimeout(() => {
+					item.classList.toggle('show-faded', false)
+				}, 10);
+			} else {
+				item.classList.toggle('show-faded', true)
+				setTimeout(() => {
+					item.classList.toggle('show-hidden', true)
+				}, 300);
+			}
+		}
 
 		//MB Manage Electron titlebar
 
@@ -1635,7 +1648,7 @@
 
 			debugPrint("	Go through servers")
 			Object.entries(serverList).forEach(async ([id, server]) => {
-				debugPrint("	"+JSON.stringify(server))
+				debugPrint("	" + JSON.stringify(server))
 				if ((!server.askPassword)) {
 					debugPrint("		Not askPassword, so the password is saved")
 					mb.serverList[id].askPassword = true;
@@ -2300,7 +2313,7 @@
 		}
 
 		function closeModal(onlyContent = false) {
-			console.log("onlycontent:"+ onlyContent)
+			console.log("onlycontent:" + onlyContent)
 			if (onlyContent) {
 				console.log("BK2")
 				modalContent.classList.add('unfade');
@@ -2322,7 +2335,7 @@
 					// Optional: if you still want to hide it completely from screen readers / tab order
 					myModal.classList.remove('visible');
 					myModal.classList.remove('unfade');
-				modalContent.classList.remove('unfade');
+					modalContent.classList.remove('unfade');
 					modalMessage.innerHTML = '';
 					document.querySelectorAll('.modal-button').forEach(el => {
 						el.remove();
@@ -6202,7 +6215,7 @@
 			purgeLoading();
 			clearAllTimeouts();
 
-			showBackButton(false)
+			showBackButton()
 			if (mb.historyStack.length == 1) {
 				mb.historyStack = ['#dashboard', mb.historyStack[0]]
 			}
@@ -7931,7 +7944,7 @@
 
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
-			showBackButton(!backButton.classList.contains('faded'))
+			showBackButton()
 		}
 
 		function hideMenu() {
@@ -8157,13 +8170,11 @@
 			return { path, params };
 		}
 
-		function showBackButton(fadeButton = false) {
+		function showBackButton() {
 			if (mb.historyStack.length == 1) {
 				backButton.classList.toggle('hidden', true)
-				backButton.classList.toggle('faded', false)
 			} else {
 				backButton.classList.toggle('hidden', false)
-				backButton.classList.toggle('faded', fadeButton)
 			}
 
 		}
@@ -8265,7 +8276,7 @@
 					break;
 				case 'bookread':
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pg'));
-					showBackButton(true);
+					showBackButton();
 					break;
 				case 'offlinebooks':
 					clearSearchField();

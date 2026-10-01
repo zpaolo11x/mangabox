@@ -562,7 +562,6 @@ body {
 }
 
 #infoText {
-	display: none;
 	position: fixed;
 	z-index: 20000;
 	font-size: 20px;
@@ -578,9 +577,14 @@ body {
 	transition: all 0.3s
 }
 
-#infoText.visible {
-	display: block;
+.show-faded{
+	opacity:0;
 }
+
+.show-hidden {
+	display: none;
+}
+
 
 #infoText h1 {
 	font-size: 24px;
@@ -1564,12 +1568,8 @@ a {
 }
 
 #backButton.hidden{
-	opacity:0.0;
+	opacity: 0.0;
 	pointer-events: none;
-}
-
-#backButton.faded{
-	opacity:0.2;
 }
 
 #bookDetailsContainer .close-details {
