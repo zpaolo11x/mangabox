@@ -287,33 +287,33 @@
 		</div>
 	</div>
 
-	<div id="loginScreen" class="auth-hidden logo-pattern">
-		<div class="login-container">
-			<div class="login-spacer-top"></div>
-			<div id="loginDialog" class="dialog">
+	<div id="logoScreen" class="logo-hidden logo-pattern">
+		<div class="logo-container">
+			<div class="logo-spacer-top"></div>
+			<div id="logoDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
 				<div class="version-note">v0.4.8</div>
 
-				<button id="divServersList" class="action login-button-wide press-button" title="Servers List" onClick="serversDialog()">
+				<button id="divServersList" class="action logo-button-wide press-button" title="Servers List" onClick="serversDialog()">
 					</i><span class="input-text" data-i18n="servers.title">Servers List</span>
 				</button>
 
-				<div class="login-buttons">
-					<div class="login-buttons-left">
-						<button id="loginInfo" class="login-button-round press-button" onClick="toggleShow(infoText)">
+				<div class="logo-buttons">
+					<div class="logo-buttons-left">
+						<button id="logoInfo" class="logo-button-round press-button" onClick="toggleShow(infoText)">
 							<i class="ico icon-circle-question-mark"></i>
 						</button>
-						<button id="languageButton" class="action login-button-round press-button" data-i18n-title="button.language" onclick="languageDialog()">
+						<button id="languageButton" class="action logo-button-round press-button" data-i18n-title="button.language" onclick="languageDialog()">
 							<i class="ico icon-languages"></i>
 						</button>
 					</div>
 				</div>
 
 
-				<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
+				<div id="errorBox" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
 			</div>
-			<div class="login-spacer-bottom"></div>
+			<div class="logo-spacer-bottom"></div>
 		</div>
 	</div>
 
@@ -1401,7 +1401,7 @@
 					await logOutFromCurrentServer()
 
 					localStorage.removeItem("mb00SessionValid");
-					showLoginDialog();
+					showLogoDialog();
 					await executeFaderGradient(0);
 					return null
 				}
@@ -1490,7 +1490,7 @@
 					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
-				<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
+				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
 
 			`, [
 				{
@@ -1563,7 +1563,7 @@
 					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value=${await getPasswordValue(serverId, serverData)}>
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
-				<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
+				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
 
 			`, [
 				{
@@ -1602,7 +1602,7 @@
 			debugPrint(JSON.stringify(serverList))
 
 			closeModal();
-			if (isLoginScreenHidden()) navigateTo('#dashboard');
+			if (isLogoScreenHidden()) navigateTo('#dashboard');
 			await executeFaderGradient(1);
 
 			debugPrint("	Go through servers")
@@ -1779,7 +1779,7 @@
 			});
 
 			out = out + "</ul>";
-			out = out + `<div id="loginError2" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>`
+			out = out + `<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>`
 
 			return (out)
 		}
@@ -1795,7 +1795,7 @@
 				{
 					label: 'modal.ok', runfunction: () => {
 						if (mb.currentServerId) {
-							hideLoginDialog();
+							hideLogoDialog();
 						}
 						console.log("---CM-4---")
 
@@ -1898,7 +1898,7 @@
 			});
 		}
 
-		function changeLoginTheme(toDark) {
+		function changeLogoTheme(toDark) {
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 		}
 
@@ -1933,10 +1933,10 @@
 
 
 		mbPrefersDarkMode.addEventListener('change', () => {
-			if (isLoginScreenHidden()) {
+			if (isLogoScreenHidden()) {
 				changeTheme()
 			} else {
-				changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
+				changeLogoTheme(mbPrefersDarkMode.matches ? true : false)
 			}
 		});
 
@@ -8337,7 +8337,7 @@
 
 		let offlineSession = false;
 
-		changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
+		changeLogoTheme(mbPrefersDarkMode.matches ? true : false)
 
 		sessionCheck()
 

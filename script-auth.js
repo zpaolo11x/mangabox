@@ -143,7 +143,7 @@ async function sessionCheck() {
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId) || (!mb.currentUserId)) {
 		debugPrint("Missing base URL or login data");
-		showLoginDialog();
+		showLogoDialog();
 		await executeFaderGradient(0);
 		return;
 	}
@@ -155,10 +155,10 @@ async function sessionCheck() {
 	if (offline) {
 		debugPrint("Offline mode detected.");
 		if (sessionWasValid) {
-			hideLoginDialog();
+			hideLogoDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog();
+			showLogoDialog();
 			await executeFaderGradient(0);
 		}
 		return;
@@ -205,7 +205,7 @@ async function sessionCheck() {
 			if (isWeb && !webPWD) await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 			debugPrint("Session valid (server confirmed).");
 			localStorage.setItem("mb00SessionValid", "true");
-			hideLoginDialog();
+			hideLogoDialog();
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
@@ -216,18 +216,18 @@ async function sessionCheck() {
 			await logOutFromCurrentServer()
 
 			localStorage.removeItem("mb00SessionValid");
-			showLoginDialog();
+			showLogoDialog();
 			await executeFaderGradient(0);
 
 		} else {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			if (sessionWasValid) {
-				hideLoginDialog();
+				hideLogoDialog();
 				bootSequence('offline');
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog();
+				showLogoDialog();
 				await executeFaderGradient(0);
 			}
 		}
@@ -236,12 +236,12 @@ async function sessionCheck() {
 		debugPrint("Treating as temporary network/server issue.");
 
 		if (sessionWasValid) {
-			hideLoginDialog();
+			hideLogoDialog();
 			bootSequence('offline');
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog();
+			showLogoDialog();
 			await executeFaderGradient(0);
 
 		}
@@ -261,11 +261,11 @@ async function systemRestart() {
 	let toDark = mbPrefersDarkMode.matches ? true : false
 	document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
-	loginScreen.classList = "auth-hidden logo-pattern";
+	logoScreen.classList = "logo-hidden logo-pattern";
 
 
-	loginError.textContent = '';
-	loginError.classList.toggle('auth-hidden', true);
+	errorBox.textContent = '';
+	errorBox.classList.toggle('logo-hidden', true);
 	executeFade(1);
 
 	if (isSystemBars) {
@@ -401,7 +401,7 @@ async function login(serverId, test, fromDialog) {
 	debugPrint("Login Function - Id:"+serverId+" test:"+test+" fromDialog:"+fromDialog)
 
 	// Hide login error messages
-	loginError.classList.toggle('auth-hidden', true);
+	errorBox.classList.toggle('logo-hidden', true);
 
 	// The "fromdialog" flag is used to determine if the login is being triggered from the login dialog or from the server list
 	let baseUrlVal = test ? loginBaseUrl2.value : mb.serverList[serverId].url;
@@ -492,19 +492,19 @@ async function login(serverId, test, fromDialog) {
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
-				loginError2.textContent = t("modal.ok");
-				loginError2.classList.toggle('auth-hidden', false);
+				errorBox2.textContent = t("modal.ok");
+				errorBox2.classList.toggle('logo-hidden', false);
 				// We are in test mode, so we just show a modal indicating that the connection is OK
 				//showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
 			debugPrint("NOT response.ok, status 401")
-			loginError2.textContent = t(`server.invalidlogindata`);
-			loginError2.classList.toggle('auth-hidden', false);
+			errorBox2.textContent = t(`server.invalidlogindata`);
+			errorBox2.classList.toggle('logo-hidden', false);
 		} else {
 			debugPrint("NOT response.ok, NOT status 401")
-			loginError2.textContent = t(`server.loginfailed`);
-			loginError2.classList.toggle('auth-hidden', false);
+			errorBox2.textContent = t(`server.loginfailed`);
+			errorBox2.classList.toggle('logo-hidden', false);
 		}
 	}).catch(error => {
 		//TODO Check and fix this
@@ -516,8 +516,8 @@ async function login(serverId, test, fromDialog) {
 
 		mb.currentServerId = false;
 		console.error('Login error:', error);
-		loginError2.textContent = t("server.cannotreach") + `${error}`;
-		loginError2.classList.toggle('auth-hidden', false);
+		errorBox2.textContent = t("server.cannotreach") + `${error}`;
+		errorBox2.classList.toggle('logo-hidden', false);
 
 	});
 
@@ -529,18 +529,18 @@ async function login(serverId, test, fromDialog) {
 }
 
 
-function showLoginDialog() {
+function showLogoDialog() {
 	dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
-	loginScreen.classList.toggle('auth-hidden', false);
+	logoScreen.classList.toggle('logo-hidden', false);
 }
 
-function hideLoginDialog() {
+function hideLogoDialog() {
 	dragbar.classList.toggle('onLogin', false);
 	debugPrint("hide Login Dialog...")
-	loginScreen.classList.toggle('auth-hidden', true);
+	logoScreen.classList.toggle('logo-hidden', true);
 }
 
-function isLoginScreenHidden() {
-	return (loginScreen.classList.contains('auth-hidden'));
+function isLogoScreenHidden() {
+	return (logoScreen.classList.contains('logo-hidden'));
 }
