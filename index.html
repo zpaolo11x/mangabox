@@ -1098,27 +1098,6 @@
 
 					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}'),
 
-					loginModes: {
-						firstboot: {
-							inputs: [],
-							buttons: ['divServersList', 'languageButton']
-						},
-						addserver: {
-							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
-							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
-						},
-						editserver: {
-							inputs: ['divServerName', 'divBaseUrl', 'divUsername', 'divPassword'],
-							buttons: ['languageButton', 'serverTest', 'serverSave', 'serverCancel']
-						},
-						enterpassword: {
-							inputs: ['divPassword'],
-							buttons: ['languageButton', 'serverList', 'loginButton', 'serverCancel']
-						},
-					},
-
-					loginMode: '',
-
 					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {},
 					/*
 					mb0: {
@@ -1422,7 +1401,7 @@
 					await logOutFromCurrentServer()
 
 					localStorage.removeItem("mb00SessionValid");
-					showLoginDialog('firstboot', null, null);
+					showLoginDialog();
 					await executeFaderGradient(0);
 					return null
 				}
@@ -1482,19 +1461,7 @@
 			mb.serversList[id][property] = value;
 		}
 
-		function cancelServer() {
-			if (!mb.currentServerId) {
-				showLoginDialog('firstboot', null, null);
-			} else if (mb.loginMode == 'enterpassword') {
-				hideLoginDialog()
-			} else {
-				hideLoginDialog()
-			}
-			serversDialog()
-		}
-
 		function saveServer() {
-
 			// Populate mb.editServerData with the data
 			mb.editServerData.name = loginServerName2.value;
 			mb.editServerData.url = loginBaseUrl2.value;
@@ -1510,9 +1477,6 @@
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 			saveUserPass(mb.editServerId, loginPassword2.value)
-
-			//XXX Removed this
-			// showLoginDialog('firstboot', null, null);
 			serversDialog();
 		}
 
@@ -1538,15 +1502,17 @@
 					label: 'button.login', runfunction: () => {
 
 						//XXX Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
-						// dovrebbe esserci qualcosa nella funziona login solo che userà il loginscreen
+						// dovrebbe esserci qualcosa nella funziona login solo che userà il bootScreen
 						login(mb.loggingServerId, false, true)
 						//closeModal()
 
 					}, high: true
 				},
-			]);
-
-			//addPasswordEvent()
+			],
+				() => {
+					loginPassword2.focus();
+					loginPassword2.select(); // optional
+				});
 		}
 
 		function addPasswordEvent() {
@@ -1564,7 +1530,6 @@
 		}
 
 		async function getPasswordValue(serverId, serverData) {
-
 			if ((isWeb && !webPWD) || serverData.askPassword) {
 				return ('');
 			} else {
@@ -1622,20 +1587,14 @@
 
 		function editServer(event, serverId) {
 			event.stopPropagation();
-
 			mb.editServerId = serverId;
 			mb.editServerData = mb.serverList[serverId];
-			//XXX showLoginDialog('editserver', mb.editServerId, mb.editServerData);
 			serverDataDialog(mb.editServerId, mb.editServerData, 'servers.edit')
-
-			//closeModal();
 		}
 
 		function addServer() {
 			[mb.editServerId, mb.editServerData] = initServer();
-			//showLoginDialog('editserver', mb.editServerId, mb.editServerData);
 			serverDataDialog(mb.editServerId, mb.editServerData, 'servers.add')
-			//closeModal();
 		}
 
 		async function logoutFromServer(serverList) {
@@ -2273,7 +2232,7 @@
 		//MB Modal Dialog
 		let modalGlobal = [];
 
-		function showModal(image, imagebg, message, itemsArray) {
+		function showModal(image, imagebg, message, itemsArray, postCode = null) {
 			if (isModalVisible()) {
 				console.log("---CM-0---")
 
@@ -2304,8 +2263,13 @@
 				});
 
 				myModal.classList.add('visible');
-			}, isModalVisible() ? 161 : 0)
+			}, isModalVisible() ? 161 : 0);
 
+			if (postCode) {
+				setTimeout(() => {
+					postCode();
+				}, isModalVisible() ? 171 : 10);
+			}
 		}
 
 		function isModalVisible() {
@@ -8176,7 +8140,6 @@
 			} else {
 				backButton.classList.toggle('hidden', false)
 			}
-
 		}
 
 		function hideBackButton() {

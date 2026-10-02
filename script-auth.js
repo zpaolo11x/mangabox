@@ -138,14 +138,12 @@ async function sessionCheck() {
 	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
 	mb.baseUrl = cleanBaseUrlVal(mb.baseUrl)
 
-//XXX	loginBaseUrl.value = mb.baseUrl;
-
-	debugPrint("Z - loggedServer:" + mb.currentServerId)
+	debugPrint("Logged Server:" + mb.currentServerId)
 
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId) || (!mb.currentUserId)) {
 		debugPrint("Missing base URL or login data");
-		showLoginDialog('firstboot', null, null);
+		showLoginDialog();
 		await executeFaderGradient(0);
 		return;
 	}
@@ -160,7 +158,7 @@ async function sessionCheck() {
 			hideLoginDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog('firstboot', null, null);
+			showLoginDialog();
 			await executeFaderGradient(0);
 		}
 		return;
@@ -218,7 +216,7 @@ async function sessionCheck() {
 			await logOutFromCurrentServer()
 
 			localStorage.removeItem("mb00SessionValid");
-			showLoginDialog('firstboot', null, null);
+			showLoginDialog();
 			await executeFaderGradient(0);
 
 		} else {
@@ -229,7 +227,7 @@ async function sessionCheck() {
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog('firstboot', null, null);
+				showLoginDialog();
 				await executeFaderGradient(0);
 			}
 		}
@@ -243,27 +241,10 @@ async function sessionCheck() {
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog('firstboot', null, null);
+			showLoginDialog();
 			await executeFaderGradient(0);
 
 		}
-	}
-}
-
-async function setServerFields(serverId, serverData) {
-
-	loginServerName.value = serverData.name;
-	loginBaseUrl.value = serverData.url;
-	loginUsername.value = serverData.username;
-
-	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
-		// When password is requested, the password field is always EMPTY
-		// same in web mode, the password is never shown ever
-		loginPassword.value = ''
-	} else {
-		let localPass = await loadUserPass(serverId);
-		loginPassword.value = localPass;
-		localPass = null;
 	}
 }
 
@@ -281,10 +262,7 @@ async function systemRestart() {
 	document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
 	loginScreen.classList = "auth-hidden logo-pattern";
-	// Clear login dialog content
 
-	//XXX How do you fix this when no mb0 is present? How do I reset the server fields?
-	// setServerFields('mb0', mb.serverList['mb0'])
 
 	loginError.textContent = '';
 	loginError.classList.toggle('auth-hidden', true);
@@ -367,14 +345,12 @@ async function loginToServer(event, serverId, test) {
 		// so it basically always work because with the login dialog present there is no risk
 		// of faux login
 		serverPasswordDialog(mb.loggingServerId, mb.serverList[mb.loggingServerId])
-		//showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
-		//closeModal();
 	} else {
 		// This is the part to tune
 		console.log("---CM-1---")
 		//closeModal();
 		//XXX Removed this should be no more useful
-		//showLoginDialog('editserver', serverId, mb.serverList[serverId])
+		//showBootDialog('editserver', serverId, mb.serverList[serverId])
 
 
 		//TODO CHECK IF THIS IS REALLY NEEDED
@@ -553,67 +529,15 @@ async function login(serverId, test, fromDialog) {
 }
 
 
-//XXX .action class can be removed it is used for the login screen
-
-function applyScenario(modeName, serverId, serverData) {
-	return;
-	const buttonsEnable = new Set(mb.loginModes[modeName].buttons || []);
-	document.querySelectorAll(".action").forEach(btn => {
-		btn.style.display = !buttonsEnable.has(btn.id) ? 'none' : '';
-	});
-
-	const inputsEnable = new Set(mb.loginModes[modeName].inputs || []);
-	document.querySelectorAll(".input-wrapper").forEach(inp => {
-		inp.classList.toggle('disabled-input', !inputsEnable.has(inp.id));
-	});
-
-	if (modeName == 'firstboot') {
-		mb.editServerId = '';
-		mb.editServerData = mb.serverList['mb0']; //XXX Come gestire questo senza mb0? a cosa serve?
-		backButton.classList.toggle('hidden', true);
-	}
-
-	if ((modeName == 'editserver') && (isWeb && !webPWD)) {
-		divPassword.classList.toggle('disabled-input', true);
-	}
-
-	if (mb.loginMode == 'enterpassword') {
-		setTimeout(() => {
-			loginPassword.focus();
-			loginPassword.select(); // optional
-		}, 0);
-	}
-
-	setServerFields(serverId, serverData);
-}
-
-function showLoginDialog(dialogMode, serverId, serverData) {
-	mb.loginMode = dialogMode;
-
-	//loginError.textContent = '';
-	//loginError.classList.toggle('auth-hidden', true);
-
-	//applyScenario(dialogMode, serverId, serverData)
-
-	//loginPassword.type = 'password';
-	//viewPassword.classList.toggle('icon-eye', true);
-	//viewPassword.classList.toggle('icon-eye-off', false);
-
-	//if (mb.currentServerId == false) 
+function showLoginDialog() {
 	dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
-
-	//loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
-	//loginScreen.classList.toggle('no-logo-pattern', mb.currentServerId)
 	loginScreen.classList.toggle('auth-hidden', false);
 }
 
 function hideLoginDialog() {
-	mb.loginMode = '';
-
 	dragbar.classList.toggle('onLogin', false);
 	debugPrint("hide Login Dialog...")
-
 	loginScreen.classList.toggle('auth-hidden', true);
 }
 
