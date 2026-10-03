@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "Nombre de usuario o contraseña incorrectos",
 	"server.loginfailed": "Error de inicio de sesión",
 	"servers.add": "Agregar servidor",
+	"servers.edit": "Editar servidor",
 	"servers.delete": "Confirmar eliminación del servidor",
 	"servers.logoutall": "Cerrar sesión en todos",
 	"servers.title": "Lista de servidores",

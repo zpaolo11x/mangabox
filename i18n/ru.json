@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "Неверное имя пользователя или пароль",
 	"server.loginfailed": "Ошибка входа",
 	"servers.add": "Добавить сервер",
+	"servers.edit": "Редактировать сервер",
 	"servers.delete": "Подтвердить удаление сервера",
 	"servers.logoutall": "Выйти из всех",
 	"servers.title": "Список серверов",

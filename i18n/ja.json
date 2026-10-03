@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "ユーザー名またはパスワードが正しくありません",
 	"server.loginfailed": "ログインに失敗しました",
 	"servers.add": "サーバーを追加",
+	"servers.edit": "サーバーを編集",
 	"servers.delete": "サーバーの削除を",
 	"servers.logoutall": "全ログアウト",
 	"servers.title": "サーバー一覧",

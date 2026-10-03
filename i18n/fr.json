@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "Nom d'utilisateur ou mot de passe incorrect",
 	"server.loginfailed": "Échec de la connexion",
 	"servers.add": "Ajouter Server",
+	"servers.edit": "Modifier le serveur",
 	"servers.delete": "Confirmer Supprimer Server",
 	"servers.logoutall": "Tout déconnecter",
 	"servers.title": "Liste des serveurs",

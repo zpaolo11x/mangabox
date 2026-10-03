@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "Nama pengguna atau kata sandi tidak valid",
 	"server.loginfailed": "Gagal masuk",
 	"servers.add": "Tambah Server",
+	"servers.edit": "Edit Server",
 	"servers.delete": "Konfirmasi Hapus Server",
 	"servers.logoutall": "Keluar Semua",
 	"servers.title": "Daftar Server",

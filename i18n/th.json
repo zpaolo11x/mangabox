@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
 	"server.loginfailed": "เข้าสู่ระบบล้มเหลว",
 	"servers.add": "เพิ่มเซิร์ฟเวอร์",
+	"servers.edit": "แก้ไขเซิร์ฟเวอร์",
 	"servers.delete": "ยืนยันการลบเซิร์ฟเวอร์",
 	"servers.logoutall": "ออกจากระบบทั้งหมด",
 	"servers.title": "รายการเซิร์ฟเวอร์",

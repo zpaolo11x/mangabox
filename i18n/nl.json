@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "Ongeldige gebruikersnaam of wachtwoord",
 	"server.loginfailed": "Inloggen mislukt",
 	"servers.add": "Server toevoegen",
+	"servers.edit": "Server bewerken",
 	"servers.delete": "Verwijderen van server bevestigen",
 	"servers.logoutall": "Alles uitloggen",
 	"servers.title": "Serverlijst",

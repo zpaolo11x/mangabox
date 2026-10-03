@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "Benutzername oder Passwort ungültig",
 	"server.loginfailed": "Anmeldung fehlgeschlagen",
 	"servers.add": "Server hinzufügen",
+	"servers.edit": "Server bearbeiten",
 	"servers.delete": "Löschen des Servers bestätigen",
 	"servers.logoutall": "Alle abmelden",
 	"servers.title": "Serverliste",

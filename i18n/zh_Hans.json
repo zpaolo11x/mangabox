@@ -121,6 +121,7 @@
 	"server.invalidlogindata": "使用者名稱或密碼錯誤",
 	"server.loginfailed": "登入失敗",
 	"servers.add": "添加服务器",
+	"servers.edit": "编辑服务器",
 	"servers.delete": "确认删除服务器",
 	"servers.logoutall": "全部登出",
 	"servers.title": "服务器列表",
