@@ -1099,17 +1099,6 @@
 					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}'),
 
 					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {},
-					/*
-					mb0: {
-						name: 'servers.unsaved',
-						url: '',
-						username: '',
-						password: '',
-						createdAt: 0,
-						userId: false,
-						askPassword: true,
-					}
-					*/
 
 					editServerData: {}, //data structure of the server being edited
 					editServerId: null, //ID of the server that is edited by the dialog
@@ -1222,7 +1211,6 @@
 			}
 		}
 
-
 		//MB Language Management
 
 		let i18n = {};
@@ -1248,22 +1236,6 @@
 			}
 		}
 
-		async function loadLanguage_old() {
-			const resFallback = await fetch(`./i18n/en.json`);
-			i18n_en = await resFallback.json();
-
-			try {
-				const res = await fetch(`./i18n/${mb.languageVal.replace("-", "_")}.json`);
-				i18n = await res.json();
-			} catch {
-				console.warn(`Missing language ${mb.languageVal}, falling back to en`);
-				if (mb.languageVal !== 'en') {
-					mb.languageVal = 'en';
-					return loadLanguage();
-				}
-			}
-		}
-
 		async function loadLanguage() {
 			i18n = {};
 			try {
@@ -1272,15 +1244,6 @@
 			} catch {
 				console.warn(`Missing language ${mb.languageVal}, using en only`);
 			}
-		}
-
-
-		function t_old(key, vars = {}) {
-			let str = i18n[key] || key;
-			for (const k in vars) {
-				str = str.replace(`{${k}}`, vars[k]);
-			}
-			return str;
 		}
 
 		function t(key, vars = {}) {
@@ -1656,25 +1619,9 @@
 			localStorage.removeItem('mb00CurrentUserId');
 			localStorage.removeItem('mb00BaseUrl');
 
-			// Always clean temp server
-			//XXX mb.serverList['mb0'].username = '';
-
 			// Save the serverlist with the modified askpassword
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
-			//XXX if (mb.currentServerId == 'mb0') deleteUserPass('mb0')
 
-			// delte c_ storage keys 
-			// //TODO REMOVED FOR MULTISERVER, cHECK!
-			/*
-			Object.keys(localStorage).forEach(key => {
-				if (key.startsWith('c_')) {
-					localStorage.removeItem(key);
-				}
-			});
-*/
-			// Delete cached calls
-			//TODO REMOVED FOR MULTISERVER, CHECK!
-			// await clearIndexedDB();
 			localStorage.removeItem('mb00SessionValid');
 
 			mainLoader.classList.add('hidden');

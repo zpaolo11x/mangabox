@@ -332,32 +332,17 @@ logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di lo
 */
 async function loginToServer(event, serverId, test) {
 
-	/*
-	loggingServerId is the TEMPORARY server you are trying to log in
-	*/
-
+	
+	// loggingServerId is the TEMPORARY server you are trying to log in
+	
 	mb.loggingServerId = serverId;
 
 	event.stopPropagation();
 
 	if (mb.serverList[serverId].askPassword || (isWeb && !webPWD)) {
-		// In askPassword mode it shows the login dialog and closes the modal
-		// so it basically always work because with the login dialog present there is no risk
-		// of faux login
+		// In askPassword mode it shows the password requester
 		serverPasswordDialog(mb.loggingServerId, mb.serverList[mb.loggingServerId])
 	} else {
-		// This is the part to tune
-		console.log("---CM-1---")
-		//closeModal();
-		//XXX Removed this should be no more useful
-		//showBootDialog('editserver', serverId, mb.serverList[serverId])
-
-
-		//TODO CHECK IF THIS IS REALLY NEEDED
-		//TODO Agguyngere questo solo per web???
-		//let serverTable = {}
-		//serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
-		//await logoutFromServer(serverTable);
 
 		mb.currentServerId = serverId;
 
@@ -367,14 +352,6 @@ async function loginToServer(event, serverId, test) {
 		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
 		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
 
-		//TODO It was this 
-		// systemRestart();
-		// and was changed back to this:
-		// login(serverId, test, false);
-		// The problem is that login doesn't work when in offline mode
-		// so either I make login work in offline, or
-		// I need to save the user id even in this logintoserver if it's not there
-		// OR I can check if the id is there or not.
 		history.pushState(null, '', mb.basePath + '#dashboard');
 
 		if (mb.currentUserId == false) {
@@ -470,14 +447,6 @@ async function login(serverId, test, fromDialog) {
 
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
-				//TODO Magari resettare la password quando anche user 0 fa logout?
-
-				//XXX
-				// Keep this if you want to keep the "temporary server" so that password is saved for the next login attempt, 
-				// but it is not needed if you want to clear the password after a successful login or
-				// if we decide to not save passwords for temporary servers (mb0) at all, which is probably a better idea for security reasons.
-				/* if (serverId == 'mb0') saveUserPass(serverId, passwordVal) */
-				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
 
 				// If it's a web login and the password is not saved, we need to set the cookie for the session
 				if (isWeb && !webPWD) await fetch(`${baseUrlVal}/api/v1/login/set-cookie`, {
