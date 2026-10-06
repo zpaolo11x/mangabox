@@ -402,7 +402,6 @@
 		let volumeOptions = null;
 
 		if (isVolumeButtons) {
-
 			if (capacitorPlatform == 'ios') {
 				volumeOptions = {
 					disableSystemVolumeHandler: true
@@ -419,6 +418,7 @@
 			const out = await Capacitor.Plugins.VolumeButtons.isWatching();
 			debugPrint("Volume\n" + JSON.stringify(out));
 		}
+
 		async function initVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.watchVolume(
 				volumeOptions,
@@ -436,17 +436,12 @@
 		async function clearVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.clearWatch();
 		}
+
 		const isKeepAwake = isCapacitor && !!Capacitor.Plugins.CapacitorKeepAwake;
 		if (isKeepAwake) {
 			Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
 		}
-		/*
-		if (isVolumeButtons) {
-			initVolumeButtons();
-			isWatchingVolumeButtons();
-		}
-		*/
-
+		
 		//Android only plugins
 		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
 
@@ -504,7 +499,7 @@
 			});
 		}
 
-
+		//Set blanker opacity to hide loading the UI
 		executeFade(1);
 
 		function isOrientationLandscape() {
@@ -532,11 +527,6 @@
 				(m.w === width && m.h === height) || (m.h === width && m.w === height)
 			);
 		}
-
-		/*
-		const isPWA = window.matchMedia('(display-mode: standalone)').matches
-			|| window.navigator.standalone === true;
-		*/
 
 		const isSharpCornerIphone = getSharpCornerIphone();
 
@@ -566,7 +556,7 @@
 			);
 		}
 
-		//MB Pinch To Zoom
+		//MBX Pinch To Zoom
 		// Two-Finger Pinch + Pan
 
 		//const page = document.getElementById('touchPanel');
@@ -584,16 +574,14 @@
 		}
 
 		function getMidpoint(touches) {
-
-			// If there is only one touch, return its coordinates
+			// There is only one touch, return its coordinates
 			if (touches.length === 1) {
 				return {
 					x: touches[0].clientX,
 					y: touches[0].clientY
 				};
 			}
-
-			// Two or more touches → midpoint between the first two
+			// Two or more touches, midpoint between the first two
 			if (touches.length === 2) {
 				return {
 					x: (touches[0].clientX + touches[1].clientX) / 2,
@@ -601,8 +589,6 @@
 				};
 			}
 		}
-
-
 
 		let gesture = {
 			startDist: 0,
@@ -765,6 +751,7 @@
 		createPinchAndPanResponse(touchPanel, readerContainer);
 		createPinchAndPanResponse(webtoonContainer, readerContainer);
 
+		// Show/Hide function used for infoText item, but can be used anywhere a fade is needed
 		function toggleShow(item, force = false) {
 			if (item.classList.contains('show-hidden') || force === true) {
 				item.classList.toggle('show-hidden', false)
@@ -779,7 +766,7 @@
 			}
 		}
 
-		//MB Manage Electron titlebar
+		//MBX Manage Electron titlebar
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -790,7 +777,6 @@
 				document.getElementById('dragbar').style.display = '';
 			}
 		}
-
 
 		if (isElectron) {
 			dragbarMinBtn.addEventListener('click', () => {
@@ -824,12 +810,10 @@
 			});
 		}
 
-		// Hide dragbar in PWA mode
-		(function () {
-			enableDragbar(isElectron);
-		})();
-
-		//MB Offline Events Response
+		// Show dragbar in electron mode
+		enableDragbar(isElectron);
+		
+		//MBX Offline Events Response
 
 		function obUpdateProgressResponse(bookId, downloadedPages, total) {
 			//DEBUG THIS IS CHECK FOR DOUBLE ELEMENTS
@@ -906,7 +890,7 @@
 		}
 
 
-		//MB General Functions 
+		//MBX General Functions 
 
 		//let mb.readerScale = getComputedStyle(document.documentElement).getPropertyValue('--mb-reader-scale');
 
@@ -919,20 +903,18 @@
 
 		function addItem(itemkind, properties = {}) {
 			const { style, dataset, ...rest } = properties;
-
 			const element = Object.assign(document.createElement(itemkind), rest);
 
 			if (style) Object.assign(element.style, style);
-
+			
 			if (dataset) {
 				Object.entries(dataset).forEach(([key, value]) => {
 					element.dataset[key] = value;
 				});
 			}
-
+			
 			return element;
 		}
-
 
 		function getScreenAR() {
 			return (window.innerWidth / window.innerHeight);
@@ -946,15 +928,13 @@
 			}
 		}
 
-		document.addEventListener('fullscreenchange', updateFullscreenLabel);
-
-		function updateFullscreenLabel() {
+		document.addEventListener('fullscreenchange', () => {
 			const isFull = !!document.fullscreenElement;
 			fullscreenLabel.classList.toggle('icon-minimize', isFull);
 			fullscreenLabel.classList.toggle('icon-maximize', !isFull);
-		}
+		});
 
-		//MB Main Variable Setup 
+		//MBX Main Variable Setup 
 		function initMB() {
 			return (
 				{
@@ -1135,6 +1115,8 @@
 			colorSwatchBar.append(colorSwatch);
 		});
 
+		//MBX Content fetching routines
+
 		async function basicHeader() {
 			let username = mb.serverList[mb.currentServerId].username;
 			let password = await loadUserPass(mb.currentServerId);
@@ -1187,6 +1169,7 @@
 			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
 		}
 
+		//Change network status to "online" if the server is reachable, otherwise no change
 		async function onlineCheck() {
 			try {
 				const ping = await fetch(`${mb.baseUrl}/api/v1/claim`, {
@@ -1200,18 +1183,19 @@
 				});
 				let pingJSON = await ping.json();
 				if (ping.ok) {
+					// server is back online, update network status
 					setNetworkStatus('online');
 				}
 			} catch (err) {
+				// still offline, ignore
 				console.error('onlineCheck ERROR:', err);
 				console.error('name:', err?.name);
 				console.error('message:', err?.message);
 				console.error('stack:', err?.stack);
-				// still offline, ignore
 			}
 		}
 
-		//MB Language Management
+		//MBX Language Management
 
 		let i18n = {};
 		let i18n_en = {};
@@ -1222,7 +1206,6 @@
 		}
 
 		async function detectLanguage() {
-
 			// Sets auto language to false then tries to load a saved language
 			mb.languageAuto = false;
 			const stored = localStorage.getItem('mb00Language');
@@ -1246,6 +1229,7 @@
 			}
 		}
 
+		//Main translate function for static text
 		function t(key, vars = {}) {
 			const str =
 				i18n[key] ??
@@ -1259,6 +1243,7 @@
 			return out;
 		}
 
+		// Extract translation variables from data attributes
 		function getI18nVars(el, base) {
 			const raw = el.dataset[`${base}Vars`];
 			if (!raw) return undefined;
@@ -1271,6 +1256,7 @@
 			}
 		}
 
+		// Translate the DOM based on data attributes
 		function translateDOM(root = document) {
 			const elements =
 				root === document
@@ -1279,6 +1265,11 @@
 						? [root]
 						: [];
 
+			// For each item scans the data attributes:
+			// data-i18n: for text content
+			// data-i18n-title: for title attribute
+			// data-i18n-placeholder: for placeholder attribute
+			// Translation is called on the main text + the variables obtained with getI18nVars function
 			elements.forEach(el => {
 				if (el.dataset.i18n) {
 					el.textContent = t(
@@ -1315,7 +1306,7 @@
 		loadFallbackLanguage();
 		applyLanguage();
 
-		//MB API Call Function 
+		//MBX API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true, obfetch = false) {
 			const db = await openIndexedDB();
@@ -1340,9 +1331,7 @@
 
 			try {
 				const req = await buildRequest(method, body);
-
 				const response = await fetch(`${mb.baseUrl}${API_url}`, req);
-
 				const rawBody = await response.text();
 
 				// Optional: try parsing manually
@@ -1352,7 +1341,6 @@
 				} catch (e) {
 					console.warn(`API ${API_url} BODY IS NOT JSON`);
 				}
-
 
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
@@ -1406,6 +1394,8 @@
 		}
 		*/
 
+		//MBX Server Management Functions
+		
 		function initServer() {
 			const serverID = crypto.randomUUID();
 			const server = {
@@ -1424,11 +1414,12 @@
 			mb.serversList[id][property] = value;
 		}
 
+		// Saves server data from server edit dialog
 		function saveServer() {
 			// Populate mb.editServerData with the data
-			mb.editServerData.name = loginServerName2.value;
-			mb.editServerData.url = loginBaseUrl2.value;
-			mb.editServerData.username = loginUsername2.value;
+			mb.editServerData.name = loginServerName.value;
+			mb.editServerData.url = loginBaseUrl.value;
+			mb.editServerData.username = loginUsername.value;
 			mb.editServerData.askPassword = !(!isWeb || (isWeb && webPWD));
 
 
@@ -1439,7 +1430,7 @@
 
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
-			saveUserPass(mb.editServerId, loginPassword2.value)
+			saveUserPass(mb.editServerId, loginPassword.value)
 			serversDialog();
 		}
 
@@ -1450,7 +1441,7 @@
 
 				<div id="divPassword2" class="input-wrapper pwd" title="Password">
 					<i class="ico icon-rectangle-ellipsis"></i>
-					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
 				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
@@ -1473,18 +1464,18 @@
 				},
 			],
 				() => {
-					loginPassword2.focus();
-					loginPassword2.select(); // optional
+					loginPassword.focus();
+					loginPassword.select();
 				});
 		}
 
 		function addPasswordEvent() {
 			console.log("addPasswordEvent")
 			viewPassword2.addEventListener('click', () => {
-				const isPassword = loginPassword2.type === 'password';
-				const showPassword = loginPassword2.type === 'password';
+				const isPassword = loginPassword.type === 'password';
+				const showPassword = loginPassword.type === 'password';
 
-				loginPassword2.type = isPassword ? 'text' : 'password';
+				loginPassword.type = isPassword ? 'text' : 'password';
 
 				viewPassword2.classList.toggle('icon-eye', !showPassword);
 				viewPassword2.classList.toggle('icon-eye-off', showPassword);
@@ -1507,23 +1498,23 @@
 				`	<span data-i18n="${titleString}">${t(titleString)}</span>
 				<div id="divServerName2" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginServerName2" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false" value=${serverData.name}>
+					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false" value=${serverData.name}>
 				</div>
 
 				<div id="divBaseUrl2" class="input-wrapper" title="Server Address">
 					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginBaseUrl2" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value=${serverData.url}>
+					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value=${serverData.url}>
 				</div>
 
 				<div id="divUsername2" class="input-wrapper" title="Username">
 					<i class="ico icon-user-round"></i> <!-- Icon for username -->
-					<input type="email" class="login-input" id="loginUsername2" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value=${serverData.username}>
+					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value=${serverData.username}>
 				</div>
 
 				<div id="divPassword2" class="input-wrapper pwd" title="Password">
 					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
 
-					<input type="password" class="login-input" id="loginPassword2" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value=${await getPasswordValue(serverId, serverData)}>
+					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value=${await getPasswordValue(serverId, serverData)}>
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
 				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
@@ -1664,6 +1655,7 @@
 						localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 						localStorage.removeItem('mb00CurrentServerId');
 						deleteUserPass(serverId);
+						
 						if (mb.currentServerId != false) {
 							systemRestart();
 						} else {
@@ -1672,9 +1664,7 @@
 					}, high: true
 				},
 				{ label: 'modal.cancel', runfunction: () => serversDialog() }
-
 			]);
-
 		}
 
 		function expandServer(idName) {
@@ -1744,7 +1734,6 @@
 						if (mb.currentServerId) {
 							hideLogoDialog();
 						}
-						console.log("---CM-4---")
 
 						closeModal()
 					}, high: true
@@ -1815,7 +1804,7 @@
 		}
 
 
-		//MB Theme Management 
+		//MBX Theme Management 
 
 		function warmth(hue) {
 			const warmth = (Math.cos((hue - 50) * Math.PI / 180) + 1) / 2;
@@ -1954,10 +1943,10 @@
 		}
 
 		function clickPassword() {
-			const isPassword = loginPassword2.type === 'password';
-			const showPassword = loginPassword2.type === 'password';
+			const isPassword = loginPassword.type === 'password';
+			const showPassword = loginPassword.type === 'password';
 
-			loginPassword2.type = isPassword ? 'text' : 'password';
+			loginPassword.type = isPassword ? 'text' : 'password';
 
 			viewPassword2.classList.toggle('icon-eye', !showPassword);
 			viewPassword2.classList.toggle('icon-eye-off', showPassword);
@@ -1965,6 +1954,7 @@
 
 
 		function logOutFromCurrentServer() {
+			console.log("LOGGING OUT FROM SERVER:"+mb.currentServerId)
 			let serverTable = {};
 			serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
 			logoutFromServer(serverTable)
@@ -2054,7 +2044,7 @@
 			if (searchInput.value != '') navigateTo('#search', { search_string: searchInput.value.toLowerCase() });
 		})
 
-		//MB Scroll Bars
+		//MBX Scroll Bars
 
 		function createCustomScrollbar(scrollbox) {
 			if (scrollbox.dataset.scrollbarInitialized) return;
@@ -2176,12 +2166,11 @@
 
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
-		//MB Modal Dialog
+		//MBX Modal Dialog
 		let modalGlobal = [];
 
 		function showModal(image, imagebg, message, itemsArray, postCode = null) {
 			if (isModalVisible()) {
-				console.log("---CM-0---")
 
 				closeModal(true);
 			}
@@ -2224,9 +2213,7 @@
 		}
 
 		function closeModal(onlyContent = false) {
-			console.log("onlycontent:" + onlyContent)
 			if (onlyContent) {
-				console.log("BK2")
 				modalContent.classList.add('unfade');
 				setTimeout(() => {
 					// Optional: if you still want to hide it completely from screen readers / tab order
@@ -2238,7 +2225,6 @@
 				}, 160);
 
 			} else {
-				console.log("BK1")
 				myModal.classList.add('unfade');
 				modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 
@@ -2288,7 +2274,7 @@
 
 
 
-		//MB Search Functions 
+		//MBX Search Functions 
 
 		function timeSplit(inTime) {
 			let outTime = inTime ?? '1111';
@@ -2399,7 +2385,7 @@
 			sectionShow(searchStripsContainer);
 		}
 
-		//MB Library Filtering 
+		//MBX Library Filtering 
 		function initFilterTable() {
 			return ({
 				sorting: {
@@ -2967,7 +2953,7 @@
 			await wait(300);
 		}
 
-		//MB Offline Download Functions
+		//MBX Offline Download Functions
 		function arrayBufferToBase64(buffer) {
 			let binary = '';
 			const bytes = new Uint8Array(buffer);
@@ -3466,7 +3452,7 @@
 			}
 		}
 
-		//MB Media Cache 
+		//MBX Media Cache 
 
 		function openIndexedDB() {
 			return new Promise((resolve, reject) => {
@@ -3760,7 +3746,7 @@
 
 		}
 
-		//MB Touch And Hover Scaler 
+		//MBX Touch And Hover Scaler 
 
 		function addClickPointerEvents(item, execute) {
 			item.addEventListener('pointerdown', () => {
@@ -3858,7 +3844,7 @@
 			return str.replace(/-/g, '\u2011')
 		}
 
-		//MB Series Items Creation
+		//MBX Series Items Creation
 
 		const attachedObserver = new IntersectionObserver(async (entries) => {
 			for (const entry of entries) {
@@ -5118,7 +5104,7 @@
 			translateDOM();
 		}
 
-		//MB Book Details Panel 
+		//MBX Book Details Panel 
 
 		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
@@ -5175,7 +5161,7 @@
 
 		}
 
-		//MB Book Item Creation
+		//MBX Book Item Creation
 
 		async function buildBookItem(item, book, format, target) {
 
@@ -5555,7 +5541,7 @@
 
 		}
 
-		//MB Dashboard Management
+		//MBX Dashboard Management
 
 		// Function to trigger the home page layout
 		async function selectHome() {
@@ -5865,7 +5851,7 @@
 
 		}
 
-		//MB Reader Functions and Data
+		//MBX Reader Functions and Data
 
 		// General reader data structure
 		let rd = {
@@ -6458,7 +6444,7 @@
 			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR: fullBook * (1 - pageRate) })
 		}
 
-		//MB Reader Fetch Page Function
+		//MBX Reader Fetch Page Function
 
 		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
 			// I put the image item and container item in the array so I can target them for changes
@@ -7234,8 +7220,6 @@
 			// Avoid page turn direction to change during a page turn animation
 			if (rd.pageTurning === direction) return;
 
-			console.log("newSpread:" + newSpread);
-			console.log(rd.spreadFocus);
 
 			//			if (newSpread < 0 || newSpread > spreadsTotal()) return;
 			//			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
@@ -7257,15 +7241,11 @@
 			const lateTurnBlock = (isDirectionLeft === rd.rtl) && (rd.currentSpreadIndex === 1) && firstSpreadIsCover;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
-			console.log(">>>>>>>>>>>>>>>ProcessJUMP")
 			if (mb.readerHorizontal) {
-				console.log("A")
 				jumpToSpread(newSpread);
 			} else if (rd.spreadFocus === edgeFocus) {
-				console.log("B")
 				spreadSetFocusSmooth(targetFocus);
 			} else {
-				console.log("C")
 				jumpToSpread(newSpread, edgeFocus);
 			}
 		}
@@ -8072,7 +8052,7 @@
 
 		});
 
-		//MB URL Parsing and LoadContent Function 
+		//MBX URL Parsing and LoadContent Function 
 		function getHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
@@ -8288,7 +8268,7 @@
 
 		sessionCheck()
 
-		//MB Reader touch response fucntions
+		//MBX Reader touch response fucntions
 		function getTrueScale() {
 			return window.innerWidth / window.visualViewport.width;
 		}

@@ -253,7 +253,7 @@ async function systemRestart() {
 	//TODO: and externalise the functions that are hear in a function that is called at boot or at login screen show
 	console.log("SYSRESTART")
 	// Reapply boot theme
-	
+
 	//XXX Added recently, maybe can override others?
 	closeModal();
 
@@ -331,10 +331,12 @@ async function systemRestart() {
 logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di login forzato per poi lanciare di nuovo il login SENZA TEST
 */
 async function loginToServer(event, serverId, test) {
-
-	
+	console.log("CURRENT SERVER ID: " + mb.currentServerId)
+	console.log("LOGIN TO SERVER: " + serverId)
+	console.log("LOGIN WITH USER: " + mb.serverList[serverId].userId)
+	console.log("LOGIN WITH URL: " + mb.serverList[serverId].url)
 	// loggingServerId is the TEMPORARY server you are trying to log in
-	
+
 	mb.loggingServerId = serverId;
 
 	event.stopPropagation();
@@ -375,19 +377,14 @@ function cleanBaseUrlVal(baseUrlVal) {
 
 async function login(serverId, test, fromDialog) {
 
-	debugPrint("Login Function - Id:"+serverId+" test:"+test+" fromDialog:"+fromDialog)
-
 	// Hide login error messages
 	errorBox.classList.toggle('logo-hidden', true);
 
-	// The "fromdialog" flag is used to determine if the login is being triggered from the login dialog or from the server list
-	let baseUrlVal = test ? loginBaseUrl2.value : mb.serverList[serverId].url;
-	let usernameVal = test ? loginUsername2.value : mb.serverList[serverId].username;
-	let passwordVal = (test || fromDialog) ? loginPassword2.value : await loadUserPass(serverId);
-
-	debugPrint("baseUrlVal:"+baseUrlVal)
-	debugPrint("usernameVal:"+usernameVal)
-	debugPrint("passwordVal:"+passwordVal)
+	// The "fromDialog" flag is true if the password value is entered in the server edit screen 
+	// (and test is true) or in the password requester (and test is false)
+	let baseUrlVal = test ? loginBaseUrl.value : mb.serverList[serverId].url;
+	let usernameVal = test ? loginUsername.value : mb.serverList[serverId].username;
+	let passwordVal = (test || fromDialog) ? loginPassword.value : await loadUserPass(serverId);
 
 	// Cleanup the base URL value to ensure it has the correct format
 	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
@@ -399,7 +396,6 @@ async function login(serverId, test, fromDialog) {
 	let fetchString = (isWeb && !webPWD)
 		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
 		: `${baseUrlVal}/api/v2/users/me`;
-
 
 	//fetches user data to check if the credentials are valid and to retrieve the user ID
 	fetch(`${baseUrlVal}/api/v2/users/me`, {
@@ -428,14 +424,11 @@ async function login(serverId, test, fromDialog) {
 			//XXX This is parsed even if JSON parsing fails, which could lead to issues. Consider adding error handling for JSON parsing.
 			if (!test) {
 				await executeFaderGradient(1);
-						console.log("---CM-2---")
 
 				await closeModal();
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
 
 				mb.currentServerId = serverId;
-				console.log("------------PARSE--------------")
-				console.log(parsed);
 				mb.currentUserId = parsed.id;
 
 				localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
@@ -477,7 +470,7 @@ async function login(serverId, test, fromDialog) {
 		}
 	}).catch(error => {
 		//TODO Check and fix this
-			debugPrint("fetch ERROR")
+		debugPrint("fetch ERROR")
 
 		localStorage.removeItem('mb00BaseUrl');
 		localStorage.removeItem('mb00CurrentServerId');
@@ -492,11 +485,10 @@ async function login(serverId, test, fromDialog) {
 
 	// Reset login credentials if this is not a "test" login attempt
 	if (!test) {
-		loginPassword2.value = null;
+		loginPassword.value = null;
 		mbAuthHeader = null;
 	}
 }
-
 
 function showLogoDialog() {
 	dragbar.classList.toggle('onLogin', true);
