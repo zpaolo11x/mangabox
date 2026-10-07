@@ -478,12 +478,13 @@ async function login(serverId, test, fromDialog) {
 	}).catch(error => {
 		//TODO Check and fix this
 		debugPrint("fetch ERROR")
+		if(!fromDialog){
+			localStorage.removeItem('mb00BaseUrl');
+			localStorage.removeItem('mb00CurrentServerId');
+			localStorage.removeItem('mb00CurrentUserId');
 
-		localStorage.removeItem('mb00BaseUrl');
-		localStorage.removeItem('mb00CurrentServerId');
-		localStorage.removeItem('mb00CurrentUserId');
-
-		mb.currentServerId = false;
+			mb.currentServerId = false;
+		}
 		console.error('Login error:', error);
 		errorBox2.textContent = t("server.cannotreach") + `${error}`;
 		errorBox2.classList.toggle('logo-hidden', false);
