@@ -1436,6 +1436,7 @@
 
 
 		function serverPasswordDialog(serverId, serverData) {
+			console.log("FX - serverPasswordDialog")
 			showModal('', false,
 				`	<span data-i18n="server.password">${t('login.password')}</span>
 
@@ -1457,6 +1458,7 @@
 
 						//XXX Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
 						// dovrebbe esserci qualcosa nella funziona login solo che userà il bootScreen
+						console.log("FX - serverPasswordDialog - login")
 						login(mb.loggingServerId, false, true)
 						//closeModal()
 
@@ -1565,6 +1567,9 @@
 				if ((!server.askPassword)) {
 					debugPrint("		Not askPassword, so the password is saved")
 					mb.serverList[id].askPassword = true;
+
+					//XXX If the session is offline better delete the user password
+					if (offlineSession) await deleteUserPass(mb.loggedUser);
 
 					let fetchPayload
 					debugPrint("		Create payload")

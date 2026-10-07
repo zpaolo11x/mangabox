@@ -331,10 +331,11 @@ async function systemRestart() {
 logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di login forzato per poi lanciare di nuovo il login SENZA TEST
 */
 async function loginToServer(event, serverId, test) {
-	console.log("CURRENT SERVER ID: " + mb.currentServerId)
-	console.log("LOGIN TO SERVER: " + serverId)
-	console.log("LOGIN WITH USER: " + mb.serverList[serverId].userId)
-	console.log("LOGIN WITH URL: " + mb.serverList[serverId].url)
+	console.log("FX - loginToServer")
+	console.log("FX - loginToServer - current server Id: " + mb.currentServerId)
+	console.log("FX - loginToServer - server to login: " + serverId)
+	console.log("FX - loginToServer - user to login: " + mb.serverList[serverId].userId)
+	console.log("FX - loginToServer - url to login: " + mb.serverList[serverId].url)
 	// loggingServerId is the TEMPORARY server you are trying to log in
 
 	mb.loggingServerId = serverId;
@@ -346,20 +347,21 @@ async function loginToServer(event, serverId, test) {
 		serverPasswordDialog(mb.loggingServerId, mb.serverList[mb.loggingServerId])
 	} else {
 
-		mb.currentServerId = serverId;
-
-		mb.currentUserId = mb.serverList[serverId].userId;
-
-		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
-		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
-		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
+		localStorage.setItem('mb00CurrentServerId', serverId);
+		localStorage.setItem('mb00CurrentUserId', mb.serverList[serverId].userId);
+		localStorage.setItem('mb00BaseUrl', mb.serverList[serverId].url)
 
 		history.pushState(null, '', mb.basePath + '#dashboard');
 
 		if (mb.currentUserId == false) {
 			// There is no currently logged in user on any server so it can just do the login
+			mb.currentServerId = serverId;
+			mb.currentUserId = mb.serverList[serverId].userId;
+			console.log("FX - loginToServer - login")
+
 			login(serverId, test, false);
 		} else {
+			console.log("FX - loginToServer - systemrestart")
 			systemRestart();
 		}
 	}
@@ -376,6 +378,7 @@ function cleanBaseUrlVal(baseUrlVal) {
 }
 
 async function login(serverId, test, fromDialog) {
+	console.log("FX - login")
 
 	// Hide login error messages
 	errorBox.classList.toggle('logo-hidden', true);
@@ -385,6 +388,7 @@ async function login(serverId, test, fromDialog) {
 	let baseUrlVal = test ? loginBaseUrl.value : mb.serverList[serverId].url;
 	let usernameVal = test ? loginUsername.value : mb.serverList[serverId].username;
 	let passwordVal = (test || fromDialog) ? loginPassword.value : await loadUserPass(serverId);
+	console.log("FX - login - passwordVal: " + passwordVal)
 
 	// Cleanup the base URL value to ensure it has the correct format
 	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
@@ -397,10 +401,13 @@ async function login(serverId, test, fromDialog) {
 		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
 		: `${baseUrlVal}/api/v2/users/me`;
 
+	console.log("FX - login - fetch including credentials")
+
 	//fetches user data to check if the credentials are valid and to retrieve the user ID
+	//but to avoid cookies it sets credentials to 'omit' when not in pure web mode
 	fetch(`${baseUrlVal}/api/v2/users/me`, {
 		method: 'GET',
-		credentials: 'include',
+		credentials: (isWeb && !webPWD) ? 'include' : 'omit',
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
