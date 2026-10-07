@@ -1154,7 +1154,7 @@
 
 			const requestTable = {
 				method: method,
-				...((isWeb && !webPWD) && { credentials: 'include' }),
+				credentials: (isWeb && !webPWD) ? 'include' : 'omit',
 				headers: {
 					'Accept': 'image/*',
 					'X-Requested-With': 'XMLHttpRequest',
