@@ -367,7 +367,7 @@
 
 		const debugPrint = enableDebugPrint
 			? text => (debuggerObj.innerText += text + '\n')
-			: text => (console.log("***** " + text));
+			: text => (console.log("" + text));
 
 
 		const isElectron = !!window.electronAPI;
@@ -1486,7 +1486,7 @@
 		}
 
 		async function getPasswordValue(serverId, serverData) {
-			if ((isWeb && !webPWD) || serverData.askPassword) {
+			if ((isWeb && !webPWD)) {
 				return ('');
 			} else {
 				let localPass = await loadUserPass(serverId);
@@ -1566,7 +1566,7 @@
 				debugPrint("	" + JSON.stringify(server))
 				if ((!server.askPassword)) {
 					debugPrint("		Not askPassword, so the password is saved")
-					mb.serverList[id].askPassword = true;
+					if (isWeb && !webPWD) mb.serverList[id].askPassword = true;
 
 					//XXX If the session is offline better delete the user password
 					if (offlineSession) await deleteUserPass(mb.loggedUser);

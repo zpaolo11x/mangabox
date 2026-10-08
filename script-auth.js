@@ -129,16 +129,17 @@ async function deleteUserPass(serverId) {
 async function sessionCheck() {
 	await executeFaderGradient(1);
 
-	debugPrint("sessionCheck...");
+	debugPrint("FX - SessionCheck");
 
 	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
-
 	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
 	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
 	mb.baseUrl = cleanBaseUrlVal(mb.baseUrl)
 
-	debugPrint("Logged Server:" + mb.currentServerId)
+	debugPrint("FX - SessionCheck - currentServerId: " + mb.currentServerId);
+	debugPrint("FX - SessionCheck - currentUserId: " + mb.currentUserId);
+	debugPrint("FX - SessionCheck - baseUrl: " + mb.baseUrl);
 
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId) || (!mb.currentUserId)) {
@@ -342,7 +343,7 @@ async function loginToServer(event, serverId, test) {
 
 	event.stopPropagation();
 
-	if (mb.serverList[serverId].askPassword || (isWeb && !webPWD)) {
+	if ((isWeb && !webPWD)) {
 		// In askPassword mode it shows the password requester
 		serverPasswordDialog(mb.loggingServerId, mb.serverList[mb.loggingServerId])
 	} else {
@@ -355,8 +356,9 @@ async function loginToServer(event, serverId, test) {
 
 		if (mb.currentUserId == false) {
 			// There is no currently logged in user on any server so it can just do the login
-			mb.currentServerId = serverId;
-			mb.currentUserId = mb.serverList[serverId].userId;
+			//XXX CHECK THIS, ADDED HERE FROM ABOVE AND NOW REMOVED
+			//mb.currentServerId = serverId;
+			//mb.currentUserId = mb.serverList[serverId].userId;
 			console.log("FX - loginToServer - login")
 
 			login(serverId, test, false);
@@ -387,7 +389,12 @@ async function login(serverId, test, fromDialog) {
 	// (and test is true) or in the password requester (and test is false)
 	let baseUrlVal = test ? loginBaseUrl.value : mb.serverList[serverId].url;
 	let usernameVal = test ? loginUsername.value : mb.serverList[serverId].username;
-	let passwordVal = (test || fromDialog) ? loginPassword.value : await loadUserPass(serverId);
+
+	let loadedPasswordVal = await loadUserPass(serverId) ?? null;
+	let inputPasswordVal = document.getElementById('loginPassword')?.value ?? null;
+
+	let passwordVal = (test || fromDialog) ? inputPasswordVal : loadedPasswordVal;
+
 	console.log("FX - login - passwordVal: " + passwordVal)
 
 	// Cleanup the base URL value to ensure it has the correct format
@@ -401,7 +408,7 @@ async function login(serverId, test, fromDialog) {
 		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
 		: `${baseUrlVal}/api/v2/users/me`;
 
-	console.log("FX - login - fetch including credentials")
+	console.log("FX - login - fetch with credentials only in web")
 
 	//fetches user data to check if the credentials are valid and to retrieve the user ID
 	//but to avoid cookies it sets credentials to 'omit' when not in pure web mode
@@ -416,7 +423,7 @@ async function login(serverId, test, fromDialog) {
 	}).then(async response => {
 		debugPrint(JSON.stringify(response))
 		if (response.ok) {
-			debugPrint("response.ok")
+			console.log("FX - login - Response OK")
 			// If the response is successful, parse the response body as JSON to retrieve user data
 			const rawBody = await response.text();
 			let parsed = null;
@@ -443,7 +450,8 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
 
 				mb.serverList[serverId].userId = mb.currentUserId;
-				mb.serverList[serverId].askPassword = false;
+
+				if (fromDialog && (loadedPasswordVal===inputPasswordVal)) mb.serverList[serverId].askPassword = false;
 
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
@@ -467,17 +475,19 @@ async function login(serverId, test, fromDialog) {
 				//showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-			debugPrint("NOT response.ok, status 401")
+			debugPrint("FX - login - response not OK, status 401")
 			errorBox2.textContent = t(`server.invalidlogindata`);
 			errorBox2.classList.toggle('logo-hidden', false);
 		} else {
-			debugPrint("NOT response.ok, NOT status 401")
+			debugPrint("FX - login - response not OK, NOT status 401")
 			errorBox2.textContent = t(`server.loginfailed`);
 			errorBox2.classList.toggle('logo-hidden', false);
 		}
 	}).catch(error => {
 		//TODO Check and fix this
-		debugPrint("fetch ERROR")
+			debugPrint("FX - login - Fetch Error")
+		// XXX If there's a fetch error (e.g. wrong server) reset the credentials
+		// but only if loading from a dialog. Maybe instead check if there's a logged user?
 		if(!fromDialog){
 			localStorage.removeItem('mb00BaseUrl');
 			localStorage.removeItem('mb00CurrentServerId');
