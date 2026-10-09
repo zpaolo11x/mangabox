@@ -236,6 +236,14 @@
 	font-style: normal;
 }
 
+/*
+@property --mb-card-color {
+    syntax: "<color>";
+    inherits: true;
+    initial-value: transparent;
+}
+*/
+
 * {
 	font-family: 'Outfit', sans-serif;
 	user-select: none;
@@ -2896,7 +2904,7 @@ body.offline #stickyContainer {
 #librariesLeft{
 	position:absolute;
 	top:var(--mb-top-spacer);
-    left:0px;
+   left:0px;
 	width:60px;
 	min-width:60px;
 	min-height:60px;
@@ -2904,7 +2912,7 @@ body.offline #stickyContainer {
 	background: linear-gradient(90deg, var(--mb-card-color) 30%, transparent);
 	opacity: 1;
 	transition:opacity 0.3s;
-    border-left:var(--mb-bar-safe-padding-left) solid var(--mb-card-color);
+   border-left:var(--mb-bar-safe-padding-left) solid var(--mb-card-color);
 }
 
 #librariesRight{
@@ -2918,8 +2926,7 @@ body.offline #stickyContainer {
 	background: linear-gradient(270deg, var(--mb-card-color) 30%, transparent);
 	opacity: 1;
 	transition:opacity 0.3s;
-    border-right:var(--mb-bar-safe-padding-right) solid var(--mb-card-color);
-
+   border-right:var(--mb-bar-safe-padding-right) solid var(--mb-card-color);
 }
 
 #librariesLeft .ico{

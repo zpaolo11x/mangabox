@@ -441,7 +441,7 @@
 		if (isKeepAwake) {
 			Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
 		}
-		
+
 		//Android only plugins
 		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
 
@@ -812,7 +812,7 @@
 
 		// Show dragbar in electron mode
 		enableDragbar(isElectron);
-		
+
 		//MBX Offline Events Response
 
 		function obUpdateProgressResponse(bookId, downloadedPages, total) {
@@ -906,13 +906,13 @@
 			const element = Object.assign(document.createElement(itemkind), rest);
 
 			if (style) Object.assign(element.style, style);
-			
+
 			if (dataset) {
 				Object.entries(dataset).forEach(([key, value]) => {
 					element.dataset[key] = value;
 				});
 			}
-			
+
 			return element;
 		}
 
@@ -1082,8 +1082,10 @@
 
 					editServerData: {}, //data structure of the server being edited
 					editServerId: null, //ID of the server that is edited by the dialog
+
 					currentServerId: null, //ID of the server passed to login and other auth functions
 					currentUserId: false,
+
 					loggingServerId: null, //ID of the server passed to login and other auth functions
 				}
 			)
@@ -1351,7 +1353,10 @@
 					mb.currentUserId = false;
 					await logOutFromCurrentServer()
 
+					//XXX questo viene giò fatto dalla routine sopra!
 					localStorage.removeItem("mb00SessionValid");
+
+					//XXX Questi servono???
 					showLogoDialog();
 					await executeFaderGradient(0);
 					return null
@@ -1395,7 +1400,7 @@
 		*/
 
 		//MBX Server Management Functions
-		
+
 		function initServer() {
 			const serverID = crypto.randomUUID();
 			const server = {
@@ -1405,7 +1410,7 @@
 				password: '',
 				createdAt: Date.now(),
 				userId: false,
-				askPassword: true //When logged is true the password is taken from the table, if is logged out the password is requested. But the password is always in the table unless the server is deleted
+				askPassword: false //When logged is true the password is taken from the table, if is logged out the password is requested. But the password is always in the table unless the server is deleted
 			};
 			return ['mbUser_' + serverID, server];
 		}
@@ -1420,8 +1425,6 @@
 			mb.editServerData.name = loginServerName.value;
 			mb.editServerData.url = loginBaseUrl.value;
 			mb.editServerData.username = loginUsername.value;
-			mb.editServerData.askPassword = !(!isWeb || (isWeb && webPWD));
-
 
 			mb.serverList[mb.editServerId] = {
 				...(mb.serverList[mb.editServerId] ?? {}),
@@ -1431,18 +1434,26 @@
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 			saveUserPass(mb.editServerId, loginPassword.value)
-			serversDialog();
+			console.log(mb.serverList)
+
+			if (mb.editServerId == mb.currentServerId) {
+				logOutFromCurrentServer()
+			} else {
+				serversDialog();
+			}
 		}
 
 
-		function serverPasswordDialog(serverId, serverData) {
+		function serverPasswordDialog(serverId) {
+			let serverData = mb.serverList[serverId];
+
 			console.log("FX - serverPasswordDialog")
 			showModal('', false,
 				`	<span data-i18n="server.password">${t('login.password')}</span>
 
 				<div id="divPassword2" class="input-wrapper pwd" title="Password">
 					<i class="ico icon-rectangle-ellipsis"></i>
-					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+					<input type="password" class="login-input" id="loginPassword" placeholder="${t('login.password')}" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
 				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
@@ -1459,7 +1470,7 @@
 						//XXX Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
 						// dovrebbe esserci qualcosa nella funziona login solo che userà il bootScreen
 						console.log("FX - serverPasswordDialog - login")
-						login(mb.loggingServerId, false, true)
+						login(serverId, false, true)
 						//closeModal()
 
 					}, high: true
@@ -1500,34 +1511,35 @@
 				`	<span data-i18n="${titleString}">${t(titleString)}</span>
 				<div id="divServerName2" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false" value=${serverData.name}>
+					<input type="text" class="login-input" id="loginServerName" placeholder="${t('login.servername')}" autocorrect="off" autocapitalize="none" spellcheck="false" value=${serverData.name}>
 				</div>
 
 				<div id="divBaseUrl2" class="input-wrapper" title="Server Address">
 					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value=${serverData.url}>
+					<input type="text" class="login-input" id="loginBaseUrl" placeholder="${t('login.serverurl')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value=${serverData.url}>
 				</div>
 
 				<div id="divUsername2" class="input-wrapper" title="Username">
 					<i class="ico icon-user-round"></i> <!-- Icon for username -->
-					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value=${serverData.username}>
+					<input type="email" class="login-input" id="loginUsername" placeholder="${t('login.username')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value=${serverData.username}>
 				</div>
 
-				<div id="divPassword2" class="input-wrapper pwd" title="Password">
+				<div id="divPassword2" class="input-wrapper pwd ${(isWeb && !webPWD) ? 'disabled-input' : ''}" title="Password">
 					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
 
-					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value=${await getPasswordValue(serverId, serverData)}>
+					<input type="password" class="login-input" id="loginPassword" "${t('login.password')}" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value=${await getPasswordValue(serverId, serverData)}>
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
 				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
 
 			`, [
-				{
-					label: 'button.testserver', runfunction: () => {
+				...(!(isWeb && !webPWD) ? [{
+					label: 'button.testserver',
+					runfunction: () => {
 						login('', true, true)
 						//closeModal()
 					}
-				},
+				}] : []),
 				{
 					label: 'modal.cancel', runfunction: () => {
 						serversDialog()
@@ -1564,58 +1576,53 @@
 			debugPrint("	Go through servers")
 			Object.entries(serverList).forEach(async ([id, server]) => {
 				debugPrint("	" + JSON.stringify(server))
-				if ((!server.askPassword)) {
-					debugPrint("		Not askPassword, so the password is saved")
-					if (isWeb && !webPWD) mb.serverList[id].askPassword = true;
 
-					//XXX If the session is offline better delete the user password
-					if (offlineSession) await deleteUserPass(mb.loggedUser);
+				//XXX If the session is offline better delete the user password
+				if (offlineSession) await deleteUserPass(mb.loggedUser);
 
-					let fetchPayload
-					debugPrint("		Create payload")
-					if (!isWeb || (isWeb && webPWD)) {
-						debugPrint("			Get saved password")
-						const username = mb.serverList[id].username;
-						const password = await loadUserPass(id);
+				let fetchPayload
+				debugPrint("		Create payload")
+				if (!isWeb || (isWeb && webPWD)) {
+					debugPrint("			Get saved password")
+					const username = mb.serverList[id].username;
+					const password = await loadUserPass(id);
 
-						fetchPayload = {
-							method: 'POST',
-							headers: {
-								'Authorization': 'Basic ' + btoa(`${username}:${password}`),
-								'X-Requested-With': 'XMLHttpRequest',
-								'skip_zrok_interstitial': '1'
-							}
-						}
-					} else {
-						debugPrint("			Use token")
-						fetchPayload = {
-							method: 'POST',
-							credentials: 'include',
-							headers: {
-								'X-Requested-With': 'XMLHttpRequest',
-								'skip_zrok_interstitial': '1'
-							}
+					fetchPayload = {
+						method: 'POST',
+						headers: {
+							'Authorization': 'Basic ' + btoa(`${username}:${password}`),
+							'X-Requested-With': 'XMLHttpRequest',
+							'skip_zrok_interstitial': '1'
 						}
 					}
-
-					debugPrint("Start logout fetch")
-					try {
-						await fetch(`${mb.serverList[id].url}/api/logout`, fetchPayload);
-					} catch (error) {
-						console.warn('Logout API call failed:', error);
-						// We continue cleanup anyway
+				} else {
+					debugPrint("			Use token")
+					fetchPayload = {
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'X-Requested-With': 'XMLHttpRequest',
+							'skip_zrok_interstitial': '1'
+						}
 					}
-
 				}
+
+				debugPrint("Start logout fetch")
+				try {
+					await fetch(`${mb.serverList[id].url}/api/logout`, fetchPayload);
+				} catch (error) {
+					console.warn('Logout API call failed:', error);
+					// We continue cleanup anyway
+				}
+
+
 			});
-			//Non cancella più la password usando:
-			// await deleteUserPass(mb.loggedUser);
-			// ma marchia il server come "askPassword"
+
 			localStorage.removeItem('mb00CurrentServerId');
 			localStorage.removeItem('mb00CurrentUserId');
 			localStorage.removeItem('mb00BaseUrl');
 
-			// Save the serverlist with the modified askpassword
+			//XXX IS THIS NEEDED?
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 			localStorage.removeItem('mb00SessionValid');
@@ -1660,7 +1667,7 @@
 						localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 						localStorage.removeItem('mb00CurrentServerId');
 						deleteUserPass(serverId);
-						
+
 						if (mb.currentServerId != false) {
 							systemRestart();
 						} else {
@@ -1673,7 +1680,6 @@
 		}
 
 		function expandServer(idName) {
-			if (idName == 'item_mb0_data') return
 
 			const target = document.getElementById(idName);
 			const isOpen = target.classList.contains('expand');
@@ -1692,12 +1698,14 @@
 		function buildServersDialog() {
 			let out = `<span data-i18n="servers.title">${t('servers.title')}</span>`;
 			out = out + '<ul class="filter-menu" id="languageMenu">';
-			Object.entries(mb.serverList).forEach(([id, server]) => {
-				let isSelected = mb.currentServerId == id;
+			Object.entries(mb.serverList)
+				.sort(([, a], [, b]) => a.name.localeCompare(b.name))
+				.forEach(([id, server]) => {
+					let isSelected = mb.currentServerId == id;
 
-				let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
+					let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
 
-				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
+					out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
 									<div class='library-name filter-menu-text'>${server.name}</div>
 									<div class='smallbutton-wrapper server-button' title='${t('button.edit')}' onClick="editServer(event, '${id}')">
 										<span class="ico icon-pencil glyph-dark"></span>
@@ -1706,7 +1714,7 @@
 										<span class="ico icon-trash-2 glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
-										<span class="ico ${mb.serverList[id].askPassword ? 'icon-key-round' : 'icon-play'} glyph-dark"></span>
+										<span class="ico icon-play glyph-dark"></span>
 									</div>
 								</li>
 								<li class="server-data" id="item_${id}_data">
@@ -1718,7 +1726,7 @@
 									</div>
 								</li>
 			`
-			});
+				});
 
 			out = out + "</ul>";
 			out = out + `<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>`
@@ -1727,7 +1735,8 @@
 		}
 
 		function serversDialog() {
-			let noLogoutAll = ((isWeb && !webPWD) && (mb.currentServerId != false))
+			//XXX LogoutAll forse non serve più
+			let noLogoutAll = false;// (!((isWeb && !webPWD))) || ((isWeb && !webPWD) && (mb.currentServerId != false))
 
 			showModal('', false, buildServersDialog(), [
 				{ label: 'servers.add', runfunction: () => addServer() },
@@ -1959,7 +1968,7 @@
 
 
 		function logOutFromCurrentServer() {
-			console.log("LOGGING OUT FROM SERVER:"+mb.currentServerId)
+			console.log("LOGGING OUT FROM SERVER:" + mb.currentServerId)
 			let serverTable = {};
 			serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
 			logoutFromServer(serverTable)
@@ -1984,22 +1993,23 @@
 				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-languages"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
+			let noLogout = !(isWeb && !webPWD)
+
 			showModal('', true, dialogText,
-				[
-					{
-						label: 'button.logout', runfunction: async () => {
-							logOutFromCurrentServer()
-						}, high: true
-					},
-					{
-						label: 'button.serverslist', runfunction: async () => {
-							serversDialog()
-						}
-					},
-					{
-						// No need to use translateDOM because modals are modal and spawned each time
-						label: 'modal.cancel', runfunction: () => closeModal(), high: false
+				[{
+					label: 'button.logout', runfunction: async () => {
+						logOutFromCurrentServer()
 					}
+				},
+				{
+					label: 'button.serverslist', runfunction: async () => {
+						serversDialog()
+					}
+				},
+				{
+					// No need to use translateDOM because modals are modal and spawned each time
+					label: 'modal.ok', runfunction: () => closeModal(), high: true
+				}
 				]
 			);
 		});

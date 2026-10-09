@@ -327,6 +327,7 @@ async function systemRestart() {
 	sessionCheck();
 }
 
+
 //TODO ZZZZZZZZ Ecco l'idea:
 /*
 logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di login forzato per poi lanciare di nuovo il login SENZA TEST
@@ -343,29 +344,11 @@ async function loginToServer(event, serverId, test) {
 
 	event.stopPropagation();
 
-	if ((isWeb && !webPWD)) {
-		// In askPassword mode it shows the password requester
-		serverPasswordDialog(mb.loggingServerId, mb.serverList[mb.loggingServerId])
+	if (!test && (isWeb && !webPWD)) {
+		serverPasswordDialog(serverId)
 	} else {
-
-		localStorage.setItem('mb00CurrentServerId', serverId);
-		localStorage.setItem('mb00CurrentUserId', mb.serverList[serverId].userId);
-		localStorage.setItem('mb00BaseUrl', mb.serverList[serverId].url)
-
 		history.pushState(null, '', mb.basePath + '#dashboard');
-
-		if (mb.currentUserId == false) {
-			// There is no currently logged in user on any server so it can just do the login
-			//XXX CHECK THIS, ADDED HERE FROM ABOVE AND NOW REMOVED
-			//mb.currentServerId = serverId;
-			//mb.currentUserId = mb.serverList[serverId].userId;
-			console.log("FX - loginToServer - login")
-
-			login(serverId, test, false);
-		} else {
-			console.log("FX - loginToServer - systemrestart")
-			systemRestart();
-		}
+		login(serverId, test, false);
 	}
 	return
 }
@@ -385,15 +368,10 @@ async function login(serverId, test, fromDialog) {
 	// Hide login error messages
 	errorBox.classList.toggle('logo-hidden', true);
 
-	// The "fromDialog" flag is true if the password value is entered in the server edit screen 
-	// (and test is true) or in the password requester (and test is false)
-	let baseUrlVal = test ? loginBaseUrl.value : mb.serverList[serverId].url;
-	let usernameVal = test ? loginUsername.value : mb.serverList[serverId].username;
-
-	let loadedPasswordVal = await loadUserPass(serverId) ?? null;
-	let inputPasswordVal = document.getElementById('loginPassword')?.value ?? null;
-
-	let passwordVal = (test || fromDialog) ? inputPasswordVal : loadedPasswordVal;
+	// If a requester with inputs or password is open, use them, otherwise get from the serverList
+	let baseUrlVal = document.getElementById('loginBaseUrl')?.value ?? mb.serverList[serverId].url ?? null;
+	let usernameVal = document.getElementById('loginUsername')?.value ?? mb.serverList[serverId].username ?? null;
+	let passwordVal = document.getElementById('loginPassword')?.value ?? await loadUserPass(serverId) ?? null;
 
 	console.log("FX - login - passwordVal: " + passwordVal)
 
@@ -402,11 +380,6 @@ async function login(serverId, test, fromDialog) {
 
 	// Build the basic authentication header using the provided username and password
 	let mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
-
-	//XXX This is not used???
-	let fetchString = (isWeb && !webPWD)
-		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
-		: `${baseUrlVal}/api/v2/users/me`;
 
 	console.log("FX - login - fetch with credentials only in web")
 
@@ -450,8 +423,6 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
 
 				mb.serverList[serverId].userId = mb.currentUserId;
-
-				if (fromDialog && (loadedPasswordVal===inputPasswordVal)) mb.serverList[serverId].askPassword = false;
 
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 

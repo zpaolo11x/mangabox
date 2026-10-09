@@ -1,5 +1,7 @@
 Main UI
-- 
+- Streamlined login dialogs
+- Server list is now sorted by server name
+- Removed "temporary" server access
 
 Reader UI
 - 
