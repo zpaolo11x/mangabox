@@ -2900,55 +2900,76 @@ body.offline #stickyContainer {
 	font-family: 'Outfit';
 
 }
+#librariesLeft,
+#librariesRight {
+    position: absolute;
+    top: var(--mb-top-spacer);
 
-#librariesLeft{
-	position:absolute;
-	top:var(--mb-top-spacer);
-   left:0px;
-	width:60px;
-	min-width:60px;
-	min-height:60px;
-	height:60px;
-	background: linear-gradient(90deg, var(--mb-card-color) 30%, transparent);
-	opacity: 1;
-	transition:opacity 0.3s;
-   border-left:var(--mb-bar-safe-padding-left) solid var(--mb-card-color);
+    min-height: 60px;
+    height: 60px;
+
+    opacity: 1;
+    transition: opacity 0.3s ease, border-color 0.3s ease;
+
+    isolation: isolate;
 }
 
-#librariesRight{
-	position:absolute;
-    top:var(--mb-top-spacer);
-	right:0px;
-	width:60px;
-	min-width:60px;
-	min-height:60px;
-	height:60px;
-	background: linear-gradient(270deg, var(--mb-card-color) 30%, transparent);
-	opacity: 1;
-	transition:opacity 0.3s;
-   border-right:var(--mb-bar-safe-padding-right) solid var(--mb-card-color);
+#librariesLeft {
+   left: 0;
+	width: calc(60px + var(--mb-bar-safe-padding-left));
+   min-width: calc(60px + var(--mb-bar-safe-padding-left));
 }
 
-#librariesLeft .ico{
-	position:absolute;
-	left:20%;
-	top:50%;
-	transform:translate(-50%,-50%);
-	font-size: 26px;
+#librariesRight {
+   right: 0;
+	width: calc(60px + var(--mb-bar-safe-padding-right));
+   min-width: calc(60px + var(--mb-bar-safe-padding-left));
 }
 
-#librariesRight .ico{
-	position:absolute;
-	left:80%;
-	top:50%;
-	transform:translate(-50%,-50%);
-	font-size: 26px;
+#librariesLeft::before,
+#librariesRight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background-color: var(--mb-card-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#librariesLeft::before {
+    -webkit-mask-image: linear-gradient(90deg, #000 30%, transparent);
+    mask-image: linear-gradient(90deg, #000 30%, transparent);
+
+}
+
+#librariesRight::before {
+    -webkit-mask-image: linear-gradient(270deg, #000 30%, transparent);
+    mask-image: linear-gradient(270deg, #000 30%, transparent);
+
+}
+
+#librariesLeft .ico {
+    position: absolute;
+    left: calc(20% + var(--mb-bar-safe-padding-left));
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 26px;
+}
+
+#librariesRight .ico {
+    position: absolute;
+    left: calc(80% - var(--mb-bar-safe-padding-right));
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 26px;
 }
 
 #librariesLeft.hidden,
-#librariesRight.hidden{
-	pointer-events: none;
-	opacity: 0;
+#librariesRight.hidden {
+    pointer-events: none;
+    opacity: 0;
 }
 
 #helperText{
