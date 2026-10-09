@@ -2937,7 +2937,7 @@ body.offline #stickyContainer {
     background-color: var(--mb-card-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
-
+/*
 #librariesLeft::before {
     -webkit-mask-image: linear-gradient(90deg, #000 30%, transparent);
     mask-image: linear-gradient(90deg, #000 30%, transparent);
@@ -2949,20 +2949,20 @@ body.offline #stickyContainer {
     mask-image: linear-gradient(270deg, #000 30%, transparent);
 
 }
-
+*/
 #librariesLeft .ico {
     position: absolute;
-    left: calc(20% + var(--mb-bar-safe-padding-left));
+    left: var(--mb-bar-safe-padding-left);
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     font-size: 26px;
 }
 
 #librariesRight .ico {
     position: absolute;
-    left: calc(80% - var(--mb-bar-safe-padding-right));
+    right: var(--mb-bar-safe-padding-right);
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     font-size: 26px;
 }
 
