@@ -59,7 +59,9 @@ async function getCredentialsCap(serverId) {
 		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
 	} catch (err) {
 		debugPrint(`SecureStorage error while loading credentials for ${serverId}`, err);
-		throw err;
+		//XXX Qui stranamente per ADD SERVER fa casino se lascio throw error perché cerca di caricare una password che non esiste???
+		return null;
+		//throw err;
 	}
 	if (!result) return null;
 
