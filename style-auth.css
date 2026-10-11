@@ -405,6 +405,8 @@
 	margin-bottom: 0px;
 	border-radius: 20px;
 	box-shadow: inset 0px 2px 5px rgba(0, 0, 0, 0.25);
+	    white-space: pre-line;
+
 
 }
 

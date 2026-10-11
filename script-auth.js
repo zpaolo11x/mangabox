@@ -440,7 +440,7 @@ async function login(serverId, test, fromDialog) {
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
-				errorBox2.textContent = t("modal.ok");
+				errorBox2.textContent = t("server.connectionok");
 				errorBox2.classList.toggle('logo-hidden', false);
 				// We are in test mode, so we just show a modal indicating that the connection is OK
 				//showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
@@ -467,7 +467,7 @@ async function login(serverId, test, fromDialog) {
 			mb.currentServerId = false;
 		}
 		console.error('Login error:', error);
-		errorBox2.textContent = t("server.cannotreach") + `${error}`;
+		errorBox2.textContent = t("server.cannotreach") + `\n${error}`;
 		errorBox2.classList.toggle('logo-hidden', false);
 
 	});

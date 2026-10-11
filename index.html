@@ -1506,28 +1506,27 @@
 		}
 
 		async function serverDataDialog(serverId, serverData, titleString) {
-
 			showModal('', false,
 				`	<span data-i18n="${titleString}">${t(titleString)}</span>
 				<div id="divServerName2" class="input-wrapper" title="Server Name">
 					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginServerName" placeholder="${t('login.servername')}" autocorrect="off" autocapitalize="none" spellcheck="false" value=${serverData.name}>
+					<input type="text" class="login-input" id="loginServerName" placeholder="${t('login.servername')}" autocorrect="off" autocapitalize="none" spellcheck="false" value="${serverData.name}">
 				</div>
 
 				<div id="divBaseUrl2" class="input-wrapper" title="Server Address">
 					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginBaseUrl" placeholder="${t('login.serverurl')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value=${serverData.url}>
+					<input type="text" class="login-input" id="loginBaseUrl" placeholder="${t('login.serverurl')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value="${serverData.url}">
 				</div>
 
 				<div id="divUsername2" class="input-wrapper" title="Username">
 					<i class="ico icon-user-round"></i> <!-- Icon for username -->
-					<input type="email" class="login-input" id="loginUsername" placeholder="${t('login.username')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value=${serverData.username}>
+					<input type="email" class="login-input" id="loginUsername" placeholder="${t('login.username')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value="${serverData.username}">
 				</div>
 
 				<div id="divPassword2" class="input-wrapper pwd ${(isWeb && !webPWD) ? 'disabled-input' : ''}" title="Password">
 					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
 
-					<input type="password" class="login-input" id="loginPassword" "${t('login.password')}" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value=${await getPasswordValue(serverId, serverData)}>
+					<input type="password" class="login-input" id="loginPassword" "${t('login.password')}" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value="${await getPasswordValue(serverId, serverData)}">
 					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
 				</div>
 				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
@@ -1736,7 +1735,7 @@
 
 		function serversDialog() {
 			//XXX LogoutAll forse non serve più
-			let noLogoutAll = false;// (!((isWeb && !webPWD))) || ((isWeb && !webPWD) && (mb.currentServerId != false))
+			let noLogoutAll = true;// (!((isWeb && !webPWD))) || ((isWeb && !webPWD) && (mb.currentServerId != false))
 
 			showModal('', false, buildServersDialog(), [
 				{ label: 'servers.add', runfunction: () => addServer() },
