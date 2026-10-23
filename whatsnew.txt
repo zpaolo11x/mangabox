@@ -2,12 +2,11 @@ Main UI
 - Streamlined login dialogs
 - Server list is now sorted by server name
 - Removed "temporary" server access
-
-Reader UI
-- 
+- Fixed translations
+- Added Russian translation thanks to VitalityV1nT
 
 Platform
-- 
+- Updated for iOS 27+
 
 Fixes
-- 
+- Stability and performance fixes
