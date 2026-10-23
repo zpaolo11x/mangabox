@@ -20,8 +20,6 @@ async function checkCredentialsCap() {
 }
 
 async function setCredentialsCap(serverId, password) {
-	debugPrint("Saving Credentials:" + serverId + " " + password)
-
 	try {
 		const result = await Capacitor.Plugins.SecureStoragePlugin.set({
 			key: serverId,
@@ -59,7 +57,7 @@ async function getCredentialsCap(serverId) {
 		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
 	} catch (err) {
 		debugPrint(`SecureStorage error while loading credentials for ${serverId}`, err);
-		//XXX Qui stranamente per ADD SERVER fa casino se lascio throw error perché cerca di caricare una password che non esiste???
+		//NULOGIN Qui stranamente per ADD SERVER fa casino se lascio throw error perché cerca di caricare una password che non esiste???
 		return null;
 		//throw err;
 	}
@@ -257,7 +255,7 @@ async function systemRestart() {
 	console.log("SYSRESTART")
 	// Reapply boot theme
 
-	//XXX Added recently, maybe can override others?
+	//NULOGIN Added recently, maybe can override others?
 	closeModal();
 
 	await executeFaderGradient(1);
@@ -375,8 +373,6 @@ async function login(serverId, test, fromDialog) {
 	let usernameVal = document.getElementById('loginUsername')?.value ?? mb.serverList[serverId].username ?? null;
 	let passwordVal = document.getElementById('loginPassword')?.value ?? await loadUserPass(serverId) ?? null;
 
-	console.log("FX - login - passwordVal: " + passwordVal)
-
 	// Cleanup the base URL value to ensure it has the correct format
 	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
 
@@ -459,7 +455,7 @@ async function login(serverId, test, fromDialog) {
 	}).catch(error => {
 		//TODO Check and fix this
 			debugPrint("FX - login - Fetch Error")
-		// XXX If there's a fetch error (e.g. wrong server) reset the credentials
+		//NULOGIN If there's a fetch error (e.g. wrong server) reset the credentials
 		// but only if loading from a dialog. Maybe instead check if there's a logged user?
 		if(!fromDialog){
 			localStorage.removeItem('mb00BaseUrl');

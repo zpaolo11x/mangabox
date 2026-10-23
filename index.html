@@ -894,13 +894,6 @@
 
 		//let mb.readerScale = getComputedStyle(document.documentElement).getPropertyValue('--mb-reader-scale');
 
-		function addItem_OLD(itemkind, properties) {
-			const { style, ...rest } = properties;
-			const element = Object.assign(document.createElement(itemkind), rest);
-			if (style) Object.assign(element.style, style);
-			return element;
-		}
-
 		function addItem(itemkind, properties = {}) {
 			const { style, dataset, ...rest } = properties;
 			const element = Object.assign(document.createElement(itemkind), rest);
@@ -1353,10 +1346,10 @@
 					mb.currentUserId = false;
 					await logOutFromCurrentServer()
 
-					//XXX questo viene giò fatto dalla routine sopra!
+					//NULOGIN questo viene giò fatto dalla routine sopra!
 					localStorage.removeItem("mb00SessionValid");
 
-					//XXX Questi servono???
+					//NULOGIN Questi servono???
 					showLogoDialog();
 					await executeFaderGradient(0);
 					return null
@@ -1467,7 +1460,7 @@
 				{
 					label: 'button.login', runfunction: () => {
 
-						//XXX Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
+						//NULOGIN Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
 						// dovrebbe esserci qualcosa nella funziona login solo che userà il bootScreen
 						console.log("FX - serverPasswordDialog - login")
 						login(serverId, false, true)
@@ -1576,7 +1569,7 @@
 			Object.entries(serverList).forEach(async ([id, server]) => {
 				debugPrint("	" + JSON.stringify(server))
 
-				//XXX If the session is offline better delete the user password
+				//NULOGIN If the session is offline better delete the user password
 				if (offlineSession) await deleteUserPass(mb.loggedUser);
 
 				let fetchPayload
@@ -1621,14 +1614,14 @@
 			localStorage.removeItem('mb00CurrentUserId');
 			localStorage.removeItem('mb00BaseUrl');
 
-			//XXX IS THIS NEEDED?
+			//NULOGIN IS THIS NEEDED?
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 			localStorage.removeItem('mb00SessionValid');
 
 			mainLoader.classList.add('hidden');
 
-			//await callAPI(null, `/api/logout`, 'GET', null, false); //TODO da autenticare, vedi codice sopra!
+			//await callAPI(null, `/api/logout`, 'GET', null, false); //NULOGIN da autenticare, vedi codice sopra!
 
 			console.log("LOGOUT PROCESS ENDED, RESTARTING")
 			systemRestart();
@@ -1734,7 +1727,7 @@
 		}
 
 		function serversDialog() {
-			//XXX LogoutAll forse non serve più
+			//NULOGIN Left for future changes of mind, but not used since 0.4.8
 			let noLogoutAll = true;// (!((isWeb && !webPWD))) || ((isWeb && !webPWD) && (mb.currentServerId != false))
 
 			showModal('', false, buildServersDialog(), [
@@ -4291,28 +4284,6 @@
 
 		}
 
-		// Creates and populates the series grid with the data from the series array.
-		async function displaySeriesOLD(series, target) {
-
-			while (target.firstChild) {
-				target.removeChild(target.firstChild);
-			}
-
-			series.forEach(async (serie) => {
-
-				const seriesContainer = addItem('div', {
-					className: 'series-container collector', //XXX was ending with , 'fade-in');
-					id: serie.id,
-				});
-
-				buildSeriesItem(seriesContainer, serie, target);
-
-				target.append(seriesContainer);
-			});
-
-			sectionShow(target); //XXX serve un fade qui???
-		}
-
 
 		let chunkIndex = 0;
 		let seriesOld = null;
@@ -4396,7 +4367,7 @@
 
 				series.forEach(async (serie) => {
 					const seriesContainer = addItem('div', {
-						className: 'series-container collector', //XXX was ending with , 'fade-in');
+						className: 'series-container collector',
 						id: serie.id,
 					});
 
@@ -4419,7 +4390,7 @@
 
 			series.forEach(async (serie) => {
 				const seriesContainer = addItem('div', {
-					className: 'series-container collector', //XXX was ending with , 'fade-in');
+					className: 'series-container collector',
 					id: serie.id,
 				});
 
@@ -4440,7 +4411,7 @@
 
 			series.forEach(async (serie) => {
 				const seriesContainer = addItem('div', {
-					className: 'series-container collector', //XXX was ending with , 'fade-in');
+					className: 'series-container collector',
 					id: serie.id,
 				});
 
@@ -6115,7 +6086,6 @@
 		function handleCloseReader() {
 			hideMenu();
 			setIncognito(false);
-			//XXX WAS incognitoMark.classList.remove('incognito'); but why didn't I just sue setIncognito(false)?
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
