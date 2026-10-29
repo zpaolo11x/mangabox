@@ -4,6 +4,7 @@ Main UI
 - Removed "temporary" server access
 - Fixed translations
 - Added Russian translation thanks to VitalityV1nT
+- Added Traditional Chinese translation thanks to hayashiK on Weblate
 
 Platform
 - Updated for iOS 27+
