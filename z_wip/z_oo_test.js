@@ -343,7 +343,7 @@ class UIManager {
   createLoginTemplate() {
     return (data) => {
       const div = document.createElement('div');
-      div.className = 'login-container';
+      div.className = 'logo-container';
       div.innerHTML = `
         <h1>MangaBox</h1>
         <form id="login-form">

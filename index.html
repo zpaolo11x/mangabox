@@ -287,66 +287,33 @@
 		</div>
 	</div>
 
-	<div id="loginScreen" class="auth-hidden logo-pattern">
-		<div class="login-container">
-			<div class="login-spacer-top"></div>
-			<div id="loginDialog" class="dialog">
+	<div id="logoScreen" class="logo-hidden logo-pattern">
+		<div class="logo-container">
+			<div class="logo-spacer-top"></div>
+			<div id="logoDialog" class="dialog">
 				<img id="logoIcon" src="logo/mangabox-logo-new.svg">
 				<img id="logoName" src="logo/mangabox-logoname.svg">
-				<div class="version-note">v0.4.7</div>
+				<div class="version-note">v0.4.8</div>
 
-				<div id="divServerName" class="input-wrapper" title="Server Name">
-					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginServerName" data-i18n-placeholder="login.servername" autocorrect="off" autocapitalize="none" spellcheck="false">
-				</div>
+				<button id="divServersList" class="action logo-button-wide press-button" title="Servers List" onClick="serversDialog()">
+					</i><span class="input-text" data-i18n="servers.title">Servers List</span>
+				</button>
 
-				<div id="divBaseUrl" class="input-wrapper" title="Server Address">
-					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
-					<input type="text" class="login-input" id="loginBaseUrl" data-i18n-placeholder="login.serverurl" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url">
-				</div>
-
-				<div id="divUsername" class="input-wrapper" title="Username">
-					<i class="ico icon-user-round"></i> <!-- Icon for username -->
-					<input type="email" class="login-input" id="loginUsername" data-i18n-placeholder="login.username" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email">
-				</div>
-
-				<div id="divPassword" class="input-wrapper pwd" title="Password">
-					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
-
-					<input type="password" class="login-input" id="loginPassword" data-i18n-placeholder="login.password" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
-					<span id="viewPassword" class="ico icon-eye right"></span>
-				</div>
-
-				<div class="login-buttons">
-					<div class="login-buttons-left">
-						<button id="languageButton" class="action login-button-round" data-i18n-title="button.language" onclick="languageDialog()">
+				<div class="logo-buttons">
+					<div class="logo-buttons-left">
+						<button id="logoInfo" class="logo-button-round press-button" onClick="toggleShow(infoText)">
+							<i class="ico icon-circle-question-mark"></i>
+						</button>
+						<button id="languageButton" class="action logo-button-round press-button" data-i18n-title="button.language" onclick="languageDialog()">
 							<i class="ico icon-languages"></i>
 						</button>
-						<button id="serverTest" class="action login-button-round" data-i18n-title="button.testserver" onclick="login('mb0', true, true)">
-							<i class="ico icon-globe question"></i>
-						</button>
-						<button id="serverList" class="action login-button-round" data-i18n-title="button.serverslist" onclick="serversDialog()">
-							<i class="ico icon-server"></i>
-						</button>
-					</div>
-					<div class="login-buttons-right">
-						<button id="serverCancel" class="action login-button" data-i18n-title="modal.cancel" onclick="cancelServer()">
-							<i class="input-glyph ico icon-undo-2"></i><span class="input-text" data-i18n="modal.cancel">Cancel</span>
-						</button>
-						<button id="serverSave" class="action login-button" data-i18n-title="button.saveserver" onclick="saveServer()">
-							<i class="input-glyph ico icon-save"></i><span class="input-text" data-i18n="button.save">Save</span>
-						</button>
-						<button id="loginButton" class="action login-button" data-i18n-title="button.login" onclick="login(mb.loginMode == 'enterpassword' ? mb.loggingServerId : (mb.loginMode == 'firstboot' ? 'mb0' : mb.currentServerId), false, true)">
-							<i class="input-glyph ico icon-play"></i><span class="input-text" data-i18n="button.login">Login</span>
-						</button>
 					</div>
 				</div>
 
-				<button class="login-button-round" id="loginInfo" onClick="infoText.classList.toggle('visible')"><i class="ico icon-circle-question-mark"></i></button>
 
-				<div id="loginError" class="error-message auth-hidden">Invalid credentials or server URL, please try again.</div>
+				<div id="errorBox" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
 			</div>
-			<div class="login-spacer-bottom"></div>
+			<div class="logo-spacer-bottom"></div>
 		</div>
 	</div>
 
@@ -367,8 +334,8 @@
 
 	<div id="fader" class="logo-pattern"></div>
 
-	<div id="infoText" onClick="infoText.classList.toggle('visible')">
-		<h1>MangaBox v0.4.7</h1>
+	<div id="infoText" class="show-hidden show-faded" onClick="toggleShow(infoText)">
+		<h1>MangaBox v0.4.8</h1>
 
 		<div data-i18n="about.intro"></div>
 		<div data-i18n="about.disclaimer"></div>
@@ -400,7 +367,7 @@
 
 		const debugPrint = enableDebugPrint
 			? text => (debuggerObj.innerText += text + '\n')
-			: () => { };
+			: text => (console.log("" + text));
 
 
 		const isElectron = !!window.electronAPI;
@@ -408,7 +375,8 @@
 
 		const isWeb = !(isElectron || isCapacitor);
 
-		const isStatusBar = isCapacitor && !!Capacitor.Plugins.StatusBar;
+		const isSystemBars = isCapacitor && !!Capacitor.Plugins.SystemBars;
+
 		const isSecureStorage = isCapacitor && !!Capacitor.Plugins.SecureStoragePlugin;
 		const isVolumeButtons = isCapacitor && !!Capacitor.Plugins.VolumeButtons;
 
@@ -434,7 +402,6 @@
 		let volumeOptions = null;
 
 		if (isVolumeButtons) {
-
 			if (capacitorPlatform == 'ios') {
 				volumeOptions = {
 					disableSystemVolumeHandler: true
@@ -451,6 +418,7 @@
 			const out = await Capacitor.Plugins.VolumeButtons.isWatching();
 			debugPrint("Volume\n" + JSON.stringify(out));
 		}
+
 		async function initVolumeButtons() {
 			await Capacitor.Plugins.VolumeButtons.watchVolume(
 				volumeOptions,
@@ -469,16 +437,12 @@
 			await Capacitor.Plugins.VolumeButtons.clearWatch();
 		}
 
-		/*
-		if (isVolumeButtons) {
-			initVolumeButtons();
-			isWatchingVolumeButtons();
+		const isKeepAwake = isCapacitor && !!Capacitor.Plugins.CapacitorKeepAwake;
+		if (isKeepAwake) {
+			Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
 		}
-		*/
 
 		//Android only plugins
-		const isNavBar = isCapacitor && !!Capacitor.Plugins.NavigationBar && capacitorPlatform == 'android';
-		const isEdgeToEdge = isCapacitor && !!Capacitor.Plugins.EdgeToEdge && capacitorPlatform == 'android';
 		const isBackButton = isCapacitor && !!Capacitor.Plugins.App && capacitorPlatform == 'android';
 
 		//iOS only plugins
@@ -535,7 +499,7 @@
 			});
 		}
 
-
+		//Set blanker opacity to hide loading the UI
 		executeFade(1);
 
 		function isOrientationLandscape() {
@@ -564,39 +528,15 @@
 			);
 		}
 
-		/*
-		const isPWA = window.matchMedia('(display-mode: standalone)').matches
-			|| window.navigator.standalone === true;
-		*/
-
 		const isSharpCornerIphone = getSharpCornerIphone();
 
-		if (isStatusBar) {
+		if (isSystemBars) {
 			if (isSharpCornerIphone) {
-				Capacitor.Plugins.StatusBar.hide();
+				Capacitor.Plugins.SystemBars.hide();
 			} else {
-				Capacitor.Plugins.StatusBar.show();
+				Capacitor.Plugins.SystemBars.show();
 			}
 		}
-
-		async function setAndroidInsets() {
-			if (isEdgeToEdge) {
-				let ratio = window.devicePixelRatio || 1;
-				await Capacitor.Plugins.EdgeToEdge.enable()
-				let result = await Capacitor.Plugins.EdgeToEdge.getInsets();
-
-				document.documentElement.style.setProperty('--mb-android-inset-top', (result.top / ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-bottom', (result.bottom / ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-left', (result.left / ratio) + 'px');
-				document.documentElement.style.setProperty('--mb-android-inset-right', (result.right / ratio) + 'px');
-				Capacitor.Plugins.EdgeToEdge.disable()
-			}
-		}
-
-		(async () => {
-			await setAndroidInsets();
-		})();
-
 
 		function helperShow(text) {
 			helperText.innerText = t(text);
@@ -616,7 +556,7 @@
 			);
 		}
 
-		//MB Pinch To Zoom
+		//MBX Pinch To Zoom
 		// Two-Finger Pinch + Pan
 
 		//const page = document.getElementById('touchPanel');
@@ -634,16 +574,14 @@
 		}
 
 		function getMidpoint(touches) {
-
-			// If there is only one touch, return its coordinates
+			// There is only one touch, return its coordinates
 			if (touches.length === 1) {
 				return {
 					x: touches[0].clientX,
 					y: touches[0].clientY
 				};
 			}
-
-			// Two or more touches → midpoint between the first two
+			// Two or more touches, midpoint between the first two
 			if (touches.length === 2) {
 				return {
 					x: (touches[0].clientX + touches[1].clientX) / 2,
@@ -651,8 +589,6 @@
 				};
 			}
 		}
-
-
 
 		let gesture = {
 			startDist: 0,
@@ -815,8 +751,22 @@
 		createPinchAndPanResponse(touchPanel, readerContainer);
 		createPinchAndPanResponse(webtoonContainer, readerContainer);
 
+		// Show/Hide function used for infoText item, but can be used anywhere a fade is needed
+		function toggleShow(item, force = false) {
+			if (item.classList.contains('show-hidden') || force === true) {
+				item.classList.toggle('show-hidden', false)
+				setTimeout(() => {
+					item.classList.toggle('show-faded', false)
+				}, 10);
+			} else {
+				item.classList.toggle('show-faded', true)
+				setTimeout(() => {
+					item.classList.toggle('show-hidden', true)
+				}, 300);
+			}
+		}
 
-		//MB Manage Electron titlebar
+		//MBX Manage Electron titlebar
 
 		function enableDragbar(enabled) {
 			if (!enabled) {
@@ -827,7 +777,6 @@
 				document.getElementById('dragbar').style.display = '';
 			}
 		}
-
 
 		if (isElectron) {
 			dragbarMinBtn.addEventListener('click', () => {
@@ -861,12 +810,10 @@
 			});
 		}
 
-		// Hide dragbar in PWA mode
-		(function () {
-			enableDragbar(isElectron);
-		})();
+		// Show dragbar in electron mode
+		enableDragbar(isElectron);
 
-		//MB Offline Events Response
+		//MBX Offline Events Response
 
 		function obUpdateProgressResponse(bookId, downloadedPages, total) {
 			//DEBUG THIS IS CHECK FOR DOUBLE ELEMENTS
@@ -943,20 +890,12 @@
 		}
 
 
-		//MB General Functions 
+		//MBX General Functions 
 
 		//let mb.readerScale = getComputedStyle(document.documentElement).getPropertyValue('--mb-reader-scale');
 
-		function addItem_OLD(itemkind, properties) {
-			const { style, ...rest } = properties;
-			const element = Object.assign(document.createElement(itemkind), rest);
-			if (style) Object.assign(element.style, style);
-			return element;
-		}
-
 		function addItem(itemkind, properties = {}) {
 			const { style, dataset, ...rest } = properties;
-
 			const element = Object.assign(document.createElement(itemkind), rest);
 
 			if (style) Object.assign(element.style, style);
@@ -970,7 +909,6 @@
 			return element;
 		}
 
-
 		function getScreenAR() {
 			return (window.innerWidth / window.innerHeight);
 		}
@@ -983,19 +921,17 @@
 			}
 		}
 
-		document.addEventListener('fullscreenchange', updateFullscreenLabel);
-
-		function updateFullscreenLabel() {
+		document.addEventListener('fullscreenchange', () => {
 			const isFull = !!document.fullscreenElement;
 			fullscreenLabel.classList.toggle('icon-minimize', isFull);
 			fullscreenLabel.classList.toggle('icon-maximize', !isFull);
-		}
+		});
 
-		//MB Main Variable Setup 
+		//MBX Main Variable Setup 
 		function initMB() {
 			return (
 				{
-					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'nl', 'pt', 'th', 'pt-BR', 'zh-Hans'],
+					languages: ['de', 'en', 'es', 'fr', 'id', 'it', 'ja', 'nl', 'pt', 'ru', 'th', 'pt-BR', 'zh-Hans', 'zh-Hant'],
 					languageAuto: false,
 					languageVal: '',
 
@@ -1135,43 +1071,15 @@
 
 					offlineBooks: JSON.parse(localStorage.getItem('mbOfflineBooks') ?? '{}'),
 
-					loginModes: {
-						firstboot: {
-							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
-							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
-						},
-						addserver: {
-							inputs: ['divBaseUrl', 'divUsername', 'divPassword'],
-							buttons: ['languageButton', 'serverList', 'serverTest', 'loginButton']
-						},
-						editserver: {
-							inputs: ['divServerName', 'divBaseUrl', 'divUsername', 'divPassword'],
-							buttons: ['languageButton', 'serverTest', 'serverSave', 'serverCancel']
-						},
-						enterpassword: {
-							inputs: ['divPassword'],
-							buttons: ['languageButton', 'serverList', 'loginButton', 'serverCancel']
-						},
-					},
+					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {},
 
-					loginMode: '',
-
-					serverList: JSON.parse(localStorage.getItem('mb00ServerList')) ?? {
-						mb0: {
-							name: 'servers.unsaved',
-							url: '',
-							username: '',
-							password: '',
-							createdAt: 0,
-							userId: false,
-							askPassword: true,
-						}
-					},
 					editServerData: {}, //data structure of the server being edited
-					editServerId: 'mb0', //ID of the server that is edited by the dialog
-					currentServerId: 'mb0', //ID of the server passed to login and other auth functions
+					editServerId: null, //ID of the server that is edited by the dialog
+
+					currentServerId: null, //ID of the server passed to login and other auth functions
 					currentUserId: false,
-					loggingServerId: 'mb0', //ID of the server passed to login and other auth functions
+
+					loggingServerId: null, //ID of the server passed to login and other auth functions
 				}
 			)
 		}
@@ -1201,6 +1109,8 @@
 			});
 			colorSwatchBar.append(colorSwatch);
 		});
+
+		//MBX Content fetching routines
 
 		async function basicHeader() {
 			let username = mb.serverList[mb.currentServerId].username;
@@ -1239,7 +1149,7 @@
 
 			const requestTable = {
 				method: method,
-				...((isWeb && !webPWD) && { credentials: 'include' }),
+				credentials: (isWeb && !webPWD) ? 'include' : 'omit',
 				headers: {
 					'Accept': 'image/*',
 					'X-Requested-With': 'XMLHttpRequest',
@@ -1254,6 +1164,7 @@
 			return 'cache_' + url.replace(/[^a-z0-9]/gi, '_');
 		}
 
+		//Change network status to "online" if the server is reachable, otherwise no change
 		async function onlineCheck() {
 			try {
 				const ping = await fetch(`${mb.baseUrl}/api/v1/claim`, {
@@ -1267,19 +1178,19 @@
 				});
 				let pingJSON = await ping.json();
 				if (ping.ok) {
+					// server is back online, update network status
 					setNetworkStatus('online');
 				}
 			} catch (err) {
+				// still offline, ignore
 				console.error('onlineCheck ERROR:', err);
 				console.error('name:', err?.name);
 				console.error('message:', err?.message);
 				console.error('stack:', err?.stack);
-				// still offline, ignore
 			}
 		}
 
-
-		//MB Language Management
+		//MBX Language Management
 
 		let i18n = {};
 		let i18n_en = {};
@@ -1290,7 +1201,6 @@
 		}
 
 		async function detectLanguage() {
-
 			// Sets auto language to false then tries to load a saved language
 			mb.languageAuto = false;
 			const stored = localStorage.getItem('mb00Language');
@@ -1304,22 +1214,6 @@
 			}
 		}
 
-		async function loadLanguage_old() {
-			const resFallback = await fetch(`./i18n/en.json`);
-			i18n_en = await resFallback.json();
-
-			try {
-				const res = await fetch(`./i18n/${mb.languageVal.replace("-", "_")}.json`);
-				i18n = await res.json();
-			} catch {
-				console.warn(`Missing language ${mb.languageVal}, falling back to en`);
-				if (mb.languageVal !== 'en') {
-					mb.languageVal = 'en';
-					return loadLanguage();
-				}
-			}
-		}
-
 		async function loadLanguage() {
 			i18n = {};
 			try {
@@ -1330,15 +1224,7 @@
 			}
 		}
 
-
-		function t_old(key, vars = {}) {
-			let str = i18n[key] || key;
-			for (const k in vars) {
-				str = str.replace(`{${k}}`, vars[k]);
-			}
-			return str;
-		}
-
+		//Main translate function for static text
 		function t(key, vars = {}) {
 			const str =
 				i18n[key] ??
@@ -1352,6 +1238,7 @@
 			return out;
 		}
 
+		// Extract translation variables from data attributes
 		function getI18nVars(el, base) {
 			const raw = el.dataset[`${base}Vars`];
 			if (!raw) return undefined;
@@ -1364,6 +1251,7 @@
 			}
 		}
 
+		// Translate the DOM based on data attributes
 		function translateDOM(root = document) {
 			const elements =
 				root === document
@@ -1372,6 +1260,11 @@
 						? [root]
 						: [];
 
+			// For each item scans the data attributes:
+			// data-i18n: for text content
+			// data-i18n-title: for title attribute
+			// data-i18n-placeholder: for placeholder attribute
+			// Translation is called on the main text + the variables obtained with getI18nVars function
 			elements.forEach(el => {
 				if (el.dataset.i18n) {
 					el.textContent = t(
@@ -1408,7 +1301,7 @@
 		loadFallbackLanguage();
 		applyLanguage();
 
-		//MB API Call Function 
+		//MBX API Call Function 
 
 		async function callAPI(cacheKey, API_url, method = 'GET', body = null, returnval = true, obfetch = false) {
 			const db = await openIndexedDB();
@@ -1433,9 +1326,7 @@
 
 			try {
 				const req = await buildRequest(method, body);
-
 				const response = await fetch(`${mb.baseUrl}${API_url}`, req);
-
 				const rawBody = await response.text();
 
 				// Optional: try parsing manually
@@ -1446,7 +1337,6 @@
 					console.warn(`API ${API_url} BODY IS NOT JSON`);
 				}
 
-
 				if (response.status === 404 || response.status === 204) {
 					console.warn(`API ${API_url} ${body} returned ${response.status}`);
 					return null;
@@ -1456,8 +1346,11 @@
 					mb.currentUserId = false;
 					await logOutFromCurrentServer()
 
+					//NULOGIN questo viene giò fatto dalla routine sopra!
 					localStorage.removeItem("mb00SessionValid");
-					showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+
+					//NULOGIN Questi servono???
+					showLogoDialog();
 					await executeFaderGradient(0);
 					return null
 				}
@@ -1499,6 +1392,8 @@
 		}
 		*/
 
+		//MBX Server Management Functions
+
 		function initServer() {
 			const serverID = crypto.randomUUID();
 			const server = {
@@ -1508,7 +1403,7 @@
 				password: '',
 				createdAt: Date.now(),
 				userId: false,
-				askPassword: true //When logged is true the password is taken from the table, if is logged out the password is requested. But the password is always in the table unless the server is deleted
+				askPassword: false //When logged is true the password is taken from the table, if is logged out the password is requested. But the password is always in the table unless the server is deleted
 			};
 			return ['mbUser_' + serverID, server];
 		}
@@ -1517,24 +1412,12 @@
 			mb.serversList[id][property] = value;
 		}
 
-		function cancelServer() {
-			if (!mb.currentServerId) {
-				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
-			} else if (mb.loginMode == 'enterpassword') {
-				hideLoginDialog()
-			} else {
-				hideLoginDialog()
-			}
-			serversDialog()
-		}
-
+		// Saves server data from server edit dialog
 		function saveServer() {
-
 			// Populate mb.editServerData with the data
 			mb.editServerData.name = loginServerName.value;
 			mb.editServerData.url = loginBaseUrl.value;
 			mb.editServerData.username = loginUsername.value;
-			mb.editServerData.askPassword = !(!isWeb || (isWeb && webPWD));
 
 			mb.serverList[mb.editServerId] = {
 				...(mb.serverList[mb.editServerId] ?? {}),
@@ -1544,102 +1427,209 @@
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
 			saveUserPass(mb.editServerId, loginPassword.value)
+			console.log(mb.serverList)
 
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
-			serversDialog();
+			if (mb.editServerId == mb.currentServerId) {
+				logOutFromCurrentServer()
+			} else {
+				serversDialog();
+			}
 		}
 
-		function editServer(serverId) {
+
+		function serverPasswordDialog(serverId) {
+			let serverData = mb.serverList[serverId];
+
+			console.log("FX - serverPasswordDialog")
+			showModal('', false,
+				`	<span data-i18n="server.password">${t('login.password')}</span>
+
+				<div id="divPassword2" class="input-wrapper pwd" title="Password">
+					<i class="ico icon-rectangle-ellipsis"></i>
+					<input type="password" class="login-input" id="loginPassword" placeholder="${t('login.password')}" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password">
+					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
+				</div>
+				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
+
+			`, [
+				{
+					label: 'modal.cancel', runfunction: () => {
+						serversDialog()
+					}
+				},
+				{
+					label: 'button.login', runfunction: () => {
+
+						//NULOGIN Qui mettere qualcosa per o testare la linea, o chiudere il modal DOPO aver fatto un login successful
+						// dovrebbe esserci qualcosa nella funziona login solo che userà il bootScreen
+						console.log("FX - serverPasswordDialog - login")
+						login(serverId, false, true)
+						//closeModal()
+
+					}, high: true
+				},
+			],
+				() => {
+					loginPassword.focus();
+					loginPassword.select();
+				});
+		}
+
+		function addPasswordEvent() {
+			console.log("addPasswordEvent")
+			viewPassword2.addEventListener('click', () => {
+				const isPassword = loginPassword.type === 'password';
+				const showPassword = loginPassword.type === 'password';
+
+				loginPassword.type = isPassword ? 'text' : 'password';
+
+				viewPassword2.classList.toggle('icon-eye', !showPassword);
+				viewPassword2.classList.toggle('icon-eye-off', showPassword);
+
+			})
+		}
+
+		async function getPasswordValue(serverId, serverData) {
+			if ((isWeb && !webPWD)) {
+				return ('');
+			} else {
+				let localPass = await loadUserPass(serverId);
+				return (localPass);
+			}
+		}
+
+		async function serverDataDialog(serverId, serverData, titleString) {
+			showModal('', false,
+				`	<span data-i18n="${titleString}">${t(titleString)}</span>
+				<div id="divServerName2" class="input-wrapper" title="Server Name">
+					<i class="ico icon-server"></i> <!-- Example icon for the base URL -->
+					<input type="text" class="login-input" id="loginServerName" placeholder="${t('login.servername')}" autocorrect="off" autocapitalize="none" spellcheck="false" value="${serverData.name}">
+				</div>
+
+				<div id="divBaseUrl2" class="input-wrapper" title="Server Address">
+					<i class="ico icon-link"></i> <!-- Example icon for the base URL -->
+					<input type="text" class="login-input" id="loginBaseUrl" placeholder="${t('login.serverurl')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="url" value="${serverData.url}">
+				</div>
+
+				<div id="divUsername2" class="input-wrapper" title="Username">
+					<i class="ico icon-user-round"></i> <!-- Icon for username -->
+					<input type="email" class="login-input" id="loginUsername" placeholder="${t('login.username')}" autocorrect="off" autocapitalize="none" spellcheck="false" inputmode="email" value="${serverData.username}">
+				</div>
+
+				<div id="divPassword2" class="input-wrapper pwd ${(isWeb && !webPWD) ? 'disabled-input' : ''}" title="Password">
+					<i class="ico icon-rectangle-ellipsis"></i> <!-- Icon for password -->
+
+					<input type="password" class="login-input" id="loginPassword" "${t('login.password')}" autocorrect="off" autocapitalize="none" spellcheck="false" autocomplete="current-password" value="${await getPasswordValue(serverId, serverData)}">
+					<span id="viewPassword2" class="ico icon-eye right" onClick="clickPassword()"></span>
+				</div>
+				<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>
+
+			`, [
+				...(!(isWeb && !webPWD) ? [{
+					label: 'button.testserver',
+					runfunction: () => {
+						login('', true, true)
+						//closeModal()
+					}
+				}] : []),
+				{
+					label: 'modal.cancel', runfunction: () => {
+						serversDialog()
+					}
+				},
+				{
+					label: 'button.saveserver', runfunction: () => {
+						saveServer()
+					}, high: true
+				},
+			]);
+		}
+
+		function editServer(event, serverId) {
+			event.stopPropagation();
 			mb.editServerId = serverId;
 			mb.editServerData = mb.serverList[serverId];
-			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
-			closeModal();
+			serverDataDialog(mb.editServerId, mb.editServerData, 'servers.edit')
 		}
 
 		function addServer() {
 			[mb.editServerId, mb.editServerData] = initServer();
-			showLoginDialog('editserver', mb.editServerId, mb.editServerData);
-			closeModal();
+			serverDataDialog(mb.editServerId, mb.editServerData, 'servers.add')
 		}
 
 		async function logoutFromServer(serverList) {
-			console.log("START LOGOUT PROCESS")
+			debugPrint("logoutFromServer")
+			debugPrint(JSON.stringify(serverList))
+
 			closeModal();
-			if (isLoginScreenHidden()) navigateTo('#dashboard');
+			if (isLogoScreenHidden()) navigateTo('#dashboard');
 			await executeFaderGradient(1);
 
+			debugPrint("	Go through servers")
 			Object.entries(serverList).forEach(async ([id, server]) => {
-				if ((!server.askPassword)) {
-					mb.serverList[id].askPassword = true;
+				debugPrint("	" + JSON.stringify(server))
 
-					let fetchPayload
-					if (!isWeb || (isWeb && webPWD)) {
-						const username = mb.serverList[id].username;
-						const password = await loadUserPass(id);
+				//NULOGIN If the session is offline better delete the user password
+				if (offlineSession) await deleteUserPass(mb.loggedUser);
 
-						fetchPayload = {
-							method: 'POST',
-							headers: {
-								'Authorization': 'Basic ' + btoa(`${username}:${password}`),
-								'X-Requested-With': 'XMLHttpRequest',
-								'skip_zrok_interstitial': '1'
-							}
-						}
-					} else {
-						fetchPayload = {
-							method: 'POST',
-							credentials: 'include',
-							headers: {
-								'X-Requested-With': 'XMLHttpRequest',
-								'skip_zrok_interstitial': '1'
-							}
+				let fetchPayload
+				debugPrint("		Create payload")
+				if (!isWeb || (isWeb && webPWD)) {
+					debugPrint("			Get saved password")
+					const username = mb.serverList[id].username;
+					const password = await loadUserPass(id);
+
+					fetchPayload = {
+						method: 'POST',
+						headers: {
+							'Authorization': 'Basic ' + btoa(`${username}:${password}`),
+							'X-Requested-With': 'XMLHttpRequest',
+							'skip_zrok_interstitial': '1'
 						}
 					}
-
-					try {
-						await fetch(`${mb.serverList[id].url}/api/logout`, fetchPayload);
-					} catch (error) {
-						console.warn('Logout API call failed:', error);
-						// We continue cleanup anyway
+				} else {
+					debugPrint("			Use token")
+					fetchPayload = {
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'X-Requested-With': 'XMLHttpRequest',
+							'skip_zrok_interstitial': '1'
+						}
 					}
-
 				}
+
+				debugPrint("Start logout fetch")
+				try {
+					await fetch(`${mb.serverList[id].url}/api/logout`, fetchPayload);
+				} catch (error) {
+					console.warn('Logout API call failed:', error);
+					// We continue cleanup anyway
+				}
+
+
 			});
-			//Non cancella più la password usando:
-			// await deleteUserPass(mb.loggedUser);
-			// ma marchia il server come "askPassword"
+
 			localStorage.removeItem('mb00CurrentServerId');
+			localStorage.removeItem('mb00CurrentUserId');
+			localStorage.removeItem('mb00BaseUrl');
 
-			// Always clean temp server
-			mb.serverList['mb0'].username = '';
-
-			// Save the serverlist with the modified askpassword
+			//NULOGIN IS THIS NEEDED?
 			localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
-			if (mb.currentServerId == 'mb0') deleteUserPass('mb0')
 
-			// delte c_ storage keys 
-			// //TODO REMOVED FOR MULTISERVER, cHECK!
-			/*
-			Object.keys(localStorage).forEach(key => {
-				if (key.startsWith('c_')) {
-					localStorage.removeItem(key);
-				}
-			});
-*/
-			// Delete cached calls
-			//TODO REMOVED FOR MULTISERVER, CHECK!
-			// await clearIndexedDB();
 			localStorage.removeItem('mb00SessionValid');
 
 			mainLoader.classList.add('hidden');
 
-			//await callAPI(null, `/api/logout`, 'GET', null, false); //TODO da autenticare, vedi codice sopra!
+			//await callAPI(null, `/api/logout`, 'GET', null, false); //NULOGIN da autenticare, vedi codice sopra!
 
 			console.log("LOGOUT PROCESS ENDED, RESTARTING")
 			systemRestart();
 		}
 
-		function deleteServer(serverId) {
+		function deleteServer(event, serverId) {
+			event.stopPropagation();
+
 			showModal('', false, `
 				<span data-i18n="servers.delete">${t('servers.delete')}</span>
 				<ul class="filter-menu">
@@ -1669,6 +1659,7 @@
 						localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 						localStorage.removeItem('mb00CurrentServerId');
 						deleteUserPass(serverId);
+
 						if (mb.currentServerId != false) {
 							systemRestart();
 						} else {
@@ -1677,13 +1668,10 @@
 					}, high: true
 				},
 				{ label: 'modal.cancel', runfunction: () => serversDialog() }
-
 			]);
-
 		}
 
 		function expandServer(idName) {
-			if (idName == 'item_mb0_data') return
 
 			const target = document.getElementById(idName);
 			const isOpen = target.classList.contains('expand');
@@ -1702,23 +1690,23 @@
 		function buildServersDialog() {
 			let out = `<span data-i18n="servers.title">${t('servers.title')}</span>`;
 			out = out + '<ul class="filter-menu" id="languageMenu">';
-			Object.entries(mb.serverList).forEach(([id, server]) => {
-				let isSelected = mb.currentServerId == id;
+			Object.entries(mb.serverList)
+				.sort(([, a], [, b]) => a.name.localeCompare(b.name))
+				.forEach(([id, server]) => {
+					let isSelected = mb.currentServerId == id;
 
-				let extraClass = (id == 'mb0') ? 'server-buttons-disabled' : '';
+					let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
 
-				let noLoginClass = ((isWeb && !webPWD) && (mb.currentServerId != false)) ? 'server-buttons-disabled' : '';
-
-				out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
-									<div class='library-name filter-menu-text'>${id == 'mb0' ? t(server.name) : server.name}</div>
-									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.edit')}' onClick="editServer('${id}')">
+					out = out + `<li class="filter-item filter-item-menu press-button ${isSelected ? 'highlighted' : ''}" onClick="expandServer('item_${id}_data')">
+									<div class='library-name filter-menu-text'>${server.name}</div>
+									<div class='smallbutton-wrapper server-button' title='${t('button.edit')}' onClick="editServer(event, '${id}')">
 										<span class="ico icon-pencil glyph-dark"></span>
 									</div>
-									<div class='smallbutton-wrapper server-button ${extraClass}' title='${t('button.delete')}' onClick="deleteServer('${id}')">
+									<div class='smallbutton-wrapper server-button' title='${t('button.delete')}' onClick="deleteServer(event, '${id}')">
 										<span class="ico icon-trash-2 glyph-dark"></span>
 									</div>
 									<div class='smallbutton-wrapper server-button ${noLoginClass}' title='${t('button.login')}' onClick="loginToServer(event, '${id}', false)">
-										<span class="ico ${(id == 'mb0' || mb.serverList[id].askPassword) ? 'icon-key-round' : 'icon-play'} glyph-dark"></span>
+										<span class="ico icon-play glyph-dark"></span>
 									</div>
 								</li>
 								<li class="server-data" id="item_${id}_data">
@@ -1730,14 +1718,17 @@
 									</div>
 								</li>
 			`
-			});
+				});
 
 			out = out + "</ul>";
+			out = out + `<div id="errorBox2" class="error-message logo-hidden">Invalid credentials or server URL, please try again.</div>`
+
 			return (out)
 		}
 
 		function serversDialog() {
-			let noLogoutAll = ((isWeb && !webPWD) && (mb.currentServerId != false))
+			//NULOGIN Left for future changes of mind, but not used since 0.4.8
+			let noLogoutAll = true;// (!((isWeb && !webPWD))) || ((isWeb && !webPWD) && (mb.currentServerId != false))
 
 			showModal('', false, buildServersDialog(), [
 				{ label: 'servers.add', runfunction: () => addServer() },
@@ -1747,8 +1738,9 @@
 				{
 					label: 'modal.ok', runfunction: () => {
 						if (mb.currentServerId) {
-							hideLoginDialog();
+							hideLogoDialog();
 						}
+
 						closeModal()
 					}, high: true
 				}
@@ -1818,7 +1810,7 @@
 		}
 
 
-		//MB Theme Management 
+		//MBX Theme Management 
 
 		function warmth(hue) {
 			const warmth = (Math.cos((hue - 50) * Math.PI / 180) + 1) / 2;
@@ -1848,7 +1840,7 @@
 			});
 		}
 
-		function changeLoginTheme(toDark) {
+		function changeLogoTheme(toDark) {
 			document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 		}
 
@@ -1883,10 +1875,10 @@
 
 
 		mbPrefersDarkMode.addEventListener('change', () => {
-			if (isLoginScreenHidden()) {
+			if (isLogoScreenHidden()) {
 				changeTheme()
 			} else {
-				changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
+				changeLogoTheme(mbPrefersDarkMode.matches ? true : false)
 			}
 		});
 
@@ -1956,18 +1948,19 @@
 			});
 		}
 
-		viewPassword.addEventListener('click', () => {
+		function clickPassword() {
 			const isPassword = loginPassword.type === 'password';
 			const showPassword = loginPassword.type === 'password';
 
 			loginPassword.type = isPassword ? 'text' : 'password';
 
-			viewPassword.classList.toggle('icon-eye', !showPassword);
-			viewPassword.classList.toggle('icon-eye-off', showPassword);
+			viewPassword2.classList.toggle('icon-eye', !showPassword);
+			viewPassword2.classList.toggle('icon-eye-off', showPassword);
+		}
 
-		})
 
 		function logOutFromCurrentServer() {
+			console.log("LOGGING OUT FROM SERVER:" + mb.currentServerId)
 			let serverTable = {};
 			serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
 			logoutFromServer(serverTable)
@@ -1992,22 +1985,23 @@
 				<span style="width:25px; min-width:25px;text-align:center;font-size:20px;" class="ico icon-languages"></span><span style="word-break: break-all;">${mb.languageAuto ? t('language.automatic') : languageName(mb.languageVal)}</span>
 			</div>
 			`
+			let noLogout = !(isWeb && !webPWD)
+
 			showModal('', true, dialogText,
-				[
-					{
-						label: 'button.logout', runfunction: async () => {
-							logOutFromCurrentServer()
-						}, high: true
-					},
-					{
-						label: 'button.serverslist', runfunction: async () => {
-							serversDialog()
-						}
-					},
-					{
-						// No need to use translateDOM because modals are modal and spawned each time
-						label: 'modal.cancel', runfunction: closeModal, high: false
+				[{
+					label: 'button.logout', runfunction: async () => {
+						logOutFromCurrentServer()
 					}
+				},
+				{
+					label: 'button.serverslist', runfunction: async () => {
+						serversDialog()
+					}
+				},
+				{
+					// No need to use translateDOM because modals are modal and spawned each time
+					label: 'modal.ok', runfunction: () => closeModal(), high: true
+				}
 				]
 			);
 		});
@@ -2057,7 +2051,7 @@
 			if (searchInput.value != '') navigateTo('#search', { search_string: searchInput.value.toLowerCase() });
 		})
 
-		//MB Scroll Bars
+		//MBX Scroll Bars
 
 		function createCustomScrollbar(scrollbox) {
 			if (scrollbox.dataset.scrollbarInitialized) return;
@@ -2179,12 +2173,13 @@
 
 		document.querySelectorAll('.scrollbox').forEach(createCustomScrollbar);
 
-		//MB Modal Dialog
+		//MBX Modal Dialog
 		let modalGlobal = [];
 
-		function showModal(image, imagebg, message, itemsArray) {
+		function showModal(image, imagebg, message, itemsArray, postCode = null) {
 			if (isModalVisible()) {
-				closeModal();
+
+				closeModal(true);
 			}
 			setTimeout(() => {
 				document.querySelectorAll('.modal-button').forEach(el => {
@@ -2211,27 +2206,47 @@
 				});
 
 				myModal.classList.add('visible');
-			}, isModalVisible() ? 221 : 0)
+			}, isModalVisible() ? 161 : 0);
 
+			if (postCode) {
+				setTimeout(() => {
+					postCode();
+				}, isModalVisible() ? 171 : 10);
+			}
 		}
 
 		function isModalVisible() {
 			return (myModal.classList.contains('visible'))
 		}
 
-		function closeModal() {
-			myModal.classList.add('unfade');
-			modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+		function closeModal(onlyContent = false) {
+			if (onlyContent) {
+				modalContent.classList.add('unfade');
+				setTimeout(() => {
+					// Optional: if you still want to hide it completely from screen readers / tab order
+					modalContent.classList.remove('unfade');
+					modalMessage.innerHTML = '';
+					document.querySelectorAll('.modal-button').forEach(el => {
+						el.remove();
+					});
+				}, 160);
 
-			setTimeout(() => {
-				// Optional: if you still want to hide it completely from screen readers / tab order
-				myModal.classList.remove('visible');
-				myModal.classList.remove('unfade');
-				modalMessage.innerHTML = '';
-				document.querySelectorAll('.modal-button').forEach(el => {
-					el.remove();
-				});
-			}, 220);
+			} else {
+				myModal.classList.add('unfade');
+				modalImage.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+				setTimeout(() => {
+					// Optional: if you still want to hide it completely from screen readers / tab order
+					myModal.classList.remove('visible');
+					myModal.classList.remove('unfade');
+					modalContent.classList.remove('unfade');
+					modalMessage.innerHTML = '';
+					document.querySelectorAll('.modal-button').forEach(el => {
+						el.remove();
+					});
+				}, 220);
+			}
+
 		}
 
 
@@ -2266,7 +2281,7 @@
 
 
 
-		//MB Search Functions 
+		//MBX Search Functions 
 
 		function timeSplit(inTime) {
 			let outTime = inTime ?? '1111';
@@ -2377,7 +2392,7 @@
 			sectionShow(searchStripsContainer);
 		}
 
-		//MB Library Filtering 
+		//MBX Library Filtering 
 		function initFilterTable() {
 			return ({
 				sorting: {
@@ -2673,7 +2688,7 @@
 			saveLibraryFilters();
 
 			//TODO Maybe make this smoother instead of reloading the whole menu!
-			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: closeModal, high: true }]);
+			//showModal('', false, buildFilterDialog(mb.filterButtons[itemIndex], itemIndex), [{ label: 'Ok', runfunction: () => closeModal(), high: true }]);
 		}
 
 		function buildLanguageDialog() {
@@ -2747,7 +2762,7 @@
 
 					//alert(JSON.stringify(button.switches[button.selected.caption]))
 
-					helperShow(t(button.title)+": "+t(button.switches[button.selected].longCaption))
+					helperShow(t(button.title) + ": " + t(button.switches[button.selected].longCaption))
 
 					await executeFade(1);
 					applyLibraryFilters();
@@ -2755,7 +2770,7 @@
 					saveLibraryFilters();
 				})
 				addLongPressListener(button.item, 'filter-item', async () => {
-					showModal('', false, buildFilterDialog(button, index), [{ label: 'modal.ok', runfunction: closeModal, high: true }]);
+					showModal('', false, buildFilterDialog(button, index), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 				}, 500)
 			});
 
@@ -2918,19 +2933,8 @@
 		fixZoomOnPWA()
 
 		window.addEventListener('orientationchange', async () => {
-			/*
-			if (isCapacitor && (capacitorPlatform == 'android')) {
-				setTimeout(() => {
-					if (isOrientationLandscape()) {
-						Capacitor.Plugins.StatusBar.hide();
-					} else {
-						Capacitor.Plugins.StatusBar.hide();
-					}
-				}, 100)
-			}
-			*/
+
 			fixZoomOnPWA();
-			await setAndroidInsets();
 		});
 
 		document.addEventListener('visibilitychange', (event) => {
@@ -2956,7 +2960,7 @@
 			await wait(300);
 		}
 
-		//MB Offline Download Functions
+		//MBX Offline Download Functions
 		function arrayBufferToBase64(buffer) {
 			let binary = '';
 			const bytes = new Uint8Array(buffer);
@@ -3005,12 +3009,10 @@
 				const bookPath = baseUrl;
 
 				debugPrint(`Successfully loaded offline book data for ${bookId}`)
-				console.log(`Successfully loaded offline book data for ${bookId}`);
 				return { bookMetadata, pagesMetadata, seriesMetadata, bookPath };
 
 			} catch (err) {
 				debugPrint('Failed to read offline book data:', err);
-				console.error('Failed to read offline book data:', err);
 				throw err;
 			}
 		}
@@ -3020,20 +3022,17 @@
 				const baseFolder = `offline-books/${bookId}`;
 
 				debugPrint(`Deleting offline book data for ${bookId}...`);
-				console.log(`Deleting offline book data for ${bookId}...`);
 
 				await Capacitor.Plugins.Filesystem.rmdir({
 					path: baseFolder,
 					directory: filesFolder,
 					recursive: true
 				});
-
 				debugPrint(`Deleted offline book ${bookId} successfully.`);
-				console.log(`Deleted offline book ${bookId} successfully.`);
+
 				return { success: true };
 			} catch (err) {
 				debugPrint(`Failed to delete offline book ${bookId}:`, err);
-				console.error(`Failed to delete offline book ${bookId}:`, err);
 				return { success: false, message: err.message };
 			}
 		}
@@ -3089,7 +3088,6 @@
 			} catch (err) {
 				debugPrint('Error in safeWriteFile:');
 				debugPrint(err);
-				console.error('Update metadata:', err);
 				return { ok: false, error: err.message };
 			}
 		}
@@ -3250,7 +3248,6 @@
 			} catch (err) {
 				debugPrint('Error in safeWriteFile:');
 				debugPrint(err);
-				console.error('Download failed:', err);
 				return { ok: false, error: err.message };
 			}
 		}
@@ -3462,7 +3459,7 @@
 			}
 		}
 
-		//MB Media Cache 
+		//MBX Media Cache 
 
 		function openIndexedDB() {
 			return new Promise((resolve, reject) => {
@@ -3720,7 +3717,7 @@
 
 			if (mb.libraryError) {
 				showModal('circle-mark-svg.svg', true, t('modal.analyzewarning') + mb.libraryNames,
-					[{ label: 'modal.ok', runfunction: closeModal, high: true }]);
+					[{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 				return;
 			}
 
@@ -3756,7 +3753,7 @@
 
 		}
 
-		//MB Touch And Hover Scaler 
+		//MBX Touch And Hover Scaler 
 
 		function addClickPointerEvents(item, execute) {
 			item.addEventListener('pointerdown', () => {
@@ -3854,7 +3851,7 @@
 			return str.replace(/-/g, '\u2011')
 		}
 
-		//MB Series Items Creation
+		//MBX Series Items Creation
 
 		const attachedObserver = new IntersectionObserver(async (entries) => {
 			for (const entry of entries) {
@@ -4287,28 +4284,6 @@
 
 		}
 
-		// Creates and populates the series grid with the data from the series array.
-		async function displaySeriesOLD(series, target) {
-
-			while (target.firstChild) {
-				target.removeChild(target.firstChild);
-			}
-
-			series.forEach(async (serie) => {
-
-				const seriesContainer = addItem('div', {
-					className: 'series-container collector', //XXX was ending with , 'fade-in');
-					id: serie.id,
-				});
-
-				buildSeriesItem(seriesContainer, serie, target);
-
-				target.append(seriesContainer);
-			});
-
-			sectionShow(target); //XXX serve un fade qui???
-		}
-
 
 		let chunkIndex = 0;
 		let seriesOld = null;
@@ -4392,7 +4367,7 @@
 
 				series.forEach(async (serie) => {
 					const seriesContainer = addItem('div', {
-						className: 'series-container collector', //XXX was ending with , 'fade-in');
+						className: 'series-container collector',
 						id: serie.id,
 					});
 
@@ -4415,7 +4390,7 @@
 
 			series.forEach(async (serie) => {
 				const seriesContainer = addItem('div', {
-					className: 'series-container collector', //XXX was ending with , 'fade-in');
+					className: 'series-container collector',
 					id: serie.id,
 				});
 
@@ -4436,7 +4411,7 @@
 
 			series.forEach(async (serie) => {
 				const seriesContainer = addItem('div', {
-					className: 'series-container collector', //XXX was ending with , 'fade-in');
+					className: 'series-container collector',
 					id: serie.id,
 				});
 
@@ -4920,7 +4895,7 @@
 									high: true
 								}, {
 									label: 'modal.cancel',
-									runfunction: closeModal,
+									runfunction: () => closeModal(),
 									high: false
 								}]);
 
@@ -5114,7 +5089,7 @@
 			translateDOM();
 		}
 
-		//MB Book Details Panel 
+		//MBX Book Details Panel 
 
 		function closeBookDetails() {
 			sectionHide(bookDetailsContainer);
@@ -5171,7 +5146,7 @@
 
 		}
 
-		//MB Book Item Creation
+		//MBX Book Item Creation
 
 		async function buildBookItem(item, book, format, target) {
 
@@ -5551,7 +5526,7 @@
 
 		}
 
-		//MB Dashboard Management
+		//MBX Dashboard Management
 
 		// Function to trigger the home page layout
 		async function selectHome() {
@@ -5861,7 +5836,7 @@
 
 		}
 
-		//MB Reader Functions and Data
+		//MBX Reader Functions and Data
 
 		// General reader data structure
 		let rd = {
@@ -6031,14 +6006,15 @@
 			sectionShow(readerOverlay);
 			sectionShow(touchPanel);
 
-			if (isStatusBar) {
-				Capacitor.Plugins.StatusBar.hide();
+			if (isSystemBars) {
+				Capacitor.Plugins.SystemBars.hide();
 			}
-			if (isNavBar) {
-				Capacitor.Plugins.NavigationBar.hide();
-			}
+
 			if (isVolumeButtons) {
 				initVolumeButtons();
+			}
+			if (isKeepAwake) {
+				Capacitor.Plugins.CapacitorKeepAwake.keepAwake();
 			}
 			initViewer();
 		}
@@ -6110,7 +6086,6 @@
 		function handleCloseReader() {
 			hideMenu();
 			setIncognito(false);
-			//XXX WAS incognitoMark.classList.remove('incognito'); but why didn't I just sue setIncognito(false)?
 
 			clearTimeout(rd.jumpTimeout);
 			setTimeout(() => {
@@ -6121,20 +6096,20 @@
 			purgeLoading();
 			clearAllTimeouts();
 
-			showBackButton(false)
+			showBackButton()
 			if (mb.historyStack.length == 1) {
 				mb.historyStack = ['#dashboard', mb.historyStack[0]]
 			}
 			goBack()
 
-			if (isStatusBar && !isSharpCornerIphone) {
-				Capacitor.Plugins.StatusBar.show();
-			}
-			if (isNavBar) {
-				Capacitor.Plugins.NavigationBar.show();
+			if (isSystemBars && !isSharpCornerIphone) {
+				Capacitor.Plugins.SystemBars.show();
 			}
 			if (isVolumeButtons) {
 				clearVolumeButtons()
+			}
+			if (isKeepAwake) {
+				Capacitor.Plugins.CapacitorKeepAwake.allowSleep();
 			}
 		}
 
@@ -6187,8 +6162,8 @@
 			rd.titleBarColor = rd.webtoon ? 'black' : getComputedStyle(document.documentElement).getPropertyValue('--mb-gr-color-1');
 
 			//rd.titleBarColor = 'black';
-			
-			if (helper) helperShow(t("reader.theme")+": "+t(mb.readerThemeControl[mb.readerThemePrefs].label));
+
+			if (helper) helperShow(t("reader.theme") + ": " + t(mb.readerThemeControl[mb.readerThemePrefs].label));
 
 			setUserSettings('mangabox.ui.readerthemeprefs', mb.readerThemePrefs);
 
@@ -6453,7 +6428,7 @@
 			return ({ left: clipLeft, right: clipRight, dropL: fullBook * pageRate, dropR: fullBook * (1 - pageRate) })
 		}
 
-		//MB Reader Fetch Page Function
+		//MBX Reader Fetch Page Function
 
 		function buildSpreadObject(spreadKind, spreadPages, spreadRefPage, spreadPageNums) {
 			// I put the image item and container item in the array so I can target them for changes
@@ -7184,9 +7159,21 @@
 		function handleArrow(direction) {
 			const isDirectionLeft = (direction === 'left');
 
+			/*
 			if (rd.webtoon) {
 				jumpToSpread(rd.currentSpreadIndex + (isDirectionLeft ? -1 : 1));
 				return
+			}
+			*/
+			if (rd.webtoon) {
+
+				const amount = webtoonContainer.clientHeight * 0.75;
+
+				webtoonContainer.scrollTo({
+					top: webtoonContainer.scrollTop + (isDirectionLeft ? -amount : amount),
+					behavior: 'smooth'
+				});
+				return;
 			}
 
 			const firstSpreadIndex = 0;
@@ -7217,8 +7204,6 @@
 			// Avoid page turn direction to change during a page turn animation
 			if (rd.pageTurning === direction) return;
 
-			console.log("newSpread:" + newSpread);
-			console.log(rd.spreadFocus);
 
 			//			if (newSpread < 0 || newSpread > spreadsTotal()) return;
 			//			if ((newSpread >= spreadsTotal()) && (rd.spreadsArray[rd.currentSpreadIndex].spreadKind == 'back-cover')) return;
@@ -7240,15 +7225,11 @@
 			const lateTurnBlock = (isDirectionLeft === rd.rtl) && (rd.currentSpreadIndex === 1) && firstSpreadIsCover;
 			if ((earlyTurnBlock || lateTurnBlock) && rd.pageTurning) return;
 
-			console.log(">>>>>>>>>>>>>>>ProcessJUMP")
 			if (mb.readerHorizontal) {
-				console.log("A")
 				jumpToSpread(newSpread);
 			} else if (rd.spreadFocus === edgeFocus) {
-				console.log("B")
 				spreadSetFocusSmooth(targetFocus);
 			} else {
-				console.log("C")
 				jumpToSpread(newSpread, edgeFocus);
 			}
 		}
@@ -7825,24 +7806,20 @@
 		// Reader UI Control Buttons
 		function toggleMenu() {
 			if (isSectionHidden(controlPanel)) {
-				if (isStatusBar && !isSharpCornerIphone) {
-					Capacitor.Plugins.StatusBar.show();
+				if (isSystemBars && !isSharpCornerIphone) {
+					Capacitor.Plugins.SystemBars.show();
 				}
-				if (isNavBar) {
-					Capacitor.Plugins.NavigationBar.show();
-				}
+
 			} else {
-				if (isStatusBar) {
-					Capacitor.Plugins.StatusBar.hide();
+				if (isSystemBars) {
+					Capacitor.Plugins.SystemBars.hide();
 				}
-				if (isNavBar) {
-					Capacitor.Plugins.NavigationBar.hide();
-				}
+
 			}
 
 			sectionToggle(controlPanel);
 			touchPanel.classList.toggle('shrink');
-			showBackButton(!backButton.classList.contains('faded'))
+			showBackButton()
 		}
 
 		function hideMenu() {
@@ -7909,7 +7886,7 @@
 			const headerHeight = seriesHeader.getBoundingClientRect().height;
 
 			if (!isSectionHidden(seriesMiniHeader)) {
-				if ((mainContainer.scrollTop > headerHeight-20) && (seriesMiniHeader.classList.contains('collapse'))) {
+				if ((mainContainer.scrollTop > headerHeight - 20) && (seriesMiniHeader.classList.contains('collapse'))) {
 					seriesMiniHeader.classList.remove('collapse');
 				} else if ((mainContainer.scrollTop < headerHeight) && !seriesMiniHeader.classList.contains('collapse')) {
 					seriesMiniHeader.classList.add('collapse');
@@ -8059,7 +8036,7 @@
 
 		});
 
-		//MB URL Parsing and LoadContent Function 
+		//MBX URL Parsing and LoadContent Function 
 		function getHashAndParams() {
 			const fullHash = window.location.hash.substring(1); // Remove leading '#'
 			const [path, paramString] = fullHash.split('?'); // Separate path and parameters
@@ -8068,15 +8045,12 @@
 			return { path, params };
 		}
 
-		function showBackButton(fadeButton = false) {
+		function showBackButton() {
 			if (mb.historyStack.length == 1) {
 				backButton.classList.toggle('hidden', true)
-				backButton.classList.toggle('faded', false)
 			} else {
 				backButton.classList.toggle('hidden', false)
-				backButton.classList.toggle('faded', fadeButton)
 			}
-
 		}
 
 		function hideBackButton() {
@@ -8176,7 +8150,7 @@
 					break;
 				case 'bookread':
 					await openBookReader(params.get('library_id'), params.get('series_id'), params.get('book_id'), params.get('dir'), params.get('pg'));
-					showBackButton(true);
+					showBackButton();
 					break;
 				case 'offlinebooks':
 					clearSearchField();
@@ -8274,11 +8248,11 @@
 
 		let offlineSession = false;
 
-		changeLoginTheme(mbPrefersDarkMode.matches ? true : false)
+		changeLogoTheme(mbPrefersDarkMode.matches ? true : false)
 
 		sessionCheck()
 
-		//MB Reader touch response fucntions
+		//MBX Reader touch response fucntions
 		function getTrueScale() {
 			return window.innerWidth / window.visualViewport.width;
 		}

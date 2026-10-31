@@ -20,8 +20,6 @@ async function checkCredentialsCap() {
 }
 
 async function setCredentialsCap(serverId, password) {
-	debugPrint("Saving Credentials:" + serverId + " " + password)
-
 	try {
 		const result = await Capacitor.Plugins.SecureStoragePlugin.set({
 			key: serverId,
@@ -59,7 +57,9 @@ async function getCredentialsCap(serverId) {
 		debugPrint(`SecureStorage get result: ${result?.value === true ? 'OK' : 'FAILED'}`);
 	} catch (err) {
 		debugPrint(`SecureStorage error while loading credentials for ${serverId}`, err);
-		throw err;
+		//NULOGIN Qui stranamente per ADD SERVER fa casino se lascio throw error perché cerca di caricare una password che non esiste???
+		return null;
+		//throw err;
 	}
 	if (!result) return null;
 
@@ -129,25 +129,22 @@ async function deleteUserPass(serverId) {
 async function sessionCheck() {
 	await executeFaderGradient(1);
 
-	debugPrint("sessionCheck...");
-	console.log("sessionCheck...");
+	debugPrint("FX - SessionCheck");
 
 	// At session start load current server and current user Id
 	mb.currentServerId = localStorage.getItem('mb00CurrentServerId') || false;
-
 	mb.currentUserId = localStorage.getItem('mb00CurrentUserId') || false;
 	mb.baseUrl = localStorage.getItem('mb00BaseUrl') || '';
 	mb.baseUrl = cleanBaseUrlVal(mb.baseUrl)
 
-	loginBaseUrl.value = mb.baseUrl;
-
-	console.log("Z - loggedServer:" + mb.currentServerId)
-	debugPrint("Z - loggedServer:" + mb.currentServerId)
+	debugPrint("FX - SessionCheck - currentServerId: " + mb.currentServerId);
+	debugPrint("FX - SessionCheck - currentUserId: " + mb.currentUserId);
+	debugPrint("FX - SessionCheck - baseUrl: " + mb.baseUrl);
 
 	// --- 1. Missing credentials → login
 	if ((!mb.baseUrl) || (!mb.currentServerId) || (!mb.currentUserId)) {
 		debugPrint("Missing base URL or login data");
-		showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+		showLogoDialog();
 		await executeFaderGradient(0);
 		return;
 	}
@@ -158,12 +155,11 @@ async function sessionCheck() {
 
 	if (offline) {
 		debugPrint("Offline mode detected.");
-		console.log("Offline mode detected.")
 		if (sessionWasValid) {
-			hideLoginDialog();
+			hideLogoDialog();
 			bootSequence('offline');
 		} else {
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			showLogoDialog();
 			await executeFaderGradient(0);
 		}
 		return;
@@ -209,74 +205,48 @@ async function sessionCheck() {
 		if (response.ok) {
 			if (isWeb && !webPWD) await fetch(`${mb.baseUrl}/api/v1/login/set-cookie`, fetchPayload);
 			debugPrint("Session valid (server confirmed).");
-			console.log("Session valid (server confirmed).");
 			localStorage.setItem("mb00SessionValid", "true");
-			hideLoginDialog();
+			hideLogoDialog();
 			bootSequence('online');
 
 		} else if (response.status === 401 || response.status === 403) {
 			debugPrint("Credentials invalid or expired.");
-			console.log("Credentials invalid or expired.");
 			mb.currentUserId = false;
 
 			//TODO Verifica se questa funzione fa già più di quel che fa il resto
 			await logOutFromCurrentServer()
 
 			localStorage.removeItem("mb00SessionValid");
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			showLogoDialog();
 			await executeFaderGradient(0);
 
 		} else {
 			debugPrint(`Unexpected server response (${response.status}) — assuming temporary issue.`);
-			console.log(`Unexpected server response (${response.status}) — assuming temporary issue.`);
 			if (sessionWasValid) {
-				hideLoginDialog();
+				hideLogoDialog();
 				bootSequence('offline');
 				await executeFaderGradient(0);
 
 			} else {
-				showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+				showLogoDialog();
 				await executeFaderGradient(0);
 			}
 		}
 	} catch (error) {
 		debugPrint("Session check failed: " + error);
 		debugPrint("Treating as temporary network/server issue.");
-		console.log("Session check failed: " + error);
-		console.log("Treating as temporary network/server issue.");
 
 		if (sessionWasValid) {
-			hideLoginDialog();
+			hideLogoDialog();
 			bootSequence('offline');
 			await executeFaderGradient(0);
 
 		} else {
-			showLoginDialog('firstboot', 'mb0', mb.serverList['mb0']);
+			showLogoDialog();
 			await executeFaderGradient(0);
 
 		}
 	}
-}
-
-async function setServerFields(serverId, serverData) {
-
-	loginServerName.value = (serverId == 'mb0') ? t(serverData.name) : serverData.name;
-	loginBaseUrl.value = serverData.url;
-	loginUsername.value = (serverId == 'mb0') ? '' : serverData.username;
-
-	if ((mb.loginMode == 'enterpassword') || (isWeb && !webPWD) || (serverId == 'mb0') || ((mb.loginMode == 'editserver') && serverData.askPassword)) {
-		// When password is requested, the password field is always EMPTY
-		// same in web mode, the password is never shown ever
-		loginPassword.value = ''
-	} else {
-		let localPass = await loadUserPass(serverId);
-
-		loginPassword.value = localPass;
-
-		localPass = null;
-	}
-
-
 }
 
 async function systemRestart() {
@@ -284,24 +254,26 @@ async function systemRestart() {
 	//TODO: and externalise the functions that are hear in a function that is called at boot or at login screen show
 	console.log("SYSRESTART")
 	// Reapply boot theme
+
+	//NULOGIN Added recently, maybe can override others?
+	closeModal();
+
 	await executeFaderGradient(1);
 	let toDark = mbPrefersDarkMode.matches ? true : false
 	document.documentElement.setAttribute('data-theme', toDark ? 'dark' : 'light');
 
-	loginScreen.classList = "auth-hidden logo-pattern";
-	// Clear login dialog content
+	logoScreen.classList = "logo-hidden logo-pattern";
 
-	setServerFields('mb0', mb.serverList['mb0'])
 
-	loginError.textContent = '';
-	loginError.classList.toggle('auth-hidden', true);
+	errorBox.textContent = '';
+	errorBox.classList.toggle('logo-hidden', true);
 	executeFade(1);
 
-	if (isStatusBar) {
+	if (isSystemBars) {
 		if (isSharpCornerIphone) {
-			Capacitor.Plugins.StatusBar.hide();
+			Capacitor.Plugins.SystemBars.hide();
 		} else {
-			Capacitor.Plugins.StatusBar.show();
+			Capacitor.Plugins.SystemBars.show();
 		}
 	}
 
@@ -355,93 +327,30 @@ async function systemRestart() {
 	sessionCheck();
 }
 
+
 //TODO ZZZZZZZZ Ecco l'idea:
 /*
-
 logintoserver è triggerato SOLO dal menu, e a questo punto faccio un TEST di login forzato per poi lanciare di nuovo il login SENZA TEST
-
-*/ 
+*/
 async function loginToServer(event, serverId, test) {
-
-	/* 
-	First step: if you are trying to log into the "temp" server it clears current server 
-	and user id and basically restarts the system. Removing those two files means that
-	at boot it will go to the login dialog
-	*/
-
-	if (serverId == 'mb0') {
-		//TODO Maybe add here a cleanup of server temporary name?
-		localStorage.removeItem('mb00CurrentServerId');
-		localStorage.removeItem('mb00CurrentUserId');
-		closeModal();
-		systemRestart()
-
-		return
-	}
-
-	/*
-	loggingServerId is the TEMPORARY server you are trying to log in
-	*/
+	console.log("FX - loginToServer")
+	console.log("FX - loginToServer - current server Id: " + mb.currentServerId)
+	console.log("FX - loginToServer - server to login: " + serverId)
+	console.log("FX - loginToServer - user to login: " + mb.serverList[serverId].userId)
+	console.log("FX - loginToServer - url to login: " + mb.serverList[serverId].url)
+	// loggingServerId is the TEMPORARY server you are trying to log in
 
 	mb.loggingServerId = serverId;
 
 	event.stopPropagation();
 
-	if (mb.serverList[serverId].askPassword || (isWeb && !webPWD)) {
-		// In askPassword mode it shows the login dialog and closes the modal
-		// so it basically always work because with the login dialog present there is no risk
-		// of faux login
-		showLoginDialog('enterpassword', mb.loggingServerId, mb.serverList[mb.loggingServerId]);
-		closeModal();
+	if (!test && (isWeb && !webPWD)) {
+		serverPasswordDialog(serverId)
 	} else {
-		// This is the part to tune
-		closeModal();
-		showLoginDialog('editserver', serverId, mb.serverList[serverId])
-
-
-		//TODO CHECK IF THIS IS REALLY NEEDED
-		//TODO Agguyngere questo solo per web???
-		//let serverTable = {}
-		//serverTable[mb.currentServerId] = mb.serverList[mb.currentServerId];
-		//await logoutFromServer(serverTable);
-
-		mb.currentServerId = serverId;
-
-		mb.currentUserId = mb.serverList[serverId].userId;
-
-		localStorage.setItem('mb00CurrentServerId', mb.currentServerId);
-		localStorage.setItem('mb00CurrentUserId', mb.currentUserId);
-		localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
-
-		//TODO It was this 
-		// systemRestart();
-		// and was changed back to this:
-		// login(serverId, test, false);
-		// The problem is that login doesn't work when in offline mode
-		// so either I make login work in offline, or
-		// I need to save the user id even in this logintoserver if it's not there
-		// OR I can check if the id is there or not.
 		history.pushState(null, '', mb.basePath + '#dashboard');
-
-		if (mb.currentUserId == false) {
-			// There is no currently logged in user on any server so it can just do the login
-			login(serverId, test, false);
-		} else {
-			systemRestart();
-		}
-
-		//		login(serverId, test, false);
-
+		login(serverId, test, false);
 	}
-
 	return
-	/*
-	if (mb.serverList[serverId].askPassword) {
-		showLoginDialog('firstboot', serverId)
-	} else {
-		login(serverId, test, false)
-	}
-	*/
 }
 
 function cleanBaseUrlVal(baseUrlVal) {
@@ -453,59 +362,55 @@ function cleanBaseUrlVal(baseUrlVal) {
 	return baseUrlVal
 }
 
-async function veryfyServerLogin(serverId){
-	login(serverId, test, fromDialog)
-}
-
 async function login(serverId, test, fromDialog) {
+	console.log("FX - login")
 
-	if (serverId == 'mb0') {
-		mb.serverList['mb0'].url = loginBaseUrl.value;
-		mb.serverList['mb0'].username = loginUsername.value;
-	}
+	// Hide login error messages
+	errorBox.classList.toggle('logo-hidden', true);
 
-	debugPrint("login...")
-	console.log("login...")
+	// If a requester with inputs or password is open, use them, otherwise get from the serverList
+	let baseUrlVal = document.getElementById('loginBaseUrl')?.value ?? mb.serverList[serverId].url ?? null;
+	let usernameVal = document.getElementById('loginUsername')?.value ?? mb.serverList[serverId].username ?? null;
+	let passwordVal = document.getElementById('loginPassword')?.value ?? await loadUserPass(serverId) ?? null;
 
-	loginError.classList.toggle('auth-hidden', true);
-
-	let baseUrlVal = fromDialog ? loginBaseUrl.value : mb.serverList[serverId].url;
-	let usernameVal = fromDialog ? loginUsername.value : mb.serverList[serverId].username;
-	let passwordVal = fromDialog ? loginPassword.value : await loadUserPass(serverId);
-
+	// Cleanup the base URL value to ensure it has the correct format
 	baseUrlVal = cleanBaseUrlVal(baseUrlVal);
 
-	//TODO Questo funziona per i test con server 0 e per gli edit quando i valori del server da modificare si portano
-	// in editserver e quindi sono già nei field. Funziona anche con l'enter della password perché i field sono popolati
-	// Ma funzionerò quando la password è automatica, e non voglio passare per i field???
-
+	// Build the basic authentication header using the provided username and password
 	let mbAuthHeader = 'Basic ' + btoa(`${usernameVal}:${passwordVal}`);
 
-	let fetchString = (isWeb && !webPWD)
-		? `${baseUrlVal}/api/v1/login/set-cookie?remember-me=true`
-		: `${baseUrlVal}/api/v2/users/me`;
+	console.log("FX - login - fetch with credentials only in web")
 
+	//fetches user data to check if the credentials are valid and to retrieve the user ID
+	//but to avoid cookies it sets credentials to 'omit' when not in pure web mode
 	fetch(`${baseUrlVal}/api/v2/users/me`, {
 		method: 'GET',
-		credentials: 'include',
+		credentials: (isWeb && !webPWD) ? 'include' : 'omit',
 		headers: {
 			'Authorization': mbAuthHeader,
 			'X-Requested-With': 'XMLHttpRequest',
 			'skip_zrok_interstitial': '1'
 		}
 	}).then(async response => {
+		debugPrint(JSON.stringify(response))
 		if (response.ok) {
-
+			console.log("FX - login - Response OK")
+			// If the response is successful, parse the response body as JSON to retrieve user data
 			const rawBody = await response.text();
 			let parsed = null;
+
 			try {
 				parsed = JSON.parse(rawBody);
 			} catch (e) {
 				console.warn(`BODY IS NOT JSON`);
 			}
 
+			//If we are not in test mode procede to the actual login code
+			//XXX This is parsed even if JSON parsing fails, which could lead to issues. Consider adding error handling for JSON parsing.
 			if (!test) {
 				await executeFaderGradient(1);
+
+				await closeModal();
 				localStorage.setItem('mb00BaseUrl', baseUrlVal);
 
 				mb.currentServerId = serverId;
@@ -516,14 +421,11 @@ async function login(serverId, test, fromDialog) {
 				localStorage.setItem('mb00BaseUrl', mb.serverList[mb.currentServerId].url)
 
 				mb.serverList[serverId].userId = mb.currentUserId;
-				mb.serverList[serverId].askPassword = false;
 
 				localStorage.setItem('mb00ServerList', JSON.stringify(mb.serverList));
 
-				//TODO Magari resettare la password quando anche user 0 fa logout?
-				if (serverId == 'mb0') saveUserPass(serverId, passwordVal)
-				//TODO COSA FARE??? await saveUserPass(loginUsername.value, loginPassword.value);
 
+				// If it's a web login and the password is not saved, we need to set the cookie for the session
 				if (isWeb && !webPWD) await fetch(`${baseUrlVal}/api/v1/login/set-cookie`, {
 					method: 'GET',
 					credentials: 'include',
@@ -536,100 +438,57 @@ async function login(serverId, test, fromDialog) {
 				console.log("LOG-SYSTEM RESTART")
 				systemRestart();
 			} else {
-				showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
+				errorBox2.textContent = t("server.connectionok");
+				errorBox2.classList.toggle('logo-hidden', false);
+				// We are in test mode, so we just show a modal indicating that the connection is OK
+				//showModal('', false, t('server.connectionok'), [{ label: 'modal.ok', runfunction: () => closeModal(), high: true }]);
 			}
 		} else if (response.status === 401) {
-			loginError.textContent = t(`server.invalidlogindata`);
-			loginError.classList.toggle('auth-hidden', false);
+			debugPrint("FX - login - response not OK, status 401")
+			errorBox2.textContent = t(`server.invalidlogindata`);
+			errorBox2.classList.toggle('logo-hidden', false);
 		} else {
-			loginError.textContent = t(`server.loginfailed`);
-			loginError.classList.toggle('auth-hidden', false);
+			debugPrint("FX - login - response not OK, NOT status 401")
+			errorBox2.textContent = t(`server.loginfailed`);
+			errorBox2.classList.toggle('logo-hidden', false);
 		}
 	}).catch(error => {
 		//TODO Check and fix this
+			debugPrint("FX - login - Fetch Error")
+		//NULOGIN If there's a fetch error (e.g. wrong server) reset the credentials
+		// but only if loading from a dialog. Maybe instead check if there's a logged user?
+		if(!fromDialog){
+			localStorage.removeItem('mb00BaseUrl');
+			localStorage.removeItem('mb00CurrentServerId');
+			localStorage.removeItem('mb00CurrentUserId');
 
-		localStorage.removeItem('mb00BaseUrl');
-		localStorage.removeItem('mb00CurrentServerId');
-		localStorage.removeItem('mb00CurrentUserId');
-		//closeModal();
-		//systemRestart()
-		
-		//mb.currentServerId = false
-mb.currentServerId = false;
+			mb.currentServerId = false;
+		}
 		console.error('Login error:', error);
-		loginError.textContent = t("server.cannotreach") + `${error}`;
-		loginError.classList.toggle('auth-hidden', false);
-		
+		errorBox2.textContent = t("server.cannotreach") + `\n${error}`;
+		errorBox2.classList.toggle('logo-hidden', false);
+
 	});
 
-	// Reset login credentials
+	// Reset login credentials if this is not a "test" login attempt
 	if (!test) {
 		loginPassword.value = null;
 		mbAuthHeader = null;
 	}
 }
 
-function applyScenario(modeName, serverId, serverData) {
-	const buttonsEnable = new Set(mb.loginModes[modeName].buttons || []);
-	document.querySelectorAll(".action").forEach(btn => {
-		btn.style.display = !buttonsEnable.has(btn.id) ? 'none' : '';
-	});
-
-	const inputsEnable = new Set(mb.loginModes[modeName].inputs || []);
-	document.querySelectorAll(".input-wrapper").forEach(inp => {
-		inp.classList.toggle('disabled-input', !inputsEnable.has(inp.id));
-	});
-
-	if (modeName == 'firstboot') {
-		mb.editServerId = 'mb0';
-		mb.editServerData = mb.serverList['mb0'];
-		backButton.classList.toggle('hidden', true);
-	}
-
-	if ((modeName == 'editserver') && (isWeb && !webPWD)) {
-		divPassword.classList.toggle('disabled-input', true);
-	}
-
-	if (mb.loginMode == 'enterpassword') {
-		setTimeout(() => {
-			loginPassword.focus();
-			loginPassword.select(); // optional
-		}, 0);
-	}
-
-	setServerFields(serverId, serverData);
-}
-
-function showLoginDialog(dialogMode, serverId, serverData) {
-	mb.loginMode = dialogMode;
-
-	//dialogMode = 'firstboot'
-	loginError.textContent = '';
-	loginError.classList.toggle('auth-hidden', true);
-
-	applyScenario(dialogMode, serverId, serverData)
-
-	loginPassword.type = 'password';
-	viewPassword.classList.toggle('icon-eye', true);
-	viewPassword.classList.toggle('icon-eye-off', false);
-
-	if (mb.currentServerId == false) dragbar.classList.toggle('onLogin', true);
+function showLogoDialog() {
+	dragbar.classList.toggle('onLogin', true);
 	debugPrint("show Login Dialog...")
-	console.log("show Login Dialog...")
-	loginScreen.classList.toggle('logo-pattern', !mb.currentServerId)
-	loginScreen.classList.toggle('no-logo-pattern', mb.currentServerId)
-	loginScreen.classList.toggle('auth-hidden', false);
+	logoScreen.classList.toggle('logo-hidden', false);
 }
 
-function hideLoginDialog() {
-	mb.loginMode = '';
-
+function hideLogoDialog() {
 	dragbar.classList.toggle('onLogin', false);
 	debugPrint("hide Login Dialog...")
-	console.log("hide Login Dialog...")
-	loginScreen.classList.toggle('auth-hidden', true);
+	logoScreen.classList.toggle('logo-hidden', true);
 }
 
-function isLoginScreenHidden() {
-	return (loginScreen.classList.contains('auth-hidden'));
+function isLogoScreenHidden() {
+	return (logoScreen.classList.contains('logo-hidden'));
 }
